@@ -1,0 +1,366 @@
+formalization/HiddenMonotonicity/AffineReadout.lean:8:noncomputable def run {n m} : MaskedTrace n m → (ℕ → ℝ) → Sensitivity m → Sensitivity n
+formalization/HiddenMonotonicity/AffineReadout.lean:13:theorem run_bulk {n m} (tr : MaskedTrace n m) (α : ℕ → ℝ) (seed : Sensitivity m) :
+formalization/HiddenMonotonicity/AffineReadout.lean:22:theorem run_unified {n m} (tr : MaskedTrace n m) (α : ℕ → ℝ) (seed : Sensitivity m) :
+formalization/HiddenMonotonicity/AffineReadout.lean:36:theorem run_zero_actual {n m} (tr : MaskedTrace n m) (seed : Sensitivity m) :
+formalization/HiddenMonotonicity/AffineReadout.lean:45:theorem run_stabilized {n m} (tr : MaskedTrace n m) (α : ℕ → ℝ) (r : Row m) (head : Bool) :
+formalization/HiddenMonotonicity/AffineReadout.lean:55:noncomputable def affineReadoutSeed {m} (rPlus rMinus : Row m) (β : ℝ) (head : Bool) : Sensitivity m :=
+formalization/HiddenMonotonicity/AffineReadout.lean:60:theorem Network.affine_readout_closed_form {n m} (net : Network n m)
+formalization/HiddenMonotonicity/AffineReadout.lean:96:theorem Network.affine_logit_derivative {n m} (net : Network n m)
+formalization/HiddenMonotonicity/Convexity.lean:6:def Network.Nonnegative {n m} : Network n m → Prop
+formalization/HiddenMonotonicity/Convexity.lean:10:theorem positive_matrix_monotone {n k} (W : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/Convexity.lean:20:theorem Network.monotone {n m} (net : Network n m) (hw : net.Nonnegative)
+formalization/HiddenMonotonicity/Convexity.lean:41:def mix {n : ℕ} (t : ℝ) (x y : Fin n → ℝ) : Fin n → ℝ :=
+formalization/HiddenMonotonicity/Convexity.lean:44:def layerPos {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/Convexity.lean:47:theorem affine_layer_mix {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/Convexity.lean:56:theorem max_jensen (a b c d t : ℝ) (ht : 0 ≤ t) (ht' : t ≤ 1) :
+formalization/HiddenMonotonicity/Convexity.lean:65:theorem Network.convex {n m} (net : Network n m) (hw : net.Nonnegative)
+formalization/HiddenMonotonicity/FinitePolynomialWitness.lean:6:noncomputable def MaxPolynomial.leaves {ι} : MaxPolynomial ι → List (PositivePolynomial ι)
+formalization/HiddenMonotonicity/FinitePolynomialWitness.lean:10:theorem MaxPolynomial.leaves_nonempty {ι} (e : MaxPolynomial ι) : e.leaves≠[] := by
+formalization/HiddenMonotonicity/FinitePolynomialWitness.lean:15:noncomputable def foldMax (xs : List ℝ) : ℝ := xs.foldr max 0
+formalization/HiddenMonotonicity/FinitePolynomialWitness.lean:17:theorem foldMax_nonnegative (xs : List ℝ) : 0≤foldMax xs := by
+formalization/HiddenMonotonicity/FinitePolynomialWitness.lean:22:theorem foldMax_append (xs ys : List ℝ) : foldMax (xs++ys)=max (foldMax xs) (foldMax ys) := by
+formalization/HiddenMonotonicity/FinitePolynomialWitness.lean:28:theorem MaxPolynomial.eval_leaves {ι} (e : MaxPolynomial ι) (x : ι → ℝ) (hx : 0≤x) :
+formalization/HiddenMonotonicity/FinitePolynomialWitness.lean:37:theorem MaxPolynomial.ordinary_finite_polynomial_witness {ι} (e : MaxPolynomial ι) :
+formalization/HiddenMonotonicity/FinitePolynomialWitness.lean:58:theorem Circuit.ordinary_polynomial_stream_witnesses {d n} (c : Circuit d n) (i : Fin n) :
+formalization/HiddenMonotonicity/Circuit.lean:8:inductive Circuit (d : ℕ) : ℕ → Type
+formalization/HiddenMonotonicity/Circuit.lean:12:noncomputable def Circuit.eval {d n} : Circuit d n → Vec d → Vec n
+formalization/HiddenMonotonicity/Circuit.lean:16:noncomputable def recenterPair (center : Bool) (p q : ℝ) : ℝ × ℝ :=
+formalization/HiddenMonotonicity/Circuit.lean:19:theorem recenterPair_difference (center : Bool) (p q : ℝ) :
+formalization/HiddenMonotonicity/Circuit.lean:23:theorem recenterPair_nonnegative (center : Bool) (p q : ℝ) (hp : 0≤p) (hq : 0≤q) :
+formalization/HiddenMonotonicity/Circuit.lean:31:noncomputable def Circuit.split {d n} : Circuit d n → Bool → (Fin d × Bool → ℝ) → PairVec n
+formalization/HiddenMonotonicity/Circuit.lean:41:theorem Circuit.split_correct {d n} (c : Circuit d n) (center : Bool)
+formalization/HiddenMonotonicity/Circuit.lean:55:theorem Circuit.split_nonnegative {d n} (c : Circuit d n) (center : Bool)
+formalization/HiddenMonotonicity/Circuit.lean:77:noncomputable def Circuit.positiveExpressions {d n} : Circuit d n →
+formalization/HiddenMonotonicity/Circuit.lean:85:theorem Circuit.positiveExpressions_eval {d n} (c : Circuit d n) (x : Fin d × Bool → ℝ) :
+formalization/HiddenMonotonicity/Circuit.lean:109:def Circuit.Additive {d n} : Circuit d n → Prop
+formalization/HiddenMonotonicity/Circuit.lean:113:theorem Circuit.positiveExpressions_additive {d n} (c : Circuit d n) (hc : c.Additive) :
+formalization/HiddenMonotonicity/Circuit.lean:136:theorem Circuit.cnn_split_convex {d n} (c : Circuit d n) (hc : c.Additive)
+formalization/HiddenMonotonicity/Circuit.lean:150:theorem Circuit.cnn_split_monotone {d n} (c : Circuit d n) (hc : c.Additive)
+formalization/HiddenMonotonicity/Circuit.lean:163:theorem Circuit.max_polynomial_streams {d n} (c : Circuit d n)
+formalization/HiddenMonotonicity/PolynomialSemantics.lean:7:noncomputable def PositivePolynomial.toMvPolynomial {ι} : PositivePolynomial ι → MvPolynomial ι ℝ
+formalization/HiddenMonotonicity/PolynomialSemantics.lean:14:theorem PositivePolynomial.toMvPolynomial_eval {ι} (p : PositivePolynomial ι) (x : ι → ℝ) :
+formalization/HiddenMonotonicity/PolynomialSemantics.lean:20:theorem PositivePolynomial.coefficients_nonnegative {ι} (p : PositivePolynomial ι)
+formalization/HiddenMonotonicity/DCTilt.lean:6:noncomputable def tilt (C : ℝ → ℝ) (M : ℝ) (z : ℝ × ℝ) : ℝ :=
+formalization/HiddenMonotonicity/DCTilt.lean:9:theorem tilt_derivative_first (C D : ℝ → ℝ) (hC : ∀ x, HasDerivAt C (D x) x)
+formalization/HiddenMonotonicity/DCTilt.lean:18:theorem tilt_derivative_second (C D : ℝ → ℝ) (hC : ∀ x, HasDerivAt C (D x) x)
+formalization/HiddenMonotonicity/DCTilt.lean:28:theorem tilt_convex (C : ℝ → ℝ) (hC : ConvexOn ℝ univ C) (M : ℝ) :
+formalization/HiddenMonotonicity/DCTilt.lean:44:theorem tilt_monotone (C D : ℝ → ℝ) (hC : ∀ x, HasDerivAt C (D x) x)
+formalization/HiddenMonotonicity/DCTilt.lean:64:theorem tilt_monotone_iff (C D : ℝ → ℝ) (hC : ∀ x, HasDerivAt C (D x) x) (M : ℝ) :
+formalization/HiddenMonotonicity/DCTilt.lean:84:theorem minimum_common_tilt (C1 C2 D1 D2 : ℝ → ℝ)
+formalization/HiddenMonotonicity/Network.lean:9:inductive Network : ℕ → ℕ → Type
+formalization/HiddenMonotonicity/Network.lean:14:def Network.eval {n m} : Network n m → (Fin n → ℝ) → (Fin m → ℝ)
+formalization/HiddenMonotonicity/Network.lean:19:def Network.split {n m} : Network n m → (Fin n → ℝ) → (Fin n → ℝ) →
+formalization/HiddenMonotonicity/Network.lean:27:theorem layer_difference {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/Network.lean:39:theorem Network.correct {n m} (net : Network n m) (p q : Fin n → ℝ) :
+formalization/HiddenMonotonicity/Network.lean:48:def Network.common {n m} : Network n m → (Fin n → ℝ) → (Fin m → ℝ)
+formalization/HiddenMonotonicity/Network.lean:52:theorem shifted_layer_preactivation {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/Network.lean:60:theorem Network.shift {n m} (net : Network n m) (p q c : Fin n → ℝ) :
+formalization/HiddenMonotonicity/StabilizedBackward.lean:7:noncomputable def assemble {n} (s : Sensitivity n) : PairVec n →L[ℝ] ℝ :=
+formalization/HiddenMonotonicity/StabilizedBackward.lean:11:noncomputable def partialPair {n} (D : PairVec n →L[ℝ] ℝ) : Sensitivity n :=
+formalization/HiddenMonotonicity/StabilizedBackward.lean:15:noncomputable def shiftPair {n} (α : ℝ) (s : Sensitivity n) : Sensitivity n :=
+formalization/HiddenMonotonicity/StabilizedBackward.lean:18:noncomputable def unified {n} (s : Sensitivity n) : Row n := (1/2 : ℝ) • (s.1-s.2)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:22:noncomputable def pull {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:26:noncomputable def absMap {n m} : MaskedTrace n m → (Vec n →L[ℝ] Vec m)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:32:noncomputable def stabilized {n m} : MaskedTrace n m → (ℕ → ℝ) →
+formalization/HiddenMonotonicity/StabilizedBackward.lean:38:def bulkCoefficient {n m} : MaskedTrace n m → (ℕ → ℝ) → ℝ
+formalization/HiddenMonotonicity/StabilizedBackward.lean:42:noncomputable def correction {n m} : MaskedTrace n m → (ℕ → ℝ) → Row m → Row n
+formalization/HiddenMonotonicity/StabilizedBackward.lean:51:theorem assemble_partialPair {n} (D : PairVec n →L[ℝ] ℝ) : assemble (partialPair D) = D := by
+formalization/HiddenMonotonicity/StabilizedBackward.lean:59:theorem shiftPair_sum {n} (α : ℝ) (s : Sensitivity n) :
+formalization/HiddenMonotonicity/StabilizedBackward.lean:64:theorem unified_shift {n} (α : ℝ) (s : Sensitivity n) : unified (shiftPair α s) = unified s := by
+formalization/HiddenMonotonicity/StabilizedBackward.lean:69:theorem MaskedTrace.splitLayer_common {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:84:theorem MaskedTrace.splitLayer_signed {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:111:theorem MaskedTrace.pull_sum {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:122:theorem MaskedTrace.pull_unified {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:143:theorem MaskedTrace.stabilized_bulk {n m} (tr : MaskedTrace n m)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:159:theorem MaskedTrace.stabilized_unified {n m} (tr : MaskedTrace n m)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:180:theorem MaskedTrace.stabilized_backward_closed_form_g {n m} (tr : MaskedTrace n m)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:188:theorem MaskedTrace.stabilized_backward_closed_form_h {n m} (tr : MaskedTrace n m)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:197:theorem MaskedTrace.stabilized_backward_invariant {n m} (tr : MaskedTrace n m)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:204:noncomputable def headProjection {m} (r : Row m) (head : Bool) : PairVec m →L[ℝ] ℝ :=
+formalization/HiddenMonotonicity/StabilizedBackward.lean:210:theorem MaskedTrace.zero_shift_actual {n m} (tr : MaskedTrace n m)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:225:theorem Network.local_sensitivities_correct {n m} (net : Network n m)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:234:theorem MaskedTrace.bulkCoefficient_zero {n m} (tr : MaskedTrace n m) :
+formalization/HiddenMonotonicity/StabilizedBackward.lean:241:theorem Network.sensitivity_complementarity {n m} (net : Network n m)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:248:noncomputable def MaskedTrace.correctionTerms {n m} : MaskedTrace n m → (ℕ → ℝ) →
+formalization/HiddenMonotonicity/StabilizedBackward.lean:257:theorem row_sum_comp {n k} (rs : List (Row k)) (D : Vec n →L[ℝ] Vec k) :
+formalization/HiddenMonotonicity/StabilizedBackward.lean:264:theorem MaskedTrace.correction_terms_sum {n m} (tr : MaskedTrace n m)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:276:theorem Network.stabilized_backward_closed_form {n m} (net : Network n m)
+formalization/HiddenMonotonicity/StabilizedBackward.lean:288:def MaskedTrace.depth {n m} : MaskedTrace n m → ℕ
+formalization/HiddenMonotonicity/StabilizedBackward.lean:294:theorem MaskedTrace.bulkCoefficient_product {n m} (tr : MaskedTrace n m) (α : ℕ → ℝ) :
+formalization/HiddenMonotonicity/StabilizedBackward.lean:317:theorem Network.half_shift_gradients {n m} (net : Network n m) (x : PairVec n) (r : Row m) :
+formalization/HiddenMonotonicity/StabilizedBackward.lean:328:theorem MaskedTrace.stabilized_partial_invariants {n m} (tr : MaskedTrace n m)
+formalization/HiddenMonotonicity/ShiftWeights.lean:7:def shiftCoefficient (α : ℕ → ℝ) : ℕ → ℝ
+formalization/HiddenMonotonicity/ShiftWeights.lean:11:theorem shiftCoefficient_product (α : ℕ → ℝ) (t : ℕ) :
+formalization/HiddenMonotonicity/ShiftWeights.lean:21:theorem shifted_source_coefficient (p n m wp wn α c A : ℝ)
+formalization/HiddenMonotonicity/ShiftWeights.lean:33:theorem input_dependent_shift_counterexample (x : ℝ) (hx : 0 < x) :
+formalization/HiddenMonotonicity/Chunks.lean:8:theorem max_derivative_left {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+formalization/HiddenMonotonicity/Chunks.lean:17:theorem max_derivative_right {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+formalization/HiddenMonotonicity/Chunks.lean:26:theorem maxpool_correct {ι : Type*} [Fintype ι] [Nonempty ι] [DecidableEq ι]
+formalization/HiddenMonotonicity/Chunks.lean:38:theorem residual_correct (p q r s : ℝ) : (p+r)-(q+s) = (p-q)+(r-s) := by ring
+formalization/HiddenMonotonicity/Chunks.lean:41:theorem weighted_sum_correct {ι : Type*} [Fintype ι] (w p n : ι → ℝ) :
+formalization/HiddenMonotonicity/Chunks.lean:49:theorem multiplicative_split_correct (p q r s : ℝ) :
+formalization/HiddenMonotonicity/Chunks.lean:53:theorem common_offset_correct (p n τ : ℝ) :
+formalization/HiddenMonotonicity/Chunks.lean:59:theorem mixing_correct (p n η : ℝ) :
+formalization/HiddenMonotonicity/Chunks.lean:71:theorem winner_pool_correct {ι : Type*} (p n : ι → ℝ) (j : ι) :
+formalization/HiddenMonotonicity/Chunks.lean:75:theorem shift_mask_invariant (p n c : ℝ) :
+formalization/HiddenMonotonicity/Backward.lean:9:def matrixBackPos {k n : ℕ} (p q : Matrix Unit (Fin k) ℝ)
+formalization/HiddenMonotonicity/Backward.lean:13:def matrixBackNeg {k n : ℕ} (p q : Matrix Unit (Fin k) ℝ)
+formalization/HiddenMonotonicity/Backward.lean:17:theorem matrix_backward_sum {k n : ℕ} (p q : Matrix Unit (Fin k) ℝ)
+formalization/HiddenMonotonicity/Backward.lean:24:theorem matrix_backward_difference {k n : ℕ} (p q : Matrix Unit (Fin k) ℝ)
+formalization/HiddenMonotonicity/Backward.lean:33:theorem matrix_shift_difference {n : ℕ} (p q c : Matrix Unit (Fin n) ℝ) :
+formalization/HiddenMonotonicity/Backward.lean:37:theorem matrix_two_head_reconstruction {k n : ℕ}
+formalization/HiddenMonotonicity/Backward.lean:50:def transported {n : ℕ} (D : ℕ → Matrix (Fin n) (Fin n) ℝ)
+formalization/HiddenMonotonicity/Backward.lean:55:def sources {n : ℕ} (D : ℕ → Matrix (Fin n) (Fin n) ℝ)
+formalization/HiddenMonotonicity/Backward.lean:60:def affineBack {n : ℕ} (D : ℕ → Matrix (Fin n) (Fin n) ℝ)
+formalization/HiddenMonotonicity/Backward.lean:66:theorem affine_closed_form {n : ℕ} (D : ℕ → Matrix (Fin n) (Fin n) ℝ)
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:13:noncomputable def cumulative (q : ℝ → ℝ) (x : ℝ) : ℝ := ∫ t in Iic x, q t
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:14:noncomputable def slope (q : ℝ → ℝ) (s x : ℝ) : ℝ := s+cumulative q x
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:15:noncomputable def primitive (q : ℝ → ℝ) (s c x : ℝ) : ℝ := c+∫ t in (0 : ℝ)..x, slope q s t
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:18:theorem cumulative_continuous (q : ℝ → ℝ) (hq : Integrable q) : Continuous (cumulative q) := by
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:28:theorem slope_continuous (q : ℝ → ℝ) (hq : Integrable q) (s : ℝ) : Continuous (slope q s) :=
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:31:theorem primitive_hasDerivAt (q : ℝ → ℝ) (hq : Integrable q) (s c x : ℝ) :
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:35:theorem cumulative_monotone (q : ℝ → ℝ) (hq : Integrable q) (hp : ∀ x,0≤q x) :
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:41:theorem primitive_convex (q : ℝ → ℝ) (hq : Integrable q) (hp : ∀ x,0≤q x) (s c : ℝ) :
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:51:theorem cumulative_atBot (q : ℝ → ℝ) : Tendsto (cumulative q) atBot (𝓝 0) :=
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:56:theorem derivative_cumulative_representation (f : ℝ → ℝ)
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:68:theorem derivative_limit_atBot (f : ℝ → ℝ)
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:83:theorem cumulative_abs_bound (q : ℝ → ℝ) (hq : Integrable q) (x : ℝ) :
+formalization/HiddenMonotonicity/CurvaturePrimitives.lean:90:theorem slope_abs_bound (q : ℝ → ℝ) (hq : Integrable q) (s x : ℝ) :
+formalization/HiddenMonotonicity/ClosedFormula.lean:10:def intervalProduct {n : ℕ} (D : ℕ → Matrix (Fin n) (Fin n) ℝ) (i : ℕ) :
+formalization/HiddenMonotonicity/ClosedFormula.lean:15:theorem intervalProduct_self {n : ℕ} (D : ℕ → Matrix (Fin n) (Fin n) ℝ) (t : ℕ) :
+formalization/HiddenMonotonicity/ClosedFormula.lean:21:theorem transported_product {n : ℕ} (D : ℕ → Matrix (Fin n) (Fin n) ℝ)
+formalization/HiddenMonotonicity/ClosedFormula.lean:29:theorem sources_sum {n : ℕ} (D : ℕ → Matrix (Fin n) (Fin n) ℝ)
+formalization/HiddenMonotonicity/ClosedFormula.lean:46:theorem affine_finite_sum {n : ℕ} (D : ℕ → Matrix (Fin n) (Fin n) ℝ)
+formalization/HiddenMonotonicity/ClosedFormula.lean:55:noncomputable def shiftedSource {n : ℕ} (Q : ℕ → Matrix Unit (Fin n) ℝ) (α : ℕ → ℝ)
+formalization/HiddenMonotonicity/ClosedFormula.lean:58:noncomputable def qSum {n : ℕ} (D : ℕ → Matrix (Fin n) (Fin n) ℝ)
+formalization/HiddenMonotonicity/ClosedFormula.lean:62:theorem shifted_source_sum {n : ℕ} (D : ℕ → Matrix (Fin n) (Fin n) ℝ)
+formalization/HiddenMonotonicity/ClosedFormula.lean:74:theorem shifted_gradient_g_finite_sum {n : ℕ}
+formalization/HiddenMonotonicity/ClosedFormula.lean:82:theorem shifted_gradient_h_finite_sum {n : ℕ}
+formalization/HiddenMonotonicity/ClosedFormula.lean:91:theorem shifted_heads_reconstruct {n : ℕ}
+formalization/HiddenMonotonicity/Core.lean:14:def relu (x : ℝ) : ℝ := max x 0
+formalization/HiddenMonotonicity/Core.lean:16:theorem max_sub (p n : ℝ) : max p n - n = relu (p - n) := by
+formalization/HiddenMonotonicity/Core.lean:22:def posPre (wp wn p n : ℝ) := wp * p + wn * n
+formalization/HiddenMonotonicity/Core.lean:23:def negPre (wp wn p n : ℝ) := wn * p + wp * n
+formalization/HiddenMonotonicity/Core.lean:25:theorem pre_difference (wp wn p n : ℝ) :
+formalization/HiddenMonotonicity/Core.lean:29:theorem split_correct (wp wn p n : ℝ) :
+formalization/HiddenMonotonicity/Core.lean:34:theorem max_common_shift (p n c : ℝ) : max (p + c) (n + c) = max p n + c := by
+formalization/HiddenMonotonicity/Core.lean:37:theorem pre_common_shift (wp wn p n c : ℝ) :
+formalization/HiddenMonotonicity/Core.lean:43:theorem lift_chain_rule (g : (ℝ × ℝ) → ℝ) (x : ℝ)
+formalization/HiddenMonotonicity/Core.lean:53:theorem lift_differential (D : (ℝ × ℝ) →L[ℝ] ℝ) :
+formalization/HiddenMonotonicity/Core.lean:62:theorem relu_derivative_positive (x : ℝ) (hx : 0 < x) : HasDerivAt relu 1 x := by
+formalization/HiddenMonotonicity/Core.lean:68:theorem relu_derivative_negative (x : ℝ) (hx : x < 0) : HasDerivAt relu 0 x := by
+formalization/HiddenMonotonicity/Core.lean:74:theorem backward_invariant (pg ng ph nh δ : ℝ)
+formalization/HiddenMonotonicity/Core.lean:78:theorem paper_backward_invariant_counterexample :
+formalization/HiddenMonotonicity/Core.lean:82:def backPos (p n m wp wn : ℝ) := p*(m*wp+(1-m)*wn)+n*wn
+formalization/HiddenMonotonicity/Core.lean:83:def backNeg (p n m wp wn : ℝ) := p*(m*wn+(1-m)*wp)+n*wp
+formalization/HiddenMonotonicity/Core.lean:85:theorem backward_sum (p n m wp wn : ℝ) :
+formalization/HiddenMonotonicity/Core.lean:89:theorem backward_difference (p n m wp wn : ℝ) :
+formalization/HiddenMonotonicity/Core.lean:95:theorem shift_difference (p n α : ℝ) :
+formalization/HiddenMonotonicity/Core.lean:98:theorem shift_sum (p n α : ℝ) :
+formalization/HiddenMonotonicity/Core.lean:102:theorem shifted_backward_difference (p n m wp wn α : ℝ) :
+formalization/HiddenMonotonicity/Core.lean:111:theorem shifted_formula_counterexample :
+formalization/HiddenMonotonicity/Core.lean:118:theorem two_head_reconstruction (dG dH S D B : ℝ) :
+formalization/HiddenMonotonicity/Core.lean:122:theorem multiplicative_convexity_counterexample :
+formalization/HiddenMonotonicity/MultiplicativeSplit.lean:7:inductive SignedExpr (ι : Type*)
+formalization/HiddenMonotonicity/MultiplicativeSplit.lean:15:noncomputable def SignedExpr.eval {ι} : SignedExpr ι → (ι → ℝ) → ℝ
+formalization/HiddenMonotonicity/MultiplicativeSplit.lean:25:noncomputable def SignedExpr.split {ι} : SignedExpr ι → PositiveExpr (ι × Bool) × PositiveExpr (ι × Bool)
+formalization/HiddenMonotonicity/MultiplicativeSplit.lean:42:theorem max_two_split_pairs (p n q r : ℝ) :
+formalization/HiddenMonotonicity/MultiplicativeSplit.lean:51:theorem SignedExpr.split_correct {ι} (e : SignedExpr ι) (z : ι × Bool → ℝ) :
+formalization/HiddenMonotonicity/MultiplicativeSplit.lean:71:noncomputable def canonicalSplitInput {ι} (x : ι → ℝ) : ι × Bool → ℝ :=
+formalization/HiddenMonotonicity/MultiplicativeSplit.lean:74:theorem canonicalSplitInput_nonnegative {ι} (x : ι → ℝ) : 0≤canonicalSplitInput x := by
+formalization/HiddenMonotonicity/MultiplicativeSplit.lean:79:theorem canonicalSplitInput_difference {ι} (x : ι → ℝ) (i : ι) :
+formalization/HiddenMonotonicity/MultiplicativeSplit.lean:85:theorem SignedExpr.monotone_split_representation {ι} (e : SignedExpr ι) (x : ι → ℝ) :
+formalization/HiddenMonotonicity/MultiplicativeSplit.lean:95:theorem SignedExpr.max_polynomial_split {ι} (e : SignedExpr ι) (x : ι → ℝ) :
+formalization/HiddenMonotonicity/MultiplicativeSplit.lean:103:theorem SignedExpr.split_streams_monotone {ι} (e : SignedExpr ι)
+formalization/HiddenMonotonicity/CircuitStatements.lean:8:theorem Circuit.cnn_split_correct {d n} (c : Circuit d n) (center : Bool)
+formalization/HiddenMonotonicity/CircuitStatements.lean:19:theorem Circuit.cnn_stream_properties {d n} (c : Circuit d n) (hc : c.Additive) :
+formalization/HiddenMonotonicity/CircuitStatements.lean:34:theorem Circuit.maxout_multiplication_split_correct {d n} (c : Circuit d n)
+formalization/HiddenMonotonicity/CircuitStatements.lean:50:theorem Circuit.multiplicative_streams_monotone {d n} (c : Circuit d n)
+formalization/HiddenMonotonicity/CircuitStatements.lean:60:noncomputable def SignedExpr.pow {ι} (e : SignedExpr ι) : ℕ → SignedExpr ι
+formalization/HiddenMonotonicity/CircuitStatements.lean:64:theorem SignedExpr.pow_eval {ι} (e : SignedExpr ι) (n : ℕ) (x : ι → ℝ) :
+formalization/HiddenMonotonicity/CircuitStatements.lean:70:noncomputable def SignedExpr.maxList {ι} (first : SignedExpr ι) : List (SignedExpr ι) → SignedExpr ι
+formalization/HiddenMonotonicity/CircuitStatements.lean:74:theorem SignedExpr.maxList_eval {ι} (first : SignedExpr ι) (es : List (SignedExpr ι)) (x : ι → ℝ) :
+formalization/HiddenMonotonicity/CircuitStatements.lean:79:noncomputable def SignedExpr.dot {ι k} (a b : Fin k → SignedExpr ι) : SignedExpr ι :=
+formalization/HiddenMonotonicity/CircuitStatements.lean:82:theorem SignedExpr.dot_eval {ι k} (a b : Fin k → SignedExpr ι) (x : ι → ℝ) :
+formalization/HiddenMonotonicity/BackwardStatements.lean:7:theorem Network.plain_backward_absolute_Q_closed_form {n m} (net : Network n m)
+formalization/HiddenMonotonicity/BackwardStatements.lean:20:theorem Network.backward_partial_invariants {n m} (net : Network n m)
+formalization/HiddenMonotonicity/BackwardStatements.lean:32:theorem Network.plain_head_gradient_formulas {n m} (net : Network n m)
+formalization/HiddenMonotonicity/ExpressionSubstitution.lean:6:noncomputable def PositiveExpr.substitute {ι κ} (σ : ι → PositiveExpr κ) :
+formalization/HiddenMonotonicity/ExpressionSubstitution.lean:15:theorem PositiveExpr.substitute_eval {ι κ} (σ : ι → PositiveExpr κ)
+formalization/HiddenMonotonicity/ExpressionSubstitution.lean:20:theorem PositiveExpr.substitute_additive {ι κ} (σ : ι → PositiveExpr κ)
+formalization/HiddenMonotonicity/ExpressionSubstitution.lean:31:def SignedExpr.Additive {ι} : SignedExpr ι → Prop
+formalization/HiddenMonotonicity/ExpressionSubstitution.lean:37:theorem SignedExpr.split_additive {ι} (e : SignedExpr ι) (he : e.Additive) :
+formalization/HiddenMonotonicity/ExpressionSubstitution.lean:48:noncomputable def SignedExpr.sum {ι} : List (SignedExpr ι) → SignedExpr ι
+formalization/HiddenMonotonicity/ExpressionSubstitution.lean:52:theorem SignedExpr.sum_eval {ι} (es : List (SignedExpr ι)) (x : ι → ℝ) :
+formalization/HiddenMonotonicity/ExpressionSubstitution.lean:56:noncomputable def SignedExpr.affine {n} (w : Vec n) (b : ℝ) : SignedExpr (Fin n) :=
+formalization/HiddenMonotonicity/ExpressionSubstitution.lean:59:theorem SignedExpr.affine_eval {n} (w : Vec n) (b : ℝ) (x : Vec n) :
+formalization/HiddenMonotonicity/ExpressionSubstitution.lean:63:theorem SignedExpr.affine_additive {n} (w : Vec n) (b : ℝ) :
+formalization/HiddenMonotonicity/ModernSoftplus.lean:10:theorem softplus_curvature (θ : ℝ) (hθ : 0<θ) :
+formalization/HiddenMonotonicity/ModernSoftplus.lean:19:theorem softplus_curvature_integrable (θ : ℝ) (hθ : 0<θ) :
+formalization/HiddenMonotonicity/ModernSoftplus.lean:24:theorem softplus_derivative_locally_AC (θ : ℝ) (hθ : 0<θ) (a b : ℝ) :
+formalization/HiddenMonotonicity/ModernSoftplus.lean:35:theorem softplus_smooth_dc_split (θ : ℝ) (hθ : 0<θ) :
+formalization/HiddenMonotonicity/Counterexamples.lean:7:noncomputable def connectedFlatG (x : ℝ) : ℝ :=
+formalization/HiddenMonotonicity/Counterexamples.lean:10:noncomputable def connectedFlatH (x : ℝ) : ℝ := -x/2+x/2+10
+formalization/HiddenMonotonicity/Counterexamples.lean:12:theorem connected_flat_head_derivatives :
+formalization/HiddenMonotonicity/Counterexamples.lean:28:theorem nonzero_mass_zero_balanced :
+formalization/HiddenMonotonicity/Decomposition.lean:9:noncomputable def Network.forwardWith {n m} : Network n m → (ℝ → ℝ) → Vec n → Vec m
+formalization/HiddenMonotonicity/Decomposition.lean:15:noncomputable def Network.decomposeWith {n m} : Network n m → ((ℝ × ℝ) → ℝ × ℝ) →
+formalization/HiddenMonotonicity/Decomposition.lean:24:def ValidPairActivation (σ : ℝ → ℝ) (φ : (ℝ × ℝ) → ℝ × ℝ) : Prop :=
+formalization/HiddenMonotonicity/Decomposition.lean:29:theorem Network.valid_decomposition_recovery {n m} (net : Network n m)
+formalization/HiddenMonotonicity/Decomposition.lean:45:theorem Network.forwardWith_relu {n m} (net : Network n m) : net.forwardWith relu=net.eval := by
+formalization/HiddenMonotonicity/Decomposition.lean:50:noncomputable def mixPair (η : ℝ) (x : ℝ × ℝ) : ℝ × ℝ :=
+formalization/HiddenMonotonicity/Decomposition.lean:53:theorem mixPair_valid (η : ℝ) : ValidPairActivation relu (mixPair η) := by
+formalization/HiddenMonotonicity/Decomposition.lean:59:theorem Network.mixing_recovery {n m} (net : Network n m) (η : ℝ) (x : PairVec n) :
+formalization/HiddenMonotonicity/Decomposition.lean:66:theorem Network.mixing_one_is_split {n m} (net : Network n m) (x : PairVec n) :
+formalization/HiddenMonotonicity/Decomposition.lean:75:def NonnegativePairActivation (φ : (ℝ × ℝ) → ℝ × ℝ) : Prop :=
+formalization/HiddenMonotonicity/Decomposition.lean:78:def Network.NonnegativeParameters {n m} : Network n m → Prop
+formalization/HiddenMonotonicity/Decomposition.lean:83:theorem Network.decomposition_nonnegative {n m} (net : Network n m)
+formalization/HiddenMonotonicity/Decomposition.lean:115:theorem mixPair_nonnegative (η : ℝ) (hη : 0≤η) (hη' : η≤1) :
+formalization/HiddenMonotonicity/MaskedTrace.lean:8:inductive MaskedTrace : ℕ → ℕ → Type
+formalization/HiddenMonotonicity/MaskedTrace.lean:15:noncomputable def activeMap {n : ℕ} (gate : Fin n → Bool) : Vec n →L[ℝ] Vec n :=
+formalization/HiddenMonotonicity/MaskedTrace.lean:18:noncomputable def inactiveMap {n : ℕ} (gate : Fin n → Bool) : Vec n →L[ℝ] Vec n :=
+formalization/HiddenMonotonicity/MaskedTrace.lean:31:noncomputable def signedMap {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/MaskedTrace.lean:35:noncomputable def deadMap {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/MaskedTrace.lean:39:noncomputable def splitLayerJac {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/MaskedTrace.lean:44:noncomputable def originalJac {n m} : MaskedTrace n m → (Vec n →L[ℝ] Vec m)
+formalization/HiddenMonotonicity/MaskedTrace.lean:48:noncomputable def splitJac {n m} : MaskedTrace n m → (PairVec n →L[ℝ] PairVec m)
+formalization/HiddenMonotonicity/MaskedTrace.lean:52:theorem difference_splitLayer {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/MaskedTrace.lean:70:theorem difference_splitJac {n m} (tr : MaskedTrace n m) :
+formalization/HiddenMonotonicity/MaskedTrace.lean:81:noncomputable def Network.trace {n m} : Network n m → PairVec n → MaskedTrace n m
+formalization/HiddenMonotonicity/MaskedTrace.lean:87:theorem layerJac_trace {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/MaskedTrace.lean:102:theorem Network.jacobian_trace {n m} (net : Network n m) (x : PairVec n) :
+formalization/HiddenMonotonicity/MaskedTrace.lean:112:theorem Network.hasFDerivAt_eval_trace {n m} (net : Network n m) (x : Vec n)
+formalization/HiddenMonotonicity/RegionalBlindness.lean:9:theorem reluLayer_continuous {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k) :
+formalization/HiddenMonotonicity/RegionalBlindness.lean:18:theorem Network.eventually_strict_trace {n m} (net : Network n m)
+formalization/HiddenMonotonicity/RegionalBlindness.lean:53:theorem Network.locally_constant_jacobian {n m} (net : Network n m)
+formalization/HiddenMonotonicity/RegionalBlindness.lean:68:theorem Network.regional_gradient_blindness {n m} (net : Network n m)
+formalization/HiddenMonotonicity/CurvatureMinimality.lean:10:theorem convex_derivative_monotone (c : ℝ → ℝ) (hc : ConvexOn ℝ univ c)
+formalization/HiddenMonotonicity/CurvatureMinimality.lean:17:theorem curvature_minimality_ae (f c1 c2 : ℝ → ℝ)
+formalization/HiddenMonotonicity/CurvatureMinimality.lean:41:theorem slope_locally_AC (q : ℝ → ℝ) (hq : Integrable q) (s a b : ℝ) :
+formalization/HiddenMonotonicity/CurvatureMinimality.lean:56:theorem primitive_second_derivatives_ae (f : ℝ → ℝ) (hq : Integrable (curvature f)) :
+formalization/HiddenMonotonicity/CurvatureMinimality.lean:77:theorem affine_of_ae_second_derivative_zero (c : ℝ → ℝ) (hc : Differentiable ℝ c)
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:7:noncomputable def curvature (f : ℝ → ℝ) := deriv (deriv f)
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:8:noncomputable def positiveCurvature (f : ℝ → ℝ) (x : ℝ) := max (curvature f x) 0
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:9:noncomputable def negativeCurvature (f : ℝ → ℝ) (x : ℝ) := max (-curvature f x) 0
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:10:noncomputable def minusInfinitySlope (f : ℝ → ℝ) := deriv f 0-cumulative (curvature f) 0
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:11:noncomputable def C1 (f : ℝ → ℝ) := primitive (positiveCurvature f) (minusInfinitySlope f) (f 0)
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:12:noncomputable def C2 (f : ℝ → ℝ) := primitive (negativeCurvature f) 0 0
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:13:noncomputable def D1 (f : ℝ → ℝ) := slope (positiveCurvature f) (minusInfinitySlope f)
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:14:noncomputable def D2 (f : ℝ → ℝ) := slope (negativeCurvature f) 0
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:15:noncomputable def commonTilt (f : ℝ → ℝ) :=
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:18:theorem positiveCurvature_integrable (f : ℝ → ℝ) (hq : Integrable (curvature f)) :
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:21:theorem negativeCurvature_integrable (f : ℝ → ℝ) (hq : Integrable (curvature f)) :
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:24:theorem cumulative_curvature_split (f : ℝ → ℝ) (hq : Integrable (curvature f)) (x : ℝ) :
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:36:theorem D1_sub_D2 (f : ℝ → ℝ)
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:45:theorem C1_hasDerivAt (f : ℝ → ℝ) (hq : Integrable (curvature f)) (x : ℝ) :
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:48:theorem C2_hasDerivAt (f : ℝ → ℝ) (hq : Integrable (curvature f)) (x : ℝ) :
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:52:theorem primitive_difference (f : ℝ → ℝ) (hf : Differentiable ℝ f)
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:66:theorem D1_abs_bounded (f : ℝ → ℝ) (hq : Integrable (curvature f)) :
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:72:theorem D2_abs_bounded (f : ℝ → ℝ) (hq : Integrable (curvature f)) :
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:78:theorem commonTilt_bounds (f : ℝ → ℝ) (hq : Integrable (curvature f)) (x : ℝ) :
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:85:theorem smooth_dc_split (f : ℝ → ℝ) (hf : Differentiable ℝ f)
+formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean:114:theorem canonical_tilt_minimality (f : ℝ → ℝ) (hq : Integrable (curvature f)) :
+formalization/HiddenMonotonicity/ModernSigmoid.lean:14:theorem integrable_nonnegative_derivative (g d : ℝ → ℝ)
+formalization/HiddenMonotonicity/ModernSigmoid.lean:35:noncomputable def sigmoidFirst (x : ℝ) := Real.sigmoid x*(1-Real.sigmoid x)
+formalization/HiddenMonotonicity/ModernSigmoid.lean:36:noncomputable def sigmoidSecond (x : ℝ) := sigmoidFirst x*(1-2*Real.sigmoid x)
+formalization/HiddenMonotonicity/ModernSigmoid.lean:38:theorem sigmoidFirst_nonnegative (x : ℝ) : 0≤sigmoidFirst x :=
+formalization/HiddenMonotonicity/ModernSigmoid.lean:41:theorem sigmoidFirst_derivative (x : ℝ) : HasDerivAt sigmoidFirst (sigmoidSecond x) x := by
+formalization/HiddenMonotonicity/ModernSigmoid.lean:48:theorem sigmoidFirst_integrable : Integrable sigmoidFirst :=
+formalization/HiddenMonotonicity/ModernSigmoid.lean:52:theorem sigmoidSecond_bound (x : ℝ) : |sigmoidSecond x|≤sigmoidFirst x := by
+formalization/HiddenMonotonicity/ModernSigmoid.lean:60:theorem sigmoidSecond_integrable : Integrable sigmoidSecond := by
+formalization/HiddenMonotonicity/ModernSigmoid.lean:66:theorem sigmoid_curvature : curvature Real.sigmoid=sigmoidSecond := by
+formalization/HiddenMonotonicity/ModernSigmoid.lean:72:theorem sigmoid_derivative_locally_AC (a b : ℝ) :
+formalization/HiddenMonotonicity/ModernSigmoid.lean:79:theorem sigmoid_smooth_dc_split :
+formalization/HiddenMonotonicity/NetworkDerivative.lean:12:noncomputable def matrixCLM {n k} (W : Matrix (Fin k) (Fin n) ℝ) : Vec n →L[ℝ] Vec k :=
+formalization/HiddenMonotonicity/NetworkDerivative.lean:15:noncomputable def preP {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) : PairVec n →L[ℝ] Vec k :=
+formalization/HiddenMonotonicity/NetworkDerivative.lean:19:noncomputable def preN {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) : PairVec n →L[ℝ] Vec k :=
+formalization/HiddenMonotonicity/NetworkDerivative.lean:22:noncomputable def layerFun {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/NetworkDerivative.lean:26:noncomputable def layerJac {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/NetworkDerivative.lean:33:theorem preP_apply {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) (x : PairVec n) :
+formalization/HiddenMonotonicity/NetworkDerivative.lean:37:theorem layer_derivative {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/NetworkDerivative.lean:60:noncomputable def Network.jacobian {n m} : (net : Network n m) → PairVec n →
+formalization/HiddenMonotonicity/NetworkDerivative.lean:66:noncomputable def Network.Regular {n m} : (net : Network n m) → PairVec n → Prop
+formalization/HiddenMonotonicity/NetworkDerivative.lean:74:theorem Network.hasFDerivAt_split {n m} (net : Network n m) (x : PairVec n)
+formalization/HiddenMonotonicity/NetworkDerivative.lean:84:noncomputable def blockPP {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/NetworkDerivative.lean:91:noncomputable def blockPN {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/NetworkDerivative.lean:98:theorem layerJac_positive_input {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/NetworkDerivative.lean:109:theorem layerJac_negative_input {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/NetworkDerivative.lean:122:theorem actual_positive_pullback {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/NetworkDerivative.lean:131:theorem actual_negative_pullback {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/NetworkDerivative.lean:139:noncomputable def liftCLM (n : ℕ) : Vec n →L[ℝ] PairVec n :=
+formalization/HiddenMonotonicity/NetworkDerivative.lean:142:noncomputable def differenceCLM (n : ℕ) : PairVec n →L[ℝ] Vec n :=
+formalization/HiddenMonotonicity/NetworkDerivative.lean:147:theorem Network.hasFDerivAt_eval {n m} (net : Network n m) (x : Vec n)
+formalization/HiddenMonotonicity/PositiveExpressions.lean:7:inductive PositiveExpr (ι : Type*)
+formalization/HiddenMonotonicity/PositiveExpressions.lean:15:noncomputable def PositiveExpr.eval {ι} : PositiveExpr ι → (ι → ℝ) → ℝ
+formalization/HiddenMonotonicity/PositiveExpressions.lean:23:def PositiveExpr.Additive {ι} : PositiveExpr ι → Prop
+formalization/HiddenMonotonicity/PositiveExpressions.lean:29:theorem PositiveExpr.nonnegative {ι} (e : PositiveExpr ι) (x : ι → ℝ) (hx : 0≤x) :
+formalization/HiddenMonotonicity/PositiveExpressions.lean:39:theorem PositiveExpr.monotone_nonnegative {ι} (e : PositiveExpr ι) (x y : ι → ℝ)
+formalization/HiddenMonotonicity/PositiveExpressions.lean:52:theorem PositiveExpr.monotone_additive {ι} (e : PositiveExpr ι) (he : e.Additive)
+formalization/HiddenMonotonicity/PositiveExpressions.lean:63:theorem PositiveExpr.convex_additive {ι} (e : PositiveExpr ι) (he : e.Additive)
+formalization/HiddenMonotonicity/PositiveExpressions.lean:83:inductive PositivePolynomial (ι : Type*)
+formalization/HiddenMonotonicity/PositiveExpressions.lean:89:noncomputable def PositivePolynomial.eval {ι} : PositivePolynomial ι → (ι → ℝ) → ℝ
+formalization/HiddenMonotonicity/PositiveExpressions.lean:95:theorem PositivePolynomial.nonnegative {ι} (p : PositivePolynomial ι) (x : ι → ℝ) (hx : 0≤x) :
+formalization/HiddenMonotonicity/PositiveExpressions.lean:104:inductive MaxPolynomial (ι : Type*)
+formalization/HiddenMonotonicity/PositiveExpressions.lean:108:noncomputable def MaxPolynomial.eval {ι} : MaxPolynomial ι → (ι → ℝ) → ℝ
+formalization/HiddenMonotonicity/PositiveExpressions.lean:112:noncomputable def MaxPolynomial.mapPoly {ι} (f : PositivePolynomial ι → PositivePolynomial ι) :
+formalization/HiddenMonotonicity/PositiveExpressions.lean:117:noncomputable def MaxPolynomial.bind {ι} (f : PositivePolynomial ι → MaxPolynomial ι) :
+formalization/HiddenMonotonicity/PositiveExpressions.lean:122:noncomputable def MaxPolynomial.add {ι} (a b : MaxPolynomial ι) : MaxPolynomial ι :=
+formalization/HiddenMonotonicity/PositiveExpressions.lean:125:noncomputable def MaxPolynomial.mul {ι} (a b : MaxPolynomial ι) : MaxPolynomial ι :=
+formalization/HiddenMonotonicity/PositiveExpressions.lean:128:theorem MaxPolynomial.nonnegative {ι} (a : MaxPolynomial ι) (x : ι → ℝ) (hx : 0≤x) :
+formalization/HiddenMonotonicity/PositiveExpressions.lean:134:theorem MaxPolynomial.add_eval {ι} (a b : MaxPolynomial ι) (x : ι → ℝ) :
+formalization/HiddenMonotonicity/PositiveExpressions.lean:149:theorem MaxPolynomial.mul_eval {ι} (a b : MaxPolynomial ι) (x : ι → ℝ) (hx : 0≤x) :
+formalization/HiddenMonotonicity/PositiveExpressions.lean:164:noncomputable def PositiveExpr.polynomialMaximum {ι} : PositiveExpr ι → MaxPolynomial ι
+formalization/HiddenMonotonicity/PositiveExpressions.lean:174:theorem PositiveExpr.max_polynomial_representation {ι} (e : PositiveExpr ι)
+formalization/HiddenMonotonicity/Sensitivities.lean:8:theorem common_shift_derivative {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+formalization/HiddenMonotonicity/Sensitivities.lean:33:theorem vector_lift_chain_rule {E : Type*} [NormedAddCommGroup E] [NormedSpace ℝ E]
+formalization/HiddenMonotonicity/Sensitivities.lean:60:theorem monotone_directional_nonnegative {n : ℕ} (g : (Fin n → ℝ) → ℝ)
+formalization/HiddenMonotonicity/Sensitivities.lean:77:theorem canonical_weight_split (w : ℝ) :
+formalization/HiddenMonotonicity/QSources.lean:12:noncomputable def QSource.pull {n k m} (q : QSource k m)
+formalization/HiddenMonotonicity/QSources.lean:16:noncomputable def QSource.row {n m} (q : QSource n m) (r : Row m) : Row n :=
+formalization/HiddenMonotonicity/QSources.lean:22:noncomputable def Network.qSources {n m} : Network n m → Vec n → (ℕ → ℝ) → List (QSource n m)
+formalization/HiddenMonotonicity/QSources.lean:34:theorem Network.qSources_have_derivatives {n m} (net : Network n m)
+formalization/HiddenMonotonicity/QSources.lean:54:noncomputable def sourceRows {n m} (qs : List (QSource n m)) (r : Row m) : List (Row n) :=
+formalization/HiddenMonotonicity/QSources.lean:57:theorem sourceRows_pull {n k m} (qs : List (QSource k m))
+formalization/HiddenMonotonicity/QSources.lean:64:theorem Network.qSources_sum {n m} (net : Network n m) (x : Vec n)
+formalization/HiddenMonotonicity/QSources.lean:84:theorem Network.stabilized_backward_Q_closed_form {n m} (net : Network n m)
+formalization/HiddenMonotonicity/QSources.lean:100:theorem Network.stabilized_backward_invariant {n m} (net : Network n m)
+formalization/HiddenMonotonicity/QSources.lean:109:theorem Network.plain_backward_Q_closed_form {n m} (net : Network n m)
+formalization/HiddenMonotonicity/QSources.lean:122:noncomputable def Network.absoluteQSources {n m} : Network n m → Vec n → (ℕ → ℝ) →
+formalization/HiddenMonotonicity/QSources.lean:133:theorem Network.qSources_eq_absolute {n m} (net : Network n m) (hc : net.Canonical)
+formalization/HiddenMonotonicity/QSources.lean:143:theorem Network.stabilized_backward_absolute_Q_closed_form {n m} (net : Network n m)
+formalization/HiddenMonotonicity/QSources.lean:155:noncomputable def balancedLift (n : ℕ) : Vec n →L[ℝ] PairVec n :=
+formalization/HiddenMonotonicity/QSources.lean:159:theorem assemble_balancedLift {n} (s : Sensitivity n) :
+formalization/HiddenMonotonicity/QSources.lean:168:theorem balancedLift_difference {n} (x : Vec n) :
+formalization/HiddenMonotonicity/QSources.lean:176:theorem Network.symmetric_head_derivative {n m} (net : Network n m)
+formalization/HiddenMonotonicity/OriginalTrace.lean:7:noncomputable def affineLayer {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/OriginalTrace.lean:10:noncomputable def reluLayer {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/OriginalTrace.lean:13:noncomputable def minLayer {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/OriginalTrace.lean:16:noncomputable def originalGate {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/OriginalTrace.lean:20:noncomputable def Network.originalTrace {n m} : Network n m → Vec n → MaskedTrace n m
+formalization/HiddenMonotonicity/OriginalTrace.lean:25:noncomputable def Network.Strict {n m} : Network n m → Vec n → Prop
+formalization/HiddenMonotonicity/OriginalTrace.lean:30:noncomputable def Network.absCLM {n m} : Network n m → (Vec n →L[ℝ] Vec m)
+formalization/HiddenMonotonicity/OriginalTrace.lean:34:theorem preactivation_difference {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/OriginalTrace.lean:43:theorem layerFun_difference {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/OriginalTrace.lean:56:theorem Network.trace_originalTrace {n m} (net : Network n m) (x : PairVec n) :
+formalization/HiddenMonotonicity/OriginalTrace.lean:71:theorem Network.regular_iff_strict {n m} (net : Network n m) (x : PairVec n) :
+formalization/HiddenMonotonicity/OriginalTrace.lean:86:theorem Network.trace_absCLM {n m} (net : Network n m) (x : PairVec n) :
+formalization/HiddenMonotonicity/OriginalTrace.lean:94:theorem Network.originalTrace_absCLM {n m} (net : Network n m) (x : Vec n) :
+formalization/HiddenMonotonicity/OriginalTrace.lean:101:theorem Network.hasFDerivAt_originalTrace {n m} (net : Network n m) (x : Vec n)
+formalization/HiddenMonotonicity/OriginalTrace.lean:107:theorem affineLayer_hasFDerivAt {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/OriginalTrace.lean:112:theorem reluLayer_hasFDerivAt {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/OriginalTrace.lean:135:theorem minLayer_hasFDerivAt {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+formalization/HiddenMonotonicity/OriginalTrace.lean:159:def Network.Canonical {n m} : Network n m → Prop
+formalization/HiddenMonotonicity/OriginalTrace.lean:165:noncomputable def Network.absoluteMap {n m} : Network n m → (Vec n →L[ℝ] Vec m)
+formalization/HiddenMonotonicity/OriginalTrace.lean:172:theorem Network.absCLM_eq_absoluteMap {n m} (net : Network n m) (hc : net.Canonical) :
+formalization/HiddenMonotonicity/OriginalTrace.lean:188:theorem Network.sensitivity_complementarity_absolute {n m} (net : Network n m)
+formalization/HiddenMonotonicity/BlockedPaths.lean:8:def PathConnected {n m} : (tr : MaskedTrace n m) → Fin m → Fin n → Paths tr → Prop
+formalization/HiddenMonotonicity/BlockedPaths.lean:15:def PathHasInactive {n m} : (tr : MaskedTrace n m) → Paths tr → Prop
+formalization/HiddenMonotonicity/BlockedPaths.lean:19:theorem rawWeight_zero_of_not_connected {n m} (tr : MaskedTrace n m) (j : Fin m)
+formalization/HiddenMonotonicity/BlockedPaths.lean:32:theorem rawWeight_zero_of_inactive {n m} (tr : MaskedTrace n m) (j : Fin m)
+formalization/HiddenMonotonicity/BlockedPaths.lean:45:theorem Network.gradient_blindness {n m} (net : Network n m) (x : Vec n)
+formalization/HiddenMonotonicity/BlockedPaths.lean:60:theorem recenter_breaks_monotonicity :
+formalization/HiddenMonotonicity/SmoothValidDecomposition.lean:7:noncomputable def splitPair (f : ℝ → ℝ) (z : ℝ × ℝ) : ℝ × ℝ :=
+formalization/HiddenMonotonicity/SmoothValidDecomposition.lean:10:theorem smooth_pair_valid (f : ℝ → ℝ) (hf : Differentiable ℝ f)
+formalization/HiddenMonotonicity/SmoothValidDecomposition.lean:18:theorem smooth_pair_nonnegative (f : ℝ → ℝ) (hf : Differentiable ℝ f)
+formalization/HiddenMonotonicity/SmoothValidDecomposition.lean:35:theorem smooth_network_recovery {n m} (net : Network n m)
+formalization/HiddenMonotonicity/SmoothValidDecomposition.lean:43:theorem smooth_network_nonnegative {n m} (net : Network n m)

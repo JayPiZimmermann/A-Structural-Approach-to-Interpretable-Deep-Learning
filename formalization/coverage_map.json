@@ -2,9 +2,10 @@
   "thm:split_correct": {
     "status": "formalized_variant",
     "lean": [
+      "HiddenMonotonicity.Network.affine_heads_recovery",
       "HiddenMonotonicity.Network.correct"
     ],
-    "scope": "Entire finite ReLU network with arbitrary varying widths and split biases; output-identity convention. Source tail theorem follows by choosing the corresponding tail network."
+    "scope": "Actual shared varying-width MLP backbone plus an arbitrary ungated signed affine readout with split biases; difference recovery for both real input streams. The generic backbone identity is also retained."
   },
   "thm:shift_forward": {
     "status": "formalized_variant",
@@ -54,37 +55,32 @@
   "thm:delta_pos_neg_connection": {
     "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.Network.sensitivity_complementarity_absolute",
-      "HiddenMonotonicity.Network.local_sensitivities_correct"
+      "HiddenMonotonicity.Network.affine_canonical_mass"
     ],
-    "scope": "Whole-network sensitivity complementarity equals the actual absolute weight product for canonical split weights. Actual head derivatives are identified at strict gates; the selected-mask algebra also holds without differentiability."
+    "scope": "The literal entrywise absolute readout row composed with the literal absolute backbone product; no gate hypothesis."
   },
   "thm:delta_connection": {
     "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.Network.sensitivity_complementarity_absolute",
-      "HiddenMonotonicity.Network.local_sensitivities_correct"
+      "HiddenMonotonicity.Network.affine_canonical_mass"
     ],
-    "scope": "Whole-network sensitivity complementarity equals the actual absolute weight product for canonical split weights. Actual head derivatives are identified at strict gates; the selected-mask algebra also holds without differentiability."
+    "scope": "The literal entrywise absolute readout row composed with the literal absolute backbone product; no gate hypothesis."
   },
   "thm:closed_formula": {
     "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.Network.plain_head_gradient_formulas",
-      "HiddenMonotonicity.Network.plain_backward_absolute_Q_closed_form",
-      "HiddenMonotonicity.Network.affine_readout_closed_form"
+      "HiddenMonotonicity.Network.affine_plain_Q_gradients_ae",
+      "HiddenMonotonicity.Network.affine_plain_head_formulas"
     ],
-    "scope": "Zero-shift full varying-width head derivatives and explicit finite Q-source sum. The canonical theorem specialized to zero shifts gives literal absolute-weight tails; actual balanced-input head derivatives are proved under strict gates."
+    "scope": "Both actual affine-head derivatives and every actual Q derivative on a common full-measure set; nonnegative canonical readout rows discharge Monotone. Actual balanced-input affine-head derivatives, strict internal gates, canonical backbone, only backbone Q sources."
   },
   "thm:closed_formula_shift": {
     "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.Network.stabilized_backward_absolute_Q_closed_form",
-      "HiddenMonotonicity.Network.qSources_have_derivatives",
-      "HiddenMonotonicity.MaskedTrace.bulkCoefficient_product",
+      "HiddenMonotonicity.Network.affine_Q_closed_form_ae",
       "HiddenMonotonicity.Network.affine_readout_closed_form"
     ],
-    "scope": "Complete varying-width shifted backward algorithm, canonical sign-split weights, strict original preactivations, arbitrary shift parameters and output row. Every Q is explicitly defined with original prefix, one minimum, and a linear absolute-weight tail; its actual Frechet derivative and the suffix shift products are proved. Algorithmic shifted sensitivities are not claimed to be derivatives of input-dependent re-centered functions."
+    "scope": "Complete shifted affine-logit Q formula, every actual vector Q derivative and actual logit derivative almost everywhere; no final affine minimum source. Exact Lean type independently checked; source scope is recorded in coverage_map.json."
   },
   "claim:sum_delta_shif": {
     "status": "formalized_variant",
@@ -97,12 +93,10 @@
   "cor:backward_invariant": {
     "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.Network.backward_partial_invariants",
-      "HiddenMonotonicity.Network.stabilized_backward_invariant",
-      "HiddenMonotonicity.Network.symmetric_head_derivative",
-      "HiddenMonotonicity.MaskedTrace.difference_splitJac"
+      "HiddenMonotonicity.Network.affine_ae_backward_invariants",
+      "HiddenMonotonicity.Network.affine_backward_invariants_of_differentiable"
     ],
-    "scope": "The difference of the actual implemented shifted unified sensitivities is the genuine original MLP derivative under strict gates, with the required one-half factor; the split Jacobian reconstructs the original one."
+    "scope": "Actual original affine-logit derivative and both backward partial invariants, all shifts quantified after one common full-measure set. Actual original affine-logit derivative and both independent shifted partial invariants whenever both lifted heads are differentiable."
   },
   "lem:split_backward_recursion": {
     "status": "formalized_variant",
@@ -118,25 +112,24 @@
   "prop:sensitivity_mass": {
     "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.Network.sensitivity_complementarity_absolute",
-      "HiddenMonotonicity.Network.local_sensitivities_correct"
+      "HiddenMonotonicity.Network.affine_canonical_mass"
     ],
-    "scope": "Whole-network sensitivity complementarity equals the actual absolute weight product for canonical split weights. Actual head derivatives are identified at strict gates; the selected-mask algebra also holds without differentiability."
+    "scope": "The literal entrywise absolute readout row composed with the literal absolute backbone product; no gate hypothesis."
   },
   "prop:maxpool_correct": {
     "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.maxpool_correct"
+      "HiddenMonotonicity.maxpool_properties",
+      "HiddenMonotonicity.winnerPool_recovery"
     ],
-    "scope": "Exact finite nonempty max-pooling split identity."
+    "scope": "Exact source sup/erase-sum functions with recovery, nonnegative outputs, monotonicity and both ConvexOn clauses. The shared selected maximizing index reconstructs the finite pool maximum, including ties. No convexity asserted."
   },
   "lem:linear_chunk": {
     "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.pre_difference",
-      "HiddenMonotonicity.layer_difference"
+      "HiddenMonotonicity.linear_chunk_properties"
     ],
-    "scope": "Affine reconstruction, including arbitrary rectangular linear maps and split biases."
+    "scope": "Full actual ungated biased affine chunk, including nonnegative outputs, monotonicity, exact affine dependence and both coordinate ConvexOn statements."
   },
   "prop:conv_correct": {
     "status": "partial",
@@ -256,11 +249,10 @@
   "lem:kl-legendre-fenchel": {
     "status": "formalized_variant",
     "lean": [
-      "Thesis.Regularization.finite_gibbs_bound",
-      "Thesis.Regularization.finite_gibbs_value",
-      "Thesis.Regularization.routing_variational"
+      "Thesis.ReferencePolicy.thesis_kl_legendre_fenchel",
+      "Thesis.ReferencePolicy.reference_policy_unique"
     ],
-    "scope": "Finite nonempty action set, real scores, positive temperature, policies including zero coordinates; full simplex maximum attained at Gibbs softmax. Extended-real -infinity actions and global multilayer equilibrium not included."
+    "scope": "Finite nonempty actions, positive reference mass at every action, real scores and positive temperature: actual reference-KL objective maximum and unique tilted optimizer, allowing candidate policies with zero coordinates. Extended minus-infinity scores and zero reference support are not included."
   },
   "lem:noisy-gate-dual": {
     "status": "partial",
@@ -304,28 +296,23 @@
   "prop:monotone_represents": {
     "status": "formalized_variant",
     "lean": [
-      "Thesis.Foundations.monotone_network",
-      "Thesis.Foundations.monotone_affine_output"
+      "Thesis.SourceFoundations.monotone_represents"
     ],
-    "scope": "Shared varying-width Network evaluated with an arbitrary monotone scalar activation, nonnegative signed weights, and optional nonnegative affine output map."
+    "scope": "Arbitrary monotone scalar activation, shared varying-width network with nonnegative signed hidden weights, and actual nonnegative ungated affine readout."
   },
   "prop:icnn_convex": {
     "status": "formalized_variant",
     "lean": [
-      "Thesis.Foundations.icnn_convex",
-      "Thesis.Foundations.icnn_affine_output"
+      "Thesis.SourceFoundations.icnn_represents_convex"
     ],
-    "scope": "Generic convex monotone scalar activation on the shared varying-width Network; first affine weights unrestricted, later weights and final affine readout nonnegative. Actual coordinatewise ConvexOn over the whole input space."
+    "scope": "Coordinatewise genuine ConvexOn for arbitrary convex monotone scalar activation, unrestricted first affine weights, nonnegative later signed weights and actual nonnegative affine readout."
   },
   "thm:shapley_bellman": {
     "status": "formalized_variant",
     "lean": [
-      "Thesis.LayeredGames.Game.saddle",
-      "Thesis.LayeredGames.Game.bellman_unique",
-      "Thesis.LayeredGames.Game.optimal_lower",
-      "Thesis.LayeredGames.Game.optimal_upper"
+      "Thesis.SourceFoundations.shapley_bellman"
     ],
-    "scope": "Finite-horizon layered stochastic game with actual randomized policies, normalized transitions, nonnegative discounts, constructed pure optimal selector, saddle inequalities at every layered state, and uniqueness of the Bellman recursion. Finite common nonempty action type; state-dependent actions represented by duplicate actions."
+    "scope": "Exactly layered finite stochastic game with common nonempty action type: unique Bellman values and pure stationary saddle versus all normalized randomized policies at every layered state. Does not assert arbitrary-DAG encoding or unique policies."
   },
   "prop:validity_recovery": {
     "status": "formalized_variant",
@@ -338,10 +325,10 @@
   "prop:gradient_blindness": {
     "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.Network.regional_gradient_blindness",
+      "HiddenMonotonicity.Network.gradient_blindness",
       "HiddenMonotonicity.Network.locally_constant_jacobian"
     ],
-    "scope": "Strict preactivations imply an actual open neighborhood of fixed whole-network Jacobian. If every signed active path from a feature to an output has zero weight, the corresponding derivative is zero throughout that neighborhood."
+    "scope": "For actual strict ReLU network input, if every connected nonzero-edge path contains an inactive neuron, that input/output derivative coordinate vanishes on an open neighborhood with a fixed trace."
   },
   "thm:attn-ab-recovery": {
     "status": "partial",
@@ -351,13 +338,192 @@
     "scope": "Fixed nonnegative row-stochastic attention matrix A, signed Value projection with bias, and arbitrary shared MLP backbone. Composite affine map, its actual derivative and signed probability/discount factorization recover full alpha-beta recurrence for positive epsilon and nonnegative alpha,beta. Query/Key derivatives and global SPNE not asserted."
   },
   "thm:relu_net_game_value": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.SourceFoundations.relu_net_game_value_affine",
+      "Thesis.ReLUNetGame.subgamePerfect_iff_gateOptimal"
+    ],
+    "scope": "Actual normalized ReLU game with nonzero fan-in and forced ungated affine output: saddle against all randomized profiles, exact selected payoff, exact all-subgame iff tie-permitted 0/1 gate conditions, and same output payoff for every subgame-perfect profile. Direct recursive all-state randomized best-response predicate on Strategy iff both players continue with probability one at strictly positive preactivations and zero at strictly negative ones; arbitrary probabilities permitted at ties."
+  },
+  "lem:support_properties": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.SourceGeometry.support_properties"
+    ],
+    "scope": "Full nonempty compact-convex support calculus; arbitrary compact convex sets for convexity, homogeneity, sums/unions, containment and uniqueness; separate nonempty finite hull formula and extreme-point attainment."
+  },
+  "prop:newton_calculus": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.SourceGeometry.newton_calculus"
+    ],
+    "scope": "Actual Newton sets under tropical addition/maximum, exact function identities, homogenized slice support and zero-intercept unlifted support."
+  },
+  "thm:split_tropical_rational": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.SourceFoundations.split_tropical_rational_affine"
+    ],
+    "scope": "Bias-free hidden network and ungated signed affine readout: constructed heads have zero intercepts, nonnegative slopes, monotonicity, convexity, positive homogeneity; exact actual split affine-head evaluations, exact signed logit difference and final weighted Minkowski sets. Includes zero hidden layers."
+  },
+  "cor:minkowski_propagation": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.SourceGeometry.minkowski_propagation_affine_network"
+    ],
+    "scope": "Actual basis-singleton initial sets, every hidden weighted Minkowski/hull propagation, and both ungated signed affine output sums, including arbitrary stored biases and zero hidden layers."
+  },
+  "prop:subdifferential_face": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.SourceFoundations.subdifferential_face"
+    ],
+    "scope": "Nonempty finite-hull support: actual subgradient inequality iff maximizing face, genuine Frechet differentiability iff singleton exposed face, and every attained gradient lies in the hull."
+  },
+  "cor:polytopes_nonneg": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.SourceGeometry.network_polytopes_nonnegative"
+    ],
+    "scope": "Both actual Newton convex hulls of constructively propagated network split polynomials are contained in the nonnegative orthant."
+  },
+  "thm:vertices_gradients": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.PiecewiseLinear.homogeneous_convex_cpwl_vertices",
+      "Thesis.Tropical.slice_attainable_gradients"
+    ],
+    "scope": "Arbitrary positively homogeneous convex CPWL function: existence and uniqueness of its nonempty Newton polytope and exact equality of its extreme points with all genuine Frechet gradient vectors. Generic finite lifted hull: actual derivatives after restriction to (x,1) exactly project slice-visible uniquely exposed lifted vertices."
+  },
+  "thm:cnn_split_correct": {
     "status": "partial",
     "lean": [
-      "Thesis.ReLUNetGame.signedValue_eq_network",
-      "Thesis.ReLUNetGame.affine_output_value",
-      "Thesis.ReLUNetGame.common_stopping_rule",
-      "Thesis.LayeredGames.Game.saddle"
+      "HiddenMonotonicity.Circuit.split_policy_correct",
+      "HiddenMonotonicity.Circuit.split_policy_nonnegative",
+      "HiddenMonotonicity.Circuit.cnn_split_correct"
     ],
-    "scope": "Full normalized signed max/min value recursion recovers the shared varying-width ReLU network, including affine output and gate choices. Generic finite layered game saddle independently proved; direct policy/saddle bridge for this network-specific recursion remains to be packaged."
+    "scope": "Actual finite shared-node scalar DAG including affine/residual/max/product operations, per-node recentering and an actual maximizing-winner pooling policy: recovery and nonnegativity. Additive convex-pooling circuits without recentering have convex monotone heads. Concrete tensor flattening/indexing and source linear-size bound are not yet proved."
+  },
+  "thm:main_simplified": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Circuit.maxout_multiplication_split_correct",
+      "HiddenMonotonicity.Circuit.multiplicative_streams_monotone",
+      "HiddenMonotonicity.Circuit.ordinary_polynomial_stream_witnesses"
+    ],
+    "scope": "Actual shared-node arithmetic DAG, signed affine/residual/max/product operations, exact rank-two max/product split and nonnegative-orthant monotonicity. Explicit nonempty finite lists of ordinary MvPolynomials with nonnegative coefficients represent each stream. Concrete tensor indexing is a flattening boundary."
+  },
+  "thm:multiplicative_split": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Circuit.maxout_multiplication_split_correct",
+      "HiddenMonotonicity.Circuit.multiplicative_streams_monotone",
+      "HiddenMonotonicity.Circuit.ordinary_polynomial_stream_witnesses"
+    ],
+    "scope": "Actual shared-node arithmetic DAG, signed affine/residual/max/product operations, exact rank-two max/product split and nonnegative-orthant monotonicity. Explicit nonempty finite lists of ordinary MvPolynomials with nonnegative coefficients represent each stream. Concrete tensor indexing is a flattening boundary."
+  },
+  "thm:main": {
+    "status": "partial",
+    "lean": [
+      "HiddenMonotonicity.Circuit.maxout_multiplication_split_correct",
+      "HiddenMonotonicity.Circuit.cnn_split_correct"
+    ],
+    "scope": "Exact constructive topological DAG splitting and all-node recovery including products; the source fixed-rank/bounded-degree linear SIZE clause is not formalized."
+  },
+  "claim:main_correct": {
+    "status": "partial",
+    "lean": [
+      "HiddenMonotonicity.Circuit.maxout_multiplication_split_correct",
+      "HiddenMonotonicity.Circuit.cnn_split_correct"
+    ],
+    "scope": "Exact constructive topological DAG splitting and all-node recovery including products; the source fixed-rank/bounded-degree linear SIZE clause is not formalized."
+  },
+  "thm:monotone_maxout_main": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.MaxPolynomial.ordinary_finite_polynomial_witness",
+      "HiddenMonotonicity.PositiveExpr.max_polynomial_representation",
+      "HiddenMonotonicity.PositivePolynomial.coefficients_nonnegative"
+    ],
+    "scope": "Constructive nonempty finite ordinary polynomial witnesses for positive arithmetic/max/product expressions, evaluated on the nonnegative input orthant, with actual nonnegative MvPolynomial coefficients."
+  },
+  "prop:posynomial_representation": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.MaxPolynomial.ordinary_finite_polynomial_witness",
+      "HiddenMonotonicity.PositiveExpr.max_polynomial_representation",
+      "HiddenMonotonicity.PositivePolynomial.coefficients_nonnegative"
+    ],
+    "scope": "Constructive nonempty finite ordinary polynomial witnesses for positive arithmetic/max/product expressions, evaluated on the nonnegative input orthant, with actual nonnegative MvPolynomial coefficients."
+  },
+  "prop:attn-value-policy": {
+    "status": "partial",
+    "lean": [
+      "Thesis.ReferencePolicy.thesis_attention_value_policy"
+    ],
+    "scope": "Exact reference-weighted Value-routing KL optimizer and uniqueness with strictly positive reference and contribution masses; the source zero-contribution/outside-option cases are not included."
+  },
+  "rem:rg-natural-equivalence": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.Coarsening.overlap_coarsening",
+      "Thesis.Coarsening.hellinger_coarsening",
+      "Thesis.Coarsening.surviving_overlap_recovery",
+      "Thesis.Coarsening.paper_full_path_bijection_counterexample"
+    ],
+    "scope": "Corrected finite-law coarsening inequalities, exact reindexing with an erase/recover inverse, and normalized explicit absorption-history counterexample. Equality for the model survivor graph requires its stated reconstruction property."
+  },
+  "prop:bellman": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.SourceFoundations.bellman_equations"
+    ],
+    "scope": "Normalized finite discounted MDP: convergent expected-return series, unique policy and optimal Bellman fixed points, pure greedy optimum, randomized-policy domination and arbitrary tied greedy choices."
+  },
+  "obs:relu_maxout_special_case": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.SourceFoundations.maxout_special_cases"
+    ],
+    "scope": "Exact ReLU-as-two-piece-max and coordinate pooling, polynomial convexity and finite-maximum monotonicity; explicit finite nonempty index assumptions."
+  },
+  "obs:relu_is_cpwl": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.PiecewiseLinear.affine_network_cpwl"
+    ],
+    "scope": "Arbitrary signed weights, biases, varying widths and depth imply continuity and a genuine finite closed-polyhedral affine cover. Affine readout included where stated. This is not the arbitrary-CPWL network converse."
+  },
+  "obs:tropical_convex_cpwl": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.PiecewiseLinear.convex_cpwl_iff_max_affine"
+    ],
+    "scope": "Exact scalar convex CPWL iff finite max-affine representation, derived from the genuine finite closed-polyhedral cover by dense interiors and convex local-to-global minima; no representation assumption or substitute CPWL definition."
+  },
+  "thm:stopping_validity": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.StoppingDecomposition.thesis_stopping_validity",
+      "Thesis.StoppingDecomposition.stopping_nonnegative"
+    ],
+    "scope": "Actual shared varying-width Network stopping decomposition, exact difference recovery and nonnegative components. Ungated readout extension is separate."
+  },
+  "thm:smooth_dc_split": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.SmoothDC.smooth_dc_split",
+      "HiddenMonotonicity.SmoothDC.canonical_tilt_minimality"
+    ],
+    "scope": "Actual curvature integrals, local absolute continuity of the derivative, globally integrable curvature, convex monotone primitive pair and exact reconstruction."
+  },
+  "cor:modern_activations": {
+    "status": "partial",
+    "lean": [
+      "HiddenMonotonicity.SmoothDC.sigmoid_smooth_dc_split",
+      "HiddenMonotonicity.SmoothDC.softplus_smooth_dc_split",
+      "HiddenMonotonicity.SmoothDC.tanh_smooth_dc_split"
+    ],
+    "scope": "Sigmoid, tanh and positive-temperature softplus with genuinely proved curvature integrability, local absolute continuity and nonnegative valid split pairs; exact GELU, Swish and Mish specializations remain open."
   }
 }

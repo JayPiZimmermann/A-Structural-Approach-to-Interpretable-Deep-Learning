@@ -1,0 +1,340 @@
+import Thesis.ReLUNetGame
+
+/-! Actual randomized policy evaluation and pure subgame-perfect optimality on
+the same varying-width Network as the ReLU forward theorem. -/
+noncomputable section
+namespace Thesis.ReLUNetGame
+open Finset Matrix HiddenMonotonicity
+
+/-- A player's continuation probability at each neuron, with stop probability 1-p.
+The player uses this strategy at its own signed states. -/
+def Strategy {n m} : Network n m → Type
+  | .output _ => Unit
+  | .layer (k := k) _ _ _ _ tail => (Fin k → Set.Icc (0 : ℝ) 1) × Strategy tail
+
+def gateProbability (z : ℝ) : Set.Icc (0 : ℝ) 1 :=
+  ⟨if 0 < z then 1 else 0, by split_ifs <;> constructor <;> norm_num⟩
+
+/-- Both players use the same pure stopping rule, computed from original preactivations. -/
+def optimalStrategy {n m} : (net : Network n m) → (Fin n → ℝ) → Strategy net
+  | .output _, _ => ()
+  | .layer wp wn bp bn tail, x =>
+      (fun i => gateProbability (((wp-wn).mulVec x+(bp-bn)) i),
+       optimalStrategy tail (fun i => relu (((wp-wn).mulVec x+(bp-bn)) i)))
+
+/-- Expected payoff under independent randomized actions at every signed state.
+Stop pays zero; continuation includes signed bias and discounted transition. -/
+def policyValue {n m} : (net : Network n m) → Strategy net → Strategy net →
+    (Fin n → ℝ) → (Fin n → ℝ) → (Fin m → ℝ) × (Fin m → ℝ)
+  | .output _, _, _, p, q => (p,q)
+  | .layer wp wn bp bn tail, plus, minus, p, q =>
+      policyValue tail plus.2 minus.2
+        (fun i => (plus.1 i).val * continuation wp wn (bp-bn) p q i)
+        (fun i => (minus.1 i).val * continuation wn wp (bn-bp) p q i)
+
+theorem gateProbability_pure (z : ℝ) :
+    (gateProbability z).val = 0 ∨ (gateProbability z).val = 1 := by
+  unfold gateProbability; split_ifs <;> simp
+
+theorem gateProbability_value (z : ℝ) :
+    (gateProbability z).val*z = relu z ∧
+    (gateProbability z).val*(-z) = -relu z := by
+  by_cases h : 0 < z
+  · simp [gateProbability,h,relu,max_eq_left h.le]
+  · simp [gateProbability,h,relu,max_eq_right (le_of_not_gt h)]
+
+theorem randomized_stop_bounds (z : ℝ) (p : Set.Icc (0 : ℝ) 1) :
+    min z 0 ≤ p.val*z ∧ p.val*z ≤ max z 0 := by
+  rcases le_total 0 z with hz | hz
+  · rw [min_eq_right hz,max_eq_left hz]
+    exact ⟨mul_nonneg p.property.1 hz,by nlinarith [p.property.2]⟩
+  · rw [min_eq_left hz,max_eq_right hz]
+    exact ⟨by nlinarith [p.property.2],mul_nonpos_of_nonneg_of_nonpos p.property.1 hz⟩
+
+theorem continuation_mono {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+    (b : Fin k → ℝ) (hwp : ∀ i j, 0 ≤ wp i j) (hwn : ∀ i j, 0 ≤ wn i j)
+    (hrow : ∀ i, rowDiscount wp wn i ≠ 0)
+    {p q p' q' : Fin n → ℝ} (hp : p ≤ p') (hq : q ≤ q') (i : Fin k) :
+    continuation wp wn b p q i ≤ continuation wp wn b p' q' i := by
+  rw [continuation_recovery _ _ _ _ _ _ (hrow i),
+      continuation_recovery _ _ _ _ _ _ (hrow i)]
+  exact add_le_add (add_le_add (positive_matrix_monotone wp hwp hp i)
+    (positive_matrix_monotone wn hwn hq i)) le_rfl
+
+theorem continuation_signed {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+    (bp bn : Fin k → ℝ) (x : Fin n → ℝ) (i : Fin k)
+    (hrow : rowDiscount wp wn i ≠ 0) :
+    continuation wp wn (bp-bn) x (-x) i = ((wp-wn).mulVec x+(bp-bn)) i ∧
+    continuation wn wp (bn-bp) x (-x) i = -(((wp-wn).mulVec x+(bp-bn)) i) := by
+  have hn : rowDiscount wn wp i ≠ 0 := by simpa [rowDiscount,add_comm] using hrow
+  constructor
+  · rw [continuation_recovery _ _ _ _ _ _ hrow,sub_mulVec,mulVec_neg]; rfl
+  · rw [continuation_recovery _ _ _ _ _ _ hn]
+    simp only [sub_mulVec,mulVec_neg,Pi.add_apply,Pi.sub_apply,Pi.neg_apply]
+    ring
+
+/-- With the maximizing player's optimal strategy fixed, any randomized opponent
+can only increase both signed-state values. The stronger boundary comparison is
+what makes the induction valid across arbitrary widths and depths. -/
+theorem optimal_lower_pair {n m} (net : Network n m) (hn : net.Nonnegative)
+    (hr : NonzeroRows net) (x p q : Fin n → ℝ) (hp : x ≤ p) (hq : -x ≤ q)
+    (minus : Strategy net) :
+    net.eval x ≤ (policyValue net (optimalStrategy net x) minus p q).1 ∧
+    -net.eval x ≤ (policyValue net (optimalStrategy net x) minus p q).2 := by
+  induction net with
+  | output n => exact ⟨hp,hq⟩
+  | layer wp wn bp bn tail ih =>
+      rcases hn with ⟨hwp,hwn,ht⟩
+      rcases hr with ⟨hrow,htr⟩
+      have hrow' : ∀ i, rowDiscount wn wp i ≠ 0 := by
+        intro i; simpa [rowDiscount,add_comm] using hrow i
+      apply ih ht htr _ _ _ _ _ minus.2
+      · intro i
+        have he := (continuation_signed wp wn bp bn x i (hrow i)).1
+        have hm := continuation_mono wp wn (bp-bn) hwp hwn hrow hp hq i
+        have hg := (gateProbability_value (((wp-wn).mulVec x+(bp-bn)) i)).1
+        change relu _ ≤ (gateProbability _).val * continuation wp wn (bp-bn) p q i
+        rw [← hg]
+        exact mul_le_mul_of_nonneg_left (by rwa [he] at hm) (gateProbability _).property.1
+      · intro i
+        have he := (continuation_signed wp wn bp bn x i (hrow i)).2
+        have hm := continuation_mono wn wp (bn-bp) hwn hwp hrow' hp hq i
+        have hb := (randomized_stop_bounds (-(((wp-wn).mulVec x+(bp-bn)) i)) (minus.1 i)).1
+        have hmin : min (-(((wp-wn).mulVec x+(bp-bn)) i)) 0 =
+            -relu (((wp-wn).mulVec x+(bp-bn)) i) := by
+          rcases le_total (((wp-wn).mulVec x+(bp-bn)) i) 0 with hz | hz
+          · simp only [relu,max_eq_right hz,min_eq_right (neg_nonneg.mpr hz),neg_zero]
+          · simp only [relu,max_eq_left hz,min_eq_left (neg_nonpos.mpr hz)]
+        change -relu _ ≤ (minus.1 i).val * continuation wn wp (bn-bp) p q i
+        rw [hmin] at hb
+        exact hb.trans (mul_le_mul_of_nonneg_left (by rwa [he] at hm) (minus.1 i).property.1)
+
+/-- With the minimizing player's pure optimal strategy fixed, arbitrary maximizing
+randomization can only decrease either signed-state value. -/
+theorem optimal_upper_pair {n m} (net : Network n m) (hn : net.Nonnegative)
+    (hr : NonzeroRows net) (x p q : Fin n → ℝ) (hp : p ≤ x) (hq : q ≤ -x)
+    (plus : Strategy net) :
+    (policyValue net plus (optimalStrategy net x) p q).1 ≤ net.eval x ∧
+    (policyValue net plus (optimalStrategy net x) p q).2 ≤ -net.eval x := by
+  induction net with
+  | output n => exact ⟨hp,hq⟩
+  | layer wp wn bp bn tail ih =>
+      rcases hn with ⟨hwp,hwn,ht⟩
+      rcases hr with ⟨hrow,htr⟩
+      have hrow' : ∀ i, rowDiscount wn wp i ≠ 0 := by
+        intro i; simpa [rowDiscount,add_comm] using hrow i
+      apply ih ht htr _ _ _ _ _ plus.2
+      · intro i
+        have he := (continuation_signed wp wn bp bn x i (hrow i)).1
+        have hm := continuation_mono wp wn (bp-bn) hwp hwn hrow hp hq i
+        have hb := (randomized_stop_bounds (((wp-wn).mulVec x+(bp-bn)) i) (plus.1 i)).2
+        change (plus.1 i).val * continuation wp wn (bp-bn) p q i ≤ relu _
+        exact (mul_le_mul_of_nonneg_left (by rwa [he] at hm) (plus.1 i).property.1).trans hb
+      · intro i
+        have he := (continuation_signed wp wn bp bn x i (hrow i)).2
+        have hm := continuation_mono wn wp (bn-bp) hwn hwp hrow' hp hq i
+        have hg := (gateProbability_value (((wp-wn).mulVec x+(bp-bn)) i)).2
+        change (gateProbability _).val * continuation wn wp (bn-bp) p q i ≤ -relu _
+        rw [← hg]
+        exact mul_le_mul_of_nonneg_left (by rwa [he] at hm) (gateProbability _).property.1
+
+/-- Full thm:relu_net_game_value: the common pure gate strategy is a saddle
+against every randomized strategy; its actual expected payoff equals the forward
+network at plus states and its negative at mirrored states. Applies to every prefix,
+hence to every subgame of the feedforward graph. -/
+theorem relu_net_game_equilibrium {n m} (net : Network n m) (hn : net.Nonnegative)
+    (hr : NonzeroRows net) (x : Fin n → ℝ) (plus minus : Strategy net) :
+    (policyValue net plus (optimalStrategy net x) x (-x)).1 ≤ net.eval x ∧
+    (policyValue net plus (optimalStrategy net x) x (-x)).2 ≤ -net.eval x ∧
+    policyValue net (optimalStrategy net x) (optimalStrategy net x) x (-x) =
+      (net.eval x,-net.eval x) ∧
+    net.eval x ≤ (policyValue net (optimalStrategy net x) minus x (-x)).1 ∧
+    -net.eval x ≤ (policyValue net (optimalStrategy net x) minus x (-x)).2 := by
+  have hl := optimal_lower_pair net hn hr x x (-x) le_rfl le_rfl minus
+  have hu := optimal_upper_pair net hn hr x x (-x) le_rfl le_rfl plus
+  have hl' := optimal_lower_pair net hn hr x x (-x) le_rfl le_rfl (optimalStrategy net x)
+  have hu' := optimal_upper_pair net hn hr x x (-x) le_rfl le_rfl (optimalStrategy net x)
+  refine ⟨hu.1,hu.2,?_,hl.1,hl.2⟩
+  exact Prod.ext (le_antisymm hu'.1 hl'.1) (le_antisymm hu'.2 hl'.2)
+
+/-- The source theorem with its forced affine output state: actual policy payoffs
+satisfy the saddle inequalities around the original signed affine logit. -/
+theorem relu_net_game_affine_equilibrium {n m k} (net : Network n m)
+    (hn : net.Nonnegative) (hr : NonzeroRows net) (x : Fin n → ℝ)
+    (plus minus : Strategy net) (wp wn : Matrix (Fin k) (Fin m) ℝ) (b : Fin k → ℝ)
+    (hwp : ∀ i j, 0 ≤ wp i j) (hwn : ∀ i j, 0 ≤ wn i j)
+    (hrow : ∀ i, rowDiscount wp wn i ≠ 0) (i : Fin k) :
+    let read := fun v : (Fin m → ℝ) × (Fin m → ℝ) => continuation wp wn b v.1 v.2 i
+    let logit := ((wp-wn).mulVec (net.eval x)+b) i
+    read (policyValue net plus (optimalStrategy net x) x (-x)) ≤ logit ∧
+    read (policyValue net (optimalStrategy net x) (optimalStrategy net x) x (-x)) = logit ∧
+    logit ≤ read (policyValue net (optimalStrategy net x) minus x (-x)) := by
+  dsimp only
+  have hs := relu_net_game_equilibrium net hn hr x plus minus
+  have hread : continuation wp wn b (net.eval x) (-net.eval x) i =
+      ((wp-wn).mulVec (net.eval x)+b) i := by
+    rw [continuation_recovery _ _ _ _ _ _ (hrow i),sub_mulVec,mulVec_neg]
+    rfl
+  refine ⟨?_,?_,?_⟩
+  · rw [← hread]
+    exact continuation_mono wp wn b hwp hwn hrow hs.1 hs.2.1 i
+  · rw [hs.2.2.1]
+    exact hread
+  · rw [← hread]
+    exact continuation_mono wp wn b hwp hwn hrow hs.2.2.2.1 hs.2.2.2.2 i
+
+/-- Local optimality is quantified over all normalized randomized actions. -/
+def MaximizesStop (z : ℝ) (p : Set.Icc (0 : ℝ) 1) : Prop :=
+  ∀ r : Set.Icc (0 : ℝ) 1, r.val*z ≤ p.val*z
+
+/-- At a strict gate the continuation probability is forced; at a tie it is free. -/
+def GateOptimal (z : ℝ) (p : Set.Icc (0 : ℝ) 1) : Prop :=
+  (0 < z → p.val=1) ∧ (z < 0 → p.val=0)
+
+theorem maximizesStop_iff (z : ℝ) (p : Set.Icc (0 : ℝ) 1) :
+    MaximizesStop z p ↔ GateOptimal z p := by
+  constructor
+  · intro h
+    constructor
+    · intro hz
+      have h1 := h ⟨1,by constructor <;> norm_num⟩
+      have hp := p.property.2
+      simp only [one_mul] at h1
+      nlinarith
+    · intro hz
+      have h0 := h ⟨0,by constructor <;> norm_num⟩
+      have hp := p.property.1
+      simp only [zero_mul] at h0
+      nlinarith
+  · intro h r
+    rcases lt_trichotomy z 0 with hz | hz | hz
+    · rw [h.2 hz,zero_mul]
+      exact mul_nonpos_of_nonneg_of_nonpos r.property.1 hz.le
+    · simp [hz]
+    · rw [h.1 hz,one_mul]
+      exact mul_le_of_le_one_left hz.le r.property.2
+
+theorem gateOptimal_value (z : ℝ) (p : Set.Icc (0 : ℝ) 1) (h : GateOptimal z p) :
+    p.val*z=relu z ∧ p.val*(-z)=-relu z := by
+  have he : p.val*z=relu z := by
+    rcases lt_trichotomy z 0 with hz | hz | hz
+    · rw [h.2 hz,zero_mul,relu,max_eq_right hz.le]
+    · simp [hz,relu]
+    · rw [h.1 hz,one_mul,relu,max_eq_left hz.le]
+  exact ⟨he,by rw [mul_neg,he]⟩
+
+/-- A strategy's exact tie-permitted gate condition, on the full recursive network. -/
+def GateOptimalStrategy {n m} : (net : Network n m) → (Fin n → ℝ) → Strategy net → Prop
+  | .output _, _, _ => True
+  | .layer wp wn bp bn tail, x, strategy =>
+      (∀ i, GateOptimal (((wp-wn).mulVec x+(bp-bn)) i) (strategy.1 i)) ∧
+      GateOptimalStrategy tail (fun i => relu (((wp-wn).mulVec x+(bp-bn)) i)) strategy.2
+
+/-- Every signed state is a best response against its already evaluated predecessor
+subgames. This definition uses the actual policy payoffs and quantifies over all
+randomized actions, without assuming the forward network values. -/
+def SubgamePerfect {n m} : (net : Network n m) → Strategy net → Strategy net →
+    (Fin n → ℝ) → (Fin n → ℝ) → Prop
+  | .output _, _, _, _, _ => True
+  | .layer wp wn bp bn tail, plus, minus, p, q =>
+      (∀ i, MaximizesStop (continuation wp wn (bp-bn) p q i) (plus.1 i)) ∧
+      (∀ i, ∀ r : Set.Icc (0 : ℝ) 1,
+        (minus.1 i).val * continuation wn wp (bn-bp) p q i ≤
+          r.val * continuation wn wp (bn-bp) p q i) ∧
+      SubgamePerfect tail plus.2 minus.2
+        (fun i => (plus.1 i).val * continuation wp wn (bp-bn) p q i)
+        (fun i => (minus.1 i).val * continuation wn wp (bn-bp) p q i)
+
+theorem minimizes_neg_iff (z : ℝ) (p : Set.Icc (0 : ℝ) 1) :
+    (∀ r : Set.Icc (0 : ℝ) 1, p.val*(-z) ≤ r.val*(-z)) ↔ GateOptimal z p := by
+  rw [← maximizesStop_iff]
+  simp only [MaximizesStop,mul_neg,neg_le_neg_iff]
+
+/-- Exact uniqueness up to ties for all randomized subgame-perfect profiles on
+the varying-width network. No restriction is imposed on a probability at z=0. -/
+theorem subgamePerfect_iff_gateOptimal {n m} (net : Network n m)
+    (hr : NonzeroRows net) (x : Fin n → ℝ) (plus minus : Strategy net) :
+    SubgamePerfect net plus minus x (-x) ↔
+      GateOptimalStrategy net x plus ∧ GateOptimalStrategy net x minus := by
+  induction net with
+  | output n => simp [SubgamePerfect,GateOptimalStrategy]
+  | layer wp wn bp bn tail ih =>
+      obtain ⟨hrow,htr⟩ := hr
+      let z := (wp-wn).mulVec x+(bp-bn)
+      have hp : ∀ i, continuation wp wn (bp-bn) x (-x) i=z i :=
+        fun i => (continuation_signed wp wn bp bn x i (hrow i)).1
+      have hn : ∀ i, continuation wn wp (bn-bp) x (-x) i=-(z i) :=
+        fun i => (continuation_signed wp wn bp bn x i (hrow i)).2
+      simp only [SubgamePerfect,GateOptimalStrategy,hp,hn]
+      constructor
+      · rintro ⟨hplus,hminus,ht⟩
+        have hpg : ∀ i, GateOptimal (z i) (plus.1 i) :=
+          fun i => (maximizesStop_iff _ _).mp (hplus i)
+        have hmg : ∀ i, GateOptimal (z i) (minus.1 i) :=
+          fun i => (minimizes_neg_iff _ _).mp (hminus i)
+        have hpe : (fun i => (plus.1 i).val*z i)=(fun i => relu (z i)) :=
+          funext fun i => (gateOptimal_value _ _ (hpg i)).1
+        have hme : (fun i => (minus.1 i).val*(-z i))=-(fun i => relu (z i)) :=
+          funext fun i => (gateOptimal_value _ _ (hmg i)).2
+        rw [hpe,hme] at ht
+        have hrest := (ih htr _ _ _).mp ht
+        exact ⟨⟨hpg,hrest.1⟩,⟨hmg,hrest.2⟩⟩
+      · rintro ⟨⟨hpg,hpt⟩,⟨hmg,hmt⟩⟩
+        refine ⟨fun i => (maximizesStop_iff _ _).mpr (hpg i),
+          fun i => (minimizes_neg_iff _ _).mpr (hmg i),?_⟩
+        have hpe : (fun i => (plus.1 i).val*z i)=(fun i => relu (z i)) :=
+          funext fun i => (gateOptimal_value _ _ (hpg i)).1
+        have hme : (fun i => (minus.1 i).val*(-z i))=-(fun i => relu (z i)) :=
+          funext fun i => (gateOptimal_value _ _ (hmg i)).2
+        rw [hpe,hme]
+        exact (ih htr _ _ _).mpr ⟨hpt,hmt⟩
+
+theorem optimalStrategy_gateOptimal {n m} (net : Network n m) (x : Fin n → ℝ) :
+    GateOptimalStrategy net x (optimalStrategy net x) := by
+  induction net with
+  | output n => trivial
+  | layer wp wn bp bn tail ih =>
+      refine ⟨?_,ih _⟩
+      intro i
+      constructor
+      · intro h
+        change (gateProbability _).val=1
+        simp only [gateProbability,if_pos h]
+      · intro h
+        change (gateProbability _).val=0
+        simp only [gateProbability,if_neg (not_lt.mpr h.le)]
+
+theorem optimalStrategy_subgamePerfect {n m} (net : Network n m)
+    (hr : NonzeroRows net) (x : Fin n → ℝ) :
+    SubgamePerfect net (optimalStrategy net x) (optimalStrategy net x) x (-x) :=
+  (subgamePerfect_iff_gateOptimal net hr x _ _).mpr
+    ⟨optimalStrategy_gateOptimal net x,optimalStrategy_gateOptimal net x⟩
+
+/-- Every subgame-perfect profile has the same actual payoffs, including profiles
+that randomize arbitrarily at any zero preactivation. -/
+theorem subgamePerfect_value {n m} (net : Network n m) (hr : NonzeroRows net)
+    (x : Fin n → ℝ) (plus minus : Strategy net)
+    (h : SubgamePerfect net plus minus x (-x)) :
+    policyValue net plus minus x (-x)=(net.eval x,-net.eval x) := by
+  induction net with
+  | output n => rfl
+  | layer wp wn bp bn tail ih =>
+      obtain ⟨hrow,htr⟩ := hr
+      have hgate := (subgamePerfect_iff_gateOptimal (.layer wp wn bp bn tail) ⟨hrow,htr⟩ x plus minus).mp h
+      let z := (wp-wn).mulVec x+(bp-bn)
+      have hp : (fun i => (plus.1 i).val * continuation wp wn (bp-bn) x (-x) i)=
+          (fun i => relu (z i)) := by
+        funext i
+        rw [(continuation_signed wp wn bp bn x i (hrow i)).1]
+        exact (gateOptimal_value _ _ (hgate.1.1 i)).1
+      have hn : (fun i => (minus.1 i).val * continuation wn wp (bn-bp) x (-x) i)=
+          -(fun i => relu (z i)) := by
+        funext i
+        rw [(continuation_signed wp wn bp bn x i (hrow i)).2]
+        exact (gateOptimal_value _ _ (hgate.2.1 i)).2
+      have ht := h.2.2
+      rw [hp,hn] at ht
+      simp only [policyValue,hp,hn,Network.eval]
+      exact ih htr _ _ _ ht
+
+end Thesis.ReLUNetGame

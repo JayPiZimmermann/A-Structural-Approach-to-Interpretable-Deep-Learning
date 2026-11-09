@@ -4,7 +4,7 @@ import json
 import importlib.util
 from pathlib import Path
 root = Path(__file__).resolve().parents[1]
-lines = ['import HiddenMonotonicity', 'import Thesis', '']
+lines = ['import All', '']
 spec = importlib.util.spec_from_file_location('lean_links', root.parent / 'scripts/generate_lean_links.py')
 links = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(links)

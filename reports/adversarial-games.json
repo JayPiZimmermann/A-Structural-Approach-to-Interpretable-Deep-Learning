@@ -1,0 +1,2481 @@
+{
+  "audit": "Independent adversarial game, routing, attention, regularization, and trajectory audit",
+  "date": "2026-11-09",
+  "verdict": "Not a caveat-free faithful formalization of all source claims. No false Lean theorem was found among the reviewed exact declarations; several concrete source claims fail, and headline model bridges remain unproved.",
+  "scope": {
+    "production_edits": false,
+    "shared_build_artifact_writes": false,
+    "read_skills": [
+      "skills/upstream-planar-features/formalization-architecture/SKILL.md",
+      "skills/upstream-planar-features/formalization-certificates/SKILL.md",
+      "skills/upstream-planar-features/formalization-conventions/SKILL.md",
+      "skills/upstream-planar-features/formalization-research/SKILL.md",
+      "skills/upstream-planar-features/formalization-build/SKILL.md",
+      "skills/upstream-planar-features/math-exposition/SKILL.md"
+    ],
+    "reviewed_modules": [
+      "ReLUNetGame",
+      "ReLUNetEquilibrium",
+      "BackwardGames",
+      "StoppingDecomposition",
+      "RoutingBackward",
+      "SoftplusBackward",
+      "SoftplusDecomposition",
+      "AttentionBackward",
+      "AffineOutputBackward",
+      "Regularization",
+      "ReferencePolicy",
+      "Games",
+      "Coarsening",
+      "Randomization",
+      "RandomizationExpectation",
+      "LayeredGames",
+      "BellmanReturn"
+    ],
+    "source_reading": "Target theorem definitions, proofs, and nearby conventions in main.tex and chapters 04/07/11; supplementary relevant general-regularizer and Gaubert statements in chapters 03/02. Not a claim to audit every experimental result in those files."
+  },
+  "user_scope_clarification": {
+    "instruction": "The Routing Game works with nonnegative activation functions; GELU arguments are to be understood locally.",
+    "effect": "No global signed-GELU counterexample is used against the intended RG. AG04 is a log-coordinate/decision presentation gap within a ReLU-only example, not a refutation of the intended signed-mass decision. No model replacement is authorized or performed.",
+    "local_gelu_sources": [
+      {
+        "file": "arxive/playingTheNetworkBackward/main.tex",
+        "line": 2787
+      },
+      {
+        "file": "arxive/playingTheNetworkBackward/main.tex",
+        "line": 2985
+      },
+      {
+        "file": "arxive/playingTheNetworkBackward/main.tex",
+        "line": 3165
+      },
+      {
+        "file": "tex/chapters/04_game_theory.tex",
+        "line": 1894
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 637
+      }
+    ],
+    "local_gelu_assumptions": "Hold the realized gate c=Phi(z_forward) fixed, obtaining the local affine operator z -> c*z. It has derivative c and agrees in value with GELU at the frozen reference point, but the original GELU derivative is c+z_forward*phi(z_forward). For application of a nonnegative-activation RG theorem, routed activation values must lie in its nonnegative operating domain; frozen positive gate coefficients alone do not make c*z nonnegative for negative z. The source attention composite rule separately supports signed input contributions by explicit positive/negative splitting. Do not promote the local frozen operator into a global GELU game equivalence."
+  },
+  "findings": [
+    {
+      "id": "AG01",
+      "severity": "high",
+      "classification": "definite_source_bug",
+      "title": "Tie conventions do not make the discontinuous stopping streams differentiable",
+      "source_locations": [
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 793
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 1463
+        },
+        {
+          "file": "tex/chapters/04_game_theory.tex",
+          "line": 282
+        },
+        {
+          "file": "tex/chapters/04_game_theory.tex",
+          "line": 952
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/Thesis/StoppingDecomposition.lean",
+          "line": 13,
+          "declaration": "Thesis.StoppingDecomposition.stopPair"
+        },
+        {
+          "file": "formalization/Thesis/StoppingDecomposition.lean",
+          "line": 203,
+          "declaration": "Thesis.StoppingDecomposition.thesis_stopping_decomposition_gradient"
+        },
+        {
+          "file": "formalization/Thesis/BackwardGames.lean",
+          "line": 174,
+          "declaration": "Thesis.BackwardGames.stopping_game_gradient"
+        }
+      ],
+      "evidence": "The source calls the tied-point quantities stream and ordinary gradients. Its sole derivative convention is ReLU'(0)=0. But stopPair(1,1)=(0,0), whereas stopPair(1+h,1)=(1+h,1) for every h>0. The first stream difference quotient is 1/h+1, so it has no classical derivative and is not even continuous. A single neuron W=1,b=-1 at x=1 realizes the witness. Max-pool ties similarly do not have classical derivatives solely because one winner is selected.",
+      "verified_artifact": "formalization/.lake/diagnostics/attack_games/Audit.lean:18 (tied_stopping_pair_jumps)",
+      "metadata_assessment": "coverage_map correctly says strict-cell partial coverage; the source theorem itself still asserts gradients under its tie convention.",
+      "minimal_repair": "State classical derivative correspondences on strict activation cells, with unique relevant pool winners. Separately define and prove a selected-mask backward operator for ties. Do not call the selected stream rule an ordinary derivative or a Clarke derivative of the discontinuous stream function."
+    },
+    {
+      "id": "AG02",
+      "severity": "high",
+      "classification": "definite_source_bug",
+      "title": "Bias-omitted diagnostic routing is not the marginal of the biased natural Routing Game",
+      "source_locations": [
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 1681
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 3322
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 3325
+        },
+        {
+          "file": "tex/chapters/11_trajectory.tex",
+          "line": 195
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/Thesis/RoutingBackward.lean",
+          "line": 19,
+          "declaration": "Thesis.RoutingBackward.posDenominator"
+        },
+        {
+          "file": "formalization/Thesis/RoutingBackward.lean",
+          "line": 75,
+          "declaration": "Thesis.RoutingBackward.rgProbability"
+        }
+      ],
+      "implementation_locations": [
+        {
+          "file": "/home/jzimmermann/code/structural-explainability-thesis/code/playing_backward/bwgame/xai/methods/hellinger.py",
+          "line": 715
+        },
+        {
+          "file": "/home/jzimmermann/code/structural-explainability-thesis/code/playing_backward/bwgame/xai/methods/hellinger.py",
+          "line": 813
+        }
+      ],
+      "evidence": "At x=W=b=1, epsilon=0, the natural positive stream includes input mass 1 and bias mass 1. Its ordinary input transition is (1/2)*(1/2)=1/4; negative empty-stream absorption plus bias absorption gives cemetery mass 3/4. The displayed bias-omitted diagnostic has ordinary mass 1/2 and cemetery mass 1/2. Erasing intermediate states preserves ordinary probabilities and cannot change 1/4 into 1/2. The refined-versus-collapsed cemetery correction does not repair this distinct omission.",
+      "verified_artifact": "formalization/.lake/diagnostics/attack_games/Audit.lean (biased_natural_rg_probability); formalization/.lake/diagnostics/attack_games/counterexamples.json (biased_natural_vs_diagnostic)",
+      "minimal_repair": "Give the bias-omitted diagnostic its own kernel/model name and remove its identification as a marginal of the natural biased game. Alternatively include bias routes in the diagnostic and account for their terminal histories. Recheck every claim that its discounted occupations recover the biased alpha-beta recurrence; it needs a separate bridge or altered discounts."
+    },
+    {
+      "id": "AG03",
+      "severity": "medium",
+      "classification": "definite_source_bug",
+      "title": "The SG trajectory kernel omits the stated zero-fan-in cemetery case",
+      "source_locations": [
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 1144
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 3278
+        },
+        {
+          "file": "tex/chapters/04_game_theory.tex",
+          "line": 633
+        },
+        {
+          "file": "tex/chapters/11_trajectory.tex",
+          "line": 152
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/Thesis/BackwardGames.lean",
+          "line": 216,
+          "declaration": "Thesis.BackwardGames.sgTransition"
+        },
+        {
+          "file": "formalization/Thesis/BackwardGames.lean",
+          "line": 221,
+          "declaration": "Thesis.BackwardGames.sgTransition_normalized"
+        },
+        {
+          "file": "formalization/Thesis/ReLUNetGame.lean",
+          "line": 14,
+          "declaration": "Thesis.ReLUNetGame.NonzeroRows"
+        }
+      ],
+      "evidence": "The base SG sends a continuation with gamma=0 to cemetery. The later claimed verbatim LMP gives cemetery probability 1[z<=0] only. W=0,b=1 has an open gate, zero fan-in, and no ordinary route: without a zero-denominator convention the ordinary entries are undefined; with Lean real division they are zero and the entire row sums to zero. The isolated Lean test proves this directly for sgTransition. The normalization theorem excludes it by PositiveFanIn.",
+      "verified_artifact": "formalization/.lake/diagnostics/attack_games/Audit.lean (zero_fanin_row_is_not_normalized)",
+      "minimal_repair": "Define cemetery probability as 1 when the gate is closed or fan-in is zero, ordinary entries as zero in the zero-fan-in case, and prove normalization for nonnegative split weights without the positive-row exclusion. Propagate the case to Softplus stochastic stopping and the source Hellinger instantiation."
+    },
+    {
+      "id": "AG04",
+      "severity": "medium",
+      "classification": "source_definition_gap",
+      "title": "Displayed log optimization does not characterize the separately intended signed gate decision",
+      "source_locations": [
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 1607
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 1690
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 1758
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 1794
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 1819
+        },
+        {
+          "file": "tex/chapters/04_game_theory.tex",
+          "line": 1097
+        },
+        {
+          "file": "tex/chapters/04_game_theory.tex",
+          "line": 1248
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/Thesis/Regularization.lean",
+          "line": 315,
+          "declaration": "Thesis.Regularization.routing_variational"
+        },
+        {
+          "file": "formalization/Thesis/RoutingBackward.lean",
+          "line": 122,
+          "declaration": "Thesis.RoutingBackward.thesis_alpha_beta_recovery"
+        },
+        {
+          "file": "formalization/Thesis/LayeredGames.lean",
+          "line": 84,
+          "declaration": "Thesis.LayeredGames.Game.payoff"
+        }
+      ],
+      "evidence": "The source now explicitly compares activation actions on signed mass before ell, which fixes the intended negative-mass preference. However, its displayed activation optimization remains max{-infinity,Q_cont}, where Q_cont=ell(z), and is indifferent for every z<=0. The signed-mass comparison and this log optimization do not have the same argmax. Moreover a standard expected discounted payoff interpretation does not follow from the routing objective: action masses (1,9,4,4) and policies (1/2,1/2,0,0), (0,0,1/2,1/2) have equal entropy, expected masses 5>4, but source log-plus-entropy objectives log(6)<log(8). The source assigns only equilibrium/state-local log recursions, not an all-policy global utility tying the two node types together.",
+      "nonclaim": "The user clarified that Routing Game activations are nonnegative and GELU arguments are local. This finding is not a counterexample to the intended signed-mass game. The explicit mass-comparison sentence already prescribes the correct choice. The ReLU-only witness a=1,W=-1,b=0 has nonnegative output ReLU(-1)=0, yet the displayed log max has an extra optimizer. Retaining the signed gate decision separately and labeling log values as reporting coordinates repairs this presentation without replacing the intended routing rule. The four-action positive-mass witness refutes only an ordinary expected-mass interpretation, not the intended local log-routing objective.",
+      "verified_artifact": "formalization/.lake/diagnostics/attack_games/counterexamples.json (utility_preference_reversal)",
+      "metadata_assessment": "Coverage correctly leaves global Routing SPNE unproved. The source-facing recurrence identity must not be promoted as that theorem.",
+      "minimal_repair": "State the intended activation maximization on signed mass and identify the displayed log max only as an optimized value-coordinate identity. Prove local signed stopping optimality, including randomized gates and ties. Preserve the nonnegative-activation routing rule. A full all-policy utility/strategy bridge is still required before claiming global SPNE in Lean; the candidate below is recorded only as an optional unimplemented analysis, not an authorized model replacement."
+    },
+    {
+      "id": "AG05",
+      "severity": "medium",
+      "classification": "definite_source_bug",
+      "title": "Continuous random weights need not change normalized routing rows",
+      "source_locations": [
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 4097
+        },
+        {
+          "file": "tex/chapters/11_trajectory.tex",
+          "line": 964
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/Thesis/Randomization.lean",
+          "line": 92,
+          "declaration": "Thesis.Randomization.thesis_randomization_routing"
+        },
+        {
+          "file": "formalization/Thesis/Randomization.lean",
+          "line": 138,
+          "declaration": "Thesis.Randomization.thesis_randomization_routing_full_depth"
+        }
+      ],
+      "evidence": "Take two positive predecessor activations (1,1), trained row (2,-1), b=epsilon=0. For every randomized row with w1 in (2,3) and w2 in (-1,0), the root stays alive, each sign stream has exactly one supported action, and both full ordinary rows are (1/2,0,0,1/2). Their geometric row mass is 1. The event has probability 1/36 for iid Uniform[-3,3], a continuous symmetric distribution. Changing temperatures cannot change a singleton normalized stream. Also a.s. strict inequality, even when true, would not itself supply a deterministic uniform b<1 over random draws.",
+      "verified_artifact": "formalization/.lake/diagnostics/attack_games/counterexamples.json (continuous_randomization_identical_rows); formalization/.lake/diagnostics/attack_games/Audit.lean (positive_singleton_stream_scale_invariance)",
+      "nonclaim": "The explicit conditional contraction theorem with the row bound hrow is sound. The false statement is the source rationale that continuous randomization automatically yields differing normalized rows and strict overlap contraction.",
+      "minimal_repair": "Remove the almost-sure claim or add and prove assumptions excluding singleton/proportional stream rows. State whether the contraction constant is fixed uniformly, realization-dependent, or an expectation bound; prove the selected version."
+    },
+    {
+      "id": "AG06",
+      "severity": "medium",
+      "classification": "definite_source_bug",
+      "title": "alpha minus beta equal to one does not by itself conserve ordinary relevance with empty streams",
+      "source_locations": [
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 348
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 1708
+        },
+        {
+          "file": "tex/chapters/04_game_theory.tex",
+          "line": 71
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/Thesis/RoutingBackward.lean",
+          "line": 30,
+          "declaration": "Thesis.RoutingBackward.lrpLayer"
+        },
+        {
+          "file": "formalization/Thesis/RoutingBackward.lean",
+          "line": 89,
+          "declaration": "Thesis.RoutingBackward.rgDiscount"
+        }
+      ],
+      "evidence": "With alpha=2,beta=1,x=W=1,b=epsilon=0, the positive ratio is 1 and the empty negative ratio is 0 under the stated 0/0=0 convention. Input relevance is 2R, despite alpha-beta=1 and no bias/stabilizer term. The missing signed share is the empty negative branch absorbed outside the ordinary input graph.",
+      "minimal_repair": "Qualify ordinary relevance conservation by nonempty normalized sign streams and no discarded mass, or explicitly include all signed absorption contributions, including the empty-stream fallback, in the conserved total."
+    },
+    {
+      "id": "AG07",
+      "severity": "medium",
+      "classification": "source_definition_gap",
+      "title": "The full conditioned-survival path formulas remain undefined off positive-survival support",
+      "source_locations": [
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 3708
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 3741
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 3751
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 3840
+        },
+        {
+          "file": "tex/chapters/11_trajectory.tex",
+          "line": 574
+        },
+        {
+          "file": "tex/chapters/11_trajectory.tex",
+          "line": 617
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/Thesis/Games.lean",
+          "line": 373,
+          "declaration": "Thesis.Games.doob_path_telescoping"
+        },
+        {
+          "file": "formalization/Thesis/Games.lean",
+          "line": 387,
+          "declaration": "Thesis.Games.doob_survival_path"
+        }
+      ],
+      "evidence": "The source defines transformed rows only at psi>0, then multiplies them over every endpoint-ordinary tuple and cancels all potentials. A root splitting probability 1/2 to a live node and 1/2 to a dead node has Z=1/2 but psi(dead)=0. Endpoint-ordinary tuples through that dead node still occur in the displayed product domain, have original probability zero, and require a 0/0 transformed row. In addition, endpoint-ordinary tuples containing an earlier cemetery are impossible paths but are in the raw product set used to define Surv; equivalence with never entering cemetery is only on valid paths/almost surely. Lean requires nonzero potentials at every state and time and therefore does not settle these cases.",
+      "metadata_assessment": "coverage_map and tex_links explicitly acknowledge missing zero-survival pruning. This is an honest partial result, not full source coverage.",
+      "minimal_repair": "Define survival potentials by the kernel recursion at unreachable states, extend transformed zero-survival rows by arbitrary stochastic rows, and prove those rows are unreachable from the conditioned root; or use layer-dependent positive-survival subtypes with an explicit embedding and common two-model comparison space. State path identities on valid ordinary paths and handle zero-probability paths without cancellation."
+    },
+    {
+      "id": "AG08",
+      "severity": "medium",
+      "classification": "source_fidelity_gap",
+      "title": "The Lean alpha-beta recurrence is explicitly gated and needs a bridge to the ungated source recurrence",
+      "source_locations": [
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 2028
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 2044
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/Thesis/RoutingBackward.lean",
+          "line": 30,
+          "declaration": "Thesis.RoutingBackward.lrpLayer"
+        },
+        {
+          "file": "formalization/Thesis/RoutingBackward.lean",
+          "line": 122,
+          "declaration": "Thesis.RoutingBackward.thesis_alpha_beta_recovery"
+        },
+        {
+          "file": "formalization/coverage_map.json",
+          "line": 240
+        },
+        {
+          "file": "formalization/tex_links.json",
+          "line": 222
+        }
+      ],
+      "evidence": "Lean lrpLayer sets the whole row to zero when preactivation<=0. The source equation eq:lrp-eps-recursion has no gate. For one neuron x=W=1,b=-2,alpha=1,beta=0,epsilon=1 and arbitrary output seed R=1, Lean returns 0 and the displayed source recurrence returns 1/2. This does not refute source thm:ab-recovery, which restricts to positive root output (or seed f=0); it disproves unconditional identification for the arbitrary relevance vector advertised in the coverage scope. For valid source seeds, a dead-neuron-relevance-zero lemma could establish equivalence.",
+      "verified_artifact": "formalization/.lake/diagnostics/attack_games/Audit.lean (masked_lrp_differs_from_unmasked_at_arbitrary_dead_seed)",
+      "minimal_repair": "Name the current recurrence gated LRP, define the literal ungated source recursion separately, and prove equality on the source-supported output seeds (and on affine-readout seeds via zero activation contributions). Retain arbitrary-R algebra as a distinct stronger-domain identity about the gated rule."
+    },
+    {
+      "id": "AG09",
+      "severity": "medium",
+      "classification": "metadata_overcredit",
+      "title": "The probit-duality source label links to the different entropy/Softplus theorem",
+      "source_locations": [
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "line": 2926
+        },
+        {
+          "file": "tex/chapters/04_game_theory.tex",
+          "line": 1834
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/Thesis/Regularization.lean",
+          "line": 155,
+          "declaration": "Thesis.Regularization.softplus_variational"
+        },
+        {
+          "file": "formalization/coverage_map.json",
+          "line": 264
+        },
+        {
+          "file": "formalization/tex_links.json",
+          "line": 227
+        }
+      ],
+      "evidence": "lem:noisy-gate-dual concerns R_Phi(p)=phi(Phi_inverse(p)), optimizer Phi(z), and value z Phi(z)+phi(z). The linked Lean theorem concerns binary entropy, optimizer sigmoid(z/theta), and theta log(1+exp(z/theta)). No probit regularizer, Gaussian CDF, quantile, or parameterized conjugate theorem occurs in the reviewed modules. At theta=1,z=0 the values are log 2 and 1/sqrt(2 pi), respectively. The metadata admits the difference but nevertheless calls the source theorem partial/Lean components.",
+      "minimal_repair": "Mark the probit lemma not formalized and remove its Lean-result link until the actual probit theorem or a general theorem with all probit hypotheses checked is present. Link the entropy theorem only to the entropy identity it proves."
+    },
+    {
+      "id": "AG10",
+      "severity": "low",
+      "classification": "definite_source_bug",
+      "title": "A regularizer maximizer can change the decomposition even when its difference is fixed",
+      "source_locations": [
+        {
+          "file": "tex/chapters/03_decompositions.tex",
+          "line": 389
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/Thesis/Regularization.lean",
+          "line": 204,
+          "declaration": "Thesis.Regularization.softSplit"
+        }
+      ],
+      "evidence": "For Omega=0, Delta=0, z+=z-=1, both pi=0 and pi=1 maximize the same conjugate objective. They give pairs (0,0) and (1,1). Thus the source sentence that choice of maximizer is immaterial is true only of the recovered difference, not the pair or its future individual streams.",
+      "minimal_repair": "Say that every maximizer gives the same recovered difference, while the stream decomposition depends on the fixed selector. No change is needed to the difference-recovery theorem."
+    }
+  ],
+  "routing_utility_repair_candidate": {
+    "status": "Optional mathematical analysis only, not implemented or Lean verified, and not authorization to replace the intended model. Prefer retaining the signed local gate decision as clarified by the user.",
+    "global_convention": "Use one signed utility U_s^pi, the payoff to the positive player; the negative player receives -U_s^pi.",
+    "activation_rule": "For continue probability lambda, U_s^pi=lambda*(U_lin_positive^pi+U_lin_negative^pi). Stop has scalar utility zero. The owner maximizes xi_q U_s^pi.",
+    "routing_rule": "At a node owned by q, U_s^pi=xi_q*exp(sum_a nu_a log(w_a*max(xi_q*U_child(a)^pi,0))+tau*H(nu)). Fused input, bias and outside actions use their explicit nonnegative static masses. Define 0*(-infinity)=0 and exp(-infinity)=0.",
+    "proof_obligations": [
+      "Every fixed-policy aggregator is monotone in each global signed child utility, including owner q=- because both sign reversals cancel.",
+      "Optimize the routing rule using the extended-support Gibbs theorem, including an all-zero stream; optimize the signed activation rule over lambda in [0,1].",
+      "Inductively prove lower/upper saddle inequalities against arbitrary strategies at every state.",
+      "At tau=1, optimized routing mass equals the sum of action masses; the two epsilon masses cancel at the activation comparison; prove original-forward recovery.",
+      "Identify source log pairs as reported positive/negative coordinates of signed utilities, not as the activation objective.",
+      "Separately define the sampled routing/cemetery law and prove the discounted occupation recurrence under the constructed policies."
+    ],
+    "boundary": "This is a nonlinear recursive payoff model. It is not justified as the usual expected discounted reward model by monotonicity of log alone."
+  },
+  "honest_existing_restrictions_and_unfinished_bridges": [
+    "The ReLU Net Game saddle theorem is substantive: randomized continuation strategies, normalized discounts, signed biases and an ungated affine-output wrapper are present. Nonzero fan-in and nonnegative split weights are explicit; no conclusion is assumed as an input.",
+    "General wp/wn splits can overlap. The derivative algebra remains true but literal source transitions use canonical positive/negative parts and absolute row sums; source specialization must choose those canonical parameters.",
+    "The stopping and Softplus path-discount cancellation proofs are genuine, but the source nonzero-fan-in exclusion remains; the full source cemetery law and path-encoding equivalence are not globally packaged.",
+    "Softplus full-network differentiation is real differentiation of softEval, with the sigmoid in the probability and original fan-in in the discount. The scalar entropy variational theorem and decomposition bridge do not prove the full entropy-regularized game equilibrium.",
+    "Attention is explicitly the frozen A affine map, including Value bias; the proof does not differentiate QK/softmax. This matches the conditioned source question. The independent attention derivative control distinguishes it from actual self-attention.",
+    "Attention and RG occupation recovery are algebraic anchor identities. Neither contains a full global SPNE proof. Attention has positive epsilon and no support-restricted/zero-score KL optimizer bridge to the source epsilon-zero formula.",
+    "ReferencePolicy proves the correct full-support finite KL variational maximum and uniqueness, allowing candidate policies with zero coordinates. It does not handle zero reference mass or minus-infinity scores. Its total real kl definition evaluates kl(1||0)=0 in the Unit witness, so it must never be used as extended KL outside its positive-reference assumptions.",
+    "The general convex regularizer theorem is not formalized by the entropy-specific softSplit_recovery. Existing coverage candidly marks it partial.",
+    "Finite path overlap DP, per-terminal disagreement, and coarsening inequalities are genuine full-path identities. The generic erase/recover inverse theorem assumes an equivalence; it does not establish the natural RG reconstruction map.",
+    "RandomizationExpectation actually invokes conditional-expectation pull-out, with integrability and above-layer measurability explicit. The modelKernel wrapper is an actual geometric mean, and full-depth monotonicity is proved. It does not derive the conditional-alive assumption from iid symmetric weights; the source also assumes that bound.",
+    "A fair coin reused for two gate layers gives each marginal alive probability 1/2 but expected two-layer survival 1/2 rather than 1/4. Conditioning on the upper kernel yields alive probability 0 or 1. Thus replacing the conditional hypothesis with unconditioned symmetry would be unsound.",
+    "The conditioned-survival lower bound is an integrable scalar threshold inequality with input c,Z and an expected-c bound. It has not been packaged with the actual two-model survival law and the full randomization theorem into one source-exact statement."
+  ],
+  "verification": {
+    "lean_command": "cd formalization && lake env lean .lake/diagnostics/attack_games/Audit.lean",
+    "lean_receipt": "formalization/.lake/diagnostics/attack_games/lean-check.log",
+    "python_command": "/home/jzimmermann/code/dc_decompose/.venv/bin/python formalization/.lake/diagnostics/attack_games/counterexamples.py",
+    "python_receipt": "formalization/.lake/diagnostics/attack_games/counterexamples.json",
+    "scope": "Diagnostic receipt using existing compiled dependencies, not a clean committed-closure build. Exact #check @ types for 22 headline declarations and axiom prints for selected parent declarations are in the Lean log. No production theorem was changed.",
+    "lean_exit_code": 0,
+    "python_exit_code": 0,
+    "numerical_boundary": "Fraction witnesses are exact; the open randomization event argument is analytic. Attention/Softplus autograd controls and exponentiated logarithms are numerical, not uniform certificates."
+  },
+  "exact_reviewed_declarations": [
+    {
+      "declaration": "Thesis.ReLUNetGame.rowDiscount",
+      "kind": "def",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 11
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.NonzeroRows",
+      "kind": "def",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 14
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.kernel",
+      "kind": "def",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 19
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.kernel_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 23
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.kernel_normalized",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 31
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.continuation",
+      "kind": "def",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 44
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.continuation_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 49
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.signedValue",
+      "kind": "def",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 65
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.signed_layer",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 73
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.signedValue_eq_network",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 106
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.affine_output_value",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 116
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.common_stopping_rule",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 126
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.maximizing_action_characterization",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetGame.lean",
+      "line": 135
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.Strategy",
+      "kind": "def",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 11
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.gateProbability",
+      "kind": "def",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 15
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.optimalStrategy",
+      "kind": "def",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 19
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.policyValue",
+      "kind": "def",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 27
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.gateProbability_pure",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 35
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.gateProbability_value",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 39
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.randomized_stop_bounds",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 46
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.continuation_mono",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 54
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.continuation_signed",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 64
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.optimal_lower_pair",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 79
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.optimal_upper_pair",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 114
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.relu_net_game_equilibrium",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 145
+    },
+    {
+      "declaration": "Thesis.ReLUNetGame.relu_net_game_affine_equilibrium",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 162
+    },
+    {
+      "declaration": "Thesis.BackwardGames.gated",
+      "kind": "def",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 16
+    },
+    {
+      "declaration": "Thesis.BackwardGames.occupations",
+      "kind": "def",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 20
+    },
+    {
+      "declaration": "Thesis.BackwardGames.signedProduct",
+      "kind": "def",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 28
+    },
+    {
+      "declaration": "Thesis.BackwardGames.gated_sub",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 32
+    },
+    {
+      "declaration": "Thesis.BackwardGames.occupation_difference",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 38
+    },
+    {
+      "declaration": "Thesis.BackwardGames.signedMap_matrix",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 48
+    },
+    {
+      "declaration": "Thesis.BackwardGames.originalJac_occupation",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 58
+    },
+    {
+      "declaration": "Thesis.BackwardGames.Paths",
+      "kind": "def",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 74
+    },
+    {
+      "declaration": "Thesis.BackwardGames.rawWeight",
+      "kind": "def",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 83
+    },
+    {
+      "declaration": "Thesis.BackwardGames.raw_path_integral",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 90
+    },
+    {
+      "declaration": "Thesis.BackwardGames.fanIn",
+      "kind": "def",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 117
+    },
+    {
+      "declaration": "Thesis.BackwardGames.PositiveFanIn",
+      "kind": "def",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 120
+    },
+    {
+      "declaration": "Thesis.BackwardGames.NonnegativeWeights",
+      "kind": "def",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 124
+    },
+    {
+      "declaration": "Thesis.BackwardGames.sgProbability",
+      "kind": "def",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 130
+    },
+    {
+      "declaration": "Thesis.BackwardGames.sgDiscount",
+      "kind": "def",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 137
+    },
+    {
+      "declaration": "Thesis.BackwardGames.sg_path_discount_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 141
+    },
+    {
+      "declaration": "Thesis.BackwardGames.sgOccupation",
+      "kind": "def",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 162
+    },
+    {
+      "declaration": "Thesis.BackwardGames.sg_occupation_kernels",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 165
+    },
+    {
+      "declaration": "Thesis.BackwardGames.stopping_game_gradient",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 174
+    },
+    {
+      "declaration": "Thesis.BackwardGames.sgProbability_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 189
+    },
+    {
+      "declaration": "Thesis.BackwardGames.sgDiscount_pos",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 203
+    },
+    {
+      "declaration": "Thesis.BackwardGames.sgOccupation_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 209
+    },
+    {
+      "declaration": "Thesis.BackwardGames.sgTransition",
+      "kind": "def",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 216
+    },
+    {
+      "declaration": "Thesis.BackwardGames.sgTransition_normalized",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 221
+    },
+    {
+      "declaration": "Thesis.BackwardGames.sgTransition_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 235
+    },
+    {
+      "declaration": "Thesis.BackwardGames.thesis_gradient_representation",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 252
+    },
+    {
+      "declaration": "Thesis.BackwardGames.originalJac_coordinate_paths",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 264
+    },
+    {
+      "declaration": "Thesis.BackwardGames.originalJac_no_path",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BackwardGames.lean",
+      "line": 273
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.stopPair",
+      "kind": "def",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 13
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.stopPair_valid",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 16
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.stopPair_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 22
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.thesis_stopping_validity",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 29
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.stopping_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 34
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.stopLayer",
+      "kind": "def",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 39
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.stopLayerJac",
+      "kind": "def",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 43
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.stoppingJac",
+      "kind": "def",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 47
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.stopLayer_difference",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 51
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.layerGate_original",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 62
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.gated_projection",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 72
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.gated_scalar_derivative",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 82
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.stopLayer_hasFDerivAt",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 99
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.stopping_hasFDerivAt",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 140
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.pairMap",
+      "kind": "def",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 160
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.stopLayerJac_pairMap",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 163
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.pairMap_comp",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 173
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.stoppingJac_occupation",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 191
+    },
+    {
+      "declaration": "Thesis.StoppingDecomposition.thesis_stopping_decomposition_gradient",
+      "kind": "theorem",
+      "file": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 203
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.preactivation",
+      "kind": "def",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 12
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.posContribution",
+      "kind": "def",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 15
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.negContribution",
+      "kind": "def",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 18
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.posDenominator",
+      "kind": "def",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 21
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.negDenominator",
+      "kind": "def",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 25
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.lrpLayer",
+      "kind": "def",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 30
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.lrp",
+      "kind": "def",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 37
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.routingTrace",
+      "kind": "def",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 44
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.signed_routing_layer",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 53
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.full_lrp_matrix",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 63
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.rgProbability",
+      "kind": "def",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 75
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.rgDiscount",
+      "kind": "def",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 86
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.rg_path_discount_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 93
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.rgOccupation",
+      "kind": "def",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 107
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.rg_occupation_kernels",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 112
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.thesis_alpha_beta_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 122
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.posDenominator_pos",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 134
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.negDenominator_pos",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 143
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.rgProbability_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 152
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.rgDiscount_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 169
+    },
+    {
+      "declaration": "Thesis.RoutingBackward.rgOccupation_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RoutingBackward.lean",
+      "line": 181
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softLayer",
+      "kind": "def",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 10
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softSigned",
+      "kind": "def",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 13
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softEval",
+      "kind": "def",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 17
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softTrace",
+      "kind": "def",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 21
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softLayer_hasFDerivAt",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 28
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softTrace_layer_map",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 50
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softEval_hasFDerivAt",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 67
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.PositiveFanIn",
+      "kind": "def",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 80
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softProbability",
+      "kind": "def",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 85
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softDiscount",
+      "kind": "def",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 94
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.soft_path_discount_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 100
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softOccupation",
+      "kind": "def",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 114
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.soft_occupation_kernels",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 118
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softProbability_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 125
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softDiscount_pos",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 141
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.softOccupation_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 147
+    },
+    {
+      "declaration": "Thesis.SoftplusBackward.thesis_softplus_gradient",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SoftplusBackward.lean",
+      "line": 155
+    },
+    {
+      "declaration": "Thesis.SoftplusDecomposition.softEval_eq_forwardWith",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SoftplusDecomposition.lean",
+      "line": 10
+    },
+    {
+      "declaration": "Thesis.SoftplusDecomposition.thesis_softplus_forward",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SoftplusDecomposition.lean",
+      "line": 20
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.pairIndex",
+      "kind": "def",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 9
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.flatIndex",
+      "kind": "def",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 12
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.effectiveWeight",
+      "kind": "def",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 16
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.effectiveBias",
+      "kind": "def",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 20
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.conditionedAttention",
+      "kind": "def",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 24
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.conditionedAttention_affine",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 30
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.conditionedAttention_hasFDerivAt",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 49
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.normalized_attention_bias",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 62
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.effective_contribution_factor",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 68
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.affineRule",
+      "kind": "def",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 90
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.attentionLRP",
+      "kind": "def",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 96
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.attentionTrace",
+      "kind": "def",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 102
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.attentionLRP_matrix",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 112
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.attention_raw_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 124
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.attentionProbability",
+      "kind": "def",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 141
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.attentionDiscount",
+      "kind": "def",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 151
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.attention_path_discount_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 157
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.attentionOccupation",
+      "kind": "def",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 168
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.thesis_attention_alpha_beta_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 177
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.attentionProbability_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 188
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.attentionDiscount_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 201
+    },
+    {
+      "declaration": "Thesis.AttentionBackward.attentionOccupation_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AttentionBackward.lean",
+      "line": 211
+    },
+    {
+      "declaration": "Thesis.AffineOutputBackward.originalJac_sg_coordinate",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AffineOutputBackward.lean",
+      "line": 10
+    },
+    {
+      "declaration": "Thesis.AffineOutputBackward.affineOutput",
+      "kind": "def",
+      "file": "formalization/Thesis/AffineOutputBackward.lean",
+      "line": 16
+    },
+    {
+      "declaration": "Thesis.AffineOutputBackward.affineOutput_hasFDerivAt",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AffineOutputBackward.lean",
+      "line": 19
+    },
+    {
+      "declaration": "Thesis.AffineOutputBackward.thesis_affine_output_gradient",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AffineOutputBackward.lean",
+      "line": 25
+    },
+    {
+      "declaration": "Thesis.AffineOutputBackward.affineOutputLRP",
+      "kind": "def",
+      "file": "formalization/Thesis/AffineOutputBackward.lean",
+      "line": 38
+    },
+    {
+      "declaration": "Thesis.AffineOutputBackward.readoutPos",
+      "kind": "def",
+      "file": "formalization/Thesis/AffineOutputBackward.lean",
+      "line": 42
+    },
+    {
+      "declaration": "Thesis.AffineOutputBackward.readoutNeg",
+      "kind": "def",
+      "file": "formalization/Thesis/AffineOutputBackward.lean",
+      "line": 46
+    },
+    {
+      "declaration": "Thesis.AffineOutputBackward.readoutOccupation",
+      "kind": "def",
+      "file": "formalization/Thesis/AffineOutputBackward.lean",
+      "line": 51
+    },
+    {
+      "declaration": "Thesis.AffineOutputBackward.thesis_affine_output_lrp",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AffineOutputBackward.lean",
+      "line": 57
+    },
+    {
+      "declaration": "Thesis.AffineOutputBackward.readoutOccupation_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AffineOutputBackward.lean",
+      "line": 75
+    },
+    {
+      "declaration": "Thesis.Regularization.softplus",
+      "kind": "def",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 12
+    },
+    {
+      "declaration": "Thesis.Regularization.gate",
+      "kind": "def",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 14
+    },
+    {
+      "declaration": "Thesis.Regularization.gate_pos",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 16
+    },
+    {
+      "declaration": "Thesis.Regularization.gate_lt_one",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 17
+    },
+    {
+      "declaration": "Thesis.Regularization.sigmoid_exp_ratio",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 19
+    },
+    {
+      "declaration": "Thesis.Regularization.hasDerivAt_softplus",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 25
+    },
+    {
+      "declaration": "Thesis.Regularization.deriv_softplus",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 36
+    },
+    {
+      "declaration": "Thesis.Regularization.hasDerivAt_gate",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 39
+    },
+    {
+      "declaration": "Thesis.Regularization.gate_derivative_pos",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 46
+    },
+    {
+      "declaration": "Thesis.Regularization.binary_gibbs_bound",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 51
+    },
+    {
+      "declaration": "Thesis.Regularization.binary_gibbs_value",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 75
+    },
+    {
+      "declaration": "Thesis.Regularization.binary_gibbs_strict",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 86
+    },
+    {
+      "declaration": "Thesis.Regularization.entropy_policy_le_softplus",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 116
+    },
+    {
+      "declaration": "Thesis.Regularization.entropy_gate_value",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 126
+    },
+    {
+      "declaration": "Thesis.Regularization.softplus_variational",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 138
+    },
+    {
+      "declaration": "Thesis.Regularization.entropy_gate_unique",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 148
+    },
+    {
+      "declaration": "Thesis.Regularization.hasDerivAt_deriv_softplus",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 168
+    },
+    {
+      "declaration": "Thesis.Regularization.softplus_relu_bounds",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 175
+    },
+    {
+      "declaration": "Thesis.Regularization.softSplit",
+      "kind": "def",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 194
+    },
+    {
+      "declaration": "Thesis.Regularization.softSplit_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 197
+    },
+    {
+      "declaration": "Thesis.Regularization.softSplit_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 203
+    },
+    {
+      "declaration": "Thesis.Regularization.softSplit_common_shift",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 209
+    },
+    {
+      "declaration": "Thesis.Regularization.entropy_cell_bound",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 218
+    },
+    {
+      "declaration": "Thesis.Regularization.normalized",
+      "kind": "def",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 234
+    },
+    {
+      "declaration": "Thesis.Regularization.partition_pos",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 236
+    },
+    {
+      "declaration": "Thesis.Regularization.normalized_pos",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 239
+    },
+    {
+      "declaration": "Thesis.Regularization.normalized_sum",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 242
+    },
+    {
+      "declaration": "Thesis.Regularization.finite_gibbs_bound",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 248
+    },
+    {
+      "declaration": "Thesis.Regularization.finite_gibbs_value",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 268
+    },
+    {
+      "declaration": "Thesis.Regularization.entropy",
+      "kind": "def",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 278
+    },
+    {
+      "declaration": "Thesis.Regularization.gibbs",
+      "kind": "def",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 280
+    },
+    {
+      "declaration": "Thesis.Regularization.logPartition",
+      "kind": "def",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 282
+    },
+    {
+      "declaration": "Thesis.Regularization.routing_variational_bound",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 285
+    },
+    {
+      "declaration": "Thesis.Regularization.routing_gibbs_value",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 301
+    },
+    {
+      "declaration": "Thesis.Regularization.routing_variational",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Regularization.lean",
+      "line": 316
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.kl",
+      "kind": "def",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 13
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.tiltedMass",
+      "kind": "def",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 15
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.referencePolicy",
+      "kind": "def",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 17
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.referenceValue",
+      "kind": "def",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 19
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.tiltedMass_pos",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 22
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.referencePolicy_pos",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 25
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.referencePolicy_normalized",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 28
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.kl_objective_identity",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 33
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.reference_variational_bound",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 50
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.reference_policy_value",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 58
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.entropy_cell_strict",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 65
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.finite_gibbs_strict",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 80
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.reference_policy_unique",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 106
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.thesis_kl_legendre_fenchel",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 120
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.reference_log_policy",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 133
+    },
+    {
+      "declaration": "Thesis.ReferencePolicy.thesis_attention_value_policy",
+      "kind": "theorem",
+      "file": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 140
+    },
+    {
+      "declaration": "Thesis.Games.overlap",
+      "kind": "def",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 18
+    },
+    {
+      "declaration": "Thesis.Games.transport",
+      "kind": "def",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 20
+    },
+    {
+      "declaration": "Thesis.Games.transport_mass",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 22
+    },
+    {
+      "declaration": "Thesis.Games.transport_probability",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 27
+    },
+    {
+      "declaration": "Thesis.Games.transport_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 34
+    },
+    {
+      "declaration": "Thesis.Games.sqrt_overlap_le",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 39
+    },
+    {
+      "declaration": "Thesis.Games.overlap_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 45
+    },
+    {
+      "declaration": "Thesis.Games.overlap_le_one",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 48
+    },
+    {
+      "declaration": "Thesis.Games.geometric_kernel_substochastic",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 57
+    },
+    {
+      "declaration": "Thesis.Games.overlap_mass_decreases",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 64
+    },
+    {
+      "declaration": "Thesis.Games.overlap_chain_rule",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 71
+    },
+    {
+      "declaration": "Thesis.Games.overlap_path_factorization",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 85
+    },
+    {
+      "declaration": "Thesis.Games.discounted_edge_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 94
+    },
+    {
+      "declaration": "Thesis.Games.signed_discounted_edge_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 98
+    },
+    {
+      "declaration": "Thesis.Games.routing_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 103
+    },
+    {
+      "declaration": "Thesis.Games.survival_overlap",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 109
+    },
+    {
+      "declaration": "Thesis.Games.hellinger_identity",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 121
+    },
+    {
+      "declaration": "Thesis.Games.Paths",
+      "kind": "def",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 139
+    },
+    {
+      "declaration": "Thesis.Games.pathLaw",
+      "kind": "def",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 150
+    },
+    {
+      "declaration": "Thesis.Games.backwardDP",
+      "kind": "def",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 155
+    },
+    {
+      "declaration": "Thesis.Games.endpoint",
+      "kind": "def",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 159
+    },
+    {
+      "declaration": "Thesis.Games.path_integral_eq_DP",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 164
+    },
+    {
+      "declaration": "Thesis.Games.path_law_normalized",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 180
+    },
+    {
+      "declaration": "Thesis.Games.path_geometric_mean",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 197
+    },
+    {
+      "declaration": "Thesis.Games.trajectory_overlap_eq_DP",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 214
+    },
+    {
+      "declaration": "Thesis.Games.discount_path_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 222
+    },
+    {
+      "declaration": "Thesis.Games.pathDisagreement",
+      "kind": "def",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 244
+    },
+    {
+      "declaration": "Thesis.Games.pixelDisagreement",
+      "kind": "def",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 248
+    },
+    {
+      "declaration": "Thesis.Games.pathDisagreement_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 251
+    },
+    {
+      "declaration": "Thesis.Games.pixelDisagreement_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 256
+    },
+    {
+      "declaration": "Thesis.Games.pixelDisagreement_formula",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 267
+    },
+    {
+      "declaration": "Thesis.Games.pixelDisagreement_total",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 279
+    },
+    {
+      "declaration": "Thesis.Games.overlap_sq_le_masses",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 291
+    },
+    {
+      "declaration": "Thesis.Games.overlap_self",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 303
+    },
+    {
+      "declaration": "Thesis.Games.overlap_eq_one_iff",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 309
+    },
+    {
+      "declaration": "Thesis.Games.overlap_eq_zero_iff",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 332
+    },
+    {
+      "declaration": "Thesis.Games.doob_kernel_normalized",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 355
+    },
+    {
+      "declaration": "Thesis.Games.doob_kernel_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 362
+    },
+    {
+      "declaration": "Thesis.Games.doob_path_telescoping",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 373
+    },
+    {
+      "declaration": "Thesis.Games.doob_survival_path",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Games.lean",
+      "line": 387
+    },
+    {
+      "declaration": "Thesis.Coarsening.pushforward",
+      "kind": "def",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 13
+    },
+    {
+      "declaration": "Thesis.Coarsening.fiber",
+      "kind": "def",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 16
+    },
+    {
+      "declaration": "Thesis.Coarsening.pushforward_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 19
+    },
+    {
+      "declaration": "Thesis.Coarsening.pushforward_mass",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 27
+    },
+    {
+      "declaration": "Thesis.Coarsening.fiber_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 34
+    },
+    {
+      "declaration": "Thesis.Coarsening.fiber_overlap_formula",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 42
+    },
+    {
+      "declaration": "Thesis.Coarsening.fiber_overlap_total",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 51
+    },
+    {
+      "declaration": "Thesis.Coarsening.overlap_coarsening",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 59
+    },
+    {
+      "declaration": "Thesis.Coarsening.hellinger_coarsening",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 74
+    },
+    {
+      "declaration": "Thesis.Coarsening.overlap_reindex",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 81
+    },
+    {
+      "declaration": "Thesis.Coarsening.surviving_overlap_recovery",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 88
+    },
+    {
+      "declaration": "Thesis.Coarsening.fineA",
+      "kind": "def",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 95
+    },
+    {
+      "declaration": "Thesis.Coarsening.fineB",
+      "kind": "def",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 96
+    },
+    {
+      "declaration": "Thesis.Coarsening.eraseCause",
+      "kind": "def",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 99
+    },
+    {
+      "declaration": "Thesis.Coarsening.counterexample_laws",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 101
+    },
+    {
+      "declaration": "Thesis.Coarsening.paper_full_path_bijection_counterexample",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 112
+    },
+    {
+      "declaration": "Thesis.Coarsening.paper_full_path_overlap_strict",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Coarsening.lean",
+      "line": 118
+    },
+    {
+      "declaration": "Thesis.Randomization.cemeteryCompletion",
+      "kind": "def",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 14
+    },
+    {
+      "declaration": "Thesis.Randomization.cemeteryCompletion_normalized",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 18
+    },
+    {
+      "declaration": "Thesis.Randomization.cemeteryCompletion_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 22
+    },
+    {
+      "declaration": "Thesis.Randomization.dead_row_ordinary_zero",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 29
+    },
+    {
+      "declaration": "Thesis.Randomization.thesis_alive_mismatch_ordinary",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 39
+    },
+    {
+      "declaration": "Thesis.Randomization.thesis_alive_mismatch_full",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 46
+    },
+    {
+      "declaration": "Thesis.Randomization.ordinaryOverlap",
+      "kind": "def",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 53
+    },
+    {
+      "declaration": "Thesis.Randomization.ordinaryOverlap_path_formula",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 57
+    },
+    {
+      "declaration": "Thesis.Randomization.backwardDP_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 63
+    },
+    {
+      "declaration": "Thesis.Randomization.backwardDP_geometric_bound",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 74
+    },
+    {
+      "declaration": "Thesis.Randomization.thesis_randomization_routing",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 92
+    },
+    {
+      "declaration": "Thesis.Randomization.prefix_overlap_monotone",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 108
+    },
+    {
+      "declaration": "Thesis.Randomization.prefix_overlap_antitone",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 119
+    },
+    {
+      "declaration": "Thesis.Randomization.ordinaryOverlap_antitone",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 124
+    },
+    {
+      "declaration": "Thesis.Randomization.thesis_randomization_routing_full_depth",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 138
+    },
+    {
+      "declaration": "Thesis.Randomization.positiveOnlyOrdinary",
+      "kind": "def",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 152
+    },
+    {
+      "declaration": "Thesis.Randomization.paper_empty_stream_counterexample",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 154
+    },
+    {
+      "declaration": "Thesis.Randomization.paper_negative_contraction_counterexample",
+      "kind": "theorem",
+      "file": "formalization/Thesis/Randomization.lean",
+      "line": 160
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.conditional_thinning",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 15
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.randomPrefix",
+      "kind": "def",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 36
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.randomMass",
+      "kind": "def",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 42
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.randomPrefix_nonneg",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 46
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.randomMass_zero",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 54
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.randomMass_step_le",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 58
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.expected_randomMass_step",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 70
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.thesis_randomization_stopping",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 102
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.backwardDP_append_one",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 128
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.randomPrefix_weighted",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 142
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.modelKernel",
+      "kind": "def",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 156
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.modelKernel_row_bound",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 160
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.randomMass_model_overlap",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 177
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.thesis_rand_adf_models",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 187
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.thesis_rand_adf_full_depth",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 209
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.survival_threshold_pointwise",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 238
+    },
+    {
+      "declaration": "Thesis.RandomizationExpectation.thesis_conditioned_survival_lower",
+      "kind": "theorem",
+      "file": "formalization/Thesis/RandomizationExpectation.lean",
+      "line": 254
+    },
+    {
+      "declaration": "Thesis.LayeredGames.Game",
+      "kind": "structure",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 14
+    },
+    {
+      "declaration": "Thesis.LayeredGames.Policy",
+      "kind": "structure",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 25
+    },
+    {
+      "declaration": "Thesis.LayeredGames.purePolicy",
+      "kind": "def",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 30
+    },
+    {
+      "declaration": "Thesis.LayeredGames.best",
+      "kind": "def",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 36
+    },
+    {
+      "declaration": "Thesis.LayeredGames.best_attained",
+      "kind": "theorem",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 39
+    },
+    {
+      "declaration": "Thesis.LayeredGames.selector",
+      "kind": "def",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 48
+    },
+    {
+      "declaration": "Thesis.LayeredGames.selector_value",
+      "kind": "theorem",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 51
+    },
+    {
+      "declaration": "Thesis.LayeredGames.le_best_max",
+      "kind": "theorem",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 55
+    },
+    {
+      "declaration": "Thesis.LayeredGames.best_min_le",
+      "kind": "theorem",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 58
+    },
+    {
+      "declaration": "Thesis.LayeredGames.Game.action",
+      "kind": "def",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 64
+    },
+    {
+      "declaration": "Thesis.LayeredGames.Game.value",
+      "kind": "def",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 67
+    },
+    {
+      "declaration": "Thesis.LayeredGames.Game.optimalAction",
+      "kind": "def",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 71
+    },
+    {
+      "declaration": "Thesis.LayeredGames.Game.optimalPolicy",
+      "kind": "def",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 74
+    },
+    {
+      "declaration": "Thesis.LayeredGames.Game.payoff",
+      "kind": "def",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 78
+    },
+    {
+      "declaration": "Thesis.LayeredGames.Game.action_mono",
+      "kind": "theorem",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 83
+    },
+    {
+      "declaration": "Thesis.LayeredGames.average_le",
+      "kind": "theorem",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 89
+    },
+    {
+      "declaration": "Thesis.LayeredGames.le_average",
+      "kind": "theorem",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 96
+    },
+    {
+      "declaration": "Thesis.LayeredGames.pure_average",
+      "kind": "theorem",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 102
+    },
+    {
+      "declaration": "Thesis.LayeredGames.Game.optimal_lower",
+      "kind": "theorem",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 109
+    },
+    {
+      "declaration": "Thesis.LayeredGames.Game.optimal_upper",
+      "kind": "theorem",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 134
+    },
+    {
+      "declaration": "Thesis.LayeredGames.Game.saddle",
+      "kind": "theorem",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 160
+    },
+    {
+      "declaration": "Thesis.LayeredGames.Game.bellman_unique",
+      "kind": "theorem",
+      "file": "formalization/Thesis/LayeredGames.lean",
+      "line": 169
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.policyReward",
+      "kind": "def",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 14
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.policyTransition",
+      "kind": "def",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 17
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.policyTransition_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 20
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.policyTransition_normalized",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 24
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.markovOperator",
+      "kind": "def",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 31
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.discountedOperator",
+      "kind": "def",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 34
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.policyBellman_affine",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 37
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.discountedOperator_bound",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 53
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.iterated_reward_bound",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 60
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.reward_series_summable",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 70
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.truncated_return",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 77
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.discounted_iterate",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 87
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.expected_return_hasSum",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 99
+    },
+    {
+      "declaration": "Thesis.Bellman.MDP.expected_return_eq_value",
+      "kind": "theorem",
+      "file": "formalization/Thesis/BellmanReturn.lean",
+      "line": 113
+    }
+  ],
+  "sha256_at_report": {
+    "formalization/Thesis/ReLUNetGame.lean": "f7afea2ed37e45a404824ee232db6515470224591b46be0cd4ede40119f2c343",
+    "formalization/Thesis/ReLUNetEquilibrium.lean": "06b305fc6d66b3477e07713f4de7b2c87265c99bd8027e6f1d43a6123a3d0183",
+    "formalization/Thesis/BackwardGames.lean": "d51750ea7e601b26f694e520d087c62258451e0fb2975ef4b5b0f2380892dc62",
+    "formalization/Thesis/StoppingDecomposition.lean": "3b36c457c06dce5f1babaef5f9e0ce44d18c158d143e50f2a7dd7975ff7ced73",
+    "formalization/Thesis/RoutingBackward.lean": "ebc8c67e41f22e949eb997d518b7ebc0f4fdd22e485ab298048128949b069128",
+    "formalization/Thesis/SoftplusBackward.lean": "a9054077b8f2d16fbc15285525cc35f9a9505d86a0f96b13a63c066e0506b4ba",
+    "formalization/Thesis/SoftplusDecomposition.lean": "837186ad21c9328367eb2a9a9b736a74864bf154cec0f195ad93d38febb7fade",
+    "formalization/Thesis/AttentionBackward.lean": "da4ed513e7b848bb684b70b0a804d4848be6b26949df64ba7d8a80ec4328155c",
+    "formalization/Thesis/AffineOutputBackward.lean": "22923269f3d7553713e76c2843dd4bab8eb58568cd695a9dfcb24617095190cd",
+    "formalization/Thesis/Regularization.lean": "3c7a8baeeafe35a7a84741f4ec9432461a26302aff41b4cb2ffd7228b47429f2",
+    "formalization/Thesis/ReferencePolicy.lean": "3aa070779d35eb5f89c7f88659516c86192c320aebb74784e6087c9223099d67",
+    "formalization/Thesis/Games.lean": "585f3fadd0c405584ec7ddb0b76be7a1606d8005ce8d179c9de6095f831fd312",
+    "formalization/Thesis/Coarsening.lean": "658ac45f36a42f0a3a209ff5e9585adfcec8d34939b24a4062cccbca5b15a315",
+    "formalization/Thesis/Randomization.lean": "ebb6e8d9718becac7c807b6cc22f305a4fe90cdefc60ed55f6bbc8787b41618b",
+    "formalization/Thesis/RandomizationExpectation.lean": "c8698824607bbde5722473d3e6744a2da71d92f3fa73eb85e6959348d44c3caa",
+    "formalization/Thesis/LayeredGames.lean": "ecea60df07094bb438597a4a069a02a6675f0167904ef6384cadc89be490ea54",
+    "formalization/Thesis/BellmanReturn.lean": "e3b2c542b096ce938a4eebb297f281837c5cadfd13ad2aab7cb9c36470073964",
+    "arxive/playingTheNetworkBackward/main.tex": "aa1ba79b73b83ae2d159a857c5d9ac0fcb264cb11af2c81c7b297dec75efb012",
+    "tex/chapters/04_game_theory.tex": "78349b18299375d7bb61130c9fcfadd8b91e20a9a3418682855f92705bf6d956",
+    "tex/chapters/07_transformers.tex": "cae42bda9a7238a7647eb7921f24ace945796b1e181f75f7c0cfa6c67f22099a",
+    "tex/chapters/11_trajectory.tex": "047a8567c92827bcd593e1357b33d5f7c3a38af099718b11dd4af70798873c82",
+    "formalization/coverage_map.json": "0b19f7c4c91579a317cf40bd86346a0b33cce4543068a6dfde665a5c4d7a3147",
+    "formalization/tex_links.json": "5b48f258b4d808314966ac70fb84024c7eccd3a8a362605245bac6320e054821",
+    "formalization/.lake/diagnostics/attack_games/Audit.lean": "f0b7ffb3c4942508a71d8d47245dc93f73ce81c6d842cc9de239f4c23f1b1ffc",
+    "formalization/.lake/diagnostics/attack_games/counterexamples.py": "7ae614fef31807b5c483c9f2960d3d704edb8d03e651600608f31526c5604cad",
+    "formalization/.lake/diagnostics/attack_games/counterexamples.json": "c9e36e237da5126b698cb3e309fe589f651dcccc57f330be2beeafa45b07d771"
+  }
+}

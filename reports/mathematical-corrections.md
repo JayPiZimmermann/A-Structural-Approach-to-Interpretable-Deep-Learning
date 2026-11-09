@@ -148,3 +148,53 @@ If that set is empty, the condition is vacuous and allows bbar=-1; at one layer
 the claimed nonnegative overlap bound by bbar is false. The paper and thesis now
 state 0<=bbar<1 explicitly. The downloaded arXiv PDF and source archive remain
 unchanged provenance copies; only the extracted working paper source is corrected.
+
+## Empty routing streams and absorption histories
+
+Reported before correction on 2026-11-09. At epsilon=0 an alive RG neuron can
+have an empty sign stream. Its half-branch probability must be absorbed, contrary
+to the printed assertion that the cemetery row is only the dead-neuron indicator.
+The act-only marginal now has a residual cemetery row and an explicit empty-stream
+convention. The positive-epsilon cemetery contribution is weighted by the half
+branch and the gate continuation probability. The alive-mismatch lemma now
+distinguishes zero ordinary overlap from zero full overlap (the latter requires
+no cemetery leakage from the alive row).
+
+This also invalidates the unrestricted claim that deleting routing states is a
+trajectory bijection preserving full Bhattacharyya/Hellinger distances. With x=1,
+W=1, model A bias0 and model B bias-2, A can absorb at an empty negative branch
+and B stops earlier at its gate. The refined histories are disjoint (BC=0),
+whereas the collapsed act-only histories have cemetery overlap 1/sqrt(2).
+The corrected text retains the refined gate/branch/routing histories for full
+diagnostics and states the coarsening inequality. Equality still holds for
+ordinary surviving paths, hence for survival-conditioned laws.
+
+The pinned official implementation already applies gate and empty-branch
+absorption separately (`bwgame/xai/methods/hellinger.py`, commit
+9cae01ce429c34b295aa06dd056895ddd4ef9ff7, gate lines543--584,
+branch lines507--516 and813--831). The code and reported experimental values
+were not modified by this correction.
+
+## Name of the multiplicative representation class
+
+Reported before correction on 2026-11-09. The simplified multiplicative theorem
+called its exact outputs ordinary Maxout networks. Such networks are piecewise
+linear and cannot represent xy exactly. The statement now says Maxout
+multiplication networks, matching the architecture defined in the appendix.
+
+## Adversarial review corrections (2026-11-09)
+
+- Routing activation ties: at the author’s explicit request, retain log-space preferences and select stopping for every log-space tie. Ties occur for all nonpositive signed continuation masses. Updated both source copies, the defining policy/value equations and the uniqueness discussion. The selected policy and forward routing formulas are unchanged. The global network interpretation assumes nonnegative activations; GeLU arguments remain local to frozen forward gates.
+- Shifted intermediate sensitivity bulk includes the product of subsequent factors `(1 - 2 alpha)`, already present in the checked recurrence.
+- Backward induction determines a unique value, while tied actions can give distinct optimal policies.
+- Support-function domains require nonempty finite generators; the halfspace characterization of polytopes requires boundedness. Polytopes in R^d may have dimension below d.
+- Homogenization preserves evaluation on the affine slice but does not make every lifted vertex attainable there. Retain only slice-visible vertices and project their gradients. The retained audit proves a triangle counterexample.
+- The eta-zero example now uses canonical sign parts (W=1, b=1); later eta-zero streams need not be convex or concave.
+- Regularizer maximizer choices preserve the reconstructed difference, but may change the two components; the selection is part of the definition.
+- Continuous weight randomization alone does not guarantee distinct normalized RG rows. The strict conditional overlap bound remains an explicit theorem hypothesis.
+
+Independent audit snapshots and executable evidence are in `reports/adversarial-*.json` and `reports/evidence/`; these are retained as records of the reviewed pre-repair sources.
+
+The affine-output convention is now explicit in the foundational tropical recursion, all thesis decomposition families, the saliency masks and the Hidden Monotonicity source: hidden layers use the pair activation; the last layer copies the affine preactivation pair. Uniform backward notation uses M_L^+=I and M_L^-=0, so the final auxiliary Q term is zero. New checked readout wrappers include actual biases and terminal partial seeds.
+
+The activation–occupation theorem distinguishes actual derivatives on strict open cells from selected backward computations at ties. A fixed ReLU backward value at zero does not create a classical derivative of a discontinuous stopping head. The SG diagnostic now absorbs zero-fan-in rows. The RG diagnostic is explicitly separated from the bias-inclusive game because dropping and renormalizing bias routes changes the kernel. Alpha–beta conservation accounts for nonempty participating streams and absorption.

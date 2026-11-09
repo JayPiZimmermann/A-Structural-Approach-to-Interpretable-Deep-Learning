@@ -68,7 +68,7 @@ from $R^{(L)}_u = f(x)$, every neuron passes its relevance $R^{(l)}_j$ on to its
 proportion to their contributions $a^{(l-1)}_i W^{(l)}_{ij}$ to its pre-activation, so that
 relevance is conserved from layer to layer up to the share absorbed by biases and stabilizers.
 Rules differ in how the contributions are weighted. The $\alpha\beta$-rule is parameterized by
-$\alpha,\beta \ge 0$, with $\alpha-\beta = 1$ for conservation (attributions sum to $f(x)$), and a
+$\alpha,\beta\geq0$, with $\alpha-\beta=1$ giving conservation when both participating sign streams are nonempty and all bias, stabilizer, and empty-stream absorption is accounted for, and a
 stabilization parameter $\varepsilon \ge 0$ \ch{(added to each sign denominator, as in common
 implementations~\parencite{Anders2021Zennit})}: the relevance of neuron $j$ is split into a
 positive-contribution fraction scaled by $\alpha$ and a negative-contribution fraction scaled by
@@ -279,7 +279,7 @@ otherwise, the sign operator $\xi_{p,q} = 2\delta_{p,q} - 1$ ($+1$ if $p=q$, $-1
 and the XOR operator $p \oplus q = +$ if $p=q$ and $-$ if $p \neq q$; it is commutative and
 associative, with $p \oplus p = +$, $p \oplus + = p$, $p \oplus - = p'$, and $p' \oplus q = (p
     \oplus q)'$.
-\textbf{Boundary conventions.} We fix $\mathrm{ReLU}'(0) \coloneqq 0$; equivalently, the indicator
+\textbf{Boundary conventions.} We fix the selected backward value $\mathrm{ReLU}'(0)\coloneqq0$ (an algorithmic convention, since ReLU has no classical derivative at zero); equivalently, the indicator
 $\1[z > 0]$ used throughout returns $0$ at $z = 0$. For a finite tuple $(x_1, \dots, x_m)$,
 $\arg\max_k x_k \coloneqq \min\{k : x_k = \max_l x_l\}$, the smallest index attaining the maximum.
 We reserve the word \emph{trajectory} for sequences of game states $\zeta = (\zeta_0, \zeta_1,
@@ -956,7 +956,7 @@ stop-at-tie-breaks equilibrium fixed by the boundary conventions of
 Section~\ref{ptnb:app:notation-identities} (uniquely fixing the SPNE at ReLU gates with $z = 0$ and at
 max-pooling states with multiple maximizers), the discounted occupation measures exactly represent,
 in a multi-trajectory ReLU network (e.g., a ResNet or a CNN with max pooling), the local
-Stopping-Decomposition and scalar activation gradients:
+Stopping-Decomposition and scalar activation derivatives on open cells with nonzero ReLU preactivations and unique max-pooling winners. At ties, the same formulas represent the backward quantities computed using the selected gates and winners; they do not assert classical differentiability of the individual stopping streams, which can be discontinuous there:
 \begin{enumerate}
     \item \textbf{Stopping-Decomposition Gradient:}
         \begin{align}
@@ -1068,7 +1068,7 @@ across skip connections and max-pooling nodes, completing the induction.
 \par\medskip
 \section{Routing Game: Log-Space Formulation}\label{ptnb:app:routing-formal}
 
-This section makes the two-player payoff structure of the Routing Game explicit. The recursion
+This section makes the two-player payoff structure of the Routing Game explicit. Its global network interpretation uses nonnegative activation outputs; the GeLU discussion later concerns local gates conditioned on a fixed forward pass. The recursion
 used in Section~\ref{ptnb:sec:routing} is the logarithmic representation of an entropy-regularized
 two-player game, and admits a Gibbs subgame-perfect equilibrium for every $\tau>0$.
 
@@ -1094,10 +1094,7 @@ We write
     \qquad \exp(-\infty) \coloneqq 0,
 \end{align}
 so that $\exp(\ell(x)) = \text{ReLU}(x)$ for any $x \in \RR$; we use this fact for notational
-convenience. Zero or negative routed mass thus receives the stopping value $-\infty$; where a
-player compares stopping with continuing (activation states), the comparison is made on the
-argument of $\ell$, the signed routed mass, so that negative mass is strictly worse than stopping
-(mass $0$). The ReLU-gating itself is fully modeled by the player policies at states modeling the
+convenience. Zero or negative routed mass thus receives the stopping value $-\infty$. At every activation state we explicitly choose \emph{stop whenever the two log-space action values tie}. Hence continuing is selected exactly when its log value is strictly greater than $-\infty$, equivalently when the signed routed mass is positive. The ReLU-gating itself is fully modeled by the player policies at states modeling the
 ReLU gates---just like in the Stopping Game.
 
 \paragraph{State Space and Game Mechanics.}
@@ -1241,16 +1238,16 @@ the continuation value becomes
     \right).
 \end{align}
 
-Observe that at least one of the two equals $-\infty$.
-On the other hand, stopping yields $-\infty$ for both.
-The equilibrium activation-game values are
+Stopping yields $-\infty$ for both players. We select \emph{stop at every activation-state tie in log space}, so the selected policy and active-player value are
 \begin{align}\label{ptnb:eq:routing-activation-value}
-    V_p(s_{j,p}^{(l, act)}) &\coloneqq \max\{-\infty, Q_p(s_{j,p}^{(l, act)}, \text{continue})\},
+    \pi_p^\star(\mathrm{continue}\mid s_{j,p}^{(l,\mathrm{act})})
+    &\coloneqq \1\!\left[Q_p(s_{j,p}^{(l,\mathrm{act})},\mathrm{continue})>-\infty\right],\\
+    V_p(s_{j,p}^{(l,\mathrm{act})})
+    &\coloneqq \max\{-\infty,Q_p(s_{j,p}^{(l,\mathrm{act})},\mathrm{continue})\}.
 \end{align}
-and, since player $p$ continues only if $Q_p(s_{j,p}^{(l, act)}, \text{continue}) > -\infty$, in
-which case $Q_{p'}(s_{j,p}^{(l, act)}, \text{continue}) = -\infty$, we have
+Writing $D_p=\exp V_p(s_+)-\exp V_{p'}(s_-)$, this selects continuing exactly when $D_p>0$. When $D_p\leq0$, both actions have log value $-\infty$ and the convention selects stopping. If continuing is selected, the opponent's continuation value is $-\infty$; if stopping is selected, both players receive $-\infty$. Thus in either case
 \begin{align}
-    V_{p'}(s_{j,p}^{(l, act)}) = -\infty.
+    V_{p'}(s_{j,p}^{(l,\mathrm{act})})=-\infty.
 \end{align}
 \end{definition}
 Figure~\ref{ptnb:fig:Routing-Game-illustration} shows a worked example of the local routing subgame.
@@ -1309,10 +1306,7 @@ $[a_i^{(l-1)}W_{ij}^{(l)}]^\kappa = a_i^{(l-1)} W_{ij}^{(l,\kappa)}$.
 \begin{remark}[Uniqueness]\label{ptnb:rem:routing-spne-uniqueness}
 The linear-state Gibbs best response~\eqref{ptnb:eq:routing-spne-linear} is the unique maximizer of the
 strictly concave entropy-regularized objective whenever some action has a finite score (otherwise
-Definition~\ref{ptnb:def:routing-recursion} fixes $\perp_{\mathrm{lin}}$). At activation states the
-active player is indifferent only when the signed continuation mass $\exp V_p(s_+) - \exp
-    V_{p'}(s_-)$ is zero ($z_j^{(l)} = 0$ at $\tau = 1$): both stopping and continuing are best
-responses, so multiple SPNEs can coexist under different tie-breaking. The theorem specifies the
+Definition~\ref{ptnb:def:routing-recursion} fixes $\perp_{\mathrm{lin}}$). At activation states the active player is indifferent whenever the signed continuation mass $\exp V_p(s_+) - \exp V_{p'}(s_-)$ is nonpositive ($z_j^{(l)}\leq0$ at $\tau=1$), because both log-space action values are then $-\infty$. Thus the unconstrained best-response set can contain several policies. The theorem specifies the
 tie-breaker $\pi_p^\star = \1[Q_p(\cdot,\mathrm{continue}) > -\infty]$, which at $\tau=1$ reduces
 to $\1[z_j^{(l)} > 0]$. Just like in the \ac{sg} (Section~\ref{ptnb:app:relu-net-game}), we refer to
 this SPNE as the \textbf{stop-at-tie-breaks} equilibrium.
@@ -1343,8 +1337,7 @@ simplex. Identity~\eqref{ptnb:eq:gibbs-lse} yields the unique Gibbs best respons
 with zero mass on routes of zero or wrong sign and closed-form value $V_q(s_{j,q,\kappa}^{(1,lin)})
     = \tau \log \sum_i \exp(Q_q(s_{j,q,\kappa}^{(1,lin)},i)/\tau)$. With these values in hand, the
 activation-state subgame at layer $l=1$ is a binary choice between stop (log-payoff $\ell(0) =
-    -\infty$) and continue~\eqref{ptnb:eq:routing-activation-continue}; comparing signed masses and stopping
-at ties, the active player's best response is the pure stop/continue strategy
+    -\infty$) and continue~\eqref{ptnb:eq:routing-activation-continue}; comparing log-space action values and choosing stopping at every tie, the active player's best response is the pure stop/continue strategy
 \begin{align}\label{ptnb:eq:routing-spne-stop}
     \pi_p^\star\bigl(s_{j,p}^{(l, act)}\bigr)
     = \1\!\bigl[ Q_p(s_{j,p}^{(l, act)}, \mathrm{continue}) > -\infty \bigr].
@@ -1374,7 +1367,7 @@ values $Q_q(s_{j,q,\kappa}^{(1, lin)}, i) = \ell([x_iW_{ij}^{(1)}]^\kappa)$
 of~\eqref{ptnb:eq:routing-linear-action} in place of $\ell(a_i^{(l-1)} W_{ij}^{(l,\kappa)})$.
 
 \textbf{Inductive step ($l \ge 2$):} Assume $V_q(s_{i,q}^{(l-1, act)}) = \ell(a_i^{(l-1)})$ for all
-predecessors $i$ and both player labels $q$. Since standard activations satisfy $a_i^{(l-1)} \ge
+predecessors $i$ and both player labels $q$. Since the assumed nonnegative activation functions satisfy $a_i^{(l-1)} \ge
     0$, the linear routing-state action values become
 \begin{align}
     Q_q \bigl( s_{j,q,\kappa}^{(l, lin)}, i \bigr)

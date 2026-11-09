@@ -1,0 +1,2684 @@
+{
+  "audit": "Independent adversarial Hidden Monotonicity source-to-Lean audit",
+  "created_utc": "2026-11-09T10:24:09.860533+00:00",
+  "reviewer": "/root/attack_hidden",
+  "verdict": "The inspected backward, Q-source, split-recovery and DAG statements are genuine theorems of their stated Lean models; no false Lean statement, accidental auto-bound premise or forbidden axiom was found in the exact-checked headline subset. Complete source coverage and a caveat-free all-thesis claim are not established. Source errors, model gaps and scope restrictions are separated below.",
+  "findings": [
+    {
+      "id": "HM-01",
+      "severity": "high",
+      "classification": "definite_formal_scope_gap",
+      "title": "Strict gates exclude smooth admissible networks on open sets, not merely kink points",
+      "source_locations": [
+        {
+          "file": "tex/chapters/05_saliency.tex",
+          "line": 15
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+          "line": 25
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+          "line": 74
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/BackwardStatements.lean",
+          "line": 32
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/QSources.lean",
+          "line": 143
+        }
+      ],
+      "evidence": "The Lean premise requires every preactivation in every layer to be nonzero. A canonical Network 1 1 with Wp=Wn=bp=bn=0 and identity tail has constant original output and constant split heads everywhere, but Strict x is false for every x. Checks.lean kernel-checks both facts and HasFDerivAt of the whole split map. Thus the current source-linked result does not establish the advertised every-differentiability-point or almost-everywhere theorem for arbitrary networks. The theorem family is not globally vacuous: the rational audit includes 556 satisfiable strict instances.",
+      "minimal_repair": "Prove derivative identities on genuine differentiability/cell conditions that admit locally identically zero preactivations, and then establish the intended almost-everywhere corollary. Alternatively state strict-gate scope in the manuscript, but that would retain a restriction relative to the requested complete theorem. Do not claim Strict holds a.e. merely because the network is CPWL.",
+      "not_a_counterexample_to_lean": true,
+      "metadata_verdict": "coverage_map states strict scope honestly; this is missing source scope, not hidden proof fraud."
+    },
+    {
+      "id": "HM-02",
+      "severity": "high",
+      "classification": "definite_model_and_source_link_gap",
+      "title": "Final affine logits are inconsistent across source sections and not fully bridged to the split-head derivative API",
+      "source_locations": [
+        {
+          "file": "tex/chapters/03_decompositions.tex",
+          "line": 26
+        },
+        {
+          "file": "tex/chapters/03_decompositions.tex",
+          "line": 213
+        },
+        {
+          "file": "tex/chapters/05_saliency.tex",
+          "line": 29
+        },
+        {
+          "file": "tex/chapters/05_saliency.tex",
+          "line": 83
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/HiddenMonotonicity/Network.lean",
+          "line": 14
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/AffineReadout.lean",
+          "line": 55
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/AffineReadout.lean",
+          "line": 60
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/AffineReadout.lean",
+          "line": 96
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/BackwardStatements.lean",
+          "line": 32
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+          "line": 188
+        }
+      ],
+      "evidence": "Network.layer applies ReLU at every layer and Network.output is identity. Chapter 03 uses the same fully activated output convention. Chapter 05 then explicitly calls L an ungated affine logit, yet its recursion quantifies l=L-1 and uses M^(L,+/-), after defining masks only for hidden layers. The formal affine-readout formula is real algebra, not a fake assumption: it supports arbitrary terminal partial seeds and separately differentiates the signed logit. However it never defines the corresponding affine split-head functions or proves that its zero-shift seed run is their HasFDerivAt; main source-linked head, mass, and partial-invariant declarations still concern projection heads of the fully gated Network. Neither rPlus/rMinus positivity nor their canonical entrywise sign-part bridge to the absolute readout is encoded there. A final -1 readout on ReLU(1)=1 gives logit -1, whereas encoding that readout as another Network.layer gives 0.",
+      "minimal_repair": "Specify one backbone-plus-affine-output model and define its actual two split head functions, including readout bias. Prove recovery, zero-shift actual head derivatives, canonical readout absolute-mass identity, and both partial invariants for that model using existing run_zero_actual and derivative lemmas. In the source set final M+=I and M-=0 where uniform recursion notation is used, and exclude a final minimum/Q source for the ungated readout.",
+      "not_a_counterexample_to_lean": true,
+      "metadata_verdict": "Existing affine wrapper substantially reduces the work, but does not by itself make all source-linked fully gated head statements statements about affine logits."
+    },
+    {
+      "id": "HM-03",
+      "severity": "medium",
+      "classification": "verified_source_counterexample",
+      "title": "Saliency prose drops the suffix factor in the intermediate shifted bulk",
+      "source_locations": [
+        {
+          "file": "tex/chapters/05_saliency.tex",
+          "line": 170
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+          "line": 143
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+          "line": 111
+        }
+      ],
+      "evidence": "For one active scalar layer W=1, terminal g seed (1,0), and output shift alpha=1/4, the incoming shifted seed is (3/4,-1/4). Its pullback sum is 1/2, whereas W_abs=1. Checks.lean verifies these exact rational identities and inequality. The source sentence identifies the intermediate sum with W_abs; the correct quantity is the suffix product of (1-2 alpha) times W_abs. Chapter 03 equation claim_bulk and the Lean implementation already have the correct factor.",
+      "minimal_repair": "Replace the asserted equality with intermediate_bulk(l)=product_{i=l+1..L}(1-2 alpha_i) W_abs[l], with the corresponding terminal convention for an affine readout. Preserve the statement that this remains independent of activation patterns.",
+      "not_a_counterexample_to_lean": true
+    },
+    {
+      "id": "HM-04",
+      "severity": "medium",
+      "classification": "definite_metadata_target_mismatch",
+      "title": "The linear-chunk source link advertises an affine theorem but points to an activated theorem",
+      "source_locations": [
+        {
+          "file": "tex/chapters/03_decompositions.tex",
+          "line": 661
+        },
+        {
+          "file": "formalization/coverage_map.json",
+          "line": 133
+        },
+        {
+          "file": "formalization/tex_links.json",
+          "line": 192
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/HiddenMonotonicity/Core.lean",
+          "line": 25
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/Network.lean",
+          "line": 27
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+          "line": 34
+        }
+      ],
+      "evidence": "The source lemma asserts arbitrary affine pair recovery, nonnegative outputs, affine dependence, convexity and monotonicity. tex_links points to pre_difference, which is scalar, bias-free algebra. coverage_map additionally cites layer_difference, whose conclusion is ReLU((Wp-Wn)(p-n)+(bp-bn)), because its positive branch has a max. It is not the source affine operation. At A=1,c=-1,p=n=0 the source affine difference is -1 while the cited activated difference is 0 (exact arithmetic checked in Checks.lean). A genuinely suitable vector/bias algebraic identity preactivation_difference already exists but is not the cited theorem, and the advertised property bundle is not packaged for this chunk.",
+      "minimal_repair": "Link to a source-facing affine-chunk theorem based on preactivation_difference and explicit nonnegative sign-split parameters, bundling recovery, nonnegativity, affine/convex and monotone properties. Until then mark this lemma component coverage, not an affine-network variant justified by layer_difference.",
+      "not_a_counterexample_to_lean": true
+    },
+    {
+      "id": "HM-05",
+      "severity": "medium",
+      "classification": "definite_formal_model_gap",
+      "title": "CNN correctness does not model the permitted winner-takes-all pooling pass",
+      "source_locations": [
+        {
+          "file": "tex/chapters/03_decompositions.tex",
+          "line": 723
+        },
+        {
+          "file": "tex/chapters/03_decompositions.tex",
+          "line": 733
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/HiddenMonotonicity/Chunks.lean",
+          "line": 71
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/MultiplicativeSplit.lean",
+          "line": 25
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/Circuit.lean",
+          "line": 31
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/CircuitStatements.lean",
+          "line": 8
+        }
+      ],
+      "evidence": "Circuit.split always uses SignedExpr.split. Its maximum constructor is the convex split (max(p+r,q+n),n+r), not shared-winner forwarding. winner_pool_correct is exactly p j - n j = (p-n) j with arbitrary j; its type contains neither an argmax condition nor equality to the pool maximum. Thus it is not a correctness proof of the winner selection and there is no graph interpreter for the source optional WTA pass. For p=(10,2), n=(9,0), source WTA produces (2,0), whereas the encoded convex split produces (11,9). Both differences are 2, but these are different stream functions. The existing global center Bool also represents all nodes recentered or none, rather than an independently chosen per-node policy.",
+      "minimal_repair": "Add an explicit pooling rule and a chosen-winner certificate/maximizer theorem, then extend the graph semantics and all-node recovery. Retain convexity only for the convex pooling rule without input-dependent recentering. If arbitrary per-node recentering is intended, parameterize the policy per node.",
+      "not_a_counterexample_to_lean": true,
+      "metadata_verdict": "The variant scope describes the encoded DAG, but does not justify the whole optional-pooling source statement."
+    },
+    {
+      "id": "HM-06",
+      "severity": "medium",
+      "classification": "definite_component_only_coverage",
+      "title": "Max-pool proposition has only its difference identity linked",
+      "source_locations": [
+        {
+          "file": "tex/chapters/03_decompositions.tex",
+          "line": 699
+        },
+        {
+          "file": "formalization/coverage_map.json",
+          "line": 126
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/HiddenMonotonicity/Chunks.lean",
+          "line": 26
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/CircuitStatements.lean",
+          "line": 19
+        }
+      ],
+      "evidence": "maxpool_correct proves the finite nonempty sup difference identity. It does not state the source proposition's nonnegative-output, convexity or coordinatewise monotonicity conclusions. Generic additive Circuit properties exist, but no theorem identifies the source finite pool pair with a particular Circuit or directly instantiates those properties for the exact sup/erase-sum functions. The metadata scope itself says exact finite nonempty identity, while status is formalized_variant and the source badge labels the whole proposition.",
+      "minimal_repair": "Package the direct finite-pool positivity/convexity/monotonicity proof, or prove the precise finite-pool-to-Circuit bridge and specialize the generic results; otherwise label component coverage.",
+      "not_a_counterexample_to_lean": true
+    },
+    {
+      "id": "HM-07",
+      "severity": "low",
+      "classification": "definite_boundary_convention_mismatch",
+      "title": "Extracted gates choose the opposite branch at zero from the printed mask convention",
+      "source_locations": [
+        {
+          "file": "tex/chapters/03_decompositions.tex",
+          "line": 565
+        },
+        {
+          "file": "tex/chapters/05_saliency.tex",
+          "line": 29
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+          "line": 16
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+          "line": 81
+        }
+      ],
+      "evidence": "The source defines M+ by z>=0 and M- by z<0. Lean originalGate uses decide (0<z), and trace chooses positive max branch only for a strict positive difference. At z=0 the source mask is active and the Lean extracted mask inactive. Checks.lean verifies the Lean gate is false for a scalar unit weight at zero. The derivative theorems requiring Strict are unaffected. The discrepancy matters when claiming this exact extracted-mask algorithm matches the source at ties: for scalar ReLU at zero, zero-shift g balanced selected sensitivity is +1/2 under the source active tie and -1/2 under the Lean inactive tie.",
+      "minimal_repair": "Align the printed and executable tie convention, or parameterize tie choices and state the agreement theorem only away from ties. Do not interpret either selected value as the ordinary derivative of ReLU at zero.",
+      "not_a_counterexample_to_lean": true
+    },
+    {
+      "id": "HM-08",
+      "severity": "low",
+      "classification": "verified_source_convention_error",
+      "title": "The eta-zero remark uses sign parts that cannot be canonical and overstates later preactivation convexity",
+      "source_locations": [
+        {
+          "file": "tex/chapters/03_decompositions.tex",
+          "line": 166
+        }
+      ],
+      "lean_locations": [
+        {
+          "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+          "line": 159
+        },
+        {
+          "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+          "line": 50
+        }
+      ],
+      "evidence": "The source gives scalar W+=2,W-=1 as an example under its canonical sign-split convention; no real scalar weight has those canonical parts, since both parts cannot be strictly positive. The same paragraph says eta-zero preactivations are convex from layer 1 onward, which does not follow: with scalar W=1,b=1 and canonical input split, eta-zero negative output is h(x)=min(max(x,0)+1,max(-x,0)). Its values at x=-2,0,-1 are 1,0,1, violating convexity at their midpoint. A subsequent positive affine map can inherit this nonconvexity. The formal mixing recovery theorem does not assert this convexity and is unaffected.",
+      "minimal_repair": "Use a canonical example such as W=1,b=1 and state that the first preactivations are convex, while later eta-zero streams and preactivations need not be convex. Keep the arithmetic recovery result separate.",
+      "not_a_counterexample_to_lean": true
+    }
+  ],
+  "positive_checks": [
+    "Canonical weight requirement is unfolded: wp=max(wp-wn,0), wn=max(-(wp-wn),0); absCLM_eq_absoluteMap proves the absolute-weight bridge for the entire variable-width tail. Bias canonicality is not needed for backward identities; nonnegative parameter hypotheses are separate for forward positivity.",
+    "Balanced lift is (x/2,-x/2); unified is (partialPlus-partialMinus)/2. Both partial invariants and the correct factor 2 in their unbalanced difference are present.",
+    "Stabilized sensitivities are explicitly computed by pull then equal shift at each layer, including output. The correction uses the suffix bulk above the transition; the local shift cancels. bulkCoefficient_product proves the finite product.",
+    "Actual split and original Frechet derivatives are proved from strict branch derivatives. zero_shift_actual and local_sensitivities_correct connect the implemented unshifted recurrence to the actual head functions. plain_head_gradient_formulas provides full Vec-to-real derivatives, not only a radial/directional test.",
+    "Every Q retains the original nonlinear prefix with its biases, uses one min at the designated layer, and has a bias-free linear absolute-weight tail. qSources_have_derivatives computes genuine Q Frechet derivatives; qSources_sum identifies the exact finite sum.",
+    "Current archived proofs.tex and thesis chapter 03 already use corrected factor-1/2, suffix indices, and explicit linear-tail Q definition. Historical counterexample declarations do not refute the current corrected source statements.",
+    "Circuit is an actual topologically ordered graph with access to earlier shared nodes. Split correctness holds at every node; nonnegative outputs are proved with optional global min recentering. Convexity/monotonicity excludes products and recentering where needed.",
+    "Multiplicative representations are exact on nonnegative split inputs. Ordinary MvPolynomial witnesses have actual nonnegative coefficients, natural exponents and a proved nonempty finite leaf list. foldMax starts at zero harmlessly because every represented polynomial is nonnegative on that domain.",
+    "The smooth-curvature source modules were read: their primitive and tilt definitions are genuine integrals and suprema, not definitions that assume decomposition. This audit does not supply an independent exact-type receipt for all smooth results."
+  ],
+  "honestly_declared_remaining_scope": [
+    {
+      "item": "Fixed-rank/bounded-total-degree linear-size theorem",
+      "source": "arxive/hiddenMonotonicity/appendix/maxout_networks.tex:thm:main",
+      "status": "coverage_map thm:main and claim:main_correct explicitly partial; no graph-size/rank-count theorem found. This is not concealed over-credit."
+    },
+    {
+      "item": "Concrete tensor convolution flattening",
+      "status": "No tensor/convolution index equivalence proved; prop:conv_correct is explicitly partial. Generic affine operations express flattened values, but application-specific indexing is outside the proof."
+    },
+    {
+      "item": "Convexity under arbitrary convex input splittings for eta=1",
+      "status": "coverage_map marks mixing_convex_extreme partial and explains the absent composition theorem."
+    },
+    {
+      "item": "Forward recentering and detached backward differentiation",
+      "status": "Current source explicitly distinguishes fixed/constant shifts, detached input-dependent shifts and ordinary differentiated recentered heads. No theorem falsely equates the latter with shifted algorithmic sensitivities."
+    }
+  ],
+  "exact_checked_claims": [
+    {
+      "declaration": "HiddenMonotonicity.Network.stabilized_backward_absolute_Q_closed_form",
+      "expected_type_receipt": {
+        "file": "reports/evidence/attack_hidden/ExactBackwardTypes.lean",
+        "line": 6
+      },
+      "typecheck_exit": 0,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "model_correspondence_verdict": "Faithful corrected shifted formula on strict original gates and canonical weights; actual Q derivatives, arbitrary finite widths/biases and real layer shifts. Algorithmic shifted quantities are not asserted to be actual derivatives of recentered heads."
+    },
+    {
+      "declaration": "HiddenMonotonicity.Network.plain_head_gradient_formulas",
+      "expected_type_receipt": {
+        "file": "reports/evidence/attack_hidden/ExactBackwardTypes.lean",
+        "line": 17
+      },
+      "typecheck_exit": 0,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "model_correspondence_verdict": "Actual full Frechet derivatives of balanced-lift projection heads, including both signs and factor 1/2. Strict-gate and fully activated-backbone scope are explicit."
+    },
+    {
+      "declaration": "HiddenMonotonicity.Network.backward_partial_invariants",
+      "expected_type_receipt": {
+        "file": "reports/evidence/attack_hidden/ExactBackwardTypes.lean",
+        "line": 27
+      },
+      "typecheck_exit": 0,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "model_correspondence_verdict": "Both separate cross-head partial identities and actual original derivative. No arbitrary recurrence is assumed."
+    },
+    {
+      "declaration": "HiddenMonotonicity.Network.stabilized_backward_invariant",
+      "expected_type_receipt": {
+        "file": "reports/evidence/attack_hidden/ExactBackwardTypes.lean",
+        "line": 36
+      },
+      "typecheck_exit": 0,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "model_correspondence_verdict": "The balanced difference is the actual derivative of the row projection of original eval at strict gates."
+    },
+    {
+      "declaration": "HiddenMonotonicity.Network.affine_readout_closed_form",
+      "expected_type_receipt": {
+        "file": "reports/evidence/attack_hidden/ExactBackwardTypes.lean",
+        "line": 43
+      },
+      "typecheck_exit": 0,
+      "axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "model_correspondence_verdict": "Correct terminal-seed formula for arbitrary signed affine readout algebra; the separate forward affine-head model and canonical absolute-readout bridge remain unbundled."
+    }
+  ],
+  "checks": {
+    "lean": {
+      "command": "cd formalization && lake env lean .lake/diagnostics/attack_hidden/Checks.lean; lake env lean .lake/diagnostics/attack_hidden/ExactBackwardTypes.lean",
+      "receipts": [
+        "reports/evidence/attack_hidden/checks.log",
+        "reports/evidence/attack_hidden/exact-types.log"
+      ],
+      "exit_codes": [
+        0,
+        0
+      ],
+      "status": "Diagnostic exact-type/axiom receipts using the existing import cache; not a clean committed-closure rebuild."
+    },
+    "rational": {
+      "seed": 391547,
+      "arithmetic": "exact fractions",
+      "generated": 600,
+      "strict_networks_checked": 556,
+      "non_strict_skipped": 44,
+      "checks": [
+        "full varying-width shifted affine-readout g/h Q-source closed forms",
+        "independent forward-mode actual plain affine-head derivatives"
+      ],
+      "failures": 0,
+      "limitations": "Finite experiment, not universal proof; tests actual algebra independently of Lean implementations; includes negative and >1/2 shifts, canonical bias splits, variable depth/width and signed readout."
+    },
+    "rational_producer": "reports/evidence/attack_hidden/rational_audit.py",
+    "rational_cases": "reports/evidence/attack_hidden/rational_cases.json",
+    "independence": "Rational experiments calculate actual plain head derivatives by forward-mode dual numbers, and Q sources through independent original prefixes/minimum/linear tails; shifted partials use a separate backward pass. Arithmetic is Fraction exact, not floating point.",
+    "reproducibility": "From repository root: python3 reports/evidence/attack_hidden/rational_audit.py. For Lean, copy the two evidence .lean files to formalization/.lake/diagnostics/attack_hidden/ and run the recorded commands with the declared Lean/mathlib v4.35.0 environment."
+  },
+  "skills_read": [
+    "skills/upstream-planar-features/formalization-architecture/SKILL.md",
+    "skills/upstream-planar-features/formalization-build/SKILL.md",
+    "skills/upstream-planar-features/formalization-certificates/SKILL.md",
+    "skills/upstream-planar-features/formalization-conventions/SKILL.md",
+    "skills/upstream-planar-features/formalization-research/SKILL.md",
+    "skills/upstream-planar-features/math-exposition/SKILL.md"
+  ],
+  "source_declarations_reviewed": [
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.run",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/AffineReadout.lean",
+      "line": 8
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.run_bulk",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/AffineReadout.lean",
+      "line": 13
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.run_unified",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/AffineReadout.lean",
+      "line": 22
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.run_zero_actual",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/AffineReadout.lean",
+      "line": 36
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.run_stabilized",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/AffineReadout.lean",
+      "line": 45
+    },
+    {
+      "name": "HiddenMonotonicity.affineReadoutSeed",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/AffineReadout.lean",
+      "line": 55
+    },
+    {
+      "name": "HiddenMonotonicity.Network.affine_readout_closed_form",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/AffineReadout.lean",
+      "line": 60
+    },
+    {
+      "name": "HiddenMonotonicity.Network.affine_logit_derivative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/AffineReadout.lean",
+      "line": 96
+    },
+    {
+      "name": "HiddenMonotonicity.matrixBackPos",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Backward.lean",
+      "line": 9
+    },
+    {
+      "name": "HiddenMonotonicity.matrixBackNeg",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Backward.lean",
+      "line": 13
+    },
+    {
+      "name": "HiddenMonotonicity.matrix_backward_sum",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Backward.lean",
+      "line": 17
+    },
+    {
+      "name": "HiddenMonotonicity.matrix_backward_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Backward.lean",
+      "line": 24
+    },
+    {
+      "name": "HiddenMonotonicity.matrix_shift_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Backward.lean",
+      "line": 33
+    },
+    {
+      "name": "HiddenMonotonicity.matrix_two_head_reconstruction",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Backward.lean",
+      "line": 37
+    },
+    {
+      "name": "HiddenMonotonicity.transported",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Backward.lean",
+      "line": 50
+    },
+    {
+      "name": "HiddenMonotonicity.sources",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Backward.lean",
+      "line": 55
+    },
+    {
+      "name": "HiddenMonotonicity.affineBack",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Backward.lean",
+      "line": 60
+    },
+    {
+      "name": "HiddenMonotonicity.affine_closed_form",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Backward.lean",
+      "line": 66
+    },
+    {
+      "name": "HiddenMonotonicity.Network.plain_backward_absolute_Q_closed_form",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/BackwardStatements.lean",
+      "line": 7
+    },
+    {
+      "name": "HiddenMonotonicity.Network.backward_partial_invariants",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/BackwardStatements.lean",
+      "line": 20
+    },
+    {
+      "name": "HiddenMonotonicity.Network.plain_head_gradient_formulas",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/BackwardStatements.lean",
+      "line": 32
+    },
+    {
+      "name": "HiddenMonotonicity.PathConnected",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/BlockedPaths.lean",
+      "line": 8
+    },
+    {
+      "name": "HiddenMonotonicity.PathHasInactive",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/BlockedPaths.lean",
+      "line": 15
+    },
+    {
+      "name": "HiddenMonotonicity.rawWeight_zero_of_not_connected",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/BlockedPaths.lean",
+      "line": 19
+    },
+    {
+      "name": "HiddenMonotonicity.rawWeight_zero_of_inactive",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/BlockedPaths.lean",
+      "line": 32
+    },
+    {
+      "name": "HiddenMonotonicity.Network.gradient_blindness",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/BlockedPaths.lean",
+      "line": 45
+    },
+    {
+      "name": "HiddenMonotonicity.recenter_breaks_monotonicity",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/BlockedPaths.lean",
+      "line": 60
+    },
+    {
+      "name": "HiddenMonotonicity.max_derivative_left",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Chunks.lean",
+      "line": 8
+    },
+    {
+      "name": "HiddenMonotonicity.max_derivative_right",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Chunks.lean",
+      "line": 17
+    },
+    {
+      "name": "HiddenMonotonicity.maxpool_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Chunks.lean",
+      "line": 26
+    },
+    {
+      "name": "HiddenMonotonicity.residual_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Chunks.lean",
+      "line": 38
+    },
+    {
+      "name": "HiddenMonotonicity.weighted_sum_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Chunks.lean",
+      "line": 41
+    },
+    {
+      "name": "HiddenMonotonicity.multiplicative_split_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Chunks.lean",
+      "line": 49
+    },
+    {
+      "name": "HiddenMonotonicity.common_offset_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Chunks.lean",
+      "line": 53
+    },
+    {
+      "name": "HiddenMonotonicity.mixing_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Chunks.lean",
+      "line": 59
+    },
+    {
+      "name": "HiddenMonotonicity.winner_pool_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Chunks.lean",
+      "line": 71
+    },
+    {
+      "name": "HiddenMonotonicity.shift_mask_invariant",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Chunks.lean",
+      "line": 75
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit",
+      "kind": "inductive",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 8
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.eval",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 12
+    },
+    {
+      "name": "HiddenMonotonicity.recenterPair",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 16
+    },
+    {
+      "name": "HiddenMonotonicity.recenterPair_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 19
+    },
+    {
+      "name": "HiddenMonotonicity.recenterPair_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 23
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.split",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 31
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.split_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 41
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.split_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 55
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.positiveExpressions",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 77
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.positiveExpressions_eval",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 85
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.Additive",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 109
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.positiveExpressions_additive",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 113
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.cnn_split_convex",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 136
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.cnn_split_monotone",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 150
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.max_polynomial_streams",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Circuit.lean",
+      "line": 163
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.cnn_split_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CircuitStatements.lean",
+      "line": 8
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.cnn_stream_properties",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CircuitStatements.lean",
+      "line": 19
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.maxout_multiplication_split_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CircuitStatements.lean",
+      "line": 34
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.multiplicative_streams_monotone",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CircuitStatements.lean",
+      "line": 50
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.pow",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/CircuitStatements.lean",
+      "line": 60
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.pow_eval",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CircuitStatements.lean",
+      "line": 64
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.maxList",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/CircuitStatements.lean",
+      "line": 70
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.maxList_eval",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CircuitStatements.lean",
+      "line": 74
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.dot",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/CircuitStatements.lean",
+      "line": 79
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.dot_eval",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CircuitStatements.lean",
+      "line": 82
+    },
+    {
+      "name": "HiddenMonotonicity.intervalProduct",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/ClosedFormula.lean",
+      "line": 10
+    },
+    {
+      "name": "HiddenMonotonicity.intervalProduct_self",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ClosedFormula.lean",
+      "line": 15
+    },
+    {
+      "name": "HiddenMonotonicity.transported_product",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ClosedFormula.lean",
+      "line": 21
+    },
+    {
+      "name": "HiddenMonotonicity.sources_sum",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ClosedFormula.lean",
+      "line": 29
+    },
+    {
+      "name": "HiddenMonotonicity.affine_finite_sum",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ClosedFormula.lean",
+      "line": 46
+    },
+    {
+      "name": "HiddenMonotonicity.shiftedSource",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/ClosedFormula.lean",
+      "line": 55
+    },
+    {
+      "name": "HiddenMonotonicity.qSum",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/ClosedFormula.lean",
+      "line": 58
+    },
+    {
+      "name": "HiddenMonotonicity.shifted_source_sum",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ClosedFormula.lean",
+      "line": 62
+    },
+    {
+      "name": "HiddenMonotonicity.shifted_gradient_g_finite_sum",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ClosedFormula.lean",
+      "line": 74
+    },
+    {
+      "name": "HiddenMonotonicity.shifted_gradient_h_finite_sum",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ClosedFormula.lean",
+      "line": 82
+    },
+    {
+      "name": "HiddenMonotonicity.shifted_heads_reconstruct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ClosedFormula.lean",
+      "line": 91
+    },
+    {
+      "name": "HiddenMonotonicity.Network.Nonnegative",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Convexity.lean",
+      "line": 6
+    },
+    {
+      "name": "HiddenMonotonicity.positive_matrix_monotone",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Convexity.lean",
+      "line": 10
+    },
+    {
+      "name": "HiddenMonotonicity.Network.monotone",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Convexity.lean",
+      "line": 20
+    },
+    {
+      "name": "HiddenMonotonicity.mix",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Convexity.lean",
+      "line": 41
+    },
+    {
+      "name": "HiddenMonotonicity.layerPos",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Convexity.lean",
+      "line": 44
+    },
+    {
+      "name": "HiddenMonotonicity.affine_layer_mix",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Convexity.lean",
+      "line": 47
+    },
+    {
+      "name": "HiddenMonotonicity.max_jensen",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Convexity.lean",
+      "line": 56
+    },
+    {
+      "name": "HiddenMonotonicity.Network.convex",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Convexity.lean",
+      "line": 65
+    },
+    {
+      "name": "HiddenMonotonicity.relu",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 14
+    },
+    {
+      "name": "HiddenMonotonicity.max_sub",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 16
+    },
+    {
+      "name": "HiddenMonotonicity.posPre",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 22
+    },
+    {
+      "name": "HiddenMonotonicity.negPre",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 23
+    },
+    {
+      "name": "HiddenMonotonicity.pre_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 25
+    },
+    {
+      "name": "HiddenMonotonicity.split_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 29
+    },
+    {
+      "name": "HiddenMonotonicity.max_common_shift",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 34
+    },
+    {
+      "name": "HiddenMonotonicity.pre_common_shift",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 37
+    },
+    {
+      "name": "HiddenMonotonicity.lift_chain_rule",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 43
+    },
+    {
+      "name": "HiddenMonotonicity.lift_differential",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 53
+    },
+    {
+      "name": "HiddenMonotonicity.relu_derivative_positive",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 62
+    },
+    {
+      "name": "HiddenMonotonicity.relu_derivative_negative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 68
+    },
+    {
+      "name": "HiddenMonotonicity.backward_invariant",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 74
+    },
+    {
+      "name": "HiddenMonotonicity.paper_backward_invariant_counterexample",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 78
+    },
+    {
+      "name": "HiddenMonotonicity.backPos",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 82
+    },
+    {
+      "name": "HiddenMonotonicity.backNeg",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 83
+    },
+    {
+      "name": "HiddenMonotonicity.backward_sum",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 85
+    },
+    {
+      "name": "HiddenMonotonicity.backward_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 89
+    },
+    {
+      "name": "HiddenMonotonicity.shift_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 95
+    },
+    {
+      "name": "HiddenMonotonicity.shift_sum",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 98
+    },
+    {
+      "name": "HiddenMonotonicity.shifted_backward_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 102
+    },
+    {
+      "name": "HiddenMonotonicity.shifted_formula_counterexample",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 111
+    },
+    {
+      "name": "HiddenMonotonicity.two_head_reconstruction",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 118
+    },
+    {
+      "name": "HiddenMonotonicity.multiplicative_convexity_counterexample",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 122
+    },
+    {
+      "name": "HiddenMonotonicity.connectedFlatG",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Counterexamples.lean",
+      "line": 7
+    },
+    {
+      "name": "HiddenMonotonicity.connectedFlatH",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Counterexamples.lean",
+      "line": 10
+    },
+    {
+      "name": "HiddenMonotonicity.connected_flat_head_derivatives",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Counterexamples.lean",
+      "line": 12
+    },
+    {
+      "name": "HiddenMonotonicity.nonzero_mass_zero_balanced",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Counterexamples.lean",
+      "line": 28
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.convex_derivative_monotone",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvatureMinimality.lean",
+      "line": 10
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.curvature_minimality_ae",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvatureMinimality.lean",
+      "line": 17
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.slope_locally_AC",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvatureMinimality.lean",
+      "line": 41
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.primitive_second_derivatives_ae",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvatureMinimality.lean",
+      "line": 56
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.affine_of_ae_second_derivative_zero",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvatureMinimality.lean",
+      "line": 77
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.cumulative",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 13
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.slope",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 14
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.primitive",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 15
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.cumulative_continuous",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 18
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.slope_continuous",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 28
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.primitive_hasDerivAt",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 31
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.cumulative_monotone",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 35
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.primitive_convex",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 41
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.cumulative_atBot",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 51
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.derivative_cumulative_representation",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 56
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.derivative_limit_atBot",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 68
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.cumulative_abs_bound",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 83
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.slope_abs_bound",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "line": 90
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.tilt",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/DCTilt.lean",
+      "line": 6
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.tilt_derivative_first",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/DCTilt.lean",
+      "line": 9
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.tilt_derivative_second",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/DCTilt.lean",
+      "line": 18
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.tilt_convex",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/DCTilt.lean",
+      "line": 28
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.tilt_monotone",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/DCTilt.lean",
+      "line": 44
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.tilt_monotone_iff",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/DCTilt.lean",
+      "line": 64
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.minimum_common_tilt",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/DCTilt.lean",
+      "line": 84
+    },
+    {
+      "name": "HiddenMonotonicity.Network.forwardWith",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 9
+    },
+    {
+      "name": "HiddenMonotonicity.Network.decomposeWith",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 15
+    },
+    {
+      "name": "HiddenMonotonicity.ValidPairActivation",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 24
+    },
+    {
+      "name": "HiddenMonotonicity.Network.valid_decomposition_recovery",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 29
+    },
+    {
+      "name": "HiddenMonotonicity.Network.forwardWith_relu",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 45
+    },
+    {
+      "name": "HiddenMonotonicity.mixPair",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 50
+    },
+    {
+      "name": "HiddenMonotonicity.mixPair_valid",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 53
+    },
+    {
+      "name": "HiddenMonotonicity.Network.mixing_recovery",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 59
+    },
+    {
+      "name": "HiddenMonotonicity.Network.mixing_one_is_split",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 66
+    },
+    {
+      "name": "HiddenMonotonicity.NonnegativePairActivation",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 75
+    },
+    {
+      "name": "HiddenMonotonicity.Network.NonnegativeParameters",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 78
+    },
+    {
+      "name": "HiddenMonotonicity.Network.decomposition_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 83
+    },
+    {
+      "name": "HiddenMonotonicity.mixPair_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 115
+    },
+    {
+      "name": "HiddenMonotonicity.PositiveExpr.substitute",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/ExpressionSubstitution.lean",
+      "line": 6
+    },
+    {
+      "name": "HiddenMonotonicity.PositiveExpr.substitute_eval",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ExpressionSubstitution.lean",
+      "line": 15
+    },
+    {
+      "name": "HiddenMonotonicity.PositiveExpr.substitute_additive",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ExpressionSubstitution.lean",
+      "line": 20
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.Additive",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/ExpressionSubstitution.lean",
+      "line": 31
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.split_additive",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ExpressionSubstitution.lean",
+      "line": 37
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.sum",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/ExpressionSubstitution.lean",
+      "line": 48
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.sum_eval",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ExpressionSubstitution.lean",
+      "line": 52
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.affine",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/ExpressionSubstitution.lean",
+      "line": 56
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.affine_eval",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ExpressionSubstitution.lean",
+      "line": 59
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.affine_additive",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ExpressionSubstitution.lean",
+      "line": 63
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial.leaves",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/FinitePolynomialWitness.lean",
+      "line": 6
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial.leaves_nonempty",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/FinitePolynomialWitness.lean",
+      "line": 10
+    },
+    {
+      "name": "HiddenMonotonicity.foldMax",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/FinitePolynomialWitness.lean",
+      "line": 15
+    },
+    {
+      "name": "HiddenMonotonicity.foldMax_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/FinitePolynomialWitness.lean",
+      "line": 17
+    },
+    {
+      "name": "HiddenMonotonicity.foldMax_append",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/FinitePolynomialWitness.lean",
+      "line": 22
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial.eval_leaves",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/FinitePolynomialWitness.lean",
+      "line": 28
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial.ordinary_finite_polynomial_witness",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/FinitePolynomialWitness.lean",
+      "line": 37
+    },
+    {
+      "name": "HiddenMonotonicity.Circuit.ordinary_polynomial_stream_witnesses",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/FinitePolynomialWitness.lean",
+      "line": 58
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace",
+      "kind": "inductive",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 8
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.activeMap",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 15
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.inactiveMap",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 18
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.activeMap_apply",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 21
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.inactiveMap_apply",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 26
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.signedMap",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 31
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.deadMap",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 35
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.splitLayerJac",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 39
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.originalJac",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 44
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.splitJac",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 48
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.difference_splitLayer",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 52
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.difference_splitJac",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 70
+    },
+    {
+      "name": "HiddenMonotonicity.Network.trace",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 81
+    },
+    {
+      "name": "HiddenMonotonicity.layerJac_trace",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 87
+    },
+    {
+      "name": "HiddenMonotonicity.Network.jacobian_trace",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 102
+    },
+    {
+      "name": "HiddenMonotonicity.Network.hasFDerivAt_eval_trace",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MaskedTrace.lean",
+      "line": 112
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.integrable_nonnegative_derivative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+      "line": 14
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.sigmoidFirst",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+      "line": 35
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.sigmoidSecond",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+      "line": 36
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.sigmoidFirst_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+      "line": 38
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.sigmoidFirst_derivative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+      "line": 41
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.sigmoidFirst_integrable",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+      "line": 48
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.sigmoidSecond_bound",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+      "line": 52
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.sigmoidSecond_integrable",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+      "line": 60
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.sigmoid_curvature",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+      "line": 66
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.sigmoid_derivative_locally_AC",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+      "line": 72
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.sigmoid_smooth_dc_split",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+      "line": 79
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.softplus_curvature",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSoftplus.lean",
+      "line": 10
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.softplus_curvature_integrable",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSoftplus.lean",
+      "line": 19
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.softplus_derivative_locally_AC",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSoftplus.lean",
+      "line": 24
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.softplus_smooth_dc_split",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ModernSoftplus.lean",
+      "line": 35
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr",
+      "kind": "inductive",
+      "file": "formalization/HiddenMonotonicity/MultiplicativeSplit.lean",
+      "line": 7
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.eval",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/MultiplicativeSplit.lean",
+      "line": 15
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.split",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/MultiplicativeSplit.lean",
+      "line": 25
+    },
+    {
+      "name": "HiddenMonotonicity.max_two_split_pairs",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MultiplicativeSplit.lean",
+      "line": 42
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.split_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MultiplicativeSplit.lean",
+      "line": 51
+    },
+    {
+      "name": "HiddenMonotonicity.canonicalSplitInput",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/MultiplicativeSplit.lean",
+      "line": 71
+    },
+    {
+      "name": "HiddenMonotonicity.canonicalSplitInput_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MultiplicativeSplit.lean",
+      "line": 74
+    },
+    {
+      "name": "HiddenMonotonicity.canonicalSplitInput_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MultiplicativeSplit.lean",
+      "line": 79
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.monotone_split_representation",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MultiplicativeSplit.lean",
+      "line": 85
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.max_polynomial_split",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MultiplicativeSplit.lean",
+      "line": 95
+    },
+    {
+      "name": "HiddenMonotonicity.SignedExpr.split_streams_monotone",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/MultiplicativeSplit.lean",
+      "line": 103
+    },
+    {
+      "name": "HiddenMonotonicity.Network",
+      "kind": "inductive",
+      "file": "formalization/HiddenMonotonicity/Network.lean",
+      "line": 9
+    },
+    {
+      "name": "HiddenMonotonicity.Network.eval",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Network.lean",
+      "line": 14
+    },
+    {
+      "name": "HiddenMonotonicity.Network.split",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Network.lean",
+      "line": 19
+    },
+    {
+      "name": "HiddenMonotonicity.layer_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Network.lean",
+      "line": 27
+    },
+    {
+      "name": "HiddenMonotonicity.Network.correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Network.lean",
+      "line": 39
+    },
+    {
+      "name": "HiddenMonotonicity.Network.common",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/Network.lean",
+      "line": 48
+    },
+    {
+      "name": "HiddenMonotonicity.shifted_layer_preactivation",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Network.lean",
+      "line": 52
+    },
+    {
+      "name": "HiddenMonotonicity.Network.shift",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Network.lean",
+      "line": 60
+    },
+    {
+      "name": "HiddenMonotonicity.Vec",
+      "kind": "abbrev",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 9
+    },
+    {
+      "name": "HiddenMonotonicity.PairVec",
+      "kind": "abbrev",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 10
+    },
+    {
+      "name": "HiddenMonotonicity.matrixCLM",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 12
+    },
+    {
+      "name": "HiddenMonotonicity.preP",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 15
+    },
+    {
+      "name": "HiddenMonotonicity.preN",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 19
+    },
+    {
+      "name": "HiddenMonotonicity.layerFun",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 22
+    },
+    {
+      "name": "HiddenMonotonicity.layerJac",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 26
+    },
+    {
+      "name": "HiddenMonotonicity.preP_apply",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 33
+    },
+    {
+      "name": "HiddenMonotonicity.layer_derivative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 37
+    },
+    {
+      "name": "HiddenMonotonicity.Network.jacobian",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 60
+    },
+    {
+      "name": "HiddenMonotonicity.Network.Regular",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 66
+    },
+    {
+      "name": "HiddenMonotonicity.Network.hasFDerivAt_split",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 74
+    },
+    {
+      "name": "HiddenMonotonicity.blockPP",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 84
+    },
+    {
+      "name": "HiddenMonotonicity.blockPN",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 91
+    },
+    {
+      "name": "HiddenMonotonicity.layerJac_positive_input",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 98
+    },
+    {
+      "name": "HiddenMonotonicity.layerJac_negative_input",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 109
+    },
+    {
+      "name": "HiddenMonotonicity.actual_positive_pullback",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 122
+    },
+    {
+      "name": "HiddenMonotonicity.actual_negative_pullback",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 131
+    },
+    {
+      "name": "HiddenMonotonicity.liftCLM",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 139
+    },
+    {
+      "name": "HiddenMonotonicity.differenceCLM",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 142
+    },
+    {
+      "name": "HiddenMonotonicity.Network.hasFDerivAt_eval",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 147
+    },
+    {
+      "name": "HiddenMonotonicity.affineLayer",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 7
+    },
+    {
+      "name": "HiddenMonotonicity.reluLayer",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 10
+    },
+    {
+      "name": "HiddenMonotonicity.minLayer",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 13
+    },
+    {
+      "name": "HiddenMonotonicity.originalGate",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 16
+    },
+    {
+      "name": "HiddenMonotonicity.Network.originalTrace",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 20
+    },
+    {
+      "name": "HiddenMonotonicity.Network.Strict",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 25
+    },
+    {
+      "name": "HiddenMonotonicity.Network.absCLM",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 30
+    },
+    {
+      "name": "HiddenMonotonicity.preactivation_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 34
+    },
+    {
+      "name": "HiddenMonotonicity.layerFun_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 43
+    },
+    {
+      "name": "HiddenMonotonicity.Network.trace_originalTrace",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 56
+    },
+    {
+      "name": "HiddenMonotonicity.Network.regular_iff_strict",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 71
+    },
+    {
+      "name": "HiddenMonotonicity.Network.trace_absCLM",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 86
+    },
+    {
+      "name": "HiddenMonotonicity.Network.originalTrace_absCLM",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 94
+    },
+    {
+      "name": "HiddenMonotonicity.Network.hasFDerivAt_originalTrace",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 101
+    },
+    {
+      "name": "HiddenMonotonicity.affineLayer_hasFDerivAt",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 107
+    },
+    {
+      "name": "HiddenMonotonicity.reluLayer_hasFDerivAt",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 112
+    },
+    {
+      "name": "HiddenMonotonicity.minLayer_hasFDerivAt",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 135
+    },
+    {
+      "name": "HiddenMonotonicity.Network.Canonical",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 159
+    },
+    {
+      "name": "HiddenMonotonicity.Network.absoluteMap",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 165
+    },
+    {
+      "name": "HiddenMonotonicity.Network.absCLM_eq_absoluteMap",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 172
+    },
+    {
+      "name": "HiddenMonotonicity.Network.sensitivity_complementarity_absolute",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 188
+    },
+    {
+      "name": "HiddenMonotonicity.PositivePolynomial.toMvPolynomial",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/PolynomialSemantics.lean",
+      "line": 7
+    },
+    {
+      "name": "HiddenMonotonicity.PositivePolynomial.toMvPolynomial_eval",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/PolynomialSemantics.lean",
+      "line": 14
+    },
+    {
+      "name": "HiddenMonotonicity.PositivePolynomial.coefficients_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/PolynomialSemantics.lean",
+      "line": 20
+    },
+    {
+      "name": "HiddenMonotonicity.PositiveExpr",
+      "kind": "inductive",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 7
+    },
+    {
+      "name": "HiddenMonotonicity.PositiveExpr.eval",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 15
+    },
+    {
+      "name": "HiddenMonotonicity.PositiveExpr.Additive",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 23
+    },
+    {
+      "name": "HiddenMonotonicity.PositiveExpr.nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 29
+    },
+    {
+      "name": "HiddenMonotonicity.PositiveExpr.monotone_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 39
+    },
+    {
+      "name": "HiddenMonotonicity.PositiveExpr.monotone_additive",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 52
+    },
+    {
+      "name": "HiddenMonotonicity.PositiveExpr.convex_additive",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 63
+    },
+    {
+      "name": "HiddenMonotonicity.PositivePolynomial",
+      "kind": "inductive",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 83
+    },
+    {
+      "name": "HiddenMonotonicity.PositivePolynomial.eval",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 89
+    },
+    {
+      "name": "HiddenMonotonicity.PositivePolynomial.nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 95
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial",
+      "kind": "inductive",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 104
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial.eval",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 108
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial.mapPoly",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 112
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial.bind",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 117
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial.add",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 122
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial.mul",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 125
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial.nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 128
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial.add_eval",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 134
+    },
+    {
+      "name": "HiddenMonotonicity.MaxPolynomial.mul_eval",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 149
+    },
+    {
+      "name": "HiddenMonotonicity.PositiveExpr.polynomialMaximum",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 164
+    },
+    {
+      "name": "HiddenMonotonicity.PositiveExpr.max_polynomial_representation",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/PositiveExpressions.lean",
+      "line": 174
+    },
+    {
+      "name": "HiddenMonotonicity.QSource",
+      "kind": "structure",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 7
+    },
+    {
+      "name": "HiddenMonotonicity.QSource.pull",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 12
+    },
+    {
+      "name": "HiddenMonotonicity.QSource.row",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 16
+    },
+    {
+      "name": "HiddenMonotonicity.Network.qSources",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 22
+    },
+    {
+      "name": "HiddenMonotonicity.Network.qSources_have_derivatives",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 34
+    },
+    {
+      "name": "HiddenMonotonicity.QSource.row_pull",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 47
+    },
+    {
+      "name": "HiddenMonotonicity.sourceRows",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 54
+    },
+    {
+      "name": "HiddenMonotonicity.sourceRows_pull",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 57
+    },
+    {
+      "name": "HiddenMonotonicity.Network.qSources_sum",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 64
+    },
+    {
+      "name": "HiddenMonotonicity.Network.stabilized_backward_Q_closed_form",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 84
+    },
+    {
+      "name": "HiddenMonotonicity.Network.stabilized_backward_invariant",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 100
+    },
+    {
+      "name": "HiddenMonotonicity.Network.plain_backward_Q_closed_form",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 109
+    },
+    {
+      "name": "HiddenMonotonicity.Network.absoluteQSources",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 122
+    },
+    {
+      "name": "HiddenMonotonicity.Network.qSources_eq_absolute",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 133
+    },
+    {
+      "name": "HiddenMonotonicity.Network.stabilized_backward_absolute_Q_closed_form",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 143
+    },
+    {
+      "name": "HiddenMonotonicity.balancedLift",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 155
+    },
+    {
+      "name": "HiddenMonotonicity.assemble_balancedLift",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 159
+    },
+    {
+      "name": "HiddenMonotonicity.balancedLift_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 168
+    },
+    {
+      "name": "HiddenMonotonicity.Network.symmetric_head_derivative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/QSources.lean",
+      "line": 176
+    },
+    {
+      "name": "HiddenMonotonicity.reluLayer_continuous",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/RegionalBlindness.lean",
+      "line": 9
+    },
+    {
+      "name": "HiddenMonotonicity.Network.eventually_strict_trace",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/RegionalBlindness.lean",
+      "line": 18
+    },
+    {
+      "name": "HiddenMonotonicity.Network.locally_constant_jacobian",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/RegionalBlindness.lean",
+      "line": 53
+    },
+    {
+      "name": "HiddenMonotonicity.Network.regional_gradient_blindness",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/RegionalBlindness.lean",
+      "line": 68
+    },
+    {
+      "name": "HiddenMonotonicity.common_shift_derivative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Sensitivities.lean",
+      "line": 8
+    },
+    {
+      "name": "HiddenMonotonicity.vector_lift_chain_rule",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Sensitivities.lean",
+      "line": 33
+    },
+    {
+      "name": "HiddenMonotonicity.monotone_directional_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Sensitivities.lean",
+      "line": 60
+    },
+    {
+      "name": "HiddenMonotonicity.canonical_weight_split",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/Sensitivities.lean",
+      "line": 77
+    },
+    {
+      "name": "HiddenMonotonicity.shiftCoefficient",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/ShiftWeights.lean",
+      "line": 7
+    },
+    {
+      "name": "HiddenMonotonicity.shiftCoefficient_product",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ShiftWeights.lean",
+      "line": 11
+    },
+    {
+      "name": "HiddenMonotonicity.shifted_source_coefficient",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ShiftWeights.lean",
+      "line": 21
+    },
+    {
+      "name": "HiddenMonotonicity.input_dependent_shift_counterexample",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/ShiftWeights.lean",
+      "line": 33
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.curvature",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 7
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.positiveCurvature",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 8
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.negativeCurvature",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 9
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.minusInfinitySlope",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 10
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.C1",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 11
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.C2",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 12
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.D1",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 13
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.D2",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 14
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.commonTilt",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 15
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.positiveCurvature_integrable",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 18
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.negativeCurvature_integrable",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 21
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.cumulative_curvature_split",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 24
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.D1_sub_D2",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 36
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.C1_hasDerivAt",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 45
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.C2_hasDerivAt",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 48
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.primitive_difference",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 52
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.D1_abs_bounded",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 66
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.D2_abs_bounded",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 72
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.commonTilt_bounds",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 78
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.smooth_dc_split",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 85
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.canonical_tilt_minimality",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 114
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.splitPair",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/SmoothValidDecomposition.lean",
+      "line": 7
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.smooth_pair_valid",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothValidDecomposition.lean",
+      "line": 10
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.smooth_pair_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothValidDecomposition.lean",
+      "line": 18
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.smooth_network_recovery",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothValidDecomposition.lean",
+      "line": 35
+    },
+    {
+      "name": "HiddenMonotonicity.SmoothDC.smooth_network_nonnegative",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/SmoothValidDecomposition.lean",
+      "line": 43
+    },
+    {
+      "name": "HiddenMonotonicity.Row",
+      "kind": "abbrev",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 4
+    },
+    {
+      "name": "HiddenMonotonicity.Sensitivity",
+      "kind": "abbrev",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 5
+    },
+    {
+      "name": "HiddenMonotonicity.assemble",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 7
+    },
+    {
+      "name": "HiddenMonotonicity.partialPair",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 11
+    },
+    {
+      "name": "HiddenMonotonicity.shiftPair",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 15
+    },
+    {
+      "name": "HiddenMonotonicity.unified",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 18
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.pull",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 22
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.absMap",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 26
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.stabilized",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 32
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.bulkCoefficient",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 38
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.correction",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 42
+    },
+    {
+      "name": "HiddenMonotonicity.assemble_partialPair",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 51
+    },
+    {
+      "name": "HiddenMonotonicity.shiftPair_sum",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 59
+    },
+    {
+      "name": "HiddenMonotonicity.unified_shift",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 64
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.splitLayer_common",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 69
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.splitLayer_signed",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 84
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.pull_sum",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 111
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.pull_unified",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 122
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.stabilized_bulk",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 143
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.stabilized_unified",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 159
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.stabilized_backward_closed_form_g",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 180
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.stabilized_backward_closed_form_h",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 188
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.stabilized_backward_invariant",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 197
+    },
+    {
+      "name": "HiddenMonotonicity.headProjection",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 204
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.zero_shift_actual",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 210
+    },
+    {
+      "name": "HiddenMonotonicity.Network.local_sensitivities_correct",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 225
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.bulkCoefficient_zero",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 234
+    },
+    {
+      "name": "HiddenMonotonicity.Network.sensitivity_complementarity",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 241
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.correctionTerms",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 248
+    },
+    {
+      "name": "HiddenMonotonicity.row_sum_comp",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 257
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.correction_terms_sum",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 264
+    },
+    {
+      "name": "HiddenMonotonicity.Network.stabilized_backward_closed_form",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 276
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.depth",
+      "kind": "def",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 288
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.bulkCoefficient_product",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 294
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.bulkCoefficient_half",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 303
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.correction_half",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 307
+    },
+    {
+      "name": "HiddenMonotonicity.Network.half_shift_gradients",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 317
+    },
+    {
+      "name": "HiddenMonotonicity.MaskedTrace.stabilized_partial_invariants",
+      "kind": "theorem",
+      "file": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 328
+    }
+  ],
+  "limitations": [
+    "No production source, shared .olean or build cache was mutated. Only audit scratch and the explicitly requested reports/evidence paths were written.",
+    "No external literature was needed: the supplied local manuscript and source were the comparison authority.",
+    "Finite experiments do not establish universal correctness. Kernel receipts are limited to explicitly imported and exact-checked declarations.",
+    "No end-to-end PyTorch converter, floating-point stabilization implementation, runtime complexity, or clean clone reproducibility was verified."
+  ]
+}

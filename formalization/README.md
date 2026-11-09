@@ -13,7 +13,9 @@ network. `n` and `m` are the input and output widths; every intermediate width
 may be different. A layer stores positive/negative weight and bias parts, whose
 differences are the ordinary weights and biases.
 
-- `net.eval x` is the ordinary ReLU forward pass.
+- `net.eval x` is the ReLU backbone forward pass. `net.affineHeads` and
+  `net.affineLogit` append the actual ungated signed affine readout, including
+  its split biases. This preserves negative logits and covers zero hidden layers.
 - `net.split p q` returns the two split heads, whose difference is
   `net.eval (p - q)`.
 - `net.forwardWith activation x` evaluates those same parameters with another
@@ -61,9 +63,13 @@ linear functions with continuity recorded for mathlib's differentiation API.
 
 ## Assumptions and boundaries
 
-ReLU derivative statements require strict nonzero preactivations at every reached
-layer. Algebraic statements about a selected gate can also hold at a tie, but do
-not assert classical differentiability there. Canonical split weights mean
+The original derivative proofs use strict nonzero preactivations. The newer
+`DifferentiableHeads` results prove actual affine-head derivatives at every point
+where those heads are differentiable; they admit degenerate zero gates.
+`AlmostEverywhere` proves the common full-measure differentiability statement,
+and `PrefixSources` certifies every actual auxiliary Q derivative almost everywhere.
+Selected backward quantities remain distinct from classical derivatives at
+nondifferentiable points. Canonical split weights mean
 `Wp = max W 0` and `Wn = max (-W) 0`, so `Wp+Wn = abs W`.
 
 Shifted backward sensitivities are algorithmic quantities. They are not asserted
@@ -88,14 +94,18 @@ From this directory, with `elan` installed:
 
 ```sh
 lake exe cache get
-lake build
+lake build All
 python3 scripts/inventory.py
-python3 scripts/audit.py
-lake env lean Audit.lean
+python3 scripts/verify.py
 ```
 
-`Audit.lean` prints transitive axiom dependencies for every project theorem
-and checks every mapped theorem name, including the names used by TeX links.
+`scripts/verify.py` requires a committed clean closure, builds the complete
+`All` root, checks the independently reviewed types in `verification.json`, and
+enumerates every imported project theorem through Lean itself for its axiom audit.
+It records commands, exit codes, exact source hashes, the commit and generated
+Lean checks in `reports/verification/current`. Use `--diagnostic` during development;
+that output is explicitly labelled as development evidence. The readable secondary
+`Audit.lean` can still be regenerated with `python3 scripts/audit.py`.
 The accepted foundational axioms are `propext`, `Classical.choice`, and
 `Quot.sound`. No `sorry`, `admit`, or custom axioms are used.
 

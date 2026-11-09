@@ -345,7 +345,7 @@ from $R^{(L)}_u = f(x)$, every neuron passes its relevance $R^{(l)}_j$ on to its
 proportion to their contributions $a^{(l-1)}_i W^{(l)}_{ij}$ to its pre-activation, so that
 relevance is conserved from layer to layer up to the share absorbed by biases and stabilizers.
 Rules differ in how the contributions are weighted. The $\alpha\beta$-rule is parameterized by
-$\alpha,\beta \ge 0$, with $\alpha-\beta = 1$ for conservation (attributions sum to $f(x)$), and a
+$\alpha,\beta\geq0$, with $\alpha-\beta=1$ giving conservation when both participating sign streams are nonempty and all bias, stabilizer, and empty-stream absorption is accounted for, and a
 stabilization parameter $\varepsilon \ge 0$ \ch{(added to each sign denominator, as in common
 implementations~\citep{Anders2021zennit})}: the relevance of neuron $j$ is split into a
 positive-contribution fraction scaled by $\alpha$ and a negative-contribution fraction scaled by
@@ -790,7 +790,7 @@ otherwise, the sign operator $\xi_{p,q} = 2\delta_{p,q} - 1$ ($+1$ if $p=q$, $-1
 and the XOR operator $p \oplus q = +$ if $p=q$ and $-$ if $p \neq q$; it is commutative and
 associative, with $p \oplus p = +$, $p \oplus + = p$, $p \oplus - = p'$, and $p' \oplus q = (p
     \oplus q)'$.
-\textbf{Boundary conventions.} We fix $\mathrm{ReLU}'(0) \coloneqq 0$; equivalently, the indicator
+\textbf{Boundary conventions.} We fix the selected backward value $\mathrm{ReLU}'(0)\coloneqq0$ (an algorithmic convention, since ReLU has no classical derivative at zero); equivalently, the indicator
 $\1[z > 0]$ used throughout returns $0$ at $z = 0$. For a finite tuple $(x_1, \dots, x_m)$,
 $\arg\max_k x_k \coloneqq \min\{k : x_k = \max_l x_l\}$, the smallest index attaining the maximum.
 We reserve the word \emph{trajectory} for sequences of game states $\zeta = (\zeta_0, \zeta_1,
@@ -1467,7 +1467,7 @@ stop-at-tie-breaks equilibrium fixed by the boundary conventions of
 Appendix~\ref{app:notation-identities} (uniquely fixing the SPNE at ReLU gates with $z = 0$ and at
 max-pooling states with multiple maximizers), the discounted occupation measures exactly represent,
 in a multi-trajectory ReLU network (e.g., a ResNet or a CNN with max pooling), the local
-Stopping-Decomposition and scalar activation gradients:
+Stopping-Decomposition and scalar activation derivatives on open cells with nonzero ReLU preactivations and unique max-pooling winners. At ties, the same formulas represent the backward quantities computed using the selected gates and winners; they do not assert classical differentiability of the individual stopping streams, which can be discontinuous there:
 \begin{enumerate}
     \item \textbf{Stopping-Decomposition Gradient:}
         \begin{align}
@@ -1578,7 +1578,7 @@ across skip connections and max-pooling nodes, completing the induction.
 \newpage
 \section{Routing Game: Log-Space Formulation}\label{app:routing-formal}
 
-This appendix makes the two-player payoff structure of the Routing Game explicit. The recursion
+This appendix makes the two-player payoff structure of the Routing Game explicit. Its global network interpretation uses nonnegative activation outputs; the GeLU discussion later concerns local gates conditioned on a fixed forward pass. The recursion
 used in Section~\ref{sec:routing} is the logarithmic representation of an entropy-regularized
 two-player game, and admits a Gibbs subgame-perfect equilibrium for every $\tau>0$.
 
@@ -1604,10 +1604,7 @@ We write
     \qquad \exp(-\infty) \coloneqq 0,
 \end{align}
 so that $\exp(\ell(x)) = \text{ReLU}(x)$ for any $x \in \RR$; we use this fact for notational
-convenience. Zero or negative routed mass thus receives the stopping value $-\infty$; where a
-player compares stopping with continuing (activation states), the comparison is made on the
-argument of $\ell$, the signed routed mass, so that negative mass is strictly worse than stopping
-(mass $0$). The ReLU-gating itself is fully modeled by the player policies at states modeling the
+convenience. Zero or negative routed mass thus receives the stopping value $-\infty$. At every activation state we explicitly choose \emph{stop whenever the two log-space action values tie}. Hence continuing is selected exactly when its log value is strictly greater than $-\infty$, equivalently when the signed routed mass is positive. The ReLU-gating itself is fully modeled by the player policies at states modeling the
 ReLU gates---just like in the Stopping Game.
 
 \paragraph{State Space and Game Mechanics.}
@@ -1751,16 +1748,16 @@ the continuation value becomes
     \right).
 \end{align}
 
-Observe that at least one of the two equals $-\infty$.
-On the other hand, stopping yields $-\infty$ for both.
-The equilibrium activation-game values are
+Stopping yields $-\infty$ for both players. We select \emph{stop at every activation-state tie in log space}, so the selected policy and active-player value are
 \begin{align}\label{eq:routing-activation-value}
-    V_p(s_{j,p}^{(l, act)}) &\coloneqq \max\{-\infty, Q_p(s_{j,p}^{(l, act)}, \text{continue})\},
+    \pi_p^\star(\mathrm{continue}\mid s_{j,p}^{(l,\mathrm{act})})
+    &\coloneqq \1\!\left[Q_p(s_{j,p}^{(l,\mathrm{act})},\mathrm{continue})>-\infty\right],\\
+    V_p(s_{j,p}^{(l,\mathrm{act})})
+    &\coloneqq \max\{-\infty,Q_p(s_{j,p}^{(l,\mathrm{act})},\mathrm{continue})\}.
 \end{align}
-and, since player $p$ continues only if $Q_p(s_{j,p}^{(l, act)}, \text{continue}) > -\infty$, in
-which case $Q_{p'}(s_{j,p}^{(l, act)}, \text{continue}) = -\infty$, we have
+Writing $D_p=\exp V_p(s_+)-\exp V_{p'}(s_-)$, this selects continuing exactly when $D_p>0$. When $D_p\leq0$, both actions have log value $-\infty$ and the convention selects stopping. If continuing is selected, the opponent's continuation value is $-\infty$; if stopping is selected, both players receive $-\infty$. Thus in either case
 \begin{align}
-    V_{p'}(s_{j,p}^{(l, act)}) = -\infty.
+    V_{p'}(s_{j,p}^{(l,\mathrm{act})})=-\infty.
 \end{align}
 \end{definition}
 Figure~\ref{fig:Routing-Game-illustration} shows a worked example of the local routing subgame.
@@ -1819,10 +1816,7 @@ $[a_i^{(l-1)}W_{ij}^{(l)}]^\kappa = a_i^{(l-1)} W_{ij}^{(l,\kappa)}$.
 \begin{remark}[Uniqueness]\label{rem:routing-spne-uniqueness}
 The linear-state Gibbs best response~\eqref{eq:routing-spne-linear} is the unique maximizer of the
 strictly concave entropy-regularized objective whenever some action has a finite score (otherwise
-Definition~\ref{def:routing-recursion} fixes $\perp_{\mathrm{lin}}$). At activation states the
-active player is indifferent only when the signed continuation mass $\exp V_p(s_+) - \exp
-    V_{p'}(s_-)$ is zero ($z_j^{(l)} = 0$ at $\tau = 1$): both stopping and continuing are best
-responses, so multiple SPNEs can coexist under different tie-breaking. The theorem specifies the
+Definition~\ref{def:routing-recursion} fixes $\perp_{\mathrm{lin}}$). At activation states the active player is indifferent whenever the signed continuation mass $\exp V_p(s_+) - \exp V_{p'}(s_-)$ is nonpositive ($z_j^{(l)}\leq0$ at $\tau=1$), because both log-space action values are then $-\infty$. Thus the unconstrained best-response set can contain several policies. The theorem specifies the
 tie-breaker $\pi_p^\star = \1[Q_p(\cdot,\mathrm{continue}) > -\infty]$, which at $\tau=1$ reduces
 to $\1[z_j^{(l)} > 0]$. Just like in the \ac{SG} (Appendix~\ref{app:relu-net-game}), we refer to
 this SPNE as the \textbf{stop-at-tie-breaks} equilibrium.
@@ -1853,8 +1847,7 @@ simplex. Identity~\eqref{eq:gibbs-lse} yields the unique Gibbs best response, an
 with zero mass on routes of zero or wrong sign and closed-form value $V_q(s_{j,q,\kappa}^{(1,lin)})
     = \tau \log \sum_i \exp(Q_q(s_{j,q,\kappa}^{(1,lin)},i)/\tau)$. With these values in hand, the
 activation-state subgame at layer $l=1$ is a binary choice between stop (log-payoff $\ell(0) =
-    -\infty$) and continue~\eqref{eq:routing-activation-continue}; comparing signed masses and stopping
-at ties, the active player's best response is the pure stop/continue strategy
+    -\infty$) and continue~\eqref{eq:routing-activation-continue}; comparing log-space action values and choosing stopping at every tie, the active player's best response is the pure stop/continue strategy
 \begin{align}\label{eq:routing-spne-stop}
     \pi_p^\star\bigl(s_{j,p}^{(l, act)}\bigr)
     = \1\!\bigl[ Q_p(s_{j,p}^{(l, act)}, \mathrm{continue}) > -\infty \bigr].
@@ -1884,7 +1877,7 @@ values $Q_q(s_{j,q,\kappa}^{(1, lin)}, i) = \ell([x_iW_{ij}^{(1)}]^\kappa)$
 of~\eqref{eq:routing-linear-action} in place of $\ell(a_i^{(l-1)} W_{ij}^{(l,\kappa)})$.
 
 \textbf{Inductive step ($l \ge 2$):} Assume $V_q(s_{i,q}^{(l-1, act)}) = \ell(a_i^{(l-1)})$ for all
-predecessors $i$ and both player labels $q$. Since standard activations satisfy $a_i^{(l-1)} \ge
+predecessors $i$ and both player labels $q$. Since the assumed nonnegative activation functions satisfy $a_i^{(l-1)} \ge
     0$, the linear routing-state action values become
 \begin{align}
     Q_q \bigl( s_{j,q,\kappa}^{(l, lin)}, i \bigr)
@@ -3200,9 +3193,11 @@ states, giving a disagreement map at the input layer (Theorem~\ref{thm:per-pixel
 We collect here the layered-Markov-process abstraction that underlies every Hellinger statement in
 this appendix: a finite layered graph augmented with a cemetery $\dagger$, and the act-state
 \acp{MP} that the two games of the main paper instantiate on it. The natural \ac{RG} carries an
-extra linear-routing state per neuron between consecutive activation states; we marginalize it out
-and check in Remark~\ref{rem:rg-natural-equivalence} that this preserves trajectory Bhattacharyya
-and Hellinger exactly.
+extra linear-routing state per neuron between consecutive activation states. We retain its
+gate, branch, and routing substeps for full-law diagnostics; only ordinary surviving paths
+admit exact act-only elimination, as detailed in Remark~\ref{rem:rg-natural-equivalence}.
+For full routing-process dynamic programming below, the layer index includes these refined
+substeps; activation-boundary readouts form a subset of those layers.
 
 \subsubsection{Layered Markov Process with Cemetery}\label{sec:lmp}
 
@@ -3276,7 +3271,7 @@ backward kernel keeps the player on positive weights and flips it on negative we
     \label{eq:adf-T}
 \end{align}
 with $\gamma^{(l)}_{M,j} = \sum_i |W^{(l)}_M[i,j]|$, $p' = -p$, cemetery row
-$T^{(l)}_M(s^{(l,\mathrm{act})}_{j,p} \to \dagger) = \1\{z_j^{(l)} \le 0\}$, and the analogous form
+$T^{(l)}_M(s^{(l,\mathrm{act})}_{j,p}\to\dagger)=1-\1\{z_j^{(l)}>0\}\1\{\gamma^{(l)}_{M,j}>0\}$, with $0/0\coloneqq0$ in the ordinary transitions, and the analogous form
 at $l = 1$ landing on the pixel-player terminals $s^{(0)}_{i,p}, s^{(0)}_{i,p'}$. This is the
 natural \ac{SG} MP of Appendix~\ref{app:relu-net-game} verbatim.
 
@@ -3302,7 +3297,11 @@ and at $l = 1$ the destinations are pixel-stream terminals carrying the routing-
     \;=\; \tfrac12\,\pi^{(1)}_{M,\kappa}(i \mid j)\,\1\{z_j^{(1)} > 0\},
     \qquad \kappa \in \{+,-\},
 \end{align}
-with the same cemetery row $\1\{z_j^{(l)} \le 0\}$. The Gibbs policy is the temperature-$\tau$
+For this act-only marginal, the cemetery probability is the residual
+$T^{(l)}_M(s_{j,p}\to\dagger)=1-\sum_{s'\in\mathcal S^{(l-1)}}T^{(l)}_M(s_{j,p}\to s')$.
+An empty routing stream has zero ordinary policy mass and its $1/2$ branch share
+is absorbed, even when the source neuron is alive. The Gibbs policy on a nonempty
+stream is the temperature-$\tau$
 distribution
 \begin{align}\label{eq:rg-T}
     \pi^{(l)}_{M,\kappa}(i \mid j)
@@ -3311,13 +3310,16 @@ distribution
     \qquad i \in \mathrm{Pred}_j^{(l)},
 \end{align}
 (at $l = 1$, $a_{M,i}^{(0)}\,W^{(1,\kappa)}_{M,ij}$ is replaced by $[x_i\,W^{(1)}_{M,ij}]^\kappa$;
-with $\varepsilon > 0$, mass $\varepsilon^{1/\tau}/Z^{(l)}_{j,\kappa}$ is added to the cemetery
-row; as in the implementation, the bias node of Appendix~\ref{app:routing-formal} is omitted).
-Equations~\eqref{eq:rg-T-act}--\eqref{eq:rg-T-pixel} are the act-to-act marginal of the natural
-\ac{RG} MP of Appendix~\ref{app:routing-formal}, which carries an extra linear-routing state per
-neuron between consecutive act states; Remark~\ref{rem:rg-natural-equivalence} gives a
-one-paragraph derivation and shows that this marginalization preserves Bhattacharyya and Hellinger
-distances on trajectories exactly.
+when $\varepsilon>0$, each continuing $\kappa$ branch sends its
+$\tfrac12\varepsilon^{1/\tau}/Z^{(l)}_{j,\kappa}$ share to the cemetery; as in the
+implementation, the bias node of Appendix~\ref{app:routing-formal} is omitted).
+If all scores in a stream are $-\infty$, its ordinary policy is zero and the whole
+branch is absorbed, in agreement with the outside-option convention.
+Equations~\eqref{eq:rg-T-act}--\eqref{eq:rg-T-pixel} are the act-to-act marginal of the \emph{diagnostic} routing process: it uses the original activation gates, omits the bias action, and normalizes each remaining routing branch. When the original bias mass is nonzero, this differs from the bias-inclusive game of Section~\ref{app:routing-formal}. For example, $a=W=b=1$, $\varepsilon=0$, gives probability $1/4$ on the ordinary positive route in that game, but $1/2$ after omitting the bias action. Remark~\ref{rem:rg-natural-equivalence} concerns state elimination within the same chosen process; it does not identify these two different kernels. The reported full-trajectory diagnostics use
+the refined gate, branch, and routing substeps: absorption at different substeps
+is retained in the trajectory history. The ordinary surviving-path overlap can
+be computed from the displayed act-to-act kernels, but their collapsed cemetery
+row must not be substituted for the refined process when computing the full overlap.
 
 \subsubsection{Marginal Occupation Measures}\label{sec:lmp-marginals}
 
@@ -3547,23 +3549,38 @@ Theorem~\ref{thm:per-pixel}, and~\eqref{eq:per-pixel-sum} guarantees they sum to
 $\mathrm{H}^{2}_{(0)}$.
 \end{proof}
 
-\begin{remark}[\ac{RG} act-only \ac{MP} matches the natural game]\label{rem:rg-natural-equivalence}
-The natural \ac{RG} \ac{MP} of Appendix~\ref{app:routing-formal} alternates activation and
-linear-routing states: each $s^{(l,\mathrm{act})}_{j,p}$ either stops to $\dagger$ (if $z_j^{(l)}
-    \le 0$) or branches uniformly to $s^{(l,\mathrm{lin})}_{j,p,+}$ or $s^{(l,\mathrm{lin})}_{j,p',-}$
-(intra-layer act-to-lin), and each $s^{(l,\mathrm{lin})}_{j,q,\kappa}$ routes to a layer-$(l-1)$
-activation (or, at $l=1$, to the layer-$0$ pixel-stream terminal $s^{(0)}_{i,\kappa}$) via the
-Gibbs policy $\pi^{(l)}_{M,\kappa}(\,\cdot\mid j)$ retaining the player (inter-layer lin-to-act).
-Multiplying these two kernels along the unique intermediate lin state yields the act-to-act
-rows~\eqref{eq:rg-T-act}--\eqref{eq:rg-T-pixel} term by term. Deleting every lin state from a
-natural trajectory is a bijection between natural and act-only trajectories starting at $s_0 =
-    s^{(L,\mathrm{act})}_{u,+}$ (each lin coordinate is recovered: $j,q$ from the act states it sits
-between, and $\kappa$ from the player update---kept $\Rightarrow +$, switched $\Rightarrow -$---or,
-at $l=1$, directly from the pixel-stream terminal). A bijection on trajectory supports preserves
-Bhattacharyya and Hellinger by the trivial reindexing $\sum_{\zeta} \sqrt{\Pi_A(\zeta)\Pi_B(\zeta)}
-    = \sum_{\widehat{\zeta}} \sqrt{\widehat\Pi_A(\widehat{\zeta})\widehat\Pi_B(\widehat{\zeta})}$, so
-all $\mathrm{BC}^{(l)}$ and $\mathrm{H}^{(l)}$ computed from the act-only kernel coincide with the
-natural-game ones.
+\begin{remark}[Routing-state elimination and absorption histories]\label{rem:rg-natural-equivalence}
+The refined diagnostic routing process just defined alternates activation and linear-routing states.
+A dead activation stops at the gate substep; an alive activation chooses its
+$\kappa$ branch uniformly, after which an empty branch or outside option can
+absorb at the routing substep. The refined layered process retains these
+substeps and pads the cemetery state after absorption. Algorithm~\ref{alg:hellinger}
+applies to this expanded state graph; the diagnostics are read at the activation
+boundaries. This is the process implemented by the separate gate and branch
+absorption updates.
+
+For a trajectory that remains ordinary, deleting each intermediate routing
+state is a bijection: its neuron and player are determined by the adjacent
+activation states, and its branch by whether the player is kept or switched
+(or by the pixel-stream tag at the input). The act-to-act formulas therefore
+preserve ordinary surviving-path probabilities and their Bhattacharyya overlap.
+The same applies after conditioning both laws on survival.
+
+For absorbing trajectories, deletion need not be injective: a gate stop and a
+later empty-branch stop can become the same act-only trajectory. Thus full-law
+Bhattacharyya and Hellinger equality is asserted only when absorption histories
+are recoverable, for example when no alive routing branch leaks to the cemetery.
+In general the finite-fibre Cauchy--Schwarz inequality gives
+\[
+ \mathrm{BC}_{\mathrm{refined}}\leq\mathrm{BC}_{\mathrm{act\text{-}only}},
+ \qquad
+ \mathrm{H}_{\mathrm{refined}}\geq\mathrm{H}_{\mathrm{act\text{-}only}}.
+\]
+For example, take one input $x=1$ and weight $W=1$. Model $A$ has bias $0$ and
+continues, with its empty negative branch absorbing with probability $1/2$;
+model $B$ has bias $-2$ and stops at the gate. Their refined path supports are
+disjoint, so $\mathrm{BC}_{\mathrm{refined}}=0$. Collapsing the two absorption
+substeps instead gives $\mathrm{BC}_{\mathrm{act\text{-}only}}=1/\sqrt2$.
 \end{remark}
 
 \subsection{Per-Pixel Disagreement Map}\label{sec:lmp-disagreement}
@@ -3981,16 +3998,20 @@ kernel and $g^{(l)}(s)$ the overlap mass reaching state $s$, so $\mathrm{BC}^{(l
 ordinary states $s \in \mathcal{S}^{(l)}$ only.
 
 \begin{lemma}[Alive-set mismatch]\label{lem:alive-mismatch}
-For backward kernels $T^{(l)}_A, T^{(l)}_B$ governed by alive sets via $T^{(l)}_M(s_i \to \dagger)
-    = \1\{i \notin \mathrm{alive}^{(l)}_M\}$, every state in the alive symmetric difference satisfies
-$\sum_{s'}\widetilde{T}^{(l)}(s_i, s') = 0$ and contributes nothing to $g^{(l-1)}$.
+Suppose a dead state sends all its mass to the cemetery. Every state in the
+alive symmetric difference then has zero geometric-mean mass to ordinary
+successors:
+$\sum_{s'\in\mathcal S^{(l-1)}}\widetilde T^{(l)}(s_i,s')=0$.
+If alive states have no cemetery leakage, as for the stated nondegenerate
+Stopping-Game kernel, its full geometric-mean row is also zero.
 \end{lemma}
 
 \begin{proof}
-WLOG $i \in \mathrm{alive}^{(l)}_A \setminus \mathrm{alive}^{(l)}_B$, so $T^{(l)}_A(s_i, \cdot)$ is
-supported on ordinary states and $T^{(l)}_B(s_i, \cdot) = \delta_\dagger$.  Then
-$\widetilde{T}^{(l)}(s_i, s') = \sqrt{T^{(l)}_A(s_i, s') \cdot 0} = 0$ for ordinary $s'$ and
-$\widetilde{T}^{(l)}(s_i, \dagger) = \sqrt{0 \cdot 1} = 0$.
+If $i$ is alive in $A$ and dead in $B$, then $T_B^{(l)}(s_i,s')=0$ for every
+ordinary successor, so each ordinary geometric mean is zero. The same argument
+applies with $A$ and $B$ exchanged. If the alive row also has zero cemetery mass,
+the cemetery geometric mean vanishes. With alive-state leakage this last
+conclusion does not follow; the ordinary-state conclusion still holds.
 \end{proof}
 
 Fix a ReLU MLP with hidden widths $n_1,\ldots,n_L$, an input $x$, and start state $s_0$ at the
@@ -4055,17 +4076,15 @@ $\mathrm{BC}^{(0)}_{\mathrm{ord}}(\Pi_A, \Pi_B) \leq \bar{b}^{N}$.
 Since $a^{(l-1)}_{M,i} = 0$ for $i \notin \mathrm{alive}^{(l-1)}_M$, the Gibbs
 policy~\eqref{eq:rg-T} sends no mass to dead neurons, so for $1 \le l < L$ the overlap $g^{(l)}$
 vanishes outside $\mathrm{alive}^{(l)}_A \cap \mathrm{alive}^{(l)}_B$, and the start state is alive
-in both, in the symmetric difference (Lemma~\ref{lem:alive-mismatch}) or dead in both.  Hence
+in both, in the symmetric difference or dead in both. In the latter two cases its
+ordinary overlap contribution is zero by the ordinary-state part of Lemma~\ref{lem:alive-mismatch}. Hence
 $\mathrm{BC}^{(l-1)}_{\mathrm{ord}} \leq \bar{b}\,\mathrm{BC}^{(l)}_{\mathrm{ord}}$ for every $l
     \geq l^*$, with no alive-set factor (the alive mismatch at layer $l-1$ is already part of the row
 masses at layer $l$); iterate as in Theorem~\ref{thm:rand-adf}.  The assumption reflects the
 structure of the \ac{RG}: each act-to-act row factors as the source-deadness indicator
 $\1\{z_j^{(l)} > 0\}$, the constant $\tfrac12$ uniform $\kappa$-branch, and the Gibbs policy
 $\pi_{M,\kappa}^{(l)}(\,\cdot\mid j) \propto [a^{(l-1)}_M[\,\cdot\,]\,W^{(l,\kappa)}_M[\,\cdot,
-    j]]^{1/\tau}$.  At $l = l^*$ the two policies share $a^{(l^*-1)}$, but $W^{(l^*)}_B$ drawn from a
-continuous distribution makes the normalized Gibbs rows differ a.s.; for $l > l^*$ the activation
-factors differ as well.  By the equality case of Cauchy--Schwarz every such row mass is then $< 1$
-a.s., whereas \ac{SG} rows on states alive in both models coincide for $l > l^*$.
+    j]]^{1/\tau}$.  At $l=l^*$ the two policies share $a^{(l^*-1)}$, while their weights may differ; above that layer their activation factors may also differ. These changes can reduce overlap, but a continuous randomization law alone does not imply distinct normalized rows almost surely. For example, if each sign branch has just one positive-mass ordinary route, changing its weight without changing its sign leaves that branch's normalized policy unchanged. The strict conditional row-overlap bound $\bar b<1$ is therefore an explicit hypothesis of this theorem; its applicability requires a separate argument for the architecture and randomization law, or an empirical assessment. The equality case of Cauchy--Schwarz explains strict contraction when the completed normalized rows actually differ.
 \end{proof}
 
 The discounted occupation measures at the input layer recover gradient and $\alpha\beta$-\ac{LRP} maps

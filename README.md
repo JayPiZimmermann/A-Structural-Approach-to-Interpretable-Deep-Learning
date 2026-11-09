@@ -8,7 +8,7 @@ formalization, and adapters for reproducing the thesis tables from the official 
 
 - `tex/`: thesis sources and figures. Build from `tex/main.tex`.
 - `arxive/hiddenMonotonicity/`: Hidden Monotonicity paper sources, with reported mathematical corrections.
-- `arxive/playingTheNetworkBackward/`: revised AISTATS paper, arXiv 2605.06212v2, with a clarification separating discounted occupation from ordinary probability.
+- `arxive/playingTheNetworkBackward/`: revised AISTATS paper, arXiv 2605.06212v2, with reported mathematical corrections and explicit routing-game tie conventions.
 - `arxive/downloads/`: unchanged arXiv PDF/source download and checksums.
 - `formalization/`: Lean 4/mathlib proofs for both papers, sharing the same finite MLP and gate trace.
 - `code/`: pinned Git submodules of the official implementations.
@@ -47,14 +47,16 @@ Install Lean's `elan` toolchain manager, then:
 ```sh
 cd formalization
 lake exe cache get
-lake build
-python3 scripts/audit.py
-lake env lean Audit.lean
+lake build All
+python3 scripts/verify.py
 ```
 
 `lean-toolchain` and `lake-manifest.json` pin Lean and all dependencies.
+The gate records the committed source closure, reviewed exact theorem types, complete imported theorem axiom audit, commands and hashes. Use `--diagnostic` for development files.
 See [the formalization guide](formalization/README.md) for the simple network
 definitions, theorem coverage, and assumptions.
+
+The verification workflow follows the six downloaded formalization/exposition skills from the [planar-features repository](https://anonymous.4open.science/r/Removing-spurious-minima-for-planar-features-by-skip-connections-35F8/README.md). `skills/upstream-planar-features/provenance.json` records their source URLs and checksums. Independent adversarial reviews, executable counterexamples and repair evidence are retained under `reports/`.
 
 ## Build the thesis
 

@@ -1,0 +1,437 @@
+\section{Further Proofs}
+
+In this appendix we rigorously define and analyze the shifting procedures proposed in \cref{sec:method} and provide the proofs to Theorems referred to in the main paper. First, in \cref{app:fundamental} we give proofs about monotonicity and convexity of weight-restricted neural networks and about the correctness of the proposed DC decomposition algorithm for ReLU networks.
+Secondly, in \cref{app:shift_forward} we provide some intuition for the shift procedure in the forward pass and use these insights to illuminate the relationship between the different local sensitivities defined in \cref{sec:backward}.
+Lastly, in \cref{app:closed_formulas} we rigorously define the shifting procedure in the backward pass and develop closed formulas for the stabilized gradients of the split-pair. The latter demonstrate how our shifting procedure effectively keeps the absolute values of the stabilized split-pair gradients within a numerically stable range and how it can potentially be used to emphasize the splitting information of different layers in the calculated gradients.
+
+\subsection{Proof of the Fundamental Theorems} \label{app:fundamental}
+
+In this section we give the simple proofs of Theorems referred to in \cref{sec:method} for completeness.
+The following Theorem is already discussed in \citetapp{AppAmos2017}.
+\begin{theorem} \label{thm:convexity_monotonicity}
+    An input-convex neural network represents a convex function. A monotone neural network represents a monotone function.
+\end{theorem}
+
+\begin{proofref}{Theorem}{thm:convexity_monotonicity}
+    Let $N_{\text{mon}}$ and $N_{\text{ic}}$ be a monotone and input-convex neural network respectively. Let us denote their activation function by $\text{act}_{\text{mon}}$ and $\text{act}_{\text{ic}}$.
+    For convenience we denote both their weights by $W^{(1)},\dots,W^{(L)}$.
+    We want to prove the monotonicity and convexity of $f_{\text{mon}}^{(l)}$ and $f_{\text{ic}}^{(l)}$ by induction on $l=L,\dots,0$.
+
+    \textbf{base} $l=L$.
+        Since $f_{\text{mon}}^{(l)}$ and $f_{\text{ic}}^{(l)}$ are the activation functions themselves, the induction base case is trivial.
+
+    \textbf{step} Let $0 \leq l < L$.
+        \begin{align}
+            f_{\text{mon}}^{(l)}(x) &= f_{\text{mon}}^{(l+1)}(x) \left( \text{act}_{\text{mon}}\left( W^{(l+1)} x \right) \right), \\
+            f_{\text{ic}}^{(l)}(x) &= f_{\text{ic}}^{(l+1)}(x) \left( \text{act}_{\text{ic}}\left( W^{(l+1)} x \right) \right).
+        \end{align}
+
+        It is easy to see that $f_{\text{mon}}^{(l)}$ is monotone as the composition of monotone functions.
+        Similarly, it is easy to see that $f_{\text{ic}}^{(l)}(x)$ is convex as the composition of a linear, and two convex and monotone functions.
+        We remark that the monotonicity of $\text{act}_{\text{ic}}$ and $f_{\text{ic}}^{(l+1)}$ is necessary - the composition of two convex functions is not convex in general.
+        However, as we can see by the inductive argument, we do not require $f_{\text{ic}}^{(0)}$ to be monotone, so we can allow negative weights in the first layer for the argument to run through.
+\end{proofref}
+
+We remark that monotonicity of the activation function for the input-convex neural networks is indeed necessary for its convexity.
+
+\begin{remark}[Bias] \label{rem:bias}
+    It is easy to see that we can add bias -- that is not restricted to be non-negative -- to a monotone or input-convex neural network without breaking the properties guaranteed by Theorem \ref{thm:convexity_monotonicity}.
+    For this insight let us briefly view bias as a shift of the activation function. Indeed, shifting the activation function neither breaks its convexity, its monotonicity nor its CPWL property.
+\end{remark}
+
+Now let us prove the correctness of the DC decomposition as described in \cref{sec:method}.
+
+\begin{proofref}{Theorem}{thm:split_correct}
+    We prove the Theorem by induction on $l=L,\dots,0$.
+    
+    \textbf{base} $l=L$.
+        Observe $g^{(L)}\left( x^+, x^- \right) = \text{max}\left\{ x^+, x^- \right\}$ and $h^{(L)}\left( x^+, x^- \right) = x^-$. We can verify correctness by
+        \begin{align}
+            f^{(L)}\left( x^+ - x^- \right)
+                = \text{ReLU}\left( x^+ - x^- \right)
+                = \text{max}\left\{ x^+, x^- \right\} - x^-
+                = g^{(L)}\left( x^+ \right) - h^{(L)}\left( x^- \right).
+        \end{align}
+    
+    \textbf{step} Let $0 \leq l < L$.
+        Observe that $g^{(l)}\left( x^+, x^- \right) = g^{(l+1)}\left( a^{(l+1, +)}, a^{(l+1, -)} \right)$, where
+        \begin{align}
+            a^{(l+1, +)} &= \text{max}\left\{ W^{(l+1, +)} x^+ + W^{(l+1, -)} x^-, W^{(l+1, +)} x^- + W^{(l+1, -)} x^+ \right\}, \ \text{and} \\
+            a^{(l+1, -)} &= W^{(l+1, +)} x^- + W^{(l+1, -)} x^+.
+        \end{align}
+        Using the induction hypothesis we obtain
+        \begin{align}
+            f^{(l)}\left( x^+ - x^- \right)
+            &= f^{(l+1)} \left( \text{ReLU}\left( \left( W^{(l+1, +)} - W^{(l+1, -)} \right) \left( x^+ - x^- \right) \right) \right) \\
+            &= f^{(l+1)} \left( \text{max}\left\{ W^{(l+1, +)} x^+ + W^{(l+1, -)} x^-, W^{(l+1, -)} x^- + W^{(l+1, +)} x^- \right\} - \left( W^{(l+1, -)} x^+ +  W^{(l+1, +)} x^- \right) \right) \\
+            &= g^{(l+1)} \left( a^{(l+1,+)}, a^{(l+1,-)} \right) - h^{(l+1)}\left( a^{(l+1,+)}, a^{(l+1,-)} \right) \\
+            &= g^{(l)}\left( x^+, x^- \right) - h^{(l)}\left( x^+, x^- \right).
+        \end{align}
+
+        This completes the proof of \cref{thm:split_correct}.
+\end{proofref}
+
+\subsection{Shifting in the forward pass} \label{app:shift_forward}
+
+Shifting the activation of the positive and negative neurons in layer $l$ in the forward pass by the same amount $c$, shifts both the output of the positive and the negative stream by the same amount, which is linear in $c$. For notational convenience, let us define the product of the absolute weight matrices of layer $L,\dots,l+1$ by
+\begin{align}
+    W_{\text{abs}}^{[l, \rightarrow]} \coloneqq \prod_{ j = L, \dots, l+1} \left|W^{(j)}\right|. \label{eq:w_abs}
+\end{align}
+
+\begin{theorem} \label{thm:shift_forward}
+    For any $0 \leq l \leq L$ and any $c, \ a^{(+)}, \ a^{(-)} \in \RR ^ {d^{(l)}}$ we have
+    \begin{align}
+        g^{(l)}\!\left( \begin{bmatrix} a^{(+)} + c \\ a^{(-)} + c \end{bmatrix} \right)
+            &= g^{(l)}\!\left( \begin{bmatrix} a^{(+)} \\ a^{(-)} \end{bmatrix} \right)
+            + W_{\text{abs}}^{[l, \rightarrow]} \cdot c \\
+        h^{(l)}\!\left( \begin{bmatrix} a^{(+)} + c \\ a^{(-)} + c \end{bmatrix} \right)
+            &= h^{(l)}\!\left( \begin{bmatrix} a^{(+)} \\ a^{(-)} \end{bmatrix} \right)
+            + W_{\text{abs}}^{[l, \rightarrow]} \cdot c.
+    \end{align}
+\end{theorem}
+
+\begin{proofref}{Theorem}{thm:shift_forward}
+    We show the claim for $g^{(l)}$ by induction on $l$. It follows analogously for $h^{(l)}$.
+
+    The base case $l = L$ is trivial, as $W_{\text{abs}}^{[L, \rightarrow]}$ is an empty product and therefore the identity.
+    For the step, let $0 \leq l < L$.
+    As the positive and negative neurons in layer $l+1$ are connected to the previous layer with the same weights,
+    only that $W^{(l+1, +)}$ and $W^{(l+1, -)}$ are flipped, uniformly shifting the positive and negative activations of layer $l$ results in a uniform shift in layer $l+1$, see \cref{fig:splitstreams} for visualization.
+    \[
+    a^{(l+1, +)} 
+      = \max\!\left\{
+        W^{(l+1, +)} a^{(+)} + W^{(l+1, -)} a^{(-)}, \,
+        W^{(l+1, -)} a^{(+)} + W^{(l+1, +)} a^{(-)}
+      \right\} 
+      + \left|W^{(l+1)}\right| c
+    \]
+    and
+    \[
+    a^{(l+1, -)} 
+      = W^{(l+1, -)} a^{(+)} + W^{(l+1, +)} a^{(-)} 
+      + \left|W^{(l+1)}\right| \cdot c,
+    \]
+    using the induction hypothesis we obtain
+    \begin{align}
+        g^{(l)}\!\left( \begin{bmatrix} a^{(+)} + c \\ a^{(-)} + c \end{bmatrix} \right)
+            = g^{(l+1)}\!\left( \begin{bmatrix} a^{(l+1, +)} \\ a^{(l+1, -)} \end{bmatrix} \right)
+            = g^{(l)}\!\left( \begin{bmatrix} a^{(+)} \\ a^{(-)} \end{bmatrix} \right) 
+               + W_{\text{abs}}^{[l, \rightarrow]} c,
+    \end{align}
+    which completes the proof of \cref{thm:shift_forward}.
+\end{proofref}
+
+This observation has consequences on the connection of the local sensitivities $\delta^{(l, +, g)}$ and $\delta^{(l, -, g)}$ as well as $\delta^{(l, +, h)}$ and $\delta^{(l, -, h)}$.
+
+\begin{theorem} \label{thm:delta_pos_neg_connection}
+    \begin{align}
+        \delta^{(l,+,g)} &= W_{\text{abs}}^{[l, \rightarrow]} - \delta^{(l,-,g)}, \\
+        \delta^{(l,+,h)} &= W_{\text{abs}}^{[l, \rightarrow]} - \delta^{(l,-,h)}
+    \end{align}
+\end{theorem}
+
+\begin{proofref}{Theorem}{thm:delta_pos_neg_connection}
+    For $j \in [d^{(l)}]$ \cref{thm:shift_forward} yields
+    \begin{align}
+        \delta_j^{(l,+,g)}
+            = \text{lim}_{\epsilon \rightarrow 0} \frac{g^{(l)}(a^{(l,+)} + \epsilon \cdot e_j, a^{(l,-)}) - g^{(l)}(a^{(l,+)},a^{(l,-)})}{\epsilon}
+            = \text{lim}_{\epsilon \rightarrow 0} \frac{g^{(l)}(a^{(l,+)}, a^{(l,-)} - \epsilon \cdot e_j) - g^{(l)}(a^{(l,+)},a^{(l,-)}) + \epsilon W_{\text{abs}}^{[l, \rightarrow]} e_j}{\epsilon}
+            = W_{\text{abs}}^{[l, \rightarrow]} e_j - \delta_j^{(l,-,g)}
+    \end{align}
+    The claim about $\delta^{(l,+,h)}$ follows analogously, closing the proof of \cref{thm:delta_pos_neg_connection}.
+\end{proofref}
+
+All classical gradient identities below assume strict inequalities at the relevant ReLU and Maxout gates. At ties, the displayed masks specify a chosen backpropagation branch and need not be classical derivatives.
+
+\subsection{Stabilizing the split-pair backward pass} \label{app:closed_formulas}
+
+\subsubsection{The algorithm}
+
+In order to stay in numerically stable regimes we shift the local sensitivities during the backward pass in each layer uniformly by $\text{shift}_\delta^{(l, g)}$ and $\text{shift}_\delta^{(l, h)}$. We compute these modified saliency tensors $\delta_{\text{shift}}^{(l, +, g)}, \delta_{\text{shift}}^{(l, -, g)}, \delta_{\text{shift}}^{(l, +, h)}, \delta_{\text{shift}}^{(l, -, h)}$ in an iterative way: using the regular gradient formulas, and the already modified local sensitivities inflowing from subsequent network layers, we compute intermediate local sensitivities $\delta_{\text{intermediate}}^{(l,+,g)}, \ \delta_{\text{intermediate}}^{(l,-,g)}, \ \delta_{\text{intermediate}}^{(l,+,h)}, \ \delta_{\text{intermediate}}^{(l,-,h)}$. In a second step, we calculate the modifed version by
+\begin{align}
+    \delta_{\text{shift}}^{(l, +, g)} &\coloneqq \delta_{\text{intermediate}}^{(l, +, g)} - \text{shift}_\delta^{(l, g)} \\
+    \delta_{\text{shift}}^{(l, -, g)} &\coloneqq \delta_{\text{intermediate}}^{(l, -, g)} - \text{shift}_\delta^{(l, g)} \\
+    \delta_{\text{shift}}^{(l, +, h)} &\coloneqq \delta_{\text{intermediate}}^{(l, +, h)} - \text{shift}_\delta^{(l, h)} \\
+    \delta_{\text{shift}}^{(l, -, h)} &\coloneqq \delta_{\text{intermediate}}^{(l, -, h)} - \text{shift}_\delta^{(l, h)}
+\end{align}
+
+For the shifting we use
+\begin{align}
+    \text{shift}_\delta^{(l, g)} & \coloneqq \alpha^{(l)} \cdot \left( \delta_{\text{intermediate}}^{(l, +, g)} + \delta_{\text{intermediate}}^{(l, -, g)} \right), \\
+    \text{shift}_\delta^{(l, h)} & \coloneqq \alpha^{(l)} \cdot \left( \delta_{\text{intermediate}}^{(l, +, h)} + \delta_{\text{intermediate}}^{(l, -, h)} \right).
+\end{align}
+
+It turns out, that indeed these shifts are just $\alpha$-multiples of the matrices $W_{\text{abs}}^{[l, \rightarrow]}$ defined in \cref{eq:w_abs}.
+We provide the closed formulas of the stabilized split-pair gradients at the end of the next section in \cref{thm:closed_formula_shift}.
+
+\subsubsection{Closed formulas for the stabilized split-pair gradients}
+
+In standard backpropagation for $0 \leq l < L$ the chain rule yields
+\begin{align}
+    \delta^{(l)}
+        \coloneqq \frac{\partial f^{(l)}}{\partial a^{(l)}}
+        = \frac{\partial f^{(l)}}{\partial a^{(l+1)}} \frac{\partial a^{(l+1)}}{\partial z^{(l+1)}} \frac{\partial z^{(l+1)}}{\partial a^{(l)}}
+        = \delta^{(l+1)} \text{diag} \left( \mathbb{1}\left\{ z^{(l+1)} \geq 0 \right\} \right) W^{(l+1)}. \label{eq:std_bckprop}
+\end{align}
+
+In order to define the derivatives of $g$ and $h$ with respect to layer activations of the original network, we need the following helper function.
+\begin{align}
+    \tilde{g}^{(l)} :\ \RR^{d^{(l)}} &\longrightarrow \RR, \\
+     a^{(l)} &\longmapsto g^{(l)}\!\left( \begin{bmatrix} \frac{a^{(l)}}{2} \\ -\frac{a^{(l)}}{2} \end{bmatrix} \right).
+\end{align}
+Defining $\tilde{h}^{(l)}$ similarily we now can rigorously define the split-streams gradients with respect to a unified input vector.
+\begin{align}
+    \delta^{(l, g)} \coloneqq \frac{\partial \tilde{g}^{(l)}}{\partial a^{(l)}}, \qquad
+    \delta^{(l, h)} \coloneqq \frac{\partial \tilde{h}^{(l)}}{\partial a^{(l)}}, \qquad
+\end{align}
+
+To calculate $\delta^{(l, g)}$ directly, we use the chain rule:
+\begin{align}
+    \delta^{(l, g)}
+        = \frac{\partial \tilde{g}^{(l)}}{\partial a^{(l)}} 
+        = \frac{\partial g^{(l)}}{\partial a^{(l,+)}} \frac{\partial a^{(l,+)}}{\partial a^{(l)}} + \frac{\partial g^{(l)}}{\partial a^{(l,-)}} \frac{\partial a^{(l,-)}}{\partial a^{(l)}}
+        = \frac{\delta^{(l,+,g)} - \delta^{(l,-,g)}}{2}.
+\end{align}
+Similarly, we obtain
+\begin{align}
+\delta^{(l, h)} = \frac{\delta^{(l,+,h)} - \delta^{(l,-,h)}}{2}.
+\end{align}
+
+
+We want to find a closed formula for all the derivatives. For this purpose let us define
+\begin{alignat}{2}
+    m^{(l,+)} &\;\coloneqq\; \mathbb{1}\!\left\{\,z^{(l,+)} \ge z^{(l,-)}\,\right\} = \mathbb{1}\!\left\{\,z^{(l)} \ge 0\,\right\},
+    &\qquad M^{(l,+)} &\;\coloneqq\; \text{diag}\!\left( m^{(l,+)} \right) \\[6pt]
+    m^{(l,-)} &\;\coloneqq\; \mathbb{1}\!\left\{\,z^{(l,-)} > z^{(l,+)}\,\right\} = \mathbb{1}\!\left\{\,z^{(l)} < 0\,\right\},
+    &\qquad M^{(l,-)} &\;\coloneqq\; \text{diag}\!\left( m^{(l,-)} \right)
+\end{alignat}
+understood elementwise. For ease of notation we define
+\begin{align}
+    W^{(l, x)} &\coloneqq M^{(l, +)} W^{(l)}
+\end{align}
+
+It is easy to see from \cref{eq:std_bckprop} that $\delta^{(l)} = \prod_{j = L,\dots,l+1} W^{(j,x)}$ and analogously for any $0 \leq l_1 < l_2 \leq L$
+\begin{align}
+    \frac{\partial a^{(l_2)}}{\partial a^{(l_1)}} = \prod_{j = l_2,\dots,(l_1 + 1)} W^{(j, x)} \label{eq:general_derivative_product}
+\end{align}
+This formula also holds for $l_1 = l_2$ in case we interpret $\frac{\partial a^{(l)}}{\partial a^{(l)}}$ as the derivative of a network where input and output layer coincide; in this case the derivative is the identity.
+
+Before looking at the shifted gradients let us develop some understanding of the plain gradients of the split-streams.
+In a first step the proof of the following Theorem calculates recursive formulas for those gradients and in a second step unfolds them into large summation formulas.
+
+\begin{theorem} \label{thm:closed_formula}
+    \begin{align}
+        \delta^{(l, g)}
+            &= \frac{1}{2} \cdot \left[ \delta^{(l)}- \sum_{l \leq j < L} W_{\text{abs}}^{[j+1, \rightarrow]} \cdot \left( M^{(j+1,-)}W^{(j+1)} \right) \cdot \prod_{i = (j-1),\dots, l} W^{(i+1, x)} \right], \\
+        \delta^{(l, h)}
+            &= -\frac{1}{2} \cdot \left[ \delta^{(l)} + \sum_{l \leq j < L} W_{\text{abs}}^{[j+1, \rightarrow]} \cdot \left( M^{(j+1,-)}W^{(j+1)} \right) \cdot \prod_{i = (j-1),\dots, l} W^{(i+1, x)} \right].
+    \end{align}
+\end{theorem}
+
+\begin{proofref}{Theorem}{thm:closed_formula}  
+    First, let us find recursive formulations of $\delta^{(l, g)}$ and $\delta^{(l, h)}$.
+    Let us calculate
+    \begin{alignat}{5}
+        \frac{\partial a^{(l+1,+)}}{\partial a^{(l,+)}}
+            &={} \frac{\partial a^{(l+1,+)}}{\partial z^{(l+1,+)}} 
+                   \frac{\partial z^{(l+1,+)}}{\partial a^{(l,+)}}
+            &+{}& \frac{\partial a^{(l+1,+)}}{\partial z^{(l+1,-)}} 
+                   \frac{\partial z^{(l+1,-)}}{\partial a^{(l,+)}}
+            &={}& M^{(l+1,+)} W^{(l+1,+)} + M^{(l+1,-)} W^{(l+1,-)}, \\[6pt]
+        \frac{\partial a^{(l+1,-)}}{\partial a^{(l,+)}}
+            &={} \frac{\partial a^{(l+1,-)}}{\partial z^{(l+1,+)}} 
+                   \frac{\partial z^{(l+1,+)}}{\partial a^{(l,+)}}
+            &+{}& \frac{\partial a^{(l+1,-)}}{\partial z^{(l+1,-)}} 
+                   \frac{\partial z^{(l+1,-)}}{\partial a^{(l,+)}}
+            &={}& 0 \cdot W^{(l+1,+)} + W^{(l+1,-)}, \\[6pt]
+        \frac{\partial a^{(l+1,+)}}{\partial a^{(l,-)}}
+            &={} \frac{\partial a^{(l+1,+)}}{\partial z^{(l+1,+)}} 
+                   \frac{\partial z^{(l+1,+)}}{\partial a^{(l,-)}}
+            &+{}& \frac{\partial a^{(l+1,+)}}{\partial z^{(l+1,-)}} 
+                   \frac{\partial z^{(l+1,-)}}{\partial a^{(l,-)}}
+            &={}& M^{(l+1,+)} W^{(l+1,-)} + M^{(l+1,-)} W^{(l+1,+)}, \\[6pt]
+        \frac{\partial a^{(l+1,-)}}{\partial a^{(l,-)}}
+            &={} \frac{\partial a^{(l+1,-)}}{\partial z^{(l+1,+)}} 
+                   \frac{\partial z^{(l+1,+)}}{\partial a^{(l,-)}}
+            &+{}& \frac{\partial a^{(l+1,-)}}{\partial z^{(l+1,-)}} 
+                   \frac{\partial z^{(l+1,-)}}{\partial a^{(l,-)}}
+            &={}& 0 \cdot W^{(l+1,-)} + W^{(l+1,+)}.
+    \end{alignat}
+    
+    Again the chain rule yields the iterative formulas
+    \begin{align}
+        \delta^{(l,+,g)}
+            &= \frac{\partial g^{(l+1)}}{\partial a^{(l+1,+)}}
+                \frac{\partial a^{(l+1,+)}}{\partial a^{(l,+)}}
+             + \frac{\partial g^{(l+1)}}{\partial a^{(l+1,-)}}
+                \frac{\partial a^{(l+1,-)}}{\partial a^{(l,+)}} \notag\\
+            &= \delta^{(l+1,+,g)} \left( M^{(l+1, +)} W^{(l+1, +)} + M^{(l+1, -)} W^{(l+1, -)} \right)
+                + \delta^{(l+1,-,g)} W^{(l+1, -)} \label{eq:delta_pg_recursion}
+    \end{align}
+    and further
+    \begin{align}
+        \delta^{(l,-,g)}
+            &= \frac{\partial g^{(l+1)}}{\partial a^{(l+1,+)}}
+               \frac{\partial a^{(l+1,+)}}{\partial a^{(l,-)}}
+             + \frac{\partial \hat g^{(l+1)}}{\partial a^{(l+1,-)}}
+               \frac{\partial a^{(l+1,-)}}{\partial a^{(l,-)}} \notag\\
+            &= \delta^{(l+1,+,g)} \left(M^{(l+1, +)} W^{(l+1, -)} + M^{(l+1, -)} W^{(l+1, +)} \right)
+                + \delta^{(l+1,-,g)} W^{(l+1, +)} \label{eq:delta_ng_recursion}.
+    \end{align}
+    
+    With this, we obtain
+    \begin{align}
+        2 \cdot \delta^{(l, g)}
+            &= \delta^{(l,+,g)} - \delta^{(l,-,g)} \notag\\
+            &= \delta^{(l+1,+,g)} \left(M^{(l+1, +)} \cdot W^{(l+1)} - M^{(l+1, -)} \cdot W^{(l+1)} \right)
+                - \delta^{(l+1,-,g)} W^{(l+1)} \notag\\
+            &= \left( \delta^{(l+1,+,g)} - \delta^{(l+1,-,g)} \right) \cdot M^{(l+1, +)} W^{(l+1)}
+                - \left( \delta^{(l+1,+,g)} + \delta^{(l+1,-,g)} \right) M^{(l+1, -)} W^{(l+1)} \notag\\
+            &= 2 \cdot \delta^{(l+1, g)} \cdot W^{(l+1, x)} - W_{\text{abs}}^{[l+1, \rightarrow]} M^{(l+1, -)} W^{(l+1)} \label{eq:delta_g_recursion},
+    \end{align}
+    where we have used in the penultimate step that $M^{(l+1, +)} + M^{(l+1, -)} = \mathbb{1}$.
+    Similarly, we obtain
+    \begin{align}
+        2 \cdot \delta^{(l, h)}
+            &= 2 \cdot \delta^{(l+1, h)} \cdot W^{(l+1, x)} - W_{\text{abs}}^{[l+1, \rightarrow]} M^{(l+1, -)} W^{(l+1)} \label{eq:delta_h_recursion}.
+    \end{align}
+
+    Let us sanity check the recursive formulas \cref{eq:delta_g_recursion} and \cref{eq:delta_h_recursion} by subtracting them.
+    We obtain $\delta^{(l, g)} - \delta^{(l, h)} = \left( \delta^{(l+1,g)} -\delta^{(l+1,h)} \right) W^{(l+1, x)}$, which turns out to be just \cref{eq:std_bckprop}.
+
+    Finally, it is easy to obtain the closed formulas by the recursion.
+    The induction base $l=L$ is correct, as $\delta^{(L,g)} = \frac{\mathbb{1}}{2} = \frac{\delta^{(L)}}{2}$ and $\delta^{(L,h)} = - \frac{\mathbb{1}}{2} = -\frac{\delta^{(L)}}{2}$.
+    For the step, we plug in the induction hypothesis.
+    \begin{align}
+        \delta^{(l, g)}
+            &= \delta^{(l+1, g)} \cdot W^{(l+1, x)} - \frac{1}{2} \cdot W_{\text{abs}}^{[l+1, \rightarrow]} \cdot \left( M^{(l+1,-)}W^{(l+1)} \right) \\
+            &= \frac{1}{2} \cdot \left[ \delta^{(l+1)} - \sum_{l+1 \leq j < L} W_{\text{abs}}^{[j+1, \rightarrow]} \cdot \left( M^{(j+1,-)}W^{(j+1)} \right) \cdot \prod_{i = (j-1),\dots, l+1} W^{(i+1, x)} \right] \cdot W^{(l+1, x)}  \\ &\qquad \mathllap{-} \frac{1}{2} \cdot W_{\text{abs}}^{[l+1, \rightarrow]} \cdot \left( M^{(l+1, -)} W^{(l+1)} \right) \\
+            &= \frac{1}{2} \cdot \left[ \delta^{(l)} - \sum_{l+1 \leq j < L} W_{\text{abs}}^{[j+1, \rightarrow]} \cdot \left( M^{(j+1,-)}W^{(j+1)} \right) \cdot \prod_{i = (j-1),\dots, l} W^{(i+1), x} \right] \\ &\qquad \mathllap{-} \frac{1}{2} \cdot W_{\text{abs}}^{[l+1, \rightarrow]} \cdot \left( M^{(l+1, -)} W^{(l+1)} \right) \\
+            &= \frac{1}{2} \cdot \left[ \delta^{(l)} - \sum_{l \leq j < L} W_{\text{abs}}^{[j+1, \rightarrow]} \cdot \left( M^{(j+1,-)}W^{(j+1)} \right) \cdot \prod_{i = (j-1),\dots, l} W^{(i+1, x)} \right]
+    \end{align}
+    One can prove the claim about $\delta^{(l, h)}$ analogously, where the only difference is a sign flip in the induction base case.
+    This concludes the proof of \cref{thm:closed_formula}.
+\end{proofref}
+
+Finally, we want to give a mathematical interpretation of what the shifted gradients actually calculate. Let us introduce the notation
+\begin{align}
+    \delta_{\text{shift}}^g
+        &\coloneqq \frac{\delta_{\text{shift}}^{(0, +, g)} -\delta_{\text{shift}}^{(0, -, g)}}{2}, \label{eq:stable_def_pos}\\
+    \delta_{\text{shift}}^h
+        &\coloneqq \frac{\delta_{\text{shift}}^{(0, +, h)} -\delta_{\text{shift}}^{(0, -, h)}}{2}\label{eq:stable_def_neg}.
+\end{align}
+The closed formulas for $\delta_{\text{shift}}^g$ and $\delta_{\text{shift}}^h$ have an interesting interpretation using the following network.
+Define
+\[
+    Q[l](x) \coloneqq W_{\text{abs}}^{[l,\rightarrow]}
+        \min\{z^{(l)}(x),0\},
+\]
+where $z^{(l)}$ is computed by the original prefix, including its biases.
+Thus only the layer-$l$ activation is replaced by a minimum, and all subsequent
+maps are linear absolute-weight maps, with no tail biases or activation gates.
+In a bias-free tail this agrees in value with placing minimum activations at
+all subsequent layers, since non-positive inputs remain non-positive under
+non-negative weights. The explicit linear-tail definition avoids extra
+assumptions on biases and branch choices at zero.
+Indeed, we observe that the summands arising in the formulas of \cref{thm:closed_formula} turn out to be just the respective gradients of $Q[l]$.
+\begin{align}
+    \frac{\partial Q[l]}{\partial x}
+        = W_{\text{abs}}^{[l, \rightarrow]} \cdot \left( M^{(l,-)}W^{(l)} \right) \cdot \prod_{i = (l-1),\dots,1} W^{(i,x)} \label{eq:special_network_derivative},
+\end{align}
+where the first product term is the derivative of the explicitly linear absolute-weight tail.
+
+\begin{theorem}[Closed formulas for shifted saliency maps] \label{thm:closed_formula_shift}
+    With $\overline{\alpha}_j \coloneqq \prod_{j+1 \leq i \leq L} \left( 1 - 2 \alpha^{(i)} \right)$ we obtain
+    \begin{align}
+        \delta_{\text{shift}}^g &= \frac{1}{2} \left[ \delta - \sum_{0 \leq j < L} \ \overline{\alpha}_j \frac{\partial Q[j+1]}{\partial x} \right], \label{eq:main_shifted_grad_pos}\\
+        \delta_{\text{shift}}^h &= - \frac{1}{2} \left[ \delta + \sum_{0 \leq j < L} \ \overline{\alpha}_j  \frac{\partial Q[j+1]}{\partial x} \right]. \label{eq:main_shifted_grad_neg}
+    \end{align}
+\end{theorem}
+
+In case, we do not shift, this simply means $\overline{\alpha}_j = 1$.
+Observe that, while not depending on shifts in the forward pass the stable gradients with respect to $g$ and $h$ do depend on the shifts in the backward pass and also on how we split the input $x$ to the positive and negative stream inputs $z^{(0,+)}$ and $z^{(0,-)}$.
+In our definition, we choose to split them half-half, resulting in a half-half distribution of $\delta$ among $\delta^g$ and $\delta^h$.
+
+\begin{remark}[Shifting]
+    As shown in the following proof, 
+    the gradient $\frac{\partial Q[j]}{\partial x}$ in \cref{eq:main_shifted_grad_pos} 
+    captures the contribution of the split information flow in layer~$j$.
+    We observe that $\frac{\partial Q[j]}{\partial x}$ tends to grow rapidly as $j$ approaches~$0$.
+    Consequently, the shifting mechanism provides an effective lever to prevent gradient explosion 
+    and to regulate the influence of split related gradient information originating from the different layers.
+\end{remark}
+
+
+\begin{proofref}{Theorem}{thm:closed_formula_shift}
+    As in \cref{thm:closed_formula}, we want to prove the following claim by induction on $l$.
+   \begin{align}
+        \delta_{\text{shift}}^{(l, g)}
+            &= \frac{1}{2} \left[ \delta^{(l)}- \sum_{l \leq j < L} \ \prod_{j+1 \leq i \leq L} \left( 1 - 2\alpha^{(i)} \right) \ W_{\text{abs}}^{[j+1, \rightarrow]} \cdot \left( M^{(j+1,-)}W^{(j+1)} \right) \cdot \prod_{i = (j-1),\dots, l} W^{(i+1, x)} \right], \\
+        \delta_{\text{shift}}^{(l, h)}
+            &= -\frac{1}{2} \left[ \delta^{(l)} + \sum_{l \leq j < L} \ \prod_{j+1 \leq i \leq L} \left( 1 - 2\alpha^{(i)} \right) \ W_{\text{abs}}^{[j+1, \rightarrow]} \cdot \left( M^{(j+1,-)}W^{(j+1)} \right) \cdot \prod_{i = (j-1),\dots, l} W^{(i+1, x)} \right].
+    \end{align}
+    This in the case $l=0$, together with \cref{eq:special_network_derivative} yields the formula stated in the Theorem.
+    We defined
+    \begin{align}
+        \delta_{\text{intermediate}}^{(l,+,g)}
+            &= \delta_{\text{shift}}^{(l+1,+,g)} \left( M^{(l+1, +)} W^{(l+1, +)} + M^{(l+1, -)} W^{(l+1, -)} \right)
+                + \delta_{\text{shift}}^{(l+1,-,g)} W^{(l+1, -)} \label{eq:delta_shift_pos_g} \\
+        \delta_{\text{intermediate}}^{(l,-,g)}
+            &= \delta_{\text{shift}}^{(l+1,+,g)} \left(M^{(l+1, +)} W^{(l+1, -)} + M^{(l+1, -)} W^{(l+1, +)} \right)
+                + \delta_{\text{shift}}^{(l+1,-,g)} W^{(l+1, +)} \label{eq:delta_shift_neg_g}
+    \end{align}
+    
+    Similarly to the calculation in \cref{eq:delta_g_recursion} we obtain
+    \begin{align}
+        2 \cdot \delta_{\text{shift}}^{(l,g)}
+            &\coloneqq \delta_{\text{shift}}^{(l,+,g)} - \delta_{\text{shift}}^{(l,-,g)} \notag\\
+            &= \delta_{\text{intermediate}}^{(l,+,g)} - \delta_{\text{intermediate}}^{(l,-,g)} \notag\\
+            &= \left( \delta_{\text{shift}}^{(l+1,+,g)} - \delta_{\text{shift}}^{(l+1,-,g)} \right) \cdot W^{(l+1, x)}
+                - \left( \delta_{\text{shift}}^{(l+1,+,g)} + \delta_{\text{shift}}^{(l+1,-,g)} \right) M^{(l+1, -)} W^{(l+1)} \label{eq:delta_g_shif}
+    \end{align}
+    
+    To simplify the expression we use the following Claim.
+    \begin{claim} \label{claim:sum_delta_shif}
+        \begin{align}
+            \delta_{\text{shift}}^{(l,+,g)} + \delta_{\text{shift}}^{(l,-,g)}
+                = \prod_{l \leq j \leq L} \left( 1 - 2 \alpha^{(j)} \right) W_{\text{abs}}^{[l, \rightarrow]}.
+        \end{align}
+    \end{claim}
+
+    \begin{proofref}{Claim}{claim:sum_delta_shif}
+        The induction base solves
+        \begin{align}
+            \delta_{\text{shift}}^{(L,+,g)} + \delta_{\text{shift}}^{(L,-,g)}
+                &= \left( 1 - 2 \alpha^{(L)} \right) \left( \delta_{\text{intermediate}}^{(L,+,g)} + \delta_{\text{intermediate}}^{(L,-,g)} \right) \notag\\
+                &= \left( 1 - 2 \alpha^{(L)} \right) \left( \delta^{(L,+,g)} + \delta^{(L,-,g)} \right) \notag\\
+                &= \left( 1 - 2 \alpha^{(L)} \right) \mathbb{1} \notag\\
+                &= \left( 1 - 2 \alpha^{(L)} \right) W_{\text{abs}}^{[L,\rightarrow]}.
+        \end{align}
+        For $0 \leq l < L$ adding \cref{eq:delta_shift_pos_g} and \cref{eq:delta_shift_neg_g} yields
+        \begin{align}
+            \delta_{\text{intermediate}}^{(l,+,g)} + \delta_{\text{intermediate}}^{(l,-,g)}
+                &= \delta_{\text{shift}}^{(l+1,+,g)} \left( M^{(l+1, +)} + M^{(l+1, -)} \right) \left|W^{(l+1)}\right| + \delta_{\text{shift}}^{(l+1,-,g)} \left|W^{(l+1)}\right| \notag\\
+                &= \left( \delta_{\text{shift}}^{(l+1,+,g)} + \delta_{\text{shift}}^{(l+1,-,g)} \right) \left|W^{(l+1)}\right| \label{eq:sum_shifted}
+        \end{align}
+        
+        Now using \cref{eq:sum_shifted}, induction yields
+        \begin{align}
+            \delta_{\text{shift}}^{(l,+,g)} + \delta_{\text{shift}}^{(l,-,g)}
+                &= \left( 1 - 2 \alpha^{(l)} \right) \left( \delta_{\text{intermediate}}^{(l,+,g)} + \delta_{\text{intermediate}}^{(l,-,g)} \right) \notag\\
+                &= \left( 1 - 2 \alpha^{(l)} \right) \left( \delta_{\text{shift}}^{(l+1,+,g)} + \delta_{\text{shift}}^{(l+1,-,g)} \right) \left|W^{(l+1)}\right| \notag\\
+                &= \left( 1 - 2 \alpha^{(l)} \right) \prod_{l+1 \leq j \leq L} \left( 1 - 2 \alpha^{(j)} \right) W_{\text{abs}}^{[l+1, \rightarrow]} \left|W^{(l+1)}\right| \notag\\
+                &= \prod_{l \leq j \leq L} \left( 1 - 2 \alpha^{(j)} \right) W_{\text{abs}}^{[l, \rightarrow]}.
+        \end{align}
+        which concludes the proof of Claim \ref{claim:sum_delta_shif}.
+    \end{proofref}
+
+    Using the Claim and \cref{eq:delta_g_shif} we obtain the recursion
+    \begin{align}
+        2 \cdot \delta_{\text{shift}}^{(l,g)}
+            = 2 \cdot \delta_{\text{shift}}^{(l+1, g)} \cdot W^{(l+1,x)}
+                - \prod_{l+1 \leq j \leq L} \left( 1 - 2 \alpha^{(j)} \right) W_{\text{abs}}^{[l+1, \rightarrow]} M^{(l+1, -)} W^{(l+1)} \label{eq:delta_g_shif_recursion}
+    \end{align}
+
+
+    Unfolding this recursion one by one as in the inductive proof of \cref{thm:closed_formula}, this closes the proof of \cref{thm:closed_formula_shift}.
+\end{proofref}

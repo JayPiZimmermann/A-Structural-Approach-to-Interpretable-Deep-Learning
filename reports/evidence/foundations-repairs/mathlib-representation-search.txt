@@ -1,0 +1,96 @@
+formalization/.lake/packages/mathlib/Mathlib/Order/RelIso/Set.lean:123:def RelIso.subrelUnivIso {p : α → Prop} (h : ∀ x, p x) : Subrel r p ≃r r where
+formalization/.lake/packages/mathlib/Mathlib/Tactic/Linter/Header.lean:249:/-- Destructures header syntax (`(module)? (prelude)? $imports*`) into an array of `ImportRef`s. -/
+formalization/.lake/packages/mathlib/Mathlib/Tactic/Linter/Header.lean:252:  | `(Parser.Module.header| $[module%$moduleTk]? $[prelude]? $imports*) =>
+formalization/.lake/packages/mathlib/Mathlib/Tactic/Linter/Header.lean:268:  | `(Parser.Module.header| $[module%$tk]? $[prelude]? $_*) => tk
+formalization/.lake/packages/mathlib/Mathlib/Tactic/Linter/Header.lean:271:/-- Returns the `prelude` token from header syntax, if there is one. -/
+formalization/.lake/packages/mathlib/Mathlib/Tactic/Linter/Header.lean:272:def headerToPreludeTk? (header : TSyntax ``Parser.Module.header) : Option Syntax :=
+formalization/.lake/packages/mathlib/Mathlib/Tactic/Linter/Header.lean:274:  | `(Parser.Module.header| $[module]? $[prelude%$tk]? $_*) => tk
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:16:This file proves results on `IsRelUpperSet` and `IsRelLowerSet`.
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:29:@[simp] lemma isRelUpperSet_true_iff_isUpperSet :
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:30:    IsRelUpperSet s (fun _ ↦ True) ↔ IsUpperSet s := by
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:31:  grind [IsUpperSet, IsRelUpperSet]
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:38:lemma IsUpperSet.isRelUpperSet_sep (hs : IsUpperSet s) : IsRelUpperSet {x ∈ s | P x} P :=
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:50:lemma IsRelUpperSet.mono_isUpperSet (ht : IsRelUpperSet t P) (hs : IsUpperSet s) (hst : s ⊆ t) :
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:51:    IsRelUpperSet s P :=
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:54:lemma IsRelUpperSet.prop_of_mem (hs : IsRelUpperSet s P) (h : a ∈ s) : P a := (hs h).1
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:57:lemma IsRelUpperSet.mem_of_le (hs : IsRelUpperSet s P) (h : a ∈ s) (h₁ : a ≤ b) (h₂ : P b) :
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:62:@[simp] lemma isRelUpperSet_empty : IsRelUpperSet (∅ : Set α) P := fun _ ↦ False.elim
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:65:@[simp] lemma isRelUpperSet_self : IsRelUpperSet s (· ∈ s) := fun _ b ↦ ⟨b, fun _ _ ↦ id⟩
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:68:lemma IsRelUpperSet.union (hs : IsRelUpperSet s P) (ht : IsRelUpperSet t P) :
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:69:    IsRelUpperSet (s ∪ t) P := fun b mb ↦ by
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:80:lemma IsRelUpperSet.inter (hs : IsRelUpperSet s P) (ht : IsRelUpperSet t P) :
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:81:    IsRelUpperSet (s ∩ t) P := fun b ⟨bs, bt⟩ ↦ by
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:82:  simp_all only [IsRelUpperSet, true_and]
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:90:protected lemma IsRelUpperSet.sUnion {S : Set (Set α)} (hS : ∀ s ∈ S, IsRelUpperSet s P) :
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:91:    IsRelUpperSet (⋃₀ S) P := fun _ ⟨s, ms, mb⟩ ↦
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:98:protected lemma IsRelUpperSet.iUnion {f : ι → Set α} (hf : ∀ i, IsRelUpperSet (f i) P) :
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:99:    IsRelUpperSet (⋃ i, f i) P :=
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:106:protected lemma IsRelUpperSet.iUnion₂ {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsRelUpperSet (f i j) P) :
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:107:    IsRelUpperSet (⋃ (i) (j), f i j) P :=
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:114:protected lemma IsRelUpperSet.sInter
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:115:    {S : Set (Set α)} (hS : S.Nonempty) (hf : ∀ s ∈ S, IsRelUpperSet s P) :
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:116:    IsRelUpperSet (⋂₀ S) P := fun b mb ↦ by
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:126:protected lemma IsRelUpperSet.iInter
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:127:    [Nonempty ι] {f : ι → Set α} (hf : ∀ i, IsRelUpperSet (f i) P) : IsRelUpperSet (⋂ i, f i) P :=
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:134:protected lemma IsRelUpperSet.iInter₂ [Nonempty ι] [∀ i, Nonempty (κ i)]
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:135:    {f : ∀ i, κ i → Set α} (hf : ∀ i j, IsRelUpperSet (f i j) P) :
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:136:    IsRelUpperSet (⋂ (i) (j), f i j) P :=
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:144:lemma isUpperSet_subtype_iff_isRelUpperSet {s : Set { x // P x }} :
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:145:    IsUpperSet s ↔ IsRelUpperSet (Subtype.val '' s) P := by
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:160:instance : SetLike (RelUpperSet P) α where
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:161:  coe := RelUpperSet.carrier
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:164:instance : PartialOrder (RelUpperSet P) := .ofSetLike (RelUpperSet P)
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:170:lemma RelUpperSet.isRelUpperSet (u : RelUpperSet P) : IsRelUpperSet u P := u.isRelUpperSet'
+formalization/.lake/packages/mathlib/Mathlib/Order/UpperLower/Relative.lean:179:lemma isRelUpperSet_Icc_le : IsRelUpperSet (Icc a c) (· ≤ c) := fun _ b ↦ by
+formalization/.lake/packages/mathlib/Mathlib/Order/WellFoundedSet.lean:268:  (RelIso.subrelUnivIso (by simp)).wellQuasiOrdered_iff
+formalization/.lake/packages/mathlib/Mathlib/Tactic/Linter/DirectoryDependency.lean:29:Omit `Init` (which is part of the prelude). -/
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Homology/ComplexShape.lean:204:instance instDecidableRelRelUp' (a : α) : DecidableRel (ComplexShape.up' a).Rel :=
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Homology/ComplexShape.lean:208:instance instDecidableRelRelUp [One α] : DecidableRel (ComplexShape.up α).Rel := by
+formalization/.lake/packages/mathlib/Mathlib/Algebra/DirectSum/Algebra.lean:137:/-- The piecewise multiplication from the `Mul` instance, as a bundled linear map.
+formalization/.lake/packages/mathlib/Mathlib/Order/Defs/Unbundled.lean:299:def IsRelUpperSet {α : Type*} [LE α] (s : Set α) (P : α → Prop) : Prop :=
+formalization/.lake/packages/mathlib/Mathlib/Order/Defs/Unbundled.lean:302:@[inherit_doc IsRelUpperSet]
+formalization/.lake/packages/mathlib/Mathlib/Order/Defs/Unbundled.lean:303:structure RelUpperSet {α : Type*} [LE α] (P : α → Prop) where
+formalization/.lake/packages/mathlib/Mathlib/Order/Defs/Unbundled.lean:304:  /-- The carrier of a `RelUpperSet`. -/
+formalization/.lake/packages/mathlib/Mathlib/Order/Defs/Unbundled.lean:306:  /-- The carrier of a `RelUpperSet` is an upper set relative to `P`.
+formalization/.lake/packages/mathlib/Mathlib/Order/Defs/Unbundled.lean:308:  Do NOT use directly. Please use `RelUpperSet.isRelUpperSet` instead. -/
+formalization/.lake/packages/mathlib/Mathlib/Order/Defs/Unbundled.lean:309:  isRelUpperSet' : IsRelUpperSet carrier P
+formalization/.lake/packages/mathlib/Mathlib/Order/Defs/Unbundled.lean:311:extend_docs RelUpperSet before "The type of upper sets of an order relative to `P`."
+formalization/.lake/packages/mathlib/Mathlib/Data/Nat/NthRoot/Defs.lean:14:The function is defined in terms of natural numbers with no dependencies outside of prelude.
+formalization/.lake/packages/mathlib/Mathlib/Topology/FiberBundle/Trivialization.lean:908:noncomputable def piecewiseLeOfEq [LinearOrder B] [OrderTopology B] (e e' : Trivialization F proj)
+formalization/.lake/packages/mathlib/Mathlib/Topology/FiberBundle/Trivialization.lean:923:noncomputable def piecewiseLe [LinearOrder B] [OrderTopology B] (e e' : Trivialization F proj)
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Base.lean:71:    have := b.iSup_cartan_borelLower_borelUpper_eq_top
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Base.lean:72:    rw [borelLower_eq, borelUpper_eq, b.cartan_eq] at this
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:147:def borelUpper : LieSubmodule R H L where
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:156:  lie_mem := b.symm.borelUpper.lie_mem
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:158:private lemma iSup_cartan_borelLower_borelUpper_eq_top_aux
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:160:    ⁅y, z⁆ ∈ H.toLieSubmodule ⊔ b.borelLower ⊔ b.borelUpper := by
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:204:        exact LieSubmodule.mem_sup_right <| b.borelUpper.lie_mem (x := ⟨yc, hyc⟩) hu
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:214:        exact LieSubmodule.mem_sup_right <| b.borelUpper.lie_mem (x := ⟨yc, hyc⟩) hv
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:220:lemma iSup_cartan_borelLower_borelUpper_eq_top :
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:221:    iSup ![H.toLieSubmodule, b.borelLower, b.borelUpper] = ⊤ := by
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:222:  suffices H.toLieSubmodule ⊔ b.borelLower ⊔ b.borelUpper = ⊤ by simpa
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:247:      exact LieSubmodule.mem_sup_right <| b.borelUpper.lie_mem (x := ⟨zc, hzc⟩) hyu
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:251:    · exact b.iSup_cartan_borelLower_borelUpper_eq_top_aux hyu hzl
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:252:    · exact LieSubmodule.mem_sup_right <| b.borelUpper.lie_mem (x := ⟨yc, hyc⟩) hzu
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:254:      exact b.iSup_cartan_borelLower_borelUpper_eq_top_aux hzu hyl
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:334:lemma borelUpper_le_biSup :
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:336:    b.borelUpper ≤ ⨆ (n : ι → ℕ) (_ : n ≠ 0), rootSpace H (∑ i, n i • b.baseSupp i) := by
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:340:  replace hx : x ∈ lieSpan R L (range b.e) := by simpa [borelUpper] using hx
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:381:  simpa only [symm_baseSupp] using! b.symm.borelUpper_le_biSup
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:383:private lemma cartan_borelLower_borelUpper_le :
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:387:    ![H.toLieSubmodule, b.borelLower, b.borelUpper] ≤ ![rootSpace H 0, U, V] := by
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:393:  · exact b.borelUpper_le_biSup
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:474:    b.iSup_cartan_borelLower_borelUpper_eq_top).mp b.cartan_borelLower_borelUpper_le) 0)
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:480:    b.iSup_cartan_borelLower_borelUpper_eq_top).mp b.cartan_borelLower_borelUpper_le) 1)
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:482:lemma borelUpper_eq :
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:484:    b.borelUpper = ⨆ (n : ι → ℕ) (_ : n ≠ 0), rootSpace H (∑ i, n i • b.baseSupp i) :=
+formalization/.lake/packages/mathlib/Mathlib/Algebra/Lie/Basis/Basic.lean:486:    b.iSup_cartan_borelLower_borelUpper_eq_top).mp b.cartan_borelLower_borelUpper_le) 2)
+formalization/.lake/packages/mathlib/Mathlib/RepresentationTheory/Semisimple.lean:35:  ComplementedLattice (Subrepresentation ρ)
+formalization/.lake/packages/mathlib/Mathlib/RepresentationTheory/Semisimple.lean:40:  exact OrderIso.complementedLattice_iff Subrepresentation.subrepresentationSubmoduleOrderIso
+formalization/.lake/packages/mathlib/Mathlib/RepresentationTheory/Semisimple.lean:47:  exact OrderIso.complementedLattice_iff Subrepresentation.submoduleSubrepresentationOrderIso
+formalization/.lake/packages/mathlib/Mathlib/RepresentationTheory/Subrepresentation.lean:98:instance : Lattice (Subrepresentation ρ) :=
+formalization/.lake/packages/mathlib/Mathlib/Data/List/Flatten.lean:14:defined in `Init.Prelude`.
+formalization/.lake/packages/mathlib/Mathlib/LinearAlgebra/Multilinear/Curry.lean:399:  rw [← curryFinFinset_symm_apply_piecewise_const hk hl, LinearEquiv.symm_apply_apply]
+formalization/.lake/packages/mathlib/Mathlib/LinearAlgebra/Multilinear/Basic.lean:1327:lemma map_sub_map_piecewise [LinearOrder ι] (a b : (i : ι) → M₁ i) (s : Finset ι) :
+formalization/.lake/packages/mathlib/Mathlib/LinearAlgebra/Multilinear/Basic.lean:1351:lemma map_piecewise_sub_map_piecewise [LinearOrder ι] (a b v : (i : ι) → M₁ i) (s : Finset ι) :
+formalization/.lake/packages/mathlib/Mathlib/LinearAlgebra/Multilinear/Basic.lean:1373:    Function.Embedding.coeFn_mk, Finset.piecewise_singleton, linearDeriv_apply, add_comm]

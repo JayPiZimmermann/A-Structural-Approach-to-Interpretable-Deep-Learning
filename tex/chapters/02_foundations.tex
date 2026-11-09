@@ -55,6 +55,7 @@ For example, $\abs{\cdot} \colon \RR \to \RR$ is \ac{cpwl} with the two regions 
 
 \begin{observation}\label{obs:relu_is_cpwl}
 Every feedforward \ac{relu} network represents a \ac{cpwl} function.
+\hfill\LeanResult{obs:relu_is_cpwl}
 \end{observation}
 
 \begin{proof}
@@ -156,6 +157,7 @@ A \emph{rank-$k$ Maxout network} is a feedforward network whose neurons are rank
 
 \begin{observation}[\ac{relu} and max-pooling as Maxout]\label{obs:relu_maxout_special_case}
 The \ac{relu} activation is the rank-$2$ Maxout unit with parameters $(w_1, \beta_1) = (w, \beta)$ and $(w_2, \beta_2) = (0, 0)$, since $\relu(w^\top x + \beta) = \max\{w^\top x + \beta,\, 0\}$. Max-pooling over a group $J$ of neurons is the rank-$\abs{J}$ Maxout unit whose $j$-th argument is the coordinate projection onto the $j$-th element of $J$. Every rank-$k$ Maxout unit is convex in its input and non-decreasing in each pre-activation argument $w_j^\top x + \beta_j$; hence Maxout qualifies as an admissible activation in Definitions~\ref{def:monotone_network} and \ref{def:icnn}.
+\hfill\LeanResult{obs:relu_maxout_special_case}
 \end{observation}
 
 \begin{proof}
@@ -198,6 +200,7 @@ Let $\mathcal{M}$ be a finite \ac{mdp} with $\gamma \in [0,1)$. Then:
 	\end{equation}
 	and any pure policy $\polstar$ that selects, in every state, an action attaining the maximum in \eqref{eq:bellman_optimality} is optimal: $V^{\polstar} = V^{\star}$.
 \end{enumerate}
+\hfill\LeanResult{prop:bellman}
 \end{proposition}
 
 \begin{proof}
@@ -210,7 +213,7 @@ The games of this thesis depart from Definition~\ref{def:mdp} in one respect: th
 	\gamma^{(l)}_i \coloneqq \sum_{j} \bigl( \Wsig{l}{+} + \Wsig{l}{-} \bigr)_{ij} = \sum_j \abs{\Wl{l}_{ij}},
 	\label{eq:structural_discount}
 \end{equation}
-which restores the weight mass after row $i$ of $\abs{\Wl{l}}$ is normalized into transition probabilities. Contraction is then unavailable, but also unnecessary: all games are played on \emph{layered acyclic} graphs, so every trajectory is finite and all value functions are well-defined finite sums. Existence and uniqueness of optimal policies follow from backward induction, recorded next in the two-player setting.
+which restores the weight mass after row $i$ of $\abs{\Wl{l}}$ is normalized into transition probabilities. Contraction is then unavailable, but also unnecessary: all games are played on \emph{layered acyclic} graphs, so every trajectory is finite and all value functions are well-defined finite sums. Backward induction gives a unique value and the existence of optimal policies; policies need not be unique when actions tie. The two-player statement follows below.
 \end{remark}
 
 \subsection*{Zero-sum turn-based games}
@@ -375,6 +378,7 @@ A one-dimensional example: $p(x) = 0 \oplus (0 \odot x) \oplus \bigl((-1) \odot 
 
 \begin{observation}[Tropical polynomials are the convex \ac{cpwl} functions]\label{obs:tropical_convex_cpwl}
 A function $p \colon \RR^d \to \RR$ is a tropical polynomial \eqref{eq:tropical_polynomial} if and only if it is convex and \ac{cpwl}.
+\hfill\LeanResult{obs:tropical_convex_cpwl}
 \end{observation}
 
 \begin{proof}
@@ -419,9 +423,10 @@ The \emph{support function} of a nonempty compact convex set $P \subset \RR^{d}$
 Let $P, Q \subset \RR^{d}$ be nonempty compact convex sets. Then:
 \begin{enumerate}
 	\item $h_{P}$ is convex and positively homogeneous, i.e.\ $h_P(\lambda x) = \lambda h_P(x)$ for $\lambda \ge 0$; if $P$ is a polytope with vertex set $\operatorname{vert}(P)$, then $h_{P}(x) = \max_{u \in \operatorname{vert}(P)} \langle u, x \rangle$ is a tropical polynomial with zero coefficients and Newton polytope $P$.
-	\item For any finite set $A \subset \RR^d$ and $x \in \RR^d$, $\max_{u \in \operatorname{conv}(A)} \langle u, x \rangle = \max_{u \in A} \langle u, x \rangle$; in particular $h_{P + Q} = h_{P} + h_{Q}$ and $h_{\operatorname{conv}(P \cup Q)} = \max\{h_{P}, h_{Q}\} = h_P \oplus h_Q$.
+	\item For any nonempty finite set $A \subset \RR^d$ and $x \in \RR^d$, $\max_{u \in \operatorname{conv}(A)} \langle u, x \rangle = \max_{u \in A} \langle u, x \rangle$; in particular $h_{P + Q} = h_{P} + h_{Q}$ and $h_{\operatorname{conv}(P \cup Q)} = \max\{h_{P}, h_{Q}\} = h_P \oplus h_Q$.
 	\item $P \subseteq Q$ if and only if $h_{P} \le h_{Q}$ pointwise; in particular $h_{P} = h_{Q}$ implies $P = Q$, so a compact convex set is uniquely determined by its support function.
 \end{enumerate}
+\hfill\LeanResult{lem:support_properties}
 \end{lemmaenv}
 
 \begin{proof}
@@ -449,6 +454,7 @@ Moreover, the lifted Newton polytope determines the polynomial function:
 	\label{eq:lifted_support}
 \end{equation}
 and if all coefficients vanish, $c_{\alpha} \equiv 0$, then $p = h_{\operatorname{Newt}(p)}$.
+\hfill\LeanResult{prop:newton_calculus}
 \end{proposition}
 
 \begin{proof}
@@ -482,7 +488,7 @@ Proposition~\ref{prop:newton_calculus} is the dictionary used in the remaining s
 
 The tropical dictionary above reads the \ac{dc} decomposition geometrically. \textcite{Zhang2018} showed that feedforward \ac{relu} networks with real weights are exactly the \emph{tropical rational maps}---componentwise differences of max-plus polynomials---so that counting linear regions becomes counting polytope vertices; the converse, that every \ac{cpwl} function arises this way, is \textcite{Arora2018}.\footnote{Related max-affine perspectives include Maxout networks \cite{Goodfellow2013Maxout} and the expressivity program on Newton polytopes \cite{Haase2023,Misiakos2022neural,hertrich2025neuralnetworksvirtualextended,huchette2025deeplearningmeetspolyhedral,Brandenburg2024b}.} We use this correspondence in the opposite direction: rather than bounding a worst-case network, we take a \emph{trained} network, compute its split streams $g, h$ explicitly---the construction developed in full in Chapter~\ref{ch:decompositions}---and read the vertices of their Newton polytopes as learned prototypes for \ac{xai} \cite{ZimmermannLoho2025}.
 
-This subsection anticipates the difference-of-convex split developed in full in Chapter~\ref{ch:decompositions}, presenting its geometry here because it belongs with the tropical and polyhedral foundations of this chapter. The split forward pass---formalized in Chapter~\ref{ch:decompositions}---acts on a bias-free network as follows: the input $x \in \RR^d$ is replaced by a pair $(\act{0}{+}, \act{0}{-})$ with $x = \act{0}{+} - \act{0}{-}$, the weights are split as $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$ with $\Wsig{l}{\pm} \ge 0$, and the layers iterate entrywise
+This subsection anticipates the difference-of-convex split developed in full in Chapter~\ref{ch:decompositions}, presenting its geometry here because it belongs with the tropical and polyhedral foundations of this chapter. The split forward pass---formalized in Chapter~\ref{ch:decompositions}---acts on a bias-free network as follows: the input $x \in \RR^d$ is replaced by a pair $(\act{0}{+}, \act{0}{-})$ with $x = \act{0}{+} - \act{0}{-}$, the weights are split as $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$ with $\Wsig{l}{\pm} \ge 0$, and the hidden layers $1\leq l<L$ iterate entrywise
 \begin{align}
     \preact{l}{+} &= \Wsig{l}{+} \act{l-1}{+} + \Wsig{l}{-} \act{l-1}{-},
     &
@@ -494,7 +500,7 @@ This subsection anticipates the difference-of-convex split developed in full in 
     \act{l}{-} &= \preact{l}{-},
     \label{eq:split_act_recursion}
 \end{align}
-so that for a scalar output the split streams $g, h \colon \RR^{2d} \to \RR$ map the doubled input $(\act{0}{+}, \act{0}{-})$ to the two final components and satisfy $f(\act{0}{+} - \act{0}{-}) = g - h$. The following theorem identifies this construction as a tropical rational decomposition whose components carry additional monotone structure.
+At the final affine readout, use the same pre-activation formulas and set $\act{L}{\pm}=\preact{L}{\pm}$ without a maximum. Thus for a scalar output the split streams $g, h \colon \RR^{2d} \to \RR$ map the doubled input $(\act{0}{+}, \act{0}{-})$ to the two final components and satisfy $f(\act{0}{+} - \act{0}{-}) = g - h$. The following theorem identifies this construction as a tropical rational decomposition whose components carry additional monotone structure.
 
 \begin{theoremenv}[The \ac{dc} split is a monotone tropical rational decomposition]\label{thm:split_tropical_rational}
 Let $f \colon \RR^d \to \RR$ be a bias-free \ac{relu} \ac{mlp} with scalar output and split streams $g, h \colon \RR^{2d} \to \RR$ defined by \eqref{eq:split_preact_recursion}--\eqref{eq:split_act_recursion}. Then:
@@ -507,6 +513,7 @@ Let $f \colon \RR^d \to \RR$ be a bias-free \ac{relu} \ac{mlp} with scalar outpu
     \end{equation}
     i.e.\ $f$, precomposed with the difference map, is the tropical rational function $g \oslash h$.
 \end{enumerate}
+\hfill\LeanResult{thm:split_tropical_rational}
 \end{theoremenv}
 
 \begin{proof}
@@ -549,7 +556,8 @@ For a bias-free \ac{relu} \ac{mlp} with split streams \eqref{eq:split_preact_rec
     P^{(l,-)}_i = Q^{(l,-)}_i,
     \label{eq:polytope_act}
 \end{align}
-with $e_1, \dots, e_{2d}$ the standard basis of $\RR^{2d}$ and $\oplus$ the Minkowski sum. The Newton polytopes $P_g \coloneqq \operatorname{Newt}(g)$ and $P_h \coloneqq \operatorname{Newt}(h)$ of a scalar output neuron are obtained after $L$ steps.
+where the activation update~\eqref{eq:polytope_act} applies only to $l<L$; at the affine readout set $P^{(L,\pm)}_i=Q^{(L,\pm)}_i$. Here $e_1, \dots, e_{2d}$ are the standard basis of $\RR^{2d}$ and $\oplus$ the Minkowski sum. The Newton polytopes $P_g \coloneqq \operatorname{Newt}(g)$ and $P_h \coloneqq \operatorname{Newt}(h)$ of a scalar output neuron are obtained after $L$ steps.
+\hfill\LeanResult{cor:minkowski_propagation}
 \end{corollary}
 
 \begin{proof}
@@ -560,6 +568,7 @@ For a single hidden layer this produces Minkowski sums of segments and points, i
 
 \begin{proposition}[Subdifferential of a support function]\label{prop:subdifferential_face}
 Let $P \subseteq \RR^n$ be a polytope and $x \in \RR^n$. Then $\partial h_P(x) = F_P(x) = \{ p \in P : \langle p, x \rangle = h_P(x) \}$, the maximizing face. In particular, $h_P$ is differentiable at $x$ if and only if $F_P(x)$ is a singleton, in which case $\nabla h_P(x) \in P$.
+\hfill\LeanResult{prop:subdifferential_face}
 \end{proposition}
 
 \begin{proof}
@@ -578,6 +587,7 @@ They exist and are unique by Theorem~\ref{thm:split_tropical_rational} and the s
 
 \begin{corollary}[Imaginative Polytopes live in the non-negative orthant]\label{cor:polytopes_nonneg}
 $P_g, P_h \subseteq \RR^{2d}_{\ge 0}$.
+\hfill\LeanResult{cor:polytopes_nonneg}
 \end{corollary}
 
 \begin{proof}
@@ -592,10 +602,11 @@ Let $u \colon \RR^n \to \RR$ be a positively homogeneous convex \ac{cpwl} functi
     \bigl\{ \nabla u(\xi) \, : \, \xi \in \RR^n, \ u \text{ differentiable at } \xi \bigr\}.
 \end{equation*}
 In particular, the attainable gradients of the split streams $g$ and $h$ are exactly the vertex sets $\operatorname{vert}(P_g)$ and $\operatorname{vert}(P_h)$ of the Imaginative Polytopes.
+\hfill\LeanResult{thm:vertices_gradients}
 \end{theoremenv}
 
 \begin{proof}
-Here $u = h_P$, and $\partial u(\xi) = F_P(\xi)$ by Proposition~\ref{prop:subdifferential_face}. ``$\supseteq$'': if $u$ is differentiable at $\xi$, then $F_P(\xi) = \{\nabla u(\xi)\}$ is a singleton face; a single-point face is a vertex, since $p = \tfrac12(p_1 + p_2)$ with $p_i \in P$ would force $p_1, p_2 \in F_P(\xi) = \{p\}$. ``$\subseteq$'': let $v \in \operatorname{vert}(P)$ and $C \coloneqq \operatorname{conv}(\operatorname{vert}(P) \setminus \{v\})$; then $v \notin C$, so strict separation yields $\xi$ with $\langle v, \xi \rangle > \max_{v_i \ne v} \langle v_i, \xi \rangle$, and this persists on a ball $B$. By the vertex representation of the support function (Lemma~\ref{lem:support_properties}), $u(\xi') = \langle v, \xi' \rangle$ on $B$, so $u$ is differentiable at $\xi$ with $\nabla u(\xi) = v$. The split-stream statement is the case $u = g, h$, admissible by Theorem~\ref{thm:split_tropical_rational}. Networks with biases are covered by homogenization: append a constant input coordinate, absorb the split biases, and evaluate on the affine slice, placing the polytopes in $\RR^{2(d+1)}_{\ge 0}$.
+Here $u = h_P$, and $\partial u(\xi) = F_P(\xi)$ by Proposition~\ref{prop:subdifferential_face}. ``$\supseteq$'': if $u$ is differentiable at $\xi$, then $F_P(\xi) = \{\nabla u(\xi)\}$ is a singleton face; a single-point face is a vertex, since $p = \tfrac12(p_1 + p_2)$ with $p_i \in P$ would force $p_1, p_2 \in F_P(\xi) = \{p\}$. ``$\subseteq$'': let $v \in \operatorname{vert}(P)$ and $C \coloneqq \operatorname{conv}(\operatorname{vert}(P) \setminus \{v\})$; then $v \notin C$, so strict separation yields $\xi$ with $\langle v, \xi \rangle > \max_{v_i \ne v} \langle v_i, \xi \rangle$, and this persists on a ball $B$. By the vertex representation of the support function (Lemma~\ref{lem:support_properties}), $u(\xi') = \langle v, \xi' \rangle$ on $B$, so $u$ is differentiable at $\xi$ with $\nabla u(\xi) = v$. The split-stream statement is the case $u = g, h$, admissible by Theorem~\ref{thm:split_tropical_rational}. For networks with biases, homogenization gives an ambient support function, but fixing the added coordinates restricts the exposing directions. The input gradients of the restricted function are projections of vertices exposed by directions on that affine slice; not every ambient vertex need be visible there. For example, $(1,0)$ is a vertex of $P=\operatorname{conv}\{(0,1),(2,1),(1,0)\}$, but its value $x$ is strictly below $h_P(x,1)=\max\{1,2x+1\}$ for every $x$. Thus the equality with all vertices applies in the homogeneous ambient space, while the biased network uses only the slice-visible vertices.
 \end{proof}
 
 Theorem~\ref{thm:vertices_gradients} turns the support-function representation into an interpretable computational model. Writing $\xi = (x^+, x^-)$ for the doubled input,
@@ -640,6 +651,7 @@ are convex on $\RR^2$, non-decreasing in each argument, and satisfy
 	f(a-b) = g(a,b) - h(a,b) \qquad \text{for all } (a,b) \in \RR^2.
 	\label{eq:smooth_splitting_identity}
 \end{equation}
+\hfill\LeanResult{thm:smooth_dc_split}
 \end{theoremenv}
 
 \begin{proof}
@@ -693,6 +705,7 @@ Theorem~\ref{thm:smooth_dc_split} applies to the following activation functions,
 	\item \emph{Softplus at temperature $\theta > 0$}, $f(x) = \theta \log(1 + e^{x/\theta})$, with $f''(x) = \sigma'(x/\theta)/\theta \ge 0$; here $N = 0$, $C_2 = 0$, and the decomposition degenerates to the statement that softplus itself is convex.
 \end{enumerate}
 In each case $f(0) \ge 0$, so by Remark~\ref{rem:smooth_valid_decomposition} below the resulting pair map preserves non-negativity of the split streams.
+\hfill\LeanResult{cor:modern_activations}
 \end{corollary}
 
 \begin{proof}

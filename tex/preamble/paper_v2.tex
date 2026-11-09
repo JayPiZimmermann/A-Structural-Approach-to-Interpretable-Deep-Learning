@@ -66,7 +66,13 @@
 \makeatletter
 \providecommand{\captionof}[1]{\def\@captype{#1}\caption}
 \providecommand{\appinputgen}[1]{\begingroup\def\^^M{\\}\input{#1}\endgroup}
-\providecommand{\appinputgenlt}[1]{\appinputgen{#1}\addtocounter{table}{-1}}
+% Captionless generated longtables advance the table counter internally. Their
+% temporary anchors must not collide with the next external table caption.
+\newcounter{ptnblongtable}
+\providecommand{\appinputgenlt}[1]{%
+  \stepcounter{ptnblongtable}\begingroup
+  \renewcommand{\theHtable}{ptnb-longtable.\arabic{ptnblongtable}}%
+  \appinputgen{#1}\endgroup\addtocounter{table}{-1}}
 \providecommand{\appinputgenci}[1]{\begingroup\fontsize{8.5}{10}\selectfont\def\tiny{\fontsize{5}{5.5}\selectfont}\appinputgenlt{#1}\endgroup}
 \providecommand{\appneedspace}[1]{\par\penalty-100\begingroup\dimen0=\pagegoal\advance\dimen0-\pagetotal
 \ifdim\dimen0<#1\relax\newpage\fi\endgroup}

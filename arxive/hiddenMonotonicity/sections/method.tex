@@ -25,8 +25,8 @@ With this, for each \(l \in \{1,\dots,L\}\) we compute the split-stream pre-acti
       \label{eq:preact-minus}
 \end{align}
 By replacing the ReLU activation of the original model with a Maxout unit in the $g$-stream
-one obtains the activations $a^{(l,+)} = \max \left\{ z^{(l,+)}, z^{(l,-)} \right\}$ and $a^{(l,-)} = z^{(l,-)}$.
-Analogously to the notation $f^{(l)}$, we denote the split-streams $g$ and $h$ restricted to the layers $l,\dots,L$ by $g^{(l)} : \ \RR ^ {d^{(l)}} \times \RR ^ {d^{(l)}} \longrightarrow \RR$ and $h^{(l)} : \ \RR ^ {d^{(l)}} \times \RR ^ {d^{(l)}} \longrightarrow \RR$.
+one obtains, at hidden layers $l<L$, the activations $a^{(l,+)} = \max \left\{ z^{(l,+)}, z^{(l,-)} \right\}$ and $a^{(l,-)} = z^{(l,-)}$. At the final affine readout, set $a^{(L,+)}=z^{(L,+)}$ and $a^{(L,-)}=z^{(L,-)}$ without a maximum, so negative logits are preserved.
+Analogously to the notation $f^{(l)}$, we denote the split-streams $g$ and $h$ restricted to the layers $l+1,\dots,L$ by $g^{(l)} : \ \RR ^ {d^{(l)}} \times \RR ^ {d^{(l)}} \longrightarrow \RR$ and $h^{(l)} : \ \RR ^ {d^{(l)}} \times \RR ^ {d^{(l)}} \longrightarrow \RR$.
 
 We prove correctness of the split in \cref{app:fundamental}.
 Indeed, the difference between the outputs of the two split-streams equals the output of the original network evaluated at the difference of their inputs.

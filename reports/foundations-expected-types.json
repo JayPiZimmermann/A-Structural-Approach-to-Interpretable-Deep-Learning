@@ -1,0 +1,533 @@
+{
+  "schema_version": 1,
+  "targets": [
+    {
+      "module": "Thesis.SourceFoundationsStatements",
+      "declaration": "Thesis.SourceFoundations.monotone_represents",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m) (σ : ℝ → ℝ)\n    (hw : Foundations.PositiveWeights net) (hm : Monotone σ)\n    (W : Matrix (Fin k) (Fin m) ℝ) (b : Fin k → ℝ) (hW : ∀ i j, 0 ≤ W i j),\n    Monotone (fun x => W.mulVec (net.forwardWith σ x)+b)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUNDATION-SOURCE-monotone_represents",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Arbitrary monotone scalar activation, shared varying-width network with nonnegative signed hidden weights, and actual nonnegative ungated affine readout."
+    },
+    {
+      "module": "Thesis.SourceFoundationsStatements",
+      "declaration": "Thesis.SourceFoundations.icnn_represents_convex",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m) (σ : ℝ → ℝ)\n    (hw : Foundations.InputConvexWeights net) (hm : Monotone σ) (hc : Foundations.ScalarConvex σ)\n    (W : Matrix (Fin k) (Fin m) ℝ) (b : Fin k → ℝ) (hW : ∀ i j, 0 ≤ W i j),\n    ∀ i, ConvexOn ℝ Set.univ (fun x => (W.mulVec (net.forwardWith σ x)+b) i)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUNDATION-SOURCE-icnn_represents_convex",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Coordinatewise genuine ConvexOn for arbitrary convex monotone scalar activation, unrestricted first affine weights, nonnegative later signed weights and actual nonnegative affine readout."
+    },
+    {
+      "module": "Thesis.SourceFoundationsStatements",
+      "declaration": "Thesis.SourceFoundations.maxout_special_cases",
+      "expected_type": "∀ {I A : Type} [Fintype I] [Nonempty I] [DecidableEq I]\n    [Fintype A] [Nonempty A] (w : I → ℝ) (b : ℝ) (p : Tropical.Polynomial I),\n    (∀ x, relu (w ⬝ᵥ x+b) =\n      ((Tropical.Polynomial.monomial w b).max (Tropical.Polynomial.monomial 0 0)).eval x) ∧\n    (∀ x, (poolingPolynomial (I := I)).eval x = finiteMax x) ∧\n    ConvexOn ℝ Set.univ p.eval ∧ Monotone (finiteMax (A := A))",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUNDATION-SOURCE-maxout_special_cases",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Exact ReLU-as-two-piece-max and coordinate pooling, polynomial convexity and finite-maximum monotonicity; explicit finite nonempty index assumptions."
+    },
+    {
+      "module": "Thesis.SourceFoundationsStatements",
+      "declaration": "Thesis.SourceFoundations.bellman_equations",
+      "expected_type": "∀ {S A : Type} [Fintype S] [Nonempty S] [Fintype A] [Nonempty A]\n    (M : Bellman.MDP S A) (π : Bellman.Policy S A),\n    ((∑' n, (M.discount : ℝ)^n • (M.markovOperator π)^[n] (M.policyReward π)) = M.policyValue π) ∧\n    (M.policyBellman π (M.policyValue π) = M.policyValue π) ∧\n    (∀ v, M.policyBellman π v=v → v=M.policyValue π) ∧\n    (M.bellman M.optimalValue=M.optimalValue) ∧\n    (∀ v, M.bellman v=v → v=M.optimalValue) ∧\n    (M.policyValue (Bellman.pure M.greedy)=M.optimalValue) ∧\n    (∀ ρ : Bellman.Policy S A, M.policyValue ρ ≤ M.optimalValue) ∧\n    (∀ choice : S → A, (∀ s, M.action M.optimalValue s (choice s)=M.optimalValue s) →\n      M.policyValue (Bellman.pure choice)=M.optimalValue)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUNDATION-SOURCE-bellman_equations",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Normalized finite discounted MDP: convergent expected-return series, unique policy and optimal Bellman fixed points, pure greedy optimum, randomized-policy domination and arbitrary tied greedy choices."
+    },
+    {
+      "module": "Thesis.SourceFoundationsStatements",
+      "declaration": "Thesis.SourceFoundations.shapley_bellman",
+      "expected_type": "∀ {S A : Type} [Fintype S] [Fintype A] [Nonempty A]\n    (G : LayeredGames.Game S A),\n    (∀ v : ℕ → S → ℝ, v 0=G.terminal →\n      (∀ n s, v (n+1) s=LayeredGames.best (G.maximize n s) (fun a => G.action n s a (v n))) →\n      v=G.value) ∧\n    ∀ plus minus : LayeredGames.Policy S A, ∀ n s,\n      G.payoff plus G.optimalPolicy n s ≤ G.value n s ∧\n      G.payoff G.optimalPolicy G.optimalPolicy n s=G.value n s ∧\n      G.value n s ≤ G.payoff G.optimalPolicy minus n s",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUNDATION-SOURCE-shapley_bellman",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Exactly layered finite stochastic game with common nonempty action type: unique Bellman values and pure stationary saddle versus all normalized randomized policies at every layered state. Does not assert arbitrary-DAG encoding or unique policies."
+    },
+    {
+      "module": "Thesis.SourceFoundationsStatements",
+      "declaration": "Thesis.SourceFoundations.subdifferential_face",
+      "expected_type": "∀ {I A : Type} [Fintype I] [Fintype A] [Nonempty A]\n    (v : A → I → ℝ) (x : I → ℝ),\n    (∀ s, Subgradient (support (convexHull ℝ (Set.range v))) x s ↔\n      s ∈ convexHull ℝ (Set.range v) ∧ s ⬝ᵥ x=support (convexHull ℝ (Set.range v)) x) ∧\n    (DifferentiableAt ℝ (support (convexHull ℝ (Set.range v))) x ↔\n      ∃ p, p ∈ convexHull ℝ (Set.range v) ∧\n        p ⬝ᵥ x=support (convexHull ℝ (Set.range v)) x ∧\n        ∀ q ∈ convexHull ℝ (Set.range v), q ⬝ᵥ x=support (convexHull ℝ (Set.range v)) x → q=p) ∧\n    (∀ p, HasFDerivAt (support (convexHull ℝ (Set.range v))) (gradientRow p) x →\n      p ∈ convexHull ℝ (Set.range v))",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUNDATION-SOURCE-subdifferential_face",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Nonempty finite-hull support: actual subgradient inequality iff maximizing face, genuine Frechet differentiability iff singleton exposed face, and every attained gradient lies in the hull."
+    },
+    {
+      "module": "Thesis.SourceFoundationsStatements",
+      "declaration": "Thesis.SourceFoundations.split_tropical_rational_affine",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m)\n    (hn : net.Nonnegative) (hb : BiasFree net)\n    (wp wn : Matrix (Fin k) (Fin m) ℝ)\n    (hwp : ∀ i j, 0 ≤ wp i j) (hwn : ∀ i j, 0 ≤ wn i j),\n    let hidden := tropicalSplit net (inputPolynomials n).1 (inputPolynomials n).2\n    let g := polynomialAffine wp wn 0 hidden.1 hidden.2\n    let h := polynomialAffine wn wp 0 hidden.1 hidden.2\n    (∀ i, (g i).ZeroIntercepts ∧ (h i).ZeroIntercepts ∧\n      (g i).NonnegativeSlopes ∧ (h i).NonnegativeSlopes ∧\n      Monotone (g i).eval ∧ Monotone (h i).eval ∧\n      ConvexOn ℝ Set.univ (g i).eval ∧ ConvexOn ℝ Set.univ (h i).eval ∧\n      (∀ c : ℝ, 0 ≤ c → ∀ x, (g i).eval (c • x)=c*(g i).eval x ∧\n        (h i).eval (c • x)=c*(h i).eval x)) ∧\n    (∀ p q, (fun i => (g i).eval (Sum.elim p q))=\n        wp.mulVec (net.split p q).1+wn.mulVec (net.split p q).2 ∧\n      (fun i => (h i).eval (Sum.elim p q))=\n        wn.mulVec (net.split p q).1+wp.mulVec (net.split p q).2) ∧\n    (∀ p q i, (g i).eval (Sum.elim p q)-(h i).eval (Sum.elim p q)=\n      (wp-wn).mulVec (net.eval (p-q)) i) ∧\n    (∀ i, (g i).newton=(∑ j, wp i j • (hidden.1 j).newton)+\n        (∑ j, wn i j • (hidden.2 j).newton) ∧\n      (h i).newton=(∑ j, wn i j • (hidden.1 j).newton)+\n        (∑ j, wp i j • (hidden.2 j).newton))",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUNDATION-SOURCE-split_tropical_rational_affine",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Bias-free hidden network and ungated signed affine readout: constructed heads have zero intercepts, nonnegative slopes, monotonicity, convexity, positive homogeneity; exact actual split affine-head evaluations, exact signed logit difference and final weighted Minkowski sets. Includes zero hidden layers."
+    },
+    {
+      "module": "Thesis.SourceFoundationsStatements",
+      "declaration": "Thesis.SourceFoundations.biased_vertices_gradients",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Thesis.Tropical.Polynomial I) (s : I → ℝ),\n    (∃ x, HasFDerivAt p.eval (gradientRow s) x) ↔\n      ∃ q, SliceVisible p.lift.slope q ∧ q ∈ p.lift.newton.extremePoints ℝ ∧\n        inputProjection q=s",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUNDATION-SOURCE-biased_vertices_gradients",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Arbitrary finite max-affine polynomial: attainable actual input gradients exactly the input projections of lifted vertices uniquely exposed by admissible (x,1) directions. No claim that all ambient lifted vertices are visible."
+    },
+    {
+      "module": "Thesis.SourceFoundationsStatements",
+      "declaration": "Thesis.SourceFoundations.relu_net_game_value_affine",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m) (hn : net.Nonnegative)\n    (hr : ReLUNetGame.NonzeroRows net) (x : Fin n → ℝ)\n    (plus minus : ReLUNetGame.Strategy net) (wp wn : Matrix (Fin k) (Fin m) ℝ)\n    (b : Fin k → ℝ) (hwp : ∀ i j, 0 ≤ wp i j) (hwn : ∀ i j, 0 ≤ wn i j)\n    (hrow : ∀ i, ReLUNetGame.rowDiscount wp wn i≠0) (i : Fin k),\n    let read := fun v : (Fin m → ℝ) × (Fin m → ℝ) => ReLUNetGame.continuation wp wn b v.1 v.2 i\n    let logit := ((wp-wn).mulVec (net.eval x)+b) i\n    read (ReLUNetGame.policyValue net plus (ReLUNetGame.optimalStrategy net x) x (-x)) ≤ logit ∧\n    read (ReLUNetGame.policyValue net (ReLUNetGame.optimalStrategy net x)\n      (ReLUNetGame.optimalStrategy net x) x (-x))=logit ∧\n    logit ≤ read (ReLUNetGame.policyValue net (ReLUNetGame.optimalStrategy net x) minus x (-x)) ∧\n    (ReLUNetGame.SubgamePerfect net plus minus x (-x) ↔\n      ReLUNetGame.GateOptimalStrategy net x plus ∧ ReLUNetGame.GateOptimalStrategy net x minus) ∧\n    (ReLUNetGame.SubgamePerfect net plus minus x (-x) →\n      read (ReLUNetGame.policyValue net plus minus x (-x))=logit)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUNDATION-SOURCE-relu_net_game_value_affine",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Actual normalized ReLU game with nonzero fan-in and forced ungated affine output: saddle against all randomized profiles, exact selected payoff, exact all-subgame iff tie-permitted 0/1 gate conditions, and same output payoff for every subgame-perfect profile."
+    },
+    {
+      "module": "Thesis.SourceGeometryStatements",
+      "declaration": "Thesis.SourceGeometry.support_properties",
+      "expected_type": "∀ {I A : Type} [Fintype I] [Fintype A] [Nonempty A] (P Q : Set (I → ℝ)) (hP : IsCompact P) (hneP : P.Nonempty)\n    (hcP : Convex ℝ P) (hQ : IsCompact Q) (hneQ : Q.Nonempty) (hcQ : Convex ℝ Q),\n    ConvexOn ℝ Set.univ (support P) ∧\n    (∀ c : ℝ, 0 ≤ c → ∀ x, support P (c • x) = c*support P x) ∧\n    (∀ x, support (P+Q) x = support P x+support Q x) ∧\n    (∀ x, support (convexHull ℝ (P∪Q)) x = max (support P x) (support Q x)) ∧\n    (P ⊆ Q ↔ ∀ x, support P x ≤ support Q x) ∧\n    (support P = support Q → P = Q) ∧\n    (∀ (v : A → I → ℝ) x, support (convexHull ℝ (Set.range v)) x = finiteMax (fun a => v a ⬝ᵥ x) ∧\n      ∃ p ∈ (convexHull ℝ (Set.range v)).extremePoints ℝ,\n        p ⬝ᵥ x = support (convexHull ℝ (Set.range v)) x)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUND-13-SUPPORT",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Full nonempty compact-convex support calculus; arbitrary compact convex sets for convexity, homogeneity, sums/unions, containment and uniqueness; separate nonempty finite hull formula and extreme-point attainment."
+    },
+    {
+      "module": "Thesis.SourceGeometryStatements",
+      "declaration": "Thesis.SourceGeometry.newton_calculus",
+      "expected_type": "∀ {I : Type} [Fintype I] (p q : Tropical.Polynomial I),\n    (p.add q).newton = p.newton+q.newton ∧\n    (p.max q).newton = convexHull ℝ (p.newton∪q.newton) ∧\n    (∀ x, (p.add q).eval x=p.eval x+q.eval x) ∧\n    (∀ x, (p.max q).eval x=max (p.eval x) (q.eval x)) ∧\n    (∀ x, p.eval x=support p.lift.newton (Sum.elim x (fun _ => 1))) ∧\n    ((∀ a, p.intercept a=0) → ∀ x, p.eval x=support p.newton x)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUNDATION-NEWTON",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Actual Newton sets under tropical addition/maximum, exact function identities, homogenized slice support and zero-intercept unlifted support."
+    },
+    {
+      "module": "Thesis.SourceGeometryStatements",
+      "declaration": "Thesis.SourceGeometry.network_polytopes_nonnegative",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hn : net.Nonnegative)\n    (i : Fin m),\n    let polynomials := tropicalSplit net (inputPolynomials n).1 (inputPolynomials n).2\n    (∀ v ∈ (polynomials.1 i).newton, ∀ j, 0 ≤ v j) ∧\n    (∀ v ∈ (polynomials.2 i).newton, ∀ j, 0 ≤ v j)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUNDATION-NONNEGATIVE",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Both actual Newton convex hulls of constructively propagated network split polynomials are contained in the nonnegative orthant."
+    },
+    {
+      "module": "Thesis.SourceGeometryStatements",
+      "declaration": "Thesis.SourceGeometry.minkowski_propagation_affine_network",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m)\n    (wp wn : Matrix (Fin k) (Fin m) ℝ) (bp bn : Fin k → ℝ),\n    let hidden := tropicalSplit net (inputPolynomials n).1 (inputPolynomials n).2\n    let sets := polytopeSplit net (fun j => {Pi.single (Sum.inl j : Fin n ⊕ Fin n) (1 : ℝ)})\n      (fun j => {Pi.single (Sum.inr j : Fin n ⊕ Fin n) (1 : ℝ)})\n    (∀ i, (hidden.1 i).newton=sets.1 i ∧ (hidden.2 i).newton=sets.2 i) ∧\n    ∀ i, (polynomialAffine wp wn bp hidden.1 hidden.2 i).newton=\n        (∑ j, wp i j • sets.1 j)+(∑ j, wn i j • sets.2 j) ∧\n      (polynomialAffine wn wp bn hidden.1 hidden.2 i).newton=\n        (∑ j, wn i j • sets.1 j)+(∑ j, wp i j • sets.2 j)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUND-03-MINKOWSKI",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Actual basis-singleton initial sets, every hidden weighted Minkowski/hull propagation, and both ungated signed affine output sums, including arbitrary stored biases and zero hidden layers."
+    },
+    {
+      "module": "Thesis.PiecewiseLinear",
+      "declaration": "Thesis.PiecewiseLinear.network_cpwl",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m),\n    CPWL net.eval",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUND-04-FORWARD-network_cpwl",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Arbitrary signed weights, biases, varying widths and depth imply continuity and a genuine finite closed-polyhedral affine cover. Affine readout included where stated. This is not the arbitrary-CPWL network converse."
+    },
+    {
+      "module": "Thesis.PiecewiseLinear",
+      "declaration": "Thesis.PiecewiseLinear.affine_network_cpwl",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m)\n    (W : Matrix (Fin k) (Fin m) ℝ) (b : Fin k → ℝ),\n    CPWL (fun x => W.mulVec (net.eval x)+b)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUND-04-FORWARD-affine_network_cpwl",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Arbitrary signed weights, biases, varying widths and depth imply continuity and a genuine finite closed-polyhedral affine cover. Affine readout included where stated. This is not the arbitrary-CPWL network converse."
+    },
+    {
+      "module": "Thesis.ConvexCPWL",
+      "declaration": "Thesis.PiecewiseLinear.convex_cpwl_iff_max_affine",
+      "expected_type": "∀ {I : Type} [Fintype I] (u : (I → ℝ) → ℝ),\n    (CPWL (fun x (_ : Unit) => u x) ∧ ConvexOn ℝ Set.univ u) ↔\n      ∃ p : Polynomial I, u=p.eval",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUND-05-convex_cpwl_iff_max_affine",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Exact scalar convex CPWL iff finite max-affine representation, derived from the genuine finite closed-polyhedral cover by dense interiors and convex local-to-global minima; no representation assumption or substitute CPWL definition."
+    },
+    {
+      "module": "Thesis.ConvexCPWL",
+      "declaration": "Thesis.PiecewiseLinear.homogeneous_convex_cpwl_unique_polytope",
+      "expected_type": "∀ {I : Type} [Fintype I] (u : (I → ℝ) → ℝ)\n    (hp : CPWL (fun x (_ : Unit) => u x)) (hc : ConvexOn ℝ Set.univ u)\n    (hh : ∀ c : ℝ, 0 ≤ c → ∀ x, u (c • x)=c*u x),\n    ∃! P : Set (I → ℝ), IsPolytope P ∧ u=support P",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUND-05-homogeneous_convex_cpwl_unique_polytope",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Every arbitrary positively homogeneous convex CPWL scalar function is the support of exactly one nonempty finite convex hull. Intercepts are removed by a proved scaling argument."
+    },
+    {
+      "module": "Thesis.ConvexCPWL",
+      "declaration": "Thesis.PiecewiseLinear.homogeneous_convex_cpwl_vertices",
+      "expected_type": "∀ {I : Type} [Fintype I] (u : (I → ℝ) → ℝ)\n    (hp : CPWL (fun x (_ : Unit) => u x)) (hc : ConvexOn ℝ Set.univ u)\n    (hh : ∀ c : ℝ, 0 ≤ c → ∀ x, u (c • x)=c*u x),\n    ∃ P : Set (I → ℝ), IsPolytope P ∧ u=support P ∧\n      (∀ Q, IsPolytope Q → u=support Q → Q=P) ∧\n      ∀ s, s ∈ P.extremePoints ℝ ↔ ∃ x, HasFDerivAt u (gradientRow s) x",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUND-05-homogeneous_convex_cpwl_vertices",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Arbitrary positively homogeneous convex CPWL function: existence and uniqueness of its nonempty Newton polytope and exact equality of its extreme points with all genuine Frechet gradient vectors."
+    },
+    {
+      "module": "Thesis.ReLUNetEquilibrium",
+      "declaration": "Thesis.ReLUNetGame.subgamePerfect_iff_gateOptimal",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m)\n    (hr : NonzeroRows net) (x : Fin n → ℝ) (plus minus : Strategy net),\n    SubgamePerfect net plus minus x (-x) ↔\n      GateOptimalStrategy net x plus ∧ GateOptimalStrategy net x minus",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUND-08-subgamePerfect_iff_gateOptimal",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Direct recursive all-state randomized best-response predicate on Strategy iff both players continue with probability one at strictly positive preactivations and zero at strictly negative ones; arbitrary probabilities permitted at ties."
+    },
+    {
+      "module": "Thesis.ReLUNetEquilibrium",
+      "declaration": "Thesis.ReLUNetGame.optimalStrategy_subgamePerfect",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m)\n    (hr : NonzeroRows net) (x : Fin n → ℝ),\n    SubgamePerfect net (optimalStrategy net x) (optimalStrategy net x) x (-x)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUND-08-optimalStrategy_subgamePerfect",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Concrete pure gate profile witnesses the recursive all-subgame predicate; establishes satisfiability rather than assuming equilibrium."
+    },
+    {
+      "module": "Thesis.ReLUNetEquilibrium",
+      "declaration": "Thesis.ReLUNetGame.subgamePerfect_value",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hr : NonzeroRows net)\n    (x : Fin n → ℝ) (plus minus : Strategy net)\n    (h : SubgamePerfect net plus minus x (-x)),\n    policyValue net plus minus x (-x)=(net.eval x,-net.eval x)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUND-08-subgamePerfect_value",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Every recursive all-subgame-perfect randomized profile evaluates to the original network and its negative at the signed states."
+    },
+    {
+      "module": "Thesis.AffineSliceGeometry",
+      "declaration": "Thesis.Tropical.slice_attainable_gradients",
+      "expected_type": "∀ {I A : Type} [Fintype I] [Fintype A] [Nonempty A] (v : A → I ⊕ Unit → ℝ) (s : I → ℝ),\n    (∃ x, HasFDerivAt (fun y => support (convexHull ℝ (Set.range v)) (affineSlice y))\n      (gradientRow s) x) ↔\n    ∃ p, SliceVisible v p ∧ p ∈ (convexHull ℝ (Set.range v)).extremePoints ℝ ∧\n      inputProjection p=s",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis",
+        "Thesis.SourceFoundations",
+        "Thesis.SourceGeometry",
+        "Thesis.ReLUNetGame"
+      ],
+      "open_scopes": [
+        "Pointwise",
+        "NNReal"
+      ],
+      "universes": [],
+      "review_id": "FOUND-10-SLICE",
+      "review_evidence": "reports/foundations-repairs.md",
+      "scope": "Generic finite lifted hull: actual derivatives after restriction to (x,1) exactly project slice-visible uniquely exposed lifted vertices."
+    }
+  ]
+}

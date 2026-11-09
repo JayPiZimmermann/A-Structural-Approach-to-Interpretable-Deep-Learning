@@ -5,13 +5,13 @@ We start with notation and basic concepts.
 \subsection{Standard neural network notation}\label{subsec:relu_notation}
 
 For simplicity, we start with
-standard feedforward networks with $L$ hidden layers without bias.
+standard feedforward networks with $L-1$ hidden layers and a final affine readout, initially without bias.
 Let $d^{(0)}, \ldots, d^{(L)}$ denote the layer widths, with input dimension $d^{(0)}$ and output dimension $d^{(L)}$, and
 weight matrices $W^{(l)} \in \RR^{d^{(l)} \times d^{(l-1)}}$.
 One can include bias by using an \emph{intercept input} of~$1$. 
 
-Using an activation function $\mathtt{act}$, we denote by $a^{(0)} \coloneqq x \in \RR^{d^{(0)}}$ the input layer, by $z^{(l)} \coloneqq W^{(l)} a^{(l-1)}$ the pre-activation and by $a^{(l)} \coloneqq \mathtt{act}(z^{(l)})$ the activation.
-Furthermore, we denote the function represented by the layers $l, \dots, L$ of the original network by $f^{(l)} : \ \RR ^ {d^{(l)}} \longrightarrow \RR$. 
+Using an activation function $\mathtt{act}$, we denote by $a^{(0)} \coloneqq x \in \RR^{d^{(0)}}$ the input layer, by $z^{(l)} \coloneqq W^{(l)} a^{(l-1)}$ the pre-activation and by $a^{(l)}\coloneqq\mathtt{act}(z^{(l)})$ the hidden activation for $l<L$; the final readout is ungated, $a^{(L)}=z^{(L)}$.
+Furthermore, we denote the function represented by the layers $l+1, \dots, L$ of the original network by $f^{(l)} : \ \RR ^ {d^{(l)}} \longrightarrow \RR$. 
 
 \subsection{Convex and monotone neural networks}
 

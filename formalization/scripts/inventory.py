@@ -11,7 +11,7 @@ for group, directory in [('hidden_monotonicity', 'arxive/hiddenMonotonicity'),
                          ('thesis', 'tex/chapters')]:
     for path in sorted((root / directory).rglob('*.tex')):
         text = path.read_text()
-        for match in re.finditer(r'\\begin\{(theorem(?:env)?|lemma(?:env)?|proposition(?:env)?|corollary(?:env)?|claim|definition(?:env)?)\}(.*?)(?=\\end\{\1\})', text, re.S):
+        for match in re.finditer(r'\\begin\{(theorem(?:env)?|lemma(?:env)?|proposition(?:env)?|corollary(?:env)?|claim|observation|remark|definition(?:env)?)\}(.*?)(?=\\end\{\1\})', text, re.S):
             label = re.search(r'\\label\{([^}]+)\}', match.group(2))
             entry = {'source_group': group, 'file': str(path.relative_to(root)),
                            'line': text[:match.start()].count('\n') + 1,

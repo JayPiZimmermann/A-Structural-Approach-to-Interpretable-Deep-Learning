@@ -1,0 +1,578 @@
+{
+  "schema_version": 1,
+  "reviewer": "attack_foundations independent adversarial reviewer",
+  "created_utc": "2026-11-09T10:23:40.525595+00:00",
+  "baseline_git_head": "4685f2fb2b8282195ca02699ed1643e40ce3ec9e",
+  "overall_verdict": "Existing reviewed Lean statements compile and no forbidden axiom or accidental auto-bound mathematical constant was detected. A caveat-free full-source claim is not supported: false source assertions, omitted clauses, missing mathematical bridges, and baseline integration/evidence gaps remain.",
+  "scope": {
+    "fully_read_lean_modules": [
+      "formalization/Thesis/Foundations.lean",
+      "formalization/Thesis/LayeredGames.lean",
+      "formalization/Thesis/ReLUNetGame.lean",
+      "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "formalization/Thesis/Bellman.lean",
+      "formalization/Thesis/BellmanReturn.lean",
+      "formalization/Thesis/Tropical.lean",
+      "formalization/Thesis/TropicalNetwork.lean",
+      "formalization/Thesis/SupportGeometry.lean",
+      "formalization/Thesis/SupportDerivatives.lean",
+      "formalization/Thesis/CompactSupport.lean",
+      "formalization/Thesis/PiecewiseLinear.lean",
+      "formalization/Thesis/SourceGeometryStatements.lean",
+      "formalization/Thesis/SourceFoundationsStatements.lean",
+      "formalization/HiddenMonotonicity/CurvaturePrimitives.lean",
+      "formalization/HiddenMonotonicity/DCTilt.lean",
+      "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "formalization/HiddenMonotonicity/CurvatureMinimality.lean",
+      "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+      "formalization/HiddenMonotonicity/ModernSoftplus.lean"
+    ],
+    "primary_source": "tex/chapters/02_foundations.tex, entire chapter",
+    "paper_source_review": [
+      "arxive/hiddenMonotonicity/appendix/mathematical_perspective.tex, entire file",
+      "arxive/hiddenMonotonicity/appendix/proofs.tex, foundations and bias discussion at lines 1-40; decomposition formulas inspected as boundary context"
+    ],
+    "auxiliary_reads": [
+      "formalization/HiddenMonotonicity/SmoothValidDecomposition.lean",
+      "formalization/HiddenMonotonicity/Network.lean and Decomposition.lean definitions via direct consumer usage and printed types",
+      "formalization/Thesis.lean",
+      "formalization/HiddenMonotonicity.lean",
+      "formalization/Audit.lean",
+      "formalization/scripts/audit.py",
+      "formalization/scripts/inventory.py",
+      "scripts/generate_lean_links.py",
+      "formalization/coverage_map.json",
+      "formalization/tex_links.json",
+      "formalization/claim_inventory.json",
+      "formalization/lakefile.toml",
+      "formalization/README.md",
+      "formalization/VERIFICATION.md"
+    ],
+    "skills_read": [
+      "skills/upstream-planar-features/formalization-architecture/SKILL.md",
+      "skills/upstream-planar-features/formalization-build/SKILL.md",
+      "skills/upstream-planar-features/formalization-certificates/SKILL.md",
+      "skills/upstream-planar-features/formalization-conventions/SKILL.md",
+      "skills/upstream-planar-features/formalization-research/SKILL.md",
+      "skills/upstream-planar-features/math-exposition/SKILL.md"
+    ],
+    "not_claimed": [
+      "No complete audit of game/routing/saliency/randomization modules outside this assignment.",
+      "No checked equivalence to every cited external paper beyond provided local source.",
+      "No clean dependency rebuild or committed publication receipt; the parent owns that work."
+    ]
+  },
+  "verification": {
+    "module_source_compiles": 20,
+    "module_source_compile_failures": 0,
+    "explicit_type_and_axiom_checks": 206,
+    "allowed_axioms_observed": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "forbidden_project_axiom_source_matches": 0,
+    "counterexample_module_exit_code": 0,
+    "evidence_directory": "reports/evidence/attack_foundations",
+    "evidence_hash_manifest": "reports/evidence/attack_foundations/sha256.json",
+    "receipt": "reports/evidence/attack_foundations/receipt.json",
+    "production_files_changed_by_reviewer": []
+  },
+  "passed_semantic_checks": [
+    "CPWL means genuine continuity and finite closed-polyhedral affine cover.",
+    "Subgradient is the standard global supporting-hyperplane inequality.",
+    "Extreme points are mathlib extremePoints, and gradient conclusions use genuine HasFDerivAt.",
+    "Support is a set supremum; compact nonempty hypotheses establish finite attainment and separation.",
+    "Bellman values have genuine contraction/uniqueness proofs and a convergent Markov reward-series bridge.",
+    "Layered and ReLU policies are normalized/nonnegative genuine randomized choices; conclusions are not stored in game data.",
+    "The smooth splitting theorem uses actual mathlib local absolute continuity, L1 curvature, cumulative integrals, derived minus-infinity slope, convexity and coordinatewise monotonicity.",
+    "Sigmoid and softplus analyticity/integrability assumptions are proved rather than postulated."
+  ],
+  "findings": [
+    {
+      "id": "FOUND-01",
+      "severity": "high",
+      "kind": "false_source_definition",
+      "title": "The paper equates polytopes with possibly unbounded polyhedra",
+      "source_locations": [
+        {
+          "path": "arxive/hiddenMonotonicity/appendix/mathematical_perspective.tex",
+          "line": 4,
+          "detail": "Any finite intersection of closed halfspaces is called a polytope; the next line assigns a real-valued support maximum."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/Thesis/SupportGeometry.lean",
+          "line": 32,
+          "detail": "The Lean geometry correctly uses finite convex hulls."
+        },
+        {
+          "path": "formalization/Thesis/CompactSupport.lean",
+          "line": 13,
+          "detail": "Real support maximum is used only with compactness and nonemptiness."
+        }
+      ],
+      "evidence": [
+        "P=[0,infinity) is one closed halfspace, but sup_{p in P} p is not finite. The statement is false before any Lean translation.",
+        "Kernel-checked witness: AdversarialFoundations.halfline_has_no_finite_support_at_one in reports/evidence/attack_foundations/Counterexamples.lean."
+      ],
+      "repair": "Replace the halfspace description with a bounded nonempty intersection of finitely many closed halfspaces. Keep polyhedra and polytopes distinct.",
+      "verdict": "Lean has the right bounded model; it does not certify the erroneous alternative source definition.",
+      "status": "open_at_reviewed_snapshot"
+    },
+    {
+      "id": "FOUND-02",
+      "severity": "medium",
+      "kind": "false_source_statement",
+      "title": "Backward induction does not make optimal policies unique",
+      "source_locations": [
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 214,
+          "detail": "The prose claims existence and uniqueness of optimal policies."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/Thesis/LayeredGames.lean",
+          "line": 169,
+          "detail": "bellman_unique proves uniqueness of values, not policies."
+        }
+      ],
+      "evidence": [
+        "A one-step game with two actions, zero rewards, zero terminal value, zero discount and a normalized transition has distinct deterministic optimal policies.",
+        "Kernel-checked tiedGame, distinct_pure_policies, and every_policy_is_optimal in reports/evidence/attack_foundations/Counterexamples.lean."
+      ],
+      "repair": "Say existence of optimal policies and uniqueness of the value; allow tied optimizers.",
+      "verdict": "False prose statement; the Lean theorem is correctly weaker because the stronger claim is false.",
+      "status": "open_at_reviewed_snapshot"
+    },
+    {
+      "id": "FOUND-03",
+      "severity": "high",
+      "kind": "source_definition_conflict_and_missing_wrapper",
+      "title": "The tropical recursion gates the output despite the affine-output network convention",
+      "source_locations": [
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 16,
+          "detail": "Definition ff_relu (def:ffn_relu) makes the final layer affine."
+        },
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 488,
+          "detail": "The displayed max-split recursion has no hidden-layer restriction before its final-component claim."
+        },
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 503,
+          "detail": "The theorem quantifies over the earlier affine-output MLP."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/Thesis/SourceFoundationsStatements.lean",
+          "line": 105,
+          "detail": "split_tropical_rational concludes for net.eval and net.split with identity output."
+        },
+        {
+          "path": "formalization/Thesis/TropicalNetwork.lean",
+          "line": 257,
+          "detail": "The separate affine wrapper proves existence and difference but does not bundle zero intercepts, homogeneity, actual affine split-head identity, or final output polytope propagation."
+        },
+        {
+          "path": "formalization/Thesis/SourceGeometryStatements.lean",
+          "line": 128,
+          "detail": "polytopeSplit also has identity output and max gates at every stored layer."
+        }
+      ],
+      "evidence": [
+        "For the scalar bias-free affine network f(x)=-x, x+=1,x-=0, the displayed output max split gives g-h=max(0,1)-1=0, whereas f(1)=-1.",
+        "Kernel-checked gated_output_changes_affine_logit in reports/evidence/attack_foundations/Counterexamples.lean.",
+        "The stored Network backbone may legitimately use identity output; the missing part is the explicit source model/readout bridge and complete final-head theorem."
+      ],
+      "repair": "Restrict the max recursion to hidden layers and define final heads by the signed affine combinations. Bundle the source theorem and final Minkowski propagation for that exact readout, including the zero-hidden-layer boundary.",
+      "verdict": "The literal unqualified recursion conflicts with the source definition; existing Lean backbone theorems are true.",
+      "status": "open_at_reviewed_snapshot"
+    },
+    {
+      "id": "FOUND-04",
+      "severity": "high",
+      "kind": "true_source_claim_not_formalized",
+      "title": "The CPWL converse and the dimension-only depth bound are absent",
+      "source_locations": [
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 66,
+          "detail": "CPWL iff ReLU representability and depth at most ceil(log2(d+1))+1."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/Thesis/PiecewiseLinear.lean",
+          "line": 56,
+          "detail": "CPWL uses genuine continuity and a finite closed-polyhedral affine cover."
+        },
+        {
+          "path": "formalization/Thesis/PiecewiseLinear.lean",
+          "line": 192,
+          "detail": "network_cpwl only proves network to CPWL."
+        },
+        {
+          "path": "formalization/Thesis/PiecewiseLinear.lean",
+          "line": 204,
+          "detail": "affine_network_cpwl still proves only this direction."
+        }
+      ],
+      "evidence": [
+        "Read the entire 222-line PiecewiseLinear module; no construction from an arbitrary AffineCover, network depth definition/bound, or CPWL-to-network theorem is present.",
+        "claim_inventory.json labels thm:cpwl_relu_equivalence not_formalized; coverage_map has no entry. This status is honest but incompatible with whole-foundations completion."
+      ],
+      "repair": "Formalize the finite-polyhedral CPWL representation theorem and a faithful arbitrary-width affine-output ReLU constructor with the stated dimension-only depth bound. Do not redefine CPWL as representability or assume a DC/max representation.",
+      "verdict": "No counterexample to the mathematical theorem is asserted. This is a substantial missing theorem, not a failing existing proof.",
+      "status": "open_at_reviewed_snapshot"
+    },
+    {
+      "id": "FOUND-05",
+      "severity": "high",
+      "kind": "true_source_claim_missing_model_bridge",
+      "title": "The general CPWL-to-support representation needed by the vertex theorem is not established",
+      "source_locations": [
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 377,
+          "detail": "Convex CPWL functions are exactly finite max-affine functions."
+        },
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 533,
+          "detail": "Every homogeneous convex CPWL function is asserted to equal a unique polytope support function."
+        },
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 595,
+          "detail": "The vertex theorem is stated for arbitrary homogeneous convex CPWL u."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/Thesis/SupportDerivatives.lean",
+          "line": 118,
+          "detail": "vertices_eq_attainable_gradients is specifically about support(convexHull(range v))."
+        },
+        {
+          "path": "formalization/Thesis/PiecewiseLinear.lean",
+          "line": 137,
+          "detail": "polynomial_difference_cpwl establishes representation implies CPWL, not the converse."
+        },
+        {
+          "path": "formalization/Thesis/SourceGeometryStatements.lean",
+          "line": 36,
+          "detail": "support_properties gives support calculus and vertex attainment; it does not establish every source u has this form."
+        }
+      ],
+      "evidence": [
+        "The geometric vertex theorem has genuine mathlib extreme points and genuine Frechet derivatives; its type has no arbitrary u or CPWL premise.",
+        "No theorem constructs a finite max-affine representation from the actual AffineCover/CPWL definition; no homogeneity argument removes intercepts for such an arbitrary u.",
+        "Concrete network-constructed polynomials do have support bridges, so this gap does not invalidate those specialized results."
+      ],
+      "repair": "Prove convex CPWL -> finite maximum of affine pieces, then homogeneous convex CPWL -> support of finite hull, and compose with the checked vertex theorem. Keep the representation theorem separate from the CPWL definition.",
+      "verdict": "The source theorem is mathematically true. The current Lean theorem is a correct specialization with an unproved source bridge; do not call it the complete arbitrary-u theorem.",
+      "status": "open_at_reviewed_snapshot"
+    },
+    {
+      "id": "FOUND-06",
+      "severity": "high",
+      "kind": "true_source_claim_missing_distributional_bridge_and_conclusion",
+      "title": "Curvature minimality does not yet cover the source distributional hypothesis or common-affine uniqueness",
+      "source_locations": [
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 686,
+          "detail": "Components have locally integrable second distributional derivatives; uniqueness up to a common affine summand is part of the conclusion."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/HiddenMonotonicity/CurvatureMinimality.lean",
+          "line": 17,
+          "detail": "curvature_minimality_ae assumes differentiable convex components and bounds classical a.e. curvature."
+        },
+        {
+          "path": "formalization/HiddenMonotonicity/CurvatureMinimality.lean",
+          "line": 77,
+          "detail": "affine_of_ae_second_derivative_zero is only an auxiliary lemma requiring local AC separately."
+        },
+        {
+          "path": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+          "line": 113,
+          "detail": "canonical_tilt_minimality establishes the tilt clause."
+        }
+      ],
+      "evidence": [
+        "No distribution/test-function predicate is defined in the reviewed project. No theorem derives differentiability/local AC and density identification from the source distributional assumption.",
+        "There is no theorem assembling equality of both minimal curvatures into existence of the same affine difference c1-C1=c2-C2.",
+        "The existing lower-bound theorem is true even with singular curvature; that broader lower bound cannot justify uniqueness from equality of classical a.e. second derivatives without the source regularity bridge."
+      ],
+      "repair": "Define second distributional derivative as an actual distributional identity, prove its locally integrable density yields a locally AC first derivative, identify the density a.e., and assemble the common-affine uniqueness theorem plus the already proved tilt minimum.",
+      "verdict": "True source statement with missing bridges and a missing clause. Do not replace the distributional hypothesis by a definition that directly assumes the desired local-AC reconstruction.",
+      "status": "open_at_reviewed_snapshot"
+    },
+    {
+      "id": "FOUND-07",
+      "severity": "high",
+      "kind": "source_claim_partially_formalized",
+      "title": "Only two of the six modern activation cases are formalized",
+      "source_locations": [
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 693,
+          "detail": "The corollary covers GELU, Swish/SiLU, Mish, tanh, sigmoid and positive-temperature softplus, plus derivative/sign/specialization clauses and f(0)>=0."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/HiddenMonotonicity/ModernSigmoid.lean",
+          "line": 79,
+          "detail": "Sigmoid hypotheses and split conclusions are proved."
+        },
+        {
+          "path": "formalization/HiddenMonotonicity/ModernSoftplus.lean",
+          "line": 35,
+          "detail": "Positive-temperature softplus hypotheses and split conclusions are proved."
+        }
+      ],
+      "evidence": [
+        "Full topical Lean source search found no GELU/Swish/SiLU/Mish/tanh definitions or specialization proofs.",
+        "The existing two cases genuinely establish global integrability and local AC rather than postulating them.",
+        "Softplus N=0/C2=0 and the full six-case nonnegative-initial-value conclusion are not bundled in these public statements."
+      ],
+      "repair": "Prove the remaining four analytic cases, the displayed curvature/sign clauses and nonnegative values at zero, and package the complete corollary. Preserve explicit integrability proofs.",
+      "verdict": "This is incomplete coverage of a true source corollary, not a refutation of sigmoid or softplus.",
+      "status": "open_at_reviewed_snapshot"
+    },
+    {
+      "id": "FOUND-08",
+      "severity": "medium",
+      "kind": "source_clause_not_formalized",
+      "title": "The ReLU game theorem omits global uniqueness up to ties",
+      "source_locations": [
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 303,
+          "detail": "Equilibrium is asserted unique up to tie-breaking at zero preactivations."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/Thesis/ReLUNetEquilibrium.lean",
+          "line": 145,
+          "detail": "relu_net_game_equilibrium proves a selected policy saddle/value but no characterization of all equilibria."
+        },
+        {
+          "path": "formalization/Thesis/ReLUNetGame.lean",
+          "line": 134,
+          "detail": "maximizing_action_characterization is a single Bool action lemma, not a theorem over randomized Strategy net."
+        }
+      ],
+      "evidence": [
+        "#check @relu_net_game_equilibrium explicitly quantifies over actual randomized strategies, which is good, but its conclusion has only saddle inequalities and the selected payoff identity.",
+        "There is no source-facing characterization of every subgame-perfect strategy at strict gates, nor a quantified tie-permitted equivalence on the recursive strategy datatype."
+      ],
+      "repair": "Define the all-subgame equilibrium predicate on the same dependent Strategy type, prove the optimal strategy restricts coherently to each prefix, and characterize all optimal continuation probabilities as 0/1 off ties with arbitrary [0,1] values at ties.",
+      "verdict": "The selected-policy theorem is correct; the source uniqueness clause remains unproved.",
+      "status": "open_at_reviewed_snapshot"
+    },
+    {
+      "id": "FOUND-09",
+      "severity": "medium",
+      "kind": "true_source_claim_missing_game_encoding_bridge",
+      "title": "The generic acyclic-game theorem is verified only in an exactly layered model",
+      "source_locations": [
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 174,
+          "detail": "Action sets depend on state."
+        },
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 226,
+          "detail": "The theorem permits any finite acyclic transition graph."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/Thesis/LayeredGames.lean",
+          "line": 14,
+          "detail": "Game has one common state/action type, all transitions decrease the explicit remaining-depth index by exactly one."
+        },
+        {
+          "path": "formalization/Thesis/SourceFoundationsStatements.lean",
+          "line": 71,
+          "detail": "The bundled theorem quantifies only over this Game type."
+        }
+      ],
+      "evidence": [
+        "This is a meaningful genuine normalized stochastic game, with no conclusion encoded as a field.",
+        "No finite DAG/ranking datatype and no padding/stuttering/duplicate-action encoding theorem preserves source payoffs, terminal rewards, policies and stationary saddle statements.",
+        "The existing coverage entry calls it a formalized_variant and describes the fixed common action type; the claim of representing state-dependent actions by duplication is prose, not a checked bridge."
+      ],
+      "repair": "Either prove an explicit encoding for arbitrary finite acyclic games with nonempty state-dependent actions, or state the source theorem in the exactly layered game model and retain an explicit separate mathematical corollary.",
+      "verdict": "The general source theorem is true; the current Lean model is a valid specialization with an unproved encoding bridge.",
+      "status": "open_at_reviewed_snapshot"
+    },
+    {
+      "id": "FOUND-10",
+      "severity": "high",
+      "kind": "invalid_source_extension",
+      "title": "Ambient lifted vertices need not be attainable on a fixed affine slice",
+      "source_locations": [
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 606,
+          "detail": "The proof extends the attainable-gradient interpretation to biases by homogenization and evaluation on an affine slice."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/Thesis/SupportDerivatives.lean",
+          "line": 118,
+          "detail": "The proved exposing point ranges over the full ambient space."
+        },
+        {
+          "path": "formalization/Thesis/Tropical.lean",
+          "line": 195,
+          "detail": "lifted_support only equates evaluation on (x,1); it does not restrict exposing directions or give surjectivity on that slice."
+        }
+      ],
+      "evidence": [
+        "P=conv{(0,1),(2,1),(1,0)} lies in the nonnegative orthant. Its vertex (1,0) is uniquely exposed by (0,-1). On t=1 its value x is strictly less than max(1,2x+1) for every real x.",
+        "Kernel-checked lower_vertex_is_extreme and lower_vertex_below_support_on_slice in reports/evidence/attack_foundations/Counterexamples.lean.",
+        "Thus the ambient theorem remains true, while the inferred equality between all lifted vertices and gradients obtainable with the intercept fixed is false."
+      ],
+      "repair": "Distinguish ambient homogeneous gradients from gradients of the restricted network. For biased networks use vertices/faces exposed by allowable slice directions and project the derivatives to actual input coordinates; do not claim every lifted vertex is reachable on the slice.",
+      "verdict": "Concrete counterexample to the unrestricted slice inference, not to the ambient support theorem.",
+      "status": "open_at_reviewed_snapshot"
+    },
+    {
+      "id": "FOUND-11",
+      "severity": "high",
+      "kind": "integration_and_audit_evidence_gap",
+      "title": "The baseline public roots and audit do not cover the current theorem tree",
+      "source_locations": [
+        {
+          "path": "formalization/VERIFICATION.md",
+          "line": 7,
+          "detail": "The receipt still advertises 126 theorem axiom audits."
+        },
+        {
+          "path": "formalization/README.md",
+          "line": 97,
+          "detail": "The build/audit prose claims every project theorem is covered."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/Thesis.lean",
+          "line": 1,
+          "detail": "Root import closure misses new source-facing and CPWL modules."
+        },
+        {
+          "path": "formalization/Audit.lean",
+          "line": 4,
+          "detail": "Only 126 #print axioms commands are present."
+        },
+        {
+          "path": "formalization/scripts/audit.py",
+          "line": 7,
+          "detail": "Generator imports only two roots while enumerating all topical files."
+        }
+      ],
+      "evidence": [
+        "Baseline unreachable modules: Thesis.PiecewiseLinear, Thesis.SourceFoundationsStatements, Thesis.SourceGeometryStatements, Thesis.Randomization, Thesis.RandomizationExpectation, Thesis.StoppingDecomposition.",
+        "The checked extractor reports 583 theorem/lemma declarations; Audit covers 126, missing 457. A separate raw declaration count agrees after accounting for 5 same-line @[simp] attributes.",
+        "No project sorry/admit/native_decide/custom axioms found. All 20 assigned source modules separately re-elaborated successfully; all 206 extracted assigned theorem axioms are standard.",
+        "These are diagnostics using existing imports, not clean reproducible closure certification; exact receipts and source snapshots are preserved in reports/evidence/attack_foundations/receipt.json."
+      ],
+      "repair": "Finish the parent-owned public facade/import repair, exhaustive exact-type manifest, freshness/hash checks, and clean committed closure certificate. Ensure the audit driver imports every inventoried module or verifies module-specific environments. Fail on unknown or omitted declarations.",
+      "verdict": "The baseline receipt cannot certify current whole-tree trust/integration. This finding may be superseded by the parent repair after this snapshot.",
+      "status": "open_at_reviewed_snapshot"
+    },
+    {
+      "id": "FOUND-12",
+      "severity": "medium",
+      "kind": "coverage_and_source_link_metadata_gap",
+      "title": "The inventory omits observations and metadata is stale relative to new proofs",
+      "source_locations": [
+        {
+          "path": "formalization/scripts/inventory.py",
+          "line": 14,
+          "detail": "The environment regex omits observation entirely."
+        },
+        {
+          "path": "formalization/coverage_map.json",
+          "line": 1,
+          "detail": "Smooth and new CPWL source labels have no coverage entry; thm:convexity_monotonicity still says generic ICNN activation is unformalized."
+        },
+        {
+          "path": "formalization/tex_links.json",
+          "line": 1,
+          "detail": "Configured source links target older components rather than new complete-source bundles."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/Thesis/Foundations.lean",
+          "line": 101,
+          "detail": "The generic scalar convex/monotone ICNN theorem now exists."
+        },
+        {
+          "path": "formalization/Thesis/SourceFoundationsStatements.lean",
+          "line": 8,
+          "detail": "New bundled source-facing declarations exist but are not baseline-linked."
+        }
+      ],
+      "evidence": [
+        "Three chapter-2 observations are absent from claim_inventory: obs:relu_is_cpwl, obs:relu_maxout_special_case, obs:tropical_convex_cpwl.",
+        "thm:smooth_dc_split remains not_formalized in the inventory despite the new genuine proof; modern/minimality claims also remain unformalized rather than accurately partial.",
+        "Both generated artifacts formalization/lean_links.json and tex/preamble/lean_links_generated.tex are absent at baseline. No permanent source-link result can currently be asserted."
+      ],
+      "repair": "Extend inventory parsing to observations, regenerate one authoritative coverage registry with clause-level scopes, and generate links only against the reviewed committed source snapshot. Keep source-equivalence status separate from compilation status.",
+      "verdict": "Metadata/integration defect; no theorem falsity is inferred from a stale record.",
+      "status": "open_at_reviewed_snapshot"
+    },
+    {
+      "id": "FOUND-13",
+      "severity": "low",
+      "kind": "source_missing_nonempty_hypothesis",
+      "title": "The finite-hull maximum clause includes the empty set",
+      "source_locations": [
+        {
+          "path": "tex/chapters/02_foundations.tex",
+          "line": 423,
+          "detail": "Item 2 says any finite A while writing real-valued maxima over A and conv(A)."
+        }
+      ],
+      "lean_locations": [
+        {
+          "path": "formalization/Thesis/SourceGeometryStatements.lean",
+          "line": 13,
+          "detail": "The finite generator type correctly has [Nonempty A]."
+        },
+        {
+          "path": "formalization/Thesis/Tropical.lean",
+          "line": 14,
+          "detail": "finiteMax requires [Nonempty A]."
+        }
+      ],
+      "evidence": [
+        "For A=empty no maximum exists in R. This is a missing source domain condition, not an unnecessary Lean strengthening."
+      ],
+      "repair": "Write any nonempty finite set A, consistent with the preceding nonempty support-set definition.",
+      "verdict": "The Lean hypothesis is necessary and correct; repair the source quantifier.",
+      "status": "open_at_reviewed_snapshot"
+    }
+  ],
+  "followup_rule": "Repair must preserve source meaning. A metadata downgrade honestly records a residual but does not satisfy a request to complete the original theorem. Findings concern the hashed snapshot; parent fixes need explicit re-review."
+}

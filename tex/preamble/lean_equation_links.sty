@@ -34,6 +34,14 @@
   \paper@displaytagfalse
   \ifmeasuring@\else\global\let\paper@equationlabel\@empty\fi
 }
+% A single equation uses endmathdisplay@a rather than make@display@tag.
+\let\paper@original@endmathdisplay\endmathdisplay@a
+\def\endmathdisplay@a{%
+  \paper@displaytagtrue
+  \paper@original@endmathdisplay
+  \paper@displaytagfalse
+  \global\let\paper@equationlabel\@empty
+}
 \let\paper@original@tagform\tagform@
 \def\tagform@#1{%
   \ifpaper@displaytag

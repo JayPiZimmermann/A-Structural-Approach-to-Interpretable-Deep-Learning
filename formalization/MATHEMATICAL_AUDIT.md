@@ -46,8 +46,8 @@ classical derivatives from a chosen automatic-differentiation mask at a nonsmoot
    valid for the bias-free absolute-weight tail: after the first min the activations
    are nonpositive, and nonnegative matrices preserve this cone. Arbitrary subsequent
    biases invalidate that reasoning. State the bias-free restriction or define Q with
-   an explicitly linear absolute-weight tail. This point is analytically checked;
-   a separate full Q-network derivative theorem is not included.
+   an explicitly linear absolute-weight tail. The QSources module now defines every auxiliary function explicitly and proves
+   its actual full-network Frechet derivative, including canonical absolute tails.
 
 Additional source proof repairs identified analytically: difference quotients require
 subtracting the base function value; the Jacobian product with the last activation mask
@@ -57,3 +57,11 @@ of distinct multiplicative inputs does not bound their exponents (already `x^m` 
 
 The checked build establishes the listed Lean statements only; it does not establish
 that every corrected prose claim, every equation, or either complete paper is correct.
+
+Further checked findings are recorded in `../reports/mathematical-corrections.md`:
+nonzero raw sensitivity mass need not give nonzero balanced head gradients;
+input-dependent re-centering can destroy monotonicity; the multiplicative class
+must retain multiplication nodes; routing contraction factors must be nonnegative;
+and erasing routing/absorption substeps can change full Hellinger distance.
+`Thesis/Coarsening.lean` proves the exact finite-law counterexample and general
+coarsening inequalities.

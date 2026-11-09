@@ -33,6 +33,9 @@ def declarations(text, path):
         if re.match(r'^end(?:\s+[\w.]+)?\s*$',line):
             if blocks: blocks.pop()
             continue
+        # Private names have compiler-generated identifiers and are not public link targets.
+        if re.match(r'^\s*(?:@\[[^\]]*\]\s*)?(?:noncomputable\s+)?private\s+',line):
+            continue
         match=re.match(r'^\s*(?:@\[[^\]]*\]\s*)?(?:(?:noncomputable|protected|private)\s+)*(theorem|lemma|def|abbrev|inductive|structure)\s+([\w.\']+)',line)
         if match:
             name='.'.join([b[1] for b in blocks if b[0]=='namespace']+[match[2]])
