@@ -1,10 +1,10 @@
-# Lean handover for Astra — 9 November 2026
+# Lean handover — resumed 9 November 2026
 
-The user explicitly requested a complete checkpoint for restarting on another
-server. All agents were asked to stop and save their state. No original agent
-or build should be assumed to continue on the old machine. The formalization
-is **unfinished**. This handover distinguishes the clean verified root, frozen
-extensions awaiting promotion, and an unfinished routing draft.
+The checkpoint has been resumed on the new server. The formalization remains
+**unfinished**. The Softplus Circuit and conditioned-trajectory batches are now
+integrated and cleanly verified. Six routing-history modules have subsequently
+passed independent review but remain outside the production import closure.
+This handover distinguishes those states and the broader remaining research.
 
 The independent editorial task is documented in [HANDOVER_TEX.md](HANDOVER_TEX.md).
 Do not require that agent to solve the mathematical obligations below.
@@ -28,24 +28,33 @@ diagnostics into separate directories; do not run competing full builds or let
 them write the same production artifacts.
 
 The last complete clean gate passed at source commit
-**`7c3c9c209ddfd728c48afb195d4ddaddd1c080a3`**:
+**`0f3cfb0ea660556c14da510e665281f07acc471d`**:
 
-- **125 modules** in the `All` import closure.
-- **345 independently reviewed exact declaration contracts**, including newly
+- **139 modules** in the `All` import closure.
+- **370 independently reviewed exact declaration contracts**, including newly
   reviewed definition contracts, with module and universe-arity checks.
-- **2,760 imported project theorem constants** axiom-audited, including generated
-  and secondary results. This is not a count of 2,760 source-paper theorems.
+- **3,048 imported project theorem constants** axiom-audited, including generated
+  and secondary results. This is not a count of 3,048 source-paper theorems.
 - Allowed axioms only: `propext`, `Classical.choice`, `Quot.sound`.
 
 Evidence is in `reports/verification/current/` and archived under
-`reports/verification/commit-7c3c9c2/`. Earlier verified snapshots are also
+`reports/verification/commit-0f3cfb0/`. Earlier verified snapshots are also
 retained. Read the receipt's `source.commit`, exact counts and hashed files; do
 not infer a clean verification of later unimported files from a nearby log.
 The handover/artifact commit necessarily follows the verified source commit.
 The imported source closure and its bound configuration are unchanged.
 
-The published TeX currently has **186 mapped links**, pinned to that verified
-commit. It does not yet advertise the unintegrated extensions below.
+The regenerated TeX has **190 mapped links**, pinned to that verified commit.
+It includes the two integrated batches and does not advertise the unimported
+routing extension. The source normalization from `e42fe47` to `0f3cfb0` changed
+only JSON order/encoding: all 190 mapping values were identical. The independent
+promotion review, `reports/lean-frozen-promotion-review.json`, records the final
+source hashes and this normalization. All 140 clean-gate commands exited zero;
+the source/configuration snapshot was unchanged throughout the run.
+
+The previous `current` receipt and every referenced artifact/log were confirmed
+identical to the `commit-7c3c9c2` archive before refreshing `current`. Unreferenced
+older logs may remain there; the receipt's command list and hashes are authoritative.
 
 ## User requirements and proof discipline
 
@@ -108,7 +117,7 @@ instructions take precedence.
   canonical equilibrium with extended log payoffs. `RoutingBackward` separately
   provides alpha-beta path recovery; their missing explicit bridge is the WIP below.
 
-The 125-module root already includes actual affine readouts, a.e. derivative
+The 139-module root includes actual affine readouts, a.e. derivative
 results, exact modern-activation curvature constructions (including Gaussian
 GELU), weak/distributional regularity bridges, CPWL representation with depth
 bounds, indexed convolution, explicit split-DAG size bounds, general regularized
@@ -117,12 +126,12 @@ max-pool ties, layered softplus SPNE, zero-support survival conditioning, and
 local attention reference-KL optimization. Consult exact contracts and scopes;
 these summaries do not enlarge them.
 
-## Frozen extensions included but not imported by All
+## Extensions integrated in the current verified root
 
-### 1. Softplus Circuit extension: ready for promotion
+### 1. Softplus Circuit extension
 
-Thirteen new `formalization/Thesis/SoftplusCircuit*.lean` leaves are present.
-Their three top imports are:
+All thirteen `formalization/Thesis/SoftplusCircuit*.lean` leaves are imported by
+`Thesis.lean` through:
 
 ```lean
 import Thesis.SoftplusCircuitUniqueness
@@ -130,85 +139,87 @@ import Thesis.SoftplusCircuitVisits
 import Thesis.SoftplusCircuitPayoff
 ```
 
-Producer: `reports/softplus-circuit-repairs.md`.
-Contracts: `reports/softplus-circuit-expected-types.json` (**20 contracts**).
-Independent review: `reports/adversarial-softplus-circuit-review.json` (**PASS**).
-Evidence: `reports/evidence/softplus-circuit-review/` and producer paths in the report.
-All 13 sources were independently recompiled; exact module/universe/type checks
-and 1,889 imported theorem axiom closures passed. Boundary consumers and the
-independent path/saddle/derivative experiment passed.
+Their twenty independently reviewed contracts are in `verification.json`.
+The frozen producer contracts remain in `reports/softplus-circuit-expected-types.json`;
+independent semantic/boundary review is
+`reports/adversarial-softplus-circuit-review.json`. Production source bytes were
+not changed during promotion. Coverage, both source/thesis inventory records,
+and the reviewed forward/gradient mappings now describe the actual Circuit scope.
 
-This extends the actual annotated shared Circuit to entropy-softened activation
-nodes while keeping pooling hard. It proves arbitrary-profile saddle bounds,
-actual SPNE, source player payoffs, normalized complete canonical trajectories,
-source discounts, and input/intermediate gradient–occupation identities.
-Preserve the exact boundaries: ordinary hard-pool derivatives require unique
-winners; selected occupation remains defined at ordered ties; uniqueness is
-proved for `NoPools`; full path law is canonical; path rewards use conditional
-expected immediate rewards rather than a separate finer sampled reward-history
-datatype. Do not silently claim a.e. hard-pool differentiability or uniqueness
-at pooling ties.
+This extends the annotated shared Circuit to entropy-softened activation nodes
+while keeping pooling hard. It proves arbitrary-profile saddle bounds, actual
+SPNE, source player payoffs, normalized complete canonical trajectories, source
+discounts, and input/intermediate derivative–occupation identities. Preserve the
+boundaries: ordinary hard-pool derivatives require unique winners; selected
+occupation remains defined at ordered ties; equilibrium uniqueness requires
+`NoPools`; full path laws are canonical. Expected path payoffs use conditional
+expected immediate rewards, without a separate finer sampled reward-history
+datatype. No a.e. hard-pool differentiability or arbitrary Network-to-Circuit
+compiler equivalence is claimed.
 
-Next: integrate the three imports and 20 contracts; update source coverage and
-the softplus-forward/gradient mappings to the appropriate exact new declarations;
-run the clean committed gate. Current mappings still honestly describe the older
-layered scope because this promotion was intentionally deferred for handover.
+### 2. Conditioned trajectory composition
 
-### 2. Conditioned trajectory composition: one review consumer pending
+`formalization/Thesis/ConditionedTrajectory.lean` is imported and its five
+reviewed contracts are in `verification.json`. The source remains frozen at
+SHA-256 `f981b0b7669441009d6145714d7f5c518869eefae0deaa67671c4d940cfb49fe`.
+It composes actual full-path marginals, geometric kernels, normalized BC/Hellinger
+formulas, and full-prefix overlap antitonicity/Hellinger monotonicity with the
+previously verified zero-support conditioning leaf.
 
-`formalization/Thesis/ConditionedTrajectory.lean` is frozen at SHA-256
-`f981b0b7669441009d6145714d7f5c518869eefae0deaa67671c4d940cfb49fe`.
-It composes actual full-path marginals, geometric kernels, normalized BC and
-Hellinger formulas with the previously verified zero-support conditioning leaf.
-It also proves actual full-prefix BC antitonicity/Hellinger monotonicity.
+The independent `nontrivial_overlap` consumer was repaired by exposing the
+`Bool × (Bool × Unit)` sum domain. The complete consumer compiled with exit zero;
+its original failure evidence is retained as `boundary-before-resumption.*`.
+See `reports/evidence/conditioned-trajectory-review/boundary-resumption.json` and
+`reports/adversarial-conditioned-trajectory-review.json`, now
+`pass_with_explicit_scope`. The report writer now checks recorded exit statuses
+instead of manufacturing success from an error-string search.
 
-Producer: `reports/conditioned-trajectory-repairs.md` and
-`reports/evidence/conditioned-trajectory/receipt.json`.
-Contracts: `reports/conditioned-trajectory-expected-types.json` (**five**).
-Production compile, all five exact contracts, 351 imported theorem axiom checks,
-and the producer's zero-survival/disjoint-support consumer passed.
+Only initial survival must be positive; intermediate dead states are pruned.
+No normalized conditional law exists at zero initial survival. The representation
+uses a common finite ordinary state type; explicit cemetery completion and
+varying-layer state embeddings remain separate. Prefix monotonicity concerns a
+fixed pair of full stochastic processes, not separately conditioned horizons.
 
-Independent report: `reports/adversarial-conditioned-trajectory-review.json`.
-It deliberately says **semantic and exact checks pass; boundary consumer pending**.
-Independent fresh compilation, explicit checks, and the 161-pair path experiment
-passed. The sole remaining independent consumer failure is the finite Bool product
-sum in `reports/evidence/conditioned-trajectory-review/Boundary.lean`, theorem
-`nontrivial_overlap`, near line 60. Simplify the literal sum over `Paths Bool 2`,
-rerun that consumer and `report.py`, then review/promotion can finish. Do not call
-that consumer passed merely because the production theorem passed.
+## Reviewed routing extension awaiting production promotion
 
-Only initial survival must be positive; reachable intermediate zero-survival states
-are pruned. No conditioned probability law exists when initial survival is zero.
-The source uses varying layers/reversed indices; this leaf uses a common finite
-state type and ordinary substochastic kernels. Preserve that representation scope.
-Prefix monotonicity is for a fixed pair of full stochastic processes, not a family
-of separately survival-conditioned horizons.
+Read **`reports/routing-bridge-handover.md`** and
+`reports/routing-bridge-resumption.json`. The old failing policy draft was repaired;
+its saved failure log is historical, not the live frontier. Six frozen sources
+remain under `reports/evidence/routing-bridge/draft/Thesis/`:
 
-### 3. Routing equilibrium-to-backward bridge: unfinished draft
+- `RoutingHistory`: normalized actual full game histories and discounted observations.
+- `RoutingPolicyBridge`: actual canonical policy ratios and complete microstep pushforward.
+- `RoutingPolicyPaths`: ordinary surviving policy products and source discounts.
+- `RoutingHistorySteps`: full-history first-step marginals, including cemetery mass.
+- `RoutingObservations`: actual full-history input/intermediate occupation and alpha-beta recovery.
+- `RoutingReadoutHistory`: a forced ungated affine readout, including negative outputs.
 
-Read **`reports/routing-bridge-handover.md`** first. It contains the detailed proof
-route, sign conventions, exact failing checks, dependencies and restore commands.
-The two draft files are outside production:
+Independent review **passed**: all six fresh source compiles, **20 independently
+stated exact contracts**, **919 imported theorem axiom closures**, and the Lean
+boundary consumer. The separate rational experiment checked 168 cases and
+5,208 histories. This is focused diagnostic evidence, not a clean production gate.
 
-```
-reports/evidence/routing-bridge/draft/Thesis/RoutingHistory.lean
-reports/evidence/routing-bridge/draft/Thesis/RoutingPolicyBridge.lean
-```
+Use exactly the twenty targets in
+`reports/evidence/routing-bridge/review/expected-types.json` for promotion. The
+producer checks have fourteen targets; eleven overlap the independent set,
+so their union has twenty-three. Three producer-only targets are listed explicitly
+in the routing handover and need independent exact checks before becoming extra
+headline targets. Do not repeat the superseded twenty-eight-contract estimate.
 
-`RoutingHistory` compiles: it defines normalized actual full Tree histories for
-arbitrary profiles and cumulative-discount observation integrals, with proved
-recurrences. It has no independent exact contract/review yet.
-`RoutingPolicyBridge` **does not compile**. Its first complete error log and source
-hashes are saved in `reports/evidence/routing-bridge/`. Known first problems are
-case-proof layout, a finite delta-sum equality orientation, and matching a route
-lemma across semireducible function types. No later result is credited as proved.
+The architecture is a layered Network. Signed raw inputs are fused in the first
+layer; hidden activations are nonnegative; stabilizer epsilon may be zero; log
+ties stop. Ordinary products, full first-step marginals and full canonical
+occupations are separate results, not a blanket macro/full-history law equality.
+The affine readout backbone outputs must be nonnegative, automatic for a nonempty
+activated backbone. A negative zero-depth input requires a separate fused
+readout. Residual/pooling routing DAGs remain outside this batch.
 
-The intended theorem connects actual canonical game policies/microsteps to the
-older alpha-beta path products and occupations, including real intermediate cuts,
-empty streams, stabilizer/bias absorption, signed fused inputs, and a forced
-ungated affine readout. Eliminating oracle microstates on ordinary surviving
-paths is not automatically a full stopped-history law equivalence. The detailed
-handover records the distinction. No root, manifest, or TeX imports these drafts.
+The next bounded Lean task is to copy these six sources byte-for-byte into
+production, add `RoutingPolicyPaths`, `RoutingHistorySteps`, and
+`RoutingReadoutHistory` to `Thesis.lean`, integrate the twenty reviewed contracts
+and exact mapping scopes, commit, and run a new clean gate. Do not repin TeX to
+this extension before that gate passes. The current publication snapshot remains
+`0f3cfb0`; no routing production promotion was performed in this checkpoint.
 
 ## Other outstanding mathematical work
 
@@ -237,23 +248,23 @@ remaining representation/contract gaps. Notable remaining work includes:
    as named theorems. The named coverage map is not a complete audit of every
    mathematical sentence in the thesis.
 
-An integrating-agent inspection also flagged a question for future review, not a
-confirmed correction: `rem:freg_smooth_connection` should be checked carefully
-for whether strict convexity/smoothness of the regularizer alone ensures the
-claimed integrable weak curvature of its conjugate. Do not change it without a
-precise argument or counterexample and reporting to the user.
+## Prose precision corrections during resumption
 
-## Confirmed prose precision issue to coordinate with TeX
+The normalized routing law alone does not determine backward magnitudes: positive
+one-edge ReLU weights 1 and 2 have the same normalized route and different
+structural discounts/gradients. The TeX task qualified the affected broad claims
+to normalized routing and model-dependent discounted occupation projections.
+`reports/routing-law-precision-review.json` preserves the original counterexample;
+Hellinger identities on the normalized law are unaffected.
 
-`reports/routing-law-precision-review.json` preserves the source passages and a
-concrete one-edge counterexample: with an active ReLU and positive weight 1 versus
-2, the normalized stopping-game trajectory is the same but the structural discount
-and gradient differ. The paper already states this limitation in its detailed
-Hellinger discussion. Intro/conclusion phrases saying Pi alone “is the backward
-computation” need qualification to **normalized routing**, with attribution a
-model-dependent discounted occupation projection. Hellinger identities on Pi
-remain valid. No new Lean witness or source correction was made before handover;
-report the proposed prose correction to the user before making it.
+The suspected issue in `rem:freg_smooth_connection` was confirmed and reported
+before the TeX correction. Smooth strict convexity of the regularizer alone can
+leave a singular curvature measure in its conjugate. The corrected connection
+to the L1-curvature theorem requires the gate to be locally absolutely continuous;
+positive interior second derivative of a C2 regularizer is sufficient.
+`reports/regularizer-curvature-review.json` records the counterexample, endpoint
+argument and independent handwritten review. This argument is not a new Lean
+certificate, and existing general-regularizer theorem scopes were not changed.
 
 ## Promotion and publication workflow
 

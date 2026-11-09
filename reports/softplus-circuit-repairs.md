@@ -1,6 +1,12 @@
 # Softplus game on the existing shared Circuit
 
-Status: frozen for independent review. All thirteen production leaves compiled individually; all twenty direct exact-type checks passed. Every headline axiom closure is exactly `propext`, `Classical.choice`, `Quot.sound`. Independent publication review remains pending. This batch does not modify any previously frozen module, root, verification configuration, or TeX source.
+Status: **independently reviewed, integrated, and cleanly verified** at source
+commit `0f3cfb0ea660556c14da510e665281f07acc471d`. All thirteen frozen production
+leaves are imported by `All`, and all twenty unchanged contracts are in the
+public manifest. Independent review is `reports/adversarial-softplus-circuit-review.json`;
+the current public receipt is `reports/verification/commit-0f3cfb0/receipt.json`.
+The construction and producer checks below describe the original frozen batch;
+no proof-source bytes changed during integration.
 
 Source-facing scope: PTNB `ptnb:thm:softplus-forward` and `ptnb:thm:softplus-gradient`, including source affine/ReLU operator syntax, residual/addition nodes, nonempty finite max-pooling, ungated signed affine readouts, and arbitrary intermediate graph states. These are ordinary softplus-network derivatives; the two decomposition components themselves are not falsely assigned the ordinary-network Jacobian.
 
@@ -55,7 +61,7 @@ Top imports: `Thesis.SoftplusCircuitUniqueness`, `Thesis.SoftplusCircuitVisits`,
 12. `SoftplusCircuitTransition`
 13. `SoftplusCircuitPayoff`
 
-The exact-type contract file is `reports/softplus-circuit-expected-types.json`, containing twenty explicitly quantified source-facing targets, manually stated independently of pretty-printed declaration types. Parent publication must retain independent review and its clean import/type/axiom gate before promotion.
+The exact-type contract file is `reports/softplus-circuit-expected-types.json`, containing twenty explicitly quantified source-facing targets, manually stated independently of pretty-printed declaration types. The public clean import/type/axiom gate now includes these twenty contracts; retain the exact reviewed types and scope in future changes.
 
 ## Frozen file hashes
 

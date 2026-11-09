@@ -81,7 +81,9 @@ linear functions with continuity recorded for mathlib's differentiation API.
 | `Thesis/StoppingOrderedPool.lean` | Source smallest-operand-index tie convention, exact pair/kernel forwarding, and source-to-DAG bridge |
 | `Thesis/SoftplusLimits.lean` | Actual pair limit as positive temperature vanishes; distinct diagonal/tie limit |
 | `Thesis/SoftplusTransitionPayoff.lean` and its imported game modules | Layered mixed-policy softplus SPNE, source player payoffs, zero rows, signed affine readouts, and actual intermediate gradient occupations |
+| `Thesis/SoftplusCircuitUniqueness.lean`, `SoftplusCircuitVisits.lean`, `SoftplusCircuitPayoff.lean` | Annotated shared-Circuit softplus SPNE and player payoffs, normalized canonical paths, and input/intermediate discounted occupations; hard-pool derivatives require unique winning operands and equilibrium uniqueness requires no pools |
 | `Thesis/ConditionedSurvival.lean` | Actual survival potentials, zero-support pruning and normalized conditioned path laws with positivity only at the initial state |
+| `Thesis/ConditionedTrajectory.lean` | Actual full-law conditioned marginals, geometric-kernel/overlap/Hellinger composition, and complete prefix overlap monotonicity for fixed stochastic kernels on a common finite state space |
 | `Thesis/AttentionReference.lean` | Extended reference-KL routing objective, exact optimizer including zero entries, and all-zero-total boundary |
 
 ## Assumptions and boundaries
@@ -107,8 +109,10 @@ are kept separate from discounted occupation measures. `RoutingNetwork` proves
 the canonical global equilibrium with pure activation choices and stochastic
 routing for the actual ReLU network, using the original log-space preferences.
 Every activation log tie selects stopping. This equilibrium theorem and the older
-alpha-beta path-recovery theorem use separate trajectory encodings; their complete
-type-level identification remains a distinct obligation. The unrestricted signed
+alpha-beta path-recovery theorem use separate trajectory encodings in the public
+root. A six-module routing-history extension has passed independent review but
+remains unimported; see `../reports/routing-bridge-handover.md` for its exact
+input/intermediate occupation and forced-readout scope and promotion steps. The unrestricted signed
 affine readout and a global game for signed smooth activations are not included
 in that routing equilibrium theorem.
 

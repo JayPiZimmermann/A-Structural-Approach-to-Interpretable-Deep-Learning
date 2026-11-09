@@ -1,0 +1,52 @@
+{
+  "status": "focused_producer_checks_passed_pending_independent_review",
+  "completed_utc": "2026-11-09T14:03:53.508523+00:00",
+  "source_sha256": {
+    "reports/evidence/routing-bridge/draft/Thesis/RoutingHistory.lean": "f87cca18086e1254232e33aae1f5549adaff4054e79dc2edd1843bf2a724c8aa",
+    "reports/evidence/routing-bridge/draft/Thesis/RoutingPolicyBridge.lean": "01bb9cc62ba9cd9a3cdef0652dea8820b23188979a096f6549e935cd7a5de3c7",
+    "reports/evidence/routing-bridge/draft/Thesis/RoutingHistorySteps.lean": "ef008d61ffd18251fddad6951067c4fe020c18fa0dac021549617d64545423ac"
+  },
+  "evidence_sha256": {
+    "reports/evidence/routing-bridge/HistoryStepsChecks.lean": "6e89ee93bac33667b98082efed4838e792469d752f0202a7d489befbeff9d23f",
+    "reports/evidence/routing-bridge/history-steps-resumption.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/evidence/routing-bridge/history-steps-resumption.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "reports/evidence/routing-bridge/history-steps-checks.log": "88fec9b9c99609b26af22be0ba4fd0e385dd0f10af22886e7a40d4c3c812c329",
+    "reports/evidence/routing-bridge/history-steps-checks.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa"
+  },
+  "module": "Thesis.RoutingHistorySteps",
+  "source_compile_exit": 0,
+  "exact_contract_and_boundary_exit": 0,
+  "literal_full_forall_contracts": 3,
+  "axiom_checked_declarations": [
+    "routing_action_mass",
+    "half_routing_action_mass",
+    "firstStep_probability",
+    "pushforward_comp",
+    "input_projection_probability",
+    "layer_projection_probability",
+    "input_history_transition",
+    "layer_history_transition"
+  ],
+  "axioms_observed": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "boundaries": [
+    "Off-equilibrium active pure policies preserve separate positive-bias and negative-outside histories, each mass one half.",
+    "Signed raw input -2 with weight -1, epsilon zero: ordinary mass one half and empty-negative-stream cemetery mass one half.",
+    "Activation zero log tie: actual first microstep stopping mass one."
+  ],
+  "scope": "Full rooted-history first-microstep and ordinary/cemetery first-target marginals; does not itself claim equality of complete stopped multi-layer laws.",
+  "production_edits": false,
+  "commands": [
+    {
+      "cwd": "formalization",
+      "command": "lake env bash -c 'export LEAN_PATH=\"$PWD/.lake/diagnostics/routing-history-steps:$LEAN_PATH\"; lean -R ../reports/evidence/routing-bridge/draft -o .lake/diagnostics/routing-history-steps/Thesis/RoutingHistorySteps.olean ../reports/evidence/routing-bridge/draft/Thesis/RoutingHistorySteps.lean'"
+    },
+    {
+      "cwd": "formalization",
+      "command": "lake env bash -c 'export LEAN_PATH=\"$PWD/.lake/diagnostics/routing-history-steps:$LEAN_PATH\"; lean ../reports/evidence/routing-bridge/HistoryStepsChecks.lean'"
+    }
+  ]
+}

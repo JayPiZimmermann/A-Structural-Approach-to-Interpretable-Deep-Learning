@@ -1,0 +1,71 @@
+../reports/evidence/routing-bridge/readout-check/ExactTypes.lean:10:154: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.RoutingReadoutHistory.readout_forward : ∀ {n m r : ℕ} (net : HiddenMonotonicity.Network n m)
+  (C : Matrix (Fin r) (Fin m) ℝ) (b : HiddenMonotonicity.Vec r) (ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n),
+  (∀ (j : Fin m), 0 ≤ net.eval x j) →
+    ∀ (u : Fin r) (q : Bool),
+      Thesis.RoutingProfiles.value 1 (Thesis.RoutingReadoutHistory.positiveReadout net C b ε hε x u q) +
+          Thesis.RoutingProfiles.value 1 (Thesis.RoutingReadoutHistory.negativeReadout net C b ε hε x u q) =
+        Thesis.RoutingProfiles.signed q (Thesis.AffineOutputBackward.affineOutput net C b x u)
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.RoutingReadoutHistory.forcedProbability_normalized : ∀ (θ : ℝ) (positive negative : Thesis.RoutingProfiles.Tree),
+  ∑ h, Thesis.RoutingReadoutHistory.forcedProbability θ positive negative h = 1
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/routing-bridge/readout-check/ExactTypes.lean:62:158: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.RoutingReadoutHistory.readoutHistoryOccupation_eq_readoutOccupation : ∀ {n m r : ℕ}
+  (net : HiddenMonotonicity.Network n m) (C : Matrix (Fin r) (Fin m) ℝ) (b : HiddenMonotonicity.Vec r) (α β ε : ℝ)
+  (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n),
+  (∀ (j : Fin m), 0 ≤ net.eval x j) →
+    ∀ (u : Fin r) (q : Bool) (i : Fin n) (owner : Bool),
+      Thesis.RoutingReadoutHistory.readoutHistoryOccupation net C b α β ε hε x u q i owner =
+        Thesis.AffineOutputBackward.readoutOccupation net C b α β ε x u i (q ^^ owner)
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingReadoutHistory.affine_output_layer_history_lrp : ∀ {n k m r : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (tail : HiddenMonotonicity.Network k m) (C : Matrix (Fin r) (Fin m) ℝ)
+  (b : HiddenMonotonicity.Vec r) (α β ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n) (R : HiddenMonotonicity.Vec r)
+  (i : Fin n),
+  Thesis.AffineOutputBackward.affineOutputLRP (HiddenMonotonicity.Network.layer wp wn bp bn tail) C b α β ε x R i =
+    ∑ u,
+      R u *
+        (Thesis.RoutingReadoutHistory.readoutHistoryOccupation (HiddenMonotonicity.Network.layer wp wn bp bn tail) C b α
+            β ε hε x u true i true -
+          Thesis.RoutingReadoutHistory.readoutHistoryOccupation (HiddenMonotonicity.Network.layer wp wn bp bn tail) C b
+            α β ε hε x u true i false)
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/routing-bridge/readout-check/ExactTypes.lean:114:133: warning: Variable name `hα` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hα
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/routing-bridge/readout-check/ExactTypes.lean:114:146: warning: Variable name `hβ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hβ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/routing-bridge/readout-check/ExactTypes.lean:114:184: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.RoutingReadoutHistory.readoutHistoryOccupation_nonnegative : ∀ {n m r : ℕ}
+  (net : HiddenMonotonicity.Network n m) (C : Matrix (Fin r) (Fin m) ℝ) (b : HiddenMonotonicity.Vec r) (α β ε : ℝ),
+  0 ≤ α →
+    0 ≤ β →
+      ∀ (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n),
+        (∀ (j : Fin m), 0 ≤ net.eval x j) →
+          ∀ (u : Fin r) (q : Bool) (i : Fin n) (owner : Bool),
+            0 ≤ Thesis.RoutingReadoutHistory.readoutHistoryOccupation net C b α β ε hε x u q i owner
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 874 project theorem declarations in the imported environment

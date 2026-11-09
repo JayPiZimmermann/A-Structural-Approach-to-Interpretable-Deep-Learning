@@ -1,0 +1,64 @@
+{
+  "review_id": "regularizer-curvature-audit-2026-11-09",
+  "status": "confirmed_missing_hypothesis",
+  "evidence_level": "Handwritten mathematical counterexample and sufficient-condition argument; not Lean verified.",
+  "skills_applied": [
+    "skills/upstream-planar-features/formalization-conventions/SKILL.md",
+    "skills/upstream-planar-features/formalization-research/SKILL.md"
+  ],
+  "locations": {
+    "claim": "tex/chapters/03_decompositions.tex:459 (rem:freg_smooth_connection)",
+    "regularizer_assumptions": "tex/chapters/03_decompositions.tex (def:freg)",
+    "curvature_theorem": "tex/chapters/02_foundations.tex:601 (thm:smooth_dc_split)",
+    "lean_general_regularizer": "formalization/Thesis/GeneralRegularization.lean",
+    "lean_distributional_definition": "formalization/HiddenMonotonicity/DistributionalRegularity.lean:15"
+  },
+  "claim_under_review": "If a finite closed nonpositive convex regularizer Omega on [0,1] is strictly convex and smooth on (0,1), its conjugate has nonnegative weak curvature in L1(R) with integral 1, so the integrable-curvature splitting theorem applies.",
+  "finding": "False without extra regularity. Strict convexity gives a unique continuous monotone gate, but does not force the gate to be locally absolutely continuous. The conjugate has a nonnegative second distributional derivative of total mass 1 as a measure; that measure need not have an L1 density.",
+  "counterexample": {
+    "set": "Let K be the Smith-Volterra set in [0,1]: at step n>=1 remove the middle open interval of length 4^(-n) from each of the 2^(n-1) remaining closed intervals. K is compact, nowhere dense, and has Lebesgue measure 1/2 because the removed lengths sum to 1/2.",
+    "smooth_density": "Enumerate the complementary intervals (a_n,b_n). Let beta_n(p)=exp(-1/((p-a_n)(b_n-p))) inside (a_n,b_n), and 0 elsewhere. Each beta_n is C-infinity on R. Put c_n=2^(-n)/(1+max_{0<=k<=n} ||beta_n^(k)||_infinity) and w=sum_n c_n beta_n. For every fixed derivative order k, the tail derivative norms are bounded by sum_{n>=k}2^(-n), so all derivative series converge uniformly. Thus w is C-infinity on R, nonnegative, zero on K and outside [0,1], and positive on [0,1]\\K.",
+    "regularizer": "Put R(p)=integral_0^p w(t)dt, A=integral_0^1 R(t)dt, and Omega(p)=integral_0^p R(t)dt-A*p, restricted to [0,1]. Then Omega(0)=Omega(1)=0, Omega-prime=R-A, and Omega-double-prime=w. Every nonempty interval in [0,1] contains a complementary open subinterval where w>0; hence Omega-prime is strictly increasing and Omega is strictly convex. Omega is C-infinity, finite and continuous on [0,1], hence closed, and convexity with zero endpoint values gives Omega<=0. It meets every regularizer hypothesis in the source remark.",
+    "gate": "Write F=Omega-prime, a=F(0), b=F(1), with a<b finite. The unique gate is pi(z)=0 for z<=a, pi(z)=F^(-1)(z) for a<z<b, and pi(z)=1 for z>=b. It is continuous, so the conjugate f=Omega-star is C1 and f-prime=pi. The saturated extensions create no endpoint jumps or atomic curvature.",
+    "null_image": "F(K) has Lebesgue measure zero. Indeed F is C1 and increasing with F-prime=w=0 on K. To avoid relying on an area formula: for every epsilon>0 choose an open neighborhood U of K with integral_U w<epsilon; its interval components map to intervals whose total length is at most integral_U w, and these images cover F(K) up to harmless endpoints. Thus the outer measure of F(K) is zero.",
+    "failure_of_absolute_continuity": "The inverse gate sends the null set F(K) onto K, whose measure is 1/2. Absolutely continuous functions send null sets to null sets, so pi is not absolutely continuous on [a,b] and not locally absolutely continuous on R.",
+    "curvature_measure": "The distributional derivative mu=D pi is the pushforward by F of Lebesgue measure restricted to [0,1]: mu((u,v])=pi(v)-pi(u). Consequently mu(R)=1 but mu(F(K))=Lebesgue(K)=1/2. As F(K) is null, mu has a nonzero singular part and cannot be represented by an L1 function. On the complementary image intervals pi-prime=1/w(pi), whose integrals sum to Lebesgue([0,1]\\K)=1/2. Thus the ordinary almost-everywhere second derivative of f misses exactly half the distributional curvature mass.",
+    "consequence": "The source curvature theorem requires local absolute continuity of f-prime as well as an L1 curvature density. Neither its hypothesis nor the claim that the density integrates to 1 follows from smooth strict convexity of Omega."
+  },
+  "minimal_hypothesis_repair": {
+    "condition": "Retain strict convexity and additionally require pi_Omega locally absolutely continuous on R.",
+    "proof": "The finite closed convex regularizer on the full compact interval is continuous, so the unique maximizer varies continuously. Its monotonicity follows by adding the two optimality inequalities. Its limits at minus/plus infinity are 0/1 because the regularizer is bounded and the linear objective forces maximizers toward the respective endpoint. Local absolute continuity gives pi(b)-pi(a)=integral_a^b pi-prime; pi-prime>=0 almost everywhere, and sending a to minus infinity and b to plus infinity gives integral_R pi-prime=1. Therefore f-double-prime=pi-prime is an L1 weak derivative, f-prime is locally AC, s_minus=0, N=0, C2=0, C1=f, and the tilt constant M is 1.",
+    "simple_sufficient_condition": "Omega is C2 on (0,1) and Omega-double-prime(p)>0 for every p in (0,1). No uniform lower bound and no infinite endpoint slopes are needed.",
+    "sufficient_condition_proof": "Omega-prime is a C1 strictly increasing bijection from (0,1) to its open range J, with possibly infinite endpoint slopes. Define q(z)=1/Omega-double-prime(pi(z)) for z in J and q(z)=0 outside J. On compact subintervals of J the inverse-function theorem applies, and substitution z=Omega-prime(p) gives integral_J q=integral_0^1 1 dp=1 by monotone limits. The gate equals integral from minus infinity to z of q; outside finite endpoint slopes it is the constant 0 or 1 and matches continuously. Hence it is locally absolutely continuous even when q is unbounded near a finite endpoint."
+  },
+  "additional_wording_issue": "The opening phrase \"exactly the smooth activations covered\" is too strong: conjugate activations here are convex, non-decreasing and 1-Lipschitz, whereas the curvature theorem also covers nonconvex and nonmonotone activations such as GELU. Say that regularized gates connect to convex activations covered by the theorem, subject to the added regularity.",
+  "unaffected_results": [
+    "GeneralRegularization.lean proves compact optimizer existence, convexity, monotonicity, Lipschitz bounds, and network difference recovery. It does not assert the false AC implication, so no change to its verified scopes is indicated.",
+    "The softplus example has positive smooth curvature and satisfies the sufficient condition.",
+    "Every conjugate activation still has a direct tilted DC-monotone split from convexity and the 1-Lipschitz bound: g(a,b)=f(a-b)+(a+b), h(a,b)=a+b. This elementary construction does not require an L1 weak curvature density. The error is invoking the particular integrable-curvature theorem without its regularity hypothesis.",
+    "The curvature theorem and DistributionalRegularity.lean explicitly distinguish locally integrable curvature functions from arbitrary curvature measures; their hypotheses need not be weakened."
+  ],
+  "files_modified_by_reviewer": [
+    "reports/regularizer-curvature-review.json"
+  ],
+  "reported_to_parent_before_source_edit": true,
+  "proposed_replacement_tex": "Regularized gates connect to the convex activations covered by Theorem~\\ref{thm:smooth_dc_split}. Suppose $\\Omega$ is strictly convex and its gate $\\pi_\\Omega$ is locally absolutely continuous on $\\RR$. Then $\\Omega^*$ is differentiable with $(\\Omega^*)'=\\pi_\\Omega$, and the gate is non-decreasing with limits $0$ and $1$ at $-\\infty$ and $+\\infty$, respectively. Consequently $(\\Omega^*)''\\ge0$ is an $L^1(\\RR)$ function with integral $1$. A sufficient condition is $\\Omega\\in C^2((0,1))$ with $\\Omega''>0$ there: the gate is the inverse of $\\Omega'$ on its range, extended by $0$ or $1$ beyond any finite endpoint slopes. Theorem~\\ref{thm:smooth_dc_split} then applies with $N=0$, $C_2=0$, and $C_1=\\Omega^*$, as for softplus in Corollary~\\ref{cor:modern_activations}(6). Strict convexity and smoothness alone do not ensure this absolute continuity; the distributional curvature can have a singular part. Under the stated regularity, gate regularization and the curvature-based construction therefore yield compatible valid decompositions of the same networks, cf.\\ Remark~\\ref{rem:smooth_valid_decomposition}.",
+  "independent_review": {
+    "reviewer_task": "regularizer_audit/counterexample_check",
+    "status": "passed_handwritten_mathematical_check",
+    "scope": "Independently checked weighted smooth bump construction, strict convexity/nonpositivity/closedness, null-image and singular-mass proof, clamped inverse gate endpoints, and positive-second-derivative sufficient condition.",
+    "finding": "No missing mathematical hypothesis found in the counterexample or proposed correction; no endpoint barrier or uniform lower curvature bound is needed.",
+    "lean_verified": false
+  },
+  "source_correction": {
+    "status": "applied_after_user_notification",
+    "paths": [
+      "tex/chapters/03_decompositions.tex",
+      "tex/chapters/09_conclusion.tex"
+    ],
+    "change": "Require local absolute continuity of the regularized gate for the integrable-curvature bridge; state strictly positive second derivative as sufficient; correct convex-only smoothness language.",
+    "independent_source_review": "passed",
+    "rendered_remark_pdf_page": 62,
+    "lean_scope": "Existing general-regularizer proofs unchanged; counterexample is a handwritten mathematical argument."
+  }
+}

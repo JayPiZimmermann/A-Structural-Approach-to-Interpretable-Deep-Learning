@@ -1,0 +1,54 @@
+@Thesis.RoutingObservations.network_integral : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m) (α β ε : ℝ)
+  (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n) (mark : Fin n → Bool → ℝ) (j : Fin m) (q : Bool),
+  Thesis.RoutingHistory.canonicalIntegral 1 α β (Thesis.RoutingNetwork.networkGame net ε hε x j q)
+      (Thesis.RoutingObservations.networkObservation net ε hε x mark j q) =
+    Thesis.RoutingObservations.traceObservation (Thesis.RoutingBackward.routingTrace α β ε net x) mark j q
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingObservations.networkOccupation_eq_rgOccupation : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m)
+  (α β ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n) (j : Fin m) (q : Bool) (i : Fin n) (r : Bool),
+  Thesis.RoutingObservations.networkOccupation net α β ε hε x j q i r =
+    Thesis.RoutingBackward.rgOccupation net α β ε x j i (q ^^ r)
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/routing-bridge/observations-check/ExactTypes.lean:70:2: warning: Variable name `hα` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hα
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/routing-bridge/observations-check/ExactTypes.lean:70:13: warning: Variable name `hβ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hβ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.RoutingObservations.networkOccupation_nonnegative : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m)
+  (α β ε : ℝ),
+  0 ≤ α →
+    0 ≤ β →
+      ∀ (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n) (j : Fin m) (q : Bool) (i : Fin n) (r : Bool),
+        0 ≤ Thesis.RoutingObservations.networkOccupation net α β ε hε x j q i r
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingObservations.network_alpha_beta_recovery : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m) (α β ε : ℝ)
+  (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n) (R : HiddenMonotonicity.Vec m) (i : Fin n),
+  Thesis.RoutingBackward.lrp α β ε net x R i =
+    ∑ j,
+      R j *
+        (Thesis.RoutingObservations.networkOccupation net α β ε hε x j true i true -
+          Thesis.RoutingObservations.networkOccupation net α β ε hε x j true i false)
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingObservations.networkGame_append_layer : ∀ {d k n m : ℕ} (wp wn : Matrix (Fin k) (Fin d) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (pre : HiddenMonotonicity.Network k n) (suffix : HiddenMonotonicity.Network n m)
+  (ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec d),
+  Thesis.RoutingNetwork.networkGame ((HiddenMonotonicity.Network.layer wp wn bp bn pre).append suffix) ε hε x =
+    Thesis.RoutingNetwork.propagate ε hε suffix
+      (Thesis.RoutingNetwork.networkGame (HiddenMonotonicity.Network.layer wp wn bp bn pre) ε hε x)
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingObservations.network_intermediateOccupation : ∀ {d k n m : ℕ} (wp wn : Matrix (Fin k) (Fin d) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (pre : HiddenMonotonicity.Network k n) (suffix : HiddenMonotonicity.Network n m)
+  (α β ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec d) (j : Fin m) (q : Bool) (i : Fin n) (r : Bool),
+  Thesis.RoutingObservations.intermediateOccupation suffix α β ε hε
+      (Thesis.RoutingNetwork.networkGame (HiddenMonotonicity.Network.layer wp wn bp bn pre) ε hε x) j q i r =
+    Thesis.RoutingBackward.rgOccupation suffix α β ε ((HiddenMonotonicity.Network.layer wp wn bp bn pre).eval x) j i
+      (q ^^ r)
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 813 project theorem declarations in the imported environment

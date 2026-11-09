@@ -1280,10 +1280,10 @@ $[a_i^{(l-1)}W_{ij}^{(l)}]^\kappa = a_i^{(l-1)} W_{ij}^{(l,\kappa)}$.
 \leavevmode
 \begin{description}
     \item[\textnormal{(i) \emph{SPNE existence for every $\tau > 0$ and $\varepsilon \ge 0$.}}]
-        For every $\tau > 0$ and every $\varepsilon \ge 0$, the entropy-regularized two-player Routing Game\allowbreak
+        For every $\tau > 0$ and every $\varepsilon \ge 0$, the entropy-regular\-ized two-player Routing Game\allowbreak
         of Definition~\ref{ptnb:def:routing-recursion} (with linear-state entropy weight $\tau\,\mathcal{H}$ and
         outside-option stabilizer $\varepsilon$) admits a subgame-perfect Nash equilibrium
-        (see~\eqref{ptnb:eq:routing-spne-linear}--\eqref{ptnb:eq:routing-spne-stop} in the proof for the explicit
+        (see~\eqref{ptnb:eq:routing-spne-linear}--\allowbreak\eqref{ptnb:eq:routing-spne-stop} in the proof for the explicit
         form of the equilibrium policy). We write $\cdot^\star$ for equilibrium quantities throughout.
 
     \item[\textnormal{(ii) \emph{Forward equivalence at the anchor $\tau=1$, $\varepsilon\geq 0$.}}]
@@ -1330,8 +1330,12 @@ state the active player solves $\max_{\nu \in \Delta(\mathrm{Pred}_j^{(1)})} \{ 
         \bigl([x_i W_{ij}^{(1)}]^\kappa\bigr)^{1/\tau}, & l = 1,
     \end{cases}
 \end{align}
-with zero mass on routes of zero or wrong sign and closed-form value $V_q(s_{j,q,\kappa}^{(1,lin)})
-    \allowbreak= \tau \log \sum_i \allowbreak\exp(Q_q(s_{j,q,\kappa}^{(1,lin)},i)/\tau)$. With these values in hand, the
+with zero mass on routes of zero or wrong sign and closed-form value
+\begin{equation*}
+    V_q(s_{j,q,\kappa}^{(1,lin)})
+    = \tau \log \sum_i \exp(Q_q(s_{j,q,\kappa}^{(1,lin)},i)/\tau).
+\end{equation*}
+With these values in hand, the
 activation-state subgame at layer $l=1$ is a binary choice between stop (log-payoff $\ell(0) =
     -\infty$) and continue~\eqref{ptnb:eq:routing-activation-continue}; comparing log-space action values and choosing stopping at every tie, the active player's best response is the pure stop/continue strategy
 \begin{align}\label{ptnb:eq:routing-spne-stop}
@@ -2051,8 +2055,11 @@ their difference is.
 \paragraph{Probit analog and GELU.}
 Replacing $\theta\mathcal{H}$ in~\eqref{ptnb:eq:softplus-soft-bellman} by the probit regularizer
 $\mathcal{R}_\Phi(\pi) = \phi(\Phi^{-1}(\pi))$ gives, by Lemma~\ref{ptnb:lem:noisy-gate-dual}, the
-continuation probability $\Phi(z)$ and the value $z\Phi(z) + \phi(z) = \E_{\eta \sim
-    \mathcal{N}(0,1)}[\relu(z + \eta)]$, so the proofs above carry over verbatim with
+continuation probability $\Phi(z)$ and the value
+\begin{equation*}
+    z\Phi(z) + \phi(z) = \E_{\eta \sim \mathcal{N}(0,1)}[\relu(z + \eta)],
+\end{equation*}
+so the proofs above carry over verbatim with
 $\mathrm{sp}_\theta$ replaced by this Gaussian-smoothed ReLU, $\mathrm{sp}'_\theta$ by its
 derivative $\Phi$ and $\theta\mathcal{H}_\theta(z)$ by $\phi(z)$: the probit-regularized game
 recovers Gaussian-smoothed-ReLU networks and their exact gradient. \acs{ptnbGELU}, $z\Phi(z)$, is

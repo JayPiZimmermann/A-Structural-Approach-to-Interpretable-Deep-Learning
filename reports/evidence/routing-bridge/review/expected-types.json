@@ -1,0 +1,353 @@
+{
+  "targets": [
+    {
+      "module": "Thesis.RoutingHistory",
+      "declaration": "Thesis.RoutingHistory.probability_nonnegative",
+      "expected_type": "∀ (t : Tree) (plus minus : Strategy t) (h : Histories t), 0 ≤ probability t plus minus h",
+      "open_namespaces": [
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingHistory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-full-history-nonnegative",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "All complete finite histories under arbitrary source-tree strategy profiles, including absorption."
+    },
+    {
+      "module": "Thesis.RoutingHistory",
+      "declaration": "Thesis.RoutingHistory.probability_normalized",
+      "expected_type": "∀ (t : Tree) (plus minus : Strategy t), (∑ h : Histories t, probability t plus minus h) = 1",
+      "open_namespaces": [
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingHistory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-full-history-normalized",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Normalization of full histories, retaining stopping and separate bias/outside actions; not normalization of ordinary endpoint paths."
+    },
+    {
+      "module": "Thesis.RoutingHistory",
+      "declaration": "Thesis.RoutingHistory.integral_root",
+      "expected_type": "∀ (α β : ℝ) (t : Tree) (plus minus : Strategy t) (r : ℝ), integral α β t plus minus (rootObservation t r) = r",
+      "open_namespaces": [
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingHistory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-prefix-root-mark",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "A root mark is integrated against the entire normalized subtree law, supporting genuine intermediate visits."
+    },
+    {
+      "module": "Thesis.RoutingPolicyBridge",
+      "declaration": "Thesis.RoutingPolicyBridge.input_collapsed_transition",
+      "expected_type": "∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k) (ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (j : Fin k) (q : Bool), collapsed (canonical 1 (inputLayerGames wp wn bp bn ε hε x j q)).1 (inputPositive wp wn bp bn ε hε x j q) (inputNegative wp wn bp bn ε hε x j q) q = Thesis.RoutingTransitions.transition wp wn bp bn ε x j q",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingNetwork",
+        "Thesis.RoutingPolicyBridge"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-input-microstep-pushforward",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "All ordinary and cemetery entries of the canonical fused-input microstep; signed raw inputs and epsilon zero allowed."
+    },
+    {
+      "module": "Thesis.RoutingPolicyBridge",
+      "declaration": "Thesis.RoutingPolicyBridge.layer_collapsed_transition",
+      "expected_type": "∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k) (ε : ℝ) (hε : 0 ≤ ε) (input : Fin n → Bool → Tree) (x : Vec n) (hx : ∀ i, 0 ≤ x i) (hv : ∀ i q, value 1 (input i q) = signed q (x i)) (j : Fin k) (q : Bool), collapsed (canonical 1 (layerGames wp wn bp bn ε hε input j q)).1 (layerPositive wp wn bp bn ε hε input j q) (layerNegative wp wn bp bn ε hε input j q) q = Thesis.RoutingTransitions.transition wp wn bp bn ε x j q",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingNetwork",
+        "Thesis.RoutingPolicyBridge"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-hidden-microstep-pushforward",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Actual predecessor games must encode nonnegative hidden activations. Full pushforward includes absorption and zero-stream mass."
+    },
+    {
+      "module": "Thesis.RoutingPolicyPaths",
+      "declaration": "Thesis.RoutingPolicyPaths.networkProbability_eq",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (α β ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (j : Fin m) (i : Fin n) (q r : Bool) (path : Paths (routingTrace α β ε net x)), networkProbability α β ε hε net x j i q r path = rgProbability α β ε net x j i (Bool.xor q r) path",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.BackwardGames",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingPolicyPaths"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-canonical-ordinary-path-products",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Ordinary surviving path products of canonical policies, with root-to-endpoint owner parity xor q r; no complete stopped-history law equivalence is asserted."
+    },
+    {
+      "module": "Thesis.RoutingPolicyPaths",
+      "declaration": "Thesis.RoutingPolicyPaths.policyDiscount_eq",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (α β ε : ℝ) (x : Vec n) (i : Fin n) (path : Paths (routingTrace α β ε net x)), policyDiscount α β ε net x i path = rgDiscount α β ε net x path",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.BackwardGames",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingPolicyPaths"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-source-branch-discounts",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Products of source 2alpha/2beta discounts at the actual ordinary microsteps. Nonnegativity additionally requires alpha,beta nonnegative."
+    },
+    {
+      "module": "Thesis.RoutingObservations",
+      "declaration": "Thesis.RoutingObservations.networkOccupation_eq_rgOccupation",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (α β ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (j : Fin m) (q : Bool) (i : Fin n) (r : Bool), networkOccupation net α β ε hε x j q i r = rgOccupation net α β ε x j i (Bool.xor q r)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingObservations"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-full-history-endpoint-occupation",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Finite expected discounted input-owner marks on the actual complete canonical tree histories equal the existing ordinary occupation. Absorbed histories remain in the probability law with zero mark."
+    },
+    {
+      "module": "Thesis.RoutingObservations",
+      "declaration": "Thesis.RoutingObservations.network_alpha_beta_recovery",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (α β ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (R : Vec m) (i : Fin n), lrp α β ε net x R i = ∑ j, R j * (networkOccupation net α β ε hε x j true i true - networkOccupation net α β ε hε x j true i false)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingObservations"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-actual-game-alpha-beta-recovery",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Alpha-beta backward rule from complete canonical layered-game histories; this theorem concerns the activated Network backbone, not an ungated final affine readout."
+    },
+    {
+      "module": "Thesis.RoutingObservations",
+      "declaration": "Thesis.RoutingObservations.network_intermediateOccupation",
+      "expected_type": "∀ {d k n m : ℕ} (wp wn : Matrix (Fin k) (Fin d) ℝ) (bp bn : Vec k) (pre : Network k n) (suffix : Network n m) (α β ε : ℝ) (hε : 0 ≤ ε) (x : Vec d) (j : Fin m) (q : Bool) (i : Fin n) (r : Bool), intermediateOccupation suffix α β ε hε (Thesis.RoutingNetwork.networkGame (Network.layer wp wn bp bn pre) ε hε x) j q i r = rgOccupation suffix α β ε ((Network.layer wp wn bp bn pre).eval x) j i (Bool.xor q r)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingObservations"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-full-history-intermediate-occupation",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Genuine prefix-state marks inside full propagated histories, with nonempty activated prefix supplying nonnegative hidden values; networkGame_append_layer identifies the tree with the appended network."
+    },
+    {
+      "module": "Thesis.RoutingPolicyPaths",
+      "declaration": "Thesis.RoutingPolicyPaths.canonical_path_occupation",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (α β ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (j : Fin m) (i : Fin n) (q r : Bool), (∑ path : Paths (routingTrace α β ε net x), policyDiscount α β ε net x i path * networkProbability α β ε hε net x j i q r path) = rgOccupation net α β ε x j i (Bool.xor q r)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.BackwardGames",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingPolicyPaths"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-policy-product-occupation",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Discounted surviving ordinary-policy products, not a separately asserted complete-history law equivalence."
+    },
+    {
+      "module": "Thesis.RoutingObservations",
+      "declaration": "Thesis.RoutingObservations.networkGame_append_layer",
+      "expected_type": "∀ {d k n m : ℕ} (wp wn : Matrix (Fin k) (Fin d) ℝ) (bp bn : Vec k) (pre : Network k n) (suffix : Network n m) (ε : ℝ) (hε : 0 ≤ ε) (x : Vec d), networkGame ((Network.layer wp wn bp bn pre).append suffix) ε hε x = propagate ε hε suffix (networkGame (Network.layer wp wn bp bn pre) ε hε x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingNetwork"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-original-appended-tree",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Literal full game-tree identity for a nonempty prefix; justifies interpreting prefix marks in the original appended network."
+    },
+    {
+      "module": "Thesis.RoutingHistorySteps",
+      "declaration": "Thesis.RoutingHistorySteps.input_history_transition",
+      "expected_type": "∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k) (ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (j : Fin k) (q : Bool) (target : Option (Fin n × Bool)), (∑ h : Histories (inputLayerGames wp wn bp bn ε hε x j q), if stepTarget q (inputProjection wp wn bp bn ε hε x j q h) = target then probability (inputLayerGames wp wn bp bn ε hε x j q) (canonical 1 (inputLayerGames wp wn bp bn ε hε x j q)) (canonical 1 (inputLayerGames wp wn bp bn ε hε x j q)) h else 0) = Thesis.RoutingTransitions.transition wp wn bp bn ε x j q target",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingNetwork",
+        "Thesis.RoutingHistory",
+        "Thesis.RoutingPolicyBridge",
+        "Thesis.RoutingHistorySteps"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-input-full-history-marginal",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Actual complete-history first-target marginal, retaining all stops and augmented route actions before cemetery projection; signed inputs allowed."
+    },
+    {
+      "module": "Thesis.RoutingHistorySteps",
+      "declaration": "Thesis.RoutingHistorySteps.layer_history_transition",
+      "expected_type": "∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k) (ε : ℝ) (hε : 0 ≤ ε) (input : Fin n → Bool → Tree) (x : Vec n) (hx : ∀ i, 0 ≤ x i) (hv : ∀ i q, value 1 (input i q) = signed q (x i)) (j : Fin k) (q : Bool) (target : Option (Fin n × Bool)), (∑ h : Histories (layerGames wp wn bp bn ε hε input j q), if stepTarget q (layerProjection wp wn bp bn ε hε input j q h) = target then probability (layerGames wp wn bp bn ε hε input j q) (canonical 1 (layerGames wp wn bp bn ε hε input j q)) (canonical 1 (layerGames wp wn bp bn ε hε input j q)) h else 0) = Thesis.RoutingTransitions.transition wp wn bp bn ε x j q target",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingNetwork",
+        "Thesis.RoutingHistory",
+        "Thesis.RoutingPolicyBridge",
+        "Thesis.RoutingHistorySteps"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-hidden-full-history-marginal",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Actual full predecessor histories are integrated; hidden values must be nonnegative and correctly encoded."
+    },
+    {
+      "module": "Thesis.RoutingReadoutHistory",
+      "declaration": "Thesis.RoutingReadoutHistory.forcedProbability_normalized",
+      "expected_type": "∀ (θ : ℝ) (positive negative : Tree), (∑ h : ForcedHistories positive negative, forcedProbability θ positive negative h) = 1",
+      "open_namespaces": [
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingReadoutHistory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-forced-readout-normalized",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Forced fair oracle over two full canonical routing histories, with no activation gate."
+    },
+    {
+      "module": "Thesis.RoutingReadoutHistory",
+      "declaration": "Thesis.RoutingReadoutHistory.readoutHistoryOccupation_eq_readoutOccupation",
+      "expected_type": "∀ {n m r : ℕ} (net : Network n m) (C : Matrix (Fin r) (Fin m) ℝ) (b : Vec r) (α β ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (hx : ∀ j, 0 ≤ net.eval x j) (u : Fin r) (q : Bool) (i : Fin n) (owner : Bool), readoutHistoryOccupation net C b α β ε hε x u q i owner = readoutOccupation net C b α β ε x u i (Bool.xor q owner)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.AffineOutputBackward",
+        "Thesis.RoutingReadoutHistory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-ungated-readout-history-occupation",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Full forced-oracle occupation matches signed affine readout occupation. Backbone activations must be nonnegative; output logit may be negative."
+    },
+    {
+      "module": "Thesis.RoutingReadoutHistory",
+      "declaration": "Thesis.RoutingReadoutHistory.affine_output_history_lrp",
+      "expected_type": "∀ {n m r : ℕ} (net : Network n m) (C : Matrix (Fin r) (Fin m) ℝ) (b : Vec r) (α β ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (hx : ∀ j, 0 ≤ net.eval x j) (R : Vec r) (i : Fin n), affineOutputLRP net C b α β ε x R i = ∑ u, R u * (readoutHistoryOccupation net C b α β ε hε x u true i true - readoutHistoryOccupation net C b α β ε hε x u true i false)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.AffineOutputBackward",
+        "Thesis.RoutingReadoutHistory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-ungated-readout-actual-history-lrp",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Complete alpha-beta recovery from actual histories including signed biased ungated affine output, with explicit nonnegative backbone-activation hypothesis."
+    },
+    {
+      "module": "Thesis.RoutingReadoutHistory",
+      "declaration": "Thesis.RoutingReadoutHistory.readout_forward",
+      "expected_type": "∀ {n m r : ℕ} (net : Network n m) (C : Matrix (Fin r) (Fin m) ℝ) (b : Vec r) (ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (hx : ∀ j, 0 ≤ net.eval x j) (u : Fin r) (q : Bool), value 1 (positiveReadout net C b ε hε x u q) + value 1 (negativeReadout net C b ε hε x u q) = signed q (affineOutput net C b x u)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.AffineOutputBackward",
+        "Thesis.RoutingReadoutHistory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-ungated-readout-forward",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Signed affine forward value including bias, with equal stabilizers cancelling and no output activation gate."
+    },
+    {
+      "module": "Thesis.RoutingReadoutHistory",
+      "declaration": "Thesis.RoutingReadoutHistory.affine_output_layer_history_lrp",
+      "expected_type": "∀ {n k m r : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k) (tail : Network k m) (C : Matrix (Fin r) (Fin m) ℝ) (b : Vec r) (α β ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (R : Vec r) (i : Fin n), affineOutputLRP (Network.layer wp wn bp bn tail) C b α β ε x R i = ∑ u, R u * (readoutHistoryOccupation (Network.layer wp wn bp bn tail) C b α β ε hε x u true i true - readoutHistoryOccupation (Network.layer wp wn bp bn tail) C b α β ε hε x u true i false)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.AffineOutputBackward",
+        "Thesis.RoutingReadoutHistory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-activated-backbone-ungated-readout-lrp",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Signed raw inputs allowed with a nonempty activated backbone; nonnegative hidden outputs follow from actual ReLU evaluation."
+    },
+    {
+      "module": "Thesis.RoutingReadoutHistory",
+      "declaration": "Thesis.RoutingReadoutHistory.readoutHistoryOccupation_nonnegative",
+      "expected_type": "∀ {n m r : ℕ} (net : Network n m) (C : Matrix (Fin r) (Fin m) ℝ) (b : Vec r) (α β ε : ℝ) (hα : 0 ≤ α) (hβ : 0 ≤ β) (hε : 0 ≤ ε) (x : Vec n) (hx : ∀ j, 0 ≤ net.eval x j) (u : Fin r) (q : Bool) (i : Fin n) (owner : Bool), 0 ≤ readoutHistoryOccupation net C b α β ε hε x u q i owner",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.AffineOutputBackward",
+        "Thesis.RoutingReadoutHistory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-nonnegative-readout-occupation",
+      "review_evidence": "reports/evidence/routing-bridge/review/source-correspondence.json",
+      "scope": "Nonnegative source discounts and backbone activations yield nonnegative full-history occupation, including epsilon zero and empty streams."
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "review_id": "attack_hidden/routing-law-prose-precision",
-  "status": "verified_prose_overclaim_existing_technical_qualification_correct",
+  "status": "prose_corrected_and_thesis_render_checked",
   "severity": "medium",
   "kind": "verified_counterexample_to_prose_identification_not_to_Hellinger_theorems",
   "finding": "The undiscounted normalized trajectory law does not determine the complete discounted backward attribution across models. Intro/conclusion identification is stronger than the technical definitions and explicitly contradicts the existing discount qualification.",
@@ -46,9 +46,92 @@
   ],
   "minimal_repair": "Describe Pi as normalized trajectory routing; attribution is recovered by a model-dependent discounted occupation projection. Reserve complete backward computation for the law together with its signs/ownership and discounts. Preserve Hellinger formulas and the interpretation as a routing diagnostic.",
   "scope": "A discrepancy in path routing and map similarity can still be empirically meaningful; it does not isolate a fixed projection loss across models when the discount functional also changes.",
-  "production_edits": [],
+  "production_edits": [
+    {
+      "path": "tex/chapters/11_trajectory.tex",
+      "scope": "Trajectory sanity-check opening, map/routing discrepancy, and randomization interpretation",
+      "change": "Pi describes normalized routing. Attribution uses a model-dependent signed discounted occupation projection; disagreement of map and routing diagnostics does not isolate a loss under a fixed projection."
+    },
+    {
+      "path": "tex/chapters/09_conclusion.tex",
+      "scope": "Summary of Contributions game/trajectory paragraph",
+      "change": "Replaced identification of Pi with the complete backward computation by normalized routing plus signs and model-dependent discounts; Hellinger compares trajectory laws."
+    },
+    {
+      "path": "arxive/playingTheNetworkBackward/main.tex",
+      "scope": "Trajectory sanity-check opening, map/routing discrepancy, Discussion & Conclusion, and randomization interpretation",
+      "change": "Applied the same prose corrections to the source paper, retaining the existing undiscounted-law technical qualification and all theorem hypotheses/formulas."
+    },
+    {
+      "path": "tex/chapters/01_introduction.tex",
+      "scope": "contribution and related-work overview",
+      "change": "Qualified trajectory laws as normalized routing and attribution as signed discounted occupations."
+    },
+    {
+      "path": "tex/frontmatter/abstract.tex",
+      "scope": "German and English trajectory summary",
+      "change": "Qualified Hellinger comparison as comparison of normalized routing laws before model-dependent projection."
+    }
+  ],
   "preserved_original_passages": "reports/evidence/routing-law-precision-review/source-passages.json",
   "pending": [
-    "Optional separate Lean counterexample leaf or consumer can be added later; not needed to establish the elementary prose counterexample."
-  ]
+    "Optional separate Lean counterexample; elementary source-level counterexample already established."
+  ],
+  "independent_recheck": {
+    "method": "Direct substitution into the source Stopping Game transition, equilibrium policy, and discounted occupation definitions; no Lean witness claimed.",
+    "definitions": [
+      "tex/chapters/04_game_theory.tex: eq:attribution, eq:adf-kernel, eq:adf-spne-policy",
+      "tex/chapters/11_trajectory.tex: eq:adf-T"
+    ],
+    "calculation": "For f_w(x)=max(w*x,0), x=1 and w in {1,2}, z=w>0 so continue=1; gamma=abs(w)=w; T(+ to +)=w/gamma=1 and cemetery mass=0. Pi is the same single-path Dirac law, BC=1 and H=0. The sole path discount and the derivative on x>0 are w, giving gradients 1 and 2.",
+    "additional_affected_claims": "The short map-hides paragraph and detailed randomization conclusion also claimed that H locates loss between calculation and projection. Both thesis and paper now account for model-dependent discount changes."
+  },
+  "formatting_only_edits": {
+    "tex/chapters/11_trajectory.tex": [
+      "Moved unchanged cemetery residual identity to an unnumbered display.",
+      "Added optional breaks in the unchanged sigma grid.",
+      "Moved unchanged cemetery overlap recurrence to an unnumbered display and added an optional break in the conditional bound."
+    ],
+    "tex/chapters/09_conclusion.tex": [
+      "Moved unchanged convex conjugate definition to an unnumbered display."
+    ]
+  },
+  "repair_source_sha256": {
+    "tex/chapters/11_trajectory.tex": "9e1cc26ee4efcba13afb3027f4564e2e2bacaa4ecceb6ddd8ca01d8a832f1a5c",
+    "tex/chapters/09_conclusion.tex": "9584e569633ffe0ffc247242ac3ce7c814892b55e083243030d4ead8bfd8594a",
+    "arxive/playingTheNetworkBackward/main.tex": "a7d9b708674cd49d931eff50c777d7a688ca074f352fed9c75d84a3b3322bf98"
+  },
+  "repair_diff": "reports/evidence/routing-law-precision-repair/source-diff.patch",
+  "repair_diff_sha256": "66a6a201e5f77fe5e3b92c9b45d218d1fae31703110d9075124b2e538fee8a16",
+  "independent_edit_review": {
+    "status": "PASS",
+    "scope": "Read-only review of the three repaired TeX sources and this report; no build/render validation performed.",
+    "checks": [
+      "The one-edge counterexample follows from actual SG definitions.",
+      "The prose distinguishes normalized routing from model-dependent signed discounted occupation recovery.",
+      "The fixed-projection-loss inference is removed.",
+      "Formatting changes preserve formulas, numerical grids, labels, hypotheses, and equation numbering."
+    ]
+  },
+  "root_validation": {
+    "latex_build": "passed",
+    "log": "reports/evidence/tex-resumption/latexmk-layout.log",
+    "undefined_references_or_citations": false,
+    "overfull_boxes": 0,
+    "source_diff_review": "passed",
+    "rendered_pages_checked": [
+      5,
+      26,
+      27,
+      62,
+      163
+    ],
+    "source_sha256": {
+      "tex/chapters/01_introduction.tex": "22dd437e61b8411c5f36839b768f69066308a9d7f276259a95fba062c042182d",
+      "tex/frontmatter/abstract.tex": "963d3cc54d98c60fe9f38925a311ec54ca9bfd43336cedc32c55ddf6720b4ebf",
+      "tex/chapters/11_trajectory.tex": "e82f7ac091477862609f0fe4c24abf71ce305135474c4724d6804ca69c220563",
+      "tex/chapters/09_conclusion.tex": "b7ef87b0cdf29a2e82528475cccdd6ab76731a720fb6b13918d756dcf2a48666",
+      "arxive/playingTheNetworkBackward/main.tex": "a7d9b708674cd49d931eff50c777d7a688ca074f352fed9c75d84a3b3322bf98"
+    }
+  }
 }

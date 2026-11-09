@@ -8,8 +8,10 @@ assert all(hashlib.sha256((ROOT/p).read_bytes()).hexdigest()==h for p,h in sha.i
 assert all(set(r['axioms'])<={'propext','Classical.choice','Quot.sound'} for r in env)
 for name in ['source','exact-types','explicit-types']:
  assert 'error:' not in (OUT/(name+'.log')).read_text()
- (OUT/(name+'.exit')).write_text('0\n')
+ assert (OUT/(name+'.exit')).read_text().strip() == '0'
 boundary_ok=(OUT/'boundary.exit').read_text().strip()=='0'
+if boundary_ok:
+ assert 'error:' not in (OUT/'boundary.log').read_text()
 report={
 'review_id':'attack_hidden/conditioned-trajectory','status':'pass_with_explicit_scope' if boundary_ok else 'semantic_and_exact_checks_pass_boundary_consumer_pending',
 'high_severity_findings':[],'verified_counterexamples_to_claimed_theorems':[],

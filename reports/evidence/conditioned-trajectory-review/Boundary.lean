@@ -59,7 +59,9 @@ theorem nontrivial_overlap :
     overlap (pathLaw 2 (kernel A (survival 2 A)) false)
       (pathLaw 2 (kernel B (survival 2 B)) false)=4/5 := by
   unfold overlap
-  simp only [Paths,Fintype.sum_prod_type,Fintype.sum_bool]
+  change (∑ path : Bool × (Bool × Unit),
+    Real.sqrt (pathLaw 2 (kernel A (survival 2 A)) false path *
+      pathLaw 2 (kernel B (survival 2 B)) false path)) = 4/5
   norm_num [kernel,survival,backwardDP,pathLaw,A,B,Fintype.sum_bool,
     Fintype.sum_prod_type,Paths,Finset.filter_insert,Finset.filter_singleton,Real.sqrt_div]
 

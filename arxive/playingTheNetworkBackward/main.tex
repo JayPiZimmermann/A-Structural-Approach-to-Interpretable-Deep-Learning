@@ -565,13 +565,14 @@ Appendix~\ref{app:modes} derives the modes and gives defaults, costs and an orde
 
 The cascading-randomization sanity check of~\citet{Adebayo2018sanity} asks whether an explanation
 meaningfully depends on the learned parameters, and answers by comparing attribution maps in pixel
-space. But the object of interest is the backward calculation itself---a distribution $\Pi$ over
-graph trajectories---and the attribution map is only its pixel projection.
+space. The object of interest here is the normalized backward routing---a distribution $\Pi$ over
+graph trajectories. The attribution map is recovered through a model-dependent signed discounted
+occupation projection of this law.
 The \textbf{Hellinger distance}~\citep{Hellinger1909} $\mathrm{H}(\Pi_A, \Pi_B) = (1 -
     \mathrm{BC})^{1/2}$, with Bhattacharyya coefficient~\citep{Bhattacharyya1943} $\mathrm{BC} =
     \sum_\zeta \sqrt{\Pi_A(\zeta)\,\Pi_B(\zeta)}$, measures the routing logic directly rather than its
 visual projection. This section probes the representation claim: parameter randomization should
-move $\Pi$ even when its pixel projection remains stable. We remark that $\mathrm{H}=0$ iff $\Pi_A
+move $\Pi$ even when the resulting attribution map remains stable. We remark that $\mathrm{H}=0$ iff $\Pi_A
     = \Pi_B$, and the metric takes its maximal value $\mathrm{H}=1$ iff their supports are disjoint.
 Unlike KL-type divergences, $\mathrm{H}$ stays finite when randomization opens or closes routes,
 and since both laws are layered Markov chains on the same state graph, BC factorizes along layers:
@@ -615,8 +616,10 @@ of all methods, and HOG $r = \sanityVitRGanchorHOG$; on VGG-16, LRP-$\varepsilon
 $\sanityVggLRPepsRho$ and $\sanityVggLRPepsHOG$ (Table~\ref{tab:sanity-check}). The
 localization-selected \ac{RG} modes are slightly more model sensitive than the anchor on all three
 models. \ch{Read against Figure~\ref{fig:hellinger-sanity}, the two readouts disagree: $\mathrm{H}$ sits at
-the fully random reference while the projection retains structure. The map-level failure stands;
-$\mathrm{H}$ locates the loss between calculation and projection.}
+the fully random reference while the attribution map retains structure. The map-level failure stands;
+$\mathrm{H}$ reveals changes in normalized routing that are not apparent in the map. The discounted
+occupation projection can also change across models, so this discrepancy does not isolate a loss
+under one fixed projection.}
 \section{Case Study}\label{sec:experiments}\label{sec:case-study}
 
 \begin{table*}[t]
@@ -744,8 +747,9 @@ and other games may give other insights.
 
 \ch{The modes improve the attribution metrics considered here, but the evidence is specific: exact results cover ReLU networks and attention conditioned on the realized attention pattern, LayerNorm statistics, and GELU gates. Human-mask agreement is only one evaluation axis, and sharper routing can remove network-relevant evidence outside the mask. Within this scope, one adapted ViT-B/16 $\alpha\beta$-\ac{LRP} configuration outperforms all baselines, including prior transformer-specific backward methods, in attribution localization, while the \ac{LRP} rules remain more faithful. Whether this transfers to other modalities, and whether metric gains translate to downstream tasks, remains future work.}
 
-The trajectory distribution $\Pi$ is the object of study; the attribution map is only its pixel
-projection. The Hellinger distance $\mathrm{H}(\Pi_A, \Pi_B)$ is computable in one backward pass
+The trajectory distribution $\Pi$ describes normalized backward routing; the attribution map is
+recovered through a model-dependent signed discounted occupation projection of this law.
+The Hellinger distance $\mathrm{H}(\Pi_A, \Pi_B)$ is computable in one backward pass
 \ch{and complements the parameter-insensitivity sanity check~\citep{Adebayo2018sanity,
 sixt2020whenexplanationslie} with a calculation-level readout: $\mathrm{H}$ detects randomization
 collapse even when projected maps remain similar.}
@@ -4091,9 +4095,9 @@ Theorems~\ref{thm:rand-adf}--\ref{thm:rand-routing} show that $\Pi_M$ changes dr
 randomization, while Table~\ref{tab:sanity-check} shows that the resulting attribution maps can remain similar. \ch{The two
 diagnostics therefore detect different aspects of parameter sensitivity: the map-level test
 of~\citet{Adebayo2018sanity} asks whether the explanation delivered to the user depends on the
-learned parameters, the trajectory-level test whether the calculation behind it does. A map can fail
-the first while its calculation passes the second; the trajectory-level result locates where the
-sensitivity is lost (between the calculation and its pixel projection), but it does not make such a
+learned parameters, the trajectory-level test whether its normalized routing does. A map can fail
+the first while its routing passes the second; this discrepancy does not isolate a fixed projection
+loss, since the discounts can also change across models, and it does not make such a
 map adequate for model debugging~\citep{Adebayo2018sanity, sixt2020whenexplanationslie}.}
 
 \subsection{Heatmap similarity at full randomization}\label{app:sanity-heatmap}

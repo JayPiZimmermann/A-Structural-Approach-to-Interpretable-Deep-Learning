@@ -36,16 +36,20 @@ theorem stepProbability_nonnegative {n} (gate : Bool) (positive negative : Polic
     (h : Step n) : 0≤stepProbability gate positive negative h := by
   cases h with
   | none => cases gate <;> norm_num [stepProbability]
-  | some h => rcases h with ⟨b,a⟩; cases gate <;> cases b <;>
-      simp only [stepProbability,Bool.false_eq_true,ite_false,ite_true]
-      all_goals first | exact le_rfl | exact div_nonneg (positive.nonnegative a) (by norm_num)
-        | exact div_nonneg (negative.nonnegative a) (by norm_num)
+  | some h =>
+      rcases h with ⟨b,a⟩
+      cases gate with
+      | false => simp [stepProbability]
+      | true =>
+          cases b with
+          | false => exact div_nonneg (positive.nonnegative a) (by norm_num)
+          | true => exact div_nonneg (negative.nonnegative a) (by norm_num)
 
 theorem collapsed_normalized {n} (gate : Bool) (positive negative : Policy (Fin (n+2))) (q : Bool) :
     (∑ target,collapsed gate positive negative q target)=1 := by
   unfold collapsed
   rw [Finset.sum_comm]
-  simpa only [Finset.sum_ite_eq',Finset.mem_univ,ite_true] using
+  simpa only [Finset.sum_ite_eq,Finset.mem_univ,ite_true] using
     stepProbability_normalized gate positive negative
 
 /-- Exact pushforward of the source microstep, with the fair oracle probability
@@ -92,14 +96,18 @@ theorem input_policy_probabilities {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) (b
     (inputNegative wp wn bp bn ε hε x j q).prob i.succ.succ=
       negContribution wp wn x j i / negDenominator wp wn bp bn ε x j := by
   constructor
-  · rw [inputPositive,route_anchor_ordinary_probability q ε _ _ (fun _ => 1) _ _ _ _
-      (fun _ => zero_le_one) (fun _ => rfl)]
-    simp only [mul_one,posDenominator]
-    congr 1 <;> ring
-  · rw [inputNegative,route_anchor_ordinary_probability (!q) ε _ _ (fun _ => 1) _ _ _ _
-      (fun _ => zero_le_one) (fun _ => rfl)]
-    simp only [mul_one,negDenominator]
-    congr 1 <;> ring
+  · have h := route_anchor_ordinary_probability q ε (max (bp j-bn j) 0)
+      (posContribution wp wn x j) (fun _ => 1) (fun _ => .terminal (signed q 1))
+      hε (le_max_right _ _) (fun _ => le_max_right _ _)
+      (fun _ => zero_le_one) (fun _ => rfl) i
+    change (inputPositive wp wn bp bn ε hε x j q).prob i.succ.succ = _ at h
+    simpa only [mul_one, posDenominator, add_assoc, add_comm, add_left_comm] using h
+  · have h := route_anchor_ordinary_probability (!q) ε (max (-(bp j-bn j)) 0)
+      (negContribution wp wn x j) (fun _ => 1) (fun _ => .terminal (signed (!q) 1))
+      hε (le_max_right _ _) (fun _ => le_max_right _ _)
+      (fun _ => zero_le_one) (fun _ => rfl) i
+    change (inputNegative wp wn bp bn ε hε x j q).prob i.succ.succ = _ at h
+    simpa only [mul_one, negDenominator, add_assoc, add_comm, add_left_comm] using h
 
 theorem layer_policy_probabilities {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k)
     (ε : ℝ) (hε : 0≤ε) (input : Fin n → Bool → Tree) (x : Vec n)
@@ -158,5 +166,61 @@ theorem layerStep_ordinary {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : V
   rw [(layer_policy_probabilities wp wn bp bn ε hε input x hx hv j q i).1,
       (layer_policy_probabilities wp wn bp bn ε hε input x hx hv j q i).2]
   cases q <;> cases b <;> rfl
+
+/-- A normalized row is determined by its ordinary entries; the remaining mass
+is precisely its cemetery entry. -/
+theorem normalized_row_ext {S : Type*} [Fintype S] (P Q : Option S → ℝ)
+    (hP : (∑ s, P s) = 1) (hQ : (∑ s, Q s) = 1)
+    (h : ∀ s, P (some s) = Q (some s)) : P = Q := by
+  funext s
+  cases s with
+  | some s => exact h s
+  | none =>
+      rw [Fintype.sum_option] at hP hQ
+      have hs : (∑ s, P (some s)) = ∑ s, Q (some s) :=
+        Finset.sum_congr rfl (fun s _ => h s)
+      linarith
+
+/-- The complete canonical input microstep, including stopped, bias and outside
+actions, pushes forward to the source macro row. Raw inputs may be signed. -/
+theorem input_collapsed_transition {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k)
+    (ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (j : Fin k) (q : Bool) :
+    collapsed (canonical 1 (inputLayerGames wp wn bp bn ε hε x j q)).1
+      (inputPositive wp wn bp bn ε hε x j q) (inputNegative wp wn bp bn ε hε x j q) q =
+      Thesis.RoutingTransitions.transition wp wn bp bn ε x j q := by
+  apply normalized_row_ext _ _ (collapsed_normalized _ _ _ _)
+    (Thesis.RoutingTransitions.transition_normalized wp wn bp bn ε x j q)
+  rintro ⟨i,r⟩
+  have h (b : Bool) :
+      collapsed (canonical 1 (inputLayerGames wp wn bp bn ε hε x j q)).1
+        (inputPositive wp wn bp bn ε hε x j q) (inputNegative wp wn bp bn ε hε x j q)
+        q (some (i,Bool.xor q b)) =
+      Thesis.RoutingTransitions.transition wp wn bp bn ε x j q (some (i,Bool.xor q b)) := by
+    rw [collapsed_ordinary]
+    exact inputStep_ordinary wp wn bp bn ε hε x j q b i
+  have hr := h (Bool.xor q r)
+  cases q <;> cases r <;> simpa using hr
+
+/-- The complete canonical hidden-layer microstep has the source macro row,
+provided the predecessor games encode the non-negative activation vector. -/
+theorem layer_collapsed_transition {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k)
+    (ε : ℝ) (hε : 0 ≤ ε) (input : Fin n → Bool → Tree) (x : Vec n)
+    (hx : ∀ i,0 ≤ x i) (hv : ∀ i q,value 1 (input i q)=signed q (x i))
+    (j : Fin k) (q : Bool) :
+    collapsed (canonical 1 (layerGames wp wn bp bn ε hε input j q)).1
+      (layerPositive wp wn bp bn ε hε input j q) (layerNegative wp wn bp bn ε hε input j q) q =
+      Thesis.RoutingTransitions.transition wp wn bp bn ε x j q := by
+  apply normalized_row_ext _ _ (collapsed_normalized _ _ _ _)
+    (Thesis.RoutingTransitions.transition_normalized wp wn bp bn ε x j q)
+  rintro ⟨i,r⟩
+  have h (b : Bool) :
+      collapsed (canonical 1 (layerGames wp wn bp bn ε hε input j q)).1
+        (layerPositive wp wn bp bn ε hε input j q) (layerNegative wp wn bp bn ε hε input j q)
+        q (some (i,Bool.xor q b)) =
+      Thesis.RoutingTransitions.transition wp wn bp bn ε x j q (some (i,Bool.xor q b)) := by
+    rw [collapsed_ordinary]
+    exact layerStep_ordinary wp wn bp bn ε hε input x hx hv j q b i
+  have hr := h (Bool.xor q r)
+  cases q <;> cases r <;> simpa using hr
 
 end Thesis.RoutingPolicyBridge

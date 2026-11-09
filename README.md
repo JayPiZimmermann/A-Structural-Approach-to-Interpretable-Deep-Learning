@@ -4,12 +4,23 @@ Master's thesis by Jakob Zimmermann: **From DC Decompositions to Two-Player Game
 This repository contains the thesis TeX, the two paper sources, a shared Lean
 formalization, and adapters for reproducing the thesis tables from the official code.
 
+The thesis brings together **Hidden Monotonicity**, a [CVPR 2026 Highlight](https://cvpr.thecvf.com/virtual/2026/poster/36564), and **Playing the Network Backward**, an [arXiv preprint (v2)](https://arxiv.org/abs/2605.06212v2). Jakob Paul Zimmermann is first author of both coauthored works. The thesis integrates their theoretical and empirical results and adds a shared exposition and partial Lean formalization.
+
 ## Continue this checkpoint on another server
 
 Read [HANDOVER_TEX.md](HANDOVER_TEX.md) for the independent TeX task and
 [HANDOVER_LEAN.md](HANDOVER_LEAN.md) for the independent Astra proof task.
 They distinguish the clean verified root, frozen extensions awaiting integration,
 and unfinished drafts. All work was checkpointed at the user’s request.
+
+## Academic reviews
+
+The [review overview and prioritized repair plan](reports/thesis-reviews/README.md)
+links twelve independent agent reviews of the thesis, with emphasis on experimental
+rigor, reproducibility, mathematical scope, and independent scientific contribution.
+The [assessment framework](reports/thesis-reviews/assessment-criteria.md) explains
+what an excellent master's thesis should demonstrate. The reviews identify
+remaining work; they do not imply that all recommended repairs have been applied.
 
 ## Contents
 

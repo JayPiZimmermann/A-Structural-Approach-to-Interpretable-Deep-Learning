@@ -1,0 +1,124 @@
+{
+  "targets": [
+    {
+      "module": "Thesis.RoutingObservations",
+      "declaration": "Thesis.RoutingObservations.network_integral",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (α β ε : ℝ) (hε : 0≤ε)\n (x : Vec n) (mark : Fin n → Bool → ℝ) (j : Fin m) (q : Bool),\n canonicalIntegral 1 α β (networkGame net ε hε x j q)\n   (networkObservation net ε hε x mark j q) =\n traceObservation (routingTrace α β ε net x) mark j q",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingNetwork",
+        "Thesis.RoutingHistory",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingObservations"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-observations-network_integral",
+      "review_evidence": "reports/evidence/routing-bridge/observations-resumption.md",
+      "scope": "Complete actual canonical game-history scalar integral, for arbitrary signed raw inputs; α and β may be real for the algebraic identity."
+    },
+    {
+      "module": "Thesis.RoutingObservations",
+      "declaration": "Thesis.RoutingObservations.networkOccupation_eq_rgOccupation",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (α β ε : ℝ) (hε : 0≤ε)\n (x : Vec n) (j : Fin m) (q : Bool) (i : Fin n) (r : Bool),\n networkOccupation net α β ε hε x j q i r =\n rgOccupation net α β ε x j i (Bool.xor q r)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingNetwork",
+        "Thesis.RoutingHistory",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingObservations"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-observations-networkOccupation_eq_rgOccupation",
+      "review_evidence": "reports/evidence/routing-bridge/observations-resumption.md",
+      "scope": "Endpoint occupation of the actual complete canonical history law equals the independently defined ordinary-path discounted occupation. Absorbed histories remain in the actual law with zero endpoint mark."
+    },
+    {
+      "module": "Thesis.RoutingObservations",
+      "declaration": "Thesis.RoutingObservations.networkOccupation_nonnegative",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (α β ε : ℝ)\n (hα : 0≤α) (hβ : 0≤β) (hε : 0≤ε) (x : Vec n)\n (j : Fin m) (q : Bool) (i : Fin n) (r : Bool),\n 0 ≤ networkOccupation net α β ε hε x j q i r",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingNetwork",
+        "Thesis.RoutingHistory",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingObservations"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-observations-networkOccupation_nonnegative",
+      "review_evidence": "reports/evidence/routing-bridge/observations-resumption.md",
+      "scope": "Nonnegative discounted occupations require nonnegative branch coefficients; includes zero stabilizer and empty streams."
+    },
+    {
+      "module": "Thesis.RoutingObservations",
+      "declaration": "Thesis.RoutingObservations.network_alpha_beta_recovery",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (α β ε : ℝ) (hε : 0≤ε)\n (x : Vec n) (R : Vec m) (i : Fin n),\n lrp α β ε net x R i = ∑ j, R j *\n (networkOccupation net α β ε hε x j true i true -\n  networkOccupation net α β ε hε x j true i false)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingNetwork",
+        "Thesis.RoutingHistory",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingObservations"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-observations-network_alpha_beta_recovery",
+      "review_evidence": "reports/evidence/routing-bridge/observations-resumption.md",
+      "scope": "Actual canonical game-history recovery of the shared layered-network alpha-beta rule, with existing stopping-at-ties convention."
+    },
+    {
+      "module": "Thesis.RoutingObservations",
+      "declaration": "Thesis.RoutingObservations.networkGame_append_layer",
+      "expected_type": "∀ {d k n m : ℕ} (wp wn : Matrix (Fin k) (Fin d) ℝ) (bp bn : Vec k)\n (pre : Network k n) (suffix : Network n m) (ε : ℝ) (hε : 0≤ε) (x : Vec d),\n networkGame ((Network.layer wp wn bp bn pre).append suffix) ε hε x =\n propagate ε hε suffix (networkGame (Network.layer wp wn bp bn pre) ε hε x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingNetwork",
+        "Thesis.RoutingHistory",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingObservations"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-observations-networkGame_append_layer",
+      "review_evidence": "reports/evidence/routing-bridge/observations-resumption.md",
+      "scope": "Literal original-tree composition for nonempty prefix; no replacement of full lower history by an independent suffix."
+    },
+    {
+      "module": "Thesis.RoutingObservations",
+      "declaration": "Thesis.RoutingObservations.network_intermediateOccupation",
+      "expected_type": "∀ {d k n m : ℕ} (wp wn : Matrix (Fin k) (Fin d) ℝ) (bp bn : Vec k)\n (pre : Network k n) (suffix : Network n m) (α β ε : ℝ) (hε : 0≤ε) (x : Vec d)\n (j : Fin m) (q : Bool) (i : Fin n) (r : Bool),\n intermediateOccupation suffix α β ε hε\n   (networkGame (Network.layer wp wn bp bn pre) ε hε x) j q i r =\n rgOccupation suffix α β ε ((Network.layer wp wn bp bn pre).eval x)\n   j i (Bool.xor q r)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingNetwork",
+        "Thesis.RoutingHistory",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingObservations"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "routing-observations-network_intermediateOccupation",
+      "review_evidence": "reports/evidence/routing-bridge/observations-resumption.md",
+      "scope": "Marked root visits in the complete original appended-network game integrate all lower prefix histories; equality to the cut occupation is proved, with a nonempty activation prefix."
+    }
+  ]
+}

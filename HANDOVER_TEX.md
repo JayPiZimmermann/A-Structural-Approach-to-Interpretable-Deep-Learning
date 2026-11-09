@@ -4,6 +4,34 @@ The user requested this checkpoint so the thesis can be continued on another
 server. This document is sufficient to start the TeX task independently. The
 mathematical continuation has a separate [Lean handover](HANDOVER_LEAN.md).
 
+## Continuation and academic reviews
+
+The 9 November continuation added thanks to Wojciech Samek for his Responsible
+AI lecture and made the publication basis explicit: **Hidden Monotonicity is a
+CVPR 2026 Highlight paper; Playing the Network Backward is an arXiv preprint
+(v2)**. The introduction and publication-provenance appendix identify both
+coauthored works and the thesis additions.
+
+The routing-law prose has been corrected to distinguish normalized routing from
+model-dependent signed discounted attribution. The regularizer/curvature remark
+now assumes local absolute continuity of the gate, with a positive second
+derivative of the regularizer as a sufficient condition. The corresponding
+source reviews are `reports/routing-law-precision-review.json` and
+`reports/regularizer-curvature-review.json`.
+
+The rebuilt thesis has no overfull boxes or unresolved references/citations.
+All 13 summary-backed game tables matched in the fresh CPU reconstruction;
+`reports/evidence/tex-resumption/` records the commands and checks. This did not
+rerun model evaluations. The latest public PDF and proof-link revision are
+recorded in `reports/publication-build.json`.
+
+The requested [twelve academic reviews and prioritized repair plan](reports/thesis-reviews/README.md)
+follow a sourced [master's-level assessment framework](reports/thesis-reviews/assessment-criteria.md).
+They identify remaining scientific and reproducibility repairs. These findings
+are review recommendations, not changes silently applied to the experiments or
+manuscript. Use the consolidated plan for the next revision; the current PDF is
+a reviewed checkpoint, not a claim that every identified issue has been fixed.
+
 ## Start here
 
 ```sh
@@ -103,9 +131,10 @@ Preserve these specific intentions:
 - Holzbach: opportunity to work on ML and gain a practical perspective.
 - Loho: deep learning theory and polyhedral geometry.
 - Montavon: DC decomposition discussions, Quantus, and attribution evaluation.
-- Samek: transformers, **asking the author to study parameter randomization**,
-  conceptual discussions, and organizational support. Do not use “sanity check”
-  in this acknowledgement.
+- Samek: the Responsible AI lecture, which introduced the author to problems
+  in this area and strategies for addressing them; transformers;
+  **asking the author to study parameter randomization**; conceptual discussions;
+  and organizational support. Do not use “sanity check” in this acknowledgement.
 - Müller: interesting discussions of the results.
 - Nakajima: discussions and comparing the author's trajectory distribution view
   with NRM's signed-measure perspective on LRP and CRP.
@@ -152,8 +181,8 @@ the table review alone.
 Theorem/lemma/definition headings contain numbered `Lean_1`, `Lean_2`, … links
 inside their heading brackets, following the style of arXiv 2610.01728v2.
 Equation numbers link directly to declarations. The published checkpoint has
-**186 mapped links** pinned to the clean verified source commit
-`7c3c9c209ddfd728c48afb195d4ddaddd1c080a3`.
+**190 mapped links** pinned to the clean verified source commit
+`0f3cfb0ea660556c14da510e665281f07acc471d`.
 
 `formalization/tex_links.json` records declaration and scope; the manual review
 is `reports/lean-link-coverage-review.json`. `scripts/sync_lean_badges.py` retains
@@ -171,12 +200,12 @@ python3 scripts/generate_lean_links.py --revision VERIFIED_COMMIT --check
 
 1. Read the last typography/checkpoint reports and the public build receipt.
    Rebuild after any changes; check actual final log and rendered pages.
-2. Resolve the routing-law prose precision report when present: the source already
-   says Hellinger compares the **undiscounted** path law and is blind to structural
-   discount magnitudes. Introductory claims that Pi alone is the entire backward
-   computation must match that limitation. A single positive ReLU edge of weight
-   1 versus 2 has the same normalized route but different gradient. Coordinate
-   with Lean and report the wording correction before editing the paper.
+2. Work through the prioritized repairs in `reports/thesis-reviews/README.md`.
+   The routing-law prose precision and regularizer-curvature assumption issues
+   were corrected in this continuation. The new reviews identify separate
+   remaining mathematical, experimental, statistical, and reproduction issues;
+   keep confirmed defects distinct from optional further research. Report any
+   additional mathematical correction before editing source papers.
 3. Retain the recently restored original wording; review any new changes for
    accidental loss of hypotheses, citations, table values, or definitions.
 4. Check the public PDF has no unresolved `??`, citations/references, or private

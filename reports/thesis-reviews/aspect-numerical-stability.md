@@ -1,0 +1,51 @@
+# Numerical stability and implementation validation review
+
+The stabilization construction is a substantial research contribution, but its numerical validation is less convincing than its algebraic development. The thesis explains why cancellation becomes dangerous and supplies useful attribution ablations. It does not yet provide an equally clear, reproducible account of how much numerical error remains, which correction mechanisms remove it, and what that accuracy costs. This is a material weakness in an otherwise strong case for an excellent master's thesis because numerical stabilization is presented as a central contribution, rather than an incidental implementation detail.
+
+This assessment follows the [master's assessment framework](assessment-criteria.md). It examines the current thesis, the Hidden Monotonicity source, and its pinned implementation at `31be19b460358a69516452402d41bd650845a344`. It is a source and artifact inspection, not an executed reproduction of the experiments. The CVPR 2026 Highlight is a significant achievement; its status does not establish the floating-point accuracy of every configuration in the integrated thesis. The recommendations below require a focused validation exercise, not a new benchmark campaign or a new paper.
+
+## What is already strong
+
+The mathematical discussion now distinguishes exact real-arithmetic identities from floating-point reconstruction. It explicitly warns that input-dependent shifts must be detached when propagating the intended head sensitivities, and separates selected backward quantities at ties from classical derivatives. These are consequential qualifications, not cosmetic disclaimers. See Chapter 3, `subsec:forward_stabilization` and `subsec:backward_stabilization`, especially [the reconstruction discussion](../../tex/chapters/03_decompositions.tex#L509).
+
+The empirical material also contains real negative evidence. The forward ablation reports stream magnitudes around (10^{18}), errors around (10^9), and unusable unstabilized SplitLRP maps. The backward ablation includes the endpoints (\alpha=0\) and (\alpha=0.5\), and the tables expose tradeoffs instead of concealing the unusually low Maximum Sensitivity of the unstabilized setting. The implementation has pre-correction activation-error instrumentation, an architecture test collection, notebook checks of forward and gradient agreement, and assertion-based sparse-operation tests. It would be inaccurate to describe this work as having no validation infrastructure. See [Chapter 8](../../tex/chapters/08_experiments.tex#L42), [Appendix forward ablations](../../tex/chapters/10_appendix.tex#L57), and [chunk error measurement](../../code/hidden_monotonicity/dc_decomposition/hybrid_split/chunk_module.py#L125).
+
+## Separate attribution changes from numerical improvement
+
+The (\alpha\) experiment changes the mathematical backward quantity, not merely the accuracy with which a fixed quantity is evaluated. The closed formula in Chapter 3 makes this explicit: different (\alpha\) values reweight auxiliary contributions; (\alpha=0.5\) recovers halves of the original gradient. Consequently, better localization at another value does not, by itself, demonstrate smaller roundoff error. Chapter 8's ablation supports a useful attribution-design choice, while the numerical-stability interpretation needs an additional measurement. See `thm:closed_formula_shift` and [the ablation interpretation](../../tex/chapters/08_experiments.tex#L47).
+
+**Needed for a persuasive 1.0 case:** separate these two questions explicitly. For a fixed backward rule, compare numerical residuals under no stabilization, shifting, and scaling at float32 and float64. Then interpret the existing (\alpha\) sweep as a comparison of attribution rules. Completion means that at least one compact table or figure reports numerical error independently of AL, PG, Pixel Flipping, and sensitivity. No repetition of the entire saliency benchmark is necessary.
+
+## Measure error before correction as well as after it
+
+The released evaluation configuration enables activation and gradient assimilation against the original network. The forward implementation applies a detached symmetric correction,
+
+\[
+e=a-(p-n),\qquad p\leftarrow p+e/2,\quad n\leftarrow n-e/2,
+\]
+
+in [the minimization module](../../code/hidden_monotonicity/dc_decomposition/split_util/minimization_module.py#L469). Its gradient machinery similarly corrects the reconstructed original gradient. Agreement after those corrections is valuable, but cannot independently establish that the uncorrected split calculation was accurate. The existing pre-correction logging makes a stronger assessment practical.
+
+The thesis illustrates a one-sided correction, (p\leftarrow n+a\), whereas the code uses the symmetric update above. Both recover the same difference in exact arithmetic, but leave different individual streams, which attribution methods can consume. This is an implementation-to-description gap, not evidence that the theorem is false. Scaling both streams also changes their difference before correction; the complete sequence must be specified.
+
+**Needed for a persuasive 1.0 case:** document the actual update order and report layer-wise absolute and scaled relative reconstruction errors, correction magnitudes, nonfinite counts, and gate disagreements before and after assimilation. Include final logits and the reconstructed gradient difference. A small synthetic depth/weight-scale sweep plus a fixed handful of images on the existing VGG-16 and ResNet-18 checkpoints would suffice. At least the tiny synthetic cases should have analytic or higher-precision reference values, so agreement between two rounded calculations is not the sole check. Near-zero references require an explicit denominator convention; a relative error alone is unsuitable. Claim stability only over the measured range unless a general bound is supplied.
+
+## Make the numerical checks executable and precision explicit
+
+The source paper reports float64 intermediates, and the thesis appropriately distinguishes this from the implementation's float32 default. However, the reproduction path still needs to bind precision to the reported results. The [CLI defaults to float32](../../code/hidden_monotonicity/xai/unified_xai_evaluation.py#L108), which [overrides](../../code/hidden_monotonicity/xai/evaluation/unified_evaluator.py#L225) the float64 value visible in `unified_config.py`. The README's full-pipeline example omits `--dtype`. This is a confirmed default/configuration ambiguity, not evidence that the published run used the wrong precision.
+
+The numerical notebook `dc_decomposition/test/test_hybrid_withGradients.ipynb` contains useful checks, but its 17 cells have no execution counts or saved outputs. Its test function returns success booleans; the suite prints a summary rather than failing the process when a model fails. The LRP conservation check likewise logs a warning above its tolerance. The existing sparse-operation tests do contain assertions. The appropriate repair is therefore to turn existing diagnostic coverage into a dependable regression command, rather than claim that a whole new test suite is needed.
+
+**Needed for a persuasive 1.0 case:** provide a deterministic CPU command for a small subset of the existing models, explicit seeds, precision, correction settings, tolerances, and a nonzero exit on failure. Cover a biased affine readout, inactive gates, a near-tie, a residual branch, and max-pooling. Archive its results and a table-to-configuration manifest. Treat an exact tie as a selected-rule test, not a finite-difference derivative test. Add the explicit float64 flag wherever that is the intended reproduction configuration.
+
+## Correct and qualify the computational-cost account
+
+The [efficiency paragraph](../../tex/chapters/10_appendix.tex#L41) calls SplitCAM and SplitGrad competitive with classical CAM methods. The table supports a substantially narrower comparison: SplitCAM takes 0.3348 s on VGG-16 versus 0.0232 s for GCAM and 0.0124 s for LCAM, approximately **14 and 27 times longer**. On ResNet-18 the corresponding factors are approximately **20 and 29**. These methods remain much faster than the reported Feature Ablation and Occlusion configurations, and are closer to Guided GCAM; the slower ordinary-CAM comparison must be acknowledged.
+
+The same paragraph says (\alpha\) only modifies forward computations, although it is a backward-shifting parameter. Its assertion that measured overhead is an upper bound is not established merely by identifying potential optimizations. It also says the measured implementation does not use hooks, whereas the current pinned code [registers backward hooks](../../code/hidden_monotonicity/dc_decomposition/split_util/gradient_processor.py#L253). That last discrepancy may reflect historical implementation differences, so the measurement revision must be identified before judging the timings themselves.
+
+The [timing runner](../../code/hidden_monotonicity/xai/evaluation/timing_evaluation.py#L103) deserves credit for CUDA synchronization and separate model initialization. But it hardcodes float32, the timing CLI does not forward `--dtype`, and failed calls become NaNs excluded from the mean. **Must correct:** repair the misleading comparison and the forward/backward wording; identify the measured revision and describe optimization opportunities without asserting a proved bound. **Needed for a persuasive 1.0 case:** disclose dtype, hardware, warm-up policy, timing scope, spread, and successful/failed image counts. Re-time only the central comparisons if the original precision or measurement conditions cannot be reconstructed.
+
+## Overall judgment
+
+This contribution has the conceptual depth expected of an excellent master's thesis. The remaining weakness is the traceable empirical argument for its central numerical claim. A small, archived numerical study, executable checks based on the existing infrastructure, and honest cost wording would strengthen that argument substantially. Wider architecture coverage, mixed-precision optimization, and a general floating-point error theorem are optional research extensions; none is required merely to earn a persuasive 1.0 assessment within the stated scope.

@@ -51,13 +51,14 @@ proved in this thesis.
 
 The cascading-randomization sanity check of~\textcite{Adebayo2018sanity} asks whether an explanation
 meaningfully depends on the learned parameters, and answers by comparing attribution maps in pixel
-space. But the object of interest is the backward calculation itself---a distribution $\Pi$ over
-graph trajectories---and the attribution map is only its pixel projection.
+space. The object of interest here is the normalized backward routing---a distribution $\Pi$ over
+graph trajectories. The attribution map is recovered through a model-dependent signed discounted
+occupation projection of this law.
 The \textbf{Hellinger distance}~\parencite{Hellinger1909} $\mathrm{H}(\Pi_A, \Pi_B) = (1 -
     \mathrm{BC})^{1/2}$, with Bhattacharyya coefficient~\parencite{Bhattacharyya1943} $\mathrm{BC} =
     \sum_\zeta \sqrt{\Pi_A(\zeta)\,\Pi_B(\zeta)}$, measures the routing logic directly rather than its
 visual projection. This section probes the representation claim: parameter randomization should
-move $\Pi$ even when its pixel projection remains stable. We remark that $\mathrm{H}=0$ iff $\Pi_A
+move $\Pi$ even when the resulting attribution map remains stable. We remark that $\mathrm{H}=0$ iff $\Pi_A
     = \Pi_B$, and the metric takes its maximal value $\mathrm{H}=1$ iff their supports are disjoint.
 Unlike KL-type divergences, $\mathrm{H}$ stays finite when randomization opens or closes routes,
 and since both laws are layered Markov chains on the same state graph, BC factorizes along layers:
@@ -100,8 +101,10 @@ of all methods, and HOG $r = \sanityVitRGanchorHOG$; on VGG-16, LRP-$\varepsilon
 $\sanityVggLRPepsRho$ and $\sanityVggLRPepsHOG$ (Table~\ref{tab:sanity-check}). The
 localization-selected \ac{rg} modes are slightly more model sensitive than the anchor on all three
 models. \ch{Read against Figure~\ref{ptnb:fig:hellinger-sanity}, the two readouts disagree: $\mathrm{H}$ sits at
-the fully random reference while the projection retains structure. The map-level failure stands;
-$\mathrm{H}$ locates the loss between calculation and projection.}
+the fully random reference while the attribution map retains structure. The map-level failure stands;
+$\mathrm{H}$ reveals changes in normalized routing that are not apparent in the map. The discounted
+occupation projection can also change across models, so this discrepancy does not isolate a loss
+under one fixed projection.}
 \section{Hellinger Distance and Disagreement Map}\label{ptnb:app:path-divergence}
 
 We compare two layered Markov processes on a common state graph and seek both a scalar divergence
@@ -223,7 +226,9 @@ and at $l = 1$ the destinations are pixel-stream terminals carrying the routing-
     \qquad \kappa \in \{+,-\},
 \end{align}
 For this act-only marginal, the cemetery probability is the residual
-$T^{(l)}_M(s_{j,p}\to\dagger)=1-\sum_{s'\in\mathcal S^{(l-1)}}T^{(l)}_M(s_{j,p}\to s')$.
+\[
+T^{(l)}_M(s_{j,p}\to\dagger)=1-\sum_{s'\in\mathcal S^{(l-1)}}T^{(l)}_M(s_{j,p}\to s').
+\]
 An empty routing stream has zero ordinary policy mass and its $1/2$ branch share
 is absorbed, even when the source neuron is alive. The Gibbs policy on a nonempty
 stream is the temperature-$\tau$
@@ -825,8 +830,8 @@ kernel~\eqref{ptnb:eq:rg-T-act} at $\tau = 1$.
 
 \subsubsection{Input-Noise Sensitivity}\label{ptnb:sec:input-noise-hellinger}
 
-For each architecture and each noise standard deviation $\sigma \in \{0.005, 0.01, 0.02, 0.03,
-    0.05, 0.1, 0.2, 0.3, 0.5\}$ we draw one standard-Gaussian tensor $\eta$ per image and compute
+For each architecture and each noise standard deviation $\sigma \in \{0.005,\allowbreak 0.01,\allowbreak 0.02,\allowbreak 0.03,
+    \allowbreak 0.05,\allowbreak 0.1,\allowbreak 0.2,\allowbreak 0.3,\allowbreak 0.5\}$ we draw one standard-Gaussian tensor $\eta$ per image and compute
 $\mathrm{H}(\Pi_A(x), \Pi_A(x + \sigma\eta))$ under both game kernels with the argmax target of the
 clean input. Figure~\ref{ptnb:fig:hellinger-input-noise} reports the mean $\mathrm{H}$ and
 $\mathrm{H}_{\mathrm{surv}}$ curves over the swept $\sigma$; both increase with $\sigma$ for both
@@ -874,7 +879,7 @@ clean pairs.
     \centering\small
     \setlength{\tabcolsep}{4pt}
     \input{tables/ptnb_v2/generated/input_baseline_tabular}
-    \caption{Reference baselines for the input-noise sweep, averaged over $R$ pairs drawn from the
+    \caption[Reference baselines for the input-noise sweep]{Reference baselines for the input-noise sweep, averaged over $R$ pairs drawn from the
     $565$-image ImageNet-S test split (clean rows: $R=200$ sampled pairs; clean-vs-random: $R=565$
     images paired with a fresh Gaussian each; random-vs-random: $R=200$ Gaussian pairs); entries are
     mean $\pm$ standard deviation over pairs. \textbf{clean-intraclass}: $\mathrm{H}(\Pi_A(x_1),
@@ -955,15 +960,19 @@ $\mathrm{BC}^{(0)} = \mathrm{BC}^{(0)}_{\mathrm{ord}} + g^{(0)}(\dagger)$.
 
 \begin{remark}[Cemetery floor]\label{ptnb:rem:adf-cemetery-floor}
 Theorem~\ref{ptnb:thm:rand-adf} bounds only the ordinary-state overlap.  Overlap mass that reaches a
-neuron dead in both models enters the cemetery in both, $g^{(l-1)}(\dagger) = g^{(l)}(\dagger) +
-    \sum_{s \in \mathrm{dead}^{(l)}_A \cap \mathrm{dead}^{(l)}_B} g^{(l)}(s)$, and is never thinned
+neuron dead in both models enters the cemetery in both,
+\[
+g^{(l-1)}(\dagger) = g^{(l)}(\dagger) +
+    \sum_{s \in \mathrm{dead}^{(l)}_A \cap \mathrm{dead}^{(l)}_B} g^{(l)}(s),
+\]
+and is never thinned
 again, so plain $\mathrm{H}$ saturates below one.  In a mean-field approximation with uniform dead
 fraction $q$ under $A$ and alive probability $p$ under $B$, the ordinary overlap shrinks by
 $(1-q)p$ per layer while a fraction $q(1-p)$ is absorbed, so $g^{(0)}(\dagger) \to
     q(1-p)/(1-(1-q)p)$ as $N \to \infty$; for illustrative values $q = 0.2$, $p = \tfrac{1}{2}$ this
 gives $\mathrm{H} \approx 0.91$, the same order as the observed $\drFloorMin$--$\drFloorMax$
 (Table~\ref{ptnb:tab:double-random-hellinger}).  The conditioned-survival distance removes the cemetery
-floor exactly, and $\mathbb{E}_B[\mathrm{H}^2_{\mathrm{surv}} \mid Z_A Z_B \geq z] \to 1$ for every
+floor exactly, and $\mathbb{E}_B[\mathrm{H}^2_{\mathrm{surv}} \mid Z_A Z_B \geq z] \allowbreak\to 1$ for every
 fixed $z > 0$ with $\mathbb{P}_B(Z_A Z_B \geq z)$ bounded away from zero.  For the Routing Game the
 activation-weighted kernel concentrates $g^{(l)}$ on neurons with largest $|a W|$, which rarely
 coincide with $\mathrm{dead}_A \cap \mathrm{dead}_B$, so $\mathrm{H}$ is nearly identical to
@@ -994,9 +1003,9 @@ $\pi_{M,\kappa}^{(l)}(\,\cdot\mid j) \propto [a^{(l-1)}_M[\,\cdot\,]\,W^{(l,\kap
 The discounted occupation measures at the input layer recover gradient and $\alpha\beta$-\ac{lrp} maps (Theorems~\ref{ptnb:thm:deriv-occ} and~\ref{ptnb:thm:ab-recovery}). The undiscounted endpoint marginal $m^{(0)}_M$ is generally different: Hellinger compares the trajectory routing laws and does not include the path discounts. Theorems~\ref{ptnb:thm:rand-adf}--\ref{ptnb:thm:rand-routing} show that $\Pi_M$ changes drastically under randomization, while Table~\ref{tab:sanity-check} shows that the resulting attribution maps can remain similar. \ch{The two
 diagnostics therefore detect different aspects of parameter sensitivity: the map-level test
 of~\textcite{Adebayo2018sanity} asks whether the explanation delivered to the user depends on the
-learned parameters, the trajectory-level test whether the calculation behind it does. A map can fail
-the first while its calculation passes the second; the trajectory-level result locates where the
-sensitivity is lost (between the calculation and its pixel projection), but it does not make such a
+learned parameters, the trajectory-level test whether its normalized routing does. A map can fail
+the first while its routing passes the second; this discrepancy does not isolate a fixed projection
+loss, since the discounts can also change across models, and it does not make such a
 map adequate for model debugging~\parencite{Adebayo2018sanity,sixt2020whenexplanationslie}.}
 
 \subsection{Heatmap similarity at full randomization}\label{ptnb:app:sanity-heatmap}

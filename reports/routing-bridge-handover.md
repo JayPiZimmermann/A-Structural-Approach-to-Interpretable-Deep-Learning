@@ -1,89 +1,170 @@
 # Routing equilibrium-to-backward bridge handover
 
-Status: **unfinished WIP**, checkpointed immediately at the user's request to push the current state and restart on another server. No proof process is running. No root, configuration, TeX, or frozen source was edited. The two new drafts have been moved out of the production source tree into `reports/evidence/routing-bridge/draft/Thesis/`; neither was imported by a public root. Their source hashes, compile exit codes, and logs are recorded in `reports/evidence/routing-bridge/checkpoint.json` and adjacent files.
+Status, 9 November 2026: **six frozen draft modules passed independent review**.
+They remain outside the production `All` import closure. This task changed no
+production imports, manifest, coverage, TeX mappings, or public links. A clean
+committed public gate is required before publication.
 
-## Exact validated frontier
+Current summary: [routing-bridge-resumption.json](routing-bridge-resumption.json).
+Independent review: [adversarial-routing-bridge-review.json](adversarial-routing-bridge-review.json).
+The earlier failing `RoutingPolicyBridge` checkpoint was repaired. Its original
+`reports/evidence/routing-bridge/RoutingPolicyBridge.log` and `checkpoint.json`
+remain unchanged as historical evidence; those failures are no longer the live
+frontier.
 
-`RoutingHistory.lean` **compiles, exit 0**. It adds a full finite history interpreter on the EXISTING `Thesis.RoutingProfiles.Tree`:
+## Checked modules
 
-- Terminal history: Unit.
-- Activation history: a distinct stop history, or a positive/negative fair-oracle branch followed by its child history.
-- Routing history: a dependent pair of the actual augmented routing action and that child's history. Thus ordinary, bias and outside actions remain distinct.
-- `probability` consumes arbitrary actual plus/minus `Strategy` profiles. It uses the controlling player's pure activation choice, probability 1/2 at the sign oracle, and the controlling routing policy's normalized probabilities.
-- `probability_nonnegative` and `probability_normalized` are proved for all profiles, not only equilibrium.
-- `Observation` annotates actual tree states with scalar rewards; it does not replace the network or tree. `pathReturn` sums cumulative-discount-weighted rewards along a realized history. On entry to positive/negative routing states it multiplies by 2α/2β; other moves have multiplier one.
-- `integral` is the actual finite expected path return, with derived activation/routing recurrences (`integral_activation`, `integral_routing`). No desired occupation recurrence is assumed.
-- `rootObservation`, `root_return`, and `integral_root` prove that marking a subtree root gives exactly that mark, regardless of subsequent normalized histories. This is intended for genuine intermediate-layer visits in the full network tree.
+All six sources are under `reports/evidence/routing-bridge/draft/Thesis/`.
 
-This file has **not** passed independent exact-type/axiom contracts or semantic review. Its successful compile is focused development evidence only. No `sorry` or new axiom is present in the source. The build log has only harmless warnings.
+- `RoutingHistory`: complete histories of the existing `RoutingProfiles.Tree`,
+  retaining activation stopping, fair-oracle outcomes and augmented route actions.
+  Probabilities are nonnegative and normalized for arbitrary profiles. Discounted
+  observation integrals and local recurrences are derived from finite history sums.
+- `RoutingPolicyBridge`: actual canonical input/hidden-layer policies have the
+  source contribution ratios. Their complete microstep pushforward equals
+  `RoutingTransitions.transition`, including cemetery mass. The saved case-layout,
+  delta-sum and semireducible-rewrite failures are fixed.
+- `RoutingPolicyPaths`: products of actual canonical ordinary microsteps equal
+  `rgProbability`; source branch multipliers equal `rgDiscount`. Root owner `q`
+  and endpoint owner `r` have parity `Bool.xor q r`. These are ordinary-surviving
+  products, distinguished from complete stopped histories.
+- `RoutingHistorySteps`: summing actual full-history probability over first-step
+  fibers gives the microstep probability, including for arbitrary profiles. The
+  canonical input/hidden-layer first-target marginal is the source transition.
+- `RoutingObservations`: full canonical-history endpoint occupation equals
+  `rgOccupation`, yielding alpha-beta LRP. Intermediate marks observe actual
+  prefix roots inside full original histories; `integral_root` integrates every
+  lower prefix continuation. An explicit append-tree identity connects this to
+  the complete game of the original composed network.
+- `RoutingReadoutHistory`: an explicit forced fair oracle over two complete
+  routing histories implements an ungated affine output. Half probabilities and
+  `2α`/`2β` returns give normalization, forward recovery, occupation equality and
+  affine-output LRP. Negative and zero logits remain ungated.
 
-`RoutingPolicyBridge.lean` **does not compile, exit 1**. It is a useful draft, not a validated theorem module. It currently specifies:
+Key source-facing declarations are
+`Thesis.RoutingObservations.network_alpha_beta_recovery`,
+`Thesis.RoutingObservations.network_intermediateOccupation`, and
+`Thesis.RoutingReadoutHistory.affine_output_layer_history_lrp`.
+Inspect their full contracts before changing any mapping scope.
 
-- `Step n = Option (Bool × Fin (n+2))`: activation stopping, oracle sign, and complete augmented route action.
-- Actual microstep probability, source branch discount, and an explicit ordinary/cemetery target map.
-- A literal finite-sum pushforward `collapsed`, meant to prove the actual source microstep has exactly `RoutingTransitions.transition` as its macro transition.
-- `inputPositive/inputNegative` and `layerPositive/layerNegative`, obtained by projecting the canonical strategies of the actual `RoutingNetwork.route` trees.
-- Route probability ratios and one-step equality with `RoutingTransitions.transition`, using the frozen `route_anchor_ordinary_probability`, `inputLayerGames_selected_gate`, and `layerGames_selected_gate`.
+## Frozen source hashes
 
-Do not infer the rest of the file was validated from errors occurring earlier. Read the complete preserved compile log.
+| Module | SHA-256 |
+|---|---|
+| `RoutingHistory` | `f87cca18086e1254232e33aae1f5549adaff4054e79dc2edd1843bf2a724c8aa` |
+| `RoutingPolicyBridge` | `01bb9cc62ba9cd9a3cdef0652dea8820b23188979a096f6549e935cd7a5de3c7` |
+| `RoutingPolicyPaths` | `0f6dcf0f73360bb6a68dd1b7747a67f9d939f36d2c960010ec57360dec54fb24` |
+| `RoutingHistorySteps` | `ef008d61ffd18251fddad6951067c4fe020c18fa0dac021549617d64545423ac` |
+| `RoutingObservations` | `802bfa0ade629ea63e8a7325e8eab3ff9417b5519439801eec0d7e4a92af494a` |
+| `RoutingReadoutHistory` | `cf84415738fe05ab5c56568d8922b5237d4784034f11b429aab04eb83968bb1b` |
 
-## First failing checks and likely local fixes
+`reports/evidence/routing-bridge/review/source-sha256.json` also binds imported
+production sources, the toolchain, exact checker and independent contracts.
+The reviewer verified these hashes remained unchanged.
 
-The full error evidence is `reports/evidence/routing-bridge/RoutingPolicyBridge.log`.
+## Contracts and evidence
 
-1. `stepProbability_nonnegative`, around lines 39–41: indentation/layout after `cases ... <;>` leaves four goals and the subsequent `all_goals` parses as a command. Restructure the case proof with separate explicit branches.
-2. `collapsed_normalized`: after swapping finite sums, the chosen `Finset.sum_ite_eq'` rewrite has the equality orientation wrong for `stepTarget q y = x`. Use the matching finite delta-sum lemma or first rewrite equality by symmetry.
-3. `input_policy_probabilities`: ordinary `rw` cannot match the frozen route lemma after unfolding semireducible matrix/function types (`posContribution wp wn x j` and negative analogue). This project has similar transparency issues. Prefer explicitly instantiated `have h := route_anchor_ordinary_probability ...` followed by `change`/`simpa`, or `erw` where needed. Do not change hypotheses or enable unsafe reducibility.
-4. Inspect later errors independently after fixing the earliest ones; the draft has not been retested beyond this first full compile.
+**The promotion manifest is the 20 targets in
+`reports/evidence/routing-bridge/review/expected-types.json`.** They were manually
+authored and independently checked for exact type, defining module, universe
+arity and axioms. All six sources were freshly recompiled independently. The
+complete imported-project-theorem audit checked **919 constants**, with only
+`propext`, `Classical.choice`, and `Quot.sound`.
 
-`RoutingHistory` had the same dependent-type pitfalls during development. Explicit tree arguments were needed in finite-sum `change` statements; `Observation (.terminal _)` needed `(0 : ℝ)` rather than an inferred zero. The final copied draft includes those fixes.
+Producer checks contain **14** full-forall contracts: three in
+`HistoryStepsChecks.lean`, six in `observations-expected-types.json`, and five in
+`readout-check/expected-types.json`. Eleven overlap the independent 20; their
+union contains **23 distinct declarations**. The producer-only exact targets are:
 
-## Original task and source facts
+- `Thesis.RoutingHistorySteps.firstStep_probability`
+- `Thesis.RoutingObservations.network_integral`
+- `Thesis.RoutingObservations.networkOccupation_nonnegative`
 
-Parent request: close the explicit bridge between the actual `RoutingNetwork` / `RoutingProfiles` equilibrium game and `RoutingBackward`'s αβ discounted occupation/path recovery, with genuine probability/sign/discount preservation, ordinary input and intermediate states, nonnegative hidden activations, stopping at every activation log tie, empty-stream/outside absorption, ε≥0, and an ungated final affine readout. Use shared definitions; do not assume the final recurrence or equivalence.
+Their producer exact checks passed. They were independently source-compiled and
+included in the imported axiom audit, but were **not explicit targets of the
+independent 20-contract suite**. Independently check their full contracts before
+adding them as extra headline targets. There is no 28-contract producer set in
+the retained evidence. The exact sets are recorded in the resumption JSON.
 
-Frozen dependencies read:
+The independent Lean boundary consumer passed with an empty log. It exercises
+actual intermediate root observation, the full first-history cemetery marginal,
+and a negative ungated output with nonzero reversed-owner occupation. Producer
+consumers additionally cover signed raw input with negative weight, activation
+ties, zero fan-in, bias/outside separation, stabilizer leakage and empty streams
+at zero stabilizer. The independent exact-rational experiment passed **168 cases
+and 5,208 complete histories**; it is finite evidence, separate from Lean proofs.
 
-- `Thesis/RoutingProfiles.lean`: `Tree`, `Strategy`, actual all-profile auxiliary/reported semantics, `canonical`, and the proved SPNE.
-- `Thesis/RoutingNetwork.lean`: `route`, `inputLayerGames`, `layerGames`, `propagate`, `networkGame`, actual canonical route probability lemma, forward-value and selected-gate proofs.
-- `Thesis/RoutingTransitions.lean`: closed-form normalized macro transition, cemetery absorption, and ε=0 nonnegativity.
-- `Thesis/RoutingBackward.lean`: `routingTrace`, independent `rgProbability`, `rgDiscount`, `rgOccupation`, and `thesis_alpha_beta_recovery`.
-- `Thesis/BackwardGames.lean`: shared varying-width `Paths`, parity kernels, `rawWeight`, and path integral.
-- `Thesis/AffineOutputBackward.lean`: ungated `affineOutputLRP`, `readoutOccupation`, and algebraic recovery.
-- `HiddenMonotonicity/PrefixSources.lean`: actual `Network.append` and its forward composition law.
+Commands actually used, from `formalization/`, had this form for each module:
 
-Source inspected: `arxive/playingTheNetworkBackward/main.tex`, routing recursion around 1610–1707 and recovery around 1949–2195. The fair sign oracle has probability 1/2, switches ownership on the negative branch, and entered routing-state discounts are 2α/2β. Bias and ε terminate. Empty streams select the outside action. Source activation ties stop. Fused input layers split the actual signed products xᵢWᵢⱼ; later layers require nonnegative activations, supplied by ReLU. Existing `networkGame` is a layered activated network; an ungated signed affine readout must not be silently modeled by another canonical activation gate.
-
-No paper correction was proposed or made. Source recovery also includes residual addition and maxpool; the task's immediate missing bridge is the layered actual Network game. Any wider DAG extension must be scoped separately.
-
-## Planned continuation, not completed proofs
-
-1. Finish `RoutingPolicyBridge`; derive both ordinary and cemetery pushforwards of the actual microstep. Normalization should preserve stopped-history mass, including distinct bias/outside/empty-stream origins before collapsing.
-2. Add scalar observation annotations on actual route/layer/network game trees. For a route, mark the root, outside and bias terminals zero, and ordinary child subtrees with their supplied observations. Prove its canonical integral is the sum of actual canonical ordinary-action probabilities times child integrals. Combine with the compiled activation integral to derive the layer redistribution law.
-3. Recursively propagate these observations through existing `RoutingNetwork.propagate`. Input annotations mark the fused ordinary terminal i with the chosen input/owner indicator; bias/outside remain zero. Derive full-history ordinary endpoint occupation, then identify it with `rgOccupation` using the already proved local policy and sign identities.
-4. Also define the ordinary-surviving microstep product directly from projected canonical policies and prove it equals `rgProbability`, with branch discounts equal to `rgDiscount`. The old `BackwardGames.Paths` encodes bottom-up intermediate indices/sign choices. If root owner is q, endpoint owner r and the current lower branch is b, the current parent owner is `Bool.xor r b`; the tail endpoint owner is the same. The parity bridge is `Bool.xor q r`. Base case is matching endpoint index and owner. Preserve source ownership convention: `RoutingProfiles.signed true` means positive, whereas `RoutingBackward` parity false means no sign flip.
-5. For an intermediate actual layer, use the literal prefix game's root observations and `integral_root` to integrate away every lower full subtree. Compose the suffix with the existing prefix forest and prove full original-history visits equal the cut occupation. Merely restating an independent suffix recurrence would not close the requested bridge.
-6. Treat an ungated affine readout as a forced fair oracle over two existing routing subgames, with no activation choice. Bridge to frozen `AffineOutputBackward.readoutOccupation` and its LRP theorem. Do not claim the existing activated `networkGame` already has this scope.
-7. Author literal full-forall contracts before promotion, run exact module/universe/type/axiom driver plus a boundary consumer (negative weights, zero preactivation log tie, ε=0 empty stream, positive bias/ε leakage, zero fan-in, signed raw fused input, intermediate cut, negative ungated readout). Then independent review and parent root integration.
-
-These are proposed proof routes. No conclusion in steps 2–7 has been proved by this WIP batch. If a proof only eliminates oracle states on ordinary surviving paths, label that limitation explicitly; do not present it as a full stopped-history law equivalence.
-
-## Reproduce or resume
-
-In a fresh checkout, stage the drafts back into their intended new source paths (neither path exists in the current production tree):
-
+```sh
+lake env bash -c 'export LEAN_PATH="$PWD/.lake/diagnostics/routing-review:$LEAN_PATH"; lean -R ../reports/evidence/routing-bridge/draft -o .lake/diagnostics/routing-review/Thesis/RoutingHistory.olean ../reports/evidence/routing-bridge/draft/Thesis/RoutingHistory.lean'
+lake env bash -c 'export LEAN_PATH="$PWD/.lake/diagnostics/routing-review:$LEAN_PATH"; lean ../reports/evidence/routing-bridge/review/ExactTypes.lean'
+lake env bash -c 'export LEAN_PATH="$PWD/.lake/diagnostics/routing-review:$LEAN_PATH"; lean ../reports/evidence/routing-bridge/review/Boundary.lean'
 ```
-cp reports/evidence/routing-bridge/draft/Thesis/RoutingHistory.lean formalization/Thesis/RoutingHistory.lean
-cp reports/evidence/routing-bridge/draft/Thesis/RoutingPolicyBridge.lean formalization/Thesis/RoutingPolicyBridge.lean
-cd formalization
-lake env lean -o .lake/build/lib/lean/Thesis/RoutingHistory.olean Thesis/RoutingHistory.lean
-lake env lean -o .lake/build/lib/lean/Thesis/RoutingPolicyBridge.olean Thesis/RoutingPolicyBridge.lean
-```
 
-Compile sequentially (16 GB shared machine), never simultaneous full builds. The second command is expected to fail at the saved frontier. A local unused `RoutingHistory.olean` may still exist from the development compile; it is not source or production verification. No shared cache was deleted.
+All final commands exited **0**. The six `review/*-source.log`/`.exit` files,
+`review/exact-types.log`/`.exit`, and `review/boundary.log`/`.exit` retain the
+results. `review/prepare.py` renders the manually authored contracts through the
+existing repository checker; it does not infer expected statements from compiled
+types. The generated `ExactTypes.lean` is retained. `review/evidence-sha256.json`
+binds the artifacts.
 
-The five `formalization-*` skills and `math-exposition` skill under `skills/upstream-planar-features/` were read/applied. Keep exact source meaning and zero boundaries, no `sorry`, no new axioms, no `native_decide`, no frozen edits, and parent ownership of roots/config/TeX.
+Before rerunning, archive the existing review evidence. Bootstrap the pinned
+Lean/mathlib and build production dependencies. Create an isolated diagnostic
+`Thesis/` overlay with read-only symlinks to production `.olean` files, excluding
+the six draft output names. Compile the drafts sequentially in the order above.
+Set `LEAN_PATH` **inside** `lake env`; Lean selects a namespace directory before
+looking for individual files, so a partial overlay without production links
+fails. `-R` supplies the draft source root when writing objects outside the
+production source tree. Initial root/overlay setup failures are preserved in
+separate review logs.
 
-## Prior completed batches from this agent
+Producer receipts are `history-steps-receipt.json`,
+`observations-check/receipt.json`, and `readout-check/receipt.json`, all under
+`reports/evidence/routing-bridge/`. They record the earlier producer stage; the
+canonical independent report records the subsequent completed review.
 
-Before this WIP, the thirteen `SoftplusCircuit*` leaves were frozen with twenty passing exact-type contracts; independent reviewer `attack_hidden` was actively reviewing them. The single `Thesis.ConditionedTrajectory` leaf was subsequently promoted byte-for-byte from foundations' saved draft, compiled, passed five exact module/universe/type/axiom contracts and a concrete zero-survival boundary consumer, and was frozen for independent review. See `reports/softplus-circuit-repairs.md`, `reports/conditioned-trajectory-repairs.md`, and their evidence directories. Do not alter those frozen files as part of resuming this routing draft.
+## Scope to preserve
+
+- The architecture is the shared **layered Network**. Arbitrary residual/maxpool
+  routing DAG cases and varying-state-space embeddings remain outside this batch.
+- Canonical backward equivalence is at `θ = 1`. Arbitrary-profile history
+  normalization is separate from the existing SPNE theorem. No full
+  off-equilibrium forced-readout game or new SPNE certificate is asserted.
+- Ordinary surviving products, actual first-step marginals and full canonical
+  history occupations are separate proved statements. There is no blanket whole
+  stopped-history-law equivalence with a separately constructed macro process.
+- Raw inputs may be signed; the first layer fuses actual signed products. Hidden
+  layers require nonnegative activations, supplied by ReLU. Stabilizer `ε ≥ 0`
+  includes empty streams. Every activation log tie selects stopping.
+- Algebraic identities allow real `α, β`; nonnegative occupation requires
+  `α, β ≥ 0`. Discounted occupations need not be probability measures.
+- Readout backbone outputs must be nonnegative, automatic for a nonempty activated
+  backbone despite signed raw input. A zero-depth backbone with negative outputs
+  needs a separate fused readout construction. The final affine output itself
+  may be negative or zero and is ungated.
+- The original intermediate-cut corollary uses a nonempty activated prefix.
+  Actual input occupation has its own signed-input theorem.
+
+## Promotion instructions
+
+1. Coordinate with the integrating agent after its current committed gate ends.
+   Copy all six frozen files byte-for-byte into `formalization/Thesis/`.
+2. Add these three imports to `formalization/Thesis.lean`; they reach all six:
+
+   ```lean
+   import Thesis.RoutingPolicyPaths
+   import Thesis.RoutingHistorySteps
+   import Thesis.RoutingReadoutHistory
+   ```
+
+3. Append exactly the independently reviewed **20** targets to
+   `formalization/verification.json`. Update coverage and reviewed TeX mappings
+   to the actual new history/backward declarations, preserving the scope above.
+   Manual `review_id` mappings override automatic choices.
+4. Commit the source closure and bound configuration. Archive current proof
+   evidence, then run `python3 scripts/verify.py` from `formalization/` with HEAD
+   and bound files fixed. The diagnostic review does not replace this clean gate.
+5. After that gate passes, give the verified commit to the TeX task for link
+   regeneration, PDF rebuilding and publication checks. This routing task
+   performed no production promotion or publication.

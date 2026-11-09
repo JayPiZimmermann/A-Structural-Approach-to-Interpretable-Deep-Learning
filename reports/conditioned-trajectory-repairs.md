@@ -1,6 +1,13 @@
 # Conditioned trajectory composition
 
-Status: **frozen for independent review**. `Thesis.ConditionedTrajectory` is now a production leaf, copied byte-for-byte from the compiled checkpoint draft. Production compilation, all five saved exact-type/module/universe/axiom contracts, and the concrete boundary consumer pass. Independent semantic review and the parent's clean public import gate remain pending. No existing frozen production leaf, root, verification configuration, or TeX source was changed.
+Status: **independently reviewed, integrated, and cleanly verified** at source
+commit `0f3cfb0ea660556c14da510e665281f07acc471d`. The frozen production leaf is
+imported by `All`, with all five unchanged contracts in the public manifest.
+The independent overlap consumer now passes; see
+`reports/evidence/conditioned-trajectory-review/boundary-resumption.json` and
+`reports/adversarial-conditioned-trajectory-review.json`. The clean public receipt
+is `reports/verification/commit-0f3cfb0/receipt.json`. Historical producer checks
+below are preserved and do not replace that integrated receipt.
 
 The production SHA-256 is `f981b0b7669441009d6145714d7f5c518869eefae0deaa67671c4d940cfb49fe`. The original checkpoint, its four recorded hashes, and all five previously authored contracts matched before promotion; the contract file was not edited to obtain a passing check. The historical report is preserved at `reports/evidence/conditioned-trajectory/prior-checkpoint-report.md`.
 
@@ -33,4 +40,4 @@ The consumer uses the combined theorem to prove both dead-state conditioned marg
 - Imported environment audit: all 351 project theorem declarations in this leaf's import closure pass the permitted-axiom check. This is a focused development receipt, not the parent's clean committed public-closure receipt.
 - Durable receipt, command lines, exit codes, hashes, logs, and environment dump: `reports/evidence/conditioned-trajectory/receipt.json` and adjacent files.
 
-All compiles were sequential. The production leaf has no diagnostics; the boundary consumer has no diagnostics. The exact driver emits only expected type displays and unused-binder warnings from the literal independently authored contracts. No `sorry`, new axiom, unsafe reduction, or `native_decide` was introduced. The new root import and source badge integration are intentionally left to the parent after independent review.
+All compiles were sequential. The production leaf has no diagnostics; the boundary consumer has no diagnostics. The exact driver emits only expected type displays and unused-binder warnings from the literal independently authored contracts. No `sorry`, new axiom, unsafe reduction, or `native_decide` was introduced. The root import and reviewed source mapping integration are included in the clean verified snapshot named above.

@@ -1,0 +1,219 @@
+Thesis.RoutingHistory.probability_nonnegative : ∀ (t : Thesis.RoutingProfiles.Tree)
+  (plus minus : Thesis.RoutingProfiles.Strategy t) (h : Thesis.RoutingHistory.Histories t),
+  0 ≤ Thesis.RoutingHistory.probability t plus minus h
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.RoutingHistory.probability_normalized : ∀ (t : Thesis.RoutingProfiles.Tree)
+  (plus minus : Thesis.RoutingProfiles.Strategy t), ∑ h, Thesis.RoutingHistory.probability t plus minus h = 1
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.RoutingHistory.integral_root : ∀ (α β : ℝ) (t : Thesis.RoutingProfiles.Tree)
+  (plus minus : Thesis.RoutingProfiles.Strategy t) (r : ℝ),
+  Thesis.RoutingHistory.integral α β t plus minus (Thesis.RoutingHistory.rootObservation t r) = r
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingPolicyBridge.input_collapsed_transition : ∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n) (j : Fin k) (q : Bool),
+  Thesis.RoutingPolicyBridge.collapsed
+      (Thesis.RoutingProfiles.canonical 1 (Thesis.RoutingNetwork.inputLayerGames wp wn bp bn ε hε x j q)).1
+      (Thesis.RoutingPolicyBridge.inputPositive wp wn bp bn ε hε x j q)
+      (Thesis.RoutingPolicyBridge.inputNegative wp wn bp bn ε hε x j q) q =
+    Thesis.RoutingTransitions.transition wp wn bp bn ε x j q
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/routing-bridge/review/ExactTypes.lean:119:170: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/routing-bridge/review/ExactTypes.lean:119:190: warning: Variable name `hv` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hv
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.RoutingPolicyBridge.layer_collapsed_transition : ∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (ε : ℝ) (hε : 0 ≤ ε) (input : Fin n → Bool → Thesis.RoutingProfiles.Tree)
+  (x : HiddenMonotonicity.Vec n),
+  (∀ (i : Fin n), 0 ≤ x i) →
+    (∀ (i : Fin n) (q : Bool), Thesis.RoutingProfiles.value 1 (input i q) = Thesis.RoutingProfiles.signed q (x i)) →
+      ∀ (j : Fin k) (q : Bool),
+        Thesis.RoutingPolicyBridge.collapsed
+            (Thesis.RoutingProfiles.canonical 1 (Thesis.RoutingNetwork.layerGames wp wn bp bn ε hε input j q)).1
+            (Thesis.RoutingPolicyBridge.layerPositive wp wn bp bn ε hε input j q)
+            (Thesis.RoutingPolicyBridge.layerNegative wp wn bp bn ε hε input j q) q =
+          Thesis.RoutingTransitions.transition wp wn bp bn ε x j q
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingPolicyPaths.networkProbability_eq : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m) (α β ε : ℝ)
+  (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n) (j : Fin m) (i : Fin n) (q r : Bool)
+  (path : Thesis.BackwardGames.Paths (Thesis.RoutingBackward.routingTrace α β ε net x)),
+  Thesis.RoutingPolicyPaths.networkProbability α β ε hε net x j i q r path =
+    Thesis.RoutingBackward.rgProbability α β ε net x j i (q ^^ r) path
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingPolicyPaths.policyDiscount_eq : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m) (α β ε : ℝ)
+  (x : HiddenMonotonicity.Vec n) (i : Fin n)
+  (path : Thesis.BackwardGames.Paths (Thesis.RoutingBackward.routingTrace α β ε net x)),
+  Thesis.RoutingPolicyPaths.policyDiscount α β ε net x i path = Thesis.RoutingBackward.rgDiscount α β ε net x path
+'_ThesisExactChecks.target_6' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingObservations.networkOccupation_eq_rgOccupation : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m)
+  (α β ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n) (j : Fin m) (q : Bool) (i : Fin n) (r : Bool),
+  Thesis.RoutingObservations.networkOccupation net α β ε hε x j q i r =
+    Thesis.RoutingBackward.rgOccupation net α β ε x j i (q ^^ r)
+'_ThesisExactChecks.target_7' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingObservations.network_alpha_beta_recovery : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m) (α β ε : ℝ)
+  (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n) (R : HiddenMonotonicity.Vec m) (i : Fin n),
+  Thesis.RoutingBackward.lrp α β ε net x R i =
+    ∑ j,
+      R j *
+        (Thesis.RoutingObservations.networkOccupation net α β ε hε x j true i true -
+          Thesis.RoutingObservations.networkOccupation net α β ε hε x j true i false)
+'_ThesisExactChecks.target_8' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingObservations.network_intermediateOccupation : ∀ {d k n m : ℕ} (wp wn : Matrix (Fin k) (Fin d) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (pre : HiddenMonotonicity.Network k n) (suffix : HiddenMonotonicity.Network n m)
+  (α β ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec d) (j : Fin m) (q : Bool) (i : Fin n) (r : Bool),
+  Thesis.RoutingObservations.intermediateOccupation suffix α β ε hε
+      (Thesis.RoutingNetwork.networkGame (HiddenMonotonicity.Network.layer wp wn bp bn pre) ε hε x) j q i r =
+    Thesis.RoutingBackward.rgOccupation suffix α β ε ((HiddenMonotonicity.Network.layer wp wn bp bn pre).eval x) j i
+      (q ^^ r)
+'_ThesisExactChecks.target_9' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingPolicyPaths.canonical_path_occupation : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m) (α β ε : ℝ)
+  (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n) (j : Fin m) (i : Fin n) (q r : Bool),
+  ∑ path,
+      Thesis.RoutingPolicyPaths.policyDiscount α β ε net x i path *
+        Thesis.RoutingPolicyPaths.networkProbability α β ε hε net x j i q r path =
+    Thesis.RoutingBackward.rgOccupation net α β ε x j i (q ^^ r)
+'_ThesisExactChecks.target_10' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingObservations.networkGame_append_layer : ∀ {d k n m : ℕ} (wp wn : Matrix (Fin k) (Fin d) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (pre : HiddenMonotonicity.Network k n) (suffix : HiddenMonotonicity.Network n m)
+  (ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec d),
+  Thesis.RoutingNetwork.networkGame ((HiddenMonotonicity.Network.layer wp wn bp bn pre).append suffix) ε hε x =
+    Thesis.RoutingNetwork.propagate ε hε suffix
+      (Thesis.RoutingNetwork.networkGame (HiddenMonotonicity.Network.layer wp wn bp bn pre) ε hε x)
+'_ThesisExactChecks.target_11' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingHistorySteps.input_history_transition : ∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n) (j : Fin k) (q : Bool)
+  (target : Option (Fin n × Bool)),
+  (∑ h,
+      if
+          Thesis.RoutingPolicyBridge.stepTarget q
+              (Thesis.RoutingHistorySteps.inputProjection wp wn bp bn ε hε x j q h) =
+            target then
+        Thesis.RoutingHistory.probability (Thesis.RoutingNetwork.inputLayerGames wp wn bp bn ε hε x j q)
+          (Thesis.RoutingProfiles.canonical 1 (Thesis.RoutingNetwork.inputLayerGames wp wn bp bn ε hε x j q))
+          (Thesis.RoutingProfiles.canonical 1 (Thesis.RoutingNetwork.inputLayerGames wp wn bp bn ε hε x j q)) h
+      else 0) =
+    Thesis.RoutingTransitions.transition wp wn bp bn ε x j q target
+'_ThesisExactChecks.target_12' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/routing-bridge/review/ExactTypes.lean:353:171: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/routing-bridge/review/ExactTypes.lean:353:191: warning: Variable name `hv` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hv
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.RoutingHistorySteps.layer_history_transition : ∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (ε : ℝ) (hε : 0 ≤ ε) (input : Fin n → Bool → Thesis.RoutingProfiles.Tree)
+  (x : HiddenMonotonicity.Vec n),
+  (∀ (i : Fin n), 0 ≤ x i) →
+    (∀ (i : Fin n) (q : Bool), Thesis.RoutingProfiles.value 1 (input i q) = Thesis.RoutingProfiles.signed q (x i)) →
+      ∀ (j : Fin k) (q : Bool) (target : Option (Fin n × Bool)),
+        (∑ h,
+            if
+                Thesis.RoutingPolicyBridge.stepTarget q
+                    (Thesis.RoutingHistorySteps.layerProjection wp wn bp bn ε hε input j q h) =
+                  target then
+              Thesis.RoutingHistory.probability (Thesis.RoutingNetwork.layerGames wp wn bp bn ε hε input j q)
+                (Thesis.RoutingProfiles.canonical 1 (Thesis.RoutingNetwork.layerGames wp wn bp bn ε hε input j q))
+                (Thesis.RoutingProfiles.canonical 1 (Thesis.RoutingNetwork.layerGames wp wn bp bn ε hε input j q)) h
+            else 0) =
+          Thesis.RoutingTransitions.transition wp wn bp bn ε x j q target
+'_ThesisExactChecks.target_13' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.RoutingReadoutHistory.forcedProbability_normalized : ∀ (θ : ℝ) (positive negative : Thesis.RoutingProfiles.Tree),
+  ∑ h, Thesis.RoutingReadoutHistory.forcedProbability θ positive negative h = 1
+'_ThesisExactChecks.target_14' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/routing-bridge/review/ExactTypes.lean:405:159: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.RoutingReadoutHistory.readoutHistoryOccupation_eq_readoutOccupation : ∀ {n m r : ℕ}
+  (net : HiddenMonotonicity.Network n m) (C : Matrix (Fin r) (Fin m) ℝ) (b : HiddenMonotonicity.Vec r) (α β ε : ℝ)
+  (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n),
+  (∀ (j : Fin m), 0 ≤ net.eval x j) →
+    ∀ (u : Fin r) (q : Bool) (i : Fin n) (owner : Bool),
+      Thesis.RoutingReadoutHistory.readoutHistoryOccupation net C b α β ε hε x u q i owner =
+        Thesis.AffineOutputBackward.readoutOccupation net C b α β ε x u i (q ^^ owner)
+'_ThesisExactChecks.target_15' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/routing-bridge/review/ExactTypes.lean:431:159: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.RoutingReadoutHistory.affine_output_history_lrp : ∀ {n m r : ℕ} (net : HiddenMonotonicity.Network n m)
+  (C : Matrix (Fin r) (Fin m) ℝ) (b : HiddenMonotonicity.Vec r) (α β ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n),
+  (∀ (j : Fin m), 0 ≤ net.eval x j) →
+    ∀ (R : HiddenMonotonicity.Vec r) (i : Fin n),
+      Thesis.AffineOutputBackward.affineOutputLRP net C b α β ε x R i =
+        ∑ u,
+          R u *
+            (Thesis.RoutingReadoutHistory.readoutHistoryOccupation net C b α β ε hε x u true i true -
+              Thesis.RoutingReadoutHistory.readoutHistoryOccupation net C b α β ε hε x u true i false)
+'_ThesisExactChecks.target_16' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/routing-bridge/review/ExactTypes.lean:457:155: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.RoutingReadoutHistory.readout_forward : ∀ {n m r : ℕ} (net : HiddenMonotonicity.Network n m)
+  (C : Matrix (Fin r) (Fin m) ℝ) (b : HiddenMonotonicity.Vec r) (ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n),
+  (∀ (j : Fin m), 0 ≤ net.eval x j) →
+    ∀ (u : Fin r) (q : Bool),
+      Thesis.RoutingProfiles.value 1 (Thesis.RoutingReadoutHistory.positiveReadout net C b ε hε x u q) +
+          Thesis.RoutingProfiles.value 1 (Thesis.RoutingReadoutHistory.negativeReadout net C b ε hε x u q) =
+        Thesis.RoutingProfiles.signed q (Thesis.AffineOutputBackward.affineOutput net C b x u)
+'_ThesisExactChecks.target_17' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingReadoutHistory.affine_output_layer_history_lrp : ∀ {n k m r : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (tail : HiddenMonotonicity.Network k m) (C : Matrix (Fin r) (Fin m) ℝ)
+  (b : HiddenMonotonicity.Vec r) (α β ε : ℝ) (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n) (R : HiddenMonotonicity.Vec r)
+  (i : Fin n),
+  Thesis.AffineOutputBackward.affineOutputLRP (HiddenMonotonicity.Network.layer wp wn bp bn tail) C b α β ε x R i =
+    ∑ u,
+      R u *
+        (Thesis.RoutingReadoutHistory.readoutHistoryOccupation (HiddenMonotonicity.Network.layer wp wn bp bn tail) C b α
+            β ε hε x u true i true -
+          Thesis.RoutingReadoutHistory.readoutHistoryOccupation (HiddenMonotonicity.Network.layer wp wn bp bn tail) C b
+            α β ε hε x u true i false)
+'_ThesisExactChecks.target_18' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/routing-bridge/review/ExactTypes.lean:509:134: warning: Variable name `hα` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hα
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/routing-bridge/review/ExactTypes.lean:509:147: warning: Variable name `hβ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hβ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/routing-bridge/review/ExactTypes.lean:509:185: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.RoutingReadoutHistory.readoutHistoryOccupation_nonnegative : ∀ {n m r : ℕ}
+  (net : HiddenMonotonicity.Network n m) (C : Matrix (Fin r) (Fin m) ℝ) (b : HiddenMonotonicity.Vec r) (α β ε : ℝ),
+  0 ≤ α →
+    0 ≤ β →
+      ∀ (hε : 0 ≤ ε) (x : HiddenMonotonicity.Vec n),
+        (∀ (j : Fin m), 0 ≤ net.eval x j) →
+          ∀ (u : Fin r) (q : Bool) (i : Fin n) (owner : Bool),
+            0 ≤ Thesis.RoutingReadoutHistory.readoutHistoryOccupation net C b α β ε hε x u q i owner
+'_ThesisExactChecks.target_19' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 919 project theorem declarations in the imported environment

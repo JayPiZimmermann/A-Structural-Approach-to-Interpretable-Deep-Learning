@@ -1,0 +1,59 @@
+{
+  "targets": [
+    {
+      "module": "Thesis.RoutingReadoutHistory",
+      "declaration": "Thesis.RoutingReadoutHistory.readout_forward",
+      "expected_type": "∀ {n m r : ℕ} (net : Network n m) (C : Matrix (Fin r) (Fin m) ℝ) (b : Vec r) (ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (hx : ∀ j, 0 ≤ net.eval x j) (u : Fin r) (q : Bool), value 1 (positiveReadout net C b ε hε x u q) + value 1 (negativeReadout net C b ε hε x u q) = signed q (affineOutput net C b x u)",
+      "open_namespaces": ["HiddenMonotonicity", "Thesis.RoutingProfiles", "Thesis.RoutingReadoutHistory", "Thesis.AffineOutputBackward"],
+      "open_scopes": ["BigOperators"],
+      "universes": [],
+      "review_id": "routing-readout-affine-forward",
+      "review_evidence": "reports/evidence/routing-bridge/draft/Thesis/RoutingReadoutHistory.lean",
+      "scope": "The two actual route-subgame values sum to the signed affine logit, retaining the bias and cancelling the common stabilizer; there is no final activation gate."
+    },
+    {
+      "module": "Thesis.RoutingReadoutHistory",
+      "declaration": "Thesis.RoutingReadoutHistory.forcedProbability_normalized",
+      "expected_type": "∀ (θ : ℝ) (positive negative : Tree), (∑ h : ForcedHistories positive negative, forcedProbability θ positive negative h) = 1",
+      "open_namespaces": ["Thesis.RoutingProfiles", "Thesis.RoutingReadoutHistory"],
+      "open_scopes": ["BigOperators"],
+      "universes": [],
+      "review_id": "routing-readout-forced-normalization",
+      "review_evidence": "reports/evidence/routing-bridge/readout-check/ForcedOracle.lean",
+      "scope": "A fair forced oracle over two complete canonical routing histories; no activation gate or collapsed absorption is introduced."
+    },
+    {
+      "module": "Thesis.RoutingReadoutHistory",
+      "declaration": "Thesis.RoutingReadoutHistory.readoutHistoryOccupation_eq_readoutOccupation",
+      "expected_type": "∀ {n m r : ℕ} (net : Network n m) (C : Matrix (Fin r) (Fin m) ℝ) (b : Vec r) (α β ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (hx : ∀ j, 0 ≤ net.eval x j) (u : Fin r) (q : Bool) (i : Fin n) (owner : Bool), readoutHistoryOccupation net C b α β ε hε x u q i owner = readoutOccupation net C b α β ε x u i (Bool.xor q owner)",
+      "open_namespaces": ["HiddenMonotonicity", "Thesis.RoutingReadoutHistory", "Thesis.AffineOutputBackward"],
+      "open_scopes": ["BigOperators"],
+      "universes": [],
+      "review_id": "routing-readout-full-history-occupation",
+      "review_evidence": "reports/evidence/routing-bridge/draft/Thesis/RoutingReadoutHistory.lean",
+      "scope": "Actual forced-oracle complete-history occupation equals the existing affine-readout discounted occupation. Requires nonnegative backbone output, preserves signed raw input when an activated backbone supplies that condition, and includes epsilon zero."
+    },
+    {
+      "module": "Thesis.RoutingReadoutHistory",
+      "declaration": "Thesis.RoutingReadoutHistory.affine_output_layer_history_lrp",
+      "expected_type": "∀ {n k m r : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k) (tail : Network k m) (C : Matrix (Fin r) (Fin m) ℝ) (b : Vec r) (α β ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (R : Vec r) (i : Fin n), affineOutputLRP (Network.layer wp wn bp bn tail) C b α β ε x R i = ∑ u, R u * (readoutHistoryOccupation (Network.layer wp wn bp bn tail) C b α β ε hε x u true i true - readoutHistoryOccupation (Network.layer wp wn bp bn tail) C b α β ε hε x u true i false)",
+      "open_namespaces": ["HiddenMonotonicity", "Thesis.RoutingReadoutHistory", "Thesis.AffineOutputBackward"],
+      "open_scopes": ["BigOperators"],
+      "universes": [],
+      "review_id": "routing-readout-affine-lrp",
+      "review_evidence": "reports/evidence/routing-bridge/draft/Thesis/RoutingReadoutHistory.lean",
+      "scope": "Alpha-beta LRP for a nonempty varying-width activated backbone followed by an arbitrary signed, biased, ungated affine readout; raw inputs may be signed. The identity is algorithmic, not a claim that LRP is the classical gradient."
+    },
+    {
+      "module": "Thesis.RoutingReadoutHistory",
+      "declaration": "Thesis.RoutingReadoutHistory.readoutHistoryOccupation_nonnegative",
+      "expected_type": "∀ {n m r : ℕ} (net : Network n m) (C : Matrix (Fin r) (Fin m) ℝ) (b : Vec r) (α β ε : ℝ) (hα : 0 ≤ α) (hβ : 0 ≤ β) (hε : 0 ≤ ε) (x : Vec n) (hx : ∀ j, 0 ≤ net.eval x j) (u : Fin r) (q : Bool) (i : Fin n) (owner : Bool), 0 ≤ readoutHistoryOccupation net C b α β ε hε x u q i owner",
+      "open_namespaces": ["HiddenMonotonicity", "Thesis.RoutingReadoutHistory"],
+      "open_scopes": ["BigOperators"],
+      "universes": [],
+      "review_id": "routing-readout-nonnegative-occupation",
+      "review_evidence": "reports/evidence/routing-bridge/draft/Thesis/RoutingReadoutHistory.lean",
+      "scope": "Nonnegative discounts and epsilon imply nonnegative full-history occupation. No probability normalization is claimed for discounted occupation."
+    }
+  ]
+}
