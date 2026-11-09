@@ -206,11 +206,11 @@
   "thm:deriv-occ": {
     "status": "partial",
     "lean": [
-      "Thesis.BackwardGames.thesis_gradient_representation",
-      "Thesis.BackwardGames.stopping_game_gradient",
-      "Thesis.BackwardGames.sgTransition_normalized"
+      "Thesis.StoppingBoundary.strict_stopping_decomposition_gradient",
+      "Thesis.StoppingBoundary.strict_gradient_occupation",
+      "Thesis.StoppingBoundary.strict_affine_output_gradient"
     ],
-    "scope": "Explicit discounted sign-labelled finite path occupation difference equals the actual shared Network Frechet derivative on a strict ReLU cell, with positive fan-in. Local cemetery-inclusive transition normalization and positivity are checked. This covers the gradient/occupation identity for the stated gate policy, not a global SPNE/equilibrium existence theorem."
+    "scope": "Actual classical stopping-head and ordinary-network derivatives on strict cells of the shared varying-width MLP, equal to discounted sign-labelled occupations, including zero fan-in and ungated affine readout. At ties selected-mask identities are separate. General residual/max-pooling DAG derivative assembly remains open."
   },
   "thm:gradient": {
     "status": "partial",
@@ -233,10 +233,10 @@
   "thm:ab-recovery": {
     "status": "partial",
     "lean": [
-      "Thesis.RoutingBackward.thesis_alpha_beta_recovery",
-      "Thesis.AffineOutputBackward.thesis_affine_output_lrp"
+      "Thesis.RoutingSupport.source_alpha_beta_output_seed",
+      "Thesis.RoutingSupport.source_affine_output_lrp"
     ],
-    "scope": "Entire shared Network alpha-beta backward recurrence from actual weights and activations equals signed discounted explicit paths for arbitrary output relevance. Positive epsilon and nonnegative alpha/beta give valid nonnegative path quantities. Recovery for the stated anchor policies is proved; global game SPNE and the epsilon=0 degenerate convention are not included."
+    "scope": "The literal ungated source alpha-beta recurrence for ordinary output relevance is bridged to the actual network-derived routing path occupation. The affine-output wrapper includes biases and arbitrary scalar target seeds. The algebraic recovery includes epsilon zero with the zero-division convention; nonnegative probabilities and occupations are separately certified for epsilon at least zero."
   },
   "def:trajectory-distribution": {
     "status": "encoded_definition",
@@ -525,5 +525,60 @@
       "HiddenMonotonicity.SmoothDC.tanh_smooth_dc_split"
     ],
     "scope": "Sigmoid, tanh and positive-temperature softplus with genuinely proved curvature integrability, local absolute continuity and nonnegative valid split pairs; exact GELU, Swish and Mish specializations remain open."
+  },
+  "prop:curvature_minimality": {
+    "status": "partial",
+    "lean": [
+      "HiddenMonotonicity.SmoothDC.curvature_minimality_locally_AC"
+    ],
+    "scope": "Curvature lower bounds, common-affine uniqueness and minimum tilt under actual locally absolutely continuous derivatives. The bridge from the manuscript distributional assumption to that regularity remains open."
+  },
+  "thm:decomp-recovery": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.StoppingDecomposition.thesis_stopping_validity"
+    ],
+    "scope": "Actual stopping pair propagation and full shared-MLP reconstruction at every input, including gate ties."
+  },
+  "thm:forward-stopping": {
+    "status": "partial",
+    "lean": [
+      "Thesis.SourceFoundations.relu_net_game_value_affine",
+      "Thesis.StoppingDecomposition.thesis_stopping_validity"
+    ],
+    "scope": "Actual randomized two-player ReLU-network equilibrium with signed affine output and recursive subgame-perfect characterization, plus actual stopping decomposition recovery. The separate two-player bookkeeping coordinates and general DAG correspondence remain to be assembled."
+  },
+  "lem:alive-mismatch": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.Randomization.thesis_alive_mismatch_ordinary",
+      "Thesis.Randomization.thesis_alive_mismatch_full"
+    ],
+    "scope": "Ordinary overlap vanishes under alive/dead mismatch. Full overlap vanishes under the explicitly required absence of alive-state cemetery leakage."
+  },
+  "thm:rand-adf": {
+    "status": "partial",
+    "lean": [
+      "Thesis.RandomizationExpectation.thesis_rand_adf_full_depth",
+      "Thesis.RandomizationExpectation.thesis_conditioned_survival_lower"
+    ],
+    "scope": "Actual conditional-expectation bound for random geometric kernels and full-depth extension, including survival-threshold normalization. The bridge from a concrete independently randomized weight model to the conditional alive-probability hypothesis remains open."
+  },
+  "thm:rand-routing": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.RoutingExpectation.conditional_affinity_full_depth",
+      "Thesis.Randomization.thesis_randomization_routing_full_depth"
+    ],
+    "scope": "Full-depth expected ordinary overlap contraction under an explicit conditional row-affinity bound, with actual square-root geometric kernels. Continuous weight randomization alone is not asserted to establish that bound."
+  },
+  "thm:routing-forward": {
+    "status": "partial",
+    "lean": [
+      "Thesis.RoutingGate.chosenLogAction_optimal",
+      "Thesis.RoutingGate.chosenLogAction_mass",
+      "Thesis.Regularization.routing_variational"
+    ],
+    "scope": "The explicit log-space stop-at-every-tie activation optimizer and its ReLU mass, plus finite-real-score Gibbs optimization. Full all-profile routing-game equilibrium and zero-score support cases are still being assembled."
   }
 }

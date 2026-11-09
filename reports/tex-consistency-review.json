@@ -1,0 +1,35 @@
+{
+  "review": "read-only TeX consistency review",
+  "scope": [
+    "tex/chapters/02_foundations.tex",
+    "tex/chapters/03_decompositions.tex",
+    "tex/chapters/04_game_theory.tex",
+    "tex/chapters/05_saliency.tex",
+    "arxive/hiddenMonotonicity/sections/preliminaries.tex",
+    "arxive/hiddenMonotonicity/sections/method.tex",
+    "arxive/hiddenMonotonicity/appendix/proofs.tex",
+    "arxive/playingTheNetworkBackward/main.tex"
+  ],
+  "checks": {
+    "label_and_reference_scan": "No unresolved ref/eqref/cref/autoref/pageref targets found in the scoped files. The repository-wide label scan sees duplicate labels in separately maintained snapshots/archive documents; no duplicate within the reviewed active source was identified as an edit regression.",
+    "final_affine_readout": "The reviewed hidden-layer range l<L, ungated a^(L)=z^(L), output placeholders M^(L,+)=I and M^(L,-)=0, and Q[L]=0 conventions agree across the relevant passages. The Q[j+1] summation includes the affine endpoint only as a zero correction.",
+    "math_review_boundary": "Static prose/equation consistency only; no Lean mathematics was evaluated and no full TeX build was run."
+  },
+  "findings": [
+    {
+      "severity": "definite wording contradiction",
+      "paths": [
+        {"path": "tex/chapters/04_game_theory.tex", "line": 713},
+        {"path": "arxive/playingTheNetworkBackward/main.tex", "line": 1222}
+      ],
+      "issue": "The parenthetical says the implementation continues at exact ties, while the surrounding remark names the selected SPNE stop-at-tie-breaks equilibrium. The routing-game theorem/proof later in the same sources explicitly selects stopping at every tie in log space. This leaves the selected backward branch at zero pre-activation ambiguous and appears to contradict the documented convention.",
+      "minimal_repair": "If stop-at-ties is the intended implementation convention, replace ‘the implementation continues at exact ties’ with ‘the selected equilibrium stops at exact ties’ (or remove the parenthetical). If the implementation deliberately differs, state that distinction explicitly and do not identify its backward quantities with the selected equilibrium at ties.",
+      "classification": "definite textual inconsistency; confirm the implementation convention before choosing the exact replacement"
+    }
+  ],
+  "no_finding": [
+    "The hidden-network Q definition, final-layer masks, summation endpoint, and shifted-product indexing are consistent in the inspected statements and proof context.",
+    "The selected-gate caveats distinguish classical derivatives on strict-gate regions from branch-selected backward quantities at ties; no direct contradiction was found in those caveats.",
+    "The regularized-decomposition theorem explicitly limits its conjugate activation identity to hidden layers and treats the output as an affine identity pair, avoiding a hidden/output activation mismatch."
+  ]
+}

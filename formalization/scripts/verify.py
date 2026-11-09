@@ -88,7 +88,7 @@ def exact_driver(manifest, output):
         # Elaborate the proposition in its own declaration, before the target proof can
         # constrain any unresolved terms in the purported expected statement.
         lines += [f'def {expected_name}{expected_sort} := ({typ})',
-                  f'{marker_kind} {marker} : {expected_name} := by exact @{name}{suffix}', 'end',
+                  f'{marker_kind} {marker} : {expected_name}{suffix} := by exact @{name}{suffix}', 'end',
                   'run_cmd do', f'  let target ← getConstInfo `{name}',
                   f'  let expected ← getConstInfo `{marker}',
                   f'  unless target.levelParams.length == {len(universes)} && expected.levelParams.length == {len(universes)} do',
@@ -120,6 +120,14 @@ def main():
     out = args.output.resolve()
     out.mkdir(parents=True, exist_ok=True)
     manifest = json.loads((FORMAL / 'verification.json').read_text())
+    target_names = [t['declaration'] for t in manifest['targets']]
+    if len(target_names) != len(set(target_names)):
+        raise SystemExit('Duplicate exact target contracts')
+    linked_names = {t['declaration'] for t in
+                    json.loads((FORMAL / 'tex_links.json').read_text()).values()}
+    if linked_names - set(target_names):
+        raise SystemExit('TeX links without reviewed exact contracts: ' +
+                         ', '.join(sorted(linked_names - set(target_names))))
     modules = import_closure(manifest['public_root'])
     topical = {str(p.relative_to(FORMAL).with_suffix('')).replace('/', '.')
                for folder in ['HiddenMonotonicity', 'Thesis']
@@ -180,6 +188,13 @@ def main():
         receipt.update(status='passed', environment_theorem_count=len(environment),
                        source_theorem_count=len(declared),
                        generated_theorems=sorted(actual_names - declared),
+                       secondary_theorems=[{
+                           'declaration': row['declaration'], 'module': row['module'],
+                           'type_sha256': sha(row['type'].encode()),
+                           'module_sha256': before['sha256'][
+                               'formalization/' + row['module'].replace('.', '/') + '.lean'],
+                           'scope': 'Secondary or generated result: included in the complete axiom audit; not an independently reviewed source-link contract.'
+                       } for row in environment if row['declaration'] not in set(target_names)],
                        completed_utc=datetime.now(timezone.utc).isoformat(),
                        artifacts={p.name: sha(p.read_bytes()) for p in [driver, out / 'environment.json']})
     except Exception as exc:

@@ -1,0 +1,122 @@
+@Network.plain_head_gradient_formulas : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (x : Vec n),
+      net.Strict x →
+        ∀ (r : Row m),
+          HasFDerivAt (fun y => r (net.split ((1 / 2) • y) ((-1 / 2) • y)).1)
+              ((1 / 2) •
+                (r ∘SL (net.originalTrace x).originalJac - (sourceRows (net.absoluteQSources x fun x => 0) r).sum))
+              x ∧
+            HasFDerivAt (fun y => r (net.split ((1 / 2) • y) ((-1 / 2) • y)).2)
+              ((-1 / 2) •
+                (r ∘SL (net.originalTrace x).originalJac + (sourceRows (net.absoluteQSources x fun x => 0) r).sum))
+              x
+@Network.stabilized_backward_absolute_Q_closed_form : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (x : Vec n),
+      net.Strict x →
+        ∀ (α : ℕ → ℝ) (r : Row m),
+          (∀ q ∈ net.absoluteQSources x α, HasFDerivAt q.value q.jacobian x) ∧
+            unified ((net.originalTrace x).stabilized α r true) =
+                (1 / 2) • (r ∘SL (net.originalTrace x).originalJac - (sourceRows (net.absoluteQSources x α) r).sum) ∧
+              unified ((net.originalTrace x).stabilized α r false) =
+                (-1 / 2) • (r ∘SL (net.originalTrace x).originalJac + (sourceRows (net.absoluteQSources x α) r).sum)
+@Network.backward_partial_invariants : ∀ {n m : ℕ} (net : Network n m) (x : Vec n),
+  net.Strict x →
+    ∀ (α : ℕ → ℝ) (r : Row m),
+      HasFDerivAt (fun y => r (net.eval y)) (r ∘SL (net.originalTrace x).originalJac) x ∧
+        ((net.originalTrace x).stabilized α r true).1 - ((net.originalTrace x).stabilized α r false).1 =
+            r ∘SL (net.originalTrace x).originalJac ∧
+          ((net.originalTrace x).stabilized α r true).2 - ((net.originalTrace x).stabilized α r false).2 =
+            -r ∘SL (net.originalTrace x).originalJac
+@Network.affine_readout_closed_form : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (x : Vec n),
+      net.Strict x →
+        ∀ (α : ℕ → ℝ) (rPlus rMinus : Row m) (β : ℝ),
+          (∀ q ∈ net.absoluteQSources x α, HasFDerivAt q.value q.jacobian x) ∧
+            unified ((net.originalTrace x).run α (affineReadoutSeed rPlus rMinus β true)) =
+                (1 / 2) •
+                  ((rPlus - rMinus) ∘SL (net.originalTrace x).originalJac -
+                    (sourceRows (net.absoluteQSources x α) ((1 - 2 * β) • (rPlus + rMinus))).sum) ∧
+              unified ((net.originalTrace x).run α (affineReadoutSeed rPlus rMinus β false)) =
+                (-1 / 2) •
+                  ((rPlus - rMinus) ∘SL (net.originalTrace x).originalJac +
+                    (sourceRows (net.absoluteQSources x α) ((1 - 2 * β) • (rPlus + rMinus))).sum)
+@Network.affine_logit_derivative : ∀ {n m : ℕ} (net : Network n m) (x : Vec n),
+  net.Strict x →
+    ∀ (rPlus rMinus : Row m) (bias : ℝ),
+      HasFDerivAt (fun y => (rPlus - rMinus) (net.eval y) + bias)
+        ((rPlus - rMinus) ∘SL (net.originalTrace x).originalJac) x
+@Network.sensitivity_complementarity_absolute : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (x : PairVec n) (r : Row m) (head : Bool),
+      ((net.trace x).stabilized (fun x => 0) r head).1 + ((net.trace x).stabilized (fun x => 0) r head).2 =
+        r ∘SL net.absoluteMap
+@Network.symmetric_head_derivative : ∀ {n m : ℕ} (net : Network n m) (x : Vec n),
+  net.Strict x →
+    ∀ (r : Row m) (head : Bool),
+      HasFDerivAt
+        (fun y =>
+          if head = true then r (net.split ((1 / 2) • y) ((-1 / 2) • y)).1
+          else r (net.split ((1 / 2) • y) ((-1 / 2) • y)).2)
+        (unified ((net.originalTrace x).stabilized (fun x => 0) r head)) x
+@Network.hasFDerivAt_originalTrace : ∀ {n m : ℕ} (net : Network n m) (x : Vec n),
+  net.Strict x → HasFDerivAt net.eval (net.originalTrace x).originalJac x
+@Network.gradient_blindness : ∀ {n m : ℕ} (net : Network n m) (x : Vec n),
+  net.Strict x →
+    ∀ (j : Fin m) (i : Fin n),
+      (∀ (path : Thesis.BackwardGames.Paths (net.originalTrace x)),
+          PathConnected (net.originalTrace x) j i path → PathHasInactive (net.originalTrace x) path) →
+        ∃ U, IsOpen U ∧ x ∈ U ∧ ∀ y ∈ U, (fderiv ℝ net.eval y) (Pi.single i 1) j = 0
+@Circuit.cnn_split_correct : ∀ {d n : ℕ} (c : Circuit d n) (center : Bool) (x : Fin d × Bool → ℝ),
+  0 ≤ x →
+    (0 ≤ (c.split center x).1 ∧ 0 ≤ (c.split center x).2) ∧
+      ∀ (i : Fin n), (c.split center x).1 i - (c.split center x).2 i = c.eval (fun j => x (j, false) - x (j, true)) i
+@Circuit.cnn_stream_properties : ∀ {d n : ℕ} (c : Circuit d n),
+  c.Additive →
+    (∀ (x y : Fin d × Bool → ℝ),
+        x ≤ y →
+          ∀ (i : Fin n),
+            (c.split false x).1 i ≤ (c.split false y).1 i ∧ (c.split false x).2 i ≤ (c.split false y).2 i) ∧
+      ∀ (x y : Fin d × Bool → ℝ) (t : ℝ),
+        0 ≤ t →
+          t ≤ 1 →
+            ∀ (i : Fin n),
+              (c.split false fun a => t * x a + (1 - t) * y a).1 i ≤
+                  t * (c.split false x).1 i + (1 - t) * (c.split false y).1 i ∧
+                (c.split false fun a => t * x a + (1 - t) * y a).2 i ≤
+                  t * (c.split false x).2 i + (1 - t) * (c.split false y).2 i
+@Circuit.maxout_multiplication_split_correct : ∀ {d n : ℕ} (c : Circuit d n) (x : Vec d) (i : Fin n),
+  c.eval x i =
+    (c.positiveExpressions.1 i).polynomialMaximum.eval (canonicalSplitInput x) -
+      (c.positiveExpressions.2 i).polynomialMaximum.eval (canonicalSplitInput x)
+@Circuit.ordinary_polynomial_stream_witnesses : ∀ {d n : ℕ} (c : Circuit d n) (i : Fin n),
+  (∃ ps,
+      ps ≠ [] ∧
+        (∀ p ∈ ps, ∀ (a : Fin d × Bool →₀ ℕ), 0 ≤ p.coeff a) ∧
+          ∀ (x : Fin d × Bool → ℝ), 0 ≤ x → (c.split false x).1 i = foldMax (List.map (⇑(MvPolynomial.eval x)) ps)) ∧
+    ∃ ps,
+      ps ≠ [] ∧
+        (∀ p ∈ ps, ∀ (a : Fin d × Bool →₀ ℕ), 0 ≤ p.coeff a) ∧
+          ∀ (x : Fin d × Bool → ℝ), 0 ≤ x → (c.split false x).2 i = foldMax (List.map (⇑(MvPolynomial.eval x)) ps)
+@maxpool_correct : ∀ {ι : Type u_1} [inst : Fintype ι] [inst_1 : Nonempty ι] [inst_2 : DecidableEq ι] (p n : ι → ℝ),
+  (Finset.univ.sup' ⋯ fun j => p j + ∑ i ∈ Finset.univ.erase j, n i) - ∑ i, n i = Finset.univ.sup' ⋯ fun j => p j - n j
+@winner_pool_correct : ∀ {ι : Type u_1} (p n : ι → ℝ) (j : ι), p j - n j = (p - n) j
+pre_difference : ∀ (wp wn p n : ℝ), posPre wp wn p n - negPre wp wn p n = (wp - wn) * (p - n)
+@layer_difference : ∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Fin k → ℝ) (p n' : Fin n → ℝ),
+  (fun i => max ((wp.mulVec p + wn.mulVec n' + bp) i) ((wn.mulVec p + wp.mulVec n' + bn) i)) -
+      (wn.mulVec p + wp.mulVec n' + bn) =
+    fun i => relu (((wp - wn).mulVec (p - n') + (bp - bn)) i)
+'HiddenMonotonicity.Network.plain_head_gradient_formulas' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.Network.stabilized_backward_absolute_Q_closed_form' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'HiddenMonotonicity.Network.affine_readout_closed_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.Circuit.cnn_split_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.Circuit.maxout_multiplication_split_correct' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'AttackHidden.zeroNet_split_differentiable' depends on axioms: [propext, Classical.choice, Quot.sound]
+'AttackHidden.intermediate_bulk_not_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'AttackHidden.eta_zero_negative_midpoint_violation' depends on axioms: [propext, Classical.choice, Quot.sound]

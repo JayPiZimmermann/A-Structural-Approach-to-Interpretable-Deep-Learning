@@ -1,0 +1,265 @@
+@Thesis.StoppingBoundary.transition_normalized : ∀ {n k : ℕ} (wp wn : Matrix.{0, 0, 0} (Fin k) (Fin n) ℝ)
+  (g : Fin k → Bool) (j : Fin k) (turn : Bool),
+  Eq.{1} (∑ target, Thesis.StoppingBoundary.transition wp wn g j turn target) 1
+@Thesis.StoppingBoundary.path_discount_recovery : ∀ {n m : ℕ} (tr : HiddenMonotonicity.MaskedTrace n m),
+  Thesis.BackwardGames.NonnegativeWeights tr →
+    ∀ (j : Fin m) (i : Fin n) (p : Bool) (path : Thesis.BackwardGames.Paths tr),
+      Eq.{1}
+        (HMul.hMul.{0, 0, 0} (Thesis.BackwardGames.sgDiscount tr path)
+          (Thesis.BackwardGames.sgProbability tr j i p path))
+        (Thesis.BackwardGames.rawWeight tr j i p path)
+@Thesis.StoppingBoundary.selected_operator_occupation : ∀ {n m : ℕ} (tr : HiddenMonotonicity.MaskedTrace n m),
+  Thesis.BackwardGames.NonnegativeWeights tr →
+    ∀ (j : Fin m) (i : Fin n),
+      Eq.{1} (tr.originalJac (Pi.single.{0, 0} i 1) j)
+        (HSub.hSub.{0, 0, 0} (Thesis.BackwardGames.sgOccupation tr j i false)
+          (Thesis.BackwardGames.sgOccupation tr j i true))
+@Thesis.StoppingBoundary.strict_gradient_occupation : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m)
+  (x : HiddenMonotonicity.Vec n),
+  net.Strict x →
+    Thesis.BackwardGames.NonnegativeWeights (net.originalTrace x) →
+      ∀ (j : Fin m) (i : Fin n),
+        Eq.{1} ((fderiv.{0, 0, 0} ℝ net.eval x) (Pi.single.{0, 0} i 1) j)
+          (HSub.hSub.{0, 0, 0} (Thesis.BackwardGames.sgOccupation (net.originalTrace x) j i false)
+            (Thesis.BackwardGames.sgOccupation (net.originalTrace x) j i true))
+'Thesis.StoppingBoundary.fanIn_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.StoppingBoundary.zero_fanIn_weights' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.StoppingBoundary.transition_normalized' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.StoppingBoundary.transition_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.StoppingBoundary.transition_eq_original' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.StoppingBoundary.path_discount_recovery' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.StoppingBoundary.occupation_kernels' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.StoppingBoundary.probability_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.StoppingBoundary.discount_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.StoppingBoundary.occupation_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.StoppingBoundary.selected_operator_occupation' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.StoppingBoundary.strict_gradient_occupation' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+Thesis.RoutingGate.chosenLogPolicy_optimal : ∀ (z : ℝ) (p : ↑(Set.Icc.{0} 0 1)),
+  LE.le.{0} (Thesis.RoutingGate.logPolicy z p) (Thesis.RoutingGate.logPolicy z (Thesis.RoutingGate.chosenLogPolicy z))
+Thesis.RoutingGate.nonpositive_log_policies_tied : ∀ (z : ℝ),
+  LE.le.{0} z 0 → ∀ (p : ↑(Set.Icc.{0} 0 1)), Eq.{1} (Thesis.RoutingGate.logPolicy z p) Bot.bot.{0}
+Thesis.RoutingGate.chosenLogPolicy_stops_at_nonpositive : ∀ (z : ℝ),
+  LE.le.{0} z 0 → Eq.{1} (↑(Thesis.RoutingGate.chosenLogPolicy z)) 0
+Thesis.RoutingGate.positive_log_policy_strict : ∀ (z : ℝ),
+  LT.lt.{0} 0 z →
+    ∀ (p : ↑(Set.Icc.{0} 0 1)),
+      LT.lt.{0} (↑p) 1 →
+        LT.lt.{0} (Thesis.RoutingGate.logPolicy z p)
+          (Thesis.RoutingGate.logPolicy z (Thesis.RoutingGate.chosenLogPolicy z))
+'Thesis.RoutingGate.chosenLogAction_eq_positive' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.nonpositive_log_actions_tied' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.chosenLogAction_stops_at_nonpositive' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.RoutingGate.positive_continue_strictly_better' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.RoutingGate.chosenLogAction_optimal' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.chosenLogAction_mass' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.gate_value' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.signed_policy_bound' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.signed_gate_optimal' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.logCoordinate_monotone' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.chosenLogPolicy_eq_gate' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.chosenLogPolicy_optimal' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.nonpositive_log_policies_tied' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.chosenLogPolicy_stops_at_nonpositive' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.RoutingGate.positive_log_policy_strict' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.signed_optimal_iff' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.negative_signed_utility_strict' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.logCoordinate_nonpositive' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.logCoordinate_selected_value' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.negative_log_tie_is_not_utility_tie' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.RoutingGate.frozenGate_hasDerivAt' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.frozenGate_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.frozenGate_reference_value' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingGate.varyingGate_hasDerivAt' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@Thesis.SoftplusBoundary.transition_normalized : ∀ {n k : ℕ} (θ z : ℝ) (wp wn : Matrix.{0, 0, 0} (Fin k) (Fin n) ℝ)
+  (j : Fin k) (turn : Bool), Eq.{1} (∑ target, Thesis.SoftplusBoundary.transition θ z wp wn j turn target) 1
+@Thesis.SoftplusBoundary.zero_fanIn_absorbs : ∀ {n k : ℕ} (θ z : ℝ) (wp wn : Matrix.{0, 0, 0} (Fin k) (Fin n) ℝ)
+  (j : Fin k) (turn : Bool),
+  Eq.{1} (Thesis.BackwardGames.fanIn wp wn j) 0 →
+    Eq.{1} (Thesis.SoftplusBoundary.transition θ z wp wn j turn none.{0}) 1
+@Thesis.SoftplusBoundary.gradient_occupation : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m) (θ : ℝ),
+  LT.lt.{0} 0 θ →
+    net.Nonnegative →
+      ∀ (x : HiddenMonotonicity.Vec n) (j : Fin m) (i : Fin n),
+        Eq.{1} ((fderiv.{0, 0, 0} ℝ (Thesis.SoftplusBackward.softEval θ net) x) (Pi.single.{0, 0} i 1) j)
+          (HSub.hSub.{0, 0, 0} (Thesis.SoftplusBackward.softOccupation net θ x j i false)
+            (Thesis.SoftplusBackward.softOccupation net θ x j i true))
+'Thesis.SoftplusBoundary.transition_normalized' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.SoftplusBoundary.transition_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.SoftplusBoundary.transition_ordinary' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.SoftplusBoundary.zero_fanIn_absorbs' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.SoftplusBoundary.path_discount_recovery' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.SoftplusBoundary.occupation_kernels' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.SoftplusBoundary.probability_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.SoftplusBoundary.discount_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.SoftplusBoundary.occupation_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.SoftplusBoundary.gradient_occupation' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@Thesis.RoutingSupport.sourceLRP_eq_lrp : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m) (α β ε : ℝ)
+  (x : HiddenMonotonicity.Vec n) (R : HiddenMonotonicity.Vec m),
+  (∀ (j : Fin m), Eq.{1} (net.eval x j) 0 → Eq.{1} (R j) 0) →
+    Eq.{1} (Thesis.RoutingSupport.sourceLRP α β ε net x R) (Thesis.RoutingBackward.lrp α β ε net x R)
+@Thesis.RoutingSupport.source_alpha_beta_recovery : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m) (α β ε : ℝ)
+  (x : HiddenMonotonicity.Vec n) (R : HiddenMonotonicity.Vec m),
+  (∀ (j : Fin m), Eq.{1} (net.eval x j) 0 → Eq.{1} (R j) 0) →
+    ∀ (i : Fin n),
+      Eq.{1} (Thesis.RoutingSupport.sourceLRP α β ε net x R i)
+        (∑ j,
+          HMul.hMul.{0, 0, 0} (R j)
+            (HSub.hSub.{0, 0, 0} (Thesis.RoutingBackward.rgOccupation net α β ε x j i false)
+              (Thesis.RoutingBackward.rgOccupation net α β ε x j i true)))
+@Thesis.RoutingSupport.source_alpha_beta_output_seed : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m) (α β ε : ℝ)
+  (x : HiddenMonotonicity.Vec n) (i : Fin n),
+  Eq.{1} (Thesis.RoutingSupport.sourceLRP α β ε net x (net.eval x) i)
+    (∑ j,
+      HMul.hMul.{0, 0, 0} (net.eval x j)
+        (HSub.hSub.{0, 0, 0} (Thesis.RoutingBackward.rgOccupation net α β ε x j i false)
+          (Thesis.RoutingBackward.rgOccupation net α β ε x j i true)))
+'Thesis.RoutingSupport.sourceLayer_zero_input' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingSupport.sourceLRP_zero_input' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingSupport.sourceLRP_eq_lrp' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingSupport.source_alpha_beta_recovery' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingSupport.source_alpha_beta_output_seed' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@Thesis.RoutingTransitions.transition_nonnegative : ∀ {n k : ℕ} (wp wn : Matrix.{0, 0, 0} (Fin k) (Fin n) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (ε : ℝ),
+  LE.le.{0} 0 ε →
+    ∀ (x : HiddenMonotonicity.Vec n) (j : Fin k) (turn : Bool) (target : Option.{0} (Prod.{0, 0} (Fin n) Bool)),
+      LE.le.{0} 0 (Thesis.RoutingTransitions.transition wp wn bp bn ε x j turn target)
+@Thesis.RoutingTransitions.transition_normalized : ∀ {n k : ℕ} (wp wn : Matrix.{0, 0, 0} (Fin k) (Fin n) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (ε : ℝ) (x : HiddenMonotonicity.Vec n) (j : Fin k) (turn : Bool),
+  Eq.{1} (∑ target, Thesis.RoutingTransitions.transition wp wn bp bn ε x j turn target) 1
+@Thesis.RoutingTransitions.probability_nonnegative : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m) (α β ε : ℝ),
+  LE.le.{0} 0 ε →
+    ∀ (x : HiddenMonotonicity.Vec n) (j : Fin m) (i : Fin n) (p : Bool)
+      (path : Thesis.BackwardGames.Paths (Thesis.RoutingBackward.routingTrace α β ε net x)),
+      LE.le.{0} 0 (Thesis.RoutingBackward.rgProbability α β ε net x j i p path)
+'Thesis.RoutingTransitions.posDenominator_nonnegative' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.RoutingTransitions.negDenominator_nonnegative' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.RoutingTransitions.positive_stream_subprobability' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.RoutingTransitions.negative_stream_subprobability' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.RoutingTransitions.ordinary_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingTransitions.ordinary_sum' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingTransitions.ordinary_subprobability' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingTransitions.transition_normalized' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingTransitions.transition_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingTransitions.transition_ordinary' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingTransitions.probability_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingTransitions.occupation_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@Thesis.RoutingExpectation.conditional_affinity_contraction.{u_1} : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace.{u_1} Ω]
+  {S : Type} [inst : Fintype.{0} S] [inst_1 : DecidableEq.{1} S] (μ : MeasureTheory.Measure.{u_1} Ω)
+  [MeasureTheory.IsProbabilityMeasure.{u_1} μ] (ℱ : ℕ → MeasurableSpace.{u_1} Ω),
+  (∀ (n : ℕ), LE.le.{u_1} (ℱ n) mΩ) →
+    ∀ (A : ℕ → S → S → ℝ) (B : ℕ → Ω → S → S → ℝ) (s₀ : S) (b : ℝ),
+      LE.le.{0} 0 b →
+        (∀ (n : ℕ) (s : S),
+            MeasureTheory.Integrable.{0, u_1}
+              (fun ω =>
+                Thesis.RandomizationExpectation.randomPrefix.{u_1}
+                  (Thesis.RandomizationExpectation.modelKernel.{u_1} A B) s₀ n ω s)
+              μ) →
+          (∀ (n : ℕ) (s : S),
+              MeasureTheory.Integrable.{0, u_1} (Thesis.RoutingExpectation.rowAffinity.{u_1} A B n s) μ) →
+            (∀ (n : ℕ) (s : S),
+                MeasureTheory.Integrable.{0, u_1}
+                  (fun ω =>
+                    HMul.hMul.{0, 0, 0}
+                      (Thesis.RandomizationExpectation.randomPrefix.{u_1}
+                        (Thesis.RandomizationExpectation.modelKernel.{u_1} A B) s₀ n ω s)
+                      (Thesis.RoutingExpectation.rowAffinity.{u_1} A B n s ω))
+                  μ) →
+              (∀ (n : ℕ) (s : S),
+                  MeasureTheory.AEStronglyMeasurable.{u_1, 0}
+                    (fun ω =>
+                      Thesis.RandomizationExpectation.randomPrefix.{u_1}
+                        (Thesis.RandomizationExpectation.modelKernel.{u_1} A B) s₀ n ω s)
+                    μ) →
+                ∀ (n : ℕ),
+                  (∀ (l : ℕ),
+                      LT.lt.{0} l n →
+                        ∀ (s : S),
+                          ∀ᵐ (ω : Ω) ∂μ,
+                            LE.le.{0}
+                              (MeasureTheory.condExp.{u_1, 0} (ℱ l) μ
+                                (Thesis.RoutingExpectation.rowAffinity.{u_1} A B l s) ω)
+                              b) →
+                    LE.le.{0} (∫ (ω : Ω), Thesis.Randomization.ordinaryOverlap n A (fun l => B l ω) s₀ ∂μ)
+                      (HPow.hPow.{0, 0, 0} b n)
+@Thesis.RoutingExpectation.conditional_affinity_full_depth.{u_1} : ∀ {Ω : Type u_1} [mΩ : MeasurableSpace.{u_1} Ω]
+  {S : Type} [inst : Fintype.{0} S] [inst_1 : DecidableEq.{1} S] (μ : MeasureTheory.Measure.{u_1} Ω)
+  [MeasureTheory.IsProbabilityMeasure.{u_1} μ] (ℱ : ℕ → MeasurableSpace.{u_1} Ω),
+  (∀ (n : ℕ), LE.le.{u_1} (ℱ n) mΩ) →
+    ∀ (A : ℕ → S → S → ℝ) (B : ℕ → Ω → S → S → ℝ) (s₀ : S) (b : ℝ),
+      LE.le.{0} 0 b →
+        (∀ (n : ℕ) (s t : S), LE.le.{0} 0 (A n s t)) →
+          (∀ (n : ℕ) (ω : Ω) (s t : S), LE.le.{0} 0 (B n ω s t)) →
+            (∀ (n : ℕ) (s : S), LE.le.{0} (∑ t, A n s t) 1) →
+              (∀ (n : ℕ) (ω : Ω) (s : S), LE.le.{0} (∑ t, B n ω s t) 1) →
+                (∀ (n : ℕ) (s : S),
+                    MeasureTheory.Integrable.{0, u_1}
+                      (fun ω =>
+                        Thesis.RandomizationExpectation.randomPrefix.{u_1}
+                          (Thesis.RandomizationExpectation.modelKernel.{u_1} A B) s₀ n ω s)
+                      μ) →
+                  (∀ (n : ℕ) (s : S),
+                      MeasureTheory.Integrable.{0, u_1} (Thesis.RoutingExpectation.rowAffinity.{u_1} A B n s) μ) →
+                    (∀ (n : ℕ) (s : S),
+                        MeasureTheory.Integrable.{0, u_1}
+                          (fun ω =>
+                            HMul.hMul.{0, 0, 0}
+                              (Thesis.RandomizationExpectation.randomPrefix.{u_1}
+                                (Thesis.RandomizationExpectation.modelKernel.{u_1} A B) s₀ n ω s)
+                              (Thesis.RoutingExpectation.rowAffinity.{u_1} A B n s ω))
+                          μ) →
+                      (∀ (n : ℕ) (s : S),
+                          MeasureTheory.AEStronglyMeasurable.{u_1, 0}
+                            (fun ω =>
+                              Thesis.RandomizationExpectation.randomPrefix.{u_1}
+                                (Thesis.RandomizationExpectation.modelKernel.{u_1} A B) s₀ n ω s)
+                            μ) →
+                        ∀ (n extra : ℕ),
+                          (∀ (l : ℕ),
+                              LT.lt.{0} l n →
+                                ∀ (s : S),
+                                  ∀ᵐ (ω : Ω) ∂μ,
+                                    LE.le.{0}
+                                      (MeasureTheory.condExp.{u_1, 0} (ℱ l) μ
+                                        (Thesis.RoutingExpectation.rowAffinity.{u_1} A B l s) ω)
+                                      b) →
+                            LE.le.{0}
+                              (∫ (ω : Ω),
+                                Thesis.Randomization.ordinaryOverlap (HAdd.hAdd.{0, 0, 0} n extra) A (fun l => B l ω)
+                                  s₀ ∂μ)
+                              (HPow.hPow.{0, 0, 0} b n)
+'Thesis.RoutingExpectation.conditional_affinity_contraction' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.RoutingExpectation.conditional_affinity_full_depth' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.StoppingBoundary.strict_stopping_decomposition_gradient' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.StoppingBoundary.strict_affine_output_gradient' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+'Thesis.RoutingSupport.sourceAffineOutputLRP_eq' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'Thesis.RoutingSupport.source_affine_output_lrp' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'RepairChecks.selected_negative_log_tie' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'RepairChecks.zero_open_stopping_row' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+'RepairChecks.bias_and_empty_stream_row' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]

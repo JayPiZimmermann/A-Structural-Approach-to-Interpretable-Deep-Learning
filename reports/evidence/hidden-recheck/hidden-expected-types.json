@@ -1,0 +1,317 @@
+{
+  "version": 1,
+  "targets": [
+    {
+      "module": "HiddenMonotonicity.AffineHeads",
+      "declaration": "HiddenMonotonicity.Network.affine_heads_recovery",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (rp rn : Row m) (bp bn : ℝ) (x : PairVec n),\n (net.affineHeads rp rn bp bn x).1 - (net.affineHeads rp rn bp bn x).2 = net.affineLogit rp rn bp bn (x.1-x.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/affine-readout-recovery",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Actual biased ungated affine split heads reconstruct the matching signed affine logit."
+    },
+    {
+      "module": "HiddenMonotonicity.AffineHeads",
+      "declaration": "HiddenMonotonicity.Network.affine_plain_head_formulas",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hc : net.Canonical) (x : Vec n) (hx : net.Strict x) (rp rn : Row m) (bp bn : ℝ),\n HasFDerivAt (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).1)\n ((1/2 : ℝ) • ((rp-rn).comp (net.originalTrace x).originalJac - (sourceRows (net.absoluteQSources x (fun _ => 0)) (rp+rn)).sum)) x ∧\n HasFDerivAt (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).2)\n ((-1/2 : ℝ) • ((rp-rn).comp (net.originalTrace x).originalJac + (sourceRows (net.absoluteQSources x (fun _ => 0)) (rp+rn)).sum)) x",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/closed-form-affine-heads",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Actual balanced-input affine-head derivatives, strict internal gates, canonical backbone, only backbone Q sources."
+    },
+    {
+      "module": "HiddenMonotonicity.AffineHeads",
+      "declaration": "HiddenMonotonicity.Network.affine_canonical_mass",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hc : net.Canonical) (x : Vec n) (w : Vec m) (head : Bool),\n ((net.originalTrace x).run (fun _ => 0) (affineReadoutSeed (coefficientRow (fun i => max (w i) 0)) (coefficientRow (fun i => max (-w i) 0)) 0 head)).1 +\n ((net.originalTrace x).run (fun _ => 0) (affineReadoutSeed (coefficientRow (fun i => max (w i) 0)) (coefficientRow (fun i => max (-w i) 0)) 0 head)).2 =\n (coefficientRow (fun i => |w i|)).comp net.absoluteMap",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/delta-connection-affine",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "The literal entrywise absolute readout row composed with the literal absolute backbone product; no gate hypothesis."
+    },
+    {
+      "module": "HiddenMonotonicity.AffineChunk",
+      "declaration": "HiddenMonotonicity.linear_chunk_properties",
+      "expected_type": "∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k)\n (hw : ∀ i j, 0≤wp i j ∧ 0≤wn i j) (hb : 0≤bp ∧ 0≤bn),\n (∀ x, (affineChunk wp wn bp bn x).1-(affineChunk wp wn bp bn x).2 = affineLayer wp wn bp bn (x.1-x.2)) ∧\n (∀ x, 0≤x → 0≤affineChunk wp wn bp bn x) ∧ Monotone (affineChunk wp wn bp bn) ∧\n (∀ x y (a b : ℝ), a+b=1 → affineChunk wp wn bp bn (a • x+b • y) = a • affineChunk wp wn bp bn x+b • affineChunk wp wn bp bn y) ∧\n (∀ i, ConvexOn ℝ Set.univ (fun x => (affineChunk wp wn bp bn x).1 i) ∧ ConvexOn ℝ Set.univ (fun x => (affineChunk wp wn bp bn x).2 i))",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/lemma-linear-chunk",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Full actual ungated biased affine chunk, including nonnegative outputs, monotonicity, exact affine dependence and both coordinate ConvexOn statements."
+    },
+    {
+      "module": "HiddenMonotonicity.MaxPool",
+      "declaration": "HiddenMonotonicity.maxpool_properties",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] [DecidableEq ι],\n (∀ x, (finitePool (ι := ι) x).1-(finitePool x).2 = Finset.univ.sup' Finset.univ_nonempty (fun j => x.1 j-x.2 j)) ∧\n (∀ x, 0≤x → 0≤finitePool (ι := ι) x) ∧ Monotone (finitePool (ι := ι)) ∧\n ConvexOn ℝ Set.univ (fun x => (finitePool (ι := ι) x).1) ∧ ConvexOn ℝ Set.univ (fun x => (finitePool (ι := ι) x).2)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "review_id": "hidden-repairs/proposition-maxpool",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Exact source sup/erase-sum functions with recovery, nonnegative outputs, monotonicity and both ConvexOn clauses."
+    },
+    {
+      "module": "HiddenMonotonicity.MaxPool",
+      "declaration": "HiddenMonotonicity.winnerPool_recovery",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (x : (ι → ℝ) × (ι → ℝ)),\n (winnerPool x).1-(winnerPool x).2 = Finset.univ.sup' Finset.univ_nonempty (fun j => x.1 j-x.2 j)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "review_id": "hidden-repairs/winner-pool",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "The shared selected maximizing index reconstructs the finite pool maximum, including ties. No convexity asserted."
+    },
+    {
+      "module": "HiddenMonotonicity.PoolingCircuit",
+      "declaration": "HiddenMonotonicity.Circuit.split_policy_correct",
+      "expected_type": "∀ {d n : ℕ} (c : Circuit d n) (pooling : ℕ → PoolingRule) (center : ℕ → Bool) (x : Fin d × Bool → ℝ),\n (c.splitWithPolicy pooling center x).1-(c.splitWithPolicy pooling center x).2 = c.eval (fun i => x (i,false)-x (i,true))",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/cnn-correctness-pooling",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Existing shared Circuit graph, true maximizing-argument forwarding on WTA maximum nodes, independent per-node recentering, all-node recovery."
+    },
+    {
+      "module": "HiddenMonotonicity.PoolingCircuit",
+      "declaration": "HiddenMonotonicity.Circuit.split_policy_nonnegative",
+      "expected_type": "∀ {d n : ℕ} (c : Circuit d n) (pooling : ℕ → PoolingRule) (center : ℕ → Bool) (x : Fin d × Bool → ℝ) (hx : 0≤x),\n 0≤c.splitWithPolicy pooling center x",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/cnn-nonnegative-pooling",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "All recorded node pairs remain nonnegative under the same optional pooling/recenter policies."
+    },
+    {
+      "module": "HiddenMonotonicity.PoolingCircuit",
+      "declaration": "HiddenMonotonicity.Circuit.split_policy_convex_eq",
+      "expected_type": "∀ {d n : ℕ} (c : Circuit d n) (center : Bool) (x : Fin d × Bool → ℝ),\n c.splitWithPolicy (fun _ => PoolingRule.convex) (fun _ => center) x = c.split center x",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/cnn-legacy-bridge",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Literal equality to existing Circuit.split for convex pooling and its fixed common recenter option."
+    },
+    {
+      "module": "HiddenMonotonicity.DifferentiableHeads",
+      "declaration": "HiddenMonotonicity.Network.affine_head_derivative_of_differentiable",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hw : net.Nonnegative) (x : PairVec n) (rp rn : Row m)\n (hp : Monotone rp) (hn : Monotone rn) (bp bn : ℝ) (head : Bool)\n (hd : DifferentiableAt ℝ (fun y => if head then (net.affineHeads rp rn bp bn y).1 else (net.affineHeads rp rn bp bn y).2) x),\n HasFDerivAt (fun y => if head then (net.affineHeads rp rn bp bn y).1 else (net.affineHeads rp rn bp bn y).2)\n (assemble ((net.originalTrace (x.1-x.2)).run (fun _ => 0) (affineReadoutSeed rp rn 0 head))) x",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/all-differentiable-pair-heads",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Actual split-pair affine-head derivative at every differentiability point with nonnegative downstream coefficients; no internal gate regularity."
+    },
+    {
+      "module": "HiddenMonotonicity.DifferentiableHeads",
+      "declaration": "HiddenMonotonicity.Network.affine_symmetric_derivative_of_differentiable",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hw : net.Nonnegative) (x : Vec n) (rp rn : Row m)\n (hp : Monotone rp) (hn : Monotone rn) (bp bn : ℝ) (head : Bool)\n (hd : DifferentiableAt ℝ (fun y => if head then (net.affineHeads rp rn bp bn (balancedLift n y)).1 else (net.affineHeads rp rn bp bn (balancedLift n y)).2) x),\n HasFDerivAt (fun y => if head then (net.affineHeads rp rn bp bn (balancedLift n y)).1 else (net.affineHeads rp rn bp bn (balancedLift n y)).2)\n (unified ((net.originalTrace x).run (fun _ => 0) (affineReadoutSeed rp rn 0 head))) x",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/all-differentiable-symmetric-heads",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Actual symmetric-lift head derivative using differentiability of that lifted head only; zero and tied gates admitted."
+    },
+    {
+      "module": "HiddenMonotonicity.DifferentiableHeads",
+      "declaration": "HiddenMonotonicity.Network.affine_backward_invariants_of_differentiable",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hw : net.Nonnegative) (x : Vec n) (rp rn : Row m)\n (hp : Monotone rp) (hn : Monotone rn) (bp bn : ℝ)\n (hg : DifferentiableAt ℝ (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).1) x)\n (hh : DifferentiableAt ℝ (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).2) x)\n (α : ℕ → ℝ) (β : ℝ),\n HasFDerivAt (net.affineLogit rp rn bp bn) ((rp-rn).comp (net.originalTrace x).originalJac) x ∧\n ((net.originalTrace x).run α (affineReadoutSeed rp rn β true)).1-((net.originalTrace x).run α (affineReadoutSeed rp rn β false)).1 = (rp-rn).comp (net.originalTrace x).originalJac ∧\n ((net.originalTrace x).run α (affineReadoutSeed rp rn β true)).2-((net.originalTrace x).run α (affineReadoutSeed rp rn β false)).2 = -((rp-rn).comp (net.originalTrace x).originalJac)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/all-differentiable-backward-invariants",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Actual original affine-logit derivative and both independent shifted partial invariants whenever both lifted heads are differentiable."
+    },
+    {
+      "module": "HiddenMonotonicity.AlmostEverywhere",
+      "declaration": "HiddenMonotonicity.Network.affine_heads_ae_derivatives",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hw : net.Nonnegative) (rp rn : Row m) (hp : Monotone rp) (hn : Monotone rn) (bp bn : ℝ),\n ∀ᵐ x : Vec n, ∀ head : Bool,\n HasFDerivAt (fun y => if head then (net.affineHeads rp rn bp bn (balancedLift n y)).1 else (net.affineHeads rp rn bp bn (balancedLift n y)).2)\n (unified ((net.originalTrace x).run (fun _ => 0) (affineReadoutSeed rp rn 0 head))) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "MeasureTheory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/ae-affine-heads",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Actual balanced-input affine-head derivatives on a full Lebesgue-measure set, with nonnegative backbone/readout rows and no strict-gate premise."
+    },
+    {
+      "module": "HiddenMonotonicity.AlmostEverywhere",
+      "declaration": "HiddenMonotonicity.Network.affine_ae_backward_invariants",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hw : net.Nonnegative) (rp rn : Row m) (hp : Monotone rp) (hn : Monotone rn) (bp bn : ℝ),\n ∀ᵐ x : Vec n, ∀ (α : ℕ → ℝ) (β : ℝ),\n HasFDerivAt (net.affineLogit rp rn bp bn) ((rp-rn).comp (net.originalTrace x).originalJac) x ∧\n ((net.originalTrace x).run α (affineReadoutSeed rp rn β true)).1-((net.originalTrace x).run α (affineReadoutSeed rp rn β false)).1 = (rp-rn).comp (net.originalTrace x).originalJac ∧\n ((net.originalTrace x).run α (affineReadoutSeed rp rn β true)).2-((net.originalTrace x).run α (affineReadoutSeed rp rn β false)).2 = -((rp-rn).comp (net.originalTrace x).originalJac)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "MeasureTheory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/ae-affine-invariants",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Actual original affine-logit derivative and both backward partial invariants, all shifts quantified after one common full-measure set."
+    },
+    {
+      "module": "HiddenMonotonicity.PrefixSources",
+      "declaration": "HiddenMonotonicity.Network.originalTrace_ae_derivative",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hw : net.Nonnegative),\n ∀ᵐ x : Vec n, HasFDerivAt net.eval (net.originalTrace x).originalJac x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "MeasureTheory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/ae-original-trace",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "The exact selected originalTrace Jacobian is an actual derivative a.e.; degenerate internal gates are allowed."
+    },
+    {
+      "module": "HiddenMonotonicity.PrefixSources",
+      "declaration": "HiddenMonotonicity.Network.absoluteQSources_ae_derivatives",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hc : net.Canonical) (α : ℕ → ℝ),\n ∀ᵐ x : Vec n, ∀ q ∈ net.absoluteQSources x α, HasFDerivAt q.value q.jacobian x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "MeasureTheory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/ae-all-Q-sources",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Every actual vector auxiliary Q function has its computed Jacobian a.e., with canonical weights and no Strict. Prefix induction is performed in original input space."
+    },
+    {
+      "module": "HiddenMonotonicity.DifferentiableBackward",
+      "declaration": "HiddenMonotonicity.Network.affine_Q_row_formulas",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hc : net.Canonical) (x : Vec n) (α : ℕ → ℝ) (rp rn : Row m) (β : ℝ),\nunified ((net.originalTrace x).run α (affineReadoutSeed rp rn β true)) =\n (1/2 : ℝ) • ((rp-rn).comp (net.originalTrace x).originalJac - (sourceRows (net.absoluteQSources x α) ((1-2*β) • (rp+rn))).sum) ∧\n unified ((net.originalTrace x).run α (affineReadoutSeed rp rn β false)) =\n (-1/2 : ℝ) • ((rp-rn).comp (net.originalTrace x).originalJac + (sourceRows (net.absoluteQSources x α) ((1-2*β) • (rp+rn))).sum)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "MeasureTheory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/all-input-Q-rows",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Pure selected-row algorithm identity at every input; does not assert each individual Q derivative exists at ties."
+    },
+    {
+      "module": "HiddenMonotonicity.DifferentiableBackward",
+      "declaration": "HiddenMonotonicity.Network.affine_Q_closed_form_ae",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hc : net.Canonical) (α : ℕ → ℝ) (rp rn : Row m) (bp bn β : ℝ),\n ∀ᵐ x : Vec n,\n (∀ q ∈ net.absoluteQSources x α, HasFDerivAt q.value q.jacobian x) ∧\n HasFDerivAt (net.affineLogit rp rn bp bn) ((rp-rn).comp (net.originalTrace x).originalJac) x ∧\nunified ((net.originalTrace x).run α (affineReadoutSeed rp rn β true)) =\n (1/2 : ℝ) • ((rp-rn).comp (net.originalTrace x).originalJac - (sourceRows (net.absoluteQSources x α) ((1-2*β) • (rp+rn))).sum) ∧\n unified ((net.originalTrace x).run α (affineReadoutSeed rp rn β false)) =\n (-1/2 : ℝ) • ((rp-rn).comp (net.originalTrace x).originalJac + (sourceRows (net.absoluteQSources x α) ((1-2*β) • (rp+rn))).sum)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "MeasureTheory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/full-shifted-Q-closed-form-ae",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Complete shifted affine-logit Q formula, every actual vector Q derivative and actual logit derivative almost everywhere; no final affine minimum source."
+    },
+    {
+      "module": "HiddenMonotonicity.DifferentiableBackward",
+      "declaration": "HiddenMonotonicity.Network.affine_plain_Q_gradients_ae",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hc : net.Canonical) (rp rn : Row m) (hp : Monotone rp) (hn : Monotone rn) (bp bn : ℝ),\n ∀ᵐ x : Vec n,\n (∀ q ∈ net.absoluteQSources x (fun _ => 0), HasFDerivAt q.value q.jacobian x) ∧\nHasFDerivAt (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).1)\n ((1/2 : ℝ) • ((rp-rn).comp (net.originalTrace x).originalJac - (sourceRows (net.absoluteQSources x (fun _ => 0)) (rp+rn)).sum)) x ∧\n HasFDerivAt (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).2)\n ((-1/2 : ℝ) • ((rp-rn).comp (net.originalTrace x).originalJac + (sourceRows (net.absoluteQSources x (fun _ => 0)) (rp+rn)).sum)) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "MeasureTheory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/full-plain-Q-head-gradients-ae",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Both actual affine-head derivatives and every actual Q derivative on a common full-measure set; nonnegative canonical readout rows discharge Monotone."
+    },
+    {
+      "module": "HiddenMonotonicity.DifferentiableBackward",
+      "declaration": "HiddenMonotonicity.Network.affine_plain_formulas_of_differentiable",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hc : net.Canonical) (x : Vec n) (rp rn : Row m) (hp : Monotone rp) (hn : Monotone rn) (bp bn : ℝ)\n (hg : DifferentiableAt ℝ (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).1) x)\n (hh : DifferentiableAt ℝ (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).2) x),\nHasFDerivAt (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).1)\n ((1/2 : ℝ) • ((rp-rn).comp (net.originalTrace x).originalJac - (sourceRows (net.absoluteQSources x (fun _ => 0)) (rp+rn)).sum)) x ∧\n HasFDerivAt (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).2)\n ((-1/2 : ℝ) • ((rp-rn).comp (net.originalTrace x).originalJac + (sourceRows (net.absoluteQSources x (fun _ => 0)) (rp+rn)).sum)) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "MeasureTheory"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-repairs/all-differentiable-plain-head-formulas",
+      "review_evidence": "reports/hidden-repairs.md",
+      "scope": "Both actual head derivatives at every common head differentiability point. Q rows in this pointwise statement are explicitly selected rows, not a claim of individual Q differentiability."
+    }
+  ]
+}

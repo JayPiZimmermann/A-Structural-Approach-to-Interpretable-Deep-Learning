@@ -1,0 +1,126 @@
+.lake/diagnostics/attack_hidden/ExactBackwardTypes.lean:6:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/attack_hidden/ExactBackwardTypes.lean:7:17: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/attack_hidden/ExactBackwardTypes.lean:17:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/attack_hidden/ExactBackwardTypes.lean:18:17: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/attack_hidden/ExactBackwardTypes.lean:27:55: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/attack_hidden/ExactBackwardTypes.lean:36:55: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/attack_hidden/ExactBackwardTypes.lean:43:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/attack_hidden/ExactBackwardTypes.lean:44:17: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.correct : ∀ {n m : ℕ} (net : Network n m) (p q : Fin n → ℝ),
+  (net.split p q).1 - (net.split p q).2 = net.eval (p - q)
+@Network.shift : ∀ {n m : ℕ} (net : Network n m) (p q c : Fin n → ℝ),
+  net.split (p + c) (q + c) = ((net.split p q).1 + net.common c, (net.split p q).2 + net.common c)
+@Network.qSources_have_derivatives : ∀ {n m : ℕ} (net : Network n m) (x : Vec n),
+  net.Strict x → ∀ (α : ℕ → ℝ), ∀ q ∈ net.qSources x α, HasFDerivAt q.value q.jacobian x
+@Network.qSources_eq_absolute : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical → ∀ (x : Vec n) (α : ℕ → ℝ), net.qSources x α = net.absoluteQSources x α
+@Network.stabilized_backward_absolute_Q_closed_form : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (x : Vec n),
+      net.Strict x →
+        ∀ (α : ℕ → ℝ) (r : Row m),
+          (∀ q ∈ net.absoluteQSources x α, HasFDerivAt q.value q.jacobian x) ∧
+            unified ((net.originalTrace x).stabilized α r true) =
+                (1 / 2) • (r ∘SL (net.originalTrace x).originalJac - (sourceRows (net.absoluteQSources x α) r).sum) ∧
+              unified ((net.originalTrace x).stabilized α r false) =
+                (-1 / 2) • (r ∘SL (net.originalTrace x).originalJac + (sourceRows (net.absoluteQSources x α) r).sum)
+@Network.plain_head_gradient_formulas : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (x : Vec n),
+      net.Strict x →
+        ∀ (r : Row m),
+          HasFDerivAt (fun y => r (net.split ((1 / 2) • y) ((-1 / 2) • y)).1)
+              ((1 / 2) •
+                (r ∘SL (net.originalTrace x).originalJac - (sourceRows (net.absoluteQSources x fun x => 0) r).sum))
+              x ∧
+            HasFDerivAt (fun y => r (net.split ((1 / 2) • y) ((-1 / 2) • y)).2)
+              ((-1 / 2) •
+                (r ∘SL (net.originalTrace x).originalJac + (sourceRows (net.absoluteQSources x fun x => 0) r).sum))
+              x
+@Network.backward_partial_invariants : ∀ {n m : ℕ} (net : Network n m) (x : Vec n),
+  net.Strict x →
+    ∀ (α : ℕ → ℝ) (r : Row m),
+      HasFDerivAt (fun y => r (net.eval y)) (r ∘SL (net.originalTrace x).originalJac) x ∧
+        ((net.originalTrace x).stabilized α r true).1 - ((net.originalTrace x).stabilized α r false).1 =
+            r ∘SL (net.originalTrace x).originalJac ∧
+          ((net.originalTrace x).stabilized α r true).2 - ((net.originalTrace x).stabilized α r false).2 =
+            -r ∘SL (net.originalTrace x).originalJac
+@Network.stabilized_backward_invariant : ∀ {n m : ℕ} (net : Network n m) (x : Vec n),
+  net.Strict x →
+    ∀ (α : ℕ → ℝ) (r : Row m),
+      HasFDerivAt (fun y => r (net.eval y))
+        (unified ((net.originalTrace x).stabilized α r true) - unified ((net.originalTrace x).stabilized α r false)) x
+@Network.affine_readout_closed_form : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (x : Vec n),
+      net.Strict x →
+        ∀ (α : ℕ → ℝ) (rPlus rMinus : Row m) (β : ℝ),
+          (∀ q ∈ net.absoluteQSources x α, HasFDerivAt q.value q.jacobian x) ∧
+            unified ((net.originalTrace x).run α (affineReadoutSeed rPlus rMinus β true)) =
+                (1 / 2) •
+                  ((rPlus - rMinus) ∘SL (net.originalTrace x).originalJac -
+                    (sourceRows (net.absoluteQSources x α) ((1 - 2 * β) • (rPlus + rMinus))).sum) ∧
+              unified ((net.originalTrace x).run α (affineReadoutSeed rPlus rMinus β false)) =
+                (-1 / 2) •
+                  ((rPlus - rMinus) ∘SL (net.originalTrace x).originalJac +
+                    (sourceRows (net.absoluteQSources x α) ((1 - 2 * β) • (rPlus + rMinus))).sum)
+@Network.affine_logit_derivative : ∀ {n m : ℕ} (net : Network n m) (x : Vec n),
+  net.Strict x →
+    ∀ (rPlus rMinus : Row m) (bias : ℝ),
+      HasFDerivAt (fun y => (rPlus - rMinus) (net.eval y) + bias)
+        ((rPlus - rMinus) ∘SL (net.originalTrace x).originalJac) x
+@MaskedTrace.run_zero_actual : ∀ {n m : ℕ} (tr : MaskedTrace n m) (seed : Sensitivity m),
+  assemble (tr.run (fun x => 0) seed) = assemble seed ∘SL tr.splitJac
+@MaskedTrace.bulkCoefficient_product : ∀ {n m : ℕ} (tr : MaskedTrace n m) (α : ℕ → ℝ),
+  tr.bulkCoefficient α = ∏ i ∈ Finset.range (tr.depth + 1), (1 - 2 * α i)
+@MaskedTrace.stabilized_partial_invariants : ∀ {n m : ℕ} (tr : MaskedTrace n m) (α : ℕ → ℝ) (r : Row m),
+  (tr.stabilized α r true).1 - (tr.stabilized α r false).1 = r ∘SL tr.originalJac ∧
+    (tr.stabilized α r true).2 - (tr.stabilized α r false).2 = -r ∘SL tr.originalJac
+'HiddenMonotonicity.Network.stabilized_backward_absolute_Q_closed_form' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'HiddenMonotonicity.Network.plain_head_gradient_formulas' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.Network.backward_partial_invariants' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.Network.stabilized_backward_invariant' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.Network.affine_readout_closed_form' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.Network.affine_logit_derivative' depends on axioms: [propext, Classical.choice, Quot.sound]

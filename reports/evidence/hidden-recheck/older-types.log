@@ -1,0 +1,185 @@
+canonical_weight_split : ∀ (w : ℝ), max w 0 - max (-w) 0 = w ∧ max w 0 + max (-w) 0 = |w|
+'HiddenMonotonicity.canonical_weight_split' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:25:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.sensitivity_complementarity_absolute : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (x : PairVec n) (r : Row m) (head : Bool),
+      ((net.trace x).stabilized (fun x => 0) r head).1 + ((net.trace x).stabilized (fun x => 0) r head).2 =
+        r ∘SL net.absoluteMap
+'HiddenMonotonicity.Network.sensitivity_complementarity_absolute' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:34:55: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.symmetric_head_derivative : ∀ {n m : ℕ} (net : Network n m) (x : Vec n),
+  net.Strict x →
+    ∀ (r : Row m) (head : Bool),
+      HasFDerivAt
+        (fun y =>
+          if head = true then r (net.split ((1 / 2) • y) ((-1 / 2) • y)).1
+          else r (net.split ((1 / 2) • y) ((-1 / 2) • y)).2)
+        (unified ((net.originalTrace x).stabilized (fun x => 0) r head)) x
+'HiddenMonotonicity.Network.symmetric_head_derivative' depends on axioms: [propext, Classical.choice, Quot.sound]
+@MaskedTrace.stabilized_bulk : ∀ {n m : ℕ} (tr : MaskedTrace n m) (α : ℕ → ℝ) (r : Row m) (head : Bool),
+  (tr.stabilized α r head).1 + (tr.stabilized α r head).2 = tr.bulkCoefficient α • r ∘SL tr.absMap
+'HiddenMonotonicity.MaskedTrace.stabilized_bulk' depends on axioms: [propext, Classical.choice, Quot.sound]
+@actual_positive_pullback : ∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k) (x : PairVec n) (v : Vec n)
+  (D : PairVec k →L[ℝ] ℝ),
+  (D ∘SL layerJac wp wn bp bn x) (v, 0) = D ((blockPP wp wn bp bn x) v, 0) + D (0, (matrixCLM wn) v)
+'HiddenMonotonicity.actual_positive_pullback' depends on axioms: [propext, Classical.choice, Quot.sound]
+@actual_negative_pullback : ∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k) (x : PairVec n) (v : Vec n)
+  (D : PairVec k →L[ℝ] ℝ),
+  (D ∘SL layerJac wp wn bp bn x) (0, v) = D ((blockPN wp wn bp bn x) v, 0) + D (0, (matrixCLM wp) v)
+'HiddenMonotonicity.actual_negative_pullback' depends on axioms: [propext, Classical.choice, Quot.sound]
+@MaskedTrace.stabilized : {n m : ℕ} → MaskedTrace n m → (ℕ → ℝ) → Row m → Bool → Sensitivity n
+'HiddenMonotonicity.MaskedTrace.stabilized' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Network.shift : ∀ {n m : ℕ} (net : Network n m) (p q c : Fin n → ℝ),
+  net.split (p + c) (q + c) = ((net.split p q).1 + net.common c, (net.split p q).2 + net.common c)
+'HiddenMonotonicity.Network.shift' depends on axioms: [propext, Classical.choice, Quot.sound]
+@maxpool_correct : ∀ {ι : Type u_1} [inst : Fintype ι] [inst_1 : Nonempty ι] [inst_2 : DecidableEq ι] (p n : ι → ℝ),
+  (Finset.univ.sup' ⋯ fun j => p j + ∑ i ∈ Finset.univ.erase j, n i) - ∑ i, n i = Finset.univ.sup' ⋯ fun j => p j - n j
+'HiddenMonotonicity.maxpool_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:99:2: warning: Variable name `hg` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hg
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:99:20: warning: Variable name `hd` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hd
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:99:45: warning: Variable name `hv` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hv
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@monotone_directional_nonnegative : ∀ {n : ℕ} (g : (Fin n → ℝ) → ℝ) (x v : Fin n → ℝ) (D : (Fin n → ℝ) →L[ℝ] ℝ),
+  Monotone g → HasFDerivAt g D x → 0 ≤ v → 0 ≤ D v
+'HiddenMonotonicity.monotone_directional_nonnegative' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:108:2: warning: Variable name `hv` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hv
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.valid_decomposition_recovery : ∀ {n m : ℕ} (net : Network n m) (σ : ℝ → ℝ) (φ : ℝ × ℝ → ℝ × ℝ),
+  ValidPairActivation σ φ →
+    ∀ (x : PairVec n), (net.decomposeWith φ x).1 - (net.decomposeWith φ x).2 = net.forwardWith σ (x.1 - x.2)
+'HiddenMonotonicity.Network.valid_decomposition_recovery' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Network.mixing_recovery : ∀ {n m : ℕ} (net : Network n m) (η : ℝ) (x : PairVec n),
+  (net.decomposeWith (mixPair η) x).1 - (net.decomposeWith (mixPair η) x).2 = net.eval (x.1 - x.2)
+'HiddenMonotonicity.Network.mixing_recovery' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:126:43: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:127:34: warning: Variable name `ht` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _ht
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:127:45: warning: Variable name `ht'` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _ht'
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.convex : ∀ {n m : ℕ} (net : Network n m),
+  net.Nonnegative →
+    ∀ (p q p' q' : Fin n → ℝ) (t : ℝ),
+      0 ≤ t →
+        t ≤ 1 →
+          (net.split (mix t p p') (mix t q q')).1 ≤ mix t (net.split p q).1 (net.split p' q').1 ∧
+            (net.split (mix t p p') (mix t q q')).2 ≤ mix t (net.split p q).2 (net.split p' q').2
+'HiddenMonotonicity.Network.convex' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Network.mixing_one_is_split : ∀ {n m : ℕ} (net : Network n m) (x : PairVec n),
+  net.decomposeWith (mixPair 1) x = net.split x.1 x.2
+'HiddenMonotonicity.Network.mixing_one_is_split' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:145:43: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:146:26: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:146:38: warning: Variable name `hq` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hq
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.monotone : ∀ {n m : ℕ} (net : Network n m),
+  net.Nonnegative →
+    ∀ (p q p' q' : Fin n → ℝ),
+      p ≤ p' → q ≤ q' → (net.split p q).1 ≤ (net.split p' q').1 ∧ (net.split p q).2 ≤ (net.split p' q').2
+'HiddenMonotonicity.Network.monotone' depends on axioms: [propext, Classical.choice, Quot.sound]
+@layer_difference : ∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Fin k → ℝ) (p n' : Fin n → ℝ),
+  (fun i => max ((wp.mulVec p + wn.mulVec n' + bp) i) ((wn.mulVec p + wp.mulVec n' + bn) i)) -
+      (wn.mulVec p + wp.mulVec n' + bn) =
+    fun i => relu (((wp - wn).mulVec (p - n') + (bp - bn)) i)
+'HiddenMonotonicity.layer_difference' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:165:55: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:166:2: warning: Variable name `hblocked` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hblocked
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.gradient_blindness : ∀ {n m : ℕ} (net : Network n m) (x : Vec n),
+  net.Strict x →
+    ∀ (j : Fin m) (i : Fin n),
+      (∀ (path : Thesis.BackwardGames.Paths (net.originalTrace x)),
+          PathConnected (net.originalTrace x) j i path → PathHasInactive (net.originalTrace x) path) →
+        ∃ U, IsOpen U ∧ x ∈ U ∧ ∀ y ∈ U, (fderiv ℝ net.eval y) (Pi.single i 1) j = 0
+'HiddenMonotonicity.Network.gradient_blindness' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/OlderTypes.lean:177:2: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@layer_derivative : ∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k) (x : PairVec n),
+  (∀ (i : Fin k), ((preP wp wn) x + bp) i ≠ ((preN wp wn) x + bn) i) →
+    HasFDerivAt (layerFun wp wn bp bn) (layerJac wp wn bp bn x) x
+'HiddenMonotonicity.layer_derivative' depends on axioms: [propext, Classical.choice, Quot.sound]
+@MaxPolynomial.ordinary_finite_polynomial_witness : ∀ {ι : Type u_1} (e : MaxPolynomial ι),
+  ∃ ps,
+    ps ≠ [] ∧
+      (∀ p ∈ ps, ∀ (d : ι →₀ ℕ), 0 ≤ p.coeff d) ∧
+        ∀ (x : ι → ℝ), 0 ≤ x → e.eval x = foldMax (List.map (⇑(MvPolynomial.eval x)) ps)
+'HiddenMonotonicity.MaxPolynomial.ordinary_finite_polynomial_witness' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+@Circuit.maxout_multiplication_split_correct : ∀ {d n : ℕ} (c : Circuit d n) (x : Vec d) (i : Fin n),
+  c.eval x i =
+    (c.positiveExpressions.1 i).polynomialMaximum.eval (canonicalSplitInput x) -
+      (c.positiveExpressions.2 i).polynomialMaximum.eval (canonicalSplitInput x)
+'HiddenMonotonicity.Circuit.maxout_multiplication_split_correct' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

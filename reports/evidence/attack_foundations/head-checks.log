@@ -1,0 +1,222 @@
+@Thesis.LayeredGames.Game.saddle : ∀ {S : Type u_1} {A : Type u_2} [inst : Fintype S] [inst_1 : Fintype A]
+  [inst_2 : Nonempty A] (G : Thesis.LayeredGames.Game S A) (plus minus : Thesis.LayeredGames.Policy S A) (n : ℕ)
+  (s : S),
+  G.payoff plus G.optimalPolicy n s ≤ G.value n s ∧
+    G.payoff G.optimalPolicy G.optimalPolicy n s = G.value n s ∧ G.value n s ≤ G.payoff G.optimalPolicy minus n s
+@Thesis.ReLUNetGame.relu_net_game_equilibrium : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m),
+  net.Nonnegative →
+    Thesis.ReLUNetGame.NonzeroRows net →
+      ∀ (x : Fin n → ℝ) (plus minus : Thesis.ReLUNetGame.Strategy net),
+        (Thesis.ReLUNetGame.policyValue net plus (Thesis.ReLUNetGame.optimalStrategy net x) x (-x)).1 ≤ net.eval x ∧
+          (Thesis.ReLUNetGame.policyValue net plus (Thesis.ReLUNetGame.optimalStrategy net x) x (-x)).2 ≤ -net.eval x ∧
+            Thesis.ReLUNetGame.policyValue net (Thesis.ReLUNetGame.optimalStrategy net x)
+                  (Thesis.ReLUNetGame.optimalStrategy net x) x (-x) =
+                (net.eval x, -net.eval x) ∧
+              net.eval x ≤
+                  (Thesis.ReLUNetGame.policyValue net (Thesis.ReLUNetGame.optimalStrategy net x) minus x (-x)).1 ∧
+                -net.eval x ≤
+                  (Thesis.ReLUNetGame.policyValue net (Thesis.ReLUNetGame.optimalStrategy net x) minus x (-x)).2
+@Thesis.ReLUNetGame.relu_net_game_affine_equilibrium : ∀ {n m k : ℕ} (net : HiddenMonotonicity.Network n m),
+  net.Nonnegative →
+    Thesis.ReLUNetGame.NonzeroRows net →
+      ∀ (x : Fin n → ℝ) (plus minus : Thesis.ReLUNetGame.Strategy net) (wp wn : Matrix (Fin k) (Fin m) ℝ)
+        (b : Fin k → ℝ),
+        (∀ (i : Fin k) (j : Fin m), 0 ≤ wp i j) →
+          (∀ (i : Fin k) (j : Fin m), 0 ≤ wn i j) →
+            (∀ (i : Fin k), Thesis.ReLUNetGame.rowDiscount wp wn i ≠ 0) →
+              ∀ (i : Fin k),
+                have read := fun v => Thesis.ReLUNetGame.continuation wp wn b v.1 v.2 i;
+                have logit := ((wp - wn).mulVec (net.eval x) + b) i;
+                read (Thesis.ReLUNetGame.policyValue net plus (Thesis.ReLUNetGame.optimalStrategy net x) x (-x)) ≤
+                    logit ∧
+                  read
+                        (Thesis.ReLUNetGame.policyValue net (Thesis.ReLUNetGame.optimalStrategy net x)
+                          (Thesis.ReLUNetGame.optimalStrategy net x) x (-x)) =
+                      logit ∧
+                    logit ≤
+                      read (Thesis.ReLUNetGame.policyValue net (Thesis.ReLUNetGame.optimalStrategy net x) minus x (-x))
+@Thesis.Tropical.vertices_eq_attainable_gradients : ∀ {I A : Type} [inst : Fintype I] [Fintype A] [Nonempty A]
+  (v : A → I → ℝ) (p : I → ℝ),
+  p ∈ Set.extremePoints ℝ ((convexHull ℝ) (Set.range v)) ↔
+    ∃ x, HasFDerivAt (Thesis.Tropical.support ((convexHull ℝ) (Set.range v))) (Thesis.Tropical.gradientRow p) x
+@Thesis.PiecewiseLinear.affine_network_cpwl : ∀ {n m k : ℕ} (net : HiddenMonotonicity.Network n m)
+  (W : Matrix (Fin k) (Fin m) ℝ) (b : Fin k → ℝ), Thesis.PiecewiseLinear.CPWL fun x => W.mulVec (net.eval x) + b
+@Thesis.SourceGeometry.polytope_vertex_support : ∀ {I A : Type} [inst : Fintype I] [Fintype A] [Nonempty A]
+  (v : A → I → ℝ) (x : I → ℝ),
+  ∃ p ∈ Set.extremePoints ℝ ((convexHull ℝ) (Set.range v)),
+    p ⬝ᵥ x = Thesis.Tropical.support ((convexHull ℝ) (Set.range v)) x
+@Thesis.SourceGeometry.support_properties : ∀ {I A : Type} [inst : Fintype I] [inst_1 : Fintype A] [inst_2 : Nonempty A]
+  (P Q : Set (I → ℝ)),
+  IsCompact P →
+    P.Nonempty →
+      Convex ℝ P →
+        IsCompact Q →
+          Q.Nonempty →
+            Convex ℝ Q →
+              ConvexOn ℝ Set.univ (Thesis.Tropical.support P) ∧
+                (∀ (c : ℝ),
+                    0 ≤ c → ∀ (x : I → ℝ), Thesis.Tropical.support P (c • x) = c * Thesis.Tropical.support P x) ∧
+                  (∀ (x : I → ℝ),
+                      Thesis.Tropical.support (P + Q) x = Thesis.Tropical.support P x + Thesis.Tropical.support Q x) ∧
+                    (∀ (x : I → ℝ),
+                        Thesis.Tropical.support ((convexHull ℝ) (P ∪ Q)) x =
+                          max (Thesis.Tropical.support P x) (Thesis.Tropical.support Q x)) ∧
+                      (P ⊆ Q ↔ ∀ (x : I → ℝ), Thesis.Tropical.support P x ≤ Thesis.Tropical.support Q x) ∧
+                        (Thesis.Tropical.support P = Thesis.Tropical.support Q → P = Q) ∧
+                          ∀ (v : A → I → ℝ) (x : I → ℝ),
+                            (Thesis.Tropical.support ((convexHull ℝ) (Set.range v)) x =
+                                Thesis.Tropical.finiteMax fun a => v a ⬝ᵥ x) ∧
+                              ∃ p ∈ Set.extremePoints ℝ ((convexHull ℝ) (Set.range v)),
+                                p ⬝ᵥ x = Thesis.Tropical.support ((convexHull ℝ) (Set.range v)) x
+@Thesis.SourceGeometry.newton_calculus : ∀ {I : Type} [inst : Fintype I] (p q : Thesis.Tropical.Polynomial I),
+  (p.add q).newton = p.newton + q.newton ∧
+    (p.max q).newton = (convexHull ℝ) (p.newton ∪ q.newton) ∧
+      (∀ (x : I → ℝ), (p.add q).eval x = p.eval x + q.eval x) ∧
+        (∀ (x : I → ℝ), (p.max q).eval x = max (p.eval x) (q.eval x)) ∧
+          (∀ (x : I → ℝ), p.eval x = Thesis.Tropical.support p.lift.newton (Sum.elim x fun x => 1)) ∧
+            ((∀ (a : p.Terms), p.intercept a = 0) → ∀ (x : I → ℝ), p.eval x = Thesis.Tropical.support p.newton x)
+@Thesis.SourceGeometry.weightedSum_newton : ∀ {I : Type} [Fintype I] {B : Type} [inst : Fintype B] (w : B → ℝ)
+  (p : B → Thesis.Tropical.Polynomial I), (Thesis.Tropical.Polynomial.weightedSum w p).newton = ∑ b, w b • (p b).newton
+@Thesis.SourceGeometry.affine_newton : ∀ {I : Type} [Fintype I] {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+  (b : Fin k → ℝ) (p q : Fin n → Thesis.Tropical.Polynomial I) (i : Fin k),
+  (Thesis.Tropical.polynomialAffine wp wn b p q i).newton = ∑ j, wp i j • (p j).newton + ∑ j, wn i j • (q j).newton
+@Thesis.SourceGeometry.minkowski_propagation : ∀ {I : Type} [Fintype I] {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+  (bp bn : Fin k → ℝ) (p q : Fin n → Thesis.Tropical.Polynomial I) (i : Fin k),
+  have Qp := ∑ j, wp i j • (p j).newton + ∑ j, wn i j • (q j).newton;
+  have Qn := ∑ j, wn i j • (p j).newton + ∑ j, wp i j • (q j).newton;
+  ((Thesis.Tropical.polynomialAffine wp wn bp p q i).max (Thesis.Tropical.polynomialAffine wn wp bn p q i)).newton =
+      (convexHull ℝ) (Qp ∪ Qn) ∧
+    (Thesis.Tropical.polynomialAffine wn wp bn p q i).newton = Qn
+@Thesis.SourceGeometry.network_polytopes_nonnegative : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m),
+  net.Nonnegative →
+    ∀ (i : Fin m),
+      have polynomials :=
+        Thesis.Tropical.tropicalSplit net (Thesis.Tropical.inputPolynomials n).1 (Thesis.Tropical.inputPolynomials n).2;
+      (∀ v ∈ (polynomials.1 i).newton, ∀ (j : Fin n ⊕ Fin n), 0 ≤ v j) ∧
+        ∀ v ∈ (polynomials.2 i).newton, ∀ (j : Fin n ⊕ Fin n), 0 ≤ v j
+@Thesis.SourceGeometry.tropicalSplit_newton : ∀ {I : Type} [Fintype I] {n m : ℕ} (net : HiddenMonotonicity.Network n m)
+  (p q : Fin n → Thesis.Tropical.Polynomial I),
+  (fun i => ((Thesis.Tropical.tropicalSplit net p q).1 i).newton, fun i =>
+      ((Thesis.Tropical.tropicalSplit net p q).2 i).newton) =
+    Thesis.SourceGeometry.polytopeSplit net (fun j => (p j).newton) fun j => (q j).newton
+@Thesis.SourceGeometry.coordinate_newton : ∀ {I : Type} [Fintype I] [inst : DecidableEq I] (i : I),
+  (Thesis.Tropical.coordinate i).newton = {Pi.single i 1}
+@Thesis.SourceGeometry.minkowski_propagation_network : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m),
+  have polynomials :=
+    Thesis.Tropical.tropicalSplit net (Thesis.Tropical.inputPolynomials n).1 (Thesis.Tropical.inputPolynomials n).2;
+  (fun i => (polynomials.1 i).newton, fun i => (polynomials.2 i).newton) =
+    Thesis.SourceGeometry.polytopeSplit net (fun j => {Pi.single (Sum.inl j) 1}) fun j => {Pi.single (Sum.inr j) 1}
+@Thesis.SourceFoundations.monotone_represents : ∀ {n m k : ℕ} (net : HiddenMonotonicity.Network n m) (σ : ℝ → ℝ),
+  Thesis.Foundations.PositiveWeights net →
+    Monotone σ →
+      ∀ (W : Matrix (Fin k) (Fin m) ℝ) (b : Fin k → ℝ),
+        (∀ (i : Fin k) (j : Fin m), 0 ≤ W i j) → Monotone fun x => W.mulVec (net.forwardWith σ x) + b
+@Thesis.SourceFoundations.icnn_represents_convex : ∀ {n m k : ℕ} (net : HiddenMonotonicity.Network n m) (σ : ℝ → ℝ),
+  Thesis.Foundations.InputConvexWeights net →
+    Monotone σ →
+      Thesis.Foundations.ScalarConvex σ →
+        ∀ (W : Matrix (Fin k) (Fin m) ℝ) (b : Fin k → ℝ),
+          (∀ (i : Fin k) (j : Fin m), 0 ≤ W i j) →
+            ∀ (i : Fin k), ConvexOn ℝ Set.univ fun x => (W.mulVec (net.forwardWith σ x) + b) i
+@Thesis.SourceFoundations.maxout_special_cases : ∀ {I A : Type} [inst : Fintype I] [inst_1 : Nonempty I]
+  [inst_2 : DecidableEq I] [inst_3 : Fintype A] [inst_4 : Nonempty A] (w : I → ℝ) (b : ℝ)
+  (p : Thesis.Tropical.Polynomial I),
+  (∀ (x : I → ℝ),
+      HiddenMonotonicity.relu (w ⬝ᵥ x + b) =
+        ((Thesis.Tropical.Polynomial.monomial w b).max (Thesis.Tropical.Polynomial.monomial 0 0)).eval x) ∧
+    (∀ (x : I → ℝ), Thesis.SourceFoundations.poolingPolynomial.eval x = Thesis.Tropical.finiteMax x) ∧
+      ConvexOn ℝ Set.univ p.eval ∧ Monotone Thesis.Tropical.finiteMax
+@Thesis.SourceFoundations.bellman_equations : ∀ {S A : Type} [inst : Fintype S] [inst_1 : Nonempty S]
+  [inst_2 : Fintype A] [inst_3 : Nonempty A] (M : Thesis.Bellman.MDP S A) (π : Thesis.Bellman.Policy S A),
+  ∑' (n : ℕ), ↑M.discount ^ n • (⇑(M.markovOperator π))^[n] (M.policyReward π) = M.policyValue π ∧
+    M.policyBellman π (M.policyValue π) = M.policyValue π ∧
+      (∀ (v : S → ℝ), M.policyBellman π v = v → v = M.policyValue π) ∧
+        M.bellman M.optimalValue = M.optimalValue ∧
+          (∀ (v : S → ℝ), M.bellman v = v → v = M.optimalValue) ∧
+            M.policyValue (Thesis.Bellman.pure M.greedy) = M.optimalValue ∧
+              (∀ (ρ : Thesis.Bellman.Policy S A), M.policyValue ρ ≤ M.optimalValue) ∧
+                ∀ (choice : S → A),
+                  (∀ (s : S), M.action M.optimalValue s (choice s) = M.optimalValue s) →
+                    M.policyValue (Thesis.Bellman.pure choice) = M.optimalValue
+@Thesis.SourceFoundations.shapley_bellman : ∀ {S A : Type} [inst : Fintype S] [inst_1 : Fintype A] [inst_2 : Nonempty A]
+  (G : Thesis.LayeredGames.Game S A),
+  (∀ (v : ℕ → S → ℝ),
+      v 0 = G.terminal →
+        (∀ (n : ℕ) (s : S), v (n + 1) s = Thesis.LayeredGames.best (G.maximize n s) fun a => G.action n s a (v n)) →
+          v = G.value) ∧
+    ∀ (plus minus : Thesis.LayeredGames.Policy S A) (n : ℕ) (s : S),
+      G.payoff plus G.optimalPolicy n s ≤ G.value n s ∧
+        G.payoff G.optimalPolicy G.optimalPolicy n s = G.value n s ∧ G.value n s ≤ G.payoff G.optimalPolicy minus n s
+@Thesis.SourceFoundations.subdifferential_face : ∀ {I A : Type} [inst : Fintype I] [Fintype A] [Nonempty A]
+  (v : A → I → ℝ) (x : I → ℝ),
+  (∀ (s : I → ℝ),
+      Thesis.Tropical.Subgradient (Thesis.Tropical.support ((convexHull ℝ) (Set.range v))) x s ↔
+        s ∈ (convexHull ℝ) (Set.range v) ∧ s ⬝ᵥ x = Thesis.Tropical.support ((convexHull ℝ) (Set.range v)) x) ∧
+    (DifferentiableAt ℝ (Thesis.Tropical.support ((convexHull ℝ) (Set.range v))) x ↔
+        ∃ p ∈ (convexHull ℝ) (Set.range v),
+          p ⬝ᵥ x = Thesis.Tropical.support ((convexHull ℝ) (Set.range v)) x ∧
+            ∀ q ∈ (convexHull ℝ) (Set.range v),
+              q ⬝ᵥ x = Thesis.Tropical.support ((convexHull ℝ) (Set.range v)) x → q = p) ∧
+      ∀ (p : I → ℝ),
+        HasFDerivAt (Thesis.Tropical.support ((convexHull ℝ) (Set.range v))) (Thesis.Tropical.gradientRow p) x →
+          p ∈ (convexHull ℝ) (Set.range v)
+@Thesis.SourceFoundations.split_tropical_rational : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m),
+  net.Nonnegative →
+    Thesis.Tropical.BiasFree net →
+      have polys :=
+        Thesis.Tropical.tropicalSplit net (Thesis.Tropical.inputPolynomials n).1 (Thesis.Tropical.inputPolynomials n).2;
+      (∀ (i : Fin m),
+          (polys.1 i).ZeroIntercepts ∧
+            (polys.2 i).ZeroIntercepts ∧
+              (polys.1 i).NonnegativeSlopes ∧
+                (polys.2 i).NonnegativeSlopes ∧
+                  Monotone (polys.1 i).eval ∧
+                    Monotone (polys.2 i).eval ∧
+                      ConvexOn ℝ Set.univ (polys.1 i).eval ∧
+                        ConvexOn ℝ Set.univ (polys.2 i).eval ∧
+                          ∀ (c : ℝ),
+                            0 ≤ c →
+                              ∀ (x : Fin n ⊕ Fin n → ℝ),
+                                (polys.1 i).eval (c • x) = c * (polys.1 i).eval x ∧
+                                  (polys.2 i).eval (c • x) = c * (polys.2 i).eval x) ∧
+        (∀ (p q : Fin n → ℝ),
+            (fun i => (polys.1 i).eval (Sum.elim p q), fun i => (polys.2 i).eval (Sum.elim p q)) = net.split p q) ∧
+          ∀ (p q : Fin n → ℝ) (i : Fin m),
+            (polys.1 i).eval (Sum.elim p q) - (polys.2 i).eval (Sum.elim p q) = net.eval (p - q) i
+HiddenMonotonicity.SmoothDC.smooth_dc_split : ∀ (f : ℝ → ℝ),
+  Differentiable ℝ f →
+    (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv f) a b) →
+      MeasureTheory.Integrable (HiddenMonotonicity.SmoothDC.curvature f) MeasureTheory.volume →
+        Filter.Tendsto (deriv f) Filter.atBot (nhds (HiddenMonotonicity.SmoothDC.minusInfinitySlope f)) ∧
+          (∃ B, ∀ (x : ℝ), |deriv f x| ≤ B) ∧
+            ConvexOn ℝ Set.univ
+                (HiddenMonotonicity.SmoothDC.tilt (HiddenMonotonicity.SmoothDC.C1 f)
+                  (HiddenMonotonicity.SmoothDC.commonTilt f)) ∧
+              ConvexOn ℝ Set.univ
+                  (HiddenMonotonicity.SmoothDC.tilt (HiddenMonotonicity.SmoothDC.C2 f)
+                    (HiddenMonotonicity.SmoothDC.commonTilt f)) ∧
+                Monotone
+                    (HiddenMonotonicity.SmoothDC.tilt (HiddenMonotonicity.SmoothDC.C1 f)
+                      (HiddenMonotonicity.SmoothDC.commonTilt f)) ∧
+                  Monotone
+                      (HiddenMonotonicity.SmoothDC.tilt (HiddenMonotonicity.SmoothDC.C2 f)
+                        (HiddenMonotonicity.SmoothDC.commonTilt f)) ∧
+                    ∀ (z : ℝ × ℝ),
+                      HiddenMonotonicity.SmoothDC.tilt (HiddenMonotonicity.SmoothDC.C1 f)
+                            (HiddenMonotonicity.SmoothDC.commonTilt f) z -
+                          HiddenMonotonicity.SmoothDC.tilt (HiddenMonotonicity.SmoothDC.C2 f)
+                            (HiddenMonotonicity.SmoothDC.commonTilt f) z =
+                        f (z.1 - z.2)
+HiddenMonotonicity.SmoothDC.curvature_minimality_ae : ∀ (f c1 c2 : ℝ → ℝ),
+  ConvexOn ℝ Set.univ c1 →
+    ConvexOn ℝ Set.univ c2 →
+      Differentiable ℝ c1 →
+        Differentiable ℝ c2 →
+          (∀ (x : ℝ), f x = c1 x - c2 x) →
+            ∀ᵐ (x : ℝ),
+              HiddenMonotonicity.SmoothDC.positiveCurvature f x ≤ HiddenMonotonicity.SmoothDC.curvature c1 x ∧
+                HiddenMonotonicity.SmoothDC.negativeCurvature f x ≤ HiddenMonotonicity.SmoothDC.curvature c2 x
+HiddenMonotonicity.SmoothDC.affine_of_ae_second_derivative_zero : ∀ (c : ℝ → ℝ),
+  Differentiable ℝ c →
+    (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv c) a b) →
+      (∀ᵐ (x : ℝ), HasDerivAt (deriv c) 0 x) → ∀ (x : ℝ), c x = c 0 + deriv c 0 * x

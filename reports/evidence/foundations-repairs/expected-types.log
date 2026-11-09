@@ -1,0 +1,388 @@
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:11:5: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:11:44: warning: Variable name `hm` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hm
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:12:52: warning: Variable name `hW` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hW
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@monotone_represents : ∀ {n m k : ℕ} (net : Network n m) (σ : ℝ → ℝ),
+  Foundations.PositiveWeights net →
+    Monotone σ →
+      ∀ (W : Matrix (Fin k) (Fin m) ℝ) (b : Fin k → ℝ),
+        (∀ (i : Fin k) (j : Fin m), 0 ≤ W i j) → Monotone fun x => W *ᵥ net.forwardWith σ x + b
+'Thesis.SourceFoundations.monotone_represents' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:19:5: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:19:47: warning: Variable name `hm` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hm
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:19:65: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:20:52: warning: Variable name `hW` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hW
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@icnn_represents_convex : ∀ {n m k : ℕ} (net : Network n m) (σ : ℝ → ℝ),
+  Foundations.InputConvexWeights net →
+    Monotone σ →
+      Foundations.ScalarConvex σ →
+        ∀ (W : Matrix (Fin k) (Fin m) ℝ) (b : Fin k → ℝ),
+          (∀ (i : Fin k) (j : Fin m), 0 ≤ W i j) →
+            ∀ (i : Fin k), ConvexOn ℝ Set.univ fun x => (W *ᵥ net.forwardWith σ x + b) i
+'Thesis.SourceFoundations.icnn_represents_convex' depends on axioms: [propext, Classical.choice, Quot.sound]
+@maxout_special_cases : ∀ {I A : Type} [inst : Fintype I] [inst_1 : Nonempty I] [inst_2 : DecidableEq I]
+  [inst_3 : Fintype A] [inst_4 : Nonempty A] (w : I → ℝ) (b : ℝ) (p : Tropical.Polynomial I),
+  (∀ (x : I → ℝ),
+      relu (w ⬝ᵥ x + b) = ((Tropical.Polynomial.monomial w b).max (Tropical.Polynomial.monomial 0 0)).eval x) ∧
+    (∀ (x : I → ℝ), poolingPolynomial.eval x = finiteMax x) ∧ ConvexOn ℝ Set.univ p.eval ∧ Monotone finiteMax
+'Thesis.SourceFoundations.maxout_special_cases' depends on axioms: [propext, Classical.choice, Quot.sound]
+@bellman_equations : ∀ {S A : Type} [inst : Fintype S] [inst_1 : Nonempty S] [inst_2 : Fintype A] [inst_3 : Nonempty A]
+  (M : Bellman.MDP S A) (π : Bellman.Policy S A),
+  ∑' (n : ℕ), ↑M.discount ^ n • (⇑(M.markovOperator π))^[n] (M.policyReward π) = M.policyValue π ∧
+    M.policyBellman π (M.policyValue π) = M.policyValue π ∧
+      (∀ (v : S → ℝ), M.policyBellman π v = v → v = M.policyValue π) ∧
+        M.bellman M.optimalValue = M.optimalValue ∧
+          (∀ (v : S → ℝ), M.bellman v = v → v = M.optimalValue) ∧
+            M.policyValue (Bellman.pure M.greedy) = M.optimalValue ∧
+              (∀ (ρ : Bellman.Policy S A), M.policyValue ρ ≤ M.optimalValue) ∧
+                ∀ (choice : S → A),
+                  (∀ (s : S), M.action M.optimalValue s (choice s) = M.optimalValue s) →
+                    M.policyValue (Bellman.pure choice) = M.optimalValue
+'Thesis.SourceFoundations.bellman_equations' depends on axioms: [propext, Classical.choice, Quot.sound]
+@shapley_bellman : ∀ {S A : Type} [inst : Fintype S] [inst_1 : Fintype A] [inst_2 : Nonempty A]
+  (G : LayeredGames.Game S A),
+  (∀ (v : ℕ → S → ℝ),
+      v 0 = G.terminal →
+        (∀ (n : ℕ) (s : S), v (n + 1) s = LayeredGames.best (G.maximize n s) fun a => G.action n s a (v n)) →
+          v = G.value) ∧
+    ∀ (plus minus : LayeredGames.Policy S A) (n : ℕ) (s : S),
+      G.payoff plus G.optimalPolicy n s ≤ G.value n s ∧
+        G.payoff G.optimalPolicy G.optimalPolicy n s = G.value n s ∧ G.value n s ≤ G.payoff G.optimalPolicy minus n s
+'Thesis.SourceFoundations.shapley_bellman' depends on axioms: [propext, Classical.choice, Quot.sound]
+@subdifferential_face : ∀ {I A : Type} [inst : Fintype I] [Fintype A] [Nonempty A] (v : A → I → ℝ) (x : I → ℝ),
+  (∀ (s : I → ℝ),
+      Subgradient (support ((convexHull ℝ) (Set.range v))) x s ↔
+        s ∈ (convexHull ℝ) (Set.range v) ∧ s ⬝ᵥ x = support ((convexHull ℝ) (Set.range v)) x) ∧
+    (DifferentiableAt ℝ (support ((convexHull ℝ) (Set.range v))) x ↔
+        ∃ p ∈ (convexHull ℝ) (Set.range v),
+          p ⬝ᵥ x = support ((convexHull ℝ) (Set.range v)) x ∧
+            ∀ q ∈ (convexHull ℝ) (Set.range v), q ⬝ᵥ x = support ((convexHull ℝ) (Set.range v)) x → q = p) ∧
+      ∀ (p : I → ℝ),
+        HasFDerivAt (support ((convexHull ℝ) (Set.range v))) (gradientRow p) x → p ∈ (convexHull ℝ) (Set.range v)
+'Thesis.SourceFoundations.subdifferential_face' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:79:5: warning: Variable name `hn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:79:28: warning: Variable name `hb` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hb
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:81:5: warning: Variable name `hwp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hwp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:81:31: warning: Variable name `hwn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hwn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@split_tropical_rational_affine : ∀ {n m k : ℕ} (net : Network n m),
+  net.Nonnegative →
+    BiasFree net →
+      ∀ (wp wn : Matrix (Fin k) (Fin m) ℝ),
+        (∀ (i : Fin k) (j : Fin m), 0 ≤ wp i j) →
+          (∀ (i : Fin k) (j : Fin m), 0 ≤ wn i j) →
+            have hidden := tropicalSplit net (inputPolynomials n).1 (inputPolynomials n).2;
+            have g := polynomialAffine wp wn 0 hidden.1 hidden.2;
+            have h := polynomialAffine wn wp 0 hidden.1 hidden.2;
+            (∀ (i : Fin k),
+                (g i).ZeroIntercepts ∧
+                  (h i).ZeroIntercepts ∧
+                    (g i).NonnegativeSlopes ∧
+                      (h i).NonnegativeSlopes ∧
+                        Monotone (g i).eval ∧
+                          Monotone (h i).eval ∧
+                            ConvexOn ℝ Set.univ (g i).eval ∧
+                              ConvexOn ℝ Set.univ (h i).eval ∧
+                                ∀ (c : ℝ),
+                                  0 ≤ c →
+                                    ∀ (x : Fin n ⊕ Fin n → ℝ),
+                                      (g i).eval (c • x) = c * (g i).eval x ∧ (h i).eval (c • x) = c * (h i).eval x) ∧
+              (∀ (p q : Fin n → ℝ),
+                  (fun i => (g i).eval (Sum.elim p q)) = wp *ᵥ (net.split p q).1 + wn *ᵥ (net.split p q).2 ∧
+                    (fun i => (h i).eval (Sum.elim p q)) = wn *ᵥ (net.split p q).1 + wp *ᵥ (net.split p q).2) ∧
+                (∀ (p q : Fin n → ℝ) (i : Fin k),
+                    (g i).eval (Sum.elim p q) - (h i).eval (Sum.elim p q) = ((wp - wn) *ᵥ net.eval (p - q)) i) ∧
+                  ∀ (i : Fin k),
+                    (g i).newton = ∑ j, wp i j • (hidden.1 j).newton + ∑ j, wn i j • (hidden.2 j).newton ∧
+                      (h i).newton = ∑ j, wn i j • (hidden.1 j).newton + ∑ j, wp i j • (hidden.2 j).newton
+'Thesis.SourceFoundations.split_tropical_rational_affine' depends on axioms: [propext, Classical.choice, Quot.sound]
+@biased_vertices_gradients : ∀ {I : Type} [inst : Fintype I] (p : Tropical.Polynomial I) (s : I → ℝ),
+  (∃ x, HasFDerivAt p.eval (gradientRow s) x) ↔
+    ∃ q, SliceVisible p.lift.slope q ∧ q ∈ Set.extremePoints ℝ p.lift.newton ∧ inputProjection q = s
+'Thesis.SourceFoundations.biased_vertices_gradients' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:113:45: warning: Variable name `hn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:114:5: warning: Variable name `hr` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hr
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:116:21: warning: Variable name `hwp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hwp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:116:47: warning: Variable name `hwn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hwn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:117:5: warning: Variable name `hrow` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hrow
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@relu_net_game_value_affine : ∀ {n m k : ℕ} (net : Network n m),
+  net.Nonnegative →
+    NonzeroRows net →
+      ∀ (x : Fin n → ℝ) (plus minus : Strategy net) (wp wn : Matrix (Fin k) (Fin m) ℝ) (b : Fin k → ℝ),
+        (∀ (i : Fin k) (j : Fin m), 0 ≤ wp i j) →
+          (∀ (i : Fin k) (j : Fin m), 0 ≤ wn i j) →
+            (∀ (i : Fin k), rowDiscount wp wn i ≠ 0) →
+              ∀ (i : Fin k),
+                have read := fun v => continuation wp wn b v.1 v.2 i;
+                have logit := ((wp - wn) *ᵥ net.eval x + b) i;
+                read (policyValue net plus (optimalStrategy net x) x (-x)) ≤ logit ∧
+                  read (policyValue net (optimalStrategy net x) (optimalStrategy net x) x (-x)) = logit ∧
+                    logit ≤ read (policyValue net (optimalStrategy net x) minus x (-x)) ∧
+                      (SubgamePerfect net plus minus x (-x) ↔
+                          GateOptimalStrategy net x plus ∧ GateOptimalStrategy net x minus) ∧
+                        (SubgamePerfect net plus minus x (-x) → read (policyValue net plus minus x (-x)) = logit)
+'Thesis.SourceFoundations.relu_net_game_value_affine' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:132:83: warning: Variable name `hP` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hP
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:132:102: warning: Variable name `hneP` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hneP
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:133:5: warning: Variable name `hcP` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hcP
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:133:24: warning: Variable name `hQ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hQ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:133:43: warning: Variable name `hneQ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hneQ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:133:63: warning: Variable name `hcQ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hcQ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@support_properties : ∀ {I A : Type} [inst : Fintype I] [inst_1 : Fintype A] [inst_2 : Nonempty A] (P Q : Set (I → ℝ)),
+  IsCompact P →
+    P.Nonempty →
+      Convex ℝ P →
+        IsCompact Q →
+          Q.Nonempty →
+            Convex ℝ Q →
+              ConvexOn ℝ Set.univ (support P) ∧
+                (∀ (c : ℝ), 0 ≤ c → ∀ (x : I → ℝ), support P (c • x) = c * support P x) ∧
+                  (∀ (x : I → ℝ), support (P + Q) x = support P x + support Q x) ∧
+                    (∀ (x : I → ℝ), support ((convexHull ℝ) (P ∪ Q)) x = max (support P x) (support Q x)) ∧
+                      (P ⊆ Q ↔ ∀ (x : I → ℝ), support P x ≤ support Q x) ∧
+                        (support P = support Q → P = Q) ∧
+                          ∀ (v : A → I → ℝ) (x : I → ℝ),
+                            (support ((convexHull ℝ) (Set.range v)) x = finiteMax fun a => v a ⬝ᵥ x) ∧
+                              ∃ p ∈ Set.extremePoints ℝ ((convexHull ℝ) (Set.range v)),
+                                p ⬝ᵥ x = support ((convexHull ℝ) (Set.range v)) x
+'Thesis.SourceGeometry.support_properties' depends on axioms: [propext, Classical.choice, Quot.sound]
+@newton_calculus : ∀ {I : Type} [inst : Fintype I] (p q : Tropical.Polynomial I),
+  (p.add q).newton = p.newton + q.newton ∧
+    (p.max q).newton = (convexHull ℝ) (p.newton ∪ q.newton) ∧
+      (∀ (x : I → ℝ), (p.add q).eval x = p.eval x + q.eval x) ∧
+        (∀ (x : I → ℝ), (p.max q).eval x = max (p.eval x) (q.eval x)) ∧
+          (∀ (x : I → ℝ), p.eval x = support p.lift.newton (Sum.elim x fun x => 1)) ∧
+            ((∀ (a : p.Terms), p.intercept a = 0) → ∀ (x : I → ℝ), p.eval x = support p.newton x)
+'Thesis.SourceGeometry.newton_calculus' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:158:43: warning: Variable name `hn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@network_polytopes_nonnegative : ∀ {n m : ℕ} (net : Network n m),
+  net.Nonnegative →
+    ∀ (i : Fin m),
+      have polynomials := tropicalSplit net (inputPolynomials n).1 (inputPolynomials n).2;
+      (∀ v ∈ (polynomials.1 i).newton, ∀ (j : Fin n ⊕ Fin n), 0 ≤ v j) ∧
+        ∀ v ∈ (polynomials.2 i).newton, ∀ (j : Fin n ⊕ Fin n), 0 ≤ v j
+'Thesis.SourceGeometry.network_polytopes_nonnegative' depends on axioms: [propext, Classical.choice, Quot.sound]
+@minkowski_propagation_affine_network : ∀ {n m k : ℕ} (net : Network n m) (wp wn : Matrix (Fin k) (Fin m) ℝ)
+  (bp bn : Fin k → ℝ),
+  have hidden := tropicalSplit net (inputPolynomials n).1 (inputPolynomials n).2;
+  have sets := polytopeSplit net (fun j => {Pi.single (Sum.inl j) 1}) fun j => {Pi.single (Sum.inr j) 1};
+  (∀ (i : Fin m), (hidden.1 i).newton = sets.1 i ∧ (hidden.2 i).newton = sets.2 i) ∧
+    ∀ (i : Fin k),
+      (polynomialAffine wp wn bp hidden.1 hidden.2 i).newton = ∑ j, wp i j • sets.1 j + ∑ j, wn i j • sets.2 j ∧
+        (polynomialAffine wn wp bn hidden.1 hidden.2 i).newton = ∑ j, wn i j • sets.1 j + ∑ j, wp i j • sets.2 j
+'Thesis.SourceGeometry.minkowski_propagation_affine_network' depends on axioms: [propext, Classical.choice, Quot.sound]
+@network_cpwl : ∀ {n m : ℕ} (net : Network n m), CPWL net.eval
+'Thesis.PiecewiseLinear.network_cpwl' depends on axioms: [propext, Classical.choice, Quot.sound]
+@affine_network_cpwl : ∀ {n m k : ℕ} (net : Network n m) (W : Matrix (Fin k) (Fin m) ℝ) (b : Fin k → ℝ),
+  CPWL fun x => W *ᵥ net.eval x + b
+'Thesis.PiecewiseLinear.affine_network_cpwl' depends on axioms: [propext, Classical.choice, Quot.sound]
+@convex_cpwl_iff_max_affine : ∀ {I : Type} [inst : Fintype I] (u : (I → ℝ) → ℝ),
+  (CPWL fun x x_1 => u x) ∧ ConvexOn ℝ Set.univ u ↔ ∃ p, u = p.eval
+'Thesis.PiecewiseLinear.convex_cpwl_iff_max_affine' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:202:5: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:202:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:203:5: warning: Variable name `hh` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hh
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@homogeneous_convex_cpwl_unique_polytope : ∀ {I : Type} [inst : Fintype I] (u : (I → ℝ) → ℝ),
+  (CPWL fun x x_1 => u x) →
+    ConvexOn ℝ Set.univ u → (∀ (c : ℝ), 0 ≤ c → ∀ (x : I → ℝ), u (c • x) = c * u x) → ∃! P, IsPolytope P ∧ u = support P
+'Thesis.PiecewiseLinear.homogeneous_convex_cpwl_unique_polytope' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:210:5: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:210:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:211:5: warning: Variable name `hh` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hh
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@homogeneous_convex_cpwl_vertices : ∀ {I : Type} [inst : Fintype I] (u : (I → ℝ) → ℝ),
+  (CPWL fun x x_1 => u x) →
+    ConvexOn ℝ Set.univ u →
+      (∀ (c : ℝ), 0 ≤ c → ∀ (x : I → ℝ), u (c • x) = c * u x) →
+        ∃ P,
+          IsPolytope P ∧
+            u = support P ∧
+              (∀ (Q : Set (I → ℝ)), IsPolytope Q → u = support Q → Q = P) ∧
+                ∀ (s : I → ℝ), s ∈ Set.extremePoints ℝ P ↔ ∃ x, HasFDerivAt u (gradientRow s) x
+'Thesis.PiecewiseLinear.homogeneous_convex_cpwl_vertices' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:220:5: warning: Variable name `hr` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hr
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@subgamePerfect_iff_gateOptimal : ∀ {n m : ℕ} (net : Network n m),
+  NonzeroRows net →
+    ∀ (x : Fin n → ℝ) (plus minus : Strategy net),
+      SubgamePerfect net plus minus x (-x) ↔ GateOptimalStrategy net x plus ∧ GateOptimalStrategy net x minus
+'Thesis.ReLUNetGame.subgamePerfect_iff_gateOptimal' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:228:5: warning: Variable name `hr` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hr
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@optimalStrategy_subgamePerfect : ∀ {n m : ℕ} (net : Network n m),
+  NonzeroRows net → ∀ (x : Fin n → ℝ), SubgamePerfect net (optimalStrategy net x) (optimalStrategy net x) x (-x)
+'Thesis.ReLUNetGame.optimalStrategy_subgamePerfect' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:234:43: warning: Variable name `hr` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hr
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/foundations-repairs/ExpectedTypeChecks.lean:236:5: warning: Variable name `h` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@subgamePerfect_value : ∀ {n m : ℕ} (net : Network n m),
+  NonzeroRows net →
+    ∀ (x : Fin n → ℝ) (plus minus : Strategy net),
+      SubgamePerfect net plus minus x (-x) → policyValue net plus minus x (-x) = (net.eval x, -net.eval x)
+'Thesis.ReLUNetGame.subgamePerfect_value' depends on axioms: [propext, Classical.choice, Quot.sound]
+@slice_attainable_gradients : ∀ {I A : Type} [inst : Fintype I] [Fintype A] [Nonempty A] (v : A → I ⊕ Unit → ℝ)
+  (s : I → ℝ),
+  (∃ x, HasFDerivAt (fun y => support ((convexHull ℝ) (Set.range v)) (affineSlice y)) (gradientRow s) x) ↔
+    ∃ p, SliceVisible v p ∧ p ∈ Set.extremePoints ℝ ((convexHull ℝ) (Set.range v)) ∧ inputProjection p = s
+'Thesis.Tropical.slice_attainable_gradients' depends on axioms: [propext, Classical.choice, Quot.sound]

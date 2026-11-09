@@ -2065,7 +2065,7 @@
     {
       "module": "Thesis.Games",
       "declaration": "Thesis.Games.pixelDisagreement_nonneg",
-      "expected_type": "\u2200 {X : Type u} {Y : Type v} [Fintype X] [DecidableEq Y] (p q : X \u2192 \u211d) (terminal : X \u2192 Y)\n    (hp : \u2200 x, 0 \u2264 p x) (hq : \u2200 x, 0 \u2264 q x) (y : Y),\n    0 \u2264 pixelDisagreement p q terminal y",
+      "expected_type": "\u2200 {X : Type u} {Y : Type v} [Fintype X] [Fintype Y] [DecidableEq Y] (p q : X \u2192 \u211d) (terminal : X \u2192 Y)\n    (hp : \u2200 x, 0 \u2264 p x) (hq : \u2200 x, 0 \u2264 q x) (y : Y),\n    0 \u2264 pixelDisagreement p q terminal y",
       "open_namespaces": [
         "Finset",
         "Thesis.Games"
@@ -2281,6 +2281,311 @@
       "review_id": "SMOOTH-softplus_degenerate_split",
       "review_evidence": "reports/smooth-repairs.md",
       "scope": "Positive-temperature softplus: canonical negative curvature and component vanish, positive canonical component equals softplus, original function is convex, and split pairs preserve nonnegativity."
+    },
+    {
+      "module": "HiddenMonotonicity.Sensitivities",
+      "declaration": "HiddenMonotonicity.canonical_weight_split",
+      "expected_type": "\u2200 (w : \u211d), max w 0 - max (-w) 0 = w \u2227 max w 0 + max (-w) 0 = |w|",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/canonical_weight_split",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Canonical scalar positive and negative parts recover the signed weight and its absolute value."
+    },
+    {
+      "module": "HiddenMonotonicity.OriginalTrace",
+      "declaration": "HiddenMonotonicity.Network.sensitivity_complementarity_absolute",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (hc : net.Canonical) (x : PairVec n) (r : Row m) (head : Bool),\n ((net.trace x).stabilized (fun _ => 0) r head).1 + ((net.trace x).stabilized (fun _ => 0) r head).2 = r.comp net.absoluteMap",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/Network.sensitivity_complementarity_absolute",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Exact selected-mask mass of projection heads for canonical backbone; affine final readout uses affine_canonical_mass instead."
+    },
+    {
+      "module": "HiddenMonotonicity.QSources",
+      "declaration": "HiddenMonotonicity.Network.symmetric_head_derivative",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (x : Vec n) (hx : net.Strict x) (r : Row m) (head : Bool),\n HasFDerivAt (fun y : Vec n => if head then r (net.split ((1/2 : \u211d) \u2022 y) ((-1/2 : \u211d) \u2022 y)).1 else r (net.split ((1/2 : \u211d) \u2022 y) ((-1/2 : \u211d) \u2022 y)).2)\n (unified ((net.originalTrace x).stabilized (fun _ => 0) r head)) x",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/Network.symmetric_head_derivative",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Actual full balanced-input derivative of either projection head under strict internal gates; the new affine differentiable-head API handles ties."
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.MaskedTrace.stabilized_bulk",
+      "expected_type": "\u2200 {n m : \u2115} (tr : MaskedTrace n m) (\u03b1 : \u2115 \u2192 \u211d) (r : Row m) (head : Bool),\n (tr.stabilized \u03b1 r head).1 + (tr.stabilized \u03b1 r head).2 = tr.bulkCoefficient \u03b1 \u2022 (r.comp tr.absMap)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/MaskedTrace.stabilized_bulk",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Entire shifted selected-mask bulk, including the current and terminal shift factors, arbitrary varying widths."
+    },
+    {
+      "module": "HiddenMonotonicity.NetworkDerivative",
+      "declaration": "HiddenMonotonicity.actual_positive_pullback",
+      "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Vec k) (x : PairVec n) (v : Vec n) (D : PairVec k \u2192L[\u211d] \u211d),\n (D.comp (layerJac wp wn bp bn x)) (v,0) = D (blockPP wp wn bp bn x v,0) + D (0,matrixCLM wn v)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/actual_positive_pullback",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Exact two-contribution pullback identity for the selected layer Jacobian; layer_derivative supplies its actual-derivative bridge under strict branch separation."
+    },
+    {
+      "module": "HiddenMonotonicity.NetworkDerivative",
+      "declaration": "HiddenMonotonicity.actual_negative_pullback",
+      "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Vec k) (x : PairVec n) (v : Vec n) (D : PairVec k \u2192L[\u211d] \u211d),\n (D.comp (layerJac wp wn bp bn x)) (0,v) = D (blockPN wp wn bp bn x v,0) + D (0,matrixCLM wp v)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/actual_negative_pullback",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Exact two-contribution pullback identity for the selected layer Jacobian; layer_derivative supplies its actual-derivative bridge under strict branch separation."
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.MaskedTrace.stabilized",
+      "expected_type": "\u2200 {n m : \u2115}, MaskedTrace n m \u2192 (\u2115 \u2192 \u211d) \u2192 Row m \u2192 Bool \u2192 Sensitivity n",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/MaskedTrace.stabilized",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Recursive selected-mask algorithm: pull back the shifted tail and subtract the same local alpha multiple of the partial sum; terminal seed is also shifted. This is a definition, not a proposition.",
+      "kind": "definition"
+    },
+    {
+      "module": "HiddenMonotonicity.Network",
+      "declaration": "HiddenMonotonicity.Network.shift",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (p q c : Fin n \u2192 \u211d),\n net.split (p+c) (q+c) = ((net.split p q).1 + net.common c, (net.split p q).2 + net.common c)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/Network.shift",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Actual whole-network common-shift equivariance with biases. common uses Wp+Wn; canonical sign parts identify the absolute-weight product."
+    },
+    {
+      "module": "HiddenMonotonicity.Chunks",
+      "declaration": "HiddenMonotonicity.maxpool_correct",
+      "expected_type": "\u2200 {\u03b9 : Type u} [Fintype \u03b9] [Nonempty \u03b9] [DecidableEq \u03b9] (p n : \u03b9 \u2192 \u211d),\n Finset.univ.sup' Finset.univ_nonempty (fun j => p j + \u2211 i \u2208 Finset.univ.erase j, n i) - \u2211 i, n i = Finset.univ.sup' Finset.univ_nonempty (fun j => p j-n j)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "review_id": "hidden-recheck/older/maxpool_correct",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Exact finite nonempty convex-pool difference identity; full output/shape properties are in maxpool_properties."
+    },
+    {
+      "module": "HiddenMonotonicity.Sensitivities",
+      "declaration": "HiddenMonotonicity.monotone_directional_nonnegative",
+      "expected_type": "\u2200 {n : \u2115} (g : (Fin n \u2192 \u211d) \u2192 \u211d) (x v : Fin n \u2192 \u211d) (D : (Fin n \u2192 \u211d) \u2192L[\u211d] \u211d)\n (hg : Monotone g) (hd : HasFDerivAt g D x) (hv : 0\u2264v), 0\u2264D v",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/monotone_directional_nonnegative",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Actual derivative of an arbitrary differentiable coordinatewise-monotone function is nonnegative in every nonnegative direction; no subdifferential assertion."
+    },
+    {
+      "module": "HiddenMonotonicity.Decomposition",
+      "declaration": "HiddenMonotonicity.Network.valid_decomposition_recovery",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03c3 : \u211d \u2192 \u211d) (\u03c6 : (\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d)\n (hv : ValidPairActivation \u03c3 \u03c6) (x : PairVec n),\n (net.decomposeWith \u03c6 x).1-(net.decomposeWith \u03c6 x).2 = net.forwardWith \u03c3 (x.1-x.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/Network.valid_decomposition_recovery",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Neuron-local scalar difference preservation gives full-network recovery using the same weights and biases. Positivity is separately established, not assumed by this algebraic theorem."
+    },
+    {
+      "module": "HiddenMonotonicity.Decomposition",
+      "declaration": "HiddenMonotonicity.Network.mixing_recovery",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b7 : \u211d) (x : PairVec n),\n (net.decomposeWith (mixPair \u03b7) x).1-(net.decomposeWith (mixPair \u03b7) x).2 = net.eval (x.1-x.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/Network.mixing_recovery",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Exact actual mixing-network recovery for every real eta; stream positivity additionally needs eta in [0,1] and nonnegative parameters/inputs."
+    },
+    {
+      "module": "HiddenMonotonicity.Convexity",
+      "declaration": "HiddenMonotonicity.Network.convex",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (hw : net.Nonnegative)\n (p q p' q' : Fin n \u2192 \u211d) (t : \u211d) (ht : 0\u2264t) (ht' : t\u22641),\n (net.split (mix t p p') (mix t q q')).1 \u2264 mix t (net.split p q).1 (net.split p' q').1 \u2227\n (net.split (mix t p p') (mix t q q')).2 \u2264 mix t (net.split p q).2 (net.split p' q').2",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/Network.convex",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Both actual split heads are globally Jensen convex in their split input pair with nonnegative split weights and arbitrary biases. General convex input-splitting composition is a separate scope item."
+    },
+    {
+      "module": "HiddenMonotonicity.Decomposition",
+      "declaration": "HiddenMonotonicity.Network.mixing_one_is_split",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (x : PairVec n), net.decomposeWith (mixPair 1) x = net.split x.1 x.2",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/Network.mixing_one_is_split",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Literal full-network equality between the eta=1 mixing evaluator and the established DC split evaluator."
+    },
+    {
+      "module": "HiddenMonotonicity.Convexity",
+      "declaration": "HiddenMonotonicity.Network.monotone",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (hw : net.Nonnegative)\n (p q p' q' : Fin n \u2192 \u211d) (hp : p\u2264p') (hq : q\u2264q'),\n (net.split p q).1 \u2264 (net.split p' q').1 \u2227 (net.split p q).2 \u2264 (net.split p' q').2",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/Network.monotone",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Actual pair-input monotonicity of both complete split heads, with nonnegative split weights and arbitrary biases."
+    },
+    {
+      "module": "HiddenMonotonicity.Network",
+      "declaration": "HiddenMonotonicity.layer_difference",
+      "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Fin k \u2192 \u211d) (p q : Fin n \u2192 \u211d),\n (fun i => max ((wp.mulVec p + wn.mulVec q + bp) i) ((wn.mulVec p + wp.mulVec q + bn) i)) -\n (wn.mulVec p + wp.mulVec q + bn) = (fun i => relu (((wp-wn).mulVec (p-q) + (bp-bn)) i))",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/layer_difference",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Biased rectangular ReLU-layer recovery; this is not an ungated affine/convolution theorem. linear_chunk_properties is the source-facing affine result."
+    },
+    {
+      "module": "HiddenMonotonicity.BlockedPaths",
+      "declaration": "HiddenMonotonicity.Network.gradient_blindness",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (x : Vec n) (hx : net.Strict x) (j : Fin m) (i : Fin n)\n (hblocked : \u2200 path : Thesis.BackwardGames.Paths (net.originalTrace x),\n PathConnected (net.originalTrace x) j i path \u2192 PathHasInactive (net.originalTrace x) path),\n \u2203 U : Set (Vec n), IsOpen U \u2227 x\u2208U \u2227 \u2200 y\u2208U, fderiv \u211d net.eval y (Pi.single i 1) j=0",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/Network.gradient_blindness",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Zero actual derivative on an open neighborhood when every connected signed path is gated off. Fully activated backbone output coordinate and strict gates; affine final readout needs its explicit model bridge."
+    },
+    {
+      "module": "HiddenMonotonicity.NetworkDerivative",
+      "declaration": "HiddenMonotonicity.layer_derivative",
+      "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Vec k) (x : PairVec n)\n (hx : \u2200 i, (preP wp wn x+bp) i \u2260 (preN wp wn x+bn) i),\n HasFDerivAt (layerFun wp wn bp bn) (layerJac wp wn bp bn x) x",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/layer_derivative",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Actual Frechet derivative of the split max/affine layer when all branch comparisons are strict; arbitrary weights and biases."
+    },
+    {
+      "module": "HiddenMonotonicity.FinitePolynomialWitness",
+      "declaration": "HiddenMonotonicity.MaxPolynomial.ordinary_finite_polynomial_witness",
+      "expected_type": "\u2200 {\u03b9 : Type u} (e : MaxPolynomial \u03b9), \u2203 ps : List (MvPolynomial \u03b9 \u211d), ps\u2260[] \u2227\n (\u2200 p\u2208ps, \u2200 d : \u03b9 \u2192\u2080 \u2115, 0\u2264p.coeff d) \u2227\n \u2200 x : \u03b9 \u2192 \u211d, 0\u2264x \u2192 e.eval x=foldMax (ps.map (MvPolynomial.eval x))",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "review_id": "hidden-recheck/older/MaxPolynomial.ordinary_finite_polynomial_witness",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "An actual nonempty finite list of ordinary multivariate polynomials with nonnegative coefficients represents the max polynomial on the nonnegative orthant."
+    },
+    {
+      "module": "HiddenMonotonicity.CircuitStatements",
+      "declaration": "HiddenMonotonicity.Circuit.maxout_multiplication_split_correct",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (x : Vec d) (i : Fin n),\n c.eval x i = (c.positiveExpressions.1 i).polynomialMaximum.eval (canonicalSplitInput x) -\n (c.positiveExpressions.2 i).polynomialMaximum.eval (canonicalSplitInput x)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "hidden-recheck/older/Circuit.maxout_multiplication_split_correct",
+      "review_evidence": "reports/adversarial-hidden-recheck.json",
+      "scope": "Actual shared-node signed arithmetic DAG recovered by two finite max-polynomial streams on canonical nonnegative split inputs. No tensor-index or complexity bound asserted."
     }
   ]
 }

@@ -1657,7 +1657,7 @@ run_cmd do
 section
 universe u v
 open Finset Thesis.Games
-theorem GamesExpectedTypes.target_69 : (∀ {X : Type u} {Y : Type v} [Fintype X] [DecidableEq Y] (p q : X → ℝ) (terminal : X → Y)
+theorem GamesExpectedTypes.target_69 : (∀ {X : Type u} {Y : Type v} [Fintype X] [Fintype Y] [DecidableEq Y] (p q : X → ℝ) (terminal : X → Y)
     (hp : ∀ x, 0 ≤ p x) (hq : ∀ x, 0 ≤ q x) (y : Y),
     0 ≤ pixelDisagreement p q terminal y) := by exact @Thesis.Games.pixelDisagreement_nonneg.{u, v}
 end

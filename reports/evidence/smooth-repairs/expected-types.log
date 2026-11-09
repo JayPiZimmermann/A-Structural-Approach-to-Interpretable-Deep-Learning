@@ -1,0 +1,104 @@
+smooth_dc_split : ∀ (f : ℝ → ℝ),
+  Differentiable ℝ f →
+    (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv f) a b) →
+      Integrable (curvature f) volume →
+        Tendsto (deriv f) atBot (𝓝 (minusInfinitySlope f)) ∧
+          (∃ B, ∀ (x : ℝ), |deriv f x| ≤ B) ∧
+            ConvexOn ℝ univ (tilt (C1 f) (commonTilt f)) ∧
+              ConvexOn ℝ univ (tilt (C2 f) (commonTilt f)) ∧
+                Monotone (tilt (C1 f) (commonTilt f)) ∧
+                  Monotone (tilt (C2 f) (commonTilt f)) ∧
+                    ∀ (z : ℝ × ℝ), tilt (C1 f) (commonTilt f) z - tilt (C2 f) (commonTilt f) z = f (z.1 - z.2)
+'HiddenMonotonicity.SmoothDC.smooth_dc_split' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/smooth-repairs/ExpectedTypeChecks.lean:23:25: warning: Variable name `hq` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hq
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+canonical_tilt_minimality : ∀ (f : ℝ → ℝ),
+  Integrable (curvature f) volume → ∀ (L : ℝ), Monotone (tilt (C1 f) L) → Monotone (tilt (C2 f) L) → commonTilt f ≤ L
+'HiddenMonotonicity.SmoothDC.canonical_tilt_minimality' depends on axioms: [propext, Classical.choice, Quot.sound]
+sigmoid_smooth_dc_split : have f := Real.sigmoid;
+ConvexOn ℝ univ (tilt (C1 f) (commonTilt f)) ∧
+  ConvexOn ℝ univ (tilt (C2 f) (commonTilt f)) ∧
+    Monotone (tilt (C1 f) (commonTilt f)) ∧
+      Monotone (tilt (C2 f) (commonTilt f)) ∧
+        ∀ (z : ℝ × ℝ), tilt (C1 f) (commonTilt f) z - tilt (C2 f) (commonTilt f) z = f (z.1 - z.2)
+'HiddenMonotonicity.SmoothDC.sigmoid_smooth_dc_split' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/smooth-repairs/ExpectedTypeChecks.lean:38:21: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+softplus_smooth_dc_split : ∀ (θ : ℝ),
+  0 < θ →
+    have f := Thesis.Regularization.softplus θ;
+    ConvexOn ℝ univ (tilt (C1 f) (commonTilt f)) ∧
+      ConvexOn ℝ univ (tilt (C2 f) (commonTilt f)) ∧
+        Monotone (tilt (C1 f) (commonTilt f)) ∧
+          Monotone (tilt (C2 f) (commonTilt f)) ∧
+            ∀ (z : ℝ × ℝ), tilt (C1 f) (commonTilt f) z - tilt (C2 f) (commonTilt f) z = f (z.1 - z.2)
+'HiddenMonotonicity.SmoothDC.softplus_smooth_dc_split' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/smooth-repairs/ExpectedTypeChecks.lean:55:5: warning: Variable name `hminimal` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hminimal
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+common_affine_of_minimal_curvature : ∀ (f c1 c2 : ℝ → ℝ),
+  Differentiable ℝ f →
+    (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv f) a b) →
+      Integrable (curvature f) volume →
+        ConvexOn ℝ univ c1 →
+          Differentiable ℝ c1 →
+            (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv c1) a b) →
+              (∀ (x : ℝ), f x = c1 x - c2 x) →
+                (∀ᵐ (x : ℝ), curvature c1 x = positiveCurvature f x) →
+                  ∃ a b, (∀ (x : ℝ), c1 x = C1 f x + a * x + b) ∧ ∀ (x : ℝ), c2 x = C2 f x + a * x + b
+'HiddenMonotonicity.SmoothDC.common_affine_of_minimal_curvature' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+curvature_minimality_locally_AC : ∀ (f c1 c2 : ℝ → ℝ),
+  Differentiable ℝ f →
+    (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv f) a b) →
+      Integrable (curvature f) volume →
+        ConvexOn ℝ univ c1 →
+          ConvexOn ℝ univ c2 →
+            Differentiable ℝ c1 →
+              Differentiable ℝ c2 →
+                (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv c1) a b) →
+                  (∀ (x : ℝ), f x = c1 x - c2 x) →
+                    (∀ᵐ (x : ℝ), positiveCurvature f x ≤ curvature c1 x ∧ negativeCurvature f x ≤ curvature c2 x) ∧
+                      ((∀ᵐ (x : ℝ), curvature c1 x = positiveCurvature f x ∧ curvature c2 x = negativeCurvature f x) →
+                          ∃ a b, (∀ (x : ℝ), c1 x = C1 f x + a * x + b) ∧ ∀ (x : ℝ), c2 x = C2 f x + a * x + b) ∧
+                        ∀ (L : ℝ), Monotone (tilt (C1 f) L) → Monotone (tilt (C2 f) L) → commonTilt f ≤ L
+'HiddenMonotonicity.SmoothDC.curvature_minimality_locally_AC' depends on axioms: [propext, Classical.choice, Quot.sound]
+tanh_curvature_sech : ∀ (x : ℝ), curvature Real.tanh x = -2 * Real.tanh x / Real.cosh x ^ 2
+'HiddenMonotonicity.SmoothDC.tanh_curvature_sech' depends on axioms: [propext, Classical.choice, Quot.sound]
+tanh_curvature_support : ∀ (x : ℝ),
+  (0 ≤ x → positiveCurvature Real.tanh x = 0) ∧ (x ≤ 0 → negativeCurvature Real.tanh x = 0)
+'HiddenMonotonicity.SmoothDC.tanh_curvature_support' depends on axioms: [propext, Classical.choice, Quot.sound]
+tanh_smooth_dc_split : Integrable (curvature Real.tanh) volume ∧
+  (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv Real.tanh) a b) ∧
+    ConvexOn ℝ univ (tilt (C1 Real.tanh) (commonTilt Real.tanh)) ∧
+      ConvexOn ℝ univ (tilt (C2 Real.tanh) (commonTilt Real.tanh)) ∧
+        Monotone (tilt (C1 Real.tanh) (commonTilt Real.tanh)) ∧
+          Monotone (tilt (C2 Real.tanh) (commonTilt Real.tanh)) ∧
+            ValidPairActivation Real.tanh (splitPair Real.tanh) ∧ NonnegativePairActivation (splitPair Real.tanh)
+'HiddenMonotonicity.SmoothDC.tanh_smooth_dc_split' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/smooth-repairs/ExpectedTypeChecks.lean:100:21: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+softplus_degenerate_split : ∀ (θ : ℝ),
+  0 < θ →
+    negativeCurvature (Thesis.Regularization.softplus θ) = 0 ∧
+      C2 (Thesis.Regularization.softplus θ) = 0 ∧
+        C1 (Thesis.Regularization.softplus θ) = Thesis.Regularization.softplus θ ∧
+          ConvexOn ℝ univ (Thesis.Regularization.softplus θ) ∧
+            NonnegativePairActivation (splitPair (Thesis.Regularization.softplus θ))
+'HiddenMonotonicity.SmoothDC.softplus_degenerate_split' depends on axioms: [propext, Classical.choice, Quot.sound]

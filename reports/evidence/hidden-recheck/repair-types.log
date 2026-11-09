@@ -1,0 +1,443 @@
+@Network.affine_heads_recovery : ∀ {n m : ℕ} (net : Network n m) (rp rn : Row m) (bp bn : ℝ) (x : PairVec n),
+  (net.affineHeads rp rn bp bn x).1 - (net.affineHeads rp rn bp bn x).2 = net.affineLogit rp rn bp bn (x.1 - x.2)
+'HiddenMonotonicity.Network.affine_heads_recovery' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:22:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:22:76: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.affine_plain_head_formulas : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (x : Vec n),
+      net.Strict x →
+        ∀ (rp rn : Row m) (bp bn : ℝ),
+          HasFDerivAt (fun y => (net.affineHeads rp rn bp bn ((balancedLift n) y)).1)
+              ((1 / 2) •
+                ((rp - rn) ∘SL (net.originalTrace x).originalJac -
+                  (sourceRows (net.absoluteQSources x fun x => 0) (rp + rn)).sum))
+              x ∧
+            HasFDerivAt (fun y => (net.affineHeads rp rn bp bn ((balancedLift n) y)).2)
+              ((-1 / 2) •
+                ((rp - rn) ∘SL (net.originalTrace x).originalJac +
+                  (sourceRows (net.absoluteQSources x fun x => 0) (rp + rn)).sum))
+              x
+'HiddenMonotonicity.Network.affine_plain_head_formulas' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:34:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.affine_canonical_mass : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (x : Vec n) (w : Vec m) (head : Bool),
+      ((net.originalTrace x).run (fun x => 0)
+              (affineReadoutSeed (coefficientRow fun i => max (w i) 0) (coefficientRow fun i => max (-w i) 0) 0
+                head)).1 +
+          ((net.originalTrace x).run (fun x => 0)
+              (affineReadoutSeed (coefficientRow fun i => max (w i) 0) (coefficientRow fun i => max (-w i) 0) 0
+                head)).2 =
+        (coefficientRow fun i => |w i|) ∘SL net.absoluteMap
+'HiddenMonotonicity.Network.affine_canonical_mass' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:46:2: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:46:36: warning: Variable name `hb` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hb
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@linear_chunk_properties : ∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k),
+  (∀ (i : Fin k) (j : Fin n), 0 ≤ wp i j ∧ 0 ≤ wn i j) →
+    0 ≤ bp ∧ 0 ≤ bn →
+      (∀ (x : PairVec n),
+          (affineChunk wp wn bp bn x).1 - (affineChunk wp wn bp bn x).2 = affineLayer wp wn bp bn (x.1 - x.2)) ∧
+        (∀ (x : PairVec n), 0 ≤ x → 0 ≤ affineChunk wp wn bp bn x) ∧
+          Monotone (affineChunk wp wn bp bn) ∧
+            (∀ (x y : PairVec n) (a b : ℝ),
+                a + b = 1 →
+                  affineChunk wp wn bp bn (a • x + b • y) =
+                    a • affineChunk wp wn bp bn x + b • affineChunk wp wn bp bn y) ∧
+              ∀ (i : Fin k),
+                (ConvexOn ℝ Set.univ fun x => (affineChunk wp wn bp bn x).1 i) ∧
+                  ConvexOn ℝ Set.univ fun x => (affineChunk wp wn bp bn x).2 i
+'HiddenMonotonicity.linear_chunk_properties' depends on axioms: [propext, Classical.choice, Quot.sound]
+@maxpool_properties : ∀ {ι : Type u_1} [inst : Fintype ι] [inst_1 : Nonempty ι] [inst_2 : DecidableEq ι],
+  (∀ (x : (ι → ℝ) × (ι → ℝ)), (finitePool x).1 - (finitePool x).2 = Finset.univ.sup' ⋯ fun j => x.1 j - x.2 j) ∧
+    (∀ (x : (ι → ℝ) × (ι → ℝ)), 0 ≤ x → 0 ≤ finitePool x) ∧
+      Monotone finitePool ∧
+        (ConvexOn ℝ Set.univ fun x => (finitePool x).1) ∧ ConvexOn ℝ Set.univ fun x => (finitePool x).2
+'HiddenMonotonicity.maxpool_properties' depends on axioms: [propext, Classical.choice, Quot.sound]
+@winnerPool_recovery : ∀ {ι : Type u_1} [inst : Fintype ι] [inst_1 : Nonempty ι] (x : (ι → ℝ) × (ι → ℝ)),
+  (winnerPool x).1 - (winnerPool x).2 = Finset.univ.sup' ⋯ fun j => x.1 j - x.2 j
+'HiddenMonotonicity.winnerPool_recovery' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Circuit.split_policy_correct : ∀ {d n : ℕ} (c : Circuit d n) (pooling : ℕ → PoolingRule) (center : ℕ → Bool)
+  (x : Fin d × Bool → ℝ),
+  (c.splitWithPolicy pooling center x).1 - (c.splitWithPolicy pooling center x).2 =
+    c.eval fun i => x (i, false) - x (i, true)
+'HiddenMonotonicity.Circuit.split_policy_correct' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:89:112: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Circuit.split_policy_nonnegative : ∀ {d n : ℕ} (c : Circuit d n) (pooling : ℕ → PoolingRule) (center : ℕ → Bool)
+  (x : Fin d × Bool → ℝ), 0 ≤ x → 0 ≤ c.splitWithPolicy pooling center x
+'HiddenMonotonicity.Circuit.split_policy_nonnegative' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Circuit.split_policy_convex_eq : ∀ {d n : ℕ} (c : Circuit d n) (center : Bool) (x : Fin d × Bool → ℝ),
+  c.splitWithPolicy (fun x => PoolingRule.convex) (fun x => center) x = c.split center x
+'HiddenMonotonicity.Circuit.split_policy_convex_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:107:43: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:108:2: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:108:21: warning: Variable name `hn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:109:2: warning: Variable name `hd` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hd
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.affine_head_derivative_of_differentiable : ∀ {n m : ℕ} (net : Network n m),
+  net.Nonnegative →
+    ∀ (x : PairVec n) (rp rn : Row m),
+      Monotone ⇑rp →
+        Monotone ⇑rn →
+          ∀ (bp bn : ℝ) (head : Bool),
+            DifferentiableAt ℝ
+                (fun y => if head = true then (net.affineHeads rp rn bp bn y).1 else (net.affineHeads rp rn bp bn y).2)
+                x →
+              HasFDerivAt
+                (fun y => if head = true then (net.affineHeads rp rn bp bn y).1 else (net.affineHeads rp rn bp bn y).2)
+                (assemble ((net.originalTrace (x.1 - x.2)).run (fun x => 0) (affineReadoutSeed rp rn 0 head))) x
+'HiddenMonotonicity.Network.affine_head_derivative_of_differentiable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:119:43: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:120:2: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:120:21: warning: Variable name `hn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:121:2: warning: Variable name `hd` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hd
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.affine_symmetric_derivative_of_differentiable : ∀ {n m : ℕ} (net : Network n m),
+  net.Nonnegative →
+    ∀ (x : Vec n) (rp rn : Row m),
+      Monotone ⇑rp →
+        Monotone ⇑rn →
+          ∀ (bp bn : ℝ) (head : Bool),
+            DifferentiableAt ℝ
+                (fun y =>
+                  if head = true then (net.affineHeads rp rn bp bn ((balancedLift n) y)).1
+                  else (net.affineHeads rp rn bp bn ((balancedLift n) y)).2)
+                x →
+              HasFDerivAt
+                (fun y =>
+                  if head = true then (net.affineHeads rp rn bp bn ((balancedLift n) y)).1
+                  else (net.affineHeads rp rn bp bn ((balancedLift n) y)).2)
+                (unified ((net.originalTrace x).run (fun x => 0) (affineReadoutSeed rp rn 0 head))) x
+'HiddenMonotonicity.Network.affine_symmetric_derivative_of_differentiable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:131:43: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:132:2: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:132:21: warning: Variable name `hn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:133:2: warning: Variable name `hg` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hg
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:134:2: warning: Variable name `hh` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hh
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.affine_backward_invariants_of_differentiable : ∀ {n m : ℕ} (net : Network n m),
+  net.Nonnegative →
+    ∀ (x : Vec n) (rp rn : Row m),
+      Monotone ⇑rp →
+        Monotone ⇑rn →
+          ∀ (bp bn : ℝ),
+            DifferentiableAt ℝ (fun y => (net.affineHeads rp rn bp bn ((balancedLift n) y)).1) x →
+              DifferentiableAt ℝ (fun y => (net.affineHeads rp rn bp bn ((balancedLift n) y)).2) x →
+                ∀ (α : ℕ → ℝ) (β : ℝ),
+                  HasFDerivAt (net.affineLogit rp rn bp bn) ((rp - rn) ∘SL (net.originalTrace x).originalJac) x ∧
+                    ((net.originalTrace x).run α (affineReadoutSeed rp rn β true)).1 -
+                          ((net.originalTrace x).run α (affineReadoutSeed rp rn β false)).1 =
+                        (rp - rn) ∘SL (net.originalTrace x).originalJac ∧
+                      ((net.originalTrace x).run α (affineReadoutSeed rp rn β true)).2 -
+                          ((net.originalTrace x).run α (affineReadoutSeed rp rn β false)).2 =
+                        -(rp - rn) ∘SL (net.originalTrace x).originalJac
+'HiddenMonotonicity.Network.affine_backward_invariants_of_differentiable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:147:43: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:147:82: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:147:101: warning: Variable name `hn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.affine_heads_ae_derivatives : ∀ {n m : ℕ} (net : Network n m),
+  net.Nonnegative →
+    ∀ (rp rn : Row m),
+      Monotone ⇑rp →
+        Monotone ⇑rn →
+          ∀ (bp bn : ℝ),
+            ∀ᵐ (x : Vec n),
+              ∀ (head : Bool),
+                HasFDerivAt
+                  (fun y =>
+                    if head = true then (net.affineHeads rp rn bp bn ((balancedLift n) y)).1
+                    else (net.affineHeads rp rn bp bn ((balancedLift n) y)).2)
+                  (unified ((net.originalTrace x).run (fun x => 0) (affineReadoutSeed rp rn 0 head))) x
+'HiddenMonotonicity.Network.affine_heads_ae_derivatives' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:159:43: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:159:82: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:159:101: warning: Variable name `hn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.affine_ae_backward_invariants : ∀ {n m : ℕ} (net : Network n m),
+  net.Nonnegative →
+    ∀ (rp rn : Row m),
+      Monotone ⇑rp →
+        Monotone ⇑rn →
+          ∀ (bp bn : ℝ),
+            ∀ᵐ (x : Vec n),
+              ∀ (α : ℕ → ℝ) (β : ℝ),
+                HasFDerivAt (net.affineLogit rp rn bp bn) ((rp - rn) ∘SL (net.originalTrace x).originalJac) x ∧
+                  ((net.originalTrace x).run α (affineReadoutSeed rp rn β true)).1 -
+                        ((net.originalTrace x).run α (affineReadoutSeed rp rn β false)).1 =
+                      (rp - rn) ∘SL (net.originalTrace x).originalJac ∧
+                    ((net.originalTrace x).run α (affineReadoutSeed rp rn β true)).2 -
+                        ((net.originalTrace x).run α (affineReadoutSeed rp rn β false)).2 =
+                      -(rp - rn) ∘SL (net.originalTrace x).originalJac
+'HiddenMonotonicity.Network.affine_ae_backward_invariants' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:172:43: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.originalTrace_ae_derivative : ∀ {n m : ℕ} (net : Network n m),
+  net.Nonnegative → ∀ᵐ (x : Vec n), HasFDerivAt net.eval (net.originalTrace x).originalJac x
+'HiddenMonotonicity.Network.originalTrace_ae_derivative' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:182:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.absoluteQSources_ae_derivatives : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical → ∀ (α : ℕ → ℝ), ∀ᵐ (x : Vec n), ∀ q ∈ net.absoluteQSources x α, HasFDerivAt q.value q.jacobian x
+'HiddenMonotonicity.Network.absoluteQSources_ae_derivatives' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:192:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.affine_Q_row_formulas : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (x : Vec n) (α : ℕ → ℝ) (rp rn : Row m) (β : ℝ),
+      unified ((net.originalTrace x).run α (affineReadoutSeed rp rn β true)) =
+          (1 / 2) •
+            ((rp - rn) ∘SL (net.originalTrace x).originalJac -
+              (sourceRows (net.absoluteQSources x α) ((1 - 2 * β) • (rp + rn))).sum) ∧
+        unified ((net.originalTrace x).run α (affineReadoutSeed rp rn β false)) =
+          (-1 / 2) •
+            ((rp - rn) ∘SL (net.originalTrace x).originalJac +
+              (sourceRows (net.absoluteQSources x α) ((1 - 2 * β) • (rp + rn))).sum)
+'HiddenMonotonicity.Network.affine_Q_row_formulas' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:205:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.affine_Q_closed_form_ae : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (α : ℕ → ℝ) (rp rn : Row m) (bp bn β : ℝ),
+      ∀ᵐ (x : Vec n),
+        (∀ q ∈ net.absoluteQSources x α, HasFDerivAt q.value q.jacobian x) ∧
+          HasFDerivAt (net.affineLogit rp rn bp bn) ((rp - rn) ∘SL (net.originalTrace x).originalJac) x ∧
+            unified ((net.originalTrace x).run α (affineReadoutSeed rp rn β true)) =
+                (1 / 2) •
+                  ((rp - rn) ∘SL (net.originalTrace x).originalJac -
+                    (sourceRows (net.absoluteQSources x α) ((1 - 2 * β) • (rp + rn))).sum) ∧
+              unified ((net.originalTrace x).run α (affineReadoutSeed rp rn β false)) =
+                (-1 / 2) •
+                  ((rp - rn) ∘SL (net.originalTrace x).originalJac +
+                    (sourceRows (net.absoluteQSources x α) ((1 - 2 * β) • (rp + rn))).sum)
+'HiddenMonotonicity.Network.affine_Q_closed_form_ae' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:221:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:221:80: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:221:99: warning: Variable name `hn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.affine_plain_Q_gradients_ae : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (rp rn : Row m),
+      Monotone ⇑rp →
+        Monotone ⇑rn →
+          ∀ (bp bn : ℝ),
+            ∀ᵐ (x : Vec n),
+              (∀ q ∈ net.absoluteQSources x fun x => 0, HasFDerivAt q.value q.jacobian x) ∧
+                HasFDerivAt (fun y => (net.affineHeads rp rn bp bn ((balancedLift n) y)).1)
+                    ((1 / 2) •
+                      ((rp - rn) ∘SL (net.originalTrace x).originalJac -
+                        (sourceRows (net.absoluteQSources x fun x => 0) (rp + rn)).sum))
+                    x ∧
+                  HasFDerivAt (fun y => (net.affineHeads rp rn bp bn ((balancedLift n) y)).2)
+                    ((-1 / 2) •
+                      ((rp - rn) ∘SL (net.originalTrace x).originalJac +
+                        (sourceRows (net.absoluteQSources x fun x => 0) (rp + rn)).sum))
+                    x
+'HiddenMonotonicity.Network.affine_plain_Q_gradients_ae' depends on axioms: [propext, Classical.choice, Quot.sound]
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:236:43: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:236:92: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:236:111: warning: Variable name `hn` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hn
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:237:2: warning: Variable name `hg` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hg
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+.lake/diagnostics/new-hidden-audit/RepairTypes.lean:238:2: warning: Variable name `hh` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hh
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Network.affine_plain_formulas_of_differentiable : ∀ {n m : ℕ} (net : Network n m),
+  net.Canonical →
+    ∀ (x : Vec n) (rp rn : Row m),
+      Monotone ⇑rp →
+        Monotone ⇑rn →
+          ∀ (bp bn : ℝ),
+            DifferentiableAt ℝ (fun y => (net.affineHeads rp rn bp bn ((balancedLift n) y)).1) x →
+              DifferentiableAt ℝ (fun y => (net.affineHeads rp rn bp bn ((balancedLift n) y)).2) x →
+                HasFDerivAt (fun y => (net.affineHeads rp rn bp bn ((balancedLift n) y)).1)
+                    ((1 / 2) •
+                      ((rp - rn) ∘SL (net.originalTrace x).originalJac -
+                        (sourceRows (net.absoluteQSources x fun x => 0) (rp + rn)).sum))
+                    x ∧
+                  HasFDerivAt (fun y => (net.affineHeads rp rn bp bn ((balancedLift n) y)).2)
+                    ((-1 / 2) •
+                      ((rp - rn) ∘SL (net.originalTrace x).originalJac +
+                        (sourceRows (net.absoluteQSources x fun x => 0) (rp + rn)).sum))
+                    x
+'HiddenMonotonicity.Network.affine_plain_formulas_of_differentiable' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
