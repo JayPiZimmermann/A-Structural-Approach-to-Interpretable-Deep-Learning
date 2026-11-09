@@ -1,0 +1,265 @@
+{
+  "version": 1,
+  "targets": [
+    {
+      "module": "Thesis.StoppingRegions",
+      "declaration": "Thesis.StoppingStructure.stopping_region_nonnegative_affine",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hp : net.NonnegativeParameters) (r : Vec n),\n 0≤frozenStopping net r 0 ∧ Monotone (stoppingJac (net.originalTrace r)) ∧\n (∀ x ∈ gateRegion net r, net.decomposeWith stopPair x = stoppingJac (net.originalTrace r) x + frozenStopping net r 0) ∧\n MonotoneOn (net.decomposeWith stopPair) (gateRegion net r)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingStructure"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-structure/lem-stop-monotone",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "Actual stopping map on explicitly recursively defined original-gate regions. Its affine linear part is monotone and its bias constant is nonnegative under nonnegative split parameters."
+    },
+    {
+      "module": "Thesis.StoppingRegions",
+      "declaration": "Thesis.StoppingStructure.stopping_input_and_bias_sources",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (x : PairVec n),\n net.decomposeWith stopPair x = stoppingJac (net.originalTrace (x.1-x.2)) x + (biasSources net (x.1-x.2)).sum",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingStructure"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-structure/bias-stub-extension",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "Actual full stopping decomposition equals the selected homogeneous stopping map plus a finite list of explicit layer-bias stubs propagated through the suffix."
+    },
+    {
+      "module": "Thesis.StoppingPaths",
+      "declaration": "Thesis.StoppingStructure.geometricParity_negative_count",
+      "expected_type": "∀ {n m : ℕ} (tr : MaskedTrace n m) (i : Fin n) (path : GeometricPaths tr),\n geometricParity tr i path = decide (Odd (negativeEdgeCount tr i path))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingStructure"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-structure/literal-negative-edge-parity",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "XOR of signed-edge comparisons equals Odd of the literal count of negative edges on the same geometric neuron-index path."
+    },
+    {
+      "module": "Thesis.StoppingPaths",
+      "declaration": "Thesis.StoppingStructure.stopping_activation_parity_paths",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hc : net.Canonical) (hb : ZeroBias net) (x : PairVec n) (j : Fin m),\n let tr := net.originalTrace (x.1-x.2)\n (net.decomposeWith stopPair x).1 j = ∑ i, ∑ path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.2 i else x.1 i) ∧\n (net.decomposeWith stopPair x).2 j = ∑ i, ∑ path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.1 i else x.2 i)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingStructure"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-structure/actual-activation-parity",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "Both actual stopping activation streams equal geometric path sums. Canonical signed weights and zero split biases; all gates along the activation path are included."
+    },
+    {
+      "module": "Thesis.StoppingPaths",
+      "declaration": "Thesis.StoppingStructure.stopping_preactivation_parity_paths",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m) (hc : net.Canonical) (hb : ZeroBias net)\n (wp wn : Matrix (Fin k) (Fin m) ℝ)\n (hw : ∀ j i, wp j i=max (wp j i-wn j i) 0 ∧ wn j i=max (-(wp j i-wn j i)) 0)\n (x : PairVec n) (j : Fin k),\n let tr := preactivationTrace net (x.1-x.2) wp wn\n preP wp wn (net.decomposeWith stopPair x) j = ∑ i, ∑ path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.2 i else x.1 i) ∧\n preN wp wn (net.decomposeWith stopPair x) j = ∑ i, ∑ path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.1 i else x.2 i)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingStructure"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-structure/lem-parity-path-and-ptnb-lem-parity-path",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "Actual preactivation path formula. Final affine edge is ungated; all intermediate ReLU gates remain. Zero edges contribute zero, and signs are canonical."
+    },
+    {
+      "module": "Thesis.StoppingPaths",
+      "declaration": "Thesis.StoppingStructure.stopping_biased_parity_paths",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hc : net.Canonical) (x : PairVec n) (j : Fin m),\n let tr := net.originalTrace (x.1-x.2)\n (net.decomposeWith stopPair x).1 j =\n (∑ i, ∑ path : GeometricPaths tr, geometricWeight tr j i path * (if geometricParity tr i path then x.2 i else x.1 i)) + ((biasSources net (x.1-x.2)).sum).1 j ∧\n (net.decomposeWith stopPair x).2 j =\n (∑ i, ∑ path : GeometricPaths tr, geometricWeight tr j i path * (if geometricParity tr i path then x.1 i else x.2 i)) + ((biasSources net (x.1-x.2)).sum).2 j",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingStructure"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-structure/biased-activation-parity",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "Actual stopping activations with arbitrary biases: parity-sorted input paths plus the explicit propagated bias-stub sum."
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.stoppingExpr_relu",
+      "expected_type": "∀ {n : ℕ} (a : SignedExpr (Fin n)) (x : PairVec n),\n stoppingExpr (.maximum a (.constant 0)) x = stopPair (stoppingExpr a x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-structure/shared-graph-stopPair-bridge",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "The existing SignedExpr max(a,0) representation is exactly the same stopPair, including its stop-at-zero tie convention."
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.stoppingCircuit_recovery",
+      "expected_type": "∀ {d n : ℕ} (c : Circuit d n) (x : PairVec d),\n (stoppingCircuit c x).1-(stoppingCircuit c x).2 = c.eval (x.1-x.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-structure/graph-forward-recovery",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "All-node exact recovery for the actual stopping/WTA pass on the existing Circuit graph, including sharing, residual addition, affine operations, pools and products."
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.stoppingCircuit_nonnegative",
+      "expected_type": "∀ {d n : ℕ} (c : Circuit d n) (x : PairVec d) (hx : 0≤x),\n 0≤stoppingCircuit c x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-structure/graph-stream-nonnegativity",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "Both actual stopping/WTA streams at every recorded shared-graph node remain nonnegative for nonnegative split inputs."
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.addition_probability_law",
+      "expected_type": "(∀ b, 0≤additionProbability b) ∧ (∑ b : Bool, additionProbability b)=1",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-structure/addition-oracle-normalization",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "Actual fair two-successor probability law for the addition oracle."
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.addition_derivative_occupation",
+      "expected_type": "∀ {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E]\n (f g : E → ℝ) (Df Dg : E →L[ℝ] ℝ) (x : E)\n (hf : HasFDerivAt f Df x) (hg : HasFDerivAt g Dg x),\n HasFDerivAt (fun y => f y+g y) ((2 : ℝ) • (additionProbability false • Df+additionProbability true • Dg)) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "review_id": "stopping-structure/addition-derivative-occupation-step",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "Actual local derivative of addition expressed with the normalized oracle probabilities and discount 2. Component of the global DAG theorem, not that theorem itself."
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.winner_derivative",
+      "expected_type": "∀ {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E]\n (f g : E → ℝ × ℝ) (Df Dg : E →L[ℝ] ℝ × ℝ) (x : E)\n (hf : HasFDerivAt f Df x) (hg : HasFDerivAt g Dg x)\n (hne : (f x).1-(f x).2 ≠ (g x).1-(g x).2),\n HasFDerivAt (fun y => winnerPair (g y) (f y))\n (if (g x).1-(g x).2 < (f x).1-(f x).2 then Df else Dg) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "review_id": "stopping-structure/maxpool-actual-derivative-step",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "Actual derivative of the shared WTA split on a unique-winner open cell, using both differentiable operand pairs. No ordinary derivative is claimed at ties."
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.winner_probability_law",
+      "expected_type": "∀ (leftWins : Bool),\n (∀ b,0≤winnerProbability leftWins b) ∧ (∑ b : Bool,winnerProbability leftWins b)=1",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-structure/maxpool-oracle-normalization",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "An actual normalized deterministic successor law at the selected max-pooling argument."
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.winner_discounted_occupation",
+      "expected_type": "∀ (leftWins : Bool) (left right : ℝ),\n (1 : ℝ)*(winnerProbability leftWins true*left+winnerProbability leftWins false*right) = if leftWins then left else right",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-structure/maxpool-discounted-occupation-step",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "Unit-discount deterministic pooling occupation equals the chosen operand occupation; local step only."
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.winner_derivative_occupation",
+      "expected_type": "∀ {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E]\n (f g : E → ℝ × ℝ) (Df Dg : E →L[ℝ] ℝ × ℝ) (x : E)\n (hf : HasFDerivAt f Df x) (hg : HasFDerivAt g Dg x)\n (hne : (f x).1-(f x).2 ≠ (g x).1-(g x).2),\n HasFDerivAt (fun y => winnerPair (g y) (f y))\n ((1 : ℝ) • (winnerProbability (decide ((g x).1-(g x).2 < (f x).1-(f x).2)) true • Df +\n winnerProbability (decide ((g x).1-(g x).2 < (f x).1-(f x).2)) false • Dg)) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "review_id": "stopping-structure/maxpool-actual-occupation-derivative",
+      "review_evidence": "reports/stopping-structure-repairs.md",
+      "scope": "Actual unique-winner WTA derivative equals the normalized deterministic pool-oracle pullback with unit discount and the same computed winning branch. Local step, not a global DAG occupation theorem."
+    }
+  ]
+}

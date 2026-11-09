@@ -147,6 +147,16 @@ import All
 #print axioms HiddenMonotonicity.Network.canonical_nonnegative
 #print axioms HiddenMonotonicity.MaskedTrace.affine_unified_invariant
 #print axioms HiddenMonotonicity.Network.affine_backward_invariants_of_differentiable
+#print axioms HiddenMonotonicity.SmoothDC.weak_second_zero_convolution
+#print axioms HiddenMonotonicity.SmoothDC.affine_of_distributional_second_zero
+#print axioms HiddenMonotonicity.SmoothDC.locally_AC_integral_mul_deriv
+#print axioms HiddenMonotonicity.SmoothDC.localPrimitive_continuous
+#print axioms HiddenMonotonicity.SmoothDC.localPrimitive_locally_AC
+#print axioms HiddenMonotonicity.SmoothDC.localPrimitive_derivative_ae
+#print axioms HiddenMonotonicity.SmoothDC.localPrimitive_hasDerivAt
+#print axioms HiddenMonotonicity.SmoothDC.localPrimitive_twice_distributional
+#print axioms HiddenMonotonicity.SmoothDC.distributional_second_derivative_regular
+#print axioms HiddenMonotonicity.SmoothDC.curvature_minimality_distributional
 #print axioms HiddenMonotonicity.PositiveExpr.substitute_eval
 #print axioms HiddenMonotonicity.PositiveExpr.substitute_additive
 #print axioms HiddenMonotonicity.SignedExpr.split_additive
@@ -174,6 +184,52 @@ import All
 #print axioms HiddenMonotonicity.poolWinner_exists
 #print axioms HiddenMonotonicity.winnerPool_recovery
 #print axioms HiddenMonotonicity.winnerPool_nonnegative
+#print axioms HiddenMonotonicity.SmoothDC.locally_AC_of_continuous_derivative
+#print axioms HiddenMonotonicity.SmoothDC.cumulative_hasDerivAt_of_continuous
+#print axioms HiddenMonotonicity.SmoothDC.integrable_even_of_Ioi
+#print axioms HiddenMonotonicity.SmoothDC.exp_neg_abs_integrable
+#print axioms HiddenMonotonicity.SmoothDC.abs_mul_exp_neg_abs_integrable
+#print axioms HiddenMonotonicity.SmoothDC.sigmoid_le_exp
+#print axioms HiddenMonotonicity.SmoothDC.sigmoidFirst_even
+#print axioms HiddenMonotonicity.SmoothDC.sigmoidFirst_exp_bound
+#print axioms HiddenMonotonicity.SmoothDC.weighted_sigmoidSecond_integrable
+#print axioms HiddenMonotonicity.SmoothDC.modern_activations_complete
+#print axioms HiddenMonotonicity.SmoothDC.modern_activation_regularity
+#print axioms HiddenMonotonicity.SmoothDC.modern_activation_split
+#print axioms HiddenMonotonicity.SmoothDC.modern_activations
+#print axioms HiddenMonotonicity.SmoothDC.standardGaussianDensity_formula
+#print axioms HiddenMonotonicity.SmoothDC.standardGaussianDensity_integrable
+#print axioms HiddenMonotonicity.SmoothDC.standardGaussianDensity_normalized
+#print axioms HiddenMonotonicity.SmoothDC.standardGaussianDensity_pos
+#print axioms HiddenMonotonicity.SmoothDC.standardGaussianDensity_continuous
+#print axioms HiddenMonotonicity.SmoothDC.standardGaussianDensity_hasDerivAt
+#print axioms HiddenMonotonicity.SmoothDC.standardGaussianCDF_hasDerivAt
+#print axioms HiddenMonotonicity.SmoothDC.gaussianGelu_hasDerivAt
+#print axioms HiddenMonotonicity.SmoothDC.gaussianGeluFirst_hasDerivAt
+#print axioms HiddenMonotonicity.SmoothDC.gaussianGelu_curvature
+#print axioms HiddenMonotonicity.SmoothDC.gaussianGelu_curvature_integrable
+#print axioms HiddenMonotonicity.SmoothDC.gaussianGelu_derivative_locally_AC
+#print axioms HiddenMonotonicity.SmoothDC.gaussianGelu_curvature_sign
+#print axioms HiddenMonotonicity.SmoothDC.gaussianGelu_curvature_interval
+#print axioms HiddenMonotonicity.SmoothDC.gaussianGelu_smooth_dc_split
+#print axioms HiddenMonotonicity.SmoothDC.mish_formula
+#print axioms HiddenMonotonicity.SmoothDC.tanhFirst_one_sub_sq
+#print axioms HiddenMonotonicity.SmoothDC.mishGate_hasDerivAt
+#print axioms HiddenMonotonicity.SmoothDC.mishGateFirst_hasDerivAt
+#print axioms HiddenMonotonicity.SmoothDC.mishGate_continuous
+#print axioms HiddenMonotonicity.SmoothDC.mishGateFirst_continuous
+#print axioms HiddenMonotonicity.SmoothDC.mishGateFirst_nonnegative
+#print axioms HiddenMonotonicity.SmoothDC.mishGate_abs_le_one
+#print axioms HiddenMonotonicity.SmoothDC.mishGateFirst_exp_bound
+#print axioms HiddenMonotonicity.SmoothDC.mishGateSecond_bound
+#print axioms HiddenMonotonicity.SmoothDC.mishGateFirst_integrable
+#print axioms HiddenMonotonicity.SmoothDC.weighted_mishGateSecond_integrable
+#print axioms HiddenMonotonicity.SmoothDC.mish_hasDerivAt
+#print axioms HiddenMonotonicity.SmoothDC.mishFirst_hasDerivAt
+#print axioms HiddenMonotonicity.SmoothDC.mish_curvature
+#print axioms HiddenMonotonicity.SmoothDC.mish_curvature_integrable
+#print axioms HiddenMonotonicity.SmoothDC.mish_derivative_locally_AC
+#print axioms HiddenMonotonicity.SmoothDC.mish_smooth_dc_split
 #print axioms HiddenMonotonicity.SmoothDC.integrable_nonnegative_derivative
 #print axioms HiddenMonotonicity.SmoothDC.sigmoidFirst_nonnegative
 #print axioms HiddenMonotonicity.SmoothDC.sigmoidFirst_derivative
@@ -193,6 +249,16 @@ import All
 #print axioms HiddenMonotonicity.SmoothDC.softplus_C1_eq
 #print axioms HiddenMonotonicity.SmoothDC.softplus_zero_nonnegative
 #print axioms HiddenMonotonicity.SmoothDC.softplus_degenerate_split
+#print axioms HiddenMonotonicity.SmoothDC.swish_hasDerivAt
+#print axioms HiddenMonotonicity.SmoothDC.swishFirst_hasDerivAt
+#print axioms HiddenMonotonicity.SmoothDC.swish_curvature
+#print axioms HiddenMonotonicity.SmoothDC.swish_curvature_integrable
+#print axioms HiddenMonotonicity.SmoothDC.swishSecond_continuous
+#print axioms HiddenMonotonicity.SmoothDC.swish_derivative_locally_AC
+#print axioms HiddenMonotonicity.SmoothDC.swishSecond_even
+#print axioms HiddenMonotonicity.SmoothDC.swish_curvature_zero
+#print axioms HiddenMonotonicity.SmoothDC.swish_curvature_sign_regions
+#print axioms HiddenMonotonicity.SmoothDC.swish_smooth_dc_split
 #print axioms HiddenMonotonicity.SmoothDC.tanh_eq_scaled_sigmoid
 #print axioms HiddenMonotonicity.SmoothDC.tanh_hasDerivAt
 #print axioms HiddenMonotonicity.SmoothDC.tanhFirst_hasDerivAt
@@ -599,6 +665,31 @@ import All
 #print axioms Thesis.RoutingBackward.rgOccupation_nonneg
 #print axioms Thesis.RoutingExpectation.conditional_affinity_contraction
 #print axioms Thesis.RoutingExpectation.conditional_affinity_full_depth
+#print axioms Thesis.RoutingExtended.expZero_coe
+#print axioms Thesis.RoutingExtended.expZero_bottom
+#print axioms Thesis.RoutingExtended.expZero_sourceValue
+#print axioms Thesis.RoutingExtended.routedMass_nonnegative
+#print axioms Thesis.RoutingExtended.log_routedMass
+#print axioms Thesis.RoutingExtended.expZero_logCoordinate
+#print axioms Thesis.RoutingExtended.source_edge_score
+#print axioms Thesis.RoutingExtended.routedMass_monotone
+#print axioms Thesis.RoutingExtended.tilted_nonnegative
+#print axioms Thesis.RoutingExtended.tilted_positive_iff
+#print axioms Thesis.RoutingExtended.policy_positive_some
+#print axioms Thesis.RoutingExtended.supported_partition_positive
+#print axioms Thesis.RoutingExtended.entropy_bound_nonnegative
+#print axioms Thesis.RoutingExtended.entropy_value_nonnegative
+#print axioms Thesis.RoutingExtended.score_temperature_identity
+#print axioms Thesis.RoutingExtended.gibbs_supported
+#print axioms Thesis.RoutingExtended.gibbs_value_positive
+#print axioms Thesis.RoutingExtended.gibbs_optimal
+#print axioms Thesis.RoutingExtended.empty_stream_value
+#print axioms Thesis.RoutingExtended.empty_stream_absorbs
+#print axioms Thesis.RoutingExtended.sourceValue_gibbs_optimal
+#print axioms Thesis.RoutingExtended.tilted_one
+#print axioms Thesis.RoutingExtended.gibbs_anchor_mass
+#print axioms Thesis.RoutingExtended.gibbs_anchor_probability
+#print axioms Thesis.RoutingExtended.gibbs_anchor_nonoutside
 #print axioms Thesis.RoutingGate.chosenLogAction_eq_positive
 #print axioms Thesis.RoutingGate.nonpositive_log_actions_tied
 #print axioms Thesis.RoutingGate.chosenLogAction_stops_at_nonpositive
@@ -623,6 +714,46 @@ import All
 #print axioms Thesis.RoutingGate.frozenGate_nonnegative
 #print axioms Thesis.RoutingGate.frozenGate_reference_value
 #print axioms Thesis.RoutingGate.varyingGate_hasDerivAt
+#print axioms Thesis.RoutingNetwork.sum_extend
+#print axioms Thesis.RoutingNetwork.extend_nonnegative
+#print axioms Thesis.RoutingNetwork.route_action_masses
+#print axioms Thesis.RoutingNetwork.route_anchor_value
+#print axioms Thesis.RoutingNetwork.route_anchor_ordinary_probability
+#print axioms Thesis.RoutingNetwork.signed_opponent
+#print axioms Thesis.RoutingNetwork.signed_difference
+#print axioms Thesis.RoutingNetwork.gateValue_signed
+#print axioms Thesis.RoutingNetwork.activation_anchor_value
+#print axioms Thesis.RoutingNetwork.denominator_difference
+#print axioms Thesis.RoutingNetwork.inputLayerGames_value
+#print axioms Thesis.RoutingNetwork.layerGames_value
+#print axioms Thesis.RoutingNetwork.propagate_value
+#print axioms Thesis.RoutingNetwork.networkGame_value
+#print axioms Thesis.RoutingNetwork.networkGame_subgame_perfect
+#print axioms Thesis.RoutingNetwork.networkGame_reported
+#print axioms Thesis.RoutingNetwork.networkGame_nonnegative_reported
+#print axioms Thesis.RoutingNetwork.eval_nonnegative
+#print axioms Thesis.RoutingNetwork.networkLayer_reported
+#print axioms Thesis.RoutingNetwork.inputLayerGames_continuation
+#print axioms Thesis.RoutingNetwork.layerGames_continuation
+#print axioms Thesis.RoutingNetwork.inputLayerGames_selected_gate
+#print axioms Thesis.RoutingNetwork.layerGames_selected_gate
+#print axioms Thesis.RoutingProfiles.signed_involutive
+#print axioms Thesis.RoutingProfiles.gateValue_plus
+#print axioms Thesis.RoutingProfiles.gateValue_minus
+#print axioms Thesis.RoutingProfiles.gate_action_monotone
+#print axioms Thesis.RoutingProfiles.gate_action_bound
+#print axioms Thesis.RoutingProfiles.actionMass_nonnegative
+#print axioms Thesis.RoutingProfiles.routingOperator_monotone
+#print axioms Thesis.RoutingProfiles.routing_choice_bound
+#print axioms Thesis.RoutingProfiles.canonical_value
+#print axioms Thesis.RoutingProfiles.auxiliary_saddle
+#print axioms Thesis.RoutingProfiles.positive_parts_difference
+#print axioms Thesis.RoutingProfiles.routed_coordinates
+#print axioms Thesis.RoutingProfiles.reported_coordinates
+#print axioms Thesis.RoutingProfiles.auxiliary_eq_reported_difference
+#print axioms Thesis.RoutingProfiles.canonical_nash
+#print axioms Thesis.RoutingProfiles.canonical_subgame_perfect
+#print axioms Thesis.RoutingProfiles.canonical_stops_log_ties
 #print axioms Thesis.RoutingSupport.sourceLayer_zero_input
 #print axioms Thesis.RoutingSupport.sourceLRP_zero_input
 #print axioms Thesis.RoutingSupport.sourceLRP_eq_lrp
@@ -699,6 +830,18 @@ import All
 #print axioms Thesis.StoppingBoundary.strict_gradient_occupation
 #print axioms Thesis.StoppingBoundary.strict_stopping_decomposition_gradient
 #print axioms Thesis.StoppingBoundary.strict_affine_output_gradient
+#print axioms Thesis.StoppingCircuit.stoppingExpr_recovery
+#print axioms Thesis.StoppingCircuit.stoppingExpr_nonnegative
+#print axioms Thesis.StoppingCircuit.stoppingExpr_relu
+#print axioms Thesis.StoppingCircuit.stoppingCircuit_recovery
+#print axioms Thesis.StoppingCircuit.stoppingCircuit_nonnegative
+#print axioms Thesis.StoppingCircuit.addition_probability_law
+#print axioms Thesis.StoppingCircuit.addition_discounted_occupation
+#print axioms Thesis.StoppingCircuit.addition_derivative_occupation
+#print axioms Thesis.StoppingCircuit.winner_derivative
+#print axioms Thesis.StoppingCircuit.winner_probability_law
+#print axioms Thesis.StoppingCircuit.winner_discounted_occupation
+#print axioms Thesis.StoppingCircuit.winner_derivative_occupation
 #print axioms Thesis.StoppingDecomposition.stopPair_valid
 #print axioms Thesis.StoppingDecomposition.stopPair_nonnegative
 #print axioms Thesis.StoppingDecomposition.thesis_stopping_validity
@@ -713,6 +856,34 @@ import All
 #print axioms Thesis.StoppingDecomposition.pairMap_comp
 #print axioms Thesis.StoppingDecomposition.stoppingJac_occupation
 #print axioms Thesis.StoppingDecomposition.thesis_stopping_decomposition_gradient
+#print axioms Thesis.StoppingStructure.geometricParity_negative_count
+#print axioms Thesis.StoppingStructure.trace_canonical
+#print axioms Thesis.StoppingStructure.canonical_edge_parity
+#print axioms Thesis.StoppingStructure.geometricKernel_layer
+#print axioms Thesis.StoppingStructure.geometric_path_integral
+#print axioms Thesis.StoppingStructure.geometric_input_sum
+#print axioms Thesis.StoppingStructure.stoppingJac_geometric_paths
+#print axioms Thesis.StoppingStructure.stopping_activation_parity_paths
+#print axioms Thesis.StoppingStructure.stoppingJac_appendTrace
+#print axioms Thesis.StoppingStructure.appendTrace_canonical
+#print axioms Thesis.StoppingStructure.ungated_stopLayerJac
+#print axioms Thesis.StoppingStructure.stopping_preactivation_parity_paths
+#print axioms Thesis.StoppingStructure.stopping_biased_parity_paths
+#print axioms Thesis.StoppingStructure.sameGates_refl
+#print axioms Thesis.StoppingStructure.stopLayer_frozen
+#print axioms Thesis.StoppingStructure.stopping_eq_frozen
+#print axioms Thesis.StoppingStructure.frozenStopping_affine
+#print axioms Thesis.StoppingStructure.activeMap_monotone
+#print axioms Thesis.StoppingStructure.stoppingJac_monotone
+#print axioms Thesis.StoppingStructure.trace_nonnegative
+#print axioms Thesis.StoppingStructure.stopping_region_affine_monotone
+#print axioms Thesis.StoppingStructure.frozenStopping_zero
+#print axioms Thesis.StoppingStructure.stopping_zeroBias_linear
+#print axioms Thesis.StoppingStructure.frozenStopping_zero_biasSources
+#print axioms Thesis.StoppingStructure.stopping_input_and_bias_sources
+#print axioms Thesis.StoppingStructure.parameters_nonnegative_weights
+#print axioms Thesis.StoppingStructure.frozenStopping_nonnegative
+#print axioms Thesis.StoppingStructure.stopping_region_nonnegative_affine
 #print axioms Thesis.Tropical.gradientRow_apply
 #print axioms Thesis.Tropical.gradientRow_injective
 #print axioms Thesis.Tropical.maximizing_point_derivative
@@ -799,11 +970,10 @@ import All
 #check HiddenMonotonicity.PositiveExpr.max_polynomial_representation
 #check HiddenMonotonicity.PositivePolynomial.coefficients_nonnegative
 #check HiddenMonotonicity.SmoothDC.canonical_tilt_minimality
-#check HiddenMonotonicity.SmoothDC.curvature_minimality_locally_AC
-#check HiddenMonotonicity.SmoothDC.sigmoid_smooth_dc_split
+#check HiddenMonotonicity.SmoothDC.curvature_minimality_distributional
+#check HiddenMonotonicity.SmoothDC.distributional_second_derivative_regular
+#check HiddenMonotonicity.SmoothDC.modern_activations_complete
 #check HiddenMonotonicity.SmoothDC.smooth_dc_split
-#check HiddenMonotonicity.SmoothDC.softplus_smooth_dc_split
-#check HiddenMonotonicity.SmoothDC.tanh_smooth_dc_split
 #check HiddenMonotonicity.actual_negative_pullback
 #check HiddenMonotonicity.actual_positive_pullback
 #check HiddenMonotonicity.canonical_weight_split
@@ -858,13 +1028,14 @@ import All
 #check Thesis.ReferencePolicy.thesis_attention_value_policy
 #check Thesis.ReferencePolicy.thesis_kl_legendre_fenchel
 #check Thesis.Regularization.entropy_gate_unique
-#check Thesis.Regularization.routing_variational
 #check Thesis.Regularization.softSplit_recovery
 #check Thesis.Regularization.softplus_variational
 #check Thesis.RoutingBackward.thesis_alpha_beta_recovery
 #check Thesis.RoutingExpectation.conditional_affinity_full_depth
-#check Thesis.RoutingGate.chosenLogAction_mass
 #check Thesis.RoutingGate.chosenLogAction_optimal
+#check Thesis.RoutingNetwork.networkGame_subgame_perfect
+#check Thesis.RoutingNetwork.networkGame_value
+#check Thesis.RoutingNetwork.networkLayer_reported
 #check Thesis.RoutingSupport.source_affine_output_lrp
 #check Thesis.RoutingSupport.source_alpha_beta_output_seed
 #check Thesis.SoftplusBackward.thesis_softplus_gradient
@@ -887,4 +1058,7 @@ import All
 #check Thesis.StoppingBoundary.strict_stopping_decomposition_gradient
 #check Thesis.StoppingDecomposition.stopping_nonnegative
 #check Thesis.StoppingDecomposition.thesis_stopping_validity
+#check Thesis.StoppingStructure.stopping_biased_parity_paths
+#check Thesis.StoppingStructure.stopping_preactivation_parity_paths
+#check Thesis.StoppingStructure.stopping_region_nonnegative_affine
 #check Thesis.Tropical.slice_attainable_gradients

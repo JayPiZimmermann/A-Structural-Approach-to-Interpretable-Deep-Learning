@@ -1,0 +1,412 @@
+{
+  "paper": "Hidden Monotonicity: Explaining Deep Neural Networks via their DC Decomposition",
+  "source_root": "arxive/hiddenMonotonicity",
+  "audit_scope": "Recursive active input closure from arxive/hiddenMonotonicity/main.tex (31 TeX files, including transitive section/appendix tables and figures), compared with all primary thesis tex chapters, figures, tables, and bibliography. Unreferenced archived files outside the active include closure were excluded. No production TeX edits or builds were performed.",
+  "entries": [
+    {
+      "source_file": "sections/introduction.tex; main.tex abstract",
+      "source_heading_or_label": "Introduction; Monotonicity as a tool for XAI; Contributions",
+      "type": "motivation_and_contributions",
+      "thesis_locations": [
+        "tex/chapters/01_introduction.tex",
+        "tex/frontmatter/abstract.tex",
+        "tex/chapters/09_conclusion.tex"
+      ],
+      "status": "partial",
+      "exact_missing_substance": "The merged introduction now develops model improvement as the interpretability motivation and covers the split method, but the source's fairness connection and monotonic-network-as-representation-without-cancellation framing are not explicit in the introductory motivation. Existing thesis text later explains non-negative evidence accumulation (05_saliency) and cites other monotonic fairness work, so this is partly covered. The source's distinct contributions (pretrained model remains functionally unchanged; no retraining; improved Quantus performance; comprehensive stabilization ablations) are present across intro, chapters 03/05/08/10 rather than in one paper-specific list.",
+      "recommended_placement": "Keep the current integrated introduction. If restoring the source motivation, add a short sentence connecting monotonicity to fairness and explain why splitting makes that structure available to pretrained models without the accuracy/expression cost of constraining training.",
+      "references_missing_or_aliases": [
+        "Wang2020ShapeFairness is present in references.bib but not cited in thesis prose; source's ResNet key Kaiming2016_resnet maps to the cited He2016resnet/ResNet paper; Anders2020ClArC is now cited in the integrated introduction."
+      ]
+    },
+    {
+      "source_file": "sections/preliminaries.tex",
+      "source_heading_or_label": "Preliminaries; Standard neural network notation; Convex and monotone neural networks",
+      "type": "definitions_and_assumptions",
+      "thesis_locations": [
+        "tex/chapters/02_foundations.tex: Neural Network Notation and PWL Mappings; Convexity and Monotonicity in Neural Networks"
+      ],
+      "status": "covered",
+      "exact_missing_substance": "Definitions of feedforward networks, monotone networks, ICNNs, biases, and the ReLU/CPWL setting are incorporated and expanded. The thesis states the more precise first-layer freedom for ICNNs and related convexity facts.",
+      "recommended_placement": "No addition required.",
+      "references_missing_or_aliases": []
+    },
+    {
+      "source_file": "sections/method.tex",
+      "source_heading_or_label": "Splitting ReLU networks; An algorithm for ReLU MLPs",
+      "type": "algorithm_and_correctness_theorem",
+      "thesis_locations": [
+        "tex/chapters/03_decompositions.tex: Difference-of-Convex (DC) splitting of ReLU Networks; Correctness of the split forward pass"
+      ],
+      "status": "covered",
+      "exact_missing_substance": "The positive/negative weight split, max identity, split input convention, preactivation and activation recurrences, exact output recovery, and rank-2 Maxout characterization are present. The thesis makes the final affine readout convention and assumptions explicit.",
+      "recommended_placement": "No addition required.",
+      "references_missing_or_aliases": [
+        "Zhang2018, Siahkamari2020_DCRegression, Awasthi2023DCNN are cited in the source; check that claims attributed to prior special cases remain cited at the relevant theorem/intro passages (the merged thesis cites hiddenMono and its general background)."
+      ]
+    },
+    {
+      "source_file": "sections/method.tex; appendix/proofs.tex",
+      "source_heading_or_label": "Numerically stabilizing the forward pass; Shifting in the forward pass; theorem labels thm:shift_forward and rem:bias",
+      "type": "theorem_and_implementation_details",
+      "thesis_locations": [
+        "tex/chapters/03_decompositions.tex: Numerical Stabilization of Split Passes; Shifting the forward pass; theorem thm:shift_forward",
+        "tex/chapters/10_appendix.tex: formalization and correction notes"
+      ],
+      "status": "partial",
+      "exact_missing_substance": "The shift-equivariance theorem and proof are present. The original implementation details that all intermediate matrix multiplication used torch.float64, re-centering occurred under threshold/scaling/shift strategies, and original activations were optionally cached for on-the-fly forward correction are not all stated in the main implementation discussion. The thesis preserves the scientifically important failure magnitudes (10^18 activations, 10^9 numerical error) in its ablation discussion.",
+      "recommended_placement": "Add only implementation facts still accurate for the documented code to the existing numerical-stabilization implementation paragraph in Chapter 03 or the evaluation limitations in Chapter 10. Avoid restoring any unqualified claim that arbitrary input-dependent recentering preserves convexity/monotonicity; the thesis explicitly repairs that mathematical issue.",
+      "references_missing_or_aliases": [],
+      "recommended_restoration_excerpt": "All intermediate computations use \\texttt{torch.float64} for high numerical precision matrix multiplication. Furthermore, we optionally cache the activations of the original model to slightly correct the activations of the split model on the fly, ensuring the forward invariant."
+    },
+    {
+      "source_file": "sections/method.tex; appendix/proofs.tex",
+      "source_heading_or_label": "Numerically stabilizing the backward pass; theorem labels thm:delta_pos_neg_connection and thm:closed_formula_shift",
+      "type": "derivative_identity_and_proof",
+      "thesis_locations": [
+        "tex/chapters/03_decompositions.tex: Shifting the backward pass; Sensitivity complementarity; Closed formulas for the stabilized split gradients; reports/mathematical-corrections.md"
+      ],
+      "status": "covered",
+      "exact_missing_substance": "The local-sensitivity recurrences, alpha-weighted absolute downstream-weight correction, unified split-gradient identity, closed formulas, correction-term interpretation, and derivations are represented in Chapter 03. The thesis also clarifies derivative conventions and repairs known proof errors; these source derivations should not be copied over verbatim where they conflict with the correction record.",
+      "recommended_placement": "No addition required; retain the corrected thesis derivations as authoritative.",
+      "references_missing_or_aliases": []
+    },
+    {
+      "source_file": "sections/method.tex",
+      "source_heading_or_label": "Generalization to other network components; theorem label thm:cnn_split_correct",
+      "type": "architecture_generalization",
+      "thesis_locations": [
+        "tex/chapters/03_decompositions.tex: Generalization to Convolutional Neural Networks (CNNs); table tab:linear_chunks; gated max-pooling; theorem thm:cnn_split_correct"
+      ],
+      "status": "partial",
+      "exact_missing_substance": "The core chunk calculus, convolution and pooling split identities, residual additions, evaluation-mode batch normalization, and dropout masks are covered. The source additionally states support for ELU and Swish via replacement by small ReLU subnetworks, graph conversion for arbitrary supported PyTorch graphs, forward/backward per-chunk caches, and layerwise activation/gradient error analysis; these engineering details are not fully reproduced. The thesis instead adds a clean mathematical treatment of limitations/training-mode multiplicative operations.",
+      "recommended_placement": "Add a concise implementation-scope note in the Chapter 03 CNN section or its implementation appendix if support claims remain current. Cite Clevert2016_elu for ELU if named.",
+      "references_missing_or_aliases": [
+        "Clevert2016_elu is present in references.bib but not cited in thesis text; the source's ELU implementation citation is therefore dropped. Swish is retained in smooth-activation discussion."
+      ]
+    },
+    {
+      "source_file": "sections/methods_xai.tex",
+      "source_heading_or_label": "XAI Methods; SplitCAM; SplitGrad; SplitLRP; eq:layercam; eq:lrp-gamma",
+      "type": "method_definitions",
+      "thesis_locations": [
+        "tex/chapters/05_saliency.tex: SplitCAM; SplitLRP; SplitGrad; tex/chapters/08_experiments.tex"
+      ],
+      "status": "covered",
+      "exact_missing_substance": "LayerCAM-on-split-streams, shifted split-gradient saliency, LRP gamma-rule adaptation, propagation through the two streams, and max-pooling/winner-takes-all implementation choices are developed in the thesis. Formula organization and labels differ, but the method substance remains.",
+      "recommended_placement": "No addition required.",
+      "references_missing_or_aliases": []
+    },
+    {
+      "source_file": "sections/experiments.tex; sections/table_main_generated_vgg.tex; sections/table_main_generated_res.tex; sections/vgg_saliency_comparison_main.tex",
+      "source_heading_or_label": "Experiments; Evaluation Setup; Evaluation Framework and Metrics; Results; tab:eval_vgg_main; tab:eval_res_main; fig:vgg_saliency_comparison_main",
+      "type": "experiment_setup_results_tables_figures",
+      "thesis_locations": [
+        "tex/chapters/08_experiments.tex: Split Methods: VGG-16 and Split Methods: ResNet-18",
+        "tex/tables/eval_vgg_main.tex",
+        "tex/tables/eval_res_main.tex",
+        "tex/figures/experiments/vgg_saliency_comparison_main.tex"
+      ],
+      "status": "covered",
+      "exact_missing_substance": "The 50-class ImageNet-S split (50 validation, 566 test images), baseline families, Quantus metrics, automated layer selection, qualitative VGG comparisons, and reported VGG16/ResNet18 table values are carried over. Table contents retain numerical values; the thesis adds clear campaign-specific metric conventions and separates the new game-paper protocol.",
+      "recommended_placement": "No addition required. Do not merge the game-paper test-set protocol with this paper's 566-image split protocol.",
+      "references_missing_or_aliases": [
+        "Kaiming2016_resnet was a paper1 bibliography alias for the ResNet citation; thesis uses He2016resnet. Confirm alias remains recorded in tex/bibliography/bib_merge_report.md."
+      ]
+    },
+    {
+      "source_file": "appendix/ablation_studies.tex; appendix/table_ppendix_alpha_combined.tex; appendix/table_alpha_none.tex; appendix/table_alpha_shift.tex; appendix/table_lrp_scale_shift_comparison.tex",
+      "source_heading_or_label": "Backward Pass Stabilization Ablation; Forward Pass Stabilization Ablation; SplitCAM; SplitLRP; tab:alpha_comparison_by_method; tab:alpha_comparison_none; tab:alpha_comparison_shift; tab:lrp_scale_shift_comparison",
+      "type": "ablation_results_and_tables",
+      "thesis_locations": [
+        "tex/chapters/08_experiments.tex: Split-Method Stabilization Ablations",
+        "tex/chapters/10_appendix.tex: Stabilization Ablations for the Split Methods",
+        "tex/tables/alpha_ablation_main.tex",
+        "tex/tables/appendix/alpha_combined.tex",
+        "tex/tables/appendix/alpha_none.tex",
+        "tex/tables/appendix/alpha_shift.tex",
+        "tex/tables/appendix/lrp_scale_shift.tex"
+      ],
+      "status": "covered",
+      "exact_missing_substance": "The alpha trends, convex versus winner-takes-all comparisons, unstabilized forward explosion, scaling-versus-shifting LRP comparison, exact numerical ablation tables, and layer-dependence results are retained. Layer-dependence figure is incorporated as tex/figures/experiments/layer_dependence_all.pdf (verify current reference at compilation only when root requests builds).",
+      "recommended_placement": "No addition required.",
+      "references_missing_or_aliases": []
+    },
+    {
+      "source_file": "appendix/saliency_analysis.tex; appendix/randomization_sanity_check_table.tex; appendix/table_timing_comparison.tex; appendix/figures/vgg_saliency_comparison.tex",
+      "source_heading_or_label": "Saliency Analysis; Randomization Sanity Check; Computational Efficiency Analysis; tab:randomization_sanity_check; tab:timing_comparison; fig:vgg_saliency_comparison",
+      "type": "appendix_experiments_figures_tables_and_limitations",
+      "thesis_locations": [
+        "tex/chapters/10_appendix.tex: Full Evaluation Results for the Split Methods; Randomization Sanity Check; Computational Efficiency",
+        "tex/tables/appendix/xai_eval_vgg_full.tex",
+        "tex/tables/appendix/xai_eval_res_full.tex",
+        "tex/tables/appendix/randomization_sanity_check.tex",
+        "tex/tables/appendix/timing_comparison.tex",
+        "tex/figures/experiments/vgg_saliency_comparison_appendix.tex"
+      ],
+      "status": "covered",
+      "exact_missing_substance": "Full tables, qualitative examples, randomization protocol and HOG/Spearman/SSIM results, interpretation of SplitLRP parameter insensitivity, timing values, and weight-duplication/no-hook implementation limitations are present. The thesis additionally positions pixel-map randomization as complementary to trajectory-level checks.",
+      "recommended_placement": "No addition required.",
+      "references_missing_or_aliases": [
+        "Source cites Adebayo2018; thesis uses the same work's canonical key Adebayo2018sanity. This is an alias, not an omission."
+      ]
+    },
+    {
+      "source_file": "sections/DICs.tex; sections/counterfactual_features.tex; appendix/dcinns.tex; appendix/table_model_accuracy.tex; appendix/figures/mnist_ic_saliency.tex; appendix/figures/mnist_split_ic_saliency.tex",
+      "source_heading_or_label": "Differences of networks analysis; Difference of Networks; Experimental Setup; Results; fig:mnist_ic_saliency; fig:mnist_split_ic_saliency_main; tab:cdinn_acc",
+      "type": "second_experiment_and_qualitative_evidence",
+      "thesis_locations": [
+        "tex/chapters/05_saliency.tex: Difference-of-Convex Input Neural Networks; Counterfactual feature attribution; tex/chapters/08_experiments.tex: MNIST Difference-of-Networks Study",
+        "tex/chapters/05_saliency.tex: Qualitative comparison with a single input-convex model; fig:mnist_ic_saliency; fig:mnist_split_ic_saliency_second; tex/figures/saliency/mnist_ic_saliency/",
+        "tex/figures/saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/"
+      ],
+      "status": "covered",
+      "exact_missing_substance": "Restored from the source: ten-class input-gradient comparisons for the single cnn_maxout IC model; its mostly positive-on-strokes/negative-on-background maps and limited class-dependent directional variation; the source observation that plain DIC gradients are mostly positive on strokes and negative on background; and a second inverted-input DICIN digit-3 example. The thesis retains the corrected chain-rule definition and explicitly limits these observations to qualitative examples.",
+      "recommended_placement": "Restored in Chapter 05 adjacent to the existing DICIN figure; no further placement needed.",
+      "references_missing_or_aliases": [
+        "Sankaranarayanan2021CDINN/CDiNN is cited; no citation loss identified for the architecture comparison."
+      ],
+      "recommended_restoration_excerpt": "The source includes appendix/figures/mnist_ic_saliency.tex: ten input-gradient visualizations for the cnn_maxout IC model, one per ground-truth class, and states that these maps lack the class-dependent directional variation seen in DIC. It also includes a second inverted-input DIC example, image_036_true_3_pred_3, in sections/counterfactual_features.tex.",
+      "restoration_excerpt": "The plain DIC model without input inversion shows the same effect in a single signed map: its gradients are mostly positive on the strokes and negative on the background. A single constrained model (cnn_maxout IC) does not show the same class-dependent directional variation: the difference structure, not the convexity constraint alone, produces the disentanglement in these examples."
+    },
+    {
+      "source_file": "appendix/mathematical_perspective.tex; figures/imaginative_polytope.png",
+      "source_heading_or_label": "Mathematical Perspective: Support Functions and Imaginative Polytopes; thm:monotonicity_positive_gradients; fig:imaginative_polytope",
+      "type": "geometric_interpretation_and_figure",
+      "thesis_locations": [
+        "tex/chapters/02_foundations.tex: Tropical Geometry and Polyhedra; Newton Polytopes of the Split Streams; Imaginative Polytopes; tex/figures/tropical/imaginative_polytope.png"
+      ],
+      "status": "covered",
+      "exact_missing_substance": "Support-function preliminaries, the correspondence between non-negative gradient regions and polytope vertices, imaginative polytope definition, learned visual prototypes, and the source polytope visualization are integrated and substantially expanded. Thesis also gives counterfactual-profile interpretation.",
+      "recommended_placement": "No addition required.",
+      "references_missing_or_aliases": [
+        "Ziegler1995 is present in source nocite; check whether the polytope background needs an explicit citation in the merged exposition or remains in the bibliography through its existing key."
+      ]
+    },
+    {
+      "source_file": "appendix/maxout_networks.tex; sections/multiplicative_networks.tex",
+      "source_heading_or_label": "Generalization of the Split to Multiplicative Maxout Networks; thm:monotone_maxout_main; thm:main; claim:main_correct",
+      "type": "multiplicative_split_theory",
+      "thesis_locations": [
+        "tex/chapters/07_transformers.tex: Decomposing Multiplicative Operations; prop:posynomial_representation; thm:multiplicative_split"
+      ],
+      "status": "covered",
+      "exact_missing_substance": "The abstract DAG of input, addition/Maxout, and multiplication neurons; natural-number exponents; non-negative-orthant max-of-posynomials representation; parity-sorted multinomial split; monotonicity without convexity; and polynomial expansion-size caveat are incorporated. Thesis avoids the source's unqualified claim that input-sign-unrestricted variants are convex, and provides a corrected counterexample. The source main.tex does not input sections/multiplicative_networks.tex, but that linked supplemental source is represented in Chapter 07.",
+      "recommended_placement": "No addition required; retain the corrected hypotheses and counterexamples in Chapter 07.",
+      "references_missing_or_aliases": [
+        "Hertrich2025 appears under citation key hertrich2025neuralnetworksvirtualextended in the thesis; this is an alias for the source's AppHertrich2025."
+      ]
+    },
+    {
+      "source_file": "appendix/proofs.tex",
+      "source_heading_or_label": "Further Proofs; thm:convexity_monotonicity; thm:split_correct; thm:shift_forward; thm:delta_pos_neg_connection; thm:closed_formula; thm:closed_formula_shift",
+      "type": "proofs_and_assumptions",
+      "thesis_locations": [
+        "tex/chapters/02_foundations.tex: prop:monotone_represents; prop:icnn_convex; bias terms in induction proofs",
+        "tex/chapters/03_decompositions.tex: prop:stream_properties; thm:split_correct; thm:shift_forward; thm:delta_connection; eq:delta_int_pos/neg; thm:closed_formula; eq:claim_bulk; eq:shifted_recursion; thm:closed_formula_shift",
+        "reports/mathematical-corrections.md"
+      ],
+      "status": "partial",
+      "exact_missing_substance": "The theorem results and induction arguments are present, with these specific compression points: (1) the source computes all four split-stream block Jacobians before deriving its gradient recurrences, while the thesis gives the two representative chain-rule recurrences directly in eq:delta_int_pos/neg and derives the same correction recurrence and unfolded formula; (2) the source states explicitly that arbitrary biases act as shifts preserving convexity, monotonicity, and CPWL, while the thesis handles biases in its definitions/proofs but does not repeat that standalone observation. The split-correctness induction is not missing: thesis thm:split_correct gives the per-layer difference invariant and an explicit splitting-identity step. The forward-shift induction and sensitivity-complementarity derivation are also present (thm:shift_forward and thm:delta_connection). The shifted closed-form proof retains both source proof ingredients, the bulk-sum induction (eq:claim_bulk) and stabilized-difference recursion (eq:shifted_recursion), then base/step unfolding. These are shortening/wording differences rather than missing theorem results; no source proof should be copied verbatim without the existing correction record.",
+      "recommended_placement": "No theorem restoration required. If preserving more source wording, optionally add one concise bias-shift remark to Chapter 02. For maximal derivation detail, expand the four block-Jacobian display in the proof of thm:closed_formula; current recurrences already state the resulting chain rule. Keep the thesis proof corrections and strict gate-tie conventions.",
+      "references_missing_or_aliases": []
+    },
+    {
+      "source_file": "sections/introduction.tex; sections/preliminaries.tex; appendix/dcinns.tex",
+      "source_heading_or_label": "Related work on convexity / monotonicity; Related work on XAI; appendix conclusion",
+      "type": "bibliography_and_related_work",
+      "thesis_locations": [
+        "tex/chapters/01_introduction.tex",
+        "tex/chapters/02_foundations.tex",
+        "tex/chapters/05_saliency.tex",
+        "tex/bibliography/references.bib"
+      ],
+      "status": "partial",
+      "exact_missing_substance": "The source-related work citations checked against the active inclusion closure still need retention review; the current audit specifically flags uncited source works listed below. Anders2020ClArC is cited in the revised introduction. Adebayo and ResNet references are aliases; they are not citation omissions.",
+      "recommended_placement": "Restore the four uncited references at their original conceptual claims: Clever Hans/diagnostic motivation in Chapter 01; fairness connection in the monotonicity motivation (Chapter 01 or 02); monotone-network related work in Chapter 02. Cite the source's ELU paper if that implementation claim is retained.",
+      "references_missing_or_aliases": [
+        "Uncited but present in .bib: Kauffmann2018OneClassDTD, Kauffmann2020CleverHans, Wang2020ShapeFairness, sivaprasad2021curious, Clevert2016_elu.",
+        "Alias already represented: Adebayo2018 -> Adebayo2018sanity; Kaiming2016_resnet -> He2016resnet; AppHertrich2025 -> hertrich2025neuralnetworksvirtualextended.",
+        "Anders2020ClArC now cited by the revised introduction."
+      ],
+      "recommended_restoration_excerpt": "When retaining the original monotonicity fairness and related-work claims, cite the exact sources listed in active_source_bibliography_audit. For Clever Hans mitigation, append \\cite{Kauffmann2020CleverHans,Kauffmann2018OneClassDTD} to the current Anders2020ClArC sentence. For fairness, cite Wang2020ShapeFairness at the relevant monotonicity claim. For convex/monotone model context, cite sivaprasad2021curious in Chapter 02."
+    },
+    {
+      "source_file": "sections/conclusion.tex; appendix/dcinns.tex",
+      "source_heading_or_label": "Conclusion; Difference of Networks conclusion",
+      "type": "limitations_and_research_conclusions",
+      "thesis_locations": [
+        "tex/chapters/09_conclusion.tex: Summary of Contributions; Limitations; Future Research Directions",
+        "tex/chapters/05_saliency.tex: Post-hoc and by-design, reconciled"
+      ],
+      "status": "covered",
+      "exact_missing_substance": "The source conclusions on numerical overhead, expressivity/accuracy trade-offs, small-model scope of the MNIST study, and future scaling are represented. The thesis makes the limits more explicit: the original pretrained-model factual/counterfactual separation is not rigorously established, and attribution methods do not automatically improve downstream models.",
+      "recommended_placement": "No addition required; retain the stronger limits statement.",
+      "references_missing_or_aliases": []
+    }
+  ],
+  "source_linked_assets_review": {
+    "status": "covered_with_omissions_noted",
+    "figures_and_tables": [
+      {
+        "source": "figures/network_split.png; figures/split_streams.pdf",
+        "thesis": "tex/figures/decompositions/network_split.png; split-stream diagram in tex/chapters/03_decompositions.tex",
+        "status": "covered"
+      },
+      {
+        "source": "sections/vgg_saliency_comparison_main.tex; appendix/figures/vgg_saliency_comparison.tex",
+        "thesis": "tex/figures/experiments/vgg_saliency_comparison_main.tex; tex/figures/experiments/vgg_saliency_comparison_appendix.tex",
+        "status": "covered"
+      },
+      {
+        "source": "appendix/figures/mnist_ic_saliency.tex",
+        "thesis": "tex/chapters/05_saliency.tex: fig:mnist_ic_saliency; tex/figures/saliency/mnist_ic_saliency/",
+        "status": "covered",
+        "substance": "Ten class-conditioned IC-model gradient panels and their ten input images are restored."
+      },
+      {
+        "source": "sections/counterfactual_features.tex image_030 and image_036",
+        "thesis": "tex/chapters/05_saliency.tex: fig:mnist_split_ic_saliency and fig:mnist_split_ic_saliency_second; tex/figures/saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/ and image_036_true_3_pred_3/",
+        "status": "covered",
+        "substance": "Both image_030 and image_036 examples, each with original and all ten class-logit maps, are included."
+      },
+      {
+        "source": "appendix/figures/mnist_split_ic_saliency.tex",
+        "thesis": "tex/chapters/05_saliency.tex: fig:mnist_split_ic_saliency and fig:mnist_split_ic_saliency_second; tex/figures/saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/ and image_036_true_3_pred_3/",
+        "status": "covered",
+        "substance": "Both digit-3 examples are included."
+      },
+      {
+        "source": "appendix/table_model_accuracy.tex",
+        "thesis": "MNIST table in tex/chapters/08_experiments.tex",
+        "status": "covered",
+        "substance": "Eight variants, medians and min/max ranges retained."
+      },
+      {
+        "source": "sections/table_main_generated_vgg.tex; sections/table_main_generated_res.tex; appendix/table_appendix_generated_vgg_full_eval_sorted.tex; appendix/table_appendix_generated_res_full_eval_sorted.tex",
+        "thesis": "tex/tables/eval_vgg_main.tex; tex/tables/eval_res_main.tex; tex/tables/appendix/xai_eval_vgg_full.tex; tex/tables/appendix/xai_eval_res_full.tex",
+        "status": "covered",
+        "substance": "Reported numerical results retained."
+      },
+      {
+        "source": "appendix/table_ppendix_alpha_combined.tex; appendix/table_alpha_none.tex; appendix/table_alpha_shift.tex; appendix/table_lrp_scale_shift_comparison.tex; appendix/table_timing_comparison.tex; appendix/randomization_sanity_check_table.tex",
+        "thesis": "tex/tables/alpha_ablation_main.tex; tex/tables/appendix/*",
+        "status": "covered",
+        "substance": "Ablation, timing and randomization numerical data are carried into thesis tables."
+      },
+      {
+        "source": "appendix/mathematical_perspective.tex figure imaginative_polytope.png",
+        "thesis": "tex/figures/tropical/imaginative_polytope.png",
+        "status": "covered",
+        "substance": "Polytope figure and interpretation retained."
+      }
+    ],
+    "unreferenced_source_files_not_in_main_include_tree": [
+      "appendix/figures/mnist_split_ic_saliency.tex is included transitively by sections/DICs.tex; all table/figure files linked through included source sections were checked. Other unreferenced archival assets were not treated as paper content unless linked from an included file."
+    ]
+  },
+  "active_source_bibliography_audit": {
+    "active_source_citations_checked": 67,
+    "uncited_in_thesis_after_alias_resolution": [
+      {
+        "source_key": "Clevert2016_elu",
+        "reference": "Fast and Accurate Deep Network Learning by Exponential Linear Units (ELUs)",
+        "source_claim": "sections/method.tex: alternative nonlinearities ELU/Swish can be represented by small ReLU subnetworks",
+        "recommended_restoration_excerpt": "Alternative nonlinearities such as ELU \\cite{Clevert2016_elu} or Swish \\cite{Ramachandran2017_swish} can be handled by replacing them with small ReLU subnetworks before applying the split procedure.",
+        "recommended_placement": "Chapter 03 CNN/generalization discussion if this implementation capability remains in scope."
+      },
+      {
+        "source_key": "Kauffmann2018OneClassDTD",
+        "reference": "Towards explaining anomalies: A deep Taylor decomposition of one-class models",
+        "source_claim": "sections/introduction.tex: spurious Clever Hans behaviors and mitigation strategies",
+        "recommended_restoration_excerpt": "Such tools have exposed spurious “Clever Hans” behaviors and guided mitigation strategies \\citep{Anders2020ClArC,Kauffmann2020CleverHans,Kauffmann2018OneClassDTD}.",
+        "recommended_placement": "Chapter 01 motivation / attribution benefits paragraph; the current intro cites Anders2020ClArC but not both Kauffmann studies."
+      },
+      {
+        "source_key": "Kauffmann2020CleverHans",
+        "reference": "The Clever Hans Effect in Anomaly Detection",
+        "source_claim": "sections/introduction.tex: spurious Clever Hans behaviors and mitigation strategies",
+        "recommended_restoration_excerpt": "Such tools have exposed spurious “Clever Hans” behaviors and guided mitigation strategies \\citep{Anders2020ClArC,Kauffmann2020CleverHans,Kauffmann2018OneClassDTD}.",
+        "recommended_placement": "Chapter 01 motivation / attribution benefits paragraph."
+      },
+      {
+        "source_key": "Wang2020ShapeFairness",
+        "reference": "Deontological Ethics By Monotonicity Shape Constraints",
+        "source_claim": "sections/introduction.tex: monotonicity relates to interpretability, robustness, and fairness",
+        "recommended_restoration_excerpt": "Monotonicity has long been associated with interpretability, (adversarial) robustness, and fairness in machine learning \\citep{Amos2017,Wang2020ShapeFairness,Liu2020CertifiedMonotone}.",
+        "recommended_placement": "Chapter 01 motivation or Chapter 02 monotonic-network related work."
+      },
+      {
+        "source_key": "sivaprasad2021curious",
+        "reference": "The Curious Case of Convex Neural Networks",
+        "source_claim": "sections/introduction.tex related work citations on partially monotone networks",
+        "recommended_restoration_excerpt": "As a building block, it is important to mention the fundamental idea to use (partially) monotone networks, going back to~\\citep{Sill1997_MonotonicNetworks} and appearing in various contexts~\\citep{Sivaraman2020_COMET,sivaprasad2021curious,Nguyen2023_MonoNet,Liu2020CertifiedMonotone,Daniels2010_MonotoneNN}.",
+        "recommended_placement": "Chapter 02 monotone-network foundations/related work."
+      },
+      {
+        "source_key": "Ziegler1995",
+        "reference": "Lectures on Polytopes",
+        "source_claim": "main.tex nocite and active appendix bibliography support for polyhedral background",
+        "recommended_restoration_excerpt": "No prose citation in active source; main.tex uses \\nocite{Ziegler1995}.",
+        "recommended_placement": "Retain in thesis bibliography if its background role is intended, or add an explicit citation in Chapter 02 polyhedral preliminaries."
+      }
+    ],
+    "aliases_already_represented": [
+      {
+        "source_key": "Adebayo2018",
+        "thesis_key": "Adebayo2018sanity"
+      },
+      {
+        "source_key": "AppAdebayo2018",
+        "thesis_key": "Adebayo2018sanity"
+      },
+      {
+        "source_key": "AppAmos2017",
+        "thesis_key": "Amos2017"
+      },
+      {
+        "source_key": "AppArora2018",
+        "thesis_key": "Arora2018"
+      },
+      {
+        "source_key": "AppBinder2023",
+        "thesis_key": "Binder2022shortcomings"
+      },
+      {
+        "source_key": "Kaiming2016_resnet",
+        "thesis_key": "He2016resnet"
+      },
+      {
+        "source_key": "AppHertrich2025",
+        "thesis_key": "hertrich2025neuralnetworksvirtualextended"
+      },
+      {
+        "source_key": "AppSankaranarayanan2021CDINN",
+        "thesis_key": "Sankaranarayanan2021CDINN"
+      },
+      {
+        "source_key": "AppZiegler1995",
+        "thesis_key": "Ziegler1995"
+      }
+    ],
+    "active_include_note": "main.tex recursively inputs the paper sections and appendices listed in source_linked_assets_review. This citation audit intentionally does not count files found by a recursive filesystem scan unless active via input/include."
+  },
+  "pinned_implementation_review": {
+    "repository": "/home/jzimmermann/code/structural-explainability-thesis/code/hidden_monotonicity",
+    "revision": "31be19b460358a69516452402d41bd650845a344",
+    "verified_findings": [
+      "HybridDecomposer traces the model with PyTorch FX through GraphAnalyzer and builds decomposition chunks from the traced graph; supported handling is operation/layer-specific, not an unconditional promise for arbitrary PyTorch graphs.",
+      "Numerical precision is configurable (float16/float32/float64); the HybridDecomposer default is float32, so the source paper statement that all computations use float64 is not accurate for this pinned implementation.",
+      "Activation error caching and gradient caching are configurable; activation assimilation is optional and defaults off, while gradient assimilation is configurable and defaults on in HybridDecomposer. These are corrections/diagnostics against the original model, not unconditionally applied behavior.",
+      "The approximation utility create_relu_approximation includes sigmoid, tanh, exp, sqrt, log, reciprocal, GELU, Swish, Mish, and softplus as piecewise-linear ReLU-network approximations over configured ranges. ELU is absent from this utility; nn.ELU is not listed as a split activation in HybridDecomposer._is_activation_operation. The inspected hybrid conversion path does not call the utility, so do not claim the converter generally replaces ELU/Swish activations with ReLU subnetworks."
+    ],
+    "recommended_chapter03_paragraph": "The pinned implementation uses PyTorch FX to trace a model and organize supported graph operations into decomposition chunks. It provides configurable float16, float32, or float64 arithmetic (float32 by default), activation-error and gradient caches, and optional activation and gradient assimilation against the original model. A separate utility constructs piecewise-linear ReLU-network approximations for selected scalar operations, including GELU, Swish, Mish, sigmoid, tanh, exponential, reciprocal, and softplus over configured ranges; this utility is not called by the inspected hybrid conversion path, and ELU is not among its supported operations. The implementation therefore does not support a general claim that its model converter replaces arbitrary ELU or Swish layers with ReLU subnetworks.",
+    "source_files": [
+      "dc_decomposition/hybrid_split/hybrid_decomposer.py",
+      "dc_decomposition/split_util/graph_analyser.py",
+      "dc_decomposition/hybrid_split/hybrid_network.py",
+      "dc_decomposition/split_util/approximations.py",
+      "dc_decomposition/config/relu_approx.json"
+    ]
+  }
+}

@@ -41,3 +41,5 @@ import HiddenMonotonicity.AlmostEverywhere
 import HiddenMonotonicity.PrefixSources
 import HiddenMonotonicity.DifferentiableBackward
 import HiddenMonotonicity.ModernTanh
+import HiddenMonotonicity.DistributionalRegularity
+import HiddenMonotonicity.ModernActivationCorollary

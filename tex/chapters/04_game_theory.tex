@@ -1,6 +1,6 @@
 \chapter{Game-Theoretic Framework}\label{ch:game_theory}
 
-Building on the network decompositions of Chapter~\ref{ch:decompositions}, this chapter develops the revised stopping and routing games. Exact recovery results concern the anchor rules; myopic temperature changes and risk-sensitive policies are controlled deformations of those rules. The detailed definitions and proofs are included in this chapter.
+The sign-separated streams of Chapter~\ref{ch:decompositions} expose how opposing contributions accumulate. This chapter asks how a backward rule traverses those contributions. The stopping decomposition gives a common state graph for two games whose policies represent gradients and relevance propagation. Their trajectory distributions make the backward calculation available for both method design in Chapter~\ref{ch:saliency} and diagnostics in Chapter~\ref{ch:trajectory}. Exact recovery results concern the anchor rules; myopic temperature changes and risk-sensitive policies are controlled deformations of those rules. The detailed definitions and proofs are included in this chapter.
 
 \begin{figure}[t]
 \centering
@@ -10,6 +10,8 @@ Building on the network decompositions of Chapter~\ref{ch:decompositions}, this 
 \end{figure}
 
 \section{Related Work}\label{ptnb:sec:related-work}\label{sec:related_work_games}
+
+\textcite{Ancona2018} unify several gradient-based rules as modified gradients, a map-level unification that leaves out the $\alpha\beta$ rule; we instead seek a signed trajectory-space representation of gradients and the $\alpha\beta$ rule that exposes their routing laws. Combined with the split representation, this distinguishes two choices that attribution methods make: which internal signals to retain and how to propagate them backward.
 
 \textbf{Game and trajectory views.} The closest mathematical precursor is the ReLU Net Game of
 \textcite{Gaubert2025}, which identifies the forward evaluation of a ReLU network with the value of a
@@ -46,7 +48,7 @@ Section~\ref{ptnb:app:softplus-stopping-game} shows that entropy-regularizing th
 stop/continue choice in \ac{sg} recovers Softplus-network gradients, situating their construction
 within our framework.
 
-\textbf{Transformer and ViT explainability.} Attention Rollout / Flow read attention as a routing
+\textbf{Interpretability in Transformers and ViTs.} Attention Rollout / Flow read attention as a routing
 graph~\parencite{Abnar2020attention}; transformer-\ac{lrp} methods propagate through attention and skip
 connections~\parencite{Chefer2021GenericAttention,Ali2022AttnLRP,Achtibat2024AttnLRP}; DAVE addresses ViT
 tokenization artifacts via conditioned operators and equivariant averaging~\parencite{Wrobel2024}. The
@@ -467,6 +469,7 @@ representation
     z_j^{(l,-)} &= \sum_{P:\, P_l = j} G_{<l}(P)\, |w|(P)\, x_{P_0}^{\mathrm{sgn}(P)'}.
     \label{ptnb:eq:parity-minus}
 \end{align}
+\hfill\LeanResult{ptnb:lem:parity-path}
 \end{lemmaenv}
 
 \begin{proof}
@@ -1142,6 +1145,8 @@ $\perp_{\mathrm{lin}}$ which routes the game's mass to the cemetery with immedia
 predecessor, so the augmented game reduces to the Routing Game over $\mathrm{Pred}_j^{(l)} \cup
     \{\mathrm{bias}\}$.
 
+An admissible profile chooses a pure stop/continue action at each activation state and a probability vector at each linear routing state. Under any profile, evaluate the displayed recursions using those choices, without taking maxima: use the chosen activation action and the chosen routing vector's expected log score plus entropy. A zero-probability term contributes zero even when its score is $-\infty$; positive probability on a $-\infty$ score makes the routing value $-\infty$.
+
 Throughout, $\mathbf{V}(\cdot) = (V_p(\cdot), V_{p'}(\cdot))^\top$ denotes the game's
 backward-induction player-specific log-value function, defined jointly at linear routing states
 by~\eqref{ptnb:eq:routing-linear-value} and at activation states by~\eqref{ptnb:eq:routing-activation-value}
@@ -1167,7 +1172,7 @@ chosen by the active player.
     \end{cases}
 \end{align}
 The outside option $\perp_{\mathrm{lin}}$ and the bias node have log-scores
-$Q_r(s_{j,q,\kappa}^{(l,\mathrm{lin})}, \perp_{\mathrm{lin}}) \coloneqq \log \varepsilon$ and
+$Q_r(s_{j,q,\kappa}^{(l,\mathrm{lin})}, \perp_{\mathrm{lin}}) \coloneqq \ell(\varepsilon)$ and
 $Q_r(s_{j,q,\kappa}^{(l,\mathrm{lin})}, \mathrm{bias}) \coloneqq \ell([b_j^{(l)}]^\kappa)$ for $r =
     q$ and $-\infty$ for $r = q'$; they route the $\varepsilon$-fraction and the bias share of the mass
 to absorbing terminals instead of to any predecessor.
@@ -1311,7 +1316,7 @@ strictly concave entropy-regularized objective whenever some action has a finite
 Definition~\ref{ptnb:def:routing-recursion} fixes $\perp_{\mathrm{lin}}$). At activation states the active player is indifferent whenever the signed continuation mass $\exp V_p(s_+) - \exp V_{p'}(s_-)$ is nonpositive ($z_j^{(l)}\leq0$ at $\tau=1$), because both log-space action values are then $-\infty$. Thus the unconstrained best-response set can contain several policies. The theorem specifies the
 tie-breaker $\pi_p^\star = \1[Q_p(\cdot,\mathrm{continue}) > -\infty]$, which at $\tau=1$ reduces
 to $\1[z_j^{(l)} > 0]$. Just like in the \ac{sg} (Section~\ref{ptnb:app:relu-net-game}), we refer to
-this SPNE as the \textbf{stop-at-tie-breaks} equilibrium.
+this SPNE as the \textbf{stop-at-tie-breaks} equilibrium. This canonical choice also selects the absorbing outside action whenever every routing action has zero mass; without these conventions, both activation log ties and empty routing streams permit multiple optimal choices.
 \end{remark}
 
 \begin{proof}
@@ -1324,8 +1329,7 @@ the layer index $l$.
 At layer $l=1$ the linear routing subgames have no unresolved game values, so the action values
 $Q_q$ in~\eqref{ptnb:eq:routing-linear-action} are fully specified by the input $x$. At each linear
 state the active player solves $\max_{\nu \in \Delta(\mathrm{Pred}_j^{(1)})} \{ \sum_i \nu(i)\,
-    Q_q(s_{j,q,\kappa}^{(1, lin)}, i) + \tau\, \mathcal{H}(\nu) \}$, which is strictly concave on the
-simplex. Identity~\eqref{ptnb:eq:gibbs-lse} yields the unique Gibbs best response, and simplifying $\exp
+    Q_q(s_{j,q,\kappa}^{(1, lin)}, i) + \tau\, \mathcal{H}(\nu) \}$, which is strictly concave on the simplex face supported on finite-score actions whenever that face is nonempty. If every score is $-\infty$, every distribution is optimal and we select the absorbing outside action as above. Identity~\eqref{ptnb:eq:gibbs-lse} yields the unique Gibbs best response in the nonempty finite-score case, and simplifying $\exp
     \circ \ell$ in~\eqref{ptnb:eq:routing-linear-action} gives the explicit form
 \begin{align}\label{ptnb:eq:routing-spne-linear}
     \pi_q^\star\!\bigl(i \,\big|\, s_{j,q,\kappa}^{(l, lin)}\bigr)

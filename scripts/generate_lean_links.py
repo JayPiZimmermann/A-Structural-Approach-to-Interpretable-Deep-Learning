@@ -45,7 +45,7 @@ def declarations(text, path):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--revision',required=True)
-    ap.add_argument('--repo',default='https://github.com/JayPiZimmermann/structural-explainability-thesis')
+    ap.add_argument('--repo',default='https://github.com/JayPiZimmermann/structural-interpretability-thesis')
     ap.add_argument('--check',action='store_true')
     args=ap.parse_args()
     revision=git('rev-parse','--verify',args.revision+'^{commit}')

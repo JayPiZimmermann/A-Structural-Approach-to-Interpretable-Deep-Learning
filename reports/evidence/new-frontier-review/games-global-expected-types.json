@@ -1,0 +1,370 @@
+{
+  "version": 1,
+  "targets": [
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.source_edge_score",
+      "expected_type": "∀ (w : ℝ) (hw : 0 ≤ w) (v : WithBot ℝ),\n    Thesis.RoutingGate.logCoordinate (w * expZero v) =\n      Thesis.RoutingGate.logCoordinate w + v",
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/source_edge_score",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption."
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.routedMass_monotone",
+      "expected_type": "∀ {A : Type u} [Fintype A] (θ : ℝ) (p : Policy A),\n    Monotone (fun m => routedMass θ m p)",
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended"
+      ],
+      "open_scopes": [],
+      "universes": [
+        "u"
+      ],
+      "review_id": "attack_games/global/routedMass_monotone",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption."
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.sourceValue_gibbs_optimal",
+      "expected_type": "∀ {A : Type u} [Fintype A] [DecidableEq A] (θ : ℝ) (hθ : 0 < θ)\n    (m : A → ℝ) (outside : A) (p : Policy A),\n    sourceValue θ m p ≤ sourceValue θ m (gibbs θ m outside)",
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended"
+      ],
+      "open_scopes": [],
+      "universes": [
+        "u"
+      ],
+      "review_id": "attack_games/global/sourceValue_gibbs_optimal",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption."
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.gibbs_anchor_mass",
+      "expected_type": "∀ {A : Type u} [Fintype A] [DecidableEq A] (m : A → ℝ) (hm : ∀ i, 0 ≤ m i) (outside : A),\n    routedMass 1 m (gibbs 1 m outside) = ∑ i, m i",
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended"
+      ],
+      "open_scopes": [],
+      "universes": [
+        "u"
+      ],
+      "review_id": "attack_games/global/gibbs_anchor_mass",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption."
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.gibbs_anchor_nonoutside",
+      "expected_type": "∀ {A : Type u} [Fintype A] [DecidableEq A] (m : A → ℝ) (hm : ∀ i, 0 ≤ m i)\n    (outside i : A) (hi : i ≠ outside),\n    (gibbs 1 m outside).prob i = m i / ∑ j, m j",
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended"
+      ],
+      "open_scopes": [],
+      "universes": [
+        "u"
+      ],
+      "review_id": "attack_games/global/gibbs_anchor_nonoutside",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption."
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.empty_stream_value",
+      "expected_type": "∀ {A : Type u} [Fintype A] (θ : ℝ) (m : A → ℝ) (p : Policy A) (hm : ∀ i, m i ≤ 0),\n    sourceValue θ m p = ⊥ ∧ routedMass θ m p = 0",
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended"
+      ],
+      "open_scopes": [],
+      "universes": [
+        "u"
+      ],
+      "review_id": "attack_games/global/empty_stream_value",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption."
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.empty_stream_absorbs",
+      "expected_type": "∀ {A : Type u} [Fintype A] [DecidableEq A] (θ : ℝ) (m : A → ℝ) (outside : A)\n    (hm : ∀ i, m i ≤ 0),\n    gibbs θ m outside = pure outside",
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended"
+      ],
+      "open_scopes": [],
+      "universes": [
+        "u"
+      ],
+      "review_id": "attack_games/global/empty_stream_absorbs",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption."
+    },
+    {
+      "module": "Thesis.RoutingProfiles",
+      "declaration": "Thesis.RoutingProfiles.auxiliary_saddle",
+      "expected_type": "∀ (θ : ℝ) (hθ : 0 < θ) (t : Tree) (plus minus : Strategy t),\n    auxiliary θ t plus (canonical θ t) ≤ value θ t ∧\n      value θ t ≤ auxiliary θ t (canonical θ t) minus",
+      "open_namespaces": [
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingProfiles"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/auxiliary_saddle",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "All contingent pure activation choices and randomized routing profiles in the finite unfolded game. Independently defined reported log coordinates, actual all-profile signed-coordinate bridge, stronger signed saddle and transfer to source-log Nash/SPNE; stop selected at every nonpositive log tie."
+    },
+    {
+      "module": "Thesis.RoutingProfiles",
+      "declaration": "Thesis.RoutingProfiles.reported_coordinates",
+      "expected_type": "∀ (θ : ℝ) (t : Tree) (plus minus : Strategy t),\n    reported θ t plus minus =\n      (Thesis.RoutingGate.logCoordinate (auxiliary θ t plus minus),\n       Thesis.RoutingGate.logCoordinate (-auxiliary θ t plus minus))",
+      "open_namespaces": [
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingProfiles"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/reported_coordinates",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "All contingent pure activation choices and randomized routing profiles in the finite unfolded game. Independently defined reported log coordinates, actual all-profile signed-coordinate bridge, stronger signed saddle and transfer to source-log Nash/SPNE; stop selected at every nonpositive log tie."
+    },
+    {
+      "module": "Thesis.RoutingProfiles",
+      "declaration": "Thesis.RoutingProfiles.auxiliary_eq_reported_difference",
+      "expected_type": "∀ (θ : ℝ) (t : Tree) (plus minus : Strategy t),\n    auxiliary θ t plus minus =\n      expZero (reported θ t plus minus).1 - expZero (reported θ t plus minus).2",
+      "open_namespaces": [
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingProfiles"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/auxiliary_eq_reported_difference",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "All contingent pure activation choices and randomized routing profiles in the finite unfolded game. Independently defined reported log coordinates, actual all-profile signed-coordinate bridge, stronger signed saddle and transfer to source-log Nash/SPNE; stop selected at every nonpositive log tie."
+    },
+    {
+      "module": "Thesis.RoutingProfiles",
+      "declaration": "Thesis.RoutingProfiles.canonical_nash",
+      "expected_type": "∀ (θ : ℝ) (hθ : 0 < θ) (t : Tree),\n    IsNash θ t (canonical θ t)",
+      "open_namespaces": [
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingProfiles"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/canonical_nash",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "All contingent pure activation choices and randomized routing profiles in the finite unfolded game. Independently defined reported log coordinates, actual all-profile signed-coordinate bridge, stronger signed saddle and transfer to source-log Nash/SPNE; stop selected at every nonpositive log tie."
+    },
+    {
+      "module": "Thesis.RoutingProfiles",
+      "declaration": "Thesis.RoutingProfiles.canonical_subgame_perfect",
+      "expected_type": "∀ (θ : ℝ) (hθ : 0 < θ) (t : Tree),\n    IsSubgamePerfect θ t (canonical θ t)",
+      "open_namespaces": [
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingProfiles"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/canonical_subgame_perfect",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "All contingent pure activation choices and randomized routing profiles in the finite unfolded game. Independently defined reported log coordinates, actual all-profile signed-coordinate bridge, stronger signed saddle and transfer to source-log Nash/SPNE; stop selected at every nonpositive log tie."
+    },
+    {
+      "module": "Thesis.RoutingProfiles",
+      "declaration": "Thesis.RoutingProfiles.canonical_stops_log_ties",
+      "expected_type": "∀ (θ : ℝ) (q : Bool) (p n : Tree)\n    (h : signed q (value θ p + value θ n) ≤ 0),\n    (canonical θ (.activation q p n)).1 = false",
+      "open_namespaces": [
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingProfiles"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/canonical_stops_log_ties",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "All contingent pure activation choices and randomized routing profiles in the finite unfolded game. Independently defined reported log coordinates, actual all-profile signed-coordinate bridge, stronger signed saddle and transfer to source-log Nash/SPNE; stop selected at every nonpositive log tie."
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.route_action_masses",
+      "expected_type": "∀ {n} (q : Bool) (ε b : ℝ) (w a : Fin n → ℝ)\n    (child : Fin n → Tree) (ha : ∀ i, 0 ≤ a i)\n    (hv : ∀ i, value 1 (child i) = signed q (a i)),\n    actionMass q (extend ε b w)\n      (fun i => value 1 (extend (.terminal (signed q 1)) (.terminal (signed q 1)) child i)) =\n      extend ε b (fun i => w i * a i)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Matrix",
+        "Finset",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingNetwork"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/route_action_masses",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1."
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.route_anchor_value",
+      "expected_type": "∀ {n} (q : Bool) (ε b : ℝ) (w a : Fin n → ℝ)\n    (child : Fin n → Tree) (hε : 0 ≤ ε) (hb : 0 ≤ b) (hw : ∀ i, 0 ≤ w i)\n    (ha : ∀ i, 0 ≤ a i) (hv : ∀ i, value 1 (child i) = signed q (a i)),\n    value 1 (route q ε b w child hε hb hw) = signed q (ε + (b + ∑ i, w i * a i))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Matrix",
+        "Finset",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingNetwork"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/route_anchor_value",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1."
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.route_anchor_ordinary_probability",
+      "expected_type": "∀ {n} (q : Bool) (ε b : ℝ) (w a : Fin n → ℝ)\n    (child : Fin n → Tree) (hε : 0 ≤ ε) (hb : 0 ≤ b) (hw : ∀ i, 0 ≤ w i)\n    (ha : ∀ i, 0 ≤ a i) (hv : ∀ i, value 1 (child i) = signed q (a i)) (i : Fin n),\n    (canonical 1 (route q ε b w child hε hb hw)).1.prob i.succ.succ =\n      w i * a i / (ε + (b + ∑ j, w j * a j))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Matrix",
+        "Finset",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingNetwork"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/route_anchor_ordinary_probability",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1."
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.networkGame_value",
+      "expected_type": "∀ {n m} (net : Network n m) (ε : ℝ) (hε : 0 ≤ ε)\n    (x : Vec n) (j : Fin m) (q : Bool),\n    value 1 (networkGame net ε hε x j q) = signed q (net.eval x j)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Matrix",
+        "Finset",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingNetwork"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/networkGame_value",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1."
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.networkGame_subgame_perfect",
+      "expected_type": "∀ {n m} (net : Network n m) (θ : ℝ) (hθ : 0 < θ)\n    (ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (j : Fin m) (q : Bool),\n    IsSubgamePerfect θ (networkGame net ε hε x j q) (canonical θ (networkGame net ε hε x j q))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Matrix",
+        "Finset",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingNetwork"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/networkGame_subgame_perfect",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1."
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.networkGame_reported",
+      "expected_type": "∀ {n m} (net : Network n m) (ε : ℝ) (hε : 0 ≤ ε)\n    (x : Vec n) (j : Fin m) (q : Bool),\n    reported 1 (networkGame net ε hε x j q)\n      (canonical 1 (networkGame net ε hε x j q)) (canonical 1 (networkGame net ε hε x j q)) =\n      (Thesis.RoutingGate.logCoordinate (signed q (net.eval x j)),\n       Thesis.RoutingGate.logCoordinate (-signed q (net.eval x j)))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Matrix",
+        "Finset",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingNetwork"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/networkGame_reported",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1."
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.networkLayer_reported",
+      "expected_type": "∀ {n k m} (wp wn : Matrix (Fin k) (Fin n) ℝ)\n    (bp bn : Vec k) (tail : Network k m) (ε : ℝ) (hε : 0 ≤ ε)\n    (x : Vec n) (j : Fin m) (q : Bool),\n    reported 1 (networkGame (.layer wp wn bp bn tail) ε hε x j q)\n      (canonical 1 (networkGame (.layer wp wn bp bn tail) ε hε x j q))\n      (canonical 1 (networkGame (.layer wp wn bp bn tail) ε hε x j q)) =\n      if q then (Thesis.RoutingGate.logCoordinate ((Network.layer wp wn bp bn tail).eval x j), ⊥)\n      else (⊥, Thesis.RoutingGate.logCoordinate ((Network.layer wp wn bp bn tail).eval x j))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Matrix",
+        "Finset",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingNetwork"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/networkLayer_reported",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1."
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.inputLayerGames_selected_gate",
+      "expected_type": "∀ {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k)\n    (ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (j : Fin k) (q : Bool),\n    (canonical 1 (inputLayerGames wp wn bp bn ε hε x j q)).1 =\n      decide (0 < preactivation wp wn bp bn x j)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Matrix",
+        "Finset",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingNetwork"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/inputLayerGames_selected_gate",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1."
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.layerGames_selected_gate",
+      "expected_type": "∀ {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k)\n    (ε : ℝ) (hε : 0 ≤ ε) (input : Fin n → Bool → Tree) (x : Vec n)\n    (hx : ∀ i, 0 ≤ x i) (hv : ∀ i q, value 1 (input i q) = signed q (x i))\n    (j : Fin k) (q : Bool),\n    (canonical 1 (layerGames wp wn bp bn ε hε input j q)).1 =\n      decide (0 < preactivation wp wn bp bn x j)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Matrix",
+        "Finset",
+        "Thesis.RoutingBackward",
+        "Thesis.RoutingProfiles",
+        "Thesis.RoutingExtended",
+        "Thesis.RoutingNetwork"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_id": "attack_games/global/layerGames_selected_gate",
+      "review_evidence": "reports/evidence/attack_games/GlobalExactTypes.lean",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1."
+    }
+  ]
+}

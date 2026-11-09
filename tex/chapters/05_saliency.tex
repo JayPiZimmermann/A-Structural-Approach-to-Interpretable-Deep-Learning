@@ -1,6 +1,6 @@
 \chapter{Saliency and Attribution Methods}\label{ch:saliency}
 
-This chapter introduces the novel explainability methods enabled by the split-stream representations. The guiding objects throughout are the stream functions $g$ and $h$ with $f = g - h$ constructed in Section~\ref{sec:dc_splitting_relu}: every method below reads the two streams \emph{separately} instead of only their difference. Section~\ref{sec:split_attribution_concept} develops the \emph{split-based} route --- attributing the decisions of a pretrained network through its \ac{dc} decomposition, yielding SplitCAM, SplitLRP and SplitGrad \cite{hiddenMono}, together with the complementary by-design route of difference-of-convex input neural networks (DCINNs), in which the difference of two constrained networks is \emph{trained} directly and turns out to be self-explanatory. Section~\ref{sec:game_based_attribution} turns to the \emph{game-based} route of Chapter~\ref{ch:game_theory}: rather than re-deriving the stopping and routing games, it collects the practical \emph{modes} --- the tunable knobs that turn the game equilibria into concrete attribution maps --- and the \emph{technicalities} of equivariant averaging that raise attribution quality.
+This chapter introduces the novel interpretability methods enabled by the split-stream representations. The guiding objects throughout are the stream functions $g$ and $h$ with $f = g - h$ constructed in Section~\ref{sec:dc_splitting_relu}: every method below reads the two streams \emph{separately} instead of only their difference. Section~\ref{sec:split_attribution_concept} develops the \emph{split-based} route --- attributing the decisions of a pretrained network through its \ac{dc} decomposition, yielding SplitCAM, SplitLRP and SplitGrad \cite{hiddenMono}, together with the complementary by-design route of difference-of-convex input neural networks (DCINNs), in which the difference of two constrained networks is \emph{trained} directly and turns out to be self-interpretable. Section~\ref{sec:game_based_attribution} turns to the \emph{game-based} route of Chapter~\ref{ch:game_theory}: rather than re-deriving the stopping and routing games, it collects the practical \emph{modes} --- the tunable knobs that turn the game equilibria into concrete attribution maps --- and the \emph{technicalities} of equivariant averaging that raise attribution quality.
 
 \section{Split-Based and Difference-of-Convex Attribution}\label{sec:split_attribution_concept}
 
@@ -250,7 +250,7 @@ Chapter~\ref{ch:decompositions} computes these stabilized gradients in closed fo
 The three methods share one pipeline: a stabilized split forward pass caching the original activations, a stabilized backward pass --- relevance-based for SplitLRP (initialized at the class-specific $\act{L}{+}$ and propagated by the $\varepsilon$-rule), sensitivity-based otherwise (the shifted recursions of \eqref{eq:shift_definition}) --- and a method-specific readout, with the resulting map bilinearly upsampled to the input resolution. The splitting is performed once per model and is negligible compared to a forward pass; the per-image cost of SplitCAM and SplitGrad is comparable to classical \ac{cam} methods and far below perturbation-based explainers, cf.\ Chapter~\ref{ch:experiments}.
 
 
-\subsection{Self-Explainability: Difference-of-Convex Input Neural Networks}\label{sec:dcinns}
+\subsection{Self-Interpretability: Difference-of-Convex Input Neural Networks}\label{sec:dcinns}
 
 The methods of Sections~\ref{sec:split_cam}--\ref{sec:split_grad} explain a \emph{pretrained} network by imposing the split structure post hoc. This raises a converse question: if the difference-of-two-streams representation is what makes explanations legible, what happens when the difference structure is not derived but \emph{trained} --- when the hypothesis class itself is the set of differences of two constrained networks? This section answers the question with \ac{dc} input neural networks (DCINNs) and their monotone relatives, and finds that the trained streams disentangle their explanatory roles into factual and counterfactual evidence, at a modest and architecture-dependent cost in accuracy.
 
@@ -266,7 +266,7 @@ Fix a base architecture. A \emph{DCINN} (in short: DIC model) is the function
 where $g$ and $h$ are two \acp{icnn} of the base architecture with independent parameters, trained \emph{jointly} by standard empirical risk minimization on the difference. The \emph{DM model} is defined analogously with both streams monotone networks. The \emph{inverted-input} variants DICIN and DMIN feed the $h$-stream the complemented input $\1 - x$ (for inputs normalized to $[0,1]^d$) instead of $x$.
 \end{definition}
 
-The construction mirrors the split-pair --- two non-negative streams whose difference is the model --- but with a crucial change of direction: nothing is split; both streams are free to learn any convex (respectively monotone) function, and the difference structure is a training-time inductive bias rather than a post-hoc reparameterization. Closely related architectures appeared as convex difference neural networks (CDiNN) in optimal control~\parencite{Sankaranarayanan2021CDINN}, with recurrent extensions for safety-critical model predictive control~\parencite{Chen2025_RCDiNN}; the explainability perspective developed here is complementary to that line of work. The inverted-input variant is motivated by monotonicity itself: a monotone $h$-stream can only accumulate evidence from the \emph{presence} of input mass, so handing it $\1 - x$ lets it accumulate evidence from what is \emph{missing} in the input.
+The construction mirrors the split-pair --- two non-negative streams whose difference is the model --- but with a crucial change of direction: nothing is split; both streams are free to learn any convex (respectively monotone) function, and the difference structure is a training-time inductive bias rather than a post-hoc reparameterization. Closely related architectures appeared as convex difference neural networks (CDiNN) in optimal control~\parencite{Sankaranarayanan2021CDINN}, with recurrent extensions for safety-critical model predictive control~\parencite{Chen2025_RCDiNN}; the interpretability perspective developed here is complementary to that line of work. The inverted-input variant is motivated by monotonicity itself: a monotone $h$-stream can only accumulate evidence from the \emph{presence} of input mass, so handing it $\1 - x$ lets it accumulate evidence from what is \emph{missing} in the input.
 
 Three implementation choices matter in practice.
 \begin{itemize}
@@ -332,14 +332,154 @@ The payoff of the by-design route is that the \emph{plain input gradients} of th
 	\label{fig:mnist_split_ic_saliency}
 \end{figure}
 
-Figure~\ref{fig:mnist_split_ic_saliency} overlays both gradients, per class logit, for a test digit ``3'', and the separation of concerns is clearly visible: for the ground-truth logit the $g$-gradient traces the strokes most accurately, while for the competing classes ``6'', ``8'' and ``9'' the counterfactual $h$-gradients concentrate densely \emph{between the arches} of the ``3'' --- exactly the missing pixels that would close the loops. The plain DIC model without input inversion shows the same effect in a single signed map, whereas a \emph{single} constrained model (\texttt{cnn\_maxout} IC) does not: the difference structure, not the convexity constraint alone, produces the disentanglement.
+\begin{figure}[t]
+	\centering
+	\begin{minipage}[c]{0.15\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/original.png}\\[-1pt]
+		{\scriptsize Original}
+	\end{minipage}\hspace{0.015\linewidth}%
+	\begin{minipage}[c]{0.80\linewidth}
+		\centering
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_0_bright.png}\\[-1pt]{\scriptsize Logit 0}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_1_bright.png}\\[-1pt]{\scriptsize Logit 1}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_2_bright.png}\\[-1pt]{\scriptsize Logit 2}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_3_bright.png}\\[-1pt]{\scriptsize Logit 3}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_4_bright.png}\\[-1pt]{\scriptsize Logit 4}
+		\end{minipage}
+
+		\vspace{0.12cm}
+
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_5_bright.png}\\[-1pt]{\scriptsize Logit 5}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_6_bright.png}\\[-1pt]{\scriptsize Logit 6}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_7_bright.png}\\[-1pt]{\scriptsize Logit 7}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_8_bright.png}\\[-1pt]{\scriptsize Logit 8}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_9_bright.png}\\[-1pt]{\scriptsize Logit 9}
+		\end{minipage}
+	\end{minipage}
+	\caption{Second example of stream gradients of the inverted-input DIC model (\texttt{cnn\_maxout} DICIN) on a correctly classified MNIST test digit ``3'', thresholded and overlaid per class logit. The $g$-stream gradient (red) marks factual evidence on present strokes, while the $h$-stream gradient (blue) marks counterfactual evidence: pixels whose addition would raise the respective class logit. Left: the original digit.}
+	\label{fig:mnist_split_ic_saliency_second}
+\end{figure}
+
+Figure~\ref{fig:mnist_split_ic_saliency} overlays both gradients, per class logit, for a test digit ``3'', and the separation of concerns is clearly visible: for the ground-truth logit the $g$-gradient traces the strokes most accurately, while for the competing classes ``6'', ``8'' and ``9'' the counterfactual $h$-gradients concentrate densely \emph{between the arches} of the ``3'' --- exactly the missing pixels that would close the loops. A second correctly classified ``3'' in Figure~\ref{fig:mnist_split_ic_saliency_second} shows the same qualitative pattern. The plain DIC model without input inversion shows the same effect in a single signed map: its gradients are mostly positive on the strokes and negative on the background. A \emph{single} constrained model (\texttt{cnn\_maxout} IC) does not show the same class-dependent directional variation: the difference structure, not the convexity constraint alone, produces the disentanglement in these examples.
+
+\paragraph{Qualitative comparison with a single input-convex model.}
+Figure~\ref{fig:mnist_ic_saliency} reproduces the source paper's ten-class input-gradient comparison for the single \texttt{cnn\_maxout} IC model. Its gradients mostly mark positive evidence on digit strokes and negative evidence on the background. The maps are informative about the input, but they show little class-dependent directional variation. By contrast, the DICIN maps in Figures~\ref{fig:mnist_split_ic_saliency} and~\ref{fig:mnist_split_ic_saliency_second} show different evidence patterns for competing class logits: the $h$-stream highlights missing strokes that would support those classes. These visual examples motivate the factual/counterfactual reading of the two streams; they do not establish that this separation holds for all inputs or models.
+
+\begin{figure}[t]
+    \centering
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_0_bright.png}
+        \scriptsize Gradient 0
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_1_bright.png}
+        \scriptsize Gradient 1
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_2_bright.png}
+        \scriptsize Gradient 2
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_3_bright.png}
+        \scriptsize Gradient 3
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_4_bright.png}
+        \scriptsize Gradient 4
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_5_bright.png}
+        \scriptsize Gradient 5
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_6_bright.png}
+        \scriptsize Gradient 6
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_7_bright.png}
+        \scriptsize Gradient 7
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_8_bright.png}
+        \scriptsize Gradient 8
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_9_bright.png}
+        \scriptsize Gradient 9
+    \end{minipage}%
+
+    \par\vspace{0.25cm}
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_0.png}
+        \scriptsize Label 0
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_1.png}
+        \scriptsize Label 1
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_2.png}
+        \scriptsize Label 2
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_3.png}
+        \scriptsize Label 3
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_4.png}
+        \scriptsize Label 4
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_5.png}
+        \scriptsize Label 5
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_6.png}
+        \scriptsize Label 6
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_7.png}
+        \scriptsize Label 7
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_8.png}
+        \scriptsize Label 8
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_9.png}
+        \scriptsize Label 9
+    \end{minipage}%
+
+    \caption{Input-gradient visualizations of the \texttt{cnn\_maxout} IC model for ten MNIST digits, each with respect to its ground-truth label. Top: saliency maps; bottom: input images. As in the source figure, positive and negative gradient values above threshold 0.2 are colored red and blue, with ranking colorized using exponential decay.}
+    \label{fig:mnist_ic_saliency}
+\end{figure}
+
 
 \paragraph{Accuracy trade-offs.}\label{subsec:dcinn_accuracy}
 
-Self-explainability by architectural constraint traditionally costs expressivity~\parencite{Sill1997_MonotonicNetworks,Liu2020CertifiedMonotone}, but for the difference-of-two construction the cost is small on the convolutional base model and even negative on the \ac{mlp}, where every difference-of-two variant outperforms the unconstrained baseline; the full accuracy table across ten seeds and all eight variants is reported in Chapter~\ref{ch:experiments}.
+Self-interpretability by architectural constraint traditionally costs expressivity~\parencite{Sill1997_MonotonicNetworks,Liu2020CertifiedMonotone}, but for the difference-of-two construction the cost is small on the convolutional base model and even negative on the \ac{mlp}, where every difference-of-two variant outperforms the unconstrained baseline; the full accuracy table across ten seeds and all eight variants is reported in Chapter~\ref{ch:experiments}.
 
 \begin{remark}[Post-hoc and by-design, reconciled]\label{rem:posthoc_bydesign}
-The two routes of this chapter probe the same structural hypothesis --- that difference-of-monotone representations are inherently more legible --- from opposite ends. The MNIST study answers the two underlying questions affirmatively: constrained monotone and input-convex networks are self-explanatory, and differences of two such networks can be trained directly to competitive accuracy, with gradients that separate factual from counterfactual evidence more cleanly than the split-pairs of the pretrained VGG16 and ResNet18 models, for which such a disentanglement of concerns is observed only partially and has not been established rigorously. Transferring the by-design disentanglement to large-scale architectures --- or explaining why splitting a pretrained model cannot fully reproduce it --- remains an open direction, taken up again in Chapter~\ref{ch:conclusion}.
+The two routes of this chapter probe the same structural hypothesis --- that difference-of-monotone representations are inherently more legible --- from opposite ends. The MNIST study answers the two underlying questions affirmatively: constrained monotone and input-convex networks are self-interpretable, and differences of two such networks can be trained directly to competitive accuracy, with gradients that separate factual from counterfactual evidence more cleanly than the split-pairs of the pretrained VGG16 and ResNet18 models, for which such a disentanglement of concerns is observed only partially and has not been established rigorously. Transferring the by-design disentanglement to large-scale architectures --- or explaining why splitting a pretrained model cannot fully reproduce it --- remains an open direction, taken up again in Chapter~\ref{ch:conclusion}.
 \end{remark}
 
 \section{Game-Based Attribution: Modes and Technicalities}\label{sec:game_based_attribution}

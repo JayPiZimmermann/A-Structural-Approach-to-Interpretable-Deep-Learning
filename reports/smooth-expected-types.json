@@ -190,6 +190,142 @@
       "review_id": "SMOOTH-softplus_degenerate_split",
       "review_evidence": "reports/smooth-repairs.md",
       "scope": "Positive-temperature softplus: canonical negative curvature and component vanish, positive canonical component equals softplus, original function is convex, and split pairs preserve nonnegativity."
+    },
+    {
+      "open_namespaces": [
+        "Set",
+        "Filter",
+        "MeasureTheory",
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "open_scopes": [
+        "Topology"
+      ],
+      "universes": [],
+      "review_evidence": "reports/smooth-repairs.md",
+      "module": "HiddenMonotonicity.ModernActivations",
+      "declaration": "HiddenMonotonicity.SmoothDC.modern_activations",
+      "expected_type": "(∀ a : ModernActivation,\n  let f := a.eval\n  Differentiable ℝ f ∧\n  (∀ l r, AbsolutelyContinuousOnInterval (deriv f) l r) ∧\n  Integrable (curvature f) ∧ 0≤f 0 ∧\n  Tendsto (deriv f) atBot (𝓝 (minusInfinitySlope f)) ∧\n  (∃ B : ℝ, ∀ x, |deriv f x|≤B) ∧\n  ConvexOn ℝ univ (tilt (C1 f) (commonTilt f)) ∧\n  ConvexOn ℝ univ (tilt (C2 f) (commonTilt f)) ∧\n  Monotone (tilt (C1 f) (commonTilt f)) ∧ Monotone (tilt (C2 f) (commonTilt f)) ∧\n  (∀ z : ℝ × ℝ, tilt (C1 f) (commonTilt f) z-tilt (C2 f) (commonTilt f) z=f (z.1-z.2)) ∧\n  NonnegativePairActivation (splitPair f)) ∧\n(∀ x, curvature gaussianGelu x=(2-x^2)*standardGaussianDensity x ∧\n  (0<curvature gaussianGelu x ↔ |x|<Real.sqrt 2) ∧\n  (curvature gaussianGelu x<0 ↔ Real.sqrt 2< |x|)) ∧\n(∀ β : ℝ, 0<β →\n  (∀ x, curvature (swish β) x=β*sigmoidFirst (β*x)*(2+β*x*(1-2*Real.sigmoid (β*x)))) ∧\n  ∃ ε R : ℝ, 0<ε ∧ 0<R ∧ (∀ x, |x|<ε → 0<curvature (swish β) x) ∧\n    (∀ x, R< |x| → curvature (swish β) x<0)) ∧\n(∀ x, mish x=x*Real.tanh (Real.log (1+Real.exp x))) ∧\n(∀ x, curvature Real.tanh x=-2*Real.tanh x/(Real.cosh x)^2 ∧\n  (0≤x → positiveCurvature Real.tanh x=0) ∧ (x≤0 → negativeCurvature Real.tanh x=0)) ∧\n(∀ x, curvature Real.sigmoid x=sigmoidFirst x*(1-2*Real.sigmoid x)) ∧\n(∀ θ : ℝ, 0<θ →\n  (∀ x, curvature (Thesis.Regularization.softplus θ) x=sigmoidFirst (x/θ)/θ) ∧\n  negativeCurvature (Thesis.Regularization.softplus θ)=0 ∧\n  C2 (Thesis.Regularization.softplus θ)=0 ∧\n  C1 (Thesis.Regularization.softplus θ)=Thesis.Regularization.softplus θ)",
+      "review_id": "SMOOTH-modern_activations",
+      "scope": "All six actual formulas: exact Gaussian CDF GeLU, positive-scale Swish, Mish, library tanh/logistic and positive-temperature softplus. Proved global integrability and local AC; full smooth split and nonnegative-pair conclusion; exact displayed curvature formulas; GeLU exact sign intervals; Swish positive neighborhood and two negative tails; tanh support and softplus zero-component clauses. Activation constructors contain only formula choice and positive parameters."
+    },
+    {
+      "open_namespaces": [
+        "Set",
+        "Filter",
+        "MeasureTheory",
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "open_scopes": [
+        "Topology"
+      ],
+      "universes": [],
+      "review_evidence": "reports/smooth-repairs.md",
+      "module": "HiddenMonotonicity.ModernGELU",
+      "declaration": "HiddenMonotonicity.SmoothDC.gaussianGelu_smooth_dc_split",
+      "expected_type": "Integrable (curvature gaussianGelu) ∧\n(∀ a b, AbsolutelyContinuousOnInterval (deriv gaussianGelu) a b) ∧\nConvexOn ℝ univ (tilt (C1 gaussianGelu) (commonTilt gaussianGelu)) ∧\nConvexOn ℝ univ (tilt (C2 gaussianGelu) (commonTilt gaussianGelu)) ∧\nMonotone (tilt (C1 gaussianGelu) (commonTilt gaussianGelu)) ∧\nMonotone (tilt (C2 gaussianGelu) (commonTilt gaussianGelu)) ∧\nValidPairActivation gaussianGelu (splitPair gaussianGelu) ∧\nNonnegativePairActivation (splitPair gaussianGelu)",
+      "review_id": "SMOOTH-gaussianGelu_smooth_dc_split",
+      "scope": "Actual global activation; curvature integrability and local AC are conclusions proved from the formula. Exact convex monotone canonical pair with validity and nonnegative preservation."
+    },
+    {
+      "open_namespaces": [
+        "Set",
+        "Filter",
+        "MeasureTheory",
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "open_scopes": [
+        "Topology"
+      ],
+      "universes": [],
+      "review_evidence": "reports/smooth-repairs.md",
+      "module": "HiddenMonotonicity.ModernMish",
+      "declaration": "HiddenMonotonicity.SmoothDC.mish_smooth_dc_split",
+      "expected_type": "Integrable (curvature mish) ∧\n(∀ a b, AbsolutelyContinuousOnInterval (deriv mish) a b) ∧\nConvexOn ℝ univ (tilt (C1 mish) (commonTilt mish)) ∧\nConvexOn ℝ univ (tilt (C2 mish) (commonTilt mish)) ∧\nMonotone (tilt (C1 mish) (commonTilt mish)) ∧\nMonotone (tilt (C2 mish) (commonTilt mish)) ∧\nValidPairActivation mish (splitPair mish) ∧\nNonnegativePairActivation (splitPair mish)",
+      "review_id": "SMOOTH-mish_smooth_dc_split",
+      "scope": "Actual global activation; curvature integrability and local AC are conclusions proved from the formula. Exact convex monotone canonical pair with validity and nonnegative preservation."
+    },
+    {
+      "open_namespaces": [
+        "Set",
+        "Filter",
+        "MeasureTheory",
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "open_scopes": [
+        "Topology"
+      ],
+      "universes": [],
+      "review_evidence": "reports/smooth-repairs.md",
+      "module": "HiddenMonotonicity.ModernSwish",
+      "declaration": "HiddenMonotonicity.SmoothDC.swish_smooth_dc_split",
+      "expected_type": "∀ (β : ℝ) (hβ : 0<β),\nIntegrable (curvature (swish β)) ∧\n(∀ a b, AbsolutelyContinuousOnInterval (deriv (swish β)) a b) ∧\nConvexOn ℝ univ (tilt (C1 (swish β)) (commonTilt (swish β))) ∧\nConvexOn ℝ univ (tilt (C2 (swish β)) (commonTilt (swish β))) ∧\nMonotone (tilt (C1 (swish β)) (commonTilt (swish β))) ∧\nMonotone (tilt (C2 (swish β)) (commonTilt (swish β))) ∧\nValidPairActivation (swish β) (splitPair (swish β)) ∧\nNonnegativePairActivation (splitPair (swish β))",
+      "review_id": "SMOOTH-swish_smooth_dc_split",
+      "scope": "Actual Swish with any strictly positive scale, including SiLU at scale one; global integrability/local AC proved from exponential domination, full canonical pair properties."
+    },
+    {
+      "open_namespaces": [
+        "Set",
+        "Filter",
+        "MeasureTheory",
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "open_scopes": [
+        "Topology",
+        "ContDiff"
+      ],
+      "universes": [],
+      "review_evidence": "reports/smooth-repairs.md",
+      "module": "HiddenMonotonicity.DistributionalRegularity",
+      "declaration": "HiddenMonotonicity.SmoothDC.distributional_second_derivative_regular",
+      "expected_type": "∀ (f q : ℝ → ℝ)\n(hf : Continuous f) (hw : HasSecondDistributionalDerivative f q),\nDifferentiable ℝ f ∧\n(∀ a b, AbsolutelyContinuousOnInterval (deriv f) a b) ∧\n(∀ᵐ x, curvature f x=q x) ∧\n∃ a b : ℝ, ∀ x, f x=localPrimitive (localPrimitive q) x+a*x+b",
+      "review_id": "SMOOTH-distributional_second_derivative_regular",
+      "scope": "Continuous real function with a genuine locally integrable weak second derivative, defined by equality against every compact smooth test function. Differentiability, local absolute continuity of its derivative, identification of its classical curvature with the density a.e., and the double-integral-plus-affine representation are conclusions. No reconstruction or local AC in the primitive weak definition."
+    },
+    {
+      "open_namespaces": [
+        "Set",
+        "Filter",
+        "MeasureTheory",
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "open_scopes": [
+        "Topology",
+        "ContDiff"
+      ],
+      "universes": [],
+      "review_evidence": "reports/smooth-repairs.md",
+      "module": "HiddenMonotonicity.DistributionalRegularity",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvature_minimality_distributional",
+      "expected_type": "∀ (f c1 c2 q1 q2 : ℝ → ℝ)\n(hf : Differentiable ℝ f)\n(hfAC : ∀ a b, AbsolutelyContinuousOnInterval (deriv f) a b)\n(hq : Integrable (curvature f))\n(hc1 : ConvexOn ℝ univ c1) (hc2 : ConvexOn ℝ univ c2)\n(hw1 : HasSecondDistributionalDerivative c1 q1)\n(hw2 : HasSecondDistributionalDerivative c2 q2)\n(heq : ∀ x, f x=c1 x-c2 x),\nDifferentiable ℝ c1 ∧ Differentiable ℝ c2 ∧\n(∀ a b, AbsolutelyContinuousOnInterval (deriv c1) a b) ∧\n(∀ a b, AbsolutelyContinuousOnInterval (deriv c2) a b) ∧\n(∀ᵐ x, curvature c1 x=q1 x ∧ curvature c2 x=q2 x) ∧\n(∀ᵐ x, positiveCurvature f x≤q1 x ∧ negativeCurvature f x≤q2 x) ∧\n((∀ᵐ x, q1 x=positiveCurvature f x ∧ q2 x=negativeCurvature f x) →\n  ∃ a b : ℝ, (∀ x, c1 x=C1 f x+a*x+b) ∧ (∀ x, c2 x=C2 f x+a*x+b)) ∧\n(∀ L, Monotone (tilt (C1 f) L) → Monotone (tilt (C2 f) L) → commonTilt f≤L)",
+      "review_id": "SMOOTH-curvature_minimality_distributional",
+      "scope": "Full prop:curvature_minimality under the source distributional hypothesis: convex component functions with locally integrable weak curvature densities. Their classical differentiability/local AC and density identification are derived, then both minimal-curvature bounds, the same affine summand under equality, and least common tilt are established. No differentiability or local AC assumption on c1/c2."
+    },
+    {
+      "open_namespaces": [
+        "Set",
+        "Filter",
+        "MeasureTheory",
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "open_scopes": [
+        "Topology",
+        "ContDiff"
+      ],
+      "universes": [],
+      "review_evidence": "reports/smooth-repairs.md",
+      "module": "HiddenMonotonicity.ModernActivationCorollary",
+      "declaration": "HiddenMonotonicity.SmoothDC.modern_activations_complete",
+      "expected_type": "(∀ a : ModernActivation,\n  let f := a.eval\n  Differentiable ℝ f ∧\n  (∀ l r, AbsolutelyContinuousOnInterval (deriv f) l r) ∧\n  Integrable (curvature f) ∧ 0≤f 0 ∧\n  Tendsto (deriv f) atBot (𝓝 (minusInfinitySlope f)) ∧\n  (∃ B : ℝ, ∀ x, |deriv f x|≤B) ∧\n  ConvexOn ℝ univ (tilt (C1 f) (commonTilt f)) ∧\n  ConvexOn ℝ univ (tilt (C2 f) (commonTilt f)) ∧\n  Monotone (tilt (C1 f) (commonTilt f)) ∧ Monotone (tilt (C2 f) (commonTilt f)) ∧\n  (∀ z : ℝ × ℝ, tilt (C1 f) (commonTilt f) z-tilt (C2 f) (commonTilt f) z=f (z.1-z.2)) ∧\n  NonnegativePairActivation (splitPair f)) ∧\n(∀ x, curvature gaussianGelu x=(2-x^2)*standardGaussianDensity x ∧\n  (0<curvature gaussianGelu x ↔ |x|<Real.sqrt 2) ∧\n  (curvature gaussianGelu x<0 ↔ Real.sqrt 2< |x|)) ∧\n(∀ β : ℝ, 0<β →\n  (∀ x, curvature (swish β) x=β*sigmoidFirst (β*x)*(2+β*x*(1-2*Real.sigmoid (β*x)))) ∧\n  ∃ ε R : ℝ, 0<ε ∧ 0<R ∧ (∀ x, |x|<ε → 0<curvature (swish β) x) ∧\n    (∀ x, R< |x| → curvature (swish β) x<0)) ∧\n(∀ x, mish x=x*Real.tanh (Real.log (1+Real.exp x))) ∧\n(∀ x, curvature Real.tanh x=-2*Real.tanh x/(Real.cosh x)^2 ∧\n  (0≤x → positiveCurvature Real.tanh x=0) ∧ (x≤0 → negativeCurvature Real.tanh x=0)) ∧\n(∀ x, curvature Real.sigmoid x=sigmoidFirst x*(1-2*Real.sigmoid x)) ∧\n(∀ θ : ℝ, 0<θ →\n  (∀ x, curvature (Thesis.Regularization.softplus θ) x=sigmoidFirst (x/θ)/θ ∧\n    0≤curvature (Thesis.Regularization.softplus θ) x) ∧\n  negativeCurvature (Thesis.Regularization.softplus θ)=0 ∧\n  C2 (Thesis.Regularization.softplus θ)=0 ∧\n  C1 (Thesis.Regularization.softplus θ)=Thesis.Regularization.softplus θ ∧\n  ConvexOn ℝ univ (Thesis.Regularization.softplus θ))",
+      "review_id": "SMOOTH-modern_activations_complete",
+      "scope": "All six actual formulas: exact Gaussian CDF GeLU, positive-scale Swish, Mish, library tanh/logistic and positive-temperature softplus. Proved global integrability and local AC; full smooth split and nonnegative-pair conclusion; exact displayed curvature formulas; GeLU exact sign intervals; Swish positive neighborhood and two negative tails; tanh support and softplus zero-component clauses. Activation constructors contain only formula choice and positive parameters. Explicitly also states nonnegative softplus curvature and convexity of softplus itself, completing all source specialization clauses."
     }
   ]
 }

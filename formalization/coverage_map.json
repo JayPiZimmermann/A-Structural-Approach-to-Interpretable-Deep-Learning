@@ -518,20 +518,19 @@
     "scope": "Actual curvature integrals, local absolute continuity of the derivative, globally integrable curvature, convex monotone primitive pair and exact reconstruction."
   },
   "cor:modern_activations": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.SmoothDC.sigmoid_smooth_dc_split",
-      "HiddenMonotonicity.SmoothDC.softplus_smooth_dc_split",
-      "HiddenMonotonicity.SmoothDC.tanh_smooth_dc_split"
+      "HiddenMonotonicity.SmoothDC.modern_activations_complete"
     ],
-    "scope": "Sigmoid, tanh and positive-temperature softplus with genuinely proved curvature integrability, local absolute continuity and nonnegative valid split pairs; exact GELU, Swish and Mish specializations remain open."
+    "scope": "All six literal activations: exact Gaussian GELU, positive-scale Swish, Mish, tanh, sigmoid, positive-temperature softplus. Actual integrable curvature, locally absolutely continuous derivatives, canonical nonnegative valid split pairs, and the stated sign/degenerate cases. No global routing-game interpretation of signed activations is asserted."
   },
   "prop:curvature_minimality": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.SmoothDC.curvature_minimality_locally_AC"
+      "HiddenMonotonicity.SmoothDC.curvature_minimality_distributional",
+      "HiddenMonotonicity.SmoothDC.distributional_second_derivative_regular"
     ],
-    "scope": "Curvature lower bounds, common-affine uniqueness and minimum tilt under actual locally absolutely continuous derivatives. The bridge from the manuscript distributional assumption to that regularity remains open."
+    "scope": "Actual locally integrable distributional second derivatives defined by compactly supported smooth test functions. Convexity supplies continuity; differentiability/local absolute continuity are derived. Both curvature bounds, common-affine uniqueness and least tilt follow without assuming the desired classical regularity."
   },
   "thm:decomp-recovery": {
     "status": "formalized_variant",
@@ -573,12 +572,35 @@
     "scope": "Full-depth expected ordinary overlap contraction under an explicit conditional row-affinity bound, with actual square-root geometric kernels. Continuous weight randomization alone is not asserted to establish that bound."
   },
   "thm:routing-forward": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
-      "Thesis.RoutingGate.chosenLogAction_optimal",
-      "Thesis.RoutingGate.chosenLogAction_mass",
-      "Thesis.Regularization.routing_variational"
+      "Thesis.RoutingNetwork.networkGame_subgame_perfect",
+      "Thesis.RoutingNetwork.networkGame_value",
+      "Thesis.RoutingNetwork.networkLayer_reported"
     ],
-    "scope": "The explicit log-space stop-at-every-tie activation optimizer and its ReLU mass, plus finite-real-score Gibbs optimization. Full all-profile routing-game equilibrium and zero-score support cases are still being assembled."
+    "scope": "The actual shared ReLU Network with signed raw inputs, biases, both sign copies and distinct outside actions. Pure activation decisions and stochastic routing; original extended-log utilities for every profile. Canonical SPNE exists for every positive temperature and nonnegative epsilon, with anchor forward values, stop-at-log-tie gates and empty-stream absorption. No signed affine-logit extension or exhaustive equilibrium-uniqueness classification is claimed."
+  },
+  "lem:stop_monotone": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.StoppingStructure.stopping_region_nonnegative_affine"
+    ],
+    "scope": "Actual shared-network stopping outputs on regions defined by equality of the recursively computed gates. Their explicit affine extension has a monotone linear part and nonnegative bias constant."
+  },
+  "lem:parity_path": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.StoppingStructure.stopping_preactivation_parity_paths",
+      "Thesis.StoppingStructure.stopping_biased_parity_paths"
+    ],
+    "scope": "Actual preactivation sums over geometric neuron-index paths, absolute signed-weight products and parity of the literal negative-edge count. Intermediate gates are used and the top preactivation edge is ungated. Zero-weight paths and a separate actual bias-source extension are included."
+  },
+  "lem:parity-path": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.StoppingStructure.stopping_preactivation_parity_paths",
+      "Thesis.StoppingStructure.stopping_biased_parity_paths"
+    ],
+    "scope": "Actual preactivation sums over geometric neuron-index paths, absolute signed-weight products and parity of the literal negative-edge count. Intermediate gates are used and the top preactivation edge is ungated. Zero-weight paths and a separate actual bias-source extension are included."
   }
 }

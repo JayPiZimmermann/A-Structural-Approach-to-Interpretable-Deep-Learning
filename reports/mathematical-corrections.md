@@ -200,3 +200,18 @@ The affine-output convention is now explicit in the foundational tropical recurs
 The activation–occupation theorem distinguishes actual derivatives on strict open cells from selected backward computations at ties. A fixed ReLU backward value at zero does not create a classical derivative of a discontinuous stopping head. The SG diagnostic now absorbs zero-fan-in rows. The RG diagnostic is explicitly separated from the bias-inclusive game because dropping and renormalizing bias routes changes the kernel. Alpha–beta conservation accounts for nonempty participating streams and absorption.
 
 The pinned PTNB implementation uses strict positive ReLU gates in Routing Game and Hellinger (`routing_game.py` and `hellinger.py`), matching the author-selected log-space stop-at-tie policy. Its separate SG/DC hard backward masks in `operations/relu.py` and `alignment_cache.py` use greater-than-or-equal at zero. The source now identifies these separate conventions explicitly; no upstream algorithm or published table was silently changed.
+
+
+### Alternative activations represented by ReLU subnetworks
+
+Reported during the source-to-thesis omission audit: the Hidden Monotonicity implementation paragraph claimed that ELU and Swish could be handled by replacement with small ReLU subnetworks without an approximation qualification. Finite ReLU networks are continuous piecewise affine; ELU and Swish are not piecewise affine, so exact global replacement is impossible. The source paragraph and thesis now state that this route approximates the original activation and preserves the approximating network. The thesis's curvature construction remains a separate exact decomposition under its stated hypotheses.
+
+
+### Global routing-game strategy and zero-support conventions
+
+The all-profile Lean proof uses the original extended-log utilities with pure activation choices and stochastic routing. Both source and thesis now state off-equilibrium evaluation and the zero-probability-times-minus-infinity convention explicitly. The outside score is ell(epsilon), including epsilon=0. Gibbs uniqueness applies on the nonempty finite-score face; when every score is minus infinity, all routing distributions are optimal and the canonical policy selects absorption. Activation log ties explicitly select stopping, as requested. The stopping parity proof now includes zero-weight paths explicitly (their product is zero).
+
+
+### Floating-point invariant versus exact algebra
+
+The source-to-thesis merge audit distinguished the original paper's reported float64 setup from the pinned code's configurable precision (float32 default). The thesis no longer claims that cache assimilation enforces the real-arithmetic recovery identity exactly in floating-point arithmetic: it targets that identity, while roundoff remains possible. The numerical setup and the independently checked exact mathematical invariant are both retained.

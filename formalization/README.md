@@ -60,6 +60,11 @@ linear functions with continuity recorded for mathlib's differentiation API.
 | `Thesis/SoftplusBackward.lean` | Actual full Softplus-network derivative and discounted occupation recovery |
 | `Thesis/Games.lean` | Finite path laws, dynamic programming, Hellinger overlap, per-pixel partition, Doob conditioning |
 | `Thesis/Regularization.lean` | Softplus derivatives, binary entropy optimizer, finite Gibbs variational principle |
+| `HiddenMonotonicity/ModernActivationCorollary.lean` | Actual GELU, Swish, Mish, tanh, sigmoid and softplus curvature constructions |
+| `HiddenMonotonicity/DistributionalRegularity.lean` | Classical regularity derived from weak second derivatives, then full curvature minimality |
+| `Thesis/RoutingNetwork.lean` | Actual network game, original log utilities for every profile, canonical SPNE and anchor forward values |
+| `Thesis/StoppingRegions.lean`, `StoppingPaths.lean` | Fixed-region affine monotonicity, actual geometric parity paths and bias sources |
+| `Thesis/StoppingCircuit.lean` | Shared-graph stopping/WTA recovery and local addition/maxpool derivative–occupation steps |
 
 ## Assumptions and boundaries
 
@@ -78,10 +83,16 @@ Unshifted sensitivities and the derivatives of every auxiliary Q are genuine
 Frechet derivatives. The difference of shifted unified head sensitivities is
 also proved to be the derivative of the original target.
 
-Probability kernels and their positivity require the stated nonnegative weights
-and positive normalizers. Ordinary path probabilities are kept separate from
-discounted occupation measures. Gradient/LRP recovery for specified policies
-does not by itself prove that those policies form a global game equilibrium.
+Probability kernels use nonnegative masses. Empty streams are explicitly completed
+by an absorbing action, including at zero stabilizer. Ordinary path probabilities
+are kept separate from discounted occupation measures. `RoutingNetwork` proves
+the canonical global equilibrium with pure activation choices and stochastic
+routing for the actual ReLU network, using the original log-space preferences.
+Every activation log tie selects stopping. This equilibrium theorem and the older
+alpha-beta path-recovery theorem use separate trajectory encodings; their complete
+type-level identification remains a distinct obligation. The unrestricted signed
+affine readout and a global game for signed smooth activations are not included
+in that routing equilibrium theorem.
 
 `coverage_map.json` and `claim_inventory.json` identify remaining gaps, including
 architectural extensions, geometry, equilibrium claims, and randomization

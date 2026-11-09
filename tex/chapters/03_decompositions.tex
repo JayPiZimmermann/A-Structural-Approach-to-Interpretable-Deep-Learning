@@ -1,6 +1,6 @@
 \chapter{Network Decompositions and DC Formulations}\label{ch:decompositions}
 
-This chapter develops the theory of network decomposition, from a generalized framework to Difference-of-Convex (DC) structures.
+The structural approach of this thesis starts with a common operation: separate the positive and negative contributions of a trained network while preserving their difference. This chapter develops that operation into a general framework of network decompositions. The DC instance exposes monotone, convex stream functions for the attribution methods of Chapter~\ref{ch:saliency}; the stopping instance preserves the network's gates and supplies the state structure for the games of Chapter~\ref{ch:game_theory}. Mixing and regularized decompositions connect these choices. Their shared forward invariant lets us compare what each representation retains and how its backward calculation changes, while numerical stabilization makes the constructions usable in deep networks.
 
 \section{Generalized Network Decomposition}\label{sec:general_decomposition_def}
 
@@ -315,6 +315,7 @@ The contrast with the mixing family is sharpest at an inactive neuron, $\preactl
 
 \begin{lemmaenv}[Monotonicity of the Stopping Decomposition on linear regions]\label{lem:stop_monotone}
 On each linear region of the \ac{relu} network---a maximal subset of input space on which all gate indicators $\1\bigl[\preactl{l}_j > 0\bigr]$ are constant---each stopping decomposed activation $a_{\mathrm{stop},i}^{(l,\pm)}$ is a non-negative-linear (i.e.\ affine with non-negative coefficients) function of the input pair $(x^+, x^-) \in \RR^{2 d^{(0)}}_{\ge 0}$, hence monotone non-decreasing in each coordinate $x_k^+$ and $x_k^-$.
+\hfill\LeanResult{lem:stop_monotone}
 \end{lemmaenv}
 
 \begin{proof}
@@ -341,12 +342,13 @@ Then the decomposed pre-activations of the Stopping Decomposition admit the path
 	\label{eq:parity_path_sums}
 \end{equation}
 where $\operatorname{sgn}(P)' $ denotes the opposite sign of $\operatorname{sgn}(P)$.
+\hfill\LeanResult{lem:parity_path}
 \end{lemmaenv}
 
 \begin{proof}
 Induction on $l$.
 
-\emph{Base case $l = 1$.} By~\eqref{eq:split_pos}, $\preact{1}{+}_i = \sum_k \bigl( \Wsig{1}{+}_{ik} x_k^+ + \Wsig{1}{-}_{ik} x_k^- \bigr)$. Paths with $P_1 = i$, $P_0 = k$ biject with predecessors $k$, each with $\abs{w}(P) = \bigl|\Wl{1}_{ik}\bigr|$, $G_{<1}(P) = 1$, and $\operatorname{sgn}(P) = +$ iff $\Wl{1}_{ik} > 0$. If $\Wl{1}_{ik} > 0$, only $\Wsig{1}{+}_{ik}$ contributes, giving $\abs{w}(P)\, x_k^+$ with $\operatorname{sgn}(P) = +$; if $\Wl{1}_{ik} < 0$, only $\Wsig{1}{-}_{ik}$ contributes, giving $\abs{w}(P)\, x_k^-$ with $\operatorname{sgn}(P) = -$. Both match~\eqref{eq:parity_path_sums}; $\preact{1}{-}_i$ is identical with the parity swapped.
+\emph{Base case $l = 1$.} By~\eqref{eq:split_pos}, $\preact{1}{+}_i = \sum_k \bigl( \Wsig{1}{+}_{ik} x_k^+ + \Wsig{1}{-}_{ik} x_k^- \bigr)$. Paths with $P_1 = i$, $P_0 = k$ biject with predecessors $k$, each with $\abs{w}(P) = \bigl|\Wl{1}_{ik}\bigr|$, $G_{<1}(P) = 1$, and $\operatorname{sgn}(P) = +$ iff $\Wl{1}_{ik} \ge 0$. If $\Wl{1}_{ik} > 0$, only $\Wsig{1}{+}_{ik}$ contributes, giving $\abs{w}(P)\, x_k^+$ with $\operatorname{sgn}(P) = +$; if $\Wl{1}_{ik} < 0$, only $\Wsig{1}{-}_{ik}$ contributes, giving $\abs{w}(P)\, x_k^-$ with $\operatorname{sgn}(P) = -$. A zero-weight edge has zero contribution regardless of its parity label. Both nonzero cases match~\eqref{eq:parity_path_sums}; $\preact{1}{-}_i$ is identical with the parity swapped.
 
 \emph{Inductive step $l \ge 2$.} The recursion~\eqref{eq:split_pos} takes stopping activations from layer $l-1$ as inputs,
 \begin{equation*}
@@ -504,14 +506,14 @@ In particular, $\bigl(g^{(l)} - h^{(l)}\bigr)\bigl( a^{(+)} + c,\, a^{(-)} + c \
 \end{theoremenv}
 
 \begin{proof}
-We show the claim for $g^{(l)}$ by induction on $l$; $h^{(l)}$ is analogous and the difference statement follows by subtraction. The base case $l = L$ is trivial, as $W_{\mathrm{abs}}^{[L, \rightarrow]} = I$ and $g^{(L)}$ is a projection. For $0 \le l < L$, the positive and negative neurons of layer $l+1$ connect to layer $l$ by the same two matrices with $\Wsig{l+1}{+}$ and $\Wsig{l+1}{-}$ flipped (Figure~\ref{fig:splitstreams}), so a uniform shift of the layer-$l$ pair produces a uniform shift of the layer-$(l+1)$ pair:
+We show the claim for $g^{(l)}$ by induction on $l$; $h^{(l)}$ is analogous and the difference statement follows by subtraction. The base case $l = L$ is trivial, as $W_{\mathrm{abs}}^{[L, \rightarrow]} = I$ and $g^{(L)}$ is a projection. For $0 \le l < L$, the positive and negative neurons of layer $l+1$ connect to layer $l$ by the same two matrices with $\Wsig{l+1}{+}$ and $\Wsig{l+1}{-}$ flipped (Figure~\ref{fig:splitstreams}), so a uniform shift of the layer-$l$ pair produces a uniform shift of the layer-$(l+1)$ pair. For a hidden layer $l+1<L$,
 \begin{align*}
 	\act{l+1}{+}\big|_{+c}
 	&= \max\bigl\{ \Wsig{l+1}{+} a^{(+)} + \Wsig{l+1}{-} a^{(-)},\; \Wsig{l+1}{-} a^{(+)} + \Wsig{l+1}{+} a^{(-)} \bigr\} + \bigl| \Wl{l+1} \bigr|\, c, \\
 	\act{l+1}{-}\big|_{+c}
 	&= \Wsig{l+1}{-} a^{(+)} + \Wsig{l+1}{+} a^{(-)} + \bigl| \Wl{l+1} \bigr|\, c,
 \end{align*}
-since $\bigl(\Wsig{l+1}{+} + \Wsig{l+1}{-}\bigr) c = \bigl|\Wl{l+1}\bigr| c$ enters both arguments of the maximum and factors out. Applying the induction hypothesis at layer $l+1$ with the shift $\bigl|\Wl{l+1}\bigr| c$,
+since $\bigl(\Wsig{l+1}{+} + \Wsig{l+1}{-}\bigr) c = \bigl|\Wl{l+1}\bigr| c$ enters both arguments of the maximum and factors out. At the final affine layer $l+1=L$, both stream activations equal their respective pre-activations, and nonnegative linearity gives the same common shift $|\Wl{L}|c$ directly, without a maximum. Applying the induction hypothesis at layer $l+1$ with the shift $\bigl|\Wl{l+1}\bigr| c$,
 \begin{equation*}
 	g^{(l)}\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr)
 	= g^{(l+1)}\Bigl( \act{l+1}{+} + \bigl|\Wl{l+1}\bigr| c,\, \act{l+1}{-} + \bigl|\Wl{l+1}\bigr| c \Bigr)
@@ -519,7 +521,7 @@ since $\bigl(\Wsig{l+1}{+} + \Wsig{l+1}{-}\bigr) c = \bigl|\Wl{l+1}\bigr| c$ ent
 \end{equation*}
 \end{proof}
 
-Theorem~\ref{thm:shift_forward} licenses \emph{re-centering}: whenever the common magnitude of a pair explodes, we subtract a common shift without altering the represented function. The canonical choice $c^{(l)} = -\min\bigl\{\act{l}{+}, \act{l}{-}\bigr\}$ (entrywise) makes at least one component of every pair zero. For a fixed shift, the head Jacobians at the shifted and unshifted split coordinates agree, since the Maxout branch comparisons are unchanged. If the shift is computed from the input, it must be detached when propagating these head sensitivities: differentiating through the shift adds the common term $W_{\mathrm{abs}}^{[l,\rightarrow]} Dc$ to both head derivatives. Their difference remains unchanged, but their individual derivatives need not. In the implementation, intermediate computations use double precision, re-centering is triggered by magnitude thresholds, and the original activations are optionally cached to correct the split activations on the fly, enforcing the \textbf{forward invariant} $\act{l}{+} - \act{l}{-} = \actl{l}$ exactly in floating-point arithmetic. The stabilized pass thus augments each layer of the split forward pass with the entrywise re-centering step $\act{l}{\pm} \leftarrow \act{l}{\pm} - \min\{\act{l}{+}, \act{l}{-}\}$ and, when enabled, the cache correction $\act{l}{+} \leftarrow \act{l}{-} + \actl{l}$.
+Theorem~\ref{thm:shift_forward} licenses \emph{re-centering}: whenever the common magnitude of a pair explodes, we subtract a common shift without altering the represented function. The canonical choice $c^{(l)} = -\min\bigl\{\act{l}{+}, \act{l}{-}\bigr\}$ (entrywise) makes at least one component of every pair zero. For a fixed shift, the head Jacobians at the shifted and unshifted split coordinates agree, since the Maxout branch comparisons are unchanged. If the shift is computed from the input, it must be detached when propagating these head sensitivities: differentiating through the shift adds the common term $W_{\mathrm{abs}}^{[l,\rightarrow]} Dc$ to both head derivatives. Their difference remains unchanged, but their individual derivatives need not. The original paper reports double-precision intermediate computations, re-centering triggered by magnitude thresholds, and optional caching of the original activations to correct the split activations on the fly. This correction targets the \textbf{forward invariant} $\act{l}{+} - \act{l}{-} = \actl{l}$; the exact real-arithmetic identity does not imply zero roundoff error in a floating-point implementation. The stabilized pass thus augments each layer of the split forward pass with the entrywise re-centering step $\act{l}{\pm} \leftarrow \act{l}{\pm} - \min\{\act{l}{+}, \act{l}{-}\}$ and, when enabled, the cache correction $\act{l}{+} \leftarrow \act{l}{-} + \actl{l}$.
 
 \subsection{Shifting the backward pass}\label{subsec:backward_stabilization}
 
@@ -550,6 +552,26 @@ For every $0 \le l \le L$,
 \begin{proof}
 For a coordinate direction $e_j$, $j \in \{1, \dots, d^{(l)}\}$, Theorem~\ref{thm:shift_forward} with $c = \epsilon\, e_j$ gives $g^{(l)}\bigl(\act{l}{+} + \epsilon e_j,\, \act{l}{-}\bigr) = g^{(l)}\bigl(\act{l}{+},\, \act{l}{-} - \epsilon e_j\bigr) + \epsilon\, W_{\mathrm{abs}}^{[l, \rightarrow]} e_j$. Subtracting $g^{(l)}\bigl(\act{l}{+}, \act{l}{-}\bigr)$, dividing by $\epsilon$, and letting $\epsilon \to 0$ yields $\delta_j^{(l,+,g)} = W_{\mathrm{abs}}^{[l, \rightarrow]} e_j - \delta_j^{(l,-,g)}$. The claim for $h$ follows analogously.
 \end{proof}
+
+For completeness, the four block Jacobians underlying the backward recursions are obtained by the chain rule. At a hidden layer with a strict gate pattern,
+\begin{align}
+\frac{\partial \act{l+1}{+}}{\partial \act{l}{+}}
+&=\frac{\partial \act{l+1}{+}}{\partial \preact{l+1}{+}}\frac{\partial \preact{l+1}{+}}{\partial \act{l}{+}}
+ +\frac{\partial \act{l+1}{+}}{\partial \preact{l+1}{-}}\frac{\partial \preact{l+1}{-}}{\partial \act{l}{+}}
+\notag\\
+&= M^{(l+1,+)}\Wsig{l+1}{+}+M^{(l+1,-)}\Wsig{l+1}{-},\notag\\
+\frac{\partial \act{l+1}{-}}{\partial \act{l}{+}}
+&=0\cdot\Wsig{l+1}{+}+\Wsig{l+1}{-},\notag\\
+\frac{\partial \act{l+1}{+}}{\partial \act{l}{-}}
+&=\frac{\partial \act{l+1}{+}}{\partial \preact{l+1}{+}}\frac{\partial \preact{l+1}{+}}{\partial \act{l}{-}}
+ +\frac{\partial \act{l+1}{+}}{\partial \preact{l+1}{-}}\frac{\partial \preact{l+1}{-}}{\partial \act{l}{-}}
+\notag\\
+&= M^{(l+1,+)}\Wsig{l+1}{-}+M^{(l+1,-)}\Wsig{l+1}{+},\notag\\
+\frac{\partial \act{l+1}{-}}{\partial \act{l}{-}}
+&=0\cdot\Wsig{l+1}{-}+\Wsig{l+1}{+}.
+\label{eq:split_layer_jacobians}
+\end{align}
+Here $M^{(l,+)}$ and $M^{(l,-)}$ select the two complementary Maxout branches, defined below. For the final ungated affine layer, the same formulas hold with $M^{(L,+)}=I$ and $M^{(L,-)}=0$. Biases contribute constant shifts to the pre-activations, so their derivatives with respect to the preceding activations vanish; fixed biases also preserve convexity, monotonicity, and the piecewise-affine structure.
 
 Equation~\eqref{eq:delta_complementarity} exposes the problem: the two sensitivities of each pair sum to the exploding matrix $W_{\mathrm{abs}}^{[l, \rightarrow]}$, so at least one is numerically large in deep networks. The stabilization subtracts at every layer an $\alpha^{(l)}$-multiple of this common bulk. Starting from $\delta_{\mathrm{shift}}^{(L,\pm,g)} \coloneqq \delta^{(L,\pm,g)} - \alpha^{(L)} \bigl( \delta^{(L,+,g)} + \delta^{(L,-,g)} \bigr)$ and analogously for $h$, the \emph{stabilized backward pass} iterates for $l = L-1, \dots, 0$: first the ordinary gradient recursion on the already shifted quantities,
 \begin{align}
@@ -722,6 +744,12 @@ and since the second summand does not depend on $j$, taking the maximum over $j$
 \end{proof}
 
 Identity~\eqref{eq:maxpool_identity} generalizes~\eqref{eq:splitting_identity}, the case $q = 2$ with the pair $\bigl( u^+ - u^-, 0 \bigr)$. Optionally, \eqref{eq:maxpool_split} can be replaced by a \emph{winner-takes-all} rule forwarding, in both streams, the entries where the \emph{difference} is maximal; this preserves the difference invariant but sacrifices monotonicity and convexity, mirroring the shared-gate trade-off of Remark~\ref{rem:gate_vs_maxima}.
+
+\paragraph{Implementation and caches.}
+The pinned implementation uses PyTorch FX to trace a model and organize supported graph operations into decomposition chunks. A forward/backward cache accumulates inflowing activations and gradients per chunk, and a parallel cache mirrors the original model. The latter serves both analysis---layer-wise activation/gradient error---and optional on-the-fly correction, and reuses the original model's positivity patterns in place of drifted split-pair maxima in the backward pass. The current code provides configurable \texttt{float16}, \texttt{float32}, or \texttt{float64} arithmetic, with \texttt{float32} as its default; this configuration choice is distinct from the double-precision setup reported in the original paper. The graph conversion applies to the operations supported by its chunk implementations.
+
+\paragraph{Alternative nonlinearities and exactness.}
+The source implementation discussion proposes replacing alternative nonlinearities such as ELU~\cite{Clevert2016_elu} or Swish~\cite{Ramachandran2017_swish} by small ReLU subnetworks before applying the split procedure. Such a replacement is an approximation: a finite ReLU subnetwork is piecewise affine and cannot reproduce these non-piecewise-affine functions exactly. The resulting split preserves the approximating network, while the approximation error relative to the original activation is a separate quantity. The pinned repository contains a separate approximation utility for selected scalar operations, including Swish, but that utility is not invoked by the inspected hybrid conversion path and does not list ELU among its supported operations. The curvature construction of Section~\ref{sec:dc_splitting_smooth} instead provides exact scalar decompositions for activations satisfying its hypotheses, without replacing them by ReLU subnetworks.
 
 \paragraph{The CNN split pass.}
 The split forward pass processes the chunks of a computation graph $\mathcal{G}$ in topological order, applying to each the split rule of its type---Lemma~\ref{lem:linear_chunk} for the linear chunks, the Maxout gate~\eqref{eq:dc_split_activations} or max-pool split~\eqref{eq:maxpool_split} for the non-linear ones---with optional entrywise re-centering $v^\pm \leftarrow v^\pm - \min\{v^+, v^-\}$ after each chunk. The stabilization of Section~\ref{sec:stabilization_dc} applies unchanged, since Theorem~\ref{thm:shift_forward} uses only non-negative linearity and the Maxout gate structure.

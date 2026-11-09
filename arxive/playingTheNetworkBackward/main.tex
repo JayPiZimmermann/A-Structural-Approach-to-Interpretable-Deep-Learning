@@ -1650,6 +1650,8 @@ $\perp_{\mathrm{lin}}$ which routes the game's mass to the cemetery with immedia
 predecessor, so the augmented game reduces to the Routing Game over $\mathrm{Pred}_j^{(l)} \cup
     \{\mathrm{bias}\}$.
 
+An admissible profile chooses a pure stop/continue action at each activation state and a probability vector at each linear routing state. Under any profile, evaluate the displayed recursions using those choices, without taking maxima: use the chosen activation action and the chosen routing vector's expected log score plus entropy. A zero-probability term contributes zero even when its score is $-\infty$; positive probability on a $-\infty$ score makes the routing value $-\infty$.
+
 Throughout, $\mathbf{V}(\cdot) = (V_p(\cdot), V_{p'}(\cdot))^\top$ denotes the game's
 backward-induction player-specific log-value function, defined jointly at linear routing states
 by~\eqref{eq:routing-linear-value} and at activation states by~\eqref{eq:routing-activation-value}
@@ -1675,7 +1677,7 @@ chosen by the active player.
     \end{cases}
 \end{align}
 The outside option $\perp_{\mathrm{lin}}$ and the bias node have log-scores
-$Q_r(s_{j,q,\kappa}^{(l,\mathrm{lin})}, \perp_{\mathrm{lin}}) \coloneqq \log \varepsilon$ and
+$Q_r(s_{j,q,\kappa}^{(l,\mathrm{lin})}, \perp_{\mathrm{lin}}) \coloneqq \ell(\varepsilon)$ and
 $Q_r(s_{j,q,\kappa}^{(l,\mathrm{lin})}, \mathrm{bias}) \coloneqq \ell([b_j^{(l)}]^\kappa)$ for $r =
     q$ and $-\infty$ for $r = q'$; they route the $\varepsilon$-fraction and the bias share of the mass
 to absorbing terminals instead of to any predecessor.
@@ -1818,7 +1820,7 @@ strictly concave entropy-regularized objective whenever some action has a finite
 Definition~\ref{def:routing-recursion} fixes $\perp_{\mathrm{lin}}$). At activation states the active player is indifferent whenever the signed continuation mass $\exp V_p(s_+) - \exp V_{p'}(s_-)$ is nonpositive ($z_j^{(l)}\leq0$ at $\tau=1$), because both log-space action values are then $-\infty$. Thus the unconstrained best-response set can contain several policies. The theorem specifies the
 tie-breaker $\pi_p^\star = \1[Q_p(\cdot,\mathrm{continue}) > -\infty]$, which at $\tau=1$ reduces
 to $\1[z_j^{(l)} > 0]$. Just like in the \ac{SG} (Appendix~\ref{app:relu-net-game}), we refer to
-this SPNE as the \textbf{stop-at-tie-breaks} equilibrium.
+this SPNE as the \textbf{stop-at-tie-breaks} equilibrium. This canonical choice also selects the absorbing outside action whenever every routing action has zero mass; without these conventions, both activation log ties and empty routing streams permit multiple optimal choices.
 \end{remark}
 
 \begin{proof}
@@ -1831,8 +1833,7 @@ the layer index $l$.
 At layer $l=1$ the linear routing subgames have no unresolved game values, so the action values
 $Q_q$ in~\eqref{eq:routing-linear-action} are fully specified by the input $x$. At each linear
 state the active player solves $\max_{\nu \in \Delta(\mathrm{Pred}_j^{(1)})} \{ \sum_i \nu(i)\,
-    Q_q(s_{j,q,\kappa}^{(1, lin)}, i) + \tau\, \mathcal{H}(\nu) \}$, which is strictly concave on the
-simplex. Identity~\eqref{eq:gibbs-lse} yields the unique Gibbs best response, and simplifying $\exp
+    Q_q(s_{j,q,\kappa}^{(1, lin)}, i) + \tau\, \mathcal{H}(\nu) \}$, which is strictly concave on the simplex face supported on finite-score actions whenever that face is nonempty. If every score is $-\infty$, every distribution is optimal and we select the absorbing outside action as above. Identity~\eqref{eq:gibbs-lse} yields the unique Gibbs best response in the nonempty finite-score case, and simplifying $\exp
     \circ \ell$ in~\eqref{eq:routing-linear-action} gives the explicit form
 \begin{align}\label{eq:routing-spne-linear}
     \pi_q^\star\!\bigl(i \,\big|\, s_{j,q,\kappa}^{(l, lin)}\bigr)

@@ -1,4 +1,4 @@
-# A Structural Approach to Explainable Deep Learning
+# A Structural Approach to Interpretable Deep Learning
 
 Master's thesis by Jakob Zimmermann: **From DC Decompositions to Two-Player Games**.
 This repository contains the thesis TeX, the two paper sources, a shared Lean
@@ -7,6 +7,7 @@ formalization, and adapters for reproducing the thesis tables from the official 
 ## Contents
 
 - `tex/`: thesis sources and figures. Build from `tex/main.tex`.
+- `docs/thesis.pdf`: compiled thesis with commit-pinned links to the Lean theorems.
 - `arxive/hiddenMonotonicity/`: Hidden Monotonicity paper sources, with reported mathematical corrections.
 - `arxive/playingTheNetworkBackward/`: revised AISTATS paper, arXiv 2605.06212v2, with reported mathematical corrections and explicit routing-game tie conventions.
 - `arxive/downloads/`: unchanged arXiv PDF/source download and checksums.
@@ -22,8 +23,8 @@ A link to a component is not a certificate for an entire theorem or paper.
 ## Clone with the official code
 
 ```sh
-git clone --recurse-submodules https://github.com/JayPiZimmermann/structural-explainability-thesis.git
-cd structural-explainability-thesis
+git clone --recurse-submodules https://github.com/JayPiZimmermann/structural-interpretability-thesis.git
+cd structural-interpretability-thesis
 ```
 
 For an existing checkout, run `git submodule update --init --recursive`. The Git
