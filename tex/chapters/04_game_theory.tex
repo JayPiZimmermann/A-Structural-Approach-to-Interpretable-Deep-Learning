@@ -37,7 +37,7 @@ Taylor~\parencite{Montavon2017DeepTaylor} justifies that same $z^+$-rule and exp
 modeling of the general $\alpha\beta$ rule as an open problem; \ac{rg} closes this.
 
 \textbf{Shapley-value attribution methods.} SHAP and KernelSHAP frame explanation as a cooperative
-game over feature coalitions~\parencite{LundbergLee2017_existing} in a \emph{black-box} setting; they are therefore
+game over feature coalitions~\parencite{LundbergLee2017} in a \emph{black-box} setting; they are therefore
 a distinct, complementary game that explains marginal input-feature contributions relative to a
 baseline, whereas our backward game explains how relevance is routed through network internals in a
 \emph{white-box} setting.
@@ -140,10 +140,10 @@ difference of two \emph{non-negative} occupation measures:
 \begin{theoremenv}[Gradient representation]\label{ptnb:thm:gradient}
 The Stopping Game allows a subgame-perfect Nash equilibrium, unique up to tie-breaking at
 zero-activation neurons.
-Under the stop-at-tie-breaks equilibrium the discounted occupation measure $\Gamma_x(s_{i,p}^{(l)})
+On strict gate cells (and with unique max-pooling winners where applicable), under the stop-at-tie-breaks equilibrium the discounted occupation measure $\Gamma_x(s_{i,p}^{(l)})
     \ge 0$ equals the output derivative with respect to the corresponding \emph{Stopping Decomposition}
-activation.
-The gradient of $f$ with respect to the input is then the difference $\Gamma_x(s_{i,+}^{(0)}) -
+activation. At ties, the corresponding identities refer to the backward quantities selected by the stated gate and winner conventions.
+On these cells, the gradient of $f$ with respect to the input is the difference $\Gamma_x(s_{i,+}^{(0)}) -
     \Gamma_x(s_{i,-}^{(0)})$.
 \hfill\LeanResult{ptnb:thm:gradient}
 \end{theoremenv}
@@ -190,9 +190,7 @@ where the sums include the bias node and $\perp_{\mathrm{lin}}$. At $\tau>0$ the
 SPNE whose occupation measure at $\tau=1$ is the $\alpha\beta$-\ac{lrp} attribution:
 
 \begin{theoremenv}[$\alpha\beta$-\ac{lrp} representation]\label{ptnb:thm:lrp-recovery}\label{thm:lrp_recovery}
-For $\tau>0$, the Gibbs policies of Eq.~\eqref{ptnb:eq:gibbs-policy} and stopping decisions according to
-neuron activations yield SPNEs of the entropy-regularized \ac{rg}, unique up to tie-breaking at
-zero-activation neurons. Under the stop-at-tie-breaks equilibrium at $\tau=1$ the
+For $\tau>0$, the Gibbs policies of Eq.~\eqref{ptnb:eq:gibbs-policy} and stopping decisions from the corresponding continuation values yield a canonical SPNE of the entropy-regularized \ac{rg}. We select stopping at every activation log tie and absorption for an empty routing stream, as specified in Remark~\ref{ptnb:rem:routing-spne-uniqueness}. At the anchor $\tau=1$, the selected gate is $\mathbf{1}[z>0]$ and the
 $\alpha\beta$-\ac{lrp} attribution map in~\eqref{ptnb:eq:lrp-ab} equals $R_i^{(l)} =
     f(x)\,\bigl(\Gamma_x(s_{i,+}^{(l)}) - \Gamma_x(s_{i,-}^{(l)})\bigr)$.
 \hfill\LeanResult{ptnb:thm:lrp-recovery}
@@ -219,7 +217,7 @@ attention-logit variant $\lambda_{\mathrm{sm}}$, the probit gate $\tilde\Phi$ (g
 and equivariant averaging over $N$ input transformations (grid artifacts).}
 
 \ch{\emph{Focus.} The myopic temperature of Section~\ref{ptnb:sec:routing} rescales the Gibbs policy at every linear state while keeping the $\tau{=}1$ game values. Low $\tau$ concentrates routing on dominant predecessors; high $\tau$ spreads mass more uniformly, exposing broader contextual features as well as architectural priors.}
-\ch{\emph{Risk aversion.} \Acl{ptnbADF} (\acs{ptnbADF};~\cite{gast2018lightweight}) propagates a
+\ch{\emph{Risk aversion.} \Acl{ptnbADF} (\acs{ptnbADF};~\parencite{gast2018lightweight}) propagates a
 Gaussian mean $\mu$ and variance $\sigma^2$ for every pre-activation $z$ from an input variance
 $\sigma^2$ in one additional moment pass. The risk-averse player replaces the observed $z$ at
 activation states by the lower-confidence bound $\mu+\lambda\sigma$ with $\lambda<0$, the

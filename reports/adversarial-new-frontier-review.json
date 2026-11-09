@@ -1,0 +1,664 @@
+{
+  "schema_version": 1,
+  "reviewer": "independent adversarial reviewer /root/attack_hidden",
+  "review_date": "2026-11-09",
+  "verdict": "PASS_WITH_EXPLICIT_SCOPE",
+  "summary": "No verified counterexample, circular assumption, changed-target defect, or high-severity semantic gap found in the 54 advertised contracts. This is a scoped review of the new smooth/routing/stopping batches, not certification of every theorem or architectural extension in the thesis.",
+  "production_mutations": false,
+  "shared_olean_writes": false,
+  "prior_reports_modified": false,
+  "findings": [],
+  "batch_verdicts": [
+    {
+      "batch": "smooth",
+      "verdict": "pass",
+      "source": [
+        "tex/chapters/02_foundations.tex:689",
+        "tex/chapters/02_foundations.tex:698"
+      ],
+      "model_correspondence": [
+        "HasSecondDistributionalDerivative unfolds to local integrability of f and q and equality of integrals against EVERY compactly supported smooth test. It contains no differentiability, local-AC, reconstruction, or desired lower-bound premise.",
+        "The continuous weak-to-classical bridge is substantive: convolution with genuine shrinking normalized bumps proves the zero-second-derivative residual affine; twice-integrated q realizes the weak equation by two integrations by parts. Convex c1/c2 continuity is derived in the source-facing minimality theorem.",
+        "The positive and negative curvature are max(deriv(deriv f),0) and max(-deriv(deriv f),0). Canonical components use actual cumulative integrals and the common tilt uses suprema of absolute slopes.",
+        "ModernActivation has six formula choices and only positive scale/temperature proof fields. It does not package integrability, convexity or correctness as data. Gaussian GeLU uses the integral of the normalized standard Gaussian density; Mish and Swish are the stated formulas. Analytic regularity/integrability are proved from their formulas.",
+        "The completed modern corollary explicitly contains the original softplus convexity and nonnegative curvature clauses. Tanh support and GeLU boundary sign inequalities are correctly inclusive/strict."
+      ]
+    },
+    {
+      "batch": "routing",
+      "verdict": "pass_for_pure_activation_randomized_routing_source_game",
+      "source": [
+        "tex/chapters/04_game_theory.tex:1072",
+        "tex/chapters/04_game_theory.tex:1126",
+        "tex/chapters/04_game_theory.tex:1282"
+      ],
+      "model_correspondence": [
+        "Policy is an actual nonnegative normalized finite probability vector. Positive probability on a nonpositive action mass makes sourceValue bottom; zero probability contributes zero. This avoids misuse of total Real.log at zero.",
+        "A routing constructor includes an outside action, making its action type nonempty. Empty streams select pure outside and have bottom source value; nonoutside probabilities are zero even when the displayed denominator is zero.",
+        "Strategies contain every contingent off-path choice. Activation choices are Bool; routing choices are arbitrary probability vectors. Reported log-coordinate recursion is separately defined and its bridge to the signed auxiliary recursion is proved for ALL profiles.",
+        "The signed saddle is stronger than the reported-log Nash conditions and transfers through monotone logCoordinate. Recursive subgame perfection includes off-path subgames. No saddle or Nash conclusion is assumed by the game constructors.",
+        "All nonpositive signed continuation masses tie with stopping in log space, and the selected strategy stops at EVERY such tie, including strict negatives. Both owner copies are handled.",
+        "Network construction uses canonical parts of the actual first-layer products x_i*(wp-wn)_ji, preserving signed raw inputs; later activation values are nonnegative. It includes distinct bias and epsilon outside actions, and epsilon cancels between sign branches at theta=1.",
+        "The shared Network model has an identity terminal and ReLU at every layer. The new routing theorem covers activated network coordinates, consistently with the source routing section; it does not secretly identify those outputs with arbitrary affine logits."
+      ]
+    },
+    {
+      "batch": "stopping",
+      "verdict": "pass_for_regions_geometric_paths_and_local_DAG_oracles",
+      "source": [
+        "tex/chapters/03_decompositions.tex:316",
+        "tex/chapters/03_decompositions.tex:327",
+        "tex/chapters/04_game_theory.tex:440"
+      ],
+      "model_correspondence": [
+        "Gate regions are defined by equality of the ACTUAL recursively evaluated original gates. The affine extension freezes those gates; monotonicity and nonnegative bias constants are conclusions from nonnegative split parameters.",
+        "GeometricPaths has ordinary neuron indices only. Parity XOR is proved equal to Odd of the literal count of negative actual signed edges; its magnitude is the product of absolute signed weights and gates. CanonicalTrace is essential and explicit.",
+        "The preactivation formula appends a final ungated affine edge and includes exactly intermediate ReLU gates. Zero edges may occur in the finite enumeration but contribute zero. ZeroBias is explicit for the input-only formula.",
+        "Arbitrary intermediate biases are included as a finite list of actual propagated bias stubs; no homogeneous formula is asserted for biased networks.",
+        "StoppingCircuit evaluates the existing shared-node Circuit and reads earlier-node streams. Graph ReLU max(a,0) uses right tie-breaking so the zero branch is selected at a tie, exactly reproducing stopPair. General max forwards one entire winning pair.",
+        "Addition has a normalized half/half law and discount 2. WTA has a normalized deterministic law and unit discount. Its derivative theorem requires unequal signed operand values, because tied split outputs can be discontinuous even when the recovered scalar max is continuous."
+      ]
+    }
+  ],
+  "residual_scope": [
+    {
+      "id": "SCOPE-ROUTING-AFFINE",
+      "classification": "explicit_scope_limit_not_false_claim",
+      "location": "formalization/Thesis/RoutingNetwork.lean:187",
+      "detail": "No new RoutingNetwork theorem for the separate AffineNetwork terminal readout. Arbitrary signed/bias parameters inside ReLU layers are covered. Source routing theorem is about nonnegative activation outputs.",
+      "extension_if_required": "Construct an explicit ungated affine routing output and prove its reported-coordinate bridge before advertising routing equivalence for arbitrary logits."
+    },
+    {
+      "id": "SCOPE-ROUTING-POLICIES",
+      "classification": "explicit_scope_limit_not_false_claim",
+      "location": "formalization/Thesis/RoutingProfiles.lean:80",
+      "detail": "Activation strategies are pure Bool choices. Routing strategies are all normalized randomized policies. No expected-log utility for arbitrary mixed activation policies is defined or claimed by these contracts.",
+      "extension_if_required": "Define the desired mixed activation payoff convention explicitly before claiming a behavioral-policy theorem broader than this game."
+    },
+    {
+      "id": "SCOPE-DAG-OCCUPATIONS",
+      "classification": "explicit_scope_limit_not_false_claim",
+      "location": "formalization/Thesis/StoppingCircuit.lean:160",
+      "detail": "DAG recovery/nonnegativity and local addition/WTA occupation derivatives are proved. A complete shared-DAG global derivative/discounted-occupation induction is not among these 15 contracts.",
+      "extension_if_required": "Assemble the local pullbacks through the shared Circuit, with explicit differentiability cells/tie conditions, before crediting the global DAG occupation theorem."
+    },
+    {
+      "id": "SCOPE-SWISH-SIGN",
+      "classification": "precision_of_contract",
+      "location": "formalization/HiddenMonotonicity/ModernSwish.lean:75",
+      "detail": "The source phrase positive on a bounded interval around zero and negative in both tails is realized as a positive neighborhood plus two eventually negative tails. The theorem does not separately count curvature roots or prove uniqueness of the positive interval.",
+      "extension_if_required": "A stronger exact-root/sign-partition claim would require a separate monotonicity/root argument; the displayed corollary does not quantify that stronger partition."
+    }
+  ],
+  "validation": {
+    "exact_contracts": [
+      {
+        "group": "smooth",
+        "contracts": 17,
+        "exit": 0,
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "driver": "reports/evidence/new-frontier-review/smoothTypes.lean"
+      },
+      {
+        "group": "games-global",
+        "contracts": 22,
+        "exit": 0,
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "driver": "reports/evidence/new-frontier-review/games-globalTypes.lean"
+      },
+      {
+        "group": "stopping-structure",
+        "contracts": 15,
+        "exit": 0,
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "driver": "reports/evidence/new-frontier-review/stopping-structureTypes.lean"
+      }
+    ],
+    "targeted_current_source_compiles": [
+      "HiddenMonotonicity.DistributionalRegularity",
+      "Thesis.RoutingNetwork",
+      "Thesis.StoppingPaths"
+    ],
+    "boundary_driver": "reports/evidence/new-frontier-review/Boundary.lean",
+    "boundary_exit": 0,
+    "boundary_cases": [
+      "genuine weak-definition unfolding",
+      "weak second density q=1 locally integrable example",
+      "activation constructors inhabited without analytic premises",
+      "no normalized policy on Fin 0",
+      "zero stream pure-outside absorption",
+      "negative log ties for both players",
+      "negative raw input and negative weight with nonzero bias",
+      "zero-width biased input layer",
+      "two-negative-edge parity and absolute product",
+      "graph ReLU tied nonzero streams annihilated",
+      "whole-pair WTA tie choice and near-tie jump"
+    ],
+    "independent_exact_experiment": {
+      "seed": 20261109,
+      "counts": {
+        "networks": 700,
+        "gate_ties": 507,
+        "zero_edges": 1249,
+        "negative_edges": 2658,
+        "activation_coordinates": 1398,
+        "affine_readout_coordinates": 700,
+        "routing_rows": 9840,
+        "empty_routing_rows": 1600,
+        "negative_raw_inputs": 397
+      },
+      "cases_sha256": "e737ef3202b361f949afa5d308758a95fa6f1b016ab81925ae7907b3590bb7a8",
+      "producer_sha256": "1a261f93df260d7eda22314bee82df80dae7aba43196f85642ba961101e07622",
+      "failures": [],
+      "negative_controls_detected": [
+        "premature raw-input clipping",
+        "noncanonical parity path formula"
+      ],
+      "scope": "Exact independent finite cases; supports but does not replace universal Lean proofs."
+    },
+    "experiment_note": "The numerical biased affine-readout cases test the independently derived path algebra; they are not credited as a new Lean AffineNetwork routing theorem.",
+    "source_snapshot_hashes": "reports/evidence/new-frontier-review/source-sha256.json",
+    "reviewed_source_changed_during_review": []
+  },
+  "reviewed_contracts": [
+    {
+      "module": "HiddenMonotonicity.SmoothCurvatureSplit",
+      "declaration": "HiddenMonotonicity.SmoothDC.smooth_dc_split",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f)\n    (hAC : ∀ a b, AbsolutelyContinuousOnInterval (deriv f) a b)\n    (hq : Integrable (curvature f)),\n    Tendsto (deriv f) atBot (𝓝 (minusInfinitySlope f)) ∧\n    (∃ B : ℝ, ∀ x, |deriv f x| ≤ B) ∧\n    ConvexOn ℝ univ (tilt (C1 f) (commonTilt f)) ∧\n    ConvexOn ℝ univ (tilt (C2 f) (commonTilt f)) ∧\n    Monotone (tilt (C1 f) (commonTilt f)) ∧\n    Monotone (tilt (C2 f) (commonTilt f)) ∧\n    ∀ z : ℝ × ℝ, tilt (C1 f) (commonTilt f) z-tilt (C2 f) (commonTilt f) z=f (z.1-z.2)",
+      "scope": "Global signed activation; genuine differentiability, actual locally absolutely continuous derivative and global integrable classical curvature. Actual canonical integral primitives, derived negative-infinity derivative limit and slope bound, convex monotone tilted components and exact difference.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.SmoothCurvatureSplit",
+      "declaration": "HiddenMonotonicity.SmoothDC.canonical_tilt_minimality",
+      "expected_type": "∀ (f : ℝ → ℝ) (hq : Integrable (curvature f)),\n    ∀ L, Monotone (tilt (C1 f) L) → Monotone (tilt (C2 f) L) → commonTilt f≤L",
+      "scope": "The canonical common tilt is less than or equal to every common scalar tilt making both actual canonical components coordinatewise monotone.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.ModernSigmoid",
+      "declaration": "HiddenMonotonicity.SmoothDC.sigmoid_smooth_dc_split",
+      "expected_type": "    let f := Real.sigmoid\n    ConvexOn ℝ univ (tilt (C1 f) (commonTilt f)) ∧\n    ConvexOn ℝ univ (tilt (C2 f) (commonTilt f)) ∧\n    Monotone (tilt (C1 f) (commonTilt f)) ∧ Monotone (tilt (C2 f) (commonTilt f)) ∧\n    ∀ z, tilt (C1 f) (commonTilt f) z-tilt (C2 f) (commonTilt f) z=f (z.1-z.2)",
+      "scope": "Actual logistic sigmoid; global L1 second derivative and local AC proved internally. Convexity, monotonicity and exact canonical split identity.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.ModernSoftplus",
+      "declaration": "HiddenMonotonicity.SmoothDC.softplus_smooth_dc_split",
+      "expected_type": "∀ (θ : ℝ) (hθ : 0<θ),\n    let f := Thesis.Regularization.softplus θ\n    ConvexOn ℝ univ (tilt (C1 f) (commonTilt f)) ∧\n    ConvexOn ℝ univ (tilt (C2 f) (commonTilt f)) ∧\n    Monotone (tilt (C1 f) (commonTilt f)) ∧ Monotone (tilt (C2 f) (commonTilt f)) ∧\n    ∀ z, tilt (C1 f) (commonTilt f) z-tilt (C2 f) (commonTilt f) z=f (z.1-z.2)",
+      "scope": "Positive-temperature actual softplus; global L1 curvature and local AC proved internally. Convexity, monotonicity and exact canonical split identity.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMinimality",
+      "declaration": "HiddenMonotonicity.SmoothDC.common_affine_of_minimal_curvature",
+      "expected_type": "∀ (f c1 c2 : ℝ → ℝ)\n    (hf : Differentiable ℝ f)\n    (hfAC : ∀ a b, AbsolutelyContinuousOnInterval (deriv f) a b)\n    (hq : Integrable (curvature f))\n    (hc1 : ConvexOn ℝ univ c1) (hd1 : Differentiable ℝ c1)\n    (hAC1 : ∀ a b, AbsolutelyContinuousOnInterval (deriv c1) a b)\n    (heq : ∀ x, f x=c1 x-c2 x)\n    (hminimal : ∀ᵐ x, curvature c1 x=positiveCurvature f x),\n    ∃ a b : ℝ, (∀ x, c1 x=C1 f x+a*x+b) ∧ (∀ x, c2 x=C2 f x+a*x+b)",
+      "scope": "Equality in the first a.e. curvature bound plus genuine local AC yields the same affine difference for both components. Does not replace or assert the separate distributional-to-local-AC bridge.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMinimality",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvature_minimality_locally_AC",
+      "expected_type": "∀ (f c1 c2 : ℝ → ℝ)\n    (hf : Differentiable ℝ f)\n    (hfAC : ∀ a b, AbsolutelyContinuousOnInterval (deriv f) a b)\n    (hq : Integrable (curvature f))\n    (hc1 : ConvexOn ℝ univ c1) (hc2 : ConvexOn ℝ univ c2)\n    (hd1 : Differentiable ℝ c1) (hd2 : Differentiable ℝ c2)\n    (hAC1 : ∀ a b, AbsolutelyContinuousOnInterval (deriv c1) a b)\n    (heq : ∀ x, f x=c1 x-c2 x),\n    (∀ᵐ x, positiveCurvature f x≤curvature c1 x ∧ negativeCurvature f x≤curvature c2 x) ∧\n    ((∀ᵐ x, curvature c1 x=positiveCurvature f x ∧ curvature c2 x=negativeCurvature f x) →\n      ∃ a b : ℝ, (∀ x, c1 x=C1 f x+a*x+b) ∧ (∀ x, c2 x=C2 f x+a*x+b)) ∧\n    (∀ L, Monotone (tilt (C1 f) L) → Monotone (tilt (C2 f) L) → commonTilt f≤L)",
+      "scope": "Assembled a.e. minimal curvature, common-affine uniqueness, and minimum common tilt under actual differentiable/local-AC regularity. Distributional scope remains separate.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.ModernTanh",
+      "declaration": "HiddenMonotonicity.SmoothDC.tanh_curvature_sech",
+      "expected_type": "∀ x : ℝ, curvature Real.tanh x=-2*Real.tanh x/(Real.cosh x)^2",
+      "scope": "Actual library hyperbolic tangent has the displayed sech-squared curvature on the entire real line.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.ModernTanh",
+      "declaration": "HiddenMonotonicity.SmoothDC.tanh_curvature_support",
+      "expected_type": "∀ x : ℝ, (0≤x → positiveCurvature Real.tanh x=0) ∧\n    (x≤0 → negativeCurvature Real.tanh x=0)",
+      "scope": "Positive curvature vanishes on the nonnegative half-line; negative curvature vanishes on the nonpositive half-line, including zero.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.ModernTanh",
+      "declaration": "HiddenMonotonicity.SmoothDC.tanh_smooth_dc_split",
+      "expected_type": "Integrable (curvature Real.tanh) ∧\n    (∀ a b, AbsolutelyContinuousOnInterval (deriv Real.tanh) a b) ∧\n    ConvexOn ℝ univ (tilt (C1 Real.tanh) (commonTilt Real.tanh)) ∧\n    ConvexOn ℝ univ (tilt (C2 Real.tanh) (commonTilt Real.tanh)) ∧\n    Monotone (tilt (C1 Real.tanh) (commonTilt Real.tanh)) ∧\n    Monotone (tilt (C2 Real.tanh) (commonTilt Real.tanh)) ∧\n    ValidPairActivation Real.tanh (splitPair Real.tanh) ∧\n    NonnegativePairActivation (splitPair Real.tanh)",
+      "scope": "Global signed tanh specialization with proved analytic assumptions, convex monotone canonical components, exact valid pair identity and nonnegative pair outputs on nonnegative inputs.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.ModernSoftplus",
+      "declaration": "HiddenMonotonicity.SmoothDC.softplus_degenerate_split",
+      "expected_type": "∀ (θ : ℝ) (hθ : 0<θ),\n    negativeCurvature (Thesis.Regularization.softplus θ)=0 ∧\n    C2 (Thesis.Regularization.softplus θ)=0 ∧\n    C1 (Thesis.Regularization.softplus θ)=Thesis.Regularization.softplus θ ∧\n    ConvexOn ℝ univ (Thesis.Regularization.softplus θ) ∧\n    NonnegativePairActivation (splitPair (Thesis.Regularization.softplus θ))",
+      "scope": "Positive-temperature softplus: canonical negative curvature and component vanish, positive canonical component equals softplus, original function is convex, and split pairs preserve nonnegativity.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.ModernActivations",
+      "declaration": "HiddenMonotonicity.SmoothDC.modern_activations",
+      "expected_type": "(∀ a : ModernActivation,\n  let f := a.eval\n  Differentiable ℝ f ∧\n  (∀ l r, AbsolutelyContinuousOnInterval (deriv f) l r) ∧\n  Integrable (curvature f) ∧ 0≤f 0 ∧\n  Tendsto (deriv f) atBot (𝓝 (minusInfinitySlope f)) ∧\n  (∃ B : ℝ, ∀ x, |deriv f x|≤B) ∧\n  ConvexOn ℝ univ (tilt (C1 f) (commonTilt f)) ∧\n  ConvexOn ℝ univ (tilt (C2 f) (commonTilt f)) ∧\n  Monotone (tilt (C1 f) (commonTilt f)) ∧ Monotone (tilt (C2 f) (commonTilt f)) ∧\n  (∀ z : ℝ × ℝ, tilt (C1 f) (commonTilt f) z-tilt (C2 f) (commonTilt f) z=f (z.1-z.2)) ∧\n  NonnegativePairActivation (splitPair f)) ∧\n(∀ x, curvature gaussianGelu x=(2-x^2)*standardGaussianDensity x ∧\n  (0<curvature gaussianGelu x ↔ |x|<Real.sqrt 2) ∧\n  (curvature gaussianGelu x<0 ↔ Real.sqrt 2< |x|)) ∧\n(∀ β : ℝ, 0<β →\n  (∀ x, curvature (swish β) x=β*sigmoidFirst (β*x)*(2+β*x*(1-2*Real.sigmoid (β*x)))) ∧\n  ∃ ε R : ℝ, 0<ε ∧ 0<R ∧ (∀ x, |x|<ε → 0<curvature (swish β) x) ∧\n    (∀ x, R< |x| → curvature (swish β) x<0)) ∧\n(∀ x, mish x=x*Real.tanh (Real.log (1+Real.exp x))) ∧\n(∀ x, curvature Real.tanh x=-2*Real.tanh x/(Real.cosh x)^2 ∧\n  (0≤x → positiveCurvature Real.tanh x=0) ∧ (x≤0 → negativeCurvature Real.tanh x=0)) ∧\n(∀ x, curvature Real.sigmoid x=sigmoidFirst x*(1-2*Real.sigmoid x)) ∧\n(∀ θ : ℝ, 0<θ →\n  (∀ x, curvature (Thesis.Regularization.softplus θ) x=sigmoidFirst (x/θ)/θ) ∧\n  negativeCurvature (Thesis.Regularization.softplus θ)=0 ∧\n  C2 (Thesis.Regularization.softplus θ)=0 ∧\n  C1 (Thesis.Regularization.softplus θ)=Thesis.Regularization.softplus θ)",
+      "scope": "All six actual formulas: exact Gaussian CDF GeLU, positive-scale Swish, Mish, library tanh/logistic and positive-temperature softplus. Proved global integrability and local AC; full smooth split and nonnegative-pair conclusion; exact displayed curvature formulas; GeLU exact sign intervals; Swish positive neighborhood and two negative tails; tanh support and softplus zero-component clauses. Activation constructors contain only formula choice and positive parameters.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.ModernGELU",
+      "declaration": "HiddenMonotonicity.SmoothDC.gaussianGelu_smooth_dc_split",
+      "expected_type": "Integrable (curvature gaussianGelu) ∧\n(∀ a b, AbsolutelyContinuousOnInterval (deriv gaussianGelu) a b) ∧\nConvexOn ℝ univ (tilt (C1 gaussianGelu) (commonTilt gaussianGelu)) ∧\nConvexOn ℝ univ (tilt (C2 gaussianGelu) (commonTilt gaussianGelu)) ∧\nMonotone (tilt (C1 gaussianGelu) (commonTilt gaussianGelu)) ∧\nMonotone (tilt (C2 gaussianGelu) (commonTilt gaussianGelu)) ∧\nValidPairActivation gaussianGelu (splitPair gaussianGelu) ∧\nNonnegativePairActivation (splitPair gaussianGelu)",
+      "scope": "Actual global activation; curvature integrability and local AC are conclusions proved from the formula. Exact convex monotone canonical pair with validity and nonnegative preservation.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.ModernMish",
+      "declaration": "HiddenMonotonicity.SmoothDC.mish_smooth_dc_split",
+      "expected_type": "Integrable (curvature mish) ∧\n(∀ a b, AbsolutelyContinuousOnInterval (deriv mish) a b) ∧\nConvexOn ℝ univ (tilt (C1 mish) (commonTilt mish)) ∧\nConvexOn ℝ univ (tilt (C2 mish) (commonTilt mish)) ∧\nMonotone (tilt (C1 mish) (commonTilt mish)) ∧\nMonotone (tilt (C2 mish) (commonTilt mish)) ∧\nValidPairActivation mish (splitPair mish) ∧\nNonnegativePairActivation (splitPair mish)",
+      "scope": "Actual global activation; curvature integrability and local AC are conclusions proved from the formula. Exact convex monotone canonical pair with validity and nonnegative preservation.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.ModernSwish",
+      "declaration": "HiddenMonotonicity.SmoothDC.swish_smooth_dc_split",
+      "expected_type": "∀ (β : ℝ) (hβ : 0<β),\nIntegrable (curvature (swish β)) ∧\n(∀ a b, AbsolutelyContinuousOnInterval (deriv (swish β)) a b) ∧\nConvexOn ℝ univ (tilt (C1 (swish β)) (commonTilt (swish β))) ∧\nConvexOn ℝ univ (tilt (C2 (swish β)) (commonTilt (swish β))) ∧\nMonotone (tilt (C1 (swish β)) (commonTilt (swish β))) ∧\nMonotone (tilt (C2 (swish β)) (commonTilt (swish β))) ∧\nValidPairActivation (swish β) (splitPair (swish β)) ∧\nNonnegativePairActivation (splitPair (swish β))",
+      "scope": "Actual Swish with any strictly positive scale, including SiLU at scale one; global integrability/local AC proved from exponential domination, full canonical pair properties.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.DistributionalRegularity",
+      "declaration": "HiddenMonotonicity.SmoothDC.distributional_second_derivative_regular",
+      "expected_type": "∀ (f q : ℝ → ℝ)\n(hf : Continuous f) (hw : HasSecondDistributionalDerivative f q),\nDifferentiable ℝ f ∧\n(∀ a b, AbsolutelyContinuousOnInterval (deriv f) a b) ∧\n(∀ᵐ x, curvature f x=q x) ∧\n∃ a b : ℝ, ∀ x, f x=localPrimitive (localPrimitive q) x+a*x+b",
+      "scope": "Continuous real function with a genuine locally integrable weak second derivative, defined by equality against every compact smooth test function. Differentiability, local absolute continuity of its derivative, identification of its classical curvature with the density a.e., and the double-integral-plus-affine representation are conclusions. No reconstruction or local AC in the primitive weak definition.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.DistributionalRegularity",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvature_minimality_distributional",
+      "expected_type": "∀ (f c1 c2 q1 q2 : ℝ → ℝ)\n(hf : Differentiable ℝ f)\n(hfAC : ∀ a b, AbsolutelyContinuousOnInterval (deriv f) a b)\n(hq : Integrable (curvature f))\n(hc1 : ConvexOn ℝ univ c1) (hc2 : ConvexOn ℝ univ c2)\n(hw1 : HasSecondDistributionalDerivative c1 q1)\n(hw2 : HasSecondDistributionalDerivative c2 q2)\n(heq : ∀ x, f x=c1 x-c2 x),\nDifferentiable ℝ c1 ∧ Differentiable ℝ c2 ∧\n(∀ a b, AbsolutelyContinuousOnInterval (deriv c1) a b) ∧\n(∀ a b, AbsolutelyContinuousOnInterval (deriv c2) a b) ∧\n(∀ᵐ x, curvature c1 x=q1 x ∧ curvature c2 x=q2 x) ∧\n(∀ᵐ x, positiveCurvature f x≤q1 x ∧ negativeCurvature f x≤q2 x) ∧\n((∀ᵐ x, q1 x=positiveCurvature f x ∧ q2 x=negativeCurvature f x) →\n  ∃ a b : ℝ, (∀ x, c1 x=C1 f x+a*x+b) ∧ (∀ x, c2 x=C2 f x+a*x+b)) ∧\n(∀ L, Monotone (tilt (C1 f) L) → Monotone (tilt (C2 f) L) → commonTilt f≤L)",
+      "scope": "Full prop:curvature_minimality under the source distributional hypothesis: convex component functions with locally integrable weak curvature densities. Their classical differentiability/local AC and density identification are derived, then both minimal-curvature bounds, the same affine summand under equality, and least common tilt are established. No differentiability or local AC assumption on c1/c2.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "HiddenMonotonicity.ModernActivationCorollary",
+      "declaration": "HiddenMonotonicity.SmoothDC.modern_activations_complete",
+      "expected_type": "(∀ a : ModernActivation,\n  let f := a.eval\n  Differentiable ℝ f ∧\n  (∀ l r, AbsolutelyContinuousOnInterval (deriv f) l r) ∧\n  Integrable (curvature f) ∧ 0≤f 0 ∧\n  Tendsto (deriv f) atBot (𝓝 (minusInfinitySlope f)) ∧\n  (∃ B : ℝ, ∀ x, |deriv f x|≤B) ∧\n  ConvexOn ℝ univ (tilt (C1 f) (commonTilt f)) ∧\n  ConvexOn ℝ univ (tilt (C2 f) (commonTilt f)) ∧\n  Monotone (tilt (C1 f) (commonTilt f)) ∧ Monotone (tilt (C2 f) (commonTilt f)) ∧\n  (∀ z : ℝ × ℝ, tilt (C1 f) (commonTilt f) z-tilt (C2 f) (commonTilt f) z=f (z.1-z.2)) ∧\n  NonnegativePairActivation (splitPair f)) ∧\n(∀ x, curvature gaussianGelu x=(2-x^2)*standardGaussianDensity x ∧\n  (0<curvature gaussianGelu x ↔ |x|<Real.sqrt 2) ∧\n  (curvature gaussianGelu x<0 ↔ Real.sqrt 2< |x|)) ∧\n(∀ β : ℝ, 0<β →\n  (∀ x, curvature (swish β) x=β*sigmoidFirst (β*x)*(2+β*x*(1-2*Real.sigmoid (β*x)))) ∧\n  ∃ ε R : ℝ, 0<ε ∧ 0<R ∧ (∀ x, |x|<ε → 0<curvature (swish β) x) ∧\n    (∀ x, R< |x| → curvature (swish β) x<0)) ∧\n(∀ x, mish x=x*Real.tanh (Real.log (1+Real.exp x))) ∧\n(∀ x, curvature Real.tanh x=-2*Real.tanh x/(Real.cosh x)^2 ∧\n  (0≤x → positiveCurvature Real.tanh x=0) ∧ (x≤0 → negativeCurvature Real.tanh x=0)) ∧\n(∀ x, curvature Real.sigmoid x=sigmoidFirst x*(1-2*Real.sigmoid x)) ∧\n(∀ θ : ℝ, 0<θ →\n  (∀ x, curvature (Thesis.Regularization.softplus θ) x=sigmoidFirst (x/θ)/θ ∧\n    0≤curvature (Thesis.Regularization.softplus θ) x) ∧\n  negativeCurvature (Thesis.Regularization.softplus θ)=0 ∧\n  C2 (Thesis.Regularization.softplus θ)=0 ∧\n  C1 (Thesis.Regularization.softplus θ)=Thesis.Regularization.softplus θ ∧\n  ConvexOn ℝ univ (Thesis.Regularization.softplus θ))",
+      "scope": "All six actual formulas: exact Gaussian CDF GeLU, positive-scale Swish, Mish, library tanh/logistic and positive-temperature softplus. Proved global integrability and local AC; full smooth split and nonnegative-pair conclusion; exact displayed curvature formulas; GeLU exact sign intervals; Swish positive neighborhood and two negative tails; tanh support and softplus zero-component clauses. Activation constructors contain only formula choice and positive parameters. Explicitly also states nonnegative softplus curvature and convexity of softplus itself, completing all source specialization clauses.",
+      "receipt": "reports/evidence/new-frontier-review/smooth-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.source_edge_score",
+      "expected_type": "∀ (w : ℝ) (hw : 0 ≤ w) (v : WithBot ℝ),\n    Thesis.RoutingGate.logCoordinate (w * expZero v) =\n      Thesis.RoutingGate.logCoordinate w + v",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.routedMass_monotone",
+      "expected_type": "∀ {A : Type u} [Fintype A] (θ : ℝ) (p : Policy A),\n    Monotone (fun m => routedMass θ m p)",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.sourceValue_gibbs_optimal",
+      "expected_type": "∀ {A : Type u} [Fintype A] [DecidableEq A] (θ : ℝ) (hθ : 0 < θ)\n    (m : A → ℝ) (outside : A) (p : Policy A),\n    sourceValue θ m p ≤ sourceValue θ m (gibbs θ m outside)",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.gibbs_anchor_mass",
+      "expected_type": "∀ {A : Type u} [Fintype A] [DecidableEq A] (m : A → ℝ) (hm : ∀ i, 0 ≤ m i) (outside : A),\n    routedMass 1 m (gibbs 1 m outside) = ∑ i, m i",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.gibbs_anchor_nonoutside",
+      "expected_type": "∀ {A : Type u} [Fintype A] [DecidableEq A] (m : A → ℝ) (hm : ∀ i, 0 ≤ m i)\n    (outside i : A) (hi : i ≠ outside),\n    (gibbs 1 m outside).prob i = m i / ∑ j, m j",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.empty_stream_value",
+      "expected_type": "∀ {A : Type u} [Fintype A] (θ : ℝ) (m : A → ℝ) (p : Policy A) (hm : ∀ i, m i ≤ 0),\n    sourceValue θ m p = ⊥ ∧ routedMass θ m p = 0",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingExtended",
+      "declaration": "Thesis.RoutingExtended.empty_stream_absorbs",
+      "expected_type": "∀ {A : Type u} [Fintype A] [DecidableEq A] (θ : ℝ) (m : A → ℝ) (outside : A)\n    (hm : ∀ i, m i ≤ 0),\n    gibbs θ m outside = pure outside",
+      "scope": "Finite extended-log entropy objective. Positive policy mass on nonpositive action mass gives bottom; zero probability times bottom is zero. Gibbs covers zero support and empty absorption.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingProfiles",
+      "declaration": "Thesis.RoutingProfiles.auxiliary_saddle",
+      "expected_type": "∀ (θ : ℝ) (hθ : 0 < θ) (t : Tree) (plus minus : Strategy t),\n    auxiliary θ t plus (canonical θ t) ≤ value θ t ∧\n      value θ t ≤ auxiliary θ t (canonical θ t) minus",
+      "scope": "All contingent pure activation choices and randomized routing profiles in the finite unfolded game. Independently defined reported log coordinates, actual all-profile signed-coordinate bridge, stronger signed saddle and transfer to source-log Nash/SPNE; stop selected at every nonpositive log tie.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingProfiles",
+      "declaration": "Thesis.RoutingProfiles.reported_coordinates",
+      "expected_type": "∀ (θ : ℝ) (t : Tree) (plus minus : Strategy t),\n    reported θ t plus minus =\n      (Thesis.RoutingGate.logCoordinate (auxiliary θ t plus minus),\n       Thesis.RoutingGate.logCoordinate (-auxiliary θ t plus minus))",
+      "scope": "All contingent pure activation choices and randomized routing profiles in the finite unfolded game. Independently defined reported log coordinates, actual all-profile signed-coordinate bridge, stronger signed saddle and transfer to source-log Nash/SPNE; stop selected at every nonpositive log tie.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingProfiles",
+      "declaration": "Thesis.RoutingProfiles.auxiliary_eq_reported_difference",
+      "expected_type": "∀ (θ : ℝ) (t : Tree) (plus minus : Strategy t),\n    auxiliary θ t plus minus =\n      expZero (reported θ t plus minus).1 - expZero (reported θ t plus minus).2",
+      "scope": "All contingent pure activation choices and randomized routing profiles in the finite unfolded game. Independently defined reported log coordinates, actual all-profile signed-coordinate bridge, stronger signed saddle and transfer to source-log Nash/SPNE; stop selected at every nonpositive log tie.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingProfiles",
+      "declaration": "Thesis.RoutingProfiles.canonical_nash",
+      "expected_type": "∀ (θ : ℝ) (hθ : 0 < θ) (t : Tree),\n    IsNash θ t (canonical θ t)",
+      "scope": "All contingent pure activation choices and randomized routing profiles in the finite unfolded game. Independently defined reported log coordinates, actual all-profile signed-coordinate bridge, stronger signed saddle and transfer to source-log Nash/SPNE; stop selected at every nonpositive log tie.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingProfiles",
+      "declaration": "Thesis.RoutingProfiles.canonical_subgame_perfect",
+      "expected_type": "∀ (θ : ℝ) (hθ : 0 < θ) (t : Tree),\n    IsSubgamePerfect θ t (canonical θ t)",
+      "scope": "All contingent pure activation choices and randomized routing profiles in the finite unfolded game. Independently defined reported log coordinates, actual all-profile signed-coordinate bridge, stronger signed saddle and transfer to source-log Nash/SPNE; stop selected at every nonpositive log tie.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingProfiles",
+      "declaration": "Thesis.RoutingProfiles.canonical_stops_log_ties",
+      "expected_type": "∀ (θ : ℝ) (q : Bool) (p n : Tree)\n    (h : signed q (value θ p + value θ n) ≤ 0),\n    (canonical θ (.activation q p n)).1 = false",
+      "scope": "All contingent pure activation choices and randomized routing profiles in the finite unfolded game. Independently defined reported log coordinates, actual all-profile signed-coordinate bridge, stronger signed saddle and transfer to source-log Nash/SPNE; stop selected at every nonpositive log tie.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.route_action_masses",
+      "expected_type": "∀ {n} (q : Bool) (ε b : ℝ) (w a : Fin n → ℝ)\n    (child : Fin n → Tree) (ha : ∀ i, 0 ≤ a i)\n    (hv : ∀ i, value 1 (child i) = signed q (a i)),\n    actionMass q (extend ε b w)\n      (fun i => value 1 (extend (.terminal (signed q 1)) (.terminal (signed q 1)) child i)) =\n      extend ε b (fun i => w i * a i)",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.route_anchor_value",
+      "expected_type": "∀ {n} (q : Bool) (ε b : ℝ) (w a : Fin n → ℝ)\n    (child : Fin n → Tree) (hε : 0 ≤ ε) (hb : 0 ≤ b) (hw : ∀ i, 0 ≤ w i)\n    (ha : ∀ i, 0 ≤ a i) (hv : ∀ i, value 1 (child i) = signed q (a i)),\n    value 1 (route q ε b w child hε hb hw) = signed q (ε + (b + ∑ i, w i * a i))",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.route_anchor_ordinary_probability",
+      "expected_type": "∀ {n} (q : Bool) (ε b : ℝ) (w a : Fin n → ℝ)\n    (child : Fin n → Tree) (hε : 0 ≤ ε) (hb : 0 ≤ b) (hw : ∀ i, 0 ≤ w i)\n    (ha : ∀ i, 0 ≤ a i) (hv : ∀ i, value 1 (child i) = signed q (a i)) (i : Fin n),\n    (canonical 1 (route q ε b w child hε hb hw)).1.prob i.succ.succ =\n      w i * a i / (ε + (b + ∑ j, w j * a j))",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.networkGame_value",
+      "expected_type": "∀ {n m} (net : Network n m) (ε : ℝ) (hε : 0 ≤ ε)\n    (x : Vec n) (j : Fin m) (q : Bool),\n    value 1 (networkGame net ε hε x j q) = signed q (net.eval x j)",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.networkGame_subgame_perfect",
+      "expected_type": "∀ {n m} (net : Network n m) (θ : ℝ) (hθ : 0 < θ)\n    (ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (j : Fin m) (q : Bool),\n    IsSubgamePerfect θ (networkGame net ε hε x j q) (canonical θ (networkGame net ε hε x j q))",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.networkGame_reported",
+      "expected_type": "∀ {n m} (net : Network n m) (ε : ℝ) (hε : 0 ≤ ε)\n    (x : Vec n) (j : Fin m) (q : Bool),\n    reported 1 (networkGame net ε hε x j q)\n      (canonical 1 (networkGame net ε hε x j q)) (canonical 1 (networkGame net ε hε x j q)) =\n      (Thesis.RoutingGate.logCoordinate (signed q (net.eval x j)),\n       Thesis.RoutingGate.logCoordinate (-signed q (net.eval x j)))",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.networkLayer_reported",
+      "expected_type": "∀ {n k m} (wp wn : Matrix (Fin k) (Fin n) ℝ)\n    (bp bn : Vec k) (tail : Network k m) (ε : ℝ) (hε : 0 ≤ ε)\n    (x : Vec n) (j : Fin m) (q : Bool),\n    reported 1 (networkGame (.layer wp wn bp bn tail) ε hε x j q)\n      (canonical 1 (networkGame (.layer wp wn bp bn tail) ε hε x j q))\n      (canonical 1 (networkGame (.layer wp wn bp bn tail) ε hε x j q)) =\n      if q then (Thesis.RoutingGate.logCoordinate ((Network.layer wp wn bp bn tail).eval x j), ⊥)\n      else (⊥, Thesis.RoutingGate.logCoordinate ((Network.layer wp wn bp bn tail).eval x j))",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.inputLayerGames_selected_gate",
+      "expected_type": "∀ {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k)\n    (ε : ℝ) (hε : 0 ≤ ε) (x : Vec n) (j : Fin k) (q : Bool),\n    (canonical 1 (inputLayerGames wp wn bp bn ε hε x j q)).1 =\n      decide (0 < preactivation wp wn bp bn x j)",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.RoutingNetwork",
+      "declaration": "Thesis.RoutingNetwork.layerGames_selected_gate",
+      "expected_type": "∀ {n k} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k)\n    (ε : ℝ) (hε : 0 ≤ ε) (input : Fin n → Bool → Tree) (x : Vec n)\n    (hx : ∀ i, 0 ≤ x i) (hv : ∀ i q, value 1 (input i q) = signed q (x i))\n    (j : Fin k) (q : Bool),\n    (canonical 1 (layerGames wp wn bp bn ε hε input j q)).1 =\n      decide (0 < preactivation wp wn bp bn x j)",
+      "scope": "Actual shared-network construction with arbitrary signed weights/biases, epsilon>=0, first-layer signed raw input products, positive/negative copies, separate outside/bias actions. Source-log SPNE at theta>0, forward values and gate/ordinary row formulas at theta=1.",
+      "receipt": "reports/evidence/new-frontier-review/games-global-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingRegions",
+      "declaration": "Thesis.StoppingStructure.stopping_region_nonnegative_affine",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hp : net.NonnegativeParameters) (r : Vec n),\n 0≤frozenStopping net r 0 ∧ Monotone (stoppingJac (net.originalTrace r)) ∧\n (∀ x ∈ gateRegion net r, net.decomposeWith stopPair x = stoppingJac (net.originalTrace r) x + frozenStopping net r 0) ∧\n MonotoneOn (net.decomposeWith stopPair) (gateRegion net r)",
+      "scope": "Actual stopping map on explicitly recursively defined original-gate regions. Its affine linear part is monotone and its bias constant is nonnegative under nonnegative split parameters.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingRegions",
+      "declaration": "Thesis.StoppingStructure.stopping_input_and_bias_sources",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (x : PairVec n),\n net.decomposeWith stopPair x = stoppingJac (net.originalTrace (x.1-x.2)) x + (biasSources net (x.1-x.2)).sum",
+      "scope": "Actual full stopping decomposition equals the selected homogeneous stopping map plus a finite list of explicit layer-bias stubs propagated through the suffix.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingPaths",
+      "declaration": "Thesis.StoppingStructure.geometricParity_negative_count",
+      "expected_type": "∀ {n m : ℕ} (tr : MaskedTrace n m) (i : Fin n) (path : GeometricPaths tr),\n geometricParity tr i path = decide (Odd (negativeEdgeCount tr i path))",
+      "scope": "XOR of signed-edge comparisons equals Odd of the literal count of negative edges on the same geometric neuron-index path.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingPaths",
+      "declaration": "Thesis.StoppingStructure.stopping_activation_parity_paths",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hc : net.Canonical) (hb : ZeroBias net) (x : PairVec n) (j : Fin m),\n let tr := net.originalTrace (x.1-x.2)\n (net.decomposeWith stopPair x).1 j = ∑ i, ∑ path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.2 i else x.1 i) ∧\n (net.decomposeWith stopPair x).2 j = ∑ i, ∑ path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.1 i else x.2 i)",
+      "scope": "Both actual stopping activation streams equal geometric path sums. Canonical signed weights and zero split biases; all gates along the activation path are included.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingPaths",
+      "declaration": "Thesis.StoppingStructure.stopping_preactivation_parity_paths",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m) (hc : net.Canonical) (hb : ZeroBias net)\n (wp wn : Matrix (Fin k) (Fin m) ℝ)\n (hw : ∀ j i, wp j i=max (wp j i-wn j i) 0 ∧ wn j i=max (-(wp j i-wn j i)) 0)\n (x : PairVec n) (j : Fin k),\n let tr := preactivationTrace net (x.1-x.2) wp wn\n preP wp wn (net.decomposeWith stopPair x) j = ∑ i, ∑ path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.2 i else x.1 i) ∧\n preN wp wn (net.decomposeWith stopPair x) j = ∑ i, ∑ path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.1 i else x.2 i)",
+      "scope": "Actual preactivation path formula. Final affine edge is ungated; all intermediate ReLU gates remain. Zero edges contribute zero, and signs are canonical.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingPaths",
+      "declaration": "Thesis.StoppingStructure.stopping_biased_parity_paths",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hc : net.Canonical) (x : PairVec n) (j : Fin m),\n let tr := net.originalTrace (x.1-x.2)\n (net.decomposeWith stopPair x).1 j =\n (∑ i, ∑ path : GeometricPaths tr, geometricWeight tr j i path * (if geometricParity tr i path then x.2 i else x.1 i)) + ((biasSources net (x.1-x.2)).sum).1 j ∧\n (net.decomposeWith stopPair x).2 j =\n (∑ i, ∑ path : GeometricPaths tr, geometricWeight tr j i path * (if geometricParity tr i path then x.1 i else x.2 i)) + ((biasSources net (x.1-x.2)).sum).2 j",
+      "scope": "Actual stopping activations with arbitrary biases: parity-sorted input paths plus the explicit propagated bias-stub sum.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.stoppingExpr_relu",
+      "expected_type": "∀ {n : ℕ} (a : SignedExpr (Fin n)) (x : PairVec n),\n stoppingExpr (.maximum a (.constant 0)) x = stopPair (stoppingExpr a x)",
+      "scope": "The existing SignedExpr max(a,0) representation is exactly the same stopPair, including its stop-at-zero tie convention.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.stoppingCircuit_recovery",
+      "expected_type": "∀ {d n : ℕ} (c : Circuit d n) (x : PairVec d),\n (stoppingCircuit c x).1-(stoppingCircuit c x).2 = c.eval (x.1-x.2)",
+      "scope": "All-node exact recovery for the actual stopping/WTA pass on the existing Circuit graph, including sharing, residual addition, affine operations, pools and products.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.stoppingCircuit_nonnegative",
+      "expected_type": "∀ {d n : ℕ} (c : Circuit d n) (x : PairVec d) (hx : 0≤x),\n 0≤stoppingCircuit c x",
+      "scope": "Both actual stopping/WTA streams at every recorded shared-graph node remain nonnegative for nonnegative split inputs.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.addition_probability_law",
+      "expected_type": "(∀ b, 0≤additionProbability b) ∧ (∑ b : Bool, additionProbability b)=1",
+      "scope": "Actual fair two-successor probability law for the addition oracle.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.addition_derivative_occupation",
+      "expected_type": "∀ {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E]\n (f g : E → ℝ) (Df Dg : E →L[ℝ] ℝ) (x : E)\n (hf : HasFDerivAt f Df x) (hg : HasFDerivAt g Dg x),\n HasFDerivAt (fun y => f y+g y) ((2 : ℝ) • (additionProbability false • Df+additionProbability true • Dg)) x",
+      "scope": "Actual local derivative of addition expressed with the normalized oracle probabilities and discount 2. Component of the global DAG theorem, not that theorem itself.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.winner_derivative",
+      "expected_type": "∀ {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E]\n (f g : E → ℝ × ℝ) (Df Dg : E →L[ℝ] ℝ × ℝ) (x : E)\n (hf : HasFDerivAt f Df x) (hg : HasFDerivAt g Dg x)\n (hne : (f x).1-(f x).2 ≠ (g x).1-(g x).2),\n HasFDerivAt (fun y => winnerPair (g y) (f y))\n (if (g x).1-(g x).2 < (f x).1-(f x).2 then Df else Dg) x",
+      "scope": "Actual derivative of the shared WTA split on a unique-winner open cell, using both differentiable operand pairs. No ordinary derivative is claimed at ties.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.winner_probability_law",
+      "expected_type": "∀ (leftWins : Bool),\n (∀ b,0≤winnerProbability leftWins b) ∧ (∑ b : Bool,winnerProbability leftWins b)=1",
+      "scope": "An actual normalized deterministic successor law at the selected max-pooling argument.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.winner_discounted_occupation",
+      "expected_type": "∀ (leftWins : Bool) (left right : ℝ),\n (1 : ℝ)*(winnerProbability leftWins true*left+winnerProbability leftWins false*right) = if leftWins then left else right",
+      "scope": "Unit-discount deterministic pooling occupation equals the chosen operand occupation; local step only.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    },
+    {
+      "module": "Thesis.StoppingCircuit",
+      "declaration": "Thesis.StoppingCircuit.winner_derivative_occupation",
+      "expected_type": "∀ {E : Type u} [NormedAddCommGroup E] [NormedSpace ℝ E]\n (f g : E → ℝ × ℝ) (Df Dg : E →L[ℝ] ℝ × ℝ) (x : E)\n (hf : HasFDerivAt f Df x) (hg : HasFDerivAt g Dg x)\n (hne : (f x).1-(f x).2 ≠ (g x).1-(g x).2),\n HasFDerivAt (fun y => winnerPair (g y) (f y))\n ((1 : ℝ) • (winnerProbability (decide ((g x).1-(g x).2 < (f x).1-(f x).2)) true • Df +\n winnerProbability (decide ((g x).1-(g x).2 < (f x).1-(f x).2)) false • Dg)) x",
+      "scope": "Actual unique-winner WTA derivative equals the normalized deterministic pool-oracle pullback with unit discount and the same computed winning branch. Local step, not a global DAG occupation theorem.",
+      "receipt": "reports/evidence/new-frontier-review/stopping-structure-types.log",
+      "exact_type_verdict": "pass",
+      "assumptions_hidden_by_implicit_binders": false
+    }
+  ],
+  "publication_gate_conclusion": "These 54 contracts introduce no identified high-severity blocker. Preserve the explicit residual scopes in coverage metadata; the full build, coverage/status integration, and whole-project publication gate remain root responsibilities."
+}

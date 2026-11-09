@@ -47,17 +47,12 @@ example (θ : ℝ) :
 
 -- Signed raw input, negative edge, positive bias: ReLU((-2)*(-3)+1)=7.
 def rawSignedNet : Network 1 1 :=
-  .layer 0 (fun _ _ => 2) (fun _ => 1) (fun _ => 0) (.output 1)
+  .layer 0 (Matrix.of (fun _ _ => 2)) (fun _ => 1) (fun _ => 0) (.output 1)
 example (ε : ℝ) (hε : 0 ≤ ε) :
     value 1 (networkGame rawSignedNet ε hε (fun _ => -3) 0 true) = 7 := by
   rw [networkGame_value]
-  have hm : ((0 : Matrix (Fin 1) (Fin 1) ℝ) - (fun (_ : Fin 1) (_ : Fin 1) => (2 : ℝ))) = fun (_ : Fin 1) (_ : Fin 1) => (-2 : ℝ) := by
-    ext i j
-    change (0 : ℝ)-2 = -2
-    norm_num
-  simp only [signed,rawSignedNet,Network.eval,ite_true]
-  rw [hm]
-  norm_num [Matrix.mulVec,dotProduct,relu,Fin.sum_univ_one]
+  norm_num [signed,rawSignedNet,Network.eval,Matrix.mulVec,dotProduct,relu,Fin.sum_univ_one,Matrix.of_apply]
+
 
 -- A zero-width input layer still yields a real, biased and nonvacuous routing game.
 def noInputNet : Network 0 1 :=

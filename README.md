@@ -101,6 +101,25 @@ code checkout. Their existing published TeX tables remain included; they are
 not described as recomputed experiments. `scripts/table_sources.json` identifies
 the sources and each missing input.
 
+## Source-content and reference coverage
+
+Separate audits compare both source papers with the merged thesis. The completed
+restoration list is in [paper-merge-restorations.json](reports/paper-merge-restorations.json),
+with detailed per-paper reports alongside it. Original technical text, equations,
+figures and tables are retained where compatible with the shared notation and
+reported mathematical corrections. The introduction connects both papers through
+interpretability as a tool for improving and controlling models.
+
+```sh
+python3 scripts/check_paper_references.py --check
+```
+
+This follows the active TeX input trees, verifies explicit citation aliases, and
+checks that every source reference is cited in the thesis and present in its
+bibliography. The current report has no missing references (74 source keys from
+Hidden Monotonicity, including appendix aliases, and 72 from the revised game paper).
+Publication and named-method titles retain their official wording.
+
 ## Stable links from TeX to Lean
 
 Thesis statements use `\LeanResult{source-label}`; selected equation numbers are

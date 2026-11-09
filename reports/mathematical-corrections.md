@@ -215,3 +215,5 @@ The all-profile Lean proof uses the original extended-log utilities with pure ac
 ### Floating-point invariant versus exact algebra
 
 The source-to-thesis merge audit distinguished the original paper's reported float64 setup from the pinned code's configurable precision (float32 default). The thesis no longer claims that cache assimilation enforces the real-arithmetic recovery identity exactly in floating-point arithmetic: it targets that identity, while roundoff remains possible. The numerical setup and the independently checked exact mathematical invariant are both retained.
+
+The short gradient and routing theorem statements are now aligned with the detailed proofs: strict-cell classical derivatives are distinguished from selected backward quantities at ties, and the general-temperature routing stop policy uses game continuation values. The anchor gate is 1[z>0]. The former headline uniqueness qualifier limited to zero activations has been replaced by the explicit log-tie and empty-stream selection already used by the detailed theorem.

@@ -415,10 +415,10 @@ difference of two \emph{non-negative} occupation measures:
 \begin{theorem}[Gradient representation]\label{thm:gradient}
 The Stopping Game allows a subgame-perfect Nash equilibrium, unique up to tie-breaking at
 zero-activation neurons.
-Under the stop-at-tie-breaks equilibrium the discounted occupation measure $\Gamma_x(s_{i,p}^{(l)})
+On strict gate cells (and with unique max-pooling winners where applicable), under the stop-at-tie-breaks equilibrium the discounted occupation measure $\Gamma_x(s_{i,p}^{(l)})
     \ge 0$ equals the output derivative with respect to the corresponding \emph{Stopping Decomposition}
-activation.
-The gradient of $f$ with respect to the input is then the difference $\Gamma_x(s_{i,+}^{(0)}) -
+activation. At ties, the corresponding identities refer to the backward quantities selected by the stated gate and winner conventions.
+On these cells, the gradient of $f$ with respect to the input is the difference $\Gamma_x(s_{i,+}^{(0)}) -
     \Gamma_x(s_{i,-}^{(0)})$.
 \end{theorem}
 Appendix~\ref{app:relu-net-game} proves the theorem, works through an example, gives the full state
@@ -464,9 +464,7 @@ where the sums include the bias node and $\perp_{\mathrm{lin}}$. At $\tau>0$ the
 SPNE whose occupation measure at $\tau=1$ is the $\alpha\beta$-\ac{LRP} attribution:
 
 \begin{theorem}[$\alpha\beta$-\ac{LRP} representation]\label{thm:lrp-recovery}
-For $\tau>0$, the Gibbs policies of Eq.~\eqref{eq:gibbs-policy} and stopping decisions according to
-neuron activations yield SPNEs of the entropy-regularized \ac{RG}, unique up to tie-breaking at
-zero-activation neurons. Under the stop-at-tie-breaks equilibrium at $\tau=1$ the
+For $\tau>0$, the Gibbs policies of Eq.~\eqref{eq:gibbs-policy} and stopping decisions from the corresponding continuation values yield a canonical SPNE of the entropy-regularized \ac{RG}. We select stopping at every activation log tie and absorption for an empty routing stream, as specified in Remark~\ref{rem:routing-spne-uniqueness}. At the anchor $\tau=1$, the selected gate is $\mathbf{1}[z>0]$ and the
 $\alpha\beta$-\ac{LRP} attribution map in~\eqref{eq:lrp-ab} equals $R_i^{(l)} =
     f(x)\,\bigl(\Gamma_x(s_{i,+}^{(l)}) - \Gamma_x(s_{i,-}^{(l)})\bigr)$.
 \end{theorem}

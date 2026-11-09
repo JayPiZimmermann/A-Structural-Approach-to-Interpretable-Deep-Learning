@@ -1,0 +1,732 @@
+\chapter{Mathematical Foundations}\label{ch:foundations}
+
+This chapter fixes the notation, definitions, and background theory used throughout. Section~\ref{sec:nn_notation_pwl} fixes the feedforward network notation and recalls the equivalence between \ac{relu} networks and \ac{cpwl} functions. Section~\ref{sec:convex_monotone_foundations} introduces the two structured classes---monotone networks and \acp{icnn}---into which Chapter~\ref{ch:decompositions} splits a general network, together with the Maxout units generalizing \ac{relu}. Section~\ref{sec:game_theory_mdp_foundations} collects the background on \acp{mdp} and zero-sum turn-based games and presents the ReLU Net Game of Gaubert and Vlassopoulos in full, so that Chapter~\ref{ch:game_theory} can state which parts of the framework it inherits and which are new. Section~\ref{sec:tropical_polyhedra_foundations} provides the tropical-geometric vocabulary---semirings, tropical polynomials, Newton polytopes, Minkowski sums, and support functions---and, in its later subsections, develops the tropical reading of the DC split, the resulting Imaginative Polytopes (Sections~\ref{sec:tropical_rational_maps}--\ref{sec:imaginative_polytopes}), and the difference-of-convex splitting of smooth activation functions (Section~\ref{sec:dc_splitting_smooth}) that lets the decompositions of Chapter~\ref{ch:decompositions} extend beyond \ac{relu}.
+
+\section{Neural Network Notation and PWL Mappings}\label{sec:nn_notation_pwl}
+
+The standard feedforward architecture serves as the reference model throughout; convolutional and attention-based architectures are treated in Section~\ref{sec:cnn_decompositions} and Chapter~\ref{ch:transformers} as structured special cases and extensions.
+
+\begin{definition}[Feedforward \ac{relu} network]\label{def:ffn_relu}
+Let $L \in \NN$ and let $d^{(0)}, d^{(1)}, \ldots, d^{(L)} \in \NN$ denote the \emph{layer widths}, with input dimension $d^{(0)}$ and output dimension $d^{(L)}$. A \emph{feedforward \ac{relu} network} of depth $L$ is given by weight matrices $\Wl{l} \in \RR^{d^{(l)} \times d^{(l-1)}}$ and bias vectors $b^{(l)} \in \RR^{d^{(l)}}$ for $l = 1, \ldots, L$. On an input $x \in \RR^{d^{(0)}}$ it computes the recursion
+\begin{align}
+	\actl{0} &\coloneqq x, \notag\\
+	\preactl{l} &\coloneqq \Wl{l} \actl{l-1} + b^{(l)}, && l = 1, \ldots, L, \label{eq:forward_recursion}\\
+	\actl{l} &\coloneqq \relu\bigl(\preactl{l}\bigr), && l = 1, \ldots, L-1, \notag
+\end{align}
+where $\relu(z) \coloneqq \max\{z, 0\}$ acts componentwise, and the output layer is affine, $\actl{L} \coloneqq \preactl{L}$. We call $\preactl{l}$ the \emph{pre-activation} and $\actl{l}$ the \emph{(post-)activation} of layer $l$, and denote the \emph{network function} by
+\begin{equation}
+	f \colon \RR^{d^{(0)}} \longrightarrow \RR^{d^{(L)}},
+	\qquad
+	f(x) \coloneqq \actl{L}.
+	\label{eq:network_function}
+\end{equation}
+Layers $1, \ldots, L-1$ are the \emph{hidden layers}. Throughout we fix the boundary convention $\relu'(0) \coloneqq 0$, so that the gate indicator $\1\{\preactl{l}_i > 0\}$ returns $0$ at $\preactl{l}_i = 0$.
+\end{definition}
+
+When a statement concerns the layers $l, \ldots, L$ only, we write $f^{(l)} \colon \RR^{d^{(l)}} \to \RR^{d^{(L)}}$ for the tail map, so that $f = f^{(1)} \circ \bigl(x \mapsto \relu(\Wl{1} x + b^{(1)})\bigr)$ and $f^{(L)}$ is the affine output map. A bias-free formulation is always available by appending an \emph{intercept input} of constant value $1$ and absorbing $b^{(l)}$ into a column of $\Wl{l}$; we use this in some proofs without comment.
+
+The decompositions of Chapter~\ref{ch:decompositions} act on the signs of parameters and inputs, fixed by the following notation.
+
+\begin{definition}[Positive and negative parts]\label{def:posneg_parts}
+For a scalar $u \in \RR$ we write $u^{+} \coloneqq \max\{u, 0\}$ and $u^{-} \coloneqq \max\{-u, 0\}$, so that $u = u^{+} - u^{-}$ and $\abs{u} = u^{+} + u^{-}$, with $u^+ u^- = 0$. For a matrix or vector $W$ and a sign label $\sigma \in \{+,-\}$, the \emph{entrywise part} $\posneg{W}{\sigma}$ is obtained by applying $u \mapsto u^{\sigma}$ to every entry. For the layer weights and biases of Definition~\ref{def:ffn_relu} we abbreviate
+\begin{equation}
+	\Wsig{l}{\sigma} \coloneqq \posneg{\Wl{l}}{\sigma},
+	\qquad
+	b^{(l,\sigma)} \coloneqq \posneg{b^{(l)}}{\sigma},
+	\qquad \sigma \in \{+,-\},
+	\label{eq:weight_split}
+\end{equation}
+so that $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$ and $\abs{\Wl{l}} = \Wsig{l}{+} + \Wsig{l}{-}$ entrywise, and both $\Wsig{l}{\sigma}$ are entrywise non-negative.
+\end{definition}
+
+\begin{remark}[Pair notation for decomposed activations]\label{rem:pair_notation}
+Superscript sign labels on \emph{activations}, written $\act{l}{\sigma}$ for $\sigma \in \{+,-\}$, are reserved for the two non-negative \emph{streams} of a network decomposition and are defined in Section~\ref{sec:general_decomposition_def}; they do \emph{not} denote the entrywise parts $\posneg{\actl{l}}{\sigma}$ of the original activations. The distinction matters: the decomposed streams carry strictly more information than the sign pattern of $\actl{l}$---the source of the sub-threshold signals exploited in Chapter~\ref{ch:saliency}.
+\end{remark}
+
+\subsection*{Continuous piecewise linear functions}
+
+The function class computed by \ac{relu} networks admits an exact geometric description.
+
+\begin{definition}[\ac{cpwl} function]\label{def:cpwl}
+A function $f \colon \RR^{d} \to \RR^{m}$ is \emph{\acl{cpwl}} (\acs{cpwl}) if it is continuous and there exist finitely many closed polyhedra $Q_1, \ldots, Q_N \subseteq \RR^d$ with $\bigcup_{r=1}^{N} Q_r = \RR^d$ such that the restriction of $f$ to each $Q_r$ is an affine map. The full-dimensional polyhedra on which $f$ is affine, taken maximal with respect to inclusion, are called the \emph{linear regions} of $f$.
+\end{definition}
+
+For example, $\abs{\cdot} \colon \RR \to \RR$ is \ac{cpwl} with the two regions $(-\infty, 0]$ and $[0, \infty)$, and $x \mapsto \max\{x_1, \ldots, x_d\}$ is \ac{cpwl} with $d$ regions.
+
+\begin{observation}\label{obs:relu_is_cpwl}
+Every feedforward \ac{relu} network represents a \ac{cpwl} function.
+\hfill\LeanResult{obs:relu_is_cpwl}
+\end{observation}
+
+\begin{proof}
+Affine maps are \ac{cpwl}, the componentwise $\relu$ is \ac{cpwl}, and the composition of two \ac{cpwl} maps is again \ac{cpwl}: if $f$ is affine on the polyhedra $Q_1, \ldots, Q_N$ covering $\RR^d$ and $g$ is affine on the polyhedra $P_1, \ldots, P_M$ covering the intermediate space, then $g \circ f$ is affine on each of the at most $NM$ polyhedra $Q_r \cap f^{-1}(P_s)$ (preimages of polyhedra under affine maps are polyhedra), these cover $\RR^d$, and continuity is preserved under composition. The claim follows by induction along the recursion \eqref{eq:forward_recursion}.
+\end{proof}
+
+The converse also holds: \emph{every} \ac{cpwl} function is exactly representable by a \ac{relu} network of bounded depth. This equivalence, due to \textcite{Arora2018}, is the entry point for the difference-of-convex analysis of Chapter~\ref{ch:decompositions} and the tropical-geometric analysis of Section~\ref{sec:tropical_rational_maps}.
+
+\begin{theoremenv}[\ac{cpwl}--\ac{relu} equivalence, \cite{Arora2018}]\label{thm:cpwl_relu_equivalence}
+A function $f \colon \RR^{d} \to \RR$ is \ac{cpwl} if and only if it is representable by a feedforward \ac{relu} network. Moreover, every \ac{cpwl} function on $\RR^d$ is representable by a \ac{relu} network of depth at most $\bigl\lceil \log_2(d+1) \bigr\rceil + 1$.
+\end{theoremenv}
+
+\begin{proof}
+The ``if'' direction is Observation~\ref{obs:relu_is_cpwl}. For the converse we give the classical construction and refer to \textcite{Arora2018} for the depth bookkeeping. First, every \ac{cpwl} function $f$ admits a \emph{difference-of-convex} representation
+\begin{equation}
+	f = g - h,
+	\qquad
+	g = \max_{r \in [N_g]}\, \ell_r,
+	\qquad
+	h = \max_{s \in [N_h]}\, m_s,
+	\label{eq:cpwl_dc_representation}
+\end{equation}
+with finitely many affine functions $\ell_r, m_s \colon \RR^d \to \RR$; this is the piecewise-linear DC theorem of \textcite{Melzer1986_PLasDC} and \textcite{Kripfganz1987_PWAasDC}, and both $g$ and $h$ are convex as finite maxima of affine functions. Second, the maximum of two scalars is a two-layer \ac{relu} computation,
+\begin{equation}
+	\max\{u, v\}
+	= \frac{u + v}{2} + \frac{\abs{u - v}}{2}
+	= \frac{u + v}{2} + \frac{\relu(u - v) + \relu(v - u)}{2},
+	\label{eq:max_as_relu}
+\end{equation}
+where the affine pre- and post-combinations are absorbed into the surrounding weight matrices. Arranging the $N_g$ affine arguments of $g$ in a balanced binary tree of pairwise maxima realizes $g$ by a \ac{relu} network of depth $\lceil \log_2 N_g \rceil + 1$, and likewise for $h$; a final affine layer forms the difference \eqref{eq:cpwl_dc_representation}. This proves representability. The stated depth bound, which is uniform in the number of affine pieces and depends only on the input dimension $d$, follows from the refinement of \textcite{Arora2018}: every \ac{cpwl} function on $\RR^d$ can be written as a signed sum of maxima of at most $d + 1$ affine functions each, so the trees in the construction above have depth at most $\lceil \log_2(d+1) \rceil$.
+\end{proof}
+
+\begin{remark}[Expressivity and linear regions]\label{rem:linear_regions}
+Theorem~\ref{thm:cpwl_relu_equivalence} identifies the function \emph{class}, not the \emph{cost} of representation: deep networks can represent \ac{cpwl} functions with exponentially many linear regions in the number of neurons, an interplay of depth, width, and region counts surveyed by \textcite{huchette2025deeplearningmeetspolyhedral}. The tropical reformulation by \textcite{Zhang2018}---\ac{relu} networks as tropical rational maps---is taken up in Sections~\ref{sec:tropical_polyhedra_foundations} and \ref{sec:tropical_rational_maps}. The representation \eqref{eq:cpwl_dc_representation} also foreshadows the central theme of this thesis: the convex \ac{cpwl} streams $g$ and $h$ of the DC split can be extracted \emph{constructively and locally} from a trained network, the subject of Section~\ref{sec:dc_splitting_relu}.
+\end{remark}
+
+\section{Convexity and Monotonicity in Neural Networks}\label{sec:convex_monotone_foundations}
+
+The decompositions of Chapter~\ref{ch:decompositions} split a general network into components from two structured classes with sign-constrained weights. We define both and record the load-bearing facts that they represent monotone and convex functions, respectively.
+
+We order $\RR^d$ coordinatewise: $x \le y$ if and only if $x_i \le y_i$ for all $i \in [d]$. A function $f \colon \RR^d \to \RR^m$ is \emph{monotone} (non-decreasing) if $x \le y$ implies $f(x) \le f(y)$.
+
+\begin{definition}[Monotone neural network]\label{def:monotone_network}
+A feedforward network with recursion \eqref{eq:forward_recursion} and monotone activation functions is called a \emph{monotone neural network} if all its weight matrices are entrywise non-negative, $\Wl{l} \ge 0$ for all $l = 1, \ldots, L$.
+\end{definition}
+
+Weight-sign constraints are the oldest device for building monotone models \cite{Sill1997_MonotonicNetworks,Daniels2010_MonotoneNN} and remain the structural core of modern certified-monotone architectures \cite{Liu2020CertifiedMonotone,Runje_2023}.
+
+\begin{proposition}[Monotone networks represent monotone functions]\label{prop:monotone_represents}
+A monotone neural network represents a monotone function; each coordinate function is non-decreasing in every input variable.
+\hfill\LeanResult{prop:monotone_represents}
+\end{proposition}
+
+\begin{proof}
+By induction over the layers. The input layer $\actl{0} = x$ is monotone in $x$. Assume $\actl{l-1}$ is monotone in $x$. An affine map with non-negative matrix preserves the coordinatewise order: if $a \le a'$, then $\Wl{l} a + b^{(l)} \le \Wl{l} a' + b^{(l)}$ entrywise, because every entry of $\Wl{l}$ is non-negative. Hence $\preactl{l}$ is monotone in $x$, and applying the monotone activation componentwise preserves monotonicity, so $\actl{l}$ is monotone in $x$. The affine output layer is again order-preserving.
+\end{proof}
+
+\begin{definition}[\acl{icnn}, \cite{Amos2017}]\label{def:icnn}
+A feedforward network with recursion \eqref{eq:forward_recursion} whose activation functions are convex \emph{and} monotone is called an \emph{\acl{icnn}} (\acs{icnn}) if all weight matrices except possibly the first are entrywise non-negative, $\Wl{l} \ge 0$ for all $l = 2, \ldots, L$, while $\Wl{1}$ is unconstrained.
+\end{definition}
+
+Definition~\ref{def:icnn} covers the plain feedforward core of the architecture of \textcite{Amos2017}; their sign-unconstrained skip (``passthrough'') connections do not affect the statement below, since they enter each pre-activation affinely in $x$.
+
+\begin{proposition}[\acp{icnn} represent convex functions]\label{prop:icnn_convex}
+An \ac{icnn} represents a convex function; each coordinate of every activation $\actl{l}$, $l \ge 1$, is a convex function of the input $x$.
+\hfill\LeanResult{prop:icnn_convex}
+\end{proposition}
+
+\begin{proof}
+We use two closure properties of convex functions: (i) a non-negative linear combination of convex functions plus a constant is convex; (ii) if $\varphi \colon \RR \to \RR$ is convex and non-decreasing and $u \colon \RR^d \to \RR$ is convex, then $\varphi \circ u$ is convex, since for $\lambda \in [0,1]$,
+\begin{equation*}
+	\varphi\bigl(u(\lambda x + (1-\lambda) y)\bigr)
+	\le \varphi\bigl(\lambda u(x) + (1-\lambda) u(y)\bigr)
+	\le \lambda\, \varphi(u(x)) + (1-\lambda)\, \varphi(u(y)),
+\end{equation*}
+where the first inequality uses convexity of $u$ and monotonicity of $\varphi$, and the second convexity of $\varphi$.
+
+Now induct over layers. Each coordinate of $\preactl{1} = \Wl{1} x + b^{(1)}$ is affine, hence convex, in $x$; applying the convex monotone activation gives convex coordinates of $\actl{1}$ by (ii). Assume all coordinates of $\actl{l-1}$ are convex in $x$. For $l \ge 2$ the weights are non-negative, so each coordinate of $\preactl{l} = \Wl{l} \actl{l-1} + b^{(l)}$ is a non-negative combination of convex functions plus a constant, hence convex by (i), and applying the activation preserves convexity by (ii). The output coordinates $\actl{L} = \preactl{L}$ are convex by the same argument with the identity activation.
+\end{proof}
+
+\begin{remark}[Monotonicity and convexity combine]\label{rem:monotone_convex_combined}
+If, in addition, $\Wl{1} \ge 0$ in Definition~\ref{def:icnn}, the network is simultaneously monotone and input-convex, hence non-decreasing \emph{and} convex by Propositions~\ref{prop:monotone_represents} and \ref{prop:icnn_convex}. Both $\relu$ and Maxout (below) are convex and monotone, so non-negative-weight \ac{relu} networks are of exactly this type. These are the building blocks of the DC splitting of Section~\ref{sec:dc_splitting_relu}: the streams $g$ and $h$ are computed by monotone networks acting on a signed embedding of the input, and are input-convex in the original input. The sign constraint also \emph{limits} expressivity---a weight-constrained \ac{relu} network represents only convex functions, precisely Proposition~\ref{prop:icnn_convex}, which is why monotone architectures add concave counterparts of the activation \cite{Runje_2023}. The decompositions of this thesis turn the limitation into a feature: the difference of two such networks recovers full generality by Theorem~\ref{thm:cpwl_relu_equivalence} and \eqref{eq:cpwl_dc_representation}.
+\end{remark}
+
+\subsection*{Maxout units}
+
+\begin{definition}[Maxout unit and Maxout network, \cite{Goodfellow2013Maxout}]\label{def:maxout}
+A \emph{rank-$k$ Maxout unit} with weights $w_1, \ldots, w_k \in \RR^{d}$ and biases $\beta_1, \ldots, \beta_k \in \RR$ computes
+\begin{equation}
+	x \longmapsto \maxout(x) \coloneqq \max_{j \in [k]} \bigl( w_j^{\top} x + \beta_j \bigr).
+	\label{eq:maxout_unit}
+\end{equation}
+A \emph{rank-$k$ Maxout network} is a feedforward network whose neurons are rank-$k$ Maxout units; equivalently, layer $l$ carries $k$ weight matrices $W^{(l)}_1, \ldots, W^{(l)}_k$ and biases $b^{(l)}_1, \ldots, b^{(l)}_k$, and
+\begin{equation}
+	\actl{l}_i \coloneqq \max_{j \in [k]} \bigl( W^{(l)}_j \actl{l-1} + b^{(l)}_j \bigr)_i .
+	\label{eq:maxout_layer}
+\end{equation}
+\end{definition}
+
+\begin{observation}[\ac{relu} and max-pooling as Maxout]\label{obs:relu_maxout_special_case}
+The \ac{relu} activation is the rank-$2$ Maxout unit with parameters $(w_1, \beta_1) = (w, \beta)$ and $(w_2, \beta_2) = (0, 0)$, since $\relu(w^\top x + \beta) = \max\{w^\top x + \beta,\, 0\}$. Max-pooling over a group $J$ of neurons is the rank-$\abs{J}$ Maxout unit whose $j$-th argument is the coordinate projection onto the $j$-th element of $J$. Every rank-$k$ Maxout unit is convex in its input and non-decreasing in each pre-activation argument $w_j^\top x + \beta_j$; hence Maxout qualifies as an admissible activation in Definitions~\ref{def:monotone_network} and \ref{def:icnn}.
+\hfill\LeanResult{obs:relu_maxout_special_case}
+\end{observation}
+
+\begin{proof}
+The first two claims are immediate from \eqref{eq:maxout_unit}. Convexity holds because a pointwise maximum of affine (hence convex) functions is convex. For monotonicity in the arguments, view the unit as $(u_1, \ldots, u_k) \mapsto \max_j u_j$ with $u_j = w_j^\top x + \beta_j$: if $u_j \le u_j'$ for all $j$, then $\max_j u_j \le \max_j u_j'$.
+\end{proof}
+
+\begin{remark}\label{rem:maxout_role}
+Maxout networks are the natural piecewise-linear generalization of \ac{relu}: a rank-$k$ unit expresses a maximum of $k$ affine functions in one neuron, matching the building blocks of the DC representation \eqref{eq:cpwl_dc_representation}. The DC splitting of Chapter~\ref{ch:decompositions} is developed for \ac{relu} networks and extended to Maxout units---and to the multiplicative interactions needed for attention---in Chapter~\ref{ch:transformers}, using the exchange identity $\max_{j \in [k]}(u_j - v_j) = \max_{j \in [k]}\bigl\{ u_j + \sum_{i \ne j} v_i \bigr\} - \sum_{i \in [k]} v_i$ for pairs of non-negative streams.
+\end{remark}
+
+\section{Game Theory and Markov Decision Processes}\label{sec:game_theory_mdp_foundations}
+
+Chapter~\ref{ch:game_theory} interprets the backward pass of a decomposed network as a two-player zero-sum game on the network graph. This section fixes the background: \acp{mdp}, turn-based zero-sum games, and their optimality equations. We restrict to finite state and action spaces, which suffices throughout.
+
+\begin{definition}[\acl{mdp}]\label{def:mdp}
+A (finite) \emph{\acl{mdp}} (\acs{mdp}) \cite{Puterman1994mdp,SuttonBarto2018rl} is a tuple $\mathcal{M} = (S, A, \P, R, \gamma)$ consisting of a finite state set $S$, a finite action set $A(s)$ for each $s \in S$, a \emph{transition kernel} $\P(s' \mid s, a) \ge 0$ with $\sum_{s'} \P(s' \mid s, a) = 1$, a bounded \emph{reward function} $R(s, a) \in \RR$, and a \emph{discount factor} $\gamma \in [0, 1)$. A \emph{(stationary) policy} is a map $\pi$ assigning to each state $s$ a probability distribution $\pi(\cdot \mid s)$ over $A(s)$; $\pi$ is \emph{pure} (deterministic) if each $\pi(\cdot \mid s)$ is a point mass. A policy induces, for every start state, a Markov chain on $S$ and hence a distribution over trajectories $(s_0, a_0, s_1, a_1, \ldots)$; the \emph{value function} of $\pi$ is the expected discounted return
+\begin{equation}
+	V^{\pi}(s) \coloneqq \E^{\pi}\Bigl[ \textstyle\sum_{t=0}^{\infty} \gamma^{t}\, R(s_t, a_t) \,\Big|\, s_0 = s \Bigr],
+	\label{eq:mdp_value}
+\end{equation}
+and the \emph{optimal value function} is $V^{\star}(s) \coloneqq \max_{\pi} V^{\pi}(s)$.
+\end{definition}
+
+Fixing an enumeration of $S$, a pure policy $\pi$ turns the kernel into a row-stochastic \emph{transition matrix} $P^{\pi} \in \RR^{S \times S}$ with $P^{\pi}_{s s'} = \P(s' \mid s, \pi(s))$ and the reward into a vector $R^{\pi}$, and \eqref{eq:mdp_value} becomes the Neumann series $V^{\pi} = \sum_{t \ge 0} \gamma^t (P^{\pi})^t R^{\pi}$. This matrix picture recurs in Chapter~\ref{ch:game_theory}, where the (sub)stochastic matrices are built from the normalized weight parts $\Wsig{l}{\sigma}$ of Definition~\ref{def:posneg_parts}.
+
+\begin{proposition}[Bellman equations]\label{prop:bellman}
+Let $\mathcal{M}$ be a finite \ac{mdp} with $\gamma \in [0,1)$. Then:
+\begin{enumerate}
+	\item $V^{\pi}$ is the unique solution of the linear system
+	\begin{equation}
+		V(s) = \sum_{a \in A(s)} \pi(a \mid s) \Bigl[ R(s,a) + \gamma \sum_{s'} \P(s' \mid s, a)\, V(s') \Bigr],
+		\qquad s \in S.
+		\label{eq:bellman_evaluation}
+	\end{equation}
+	\item $V^{\star}$ is the unique solution of the \emph{Bellman optimality equation}
+	\begin{equation}
+		V(s) = \max_{a \in A(s)} \Bigl\{ R(s, a) + \gamma \sum_{s'} \P(s' \mid s, a)\, V(s') \Bigr\},
+		\qquad s \in S,
+		\label{eq:bellman_optimality}
+	\end{equation}
+	and any pure policy $\polstar$ that selects, in every state, an action attaining the maximum in \eqref{eq:bellman_optimality} is optimal: $V^{\polstar} = V^{\star}$.
+\end{enumerate}
+\hfill\LeanResult{prop:bellman}
+\end{proposition}
+
+\begin{proof}
+Both claims are standard \cite{Puterman1994mdp,SuttonBarto2018rl}. The right-hand sides of \eqref{eq:bellman_evaluation} and \eqref{eq:bellman_optimality} define $\gamma$-contractions on $\bigl(\RR^{S}, \norm{\cdot}_{\infty}\bigr)$, so each has a unique fixed point by the Banach fixed-point theorem; conditioning \eqref{eq:mdp_value} on the first transition identifies these fixed points as $V^{\pi}$ and $V^{\star}$, and any policy greedy for $V^{\star}$ is optimal. The acyclic games below make even the contraction argument unnecessary (Remark~\ref{rem:structural_discount}).
+\end{proof}
+
+\begin{remark}[State-dependent structural discounts]\label{rem:structural_discount}
+The games of this thesis depart from Definition~\ref{def:mdp} in one respect: the discount is \emph{state-dependent}, $\gamma(s) \ge 0$, and may exceed $1$. Here discounts are not impatience parameters but \emph{structural} normalizers---for neuron $i$ in layer $l$ the absolute weight mass
+\begin{equation}
+	\gamma^{(l)}_i \coloneqq \sum_{j} \bigl( \Wsig{l}{+} + \Wsig{l}{-} \bigr)_{ij} = \sum_j \abs{\Wl{l}_{ij}},
+	\label{eq:structural_discount}
+\end{equation}
+which restores the weight mass after row $i$ of $\abs{\Wl{l}}$ is normalized into transition probabilities. Contraction is then unavailable, but also unnecessary: all games are played on \emph{layered acyclic} graphs, so every trajectory is finite and all value functions are well-defined finite sums. Backward induction gives a unique value and the existence of optimal policies; policies need not be unique when actions tie. The two-player statement follows below.
+\end{remark}
+
+\subsection*{Zero-sum turn-based games}
+
+Two-player games enter because a decomposed network carries two interacting streams: a player $P^{+}$ who collects positive evidence and a player $P^{-}$ who collects negative evidence. We use the following conventions throughout: $p, q, r \in \{+, -\}$ denote player, turn, or sign labels; $\opp{p}$ denotes the opponent ($\opp{+} = -$, $\opp{-} = +$); the \emph{sign-XOR} $p \oplus q$ is $+$ if $p = q$ and $-$ otherwise; and $\xi_{p} \in \{+1, -1\}$ is the numerical sign of the label $p$, so that $\xi_{p}\, \xi_{q} = \xi_{p \oplus q}$.
+
+\begin{definition}[Zero-sum turn-based game]\label{def:turn_based_game}
+A (finite) \emph{zero-sum turn-based game} is a tuple $\mathcal{G} = (S_{+}, S_{-}, S_{\mathrm{ter}}, A, \P, R, \gamma)$ where the state set $S = S_{+} \uplus S_{-} \uplus S_{\mathrm{ter}}$ is partitioned into states controlled by player $P^{+}$, states controlled by player $P^{-}$, and terminal states; the action sets $A(s)$, the transition kernel $\P$, and the reward $R$ are as in Definition~\ref{def:mdp} on non-terminal states; $\gamma \colon S \to \RR_{\ge 0}$ is a (possibly state-dependent) discount; and each terminal state $s \in S_{\mathrm{ter}}$ carries a fixed one-time payoff $R(s)$. A \emph{policy pair} $\pi = (\pi_{+}, \pi_{-})$ consists of a policy $\pi_{p}$ for player $P^{p}$ on $S_{p}$. Play generates a trajectory as in an \ac{mdp}, with the player in turn choosing the action; the expected total payoff $V^{\pi}(s)$, defined as in \eqref{eq:mdp_value} with the discount accumulated multiplicatively along the trajectory ($\gamma^t$ replaced by $\prod_{m=0}^{t-1}\gamma(s_m)$), is paid \emph{by $P^{-}$ to $P^{+}$}: player $P^{+}$ maximizes $V^{\pi}$ and player $P^{-}$ minimizes it.
+\end{definition}
+
+\begin{theoremenv}[Shapley--Bellman optimality on layered games]\label{thm:shapley_bellman}
+Let $\mathcal{G}$ be a finite zero-sum turn-based game whose transition graph is acyclic. Then $\mathcal{G}$ has a \emph{value}: there is a unique function $V^{\star} \colon S \to \RR$ satisfying the \emph{Shapley--Bellman optimality equations}
+\begin{equation}
+	V^{\star}(s) =
+	\begin{cases}
+		\displaystyle \max_{a \in A(s)} \Bigl\{ R(s,a) + \gamma(s) \sum_{s'} \P(s' \mid s, a)\, V^{\star}(s') \Bigr\}, & s \in S_{+}, \\[1.2em]
+		\displaystyle \min_{a \in A(s)} \Bigl\{ R(s,a) + \gamma(s) \sum_{s'} \P(s' \mid s, a)\, V^{\star}(s') \Bigr\}, & s \in S_{-}, \\[1.2em]
+		R(s), & s \in S_{\mathrm{ter}},
+	\end{cases}
+	\label{eq:shapley_bellman}
+\end{equation}
+and there exist pure stationary policies $\polstar = (\polstar_{+}, \polstar_{-})$, obtained by selecting maximizing respectively minimizing actions in \eqref{eq:shapley_bellman}, such that for all $s \in S$ and all policies $\pi_{+}, \pi_{-}$,
+\begin{equation}
+	V^{(\polstar_{+}, \pi_{-})}(s) \;\ge\; V^{\polstar}(s) = V^{\star}(s) \;\ge\; V^{(\pi_{+}, \polstar_{-})}(s).
+	\label{eq:saddle_point}
+\end{equation}
+In particular, $\polstar$ is a Nash equilibrium of every subgame, i.e.\ a subgame perfect equilibrium.
+\hfill\LeanResult{thm:shapley_bellman}
+\end{theoremenv}
+
+\begin{proof}
+Since the graph is finite and acyclic, its states admit a topological order; we induct backward along it. For terminal states, \eqref{eq:shapley_bellman} fixes $V^{\star}(s) = R(s)$ and \eqref{eq:saddle_point} is trivial. Consider a non-terminal state $s \in S_{+}$ and assume $V^{\star}$ is uniquely defined and \eqref{eq:saddle_point} holds for all states reachable from $s$. The bracket in \eqref{eq:shapley_bellman} is a well-defined finite number for every action, so the maximum exists and is attained by some pure choice $\polstar_{+}(s)$; this defines $V^{\star}(s)$ uniquely. For the saddle-point property, fix any opponent policy $\pi_{-}$ and let $P^{+}$ play $\polstar_{+}$. Conditioning on the first transition from $s$ and using the induction hypothesis (the left inequality of \eqref{eq:saddle_point} at the successor states) together with $\gamma(s) \ge 0$,
+\begin{align*}
+	V^{(\polstar_{+}, \pi_{-})}(s)
+	&= R\bigl(s, \polstar_{+}(s)\bigr) + \gamma(s) \sum_{s'} \P\bigl(s' \mid s, \polstar_{+}(s)\bigr)\, V^{(\polstar_{+}, \pi_{-})}(s') \\
+	&\ge R\bigl(s, \polstar_{+}(s)\bigr) + \gamma(s) \sum_{s'} \P\bigl(s' \mid s, \polstar_{+}(s)\bigr)\, V^{\star}(s')
+	\;=\; V^{\star}(s),
+\end{align*}
+where the last equality holds because $\polstar_{+}(s)$ attains the maximum in \eqref{eq:shapley_bellman}. Similarly, if $P^{+}$ plays an arbitrary $\pi_{+}$ against $\polstar_{-}$, then averaging the bracket over $\pi_{+}(\cdot \mid s)$ is at most its maximum, so the same conditioning together with the right inequality at the successors yields $V^{(\pi_{+}, \polstar_{-})}(s) \le V^{\star}(s)$. The argument for $s \in S_{-}$ is symmetric, with $\max$ and $\min$ and the inequality directions exchanged. Evaluating both inequalities of \eqref{eq:saddle_point} at $\pi = \polstar$ gives $V^{\polstar} = V^{\star}$. Since the argument applies verbatim to the subgame rooted at any state, $\polstar$ is subgame perfect.
+\end{proof}
+
+\begin{remark}\label{rem:shapley_history}
+For general discounted stochastic games with cycles, existence of the value and of optimal stationary policies is Shapley's theorem \cite{Shapley1953stochastic}, proved by the contraction argument of Proposition~\ref{prop:bellman} applied to the \emph{Shapley operator}---the min-max analogue of the Bellman operator \eqref{eq:shapley_bellman}. \textcite{Gaubert2025} formulate their network games in this operator language. The layered acyclic case of Theorem~\ref{thm:shapley_bellman} is all we need, and it additionally delivers subgame perfection, on which Chapter~\ref{ch:trajectory} relies.
+\end{remark}
+
+\subsection{The ReLU Net Game of Gaubert and Vlassopoulos}\label{subsec:relu_net_game}
+
+\textcite{Gaubert2025} showed that the forward pass of a \ac{relu} network \emph{is} the value of a zero-sum turn-based stopping game played backward on the network graph. We present their construction in full, in our notation, since Chapter~\ref{ch:game_theory} inherits its state space, transition kernel, and stopping structure while changing the payoff bookkeeping. Throughout, fix a network as in Definition~\ref{def:ffn_relu} with scalar output ($d^{(L)} = 1$), fix an input $x \in \RR^{d^{(0)}}$, and assume that no row of any weight matrix vanishes, so that the discounts \eqref{eq:structural_discount} are strictly positive.
+
+Read the identity $\actl{l}_i = \max\bigl\{0,\, \preactl{l}_i\bigr\}$ as a decision: a player at neuron $i$ may \emph{stop}, securing payoff $0$, or \emph{continue}, collecting the bias $b^{(l)}_i$ plus the weighted contributions of the previous layer. Continuing propagates the decision backward through the network; a negative weight flips the sign of its contribution, i.e.\ hands the turn to an adversary facing the mirrored problem. The optimal value at neuron $i$ is exactly the activation $\actl{l}_i$.
+
+\begin{definition}[ReLU Net Game, following \cite{Gaubert2025}]\label{def:relu_net_game}
+The \emph{ReLU Net Game} on the network $f$ at input $x$ is the zero-sum turn-based game with the following components.
+\begin{itemize}
+	\item \textbf{States.} For every hidden layer $l \in \{1, \ldots, L-1\}$, every neuron $i \in [d^{(l)}]$, and every turn label $q \in \{+,-\}$ there is an \emph{activation state} $s^{(l)}_{i,q}$, controlled by player $P^{q}$, so that $S_q = \bigl\{ s^{(l)}_{i,q} : l \in [L-1],\, i \in [d^{(l)}] \bigr\}$. For every input coordinate $k \in [d^{(0)}]$ and every $q \in \{+,-\}$ there is a \emph{terminal state} $s^{(0)}_{k,q}$, and there is one absorbing \emph{cemetery state} $\perp$ with zero payoff. Finally, there is a single \emph{output state} $s^{(L)}$ at the affine output neuron, at which no decision is taken.
+	\item \textbf{Actions.} At every activation state the player in turn chooses an action from $\{\mathrm{stop}, \mathrm{cont}\}$. The output state has the single action $\mathrm{cont}$.
+	\item \textbf{Transitions.} Stopping moves deterministically to the cemetery, $\P(\perp \mid s^{(l)}_{i,q}, \mathrm{stop}) = 1$. Continuation at $s^{(l)}_{i,q}$ moves one layer backward, to neuron $j$ of layer $l-1$ with probability proportional to the absolute weight, keeping the turn on positive weights and passing it to the opponent on negative weights:
+	\begin{equation}
+		\P\bigl( s^{(l-1)}_{j,r} \,\big|\, s^{(l)}_{i,q}, \mathrm{cont} \bigr)
+		\coloneqq \frac{\Wsig{l}{q \oplus r}_{ij}}{\gamma^{(l)}_i},
+		\qquad
+		\gamma^{(l)}_i = \sum_{j} \bigl( \Wsig{l}{+} + \Wsig{l}{-} \bigr)_{ij},
+		\label{eq:rng_kernel}
+	\end{equation}
+	where for $l = 1$ the successor $s^{(0)}_{j,r}$ is the corresponding terminal state. The output state transitions by the same rule \eqref{eq:rng_kernel} with $l = L$ and turn label $q = +$.
+	\item \textbf{Payoffs and discounts.} Continuation at $s^{(l)}_{i,q}$ pays the signed bias $\xi_{q}\, b^{(l)}_i$; stopping pays $0$. A terminal state pays the signed input coordinate once, $R\bigl(s^{(0)}_{k,q}\bigr) \coloneqq \xi_{q}\, x_k$, and the game ends. The output state pays $b^{(L)}$ upon its forced continuation. The discount at every activation state and at the output state is the structural discount $\gamma\bigl(s^{(l)}_{i,q}\bigr) \coloneqq \gamma^{(l)}_i$ of \eqref{eq:structural_discount}.
+\end{itemize}
+Player $P^{+}$ maximizes and $P^{-}$ minimizes the expected discounted total payoff, as in Definition~\ref{def:turn_based_game}.
+\end{definition}
+
+The game graph is layered and acyclic---every transition strictly decreases the layer index or ends in the cemetery---so Theorem~\ref{thm:shapley_bellman} applies despite the discounts $\gamma^{(l)}_i$ being arbitrary positive numbers. Normalization and discounting cancel: the product of the transition probability \eqref{eq:rng_kernel} and the discount $\gamma^{(l)}_i$ is exactly the absolute weight $\abs{\Wl{l}_{ij}}$, so the Shapley--Bellman recursion reproduces the affine algebra of the forward pass.
+
+\begin{theoremenv}[Forward pass as game value, \cite{Gaubert2025}]\label{thm:relu_net_game_value}
+The ReLU Net Game of Definition~\ref{def:relu_net_game} admits the subgame perfect equilibrium $\polstar = (\polstar_{+}, \polstar_{-})$ in which both players use the same pure stopping rule,
+\begin{equation}
+	\polstar_{q}\bigl( s^{(l)}_{i,q} \bigr) = \mathrm{cont}
+	\quad \Longleftrightarrow \quad
+	\preactl{l}_i > 0,
+	\label{eq:rng_equilibrium_policy}
+\end{equation}
+and the value function of the game evaluates the network:
+\begin{equation}
+	V^{\star}\bigl(s^{(l)}_{i,q}\bigr) = \xi_{q}\, \actl{l}_i
+	\quad \text{for } l \in \{0, 1, \ldots, L-1\},
+	\qquad
+	V^{\star}\bigl(s^{(L)}\bigr) = f(x),
+	\label{eq:rng_value_identity}
+\end{equation}
+where for $l = 0$ we read $\actl{0}_k = x_k$. The equilibrium is unique up to tie-breaking at neurons with $\preactl{l}_i = 0$, where both actions are optimal; the convention \eqref{eq:rng_equilibrium_policy} stops at ties, matching $\relu'(0) = 0$.
+\hfill\LeanResult{thm:relu_net_game_value}
+\end{theoremenv}
+
+\begin{proof}
+By Theorem~\ref{thm:shapley_bellman} it suffices to verify that the function defined by \eqref{eq:rng_value_identity} satisfies the Shapley--Bellman equations \eqref{eq:shapley_bellman}, with the maximizers and minimizers given by \eqref{eq:rng_equilibrium_policy}. We induct on the layer index.
+
+\emph{Base case $l = 0$.} Terminal states carry the fixed payoff $R\bigl(s^{(0)}_{k,q}\bigr) = \xi_q\, x_k = \xi_q\, \actl{0}_k$, which is \eqref{eq:rng_value_identity}.
+
+\emph{Inductive step.} Let $l \ge 1$ and assume \eqref{eq:rng_value_identity} at layer $l - 1$. Consider first a state $s^{(l)}_{i,+} \in S_{+}$. The stop action yields $0 + V^{\star}(\perp) = 0$. The continuation value is, by \eqref{eq:rng_kernel} and the induction hypothesis,
+\begin{align}
+	R\bigl(s^{(l)}_{i,+}, \mathrm{cont}\bigr) + \gamma^{(l)}_i \sum_{j, r} \frac{\Wsig{l}{+ \oplus r}_{ij}}{\gamma^{(l)}_i}\, \xi_{r}\, \actl{l-1}_j
+	&= b^{(l)}_i + \sum_{j} \Bigl( \Wsig{l}{+}_{ij}\, \actl{l-1}_j - \Wsig{l}{-}_{ij}\, \actl{l-1}_j \Bigr) \notag\\
+	&= b^{(l)}_i + \sum_j \Wl{l}_{ij}\, \actl{l-1}_j
+	\;=\; \preactl{l}_i,
+	\label{eq:rng_cont_value}
+\end{align}
+using $+ \oplus r = r$, $\xi_{+} = 1$, $\xi_{-} = -1$, and $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$. The maximizing player $P^{+}$ therefore obtains
+\begin{equation*}
+	V^{\star}\bigl(s^{(l)}_{i,+}\bigr) = \max\bigl\{ 0,\, \preactl{l}_i \bigr\} = \relu\bigl(\preactl{l}_i\bigr) = \actl{l}_i = \xi_{+}\, \actl{l}_i,
+\end{equation*}
+continuing exactly when $\preactl{l}_i > 0$. At the mirrored state $s^{(l)}_{i,-} \in S_{-}$ the continuation payoff is $\xi_{-} b^{(l)}_i = -b^{(l)}_i$, and the kernel labels satisfy $- \oplus r = \opp{r}$, so the computation \eqref{eq:rng_cont_value} returns the continuation value
+\begin{equation*}
+	-b^{(l)}_i + \sum_{j} \Bigl( \Wsig{l}{-}_{ij}\, \actl{l-1}_j - \Wsig{l}{+}_{ij}\, \actl{l-1}_j \Bigr)
+	= -\preactl{l}_i .
+\end{equation*}
+The minimizing player $P^{-}$ obtains $V^{\star}\bigl(s^{(l)}_{i,-}\bigr) = \min\{0, -\preactl{l}_i\} = -\relu\bigl(\preactl{l}_i\bigr) = \xi_{-}\, \actl{l}_i$ and prefers to continue exactly when $-\preactl{l}_i < 0$, i.e.\ under the same gate \eqref{eq:rng_equilibrium_policy}. At $\preactl{l}_i = 0$ both actions give value $0$ for either player, which proves the uniqueness-up-to-ties claim. Finally, the output state has the single action $\mathrm{cont}$, and the computation \eqref{eq:rng_cont_value} with $l = L$ yields $V^{\star}\bigl(s^{(L)}\bigr) = \preactl{L} = \actl{L} = f(x)$.
+\end{proof}
+
+\begin{remark}[Softplus networks from entropy regularization]\label{rem:softplus_game}
+\textcite{Gaubert2025} also treat softplus networks, by \emph{regularizing} the stop/continue decision. Replace the hard choice at an activation state by a mixed policy $\nu \in \Delta(\{\mathrm{stop}, \mathrm{cont}\})$ rewarded with a Shannon-entropy bonus at temperature $\theta > 0$. By the Legendre--Fenchel identity for the entropy \cite{BoydVandenberghe2004},
+\begin{equation}
+	\max_{\nu \in \Delta_n} \Bigl\{ \textstyle\sum_{i=1}^{n} \nu_i r_i + \theta\, \mathcal{H}(\nu) \Bigr\}
+	= \theta \log \textstyle\sum_{i=1}^{n} e^{r_i / \theta},
+	\qquad
+	\mathcal{H}(\nu) = -\textstyle\sum_i \nu_i \log \nu_i,
+	\label{eq:legendre_fenchel}
+\end{equation}
+with the Gibbs distribution $\nu^{\star}_i \propto e^{r_i/\theta}$ as unique maximizer, the regularized value at a state with continuation value $\preactl{l}_i$ (computed as in \eqref{eq:rng_cont_value}) becomes $\theta \log\bigl(1 + e^{\preactl{l}_i / \theta}\bigr)$---the softplus activation at temperature $\theta$---and the equilibrium policy continues with the sigmoid probability $\bigl(1 + e^{-\preactl{l}_i/\theta}\bigr)^{-1}$. The hard game of Definition~\ref{def:relu_net_game} is recovered in the limit $\theta \to 0$. Chapter~\ref{ch:game_theory} re-derives this mechanism from the regularized decompositions of Section~\ref{sec:regularized_decompositions} and reuses it at the routing states of the \ac{rg}, with the two temperatures $\theta$ (activation gates) and $\tau$ (routing) kept distinct.
+\end{remark}
+
+\begin{remark}[What Chapter~\ref{ch:game_theory} inherits and what it changes]\label{rem:inherited_vs_new}
+The \ac{sg} of Chapter~\ref{ch:game_theory} keeps the structural skeleton of Definition~\ref{def:relu_net_game}: per-neuron $\pm$ states, stop-versus-continue actions, the bias as continuation payoff and the input as final payoff, the transition kernel \eqref{eq:rng_kernel} driven by the weight parts $\Wsig{l}{\sigma}$, the cemetery state, and the structural discounts $\gamma^{(l)}_i$. Two changes are load-bearing for attribution. First, the original tracks only the single signed value \eqref{eq:rng_value_identity}; Chapter~\ref{ch:game_theory} additionally maintains a \emph{non-negative payoff per player}, identifying the pair of player-specific values $\Vp{p}{s}$, $p \in \{+,-\}$, with the two streams of the Stopping Decomposition of Section~\ref{sec:stopping_decomposition} and recovering \eqref{eq:rng_value_identity} as their difference. Second, the signed terminal payoffs $\xi_q\, x_k$ become the non-negative pair $(x_k^{+}, x_k^{-})$ of Definition~\ref{def:posneg_parts}, keeping every player-specific quantity non-negative and exposing the parity structure of backward trajectories. Chapter~\ref{ch:game_theory} further extends the graph to skip connections and max-pooling and adds risk aversion and regularized policies, none of which appear in the original game.
+\end{remark}
+
+\section{Tropical Geometry and Polyhedra}\label{sec:tropical_polyhedra_foundations}
+
+Tropical geometry replaces $(+, \times)$ by $(\max, +)$, turning polynomials into convex \ac{cpwl} functions and polynomial multiplication into Minkowski addition of polytopes. This is the algebra governing the convex streams $g$ and $h$ of the DC decomposition, which Sections~\ref{sec:tropical_rational_maps}--\ref{sec:imaginative_polytopes} exploit to read learned structure off the associated polytopes. We collect the definitions and calculus rules used there.
+
+\begin{definition}[Max-plus and min-plus semirings]\label{def:maxplus_semiring}
+The \emph{max-plus semiring} is the set $\RR_{\max} \coloneqq \RR \cup \{-\infty\}$ equipped with \emph{tropical addition} and \emph{tropical multiplication},
+\begin{equation}
+	u \oplus v \coloneqq \max\{u, v\},
+	\qquad
+	u \odot v \coloneqq u + v,
+	\label{eq:tropical_operations}
+\end{equation}
+with additive neutral element $-\infty$ and multiplicative neutral element $0$. Both operations are associative and commutative, and $\odot$ distributes over $\oplus$; additive inverses do not exist, so $\RR_{\max}$ is a semiring but not a ring. The \emph{min-plus semiring} $\RR_{\min} \coloneqq \RR \cup \{+\infty\}$ is defined dually with $u \oplus' v \coloneqq \min\{u,v\}$; the map $u \mapsto -u$ is an isomorphism between the two, so every statement below has a min-plus counterpart.
+\end{definition}
+
+For example, $2 \oplus 3 = 3$ and $2 \odot 3 = 5$, and the tropical square is $u^{\odot 2} = u \odot u = 2u$. More generally, tropical exponentiation is scalar multiplication, $u^{\odot \alpha} = \alpha u$, which is meaningful for any real exponent $\alpha$. (The symbol $\oplus$ doubles as the sign-XOR of Section~\ref{sec:game_theory_mdp_foundations}; the operands---real numbers here, sign labels there---always disambiguate.)
+
+\begin{definition}[Tropical polynomials and rational functions]\label{def:tropical_polynomial}
+A \emph{tropical monomial} in $d$ variables with exponent $\alpha \in \RR^{d}$ and coefficient $c \in \RR$ is the affine function $c \odot x_1^{\odot \alpha_1} \odot \cdots \odot x_d^{\odot \alpha_d} = c + \langle \alpha, x \rangle$. A \emph{tropical polynomial} with finite support $\mathcal{A} \subset \RR^{d}$ and coefficients $(c_{\alpha})_{\alpha \in \mathcal{A}}$, $c_\alpha \in \RR$, is the tropical sum of monomials,
+\begin{equation}
+	p(x) \;=\; \bigoplus_{\alpha \in \mathcal{A}} c_{\alpha} \odot x^{\odot \alpha}
+	\;=\; \max_{\alpha \in \mathcal{A}} \bigl( c_{\alpha} + \langle \alpha, x \rangle \bigr).
+	\label{eq:tropical_polynomial}
+\end{equation}
+A \emph{tropical rational function} is a tropical quotient of two tropical polynomials, $p \oslash q \coloneqq p - q$. In classical tropical geometry \cite{MaclaganSturmfels2015tropical} the exponents are restricted to $\mathcal{A} \subset \NN^{d}$ or $\ZZ^{d}$; for neural networks, real exponents (network weights) are the natural setting, and all statements below hold verbatim in this generality.
+\end{definition}
+
+A one-dimensional example: $p(x) = 0 \oplus (0 \odot x) \oplus \bigl((-1) \odot x^{\odot 2}\bigr) = \max\{0,\, x,\, 2x - 1\}$, a convex piecewise-linear function with breakpoints at $x = 0$ and $x = 1$.
+
+\begin{observation}[Tropical polynomials are the convex \ac{cpwl} functions]\label{obs:tropical_convex_cpwl}
+A function $p \colon \RR^d \to \RR$ is a tropical polynomial \eqref{eq:tropical_polynomial} if and only if it is convex and \ac{cpwl}.
+\hfill\LeanResult{obs:tropical_convex_cpwl}
+\end{observation}
+
+\begin{proof}
+A tropical polynomial is a finite maximum of affine functions, hence convex and \ac{cpwl}. Conversely, let $p$ be convex and \ac{cpwl} with affine pieces $\ell_1, \ldots, \ell_N$ on the linear regions $Q_1, \ldots, Q_N$ of Definition~\ref{def:cpwl}. We claim $p = \max_r \ell_r$. Pointwise $p \le \max_r \ell_r$, since every $x$ lies in some region $Q_r$ where $p(x) = \ell_r(x)$. For the reverse inequality, fix $r$ and a point $x_0$ in the interior of the full-dimensional region $Q_r$. Then $\ell_r$ agrees with $p$ on a neighborhood of $x_0$, and it is a supporting affine minorant of the convex function $p$ at $x_0$: for any $x$ and sufficiently small $t \in (0, 1)$, convexity gives $p\bigl(x_0 + t(x - x_0)\bigr) \le (1-t)\, p(x_0) + t\, p(x)$, while the left-hand side equals $\ell_r\bigl(x_0 + t(x-x_0)\bigr) = (1-t)\,\ell_r(x_0) + t\,\ell_r(x)$; comparing and using $p(x_0) = \ell_r(x_0)$ yields $\ell_r(x) \le p(x)$. Hence $\max_r \ell_r \le p$, and equality holds.
+\end{proof}
+
+Combining Observation~\ref{obs:tropical_convex_cpwl} with the DC representation \eqref{eq:cpwl_dc_representation} and Theorem~\ref{thm:cpwl_relu_equivalence} identifies \ac{relu} network functions with tropical rational functions; this is the theorem of \textcite{Zhang2018}, restated and connected to the split streams $g$ and $h$ in Section~\ref{sec:tropical_rational_maps}. The expressivity of tropical polynomials as computed by networks is studied by \textcite{Misiakos2022neural} and, in the real-exponent setting, by \textcite{Brandenburg2024b}.
+
+\subsection*{Newton polytopes, Minkowski sums, and support functions}
+
+The combinatorics of a tropical polynomial is captured by a polytope---the convex hull of its exponents. We refer to \textcite{Ziegler1995} for general polytope theory and write $\operatorname{conv}$ for the convex hull.
+
+\begin{definition}[Newton polytope]\label{def:newton_polytope}
+The \emph{Newton polytope} of a tropical polynomial $p$ with support $\mathcal{A}$ as in \eqref{eq:tropical_polynomial} is the convex hull of its exponent vectors,
+\begin{equation}
+	\operatorname{Newt}(p) \coloneqq \operatorname{conv}\bigl\{ \alpha : \alpha \in \mathcal{A} \bigr\} \subset \RR^{d}.
+	\label{eq:newton_polytope}
+\end{equation}
+The \emph{lifted Newton polytope} additionally records the coefficients,
+$\widehat{\operatorname{Newt}}(p) \coloneqq \operatorname{conv}\bigl\{ (\alpha, c_{\alpha}) : \alpha \in \mathcal{A} \bigr\} \subset \RR^{d+1}$.
+\end{definition}
+
+For the example $p(x) = \max\{0, x, 2x-1\}$ above, $\mathcal{A} = \{0, 1, 2\}$ and $\operatorname{Newt}(p) = [0, 2] \subset \RR$, while $\widehat{\operatorname{Newt}}(p) = \operatorname{conv}\{(0,0), (1,0), (2,-1)\}$ is a triangle in $\RR^2$.
+
+\begin{definition}[Minkowski sum]\label{def:minkowski_sum}
+The \emph{Minkowski sum} of two sets $P, Q \subseteq \RR^{d}$ is $P + Q \coloneqq \{ u + v : u \in P,\, v \in Q \}$. For polytopes $P$ and $Q$ the Minkowski sum is again a polytope, and every vertex of $P + Q$ decomposes as the sum of a vertex of $P$ and a vertex of $Q$ \cite{Ziegler1995}.
+\end{definition}
+
+For example, the Minkowski sum of two segments in general position is a parallelogram, and the Minkowski sum of $k$ segments is a \emph{zonotope}---the polytope class that \textcite{Zhang2018} showed to govern one-hidden-layer \ac{relu} networks. The analytic tool linking polytopes to convex functions is the support function.
+
+\begin{definition}[Support function]\label{def:support_function}
+The \emph{support function} of a nonempty compact convex set $P \subset \RR^{d}$ is
+\begin{equation}
+	h_{P} \colon \RR^{d} \to \RR,
+	\qquad
+	h_{P}(x) \coloneqq \max_{u \in P}\, \langle u, x \rangle .
+	\label{eq:support_function}
+\end{equation}
+\end{definition}
+
+\begin{lemmaenv}[Properties of support functions]\label{lem:support_properties}
+Let $P, Q \subset \RR^{d}$ be nonempty compact convex sets. Then:
+\begin{enumerate}
+	\item $h_{P}$ is convex and positively homogeneous, i.e.\ $h_P(\lambda x) = \lambda h_P(x)$ for $\lambda \ge 0$; if $P$ is a polytope with vertex set $\operatorname{vert}(P)$, then $h_{P}(x) = \max_{u \in \operatorname{vert}(P)} \langle u, x \rangle$ is a tropical polynomial with zero coefficients and Newton polytope $P$.
+	\item For any nonempty finite set $A \subset \RR^d$ and $x \in \RR^d$, $\max_{u \in \operatorname{conv}(A)} \langle u, x \rangle = \max_{u \in A} \langle u, x \rangle$; in particular $h_{P + Q} = h_{P} + h_{Q}$ and $h_{\operatorname{conv}(P \cup Q)} = \max\{h_{P}, h_{Q}\} = h_P \oplus h_Q$.
+	\item $P \subseteq Q$ if and only if $h_{P} \le h_{Q}$ pointwise; in particular $h_{P} = h_{Q}$ implies $P = Q$, so a compact convex set is uniquely determined by its support function.
+\end{enumerate}
+\hfill\LeanResult{lem:support_properties}
+\end{lemmaenv}
+
+\begin{proof}
+1: As a pointwise maximum of the linear functions $x \mapsto \langle u, x\rangle$, $u \in P$, the support function is convex, and homogeneity is clear from \eqref{eq:support_function}. For a polytope, the maximum of the linear objective $\langle \cdot\,, x \rangle$ over $P$ is attained at a vertex, giving the finite-max representation; its exponent set is $\operatorname{vert}(P)$, whose convex hull is $P$.
+
+2: Maximizing a linear function over a convex hull adds nothing: any convex combination satisfies $\bigl\langle \sum_i \lambda_i u_i, x \bigr\rangle = \sum_i \lambda_i \langle u_i, x\rangle \le \max_i \langle u_i, x \rangle$, and $A \subseteq \operatorname{conv}(A)$ gives the reverse bound. For the Minkowski sum, $\max_{w \in P + Q} \langle w, x \rangle = \max_{u \in P,\, v \in Q} \bigl( \langle u, x\rangle + \langle v, x\rangle \bigr) = h_P(x) + h_Q(x)$, since the two maximizations decouple. For the union, the objective attains the same maximum over $\operatorname{conv}(P \cup Q)$ as over $P \cup Q$ by the first claim (applied with suprema over compact sets in place of finite maxima, with the same one-line proof), and $\max_{u \in P \cup Q} \langle u, x \rangle = \max\{h_P(x), h_Q(x)\}$.
+
+3: If $P \subseteq Q$, the maximum in \eqref{eq:support_function} over the larger set is at least as big, so $h_P \le h_Q$. Conversely, suppose $u_0 \in P \setminus Q$. By the separating-hyperplane theorem for a point and a compact convex set \cite{BoydVandenberghe2004}, there is $x \in \RR^d$ with $\langle u_0, x \rangle > \max_{v \in Q} \langle v, x \rangle = h_Q(x)$, whence $h_P(x) \ge \langle u_0, x\rangle > h_Q(x)$, contradicting $h_P \le h_Q$. The uniqueness statement follows by applying the equivalence in both directions.
+\end{proof}
+
+Support functions translate the tropical operations on polynomials into polytope operations on their Newton polytopes.
+
+\begin{proposition}[Newton polytope calculus, cf.\ \cite{Zhang2018}]\label{prop:newton_calculus}
+Let $p$ and $q$ be tropical polynomials on $\RR^d$. Then
+\begin{equation}
+	\operatorname{Newt}(p \odot q) = \operatorname{Newt}(p) + \operatorname{Newt}(q),
+	\qquad
+	\operatorname{Newt}(p \oplus q) = \operatorname{conv}\bigl( \operatorname{Newt}(p) \cup \operatorname{Newt}(q) \bigr).
+	\label{eq:newton_calculus}
+\end{equation}
+Moreover, the lifted Newton polytope determines the polynomial function:
+\begin{equation}
+	p(x) = h_{\widehat{\operatorname{Newt}}(p)}(x, 1)
+	\qquad \text{for all } x \in \RR^{d},
+	\label{eq:lifted_support}
+\end{equation}
+and if all coefficients vanish, $c_{\alpha} \equiv 0$, then $p = h_{\operatorname{Newt}(p)}$.
+\hfill\LeanResult{prop:newton_calculus}
+\end{proposition}
+
+\begin{proof}
+We first prove \eqref{eq:lifted_support}. By Lemma~\ref{lem:support_properties}.2 applied to the finite point set $\{(\alpha, c_\alpha) : \alpha \in \mathcal{A}\}$, maximizing the linear functional $\langle \cdot\,, (x,1) \rangle$ over its convex hull $\widehat{\operatorname{Newt}}(p)$ equals maximizing it over the points themselves:
+\begin{equation*}
+	h_{\widehat{\operatorname{Newt}}(p)}(x, 1)
+	= \max_{\alpha \in \mathcal{A}} \bigl\langle (\alpha, c_{\alpha}), (x, 1) \bigr\rangle
+	= \max_{\alpha \in \mathcal{A}} \bigl( \langle \alpha, x \rangle + c_{\alpha} \bigr)
+	= p(x),
+\end{equation*}
+and the zero-coefficient case is the same computation one dimension lower.
+
+For the tropical sum $p \oplus q = \max\{p, q\}$: its support is the union $\mathcal{A}_p \cup \mathcal{A}_q$ (an exponent occurring in both summands keeps the larger coefficient, which does not change the support), so
+\begin{equation*}
+	\operatorname{Newt}(p \oplus q) = \operatorname{conv}(\mathcal{A}_p \cup \mathcal{A}_q) = \operatorname{conv}\bigl( \operatorname{conv}(\mathcal{A}_p) \cup \operatorname{conv}(\mathcal{A}_q) \bigr) = \operatorname{conv}\bigl( \operatorname{Newt}(p) \cup \operatorname{Newt}(q) \bigr),
+\end{equation*}
+where the middle equality holds because both sides are the smallest convex set containing $\mathcal{A}_p \cup \mathcal{A}_q$.
+
+For the tropical product $p \odot q = p + q$: expanding the product of \eqref{eq:tropical_polynomial} termwise shows that the support of $p \odot q$ is contained in the pointwise sum $\mathcal{A}_p + \mathcal{A}_q$ (tropical addition of coefficients on coinciding exponent sums never removes an exponent, in contrast to classical cancellation), so
+\begin{equation*}
+	\operatorname{Newt}(p \odot q) \subseteq \operatorname{conv}(\mathcal{A}_p + \mathcal{A}_q) = \operatorname{conv}(\mathcal{A}_p) + \operatorname{conv}(\mathcal{A}_q) = \operatorname{Newt}(p) + \operatorname{Newt}(q),
+\end{equation*}
+using the identity $\operatorname{conv}(A + B) = \operatorname{conv}(A) + \operatorname{conv}(B)$: the right-hand side is a convex set containing $A + B$, and conversely any sum of convex combinations $\sum_i \lambda_i u_i + \sum_j \mu_j v_j = \sum_{i,j} \lambda_i \mu_j (u_i + v_j)$ is a convex combination of points of $A + B$. For the reverse inclusion, take a vertex $w$ of $\operatorname{Newt}(p) + \operatorname{Newt}(q)$ and a linear functional $\langle \cdot\,, x^* \rangle$ uniquely maximized over the sum at $w$; by Definition~\ref{def:minkowski_sum} we may write $w = u + v$ with $u \in \mathcal{A}_p$ maximizing $\langle \cdot\,, x^* \rangle$ over $\operatorname{Newt}(p)$ and $v \in \mathcal{A}_q$ maximizing it over $\operatorname{Newt}(q)$ (a vertex of a Newton polytope belongs to the support). Then $w = u + v$ lies in the support of $p \odot q$, so every vertex of $\operatorname{Newt}(p) + \operatorname{Newt}(q)$ lies in $\operatorname{Newt}(p \odot q)$, and taking convex hulls gives the reverse inclusion.
+\end{proof}
+
+\begin{remark}[Layer transitions as polytope operations]\label{rem:polytope_layer_transitions}
+Proposition~\ref{prop:newton_calculus} is the dictionary used in the remaining subsections: an affine layer with non-negative weights acts on the tropical polynomials computed by the previous layer through tropical products and powers---Minkowski sums and scalings of Newton polytopes---while $\relu$ and Maxout gates act through tropical sums---convex hulls of unions. The convex streams $g$ and $h$ of the DC decomposition---developed in full in Chapter~\ref{ch:decompositions}---are, by Observation~\ref{obs:tropical_convex_cpwl}, tropical polynomials, so their (lifted) Newton polytopes are computable layer by layer. Section~\ref{sec:imaginative_polytopes} studies these polytopes: by Lemma~\ref{lem:support_properties}.3 they encode the split streams faithfully, and their vertices are exactly the attainable gradients of $g$ and $h$---the geometric objects behind the \emph{imaginative polytopes} of this thesis. For the broader landscape connecting polyhedral and tropical geometry with network expressivity, see \cite{Zhang2018,Brandenburg2024b,huchette2025deeplearningmeetspolyhedral}.
+\end{remark}
+
+\subsection{Tropical Rational Maps and the DC Split}\label{sec:tropical_rational_maps}
+
+The tropical dictionary above reads the \ac{dc} decomposition geometrically. \textcite{Zhang2018} showed that feedforward \ac{relu} networks with real weights are exactly the \emph{tropical rational maps}---componentwise differences of max-plus polynomials---so that counting linear regions becomes counting polytope vertices; the converse, that every \ac{cpwl} function arises this way, is \textcite{Arora2018}.\footnote{Related max-affine perspectives include Maxout networks \cite{Goodfellow2013Maxout} and the expressivity program on Newton polytopes \cite{Haase2023,Misiakos2022neural,hertrich2025neuralnetworksvirtualextended,huchette2025deeplearningmeetspolyhedral,Brandenburg2024b}.} We use this correspondence in the opposite direction: rather than bounding a worst-case network, we take a \emph{trained} network, compute its split streams $g, h$ explicitly---the construction developed in full in Chapter~\ref{ch:decompositions}---and read the vertices of their Newton polytopes as learned prototypes for interpreting trained networks \cite{ZimmermannLoho2025}.
+
+This subsection anticipates the difference-of-convex split developed in full in Chapter~\ref{ch:decompositions}, presenting its geometry here because it belongs with the tropical and polyhedral foundations of this chapter. The split forward pass---formalized in Chapter~\ref{ch:decompositions}---acts on a bias-free network as follows: the input $x \in \RR^d$ is replaced by a pair $(\act{0}{+}, \act{0}{-})$ with $x = \act{0}{+} - \act{0}{-}$, the weights are split as $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$ with $\Wsig{l}{\pm} \ge 0$, and the hidden layers $1\leq l<L$ iterate entrywise
+\begin{align}
+    \preact{l}{+} &= \Wsig{l}{+} \act{l-1}{+} + \Wsig{l}{-} \act{l-1}{-},
+    &
+    \preact{l}{-} &= \Wsig{l}{-} \act{l-1}{+} + \Wsig{l}{+} \act{l-1}{-},
+    \label{eq:split_preact_recursion}
+    \\
+    \act{l}{+} &= \max\bigl\{ \preact{l}{+}, \preact{l}{-} \bigr\},
+    &
+    \act{l}{-} &= \preact{l}{-},
+    \label{eq:split_act_recursion}
+\end{align}
+At the final affine readout, use the same pre-activation formulas and set $\act{L}{\pm}=\preact{L}{\pm}$ without a maximum. Thus for a scalar output the split streams $g, h \colon \RR^{2d} \to \RR$ map the doubled input $(\act{0}{+}, \act{0}{-})$ to the two final components and satisfy $f(\act{0}{+} - \act{0}{-}) = g - h$. The following theorem identifies this construction as a tropical rational decomposition whose components carry additional monotone structure.
+
+\begin{theoremenv}[The \ac{dc} split is a monotone tropical rational decomposition]\label{thm:split_tropical_rational}
+Let $f \colon \RR^d \to \RR$ be a bias-free \ac{relu} \ac{mlp} with scalar output and split streams $g, h \colon \RR^{2d} \to \RR$ defined by \eqref{eq:split_preact_recursion}--\eqref{eq:split_act_recursion}. Then:
+\begin{enumerate}
+    \item every coordinate of $\act{l}{+}$ and $\act{l}{-}$, and in particular $g$ and $h$, is a positively homogeneous \emph{monotone} tropical polynomial in the doubled variable $(x^+, x^-) \in \RR^{2d}$;
+    \item for every splitting $x = x^+ - x^-$,
+    \begin{equation}
+        f(x) \;=\; g(x^+, x^-) \;-\; h(x^+, x^-),
+        \label{eq:tropical_rational_split}
+    \end{equation}
+    i.e.\ $f$, precomposed with the difference map, is the tropical rational function $g \oslash h$.
+\end{enumerate}
+\hfill\LeanResult{thm:split_tropical_rational}
+\end{theoremenv}
+
+\begin{proof}
+\emph{(1).} Induct forward. At $l = 0$ the coordinates of $\act{0}{+} = x^+$ and $\act{0}{-} = x^-$ are coordinate projections, i.e.\ monomials $\langle e_j, \cdot \rangle$ with a single non-negative exponent and zero coefficient. For the step, each coordinate of $\preact{l}{\pm}$ in \eqref{eq:split_preact_recursion} is a non-negative combination of layer-$(l-1)$ coordinates (as $\Wsig{l}{\pm} \ge 0$), and each coordinate of $\act{l}{+}$ is a pointwise maximum of two of these while $\act{l}{-} = \preact{l}{-}$. By the closure of positively homogeneous monotone tropical polynomials under non-negative combinations and maxima (Observation~\ref{obs:tropical_convex_cpwl}), the property propagates to $g$ and $h$. \emph{(2).} The identity \eqref{eq:tropical_rational_split} is not a new proof obligation here: the correctness of the split $f = g - h$ is established in Chapter~\ref{ch:decompositions}, and the present part only restates it in tropical language---by part (1) both $g$ and $h$ are tropical polynomials, so their difference $g \oslash h = g - h$ is a tropical rational function.
+\end{proof}
+
+Monotonicity of both components---not guaranteed by generic tropical rational representations---is what confines the Newton polytopes below to the non-negative orthant, via the following elementary fact.
+
+\begin{theoremenv}[Monotone \ac{cpwl} functions have non-negative gradients]\label{thm:monotone_nonneg_gradients}
+Let $u \colon \RR^n \to \RR$ be monotone and \ac{cpwl}. Then every gradient attained by $u$ at a point of differentiability is entrywise non-negative.
+\hfill\LeanResult{thm:monotone_nonneg_gradients}
+\end{theoremenv}
+
+\begin{proof}
+If $u$ is differentiable at $x$ with $(\nabla u(x))_j < 0$, then $u$ is affine on an $\varepsilon$-ball around $x$, and $\tilde{x} \coloneqq x - \tfrac{\varepsilon}{2} e_j \le x$ satisfies $u(\tilde{x}) = u(x) - \tfrac{\varepsilon}{2}(\nabla u(x))_j > u(x)$, contradicting monotonicity.
+\end{proof}
+
+\subsection{Newton Polytopes of the Split Streams}\label{sec:newton_polytopes_support}
+
+By Observation~\ref{obs:tropical_convex_cpwl} and Lemma~\ref{lem:support_properties}, every positively homogeneous convex \ac{cpwl} function $u$ is the support function $u = h_P$ of a unique polytope $P = \operatorname{Newt}(u)$, recovered as the halfspace intersection
+\begin{equation}
+    P = \bigl\{ y \in \RR^n \, : \, \langle y, x \rangle \le h_P(x) \text{ for all } x \in \RR^n \bigr\},
+    \label{eq:halfspace_description}
+\end{equation}
+and the tropical operations act on $P$ through the Minkowski calculus of Proposition~\ref{prop:newton_calculus}. Applied to the split streams---positively homogeneous monotone tropical polynomials by Theorem~\ref{thm:split_tropical_rational}---this turns the split recursion into a layerwise propagation of Newton polytopes. Writing $P^{(l,\sigma)}_j \coloneqq \operatorname{Newt}\bigl(\act{l}{\sigma}_j\bigr) \subseteq \RR^{2d}$ for the $j$th split activation of layer $l$:
+
+\begin{corollary}[Minkowski-sum propagation across layers]\label{cor:minkowski_propagation}
+For a bias-free \ac{relu} \ac{mlp} with split streams \eqref{eq:split_preact_recursion}--\eqref{eq:split_act_recursion}, the Newton polytopes of the split activations satisfy
+\begin{align}
+    P^{(0,+)}_j &= \{ e_j \},
+    \qquad
+    P^{(0,-)}_j = \{ e_{d+j} \},
+    \qquad j \in [d], \notag \\
+    Q^{(l,+)}_i &\coloneqq \bigoplus_j \Bigl( \Wsig{l}{+}_{ij} P^{(l-1,+)}_j \oplus \Wsig{l}{-}_{ij} P^{(l-1,-)}_j \Bigr),
+    \qquad
+    Q^{(l,-)}_i \coloneqq \bigoplus_j \Bigl( \Wsig{l}{-}_{ij} P^{(l-1,+)}_j \oplus \Wsig{l}{+}_{ij} P^{(l-1,-)}_j \Bigr),
+    \label{eq:polytope_preact} \\
+    P^{(l,+)}_i &= \operatorname{conv}\Bigl( Q^{(l,+)}_i \cup Q^{(l,-)}_i \Bigr),
+    \qquad
+    P^{(l,-)}_i = Q^{(l,-)}_i,
+    \label{eq:polytope_act}
+\end{align}
+where the activation update~\eqref{eq:polytope_act} applies only to $l<L$; at the affine readout set $P^{(L,\pm)}_i=Q^{(L,\pm)}_i$. Here $e_1, \dots, e_{2d}$ are the standard basis of $\RR^{2d}$ and $\oplus$ the Minkowski sum. The Newton polytopes $P_g \coloneqq \operatorname{Newt}(g)$ and $P_h \coloneqq \operatorname{Newt}(h)$ of a scalar output neuron are obtained after $L$ steps.
+\hfill\LeanResult{cor:minkowski_propagation}
+\end{corollary}
+
+\begin{proof}
+The base case restates that $\act{0}{\pm}_j$ are the coordinate functionals $\langle e_j, \cdot \rangle$, $\langle e_{d+j}, \cdot \rangle$. For the step, the $i$th coordinate of \eqref{eq:split_preact_recursion} is a non-negative combination whose Newton polytope is, by the Minkowski-sum and scaling identities of Proposition~\ref{prop:newton_calculus}, the weighted sum $Q^{(l,\pm)}_i$; the entrywise maximum in \eqref{eq:split_act_recursion} corresponds to the convex hull of the union by the same calculus, while $\act{l}{-}$ passes its polytope through unchanged.
+\end{proof}
+
+For a single hidden layer this produces Minkowski sums of segments and points, i.e.\ \emph{zonotopes}, recovering the shallow-network picture of \textcite{Zhang2018}; in deeper networks the alternation of sums and hulls makes vertex counts grow with depth. The recursion is a structural tool, not an algorithm: the split forward pass evaluates these support functions without enumerating vertices. The link between polytope geometry and the differential behavior of its support function is the subdifferential correspondence, the engine behind Section~\ref{sec:imaginative_polytopes}.
+
+\begin{proposition}[Subdifferential of a support function]\label{prop:subdifferential_face}
+Let $P \subseteq \RR^n$ be a polytope and $x \in \RR^n$. Then $\partial h_P(x) = F_P(x) = \{ p \in P : \langle p, x \rangle = h_P(x) \}$, the maximizing face. In particular, $h_P$ is differentiable at $x$ if and only if $F_P(x)$ is a singleton, in which case $\nabla h_P(x) \in P$.
+\hfill\LeanResult{prop:subdifferential_face}
+\end{proposition}
+
+\begin{proof}
+``$\supseteq$'': For $p \in F_P(x)$ and any $y$, $h_P(y) \ge \langle p, y \rangle = h_P(x) + \langle p, y - x \rangle$, the subgradient inequality. ``$\subseteq$'': Let $s \in \partial h_P(x)$. Testing the subgradient inequality with $y = 2x$ and $y = 0$ and using positive homogeneity gives $\langle s, x \rangle = h_P(x)$; substituting back yields $h_P(y) \ge \langle s, y \rangle$ for all $y$, so $s \in P$ by \eqref{eq:halfspace_description}, hence $s \in F_P(x)$. Differentiability of a convex function is equivalent to a singleton subdifferential, whose element is the gradient.
+\end{proof}
+
+\subsection{Imaginative Polytopes}\label{sec:imaginative_polytopes}
+
+We now specialize to the split streams of a trained network. Their Newton polytopes are the central geometric objects of the interpretability perspective of this thesis.
+
+\begin{definition}[Imaginative Polytopes]\label{def:imaginative_polytopes}
+Let $g, h \colon \RR^{2d} \to \RR$ be the split streams of an output neuron of a bias-free \ac{relu} network. The \emph{Imaginative Polytopes} of that neuron are the Newton polytopes $P_g \coloneqq \operatorname{Newt}(g)$ and $P_h \coloneqq \operatorname{Newt}(h)$, i.e.\ the unique polytopes in $\RR^{2d}$ whose support functions are $g$ and $h$ (Lemma~\ref{lem:support_properties}).
+\end{definition}
+
+They exist and are unique by Theorem~\ref{thm:split_tropical_rational} and the support-function bijection, and Corollary~\ref{cor:minkowski_propagation} expresses them as an alternation of weighted Minkowski sums and convex hulls. Monotonicity constrains their location.
+
+\begin{corollary}[Imaginative Polytopes live in the non-negative orthant]\label{cor:polytopes_nonneg}
+$P_g, P_h \subseteq \RR^{2d}_{\ge 0}$.
+\hfill\LeanResult{cor:polytopes_nonneg}
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{thm:split_tropical_rational}, $g = \max_i \langle a_i, \cdot \rangle$ with all $a_i \ge 0$, and $P_g = \operatorname{conv}\{a_i\}$ is a convex hull of non-negative vectors; likewise for $P_h$. (Equivalently, every vertex is an attainable gradient of the monotone $g$ by Theorems~\ref{thm:vertices_gradients} and \ref{thm:monotone_nonneg_gradients}.)
+\end{proof}
+
+\begin{theoremenv}[Vertices encode the attainable split-stream gradients]\label{thm:vertices_gradients}
+Let $u \colon \RR^n \to \RR$ be a positively homogeneous convex \ac{cpwl} function with Newton polytope $P = \operatorname{Newt}(u)$. Then
+\begin{equation*}
+    \operatorname{vert}(P)
+    \;=\;
+    \bigl\{ \nabla u(\xi) \, : \, \xi \in \RR^n, \ u \text{ differentiable at } \xi \bigr\}.
+\end{equation*}
+In particular, the attainable gradients of the split streams $g$ and $h$ are exactly the vertex sets $\operatorname{vert}(P_g)$ and $\operatorname{vert}(P_h)$ of the Imaginative Polytopes.
+\hfill\LeanResult{thm:vertices_gradients}
+\end{theoremenv}
+
+\begin{proof}
+Here $u = h_P$, and $\partial u(\xi) = F_P(\xi)$ by Proposition~\ref{prop:subdifferential_face}. ``$\supseteq$'': if $u$ is differentiable at $\xi$, then $F_P(\xi) = \{\nabla u(\xi)\}$ is a singleton face; a single-point face is a vertex, since $p = \tfrac12(p_1 + p_2)$ with $p_i \in P$ would force $p_1, p_2 \in F_P(\xi) = \{p\}$. ``$\subseteq$'': let $v \in \operatorname{vert}(P)$ and $C \coloneqq \operatorname{conv}(\operatorname{vert}(P) \setminus \{v\})$; then $v \notin C$, so strict separation yields $\xi$ with $\langle v, \xi \rangle > \max_{v_i \ne v} \langle v_i, \xi \rangle$, and this persists on a ball $B$. By the vertex representation of the support function (Lemma~\ref{lem:support_properties}), $u(\xi') = \langle v, \xi' \rangle$ on $B$, so $u$ is differentiable at $\xi$ with $\nabla u(\xi) = v$. The split-stream statement is the case $u = g, h$, admissible by Theorem~\ref{thm:split_tropical_rational}. For networks with biases, homogenization gives an ambient support function, but fixing the added coordinates restricts the exposing directions. The input gradients of the restricted function are projections of vertices exposed by directions on that affine slice; not every ambient vertex need be visible there. For example, $(1,0)$ is a vertex of $P=\operatorname{conv}\{(0,1),(2,1),(1,0)\}$, but its value $x$ is strictly below $h_P(x,1)=\max\{1,2x+1\}$ for every $x$. Thus the equality with all vertices applies in the homogeneous ambient space, while the biased network uses only the slice-visible vertices.
+\end{proof}
+
+Theorem~\ref{thm:vertices_gradients} turns the support-function representation into an interpretable computational model. Writing $\xi = (x^+, x^-)$ for the doubled input,
+\begin{equation}
+    g(\xi) = \max_{v \in \operatorname{vert}(P_g)} \langle v, \xi \rangle,
+    \qquad
+    h(\xi) = \max_{w \in \operatorname{vert}(P_h)} \langle w, \xi \rangle,
+    \label{eq:prototype_evaluation}
+\end{equation}
+so each split stream scans a finite catalog of non-negative linear templates (Corollary~\ref{cor:polytopes_nonneg})---for image classifiers, pairs of non-negative images---and reports the strongest response; each vertex corresponds to one gate configuration of \eqref{eq:split_act_recursion}, the linear region on which that stream has the given gradient. We therefore read $\operatorname{vert}(P_g)$ and $\operatorname{vert}(P_h)$ as the neuron's \emph{learned prototypes}, extremal non-redundant feature detectors of which the network applies the best-matching one per input, with the logit the difference of the two strongest responses~\eqref{eq:tropical_rational_split}; $P_g$ collects excitatory, $P_h$ inhibitory evidence profiles. The same vertices double as \emph{counterfactual profiles}: for an input with active prototype $v$, the non-negative gaps $\langle v - v', \xi \rangle$ over edge-neighbors $v'$ of $v$ measure how far $\xi$ is from being re-imagined under another prototype, and $v - v'$ shows which evidence would have to move---answering, within the network's own geometry and without any surrogate, what minimally different perception would flip the stream's assessment. Their non-negativity also explains the stability and localization of the split-stream saliency maps studied in Chapters~\ref{ch:saliency} and \ref{ch:experiments}: responses aggregate non-negative evidence without the sign cancellation that erodes $\nabla f$.
+
+\begin{figure}[tbp]
+    \centering
+    \includegraphics[width=0.75\textwidth]{tropical/imaginative_polytope.png}
+    \caption[Imaginative Polytope of the VGG16 dragonfly neuron]{Concept visualization of the Imaginative Polytopes associated with the ``dragonfly'' output neuron of VGG16 \cite{Simonyan2015} on four ImageNet test images \cite{Deng2009}. Shown are $g$-stream gradients with respect to the class logit, computed with the stabilized backward pass of Section~\ref{sec:stabilization_dc}; by Theorem~\ref{thm:vertices_gradients}, each unstabilized such gradient is a vertex of $P_g$, i.e.\ a learned visual prototype of the class. The $h$-stream gradients look very similar, since the two streams differ only by the gradient of the original network. Figure adapted from \textcite{ZimmermannLoho2025}.}
+    \label{fig:imaginative_polytope}
+\end{figure}
+
+The split pair $(g, h)$ is in general \emph{not} minimal---the recursion accumulates common monomials in both streams---but it is computed by the network's own architecture, both components are monotone, and the split activations stay in one-to-one correspondence with the original neurons, properties that Chapters~\ref{ch:saliency} and \ref{ch:game_theory} exploit.\footnote{That every \ac{cpwl} function is a difference of convex \ac{cpwl} functions is classical \cite{Melzer1986_PLasDC,Kripfganz1987_PWAasDC,Zalgaller2000_DCRepresentation}; algorithmic and minimality aspects, including the polyhedral structure of the set of all \ac{dc} decompositions of a fixed function, were developed by \textcite{Griewank2020_PolyhedralDCDecomposition} and in \cite{Brandenburg2025_DecompositionPolyhedra,Koutschan2024_MinimalArity}.}
+
+\subsection{DC Splitting of Smooth Activation Functions}\label{sec:dc_splitting_smooth}
+
+The tropical picture above rests on the piecewise-linear structure of \ac{relu}, but the difference-of-convex splitting itself does not: the only property that matters is that the activation function has integrable curvature. The following general theory lets the decompositions of Chapter~\ref{ch:decompositions} extend beyond \ac{relu} to smooth-activation networks and, conversely, exhibits \ac{relu} networks as the piecewise-linear special case of a single construction. Throughout this subsection the symbols $g$ and $h$ are reused \emph{locally} for the scalar per-activation split $g, h \colon \RR^2 \to \RR$ of a single unit; they no longer denote the network split streams $g, h \colon \RR^{2d} \to \RR$ of the preceding subsections.
+
+\begin{theoremenv}[DC--monotone splitting under integrable curvature]\label{thm:smooth_dc_split}
+Let $f\colon \RR \to \RR$ be differentiable with locally absolutely continuous derivative $f'$ and $f'' \in L^1(\RR)$. Then the limit $s_- \coloneqq \lim_{u\to-\infty} f'(u)$ exists and $f'$ is bounded. Write $P \coloneqq \max\{f'',0\}$ and $N \coloneqq \max\{-f'',0\}$, so that $f'' = P - N$ with $P, N \ge 0$, and define
+\begin{align}
+	C_1(x) &\coloneqq f(0) + \int_0^x \Bigl( s_- + \int_{-\infty}^t P(u)\,\diff u \Bigr) \diff t,
+	&
+	C_2(x) &\coloneqq \int_0^x \int_{-\infty}^t N(u)\,\diff u \,\diff t,
+	\label{eq:curvature_antiderivatives}
+\end{align}
+as well as $M \coloneqq \max\bigl\{ \sup_{x\in\RR} \abs{C_1'(x)},\, \sup_{x\in\RR} \abs{C_2'(x)} \bigr\} < \infty$. Then the functions
+\begin{equation}
+	g(a,b) \coloneqq C_1(a-b) + M(a+b),
+	\qquad
+	h(a,b) \coloneqq C_2(a-b) + M(a+b)
+	\label{eq:smooth_split_pair}
+\end{equation}
+are convex on $\RR^2$, non-decreasing in each argument, and satisfy
+\begin{equation}
+	f(a-b) = g(a,b) - h(a,b) \qquad \text{for all } (a,b) \in \RR^2.
+	\label{eq:smooth_splitting_identity}
+\end{equation}
+\hfill\LeanResult{thm:smooth_dc_split}
+\end{theoremenv}
+
+\begin{proof}
+\emph{Well-definedness.}
+For $x \le y$ we have $\abs{f'(y) - f'(x)} \le \int_x^y \abs{f''(u)} \diff u$, which tends to $0$ as $x, y \to -\infty$ because $f'' \in L^1(\RR)$; by the Cauchy criterion the limit $s_-$ exists. Consequently $\abs{f'(x)} \le \abs{s_-} + \norm{f''}_{L^1(\RR)}$ for all $x$, so the boundedness of $f'$ is automatic and need not be assumed. Since $0 \le P, N \le \abs{f''}$, both $P$ and $N$ lie in $L^1(\RR)$, the inner integrals in \eqref{eq:curvature_antiderivatives} are well-defined, non-decreasing in $t$, and bounded by $\norm{P}_{L^1(\RR)}$ and $\norm{N}_{L^1(\RR)}$ respectively. Hence $C_1, C_2$ are well-defined with locally absolutely continuous derivatives
+\begin{equation*}
+	C_1'(x) = s_- + \int_{-\infty}^{x} P(u) \,\diff u,
+	\qquad
+	C_2'(x) = \int_{-\infty}^{x} N(u) \,\diff u,
+\end{equation*}
+and $\abs{C_1'} \le \abs{s_-} + \norm{P}_{L^1(\RR)}$, $\abs{C_2'} \le \norm{N}_{L^1(\RR)}$, so $M < \infty$.
+
+\emph{Exactness.}
+For almost every $x$,
+\begin{equation*}
+	C_1'(x) - C_2'(x) = s_- + \int_{-\infty}^{x} \bigl( P(u) - N(u) \bigr) \diff u = s_- + \int_{-\infty}^{x} f''(u) \,\diff u = f'(x),
+\end{equation*}
+and $C_1(0) - C_2(0) = f(0)$, so integrating from $0$ yields $C_1 - C_2 = f$ on all of $\RR$. The linear tilt cancels upon subtraction, and \eqref{eq:smooth_splitting_identity} follows by evaluating at $x = a - b$.
+
+\emph{Convexity.}
+$C_1'$ and $C_2'$ are non-decreasing, being (shifted) antiderivatives of the non-negative functions $P$ and $N$, so $C_1$ and $C_2$ are convex on $\RR$. Precomposition with the linear map $(a,b) \mapsto a - b$ preserves convexity, and so does adding the linear function $M(a+b)$; hence $g$ and $h$ are convex on $\RR^2$. (When $f''$ is continuous, this is also visible directly: the Hessian of $(a,b) \mapsto C_1(a-b)$ has eigenvalues $0$ and $2 C_1''(a-b) = 2P(a-b) \ge 0$.)
+
+\emph{Monotonicity.}
+By the choice of $M$,
+\begin{equation*}
+	\frac{\partial g}{\partial a}(a,b) = C_1'(a-b) + M \ge 0,
+	\qquad
+	\frac{\partial g}{\partial b}(a,b) = -C_1'(a-b) + M \ge 0,
+\end{equation*}
+and analogously for $h$ with $C_2'$ in place of $C_1'$. Hence $g$ and $h$ are non-decreasing in each argument.
+\end{proof}
+
+The construction is less arbitrary than it may first appear: the split of the curvature into $P$ and $N$ is canonical, and the tilt $M$ is the smallest possible.
+
+\begin{proposition}[Minimality of the curvature split]\label{prop:curvature_minimality}
+Let $f$ be as in Theorem~\ref{thm:smooth_dc_split} and suppose $f = c_1 - c_2$ for convex functions $c_1, c_2 \colon \RR \to \RR$ whose second distributional derivatives are locally integrable functions. Then $c_1'' \ge P$ and $c_2'' \ge N$ almost everywhere. In particular, $(C_1, C_2)$ is, up to a common affine summand, the unique pair of convex functions with $C_1 - C_2 = f$ of pointwise minimal curvature, and among all tilts of the form $(a,b) \mapsto \lambda(a+b)$, $\lambda \ge 0$, the constant $M$ in Theorem~\ref{thm:smooth_dc_split} is the smallest one rendering both components of \eqref{eq:smooth_split_pair} non-decreasing in each argument.
+\hfill\LeanResult{prop:curvature_minimality}
+\end{proposition}
+
+\begin{proof}
+From $c_1'' = f'' + c_2''$ and $c_2'' \ge 0$ we get $c_1'' \ge f''$, and convexity of $c_1$ gives $c_1'' \ge 0$; together $c_1'' \ge \max\{f'', 0\} = P$ almost everywhere, and symmetrically $c_2'' \ge N$. If equality holds a.e.\ in both bounds, then $c_1 - C_1$ and $c_2 - C_2$ are affine and, since $c_1 - c_2 = f = C_1 - C_2$, they coincide. For the tilt, non-decreasingness of $g$ in both arguments is equivalent to $\lambda \ge C_1'(x)$ and $\lambda \ge -C_1'(x)$ for all $x$, i.e.\ $\lambda \ge \sup_x \abs{C_1'(x)}$, and analogously for $h$; the smallest admissible $\lambda$ is exactly $M$.
+\end{proof}
+
+\begin{corollary}[Modern activation functions]\label{cor:modern_activations}
+Theorem~\ref{thm:smooth_dc_split} applies to the following activation functions, where $\varphi$ and $\Phi$ denote the standard Gaussian density and distribution function and $\sigma(x) = (1+e^{-x})^{-1}$ the logistic sigmoid:
+\begin{enumerate}
+	\item \emph{GELU}, $f(x) = x\,\Phi(x)$, with $f''(x) = (2 - x^2)\,\varphi(x)$; the curvature is positive on $(-\sqrt{2}, \sqrt{2})$ and negative outside.
+	\item \emph{Swish/SiLU}, $f(x) = x\,\sigma(\beta x)$ with $\beta > 0$, with $f''(x) = \beta\,\sigma'(\beta x)\bigl( 2 + \beta x\,(1 - 2\sigma(\beta x)) \bigr)$; the curvature is positive on a bounded interval around the origin and negative in both tails.
+	\item \emph{Mish}, $f(x) = x \tanh\bigl(\log(1 + e^{x})\bigr)$.
+	\item \emph{Hyperbolic tangent}, $f(x) = \tanh(x)$, with $f''(x) = -2 \tanh(x)\operatorname{sech}^2(x)$, so $P$ is supported on $(-\infty, 0]$ and $N$ on $[0, \infty)$.
+	\item \emph{Logistic sigmoid}, $f = \sigma$, with $f'' = \sigma'\,(1 - 2\sigma)$.
+	\item \emph{Softplus at temperature $\theta > 0$}, $f(x) = \theta \log(1 + e^{x/\theta})$, with $f''(x) = \sigma'(x/\theta)/\theta \ge 0$; here $N = 0$, $C_2 = 0$, and the decomposition degenerates to the statement that softplus itself is convex.
+\end{enumerate}
+In each case $f(0) \ge 0$, so by Remark~\ref{rem:smooth_valid_decomposition} below the resulting pair map preserves non-negativity of the split streams.
+\hfill\LeanResult{cor:modern_activations}
+\end{corollary}
+
+\begin{proof}
+All listed functions are smooth with the stated second derivatives, obtained by direct differentiation. In each case $f''$ is continuous and decays at least exponentially as $\abs{x} \to \infty$ (with Gaussian decay for GELU): for Swish and Mish the polynomial factor $x$ is dominated by the exponential decay of $\sigma'(\beta x)$ and of the derivatives of $\tanh \circ \operatorname{softplus}$, respectively. Hence $f'' \in L^1(\RR)$ and $f'$ is locally absolutely continuous, so Theorem~\ref{thm:smooth_dc_split} applies. The values $f(0) \in \{0, \tfrac{1}{2}, \theta \log 2\}$ are non-negative in every case.
+\end{proof}
+
+\begin{remark}[Bounded variation and the piecewise-linear case]\label{rem:bv_extension}
+The hypothesis of Theorem~\ref{thm:smooth_dc_split} can be weakened to $f'$ having bounded variation, i.e.\ $f''$ being a finite signed Radon measure $\mu$; replacing $P(u)\,\diff u$ and $N(u)\,\diff u$ in \eqref{eq:curvature_antiderivatives} by the Jordan decomposition $\mu = \mu_+ - \mu_-$ leaves every step of the proof intact. This covers the piecewise-linear activations: for $\relu$ one has $\mu = \delta_0$, hence $C_1(x) = \max\{x, 0\}$, $C_2 = 0$, $s_- = 0$ and $M = 1$, so that
+\begin{equation*}
+	g(a,b) - h(a,b) = \max\{a - b, 0\} = \max\{a, b\} - b,
+\end{equation*}
+recovering the splitting identity of Section~\ref{sec:dc_splitting_relu} up to the monotone tilt. Leaky $\relu$ corresponds to $\mu = (1 - \alpha)\,\delta_0$, and ELU to an absolutely continuous curvature $e^{x} \indicator{x < 0}$ plus a possible atom at the origin. Piecewise-linear and smooth activation splittings are thus instances of a single construction.
+\end{remark}
+
+\begin{remark}[Compatibility with valid decompositions]\label{rem:smooth_valid_decomposition}
+The pair map $(a,b) \mapsto \bigl(g(a,b), h(a,b)\bigr)$ fits the general decomposition framework of Section~\ref{sec:general_decomposition_def}. Indeed, for $a, b \ge 0$ the Lipschitz bounds $\abs{C_i(x) - C_i(0)} \le M \abs{x}$ and $\abs{a - b} \le a + b$ yield
+\begin{equation*}
+	g(a,b) \ge f(0) \ge 0,
+	\qquad
+	h(a,b) \ge 0,
+\end{equation*}
+for every activation of Corollary~\ref{cor:modern_activations}, so the map sends $\RR^2_{\ge 0}$ to $\RR^2_{\ge 0}$ and is a monotone pairwise activation function; exactness \eqref{eq:smooth_splitting_identity} is precisely the validity condition. For an activation with $f(0) < 0$, shifting both components by $\abs{f(0)}$ restores non-negativity without affecting the difference.
+\end{remark}
