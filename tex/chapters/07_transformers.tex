@@ -1,0 +1,683 @@
+\chapter{Extensions: Attention and Transformers}\label{ch:transformers}
+
+This is an extensions-and-outlook chapter with lighter rigor than the frameworks of Chapters~\ref{ch:decompositions} and~\ref{ch:game_theory} just developed: it carries the decomposition and routing-game machinery over to multiplicative layers and Vision Transformers (ViTs), with the weight on how the resulting backward pass is actually implemented.
+
+Two features separate a Transformer \cite{Vaswani2017} from the architectures treated so far. First, attention multiplies \emph{activations with activations}: the score matrix $QK^\top$ and the mixing product $AV$ are bilinear in input-dependent quantities, so the fixed-weight linear algebra of Chapter~\ref{ch:decompositions} and the routing states of Chapter~\ref{ch:game_theory} no longer apply directly. Second, softmax and layer normalization are smooth, \emph{normalizing} non-linearities that couple whole token rows, unlike the pointwise gates of Theorem~\ref{thm:smooth_dc_split}. The chapter addresses both once per framework: Section~\ref{sec:multiplicative_splits} extends the \ac{dc} decomposition to multiplicative components, and Section~\ref{sec:attention_routing_game} extends the \ac{rg} by reading the softmax row as a policy. Section~\ref{sec:vit_implementation} then turns both into a concrete backward pass on \ac{vit}-B/16 --- the implementation that instantiates the split-stream saliency methods developed next in Chapter~\ref{ch:saliency} and evaluated in Chapter~\ref{ch:experiments}.
+
+\section{Related Work: Transformer Explainability}\label{sec:related_work_transformers}
+
+Attribution research on Transformers began at the attention weights themselves: since the rows of an attention matrix are distributions over tokens, early analyses of head roles and pruning read them directly as explanations \cite{Voita2019}. \textcite{Abnar2020attention} objected that single-layer weights ignore propagation through depth, and proposed \emph{attention rollout} --- multiplying the residual-corrected attention matrices across layers --- and \emph{attention flow}, a max-flow computation on the layered attention graph. Both commit to a routing view: attention matrices are transition kernels of a walk on tokens, and an explanation states where that walk deposits its mass. What they omit is everything outside the attention weights --- value magnitudes, the \acp{mlp}, the sign structure of the projections --- so rollout can assign high relevance to tokens whose values contribute nothing.
+
+A second line adapts \ac{lrp} \cite{Bach2015} to the Transformer. \textcite{Chefer2021ICCV} combined \ac{lrp}-style relevance with attention gradients to propagate class-specific relevance through self-attention, later generalized to co-attention and encoder--decoder architectures \cite{Chefer2021GenericAttention}. \textcite{Ali2022AttnLRP} made the structural point that shapes this chapter: naive gradient propagation through softmax and layer normalization \emph{violates conservation}, since both route relevance through data-dependent normalizers, whereas propagating through a locally linearized map with those outputs and statistics held constant (``detached'') restores it. AttnLRP \cite{Achtibat2024AttnLRP} systematized this into dedicated rules for the bilinear products and non-linearities, scaling to \acp{llm}, with concept-level \cite{Achtibat2023CRP} and sign-aware \cite{vukadin2024abslrp} extensions. On the vision side, DAVE \cite{Wrobel2024} traced grid artefacts to the $16{\times}16$ patch tokenization of \acp{vit} \cite{Dosovitskiy2021vit} --- related to the artefact tokens of \textcite{darcet2024vision} --- and countered them with \emph{conditioned} (detached) operators and attribution averaging over random spatial transformations. At \ac{llm} scale, gradient approximations of activation patching \cite{Syed2024AttributionPatching,Kramar2024AtPStar} localize circuits against interventions \cite{Hanna2024Faithfulness}, and attribution increasingly acts as a control signal for head identification and guided decoding \cite{Kahardipraja2025Atlas,Komorowski2026AGD}.
+
+The two lines pull in opposite directions: rollout has clean routing semantics but ignores the network outside the attention weights, while transformer-\ac{lrp} covers the whole network yet justifies detachment operationally --- softmax and LayerNorm are detached \emph{because} conservation then holds --- rather than from a model of the backward pass. This chapter closes the gap from both ends: Section~\ref{sec:multiplicative_splits} keeps the split streams intact across matrix and Hadamard products (at the price of leaving the convex world for maxima of posynomials), and Section~\ref{sec:attention_routing_game} shows the detached softmax row to be the equilibrium policy of an entropy-regularized oracle player, recovering the conservative attention-block rules of \textcite{Ali2022AttnLRP} as occupation measures of the \ac{rg} --- the routing intuition of \textcite{Abnar2020attention}, made exact at the attention blocks.
+
+\section{Decomposing Multiplicative Operations}\label{sec:multiplicative_splits}
+
+The decompositions of Chapter~\ref{ch:decompositions} treat networks whose only non-linearities are pointwise gates and maxima between \emph{fixed} linear maps. Gating layers, squeeze-and-excitation blocks, and attention add a new primitive: two activation streams multiplied entrywise (Hadamard product) or contracted against each other (matrix product). This section extends the split-stream construction to such components, following \textcite{hiddenMono}; results are stated at the level of the split rules and the main theorem, with proof sketches for the inductive constructions.
+
+\paragraph{The gated product rule.}
+Suppose two scalar quantities are carried in split form, $a = a^{+} - a^{-}$ and $b = b^{+} - b^{-}$ with all four streams non-negative, as the valid decompositions of Section~\ref{sec:general_decomposition_def} guarantee. Their product again splits into non-negative parts by expanding and sorting the four cross terms by sign:
+\begin{equation}
+	(a^{+} - a^{-})(b^{+} - b^{-})
+	\;=\;
+	\underbrace{\bigl(a^{+}b^{+} + a^{-}b^{-}\bigr)}_{\eqqcolon\, (ab)^{+}}
+	\;-\;
+	\underbrace{\bigl(a^{+}b^{-} + a^{-}b^{+}\bigr)}_{\eqqcolon\, (ab)^{-}}.
+	\label{eq:pair_product_rule}
+\end{equation}
+Both bracketed terms are non-negative and non-decreasing in each incoming stream, so multiplication maps monotone stream pairs to monotone stream pairs --- the analogue of routing $\Wsig{l}{+}$ and $\Wsig{l}{-}$ into separate channels in Section~\ref{sec:dc_splitting_relu}. Applied entrywise, \eqref{eq:pair_product_rule} splits Hadamard layers; applied to every scalar contraction, it splits matrix products of two split-stream tensors. What is \emph{not} preserved is convexity: products of convex functions need not be convex, so the split streams need not stay convex in the input. The correct replacement for ``convex \ac{cpwl} function'' is ``maximum of finitely many posynomials'', a \emph{posynomial} being a polynomial with non-negative coefficients: posynomials are closed under addition, multiplication, and positive scaling, and are monotone on the non-negative orthant.
+
+\paragraph{Maxout multiplication networks.}
+To state the splitting theorem in its natural generality we enlarge the architecture class. A rank-$k$ Maxout unit \cite{Goodfellow2013Maxout} computes the maximum of $k$ affine forms and reduces to $\relu$ for $k = 2$ with one form fixed to zero.
+
+\begin{definition}[Maxout multiplication network]\label{def:maxout_multiplication_network}
+A \emph{rank-$k$ Maxout multiplication network} is a finite directed acyclic graph of \emph{input neurons}, \emph{addition neurons}, and \emph{multiplication neurons}. An addition neuron $v$ carries weight vectors $w^{uv} \in \RR^k$ on its incoming arcs and computes the rank-$k$ Maxout activation $a^v = \max_{i \in [k]} \sum_{u} w^{uv}_i a^u$; a multiplication neuron carries natural exponents $w^{uv} \in \NN$ and computes the monomial $a^v = \prod_{u} (a^u)^{w^{uv}}$. The network is called \emph{monotone} if all weights are non-negative, and \emph{input-convex} if all weights are non-negative except possibly those on arcs leaving input neurons.
+\end{definition}
+
+Linear and convolutional layers, biases (via a constant input neuron), maxima and max-pooling, residual connections, Hadamard products, and matrix products are all expressible here; restricting exponents to natural numbers avoids divisions and fractional powers of possibly negative quantities. The two structural adjectives of Definition~\ref{def:maxout_multiplication_network} pin down what such networks compute.
+
+\begin{proposition}[Representation by maxima of posynomials]\label{prop:posynomial_representation}
+A monotone rank-$k$ Maxout multiplication network with non-negative intermediate quantities represents the maximum of finitely many posynomials in its non-negative input variables, and is monotone on the non-negative orthant. This representation does not imply ordinary convexity: the positive-coefficient monomial $xy$ is a counterexample. Allowing signed input-incident affine maps likewise supplies no general input-convexity guarantee in the presence of multiplication.
+\end{proposition}
+
+\begin{proof}[Proof sketch]
+Induct along a topological order on the non-negative orthant. Coordinate projections are posynomials. Non-negative scaling, addition and maxima preserve finite maxima of posynomials. Products do so when the factors are non-negative, by distributing the product over the finite maxima. These are precisely the stated network operations. The failure of convexity is witnessed by $F(x,y)=xy$: $F(1,1)=1$ exceeds $\tfrac12F(2,0)+\tfrac12F(0,2)=0$.
+\end{proof}
+
+\paragraph{The splitting theorem.}
+The main result transfers the split of Section~\ref{sec:dc_splitting_relu} to this class. Two local identities drive it. Maxout units are split by the maximum-shift identity
+\begin{equation}
+	\max_{j \in [k]}\bigl(a_j^{+} - a_j^{-}\bigr)
+	\;=\;
+	\max_{j \in [k]}\Bigl\{a_j^{+} + \sum_{i \neq j} a_i^{-}\Bigr\}
+	\;-\;
+	\sum_{i \in [k]} a_i^{-},
+	\label{eq:maxout_split_identity}
+\end{equation}
+which generalizes both the $\relu$ splitting identity $\relu(a - b) = \max\{a, b\} - b$ of Section~\ref{sec:dc_splitting_relu} and the gated max-pooling rule of Section~\ref{sec:cnn_decompositions}; multiplication neurons are split by the multinomial generalization of \eqref{eq:pair_product_rule}, expanding $\prod_u (a^{u,+} - a^{u,-})^{w^{uv}}$ and sorting the resulting monomials by the parity of the number of $(-)$-stream factors.
+
+\begin{theoremenv}[Monotone split of multiplicative \ac{relu} networks]\label{thm:multiplicative_split}
+Let $N$ be a (residual) \ac{relu} network containing linear, convolutional, maximum, matrix-product, and Hadamard-product components. Then, on non-negative split-input variables, $N$ has two \emph{monotone} rank-$2$ Maxout multiplication networks $N^{+}$ and $N^{-}$ satisfying
+\begin{equation*}
+	N(x) = N^{+}(x^+,x^-) - N^{-}(x^+,x^-), \qquad x=x^+-x^-,\quad x^\pm\ge0,
+\end{equation*}
+Each component is monotone as a function of its non-negative split inputs and is representable there by a finite maximum of posynomials. This gives a difference-of-monotone representation; it does not establish a difference-of-convex representation in the original inputs. If the number of expanded monomials per multiplication neuron is uniformly bounded, the sizes of the split networks are linear in the size of $N$.
+\end{theoremenv}
+
+\begin{proof}[Proof sketch]
+Process the neurons in topological order, replacing each by a coordinated pair $(v^{+}, v^{-})$ preserving the computed function; the construction extends the extended-formulation argument of \textcite{hertrich2025neuralnetworksvirtualextended}. \emph{Input neurons} are supplied as non-negative split variables $x^+,x^-$ (for instance $\relu(x),\relu(-x)$) with output weights sign-flipped towards the $(-)$-copy; keeping inputs unsplit does not, in general, yield a convex variant once multiplication is present. \emph{Addition (Maxout) neurons} split their weight vectors entrywise into $\posneg{w^{uv}}{+} - \posneg{w^{uv}}{-}$ and apply \eqref{eq:maxout_split_identity}: the maximum term defines $v^{+}$, the subtracted sum $v^{-}$, both with non-negative weights. \emph{Multiplication neurons} apply the sign-sorted multinomial expansion; one auxiliary multiplication neuron per summand feeds collecting addition neurons $v^{+}$ (even parity) and $v^{-}$ (odd parity), all non-negative. Each rewrite is an identity, so correctness telescopes to $N = N^{+} - N^{-}$; all weights are non-negative, hence both components are monotone in the split variables, with the posynomial representation from Proposition~\ref{prop:posynomial_representation}. The multinomial summand count is the source of growth; bounded fan-in alone does not control it if exponents are unbounded. A uniform bound on the expanded monomial count is sufficient.
+\end{proof}
+
+Theorem~\ref{thm:multiplicative_split} extends the algebraic split to multiplicative layers. The two streams retain non-negativity and monotonicity in the split inputs, while their difference preserves the original computation. Convexity is not preserved by arbitrary products, so the DC interpretation and convex-geometric guarantees of Chapter~\ref{ch:decompositions} require additional hypotheses in this setting.
+
+\begin{remark}[Smooth normalizers: softmax and sigmoid gates]\label{rem:smooth_gates}
+Theorem~\ref{thm:multiplicative_split} covers the piecewise-polynomial skeleton of an attention block --- projections, the bilinear products $QK^\top$ and $AV$, residual additions --- but not the softmax, which is smooth and divides by the partition sum. Three treatments are available. \emph{(i) \ac{cpwl} approximation:} replacing $\exp$ and the division by \ac{cpwl} surrogates on a compact range turns the block into a Maxout multiplication network, at a size cost proportional to the resolution. \emph{(ii) Streamwise smooth splitting:} the scalar non-linearities (sigmoid gates, $\exp$ of bounded scores, GELU in the \ac{mlp} blocks \cite{Hendrycks2016}) have integrable curvature on bounded domains, so Theorem~\ref{thm:smooth_dc_split} splits them pointwise into monotone pairs that enter the product rule \eqref{eq:pair_product_rule}. \emph{(iii) Detachment:} the softmax output $A$ is treated as a forward-pass constant, so the block becomes the fixed-coefficient linear map $X \mapsto AV(X)$ with no multiplicative machinery. Option (iii) is what transformer-\ac{lrp} practice converged to \cite{Ali2022AttnLRP,Achtibat2024AttnLRP,Wrobel2024}; the next section shows it is not an approximation but an exact statement about \emph{whose} decision the softmax is.
+\end{remark}
+
+\section{Attention via a detached-logit oracle}\label{ptnb:sec:attention}
+
+Two \ac{vit} subtleties break conservative transport: \ch{LayerNorm's input-dependent statistics}
+and the data-dependent QK-softmax. LayerNorm statistics are detached so the layer becomes a pointwise linear
+map~\parencite{Ali2022AttnLRP,Wrobel2024}; the QK-softmax block is replaced by an \emph{oracle game} emitting
+a detached reference policy, the softmax row $A_{t\cdot}$, with occupation-measure trajectories
+flowing only through the Value route. \ch{Like conservative propagation~\parencite{Ali2022AttnLRP}, this explains the network conditioned on its
+realized attention pattern.}
+
+\begin{theoremenv}[Attention, informal]\label{ptnb:thm:attention}
+With reference policy $A_{t\cdot}$, the KL-regularized Value-routing subgame has an SPNE whose
+occupation measure at the block input equals $\alpha\beta$-\ac{lrp} on the conditioned effective
+map $x \mapsto \sum_k A_{tk}\, x_k W_v + b_v$ (Theorem~\ref{ptnb:thm:attn-ab-recovery}).
+\end{theoremenv}
+Our implementation applies this rule to the attention product and the Value projection as one
+composite step; a full gradient fallback through the attention block degrades localization (AL
+$0.624$ vs.\ \vitRGlocAL{} at the localization-selected configuration). Equivariant Reynolds
+averaging optionally suppresses tokenization-grid artifacts~\parencite{Wrobel2024} (\ac{rg}+Eq). Full
+KL formulation, oracle embedding, occupation-measure theorem and implementation are in
+Section~\ref{ptnb:app:attention-subgame}.
+\section{Extension: Vision Transformer Attention}\label{ptnb:app:vit-extension}\label{sec:attention_routing_game}\label{ptnb:app:attention-subgame}
+
+This section develops the full state-space formulation for attention modules in the \ac{rg}. The
+development proceeds in two stages. \S\ref{ptnb:app:attention-kl-routing} extends the backward walk of
+Theorem~\ref{ptnb:thm:ab-recovery} through the attention block by treating the softmax row $A_{t,\cdot}$
+as a fixed reference policy on the keys, derives the resulting Value-routing equilibrium from the
+Legendre--Fenchel transform of the KL divergence, and proves $\alpha\beta$-\ac{lrp} recovery for
+the conditioned effective map $X \mapsto O$ in the occupation-measure notation $\Gamma$ of
+Theorem~\ref{ptnb:thm:ab-recovery}. \S\ref{ptnb:app:attention-oracle} then identifies the fixed reference
+$A_{t,\cdot}$ with the policy of an auxiliary entropy-regularized QK oracle player, closing the
+loop with the rest of the game-theoretic framework. The risk-averse attention variant is in
+\S\ref{ptnb:app:risk-attn}; forward-pass detachments and gradient-hook conventions used by all ViT
+experiments are collected in \S\ref{ptnb:app:vit-implementation}; the equivariant spatial averaging is
+in \S\ref{ptnb:app:equivariant}.
+
+\subsection{Attention as fixed-reference KL Value routing}\label{ptnb:app:attention-kl-routing}
+
+\subsubsection{Target rule: \texorpdfstring{$\alpha\beta$-\ac{lrp}}{LRP-alpha-beta} with detached logits}\label{ptnb:app:attention-target-rule}
+
+We first state the rule that the Routing-Game state-space construction below is designed to
+recover. We focus on a single attention head; the multi-head extension carries an additional head
+index $h$ and the recovery is per-head. Note that ViT-B/16 implements the Value projection as a
+single $D \times D$ linear $v = X W_v$ followed by a reshape into $n_h$ heads (the per-head matrix
+$W_v^{(h)} \in \RR^{D \times d_h}$ is the head-$h$ column block of the full $W_v$), so one input
+embedding $X_{k,e}$ feeds Value entries of every head and the per-head $R^X$ contributions sum at
+$X_{k,e}$ to give the total. The per-head description below applies unchanged. We omit the
+$\varepsilon$ stabilizer inside the attention block --- the surrounding ReLU recursion of
+\S\ref{ptnb:app:routing-attribution} carries its own $\varepsilon$ on every linear-routing state and
+that mechanism transfers to the $Av{+}W_v$ composite without modification, but tracking it through
+the tensor indexing here only obscures the structure.
+
+\paragraph{Forward pass.} The Value projection is applied per token: for each $k \in \{1,\dots,S\}$,
+\begin{align}\label{ptnb:eq:attn-V-forward}
+    v_{k,d} \;=\; \sum_e W_{v,e,d}\, X_{k,e} + b_{v,d},
+    \qquad d \in \{1,\dots,d_h\},
+\end{align}
+where the same matrix $W_v \in \RR^{D \times d_h}$ and bias $b_v \in \RR^{d_h}$ are applied
+independently to every token. The detached attention matrix $A \in \RR^{S \times S}_{\ge 0}$ (with
+$A_{t,k} \ge 0$ and $\sum_k A_{t,k} = 1$ from softmax) then mixes Values across tokens
+\emph{independently per feature dimension} $d$: for each output token $t \in \{1,\dots,S\}$ and
+feature $d$,
+\begin{align}\label{ptnb:eq:attn-AV-forward}
+    O_{t,d} \;=\; \sum_k A_{t,k}\, v_{k,d}
+    \;=\; \sum_{k,e} A_{t,k}\, W_{v,e,d}\, X_{k,e} + b_{v,d}.
+\end{align}
+
+\paragraph{Composite linear map and $\kappa$-stream split.} Holding $A$, the LayerNorm statistics and the \acs{ptnbGELU} gates at their forward values
+(\S\ref{ptnb:app:vit-implementation}) is a modeling assumption about the explanation question---given
+the realized attention policy, through which Value routes does relevance flow?---and not a theorem
+about relevance through $Q$ and $K$. \ch{Our attention extension is therefore a Value-only attribution
+conditioned on the realized attention matrix, resembling the conservative propagation of
+\textcite{Ali2022AttnLRP} (CP-LRP), which holds the attention matrix constant, and DAVE's conditioned
+operators~\parencite{Wrobel2024}. It differs from AttnLRP~\parencite{Achtibat2024AttnLRP}, which also
+propagates relevance through the attention-generating operations (the softmax and the bilinear QK
+product) and so attributes the Query and Key paths.} With $A$ so conditioned, the attention block reduces to the
+affine \emph{conditioned effective map} $X \mapsto O$ with composite weights
+$W^{\mathrm{eff}}_{(k,e),\,(t,d)} = A_{t,k}\, W_{v,e,d}$ and bias $b_{v,d}$. Since $A_{t,k} \ge 0$,
+the sign of the composite weight is the sign of $W_{v,e,d}$:
+\begin{align}\label{ptnb:eq:attn-composite-weight}
+    \bigl[\,W^{\mathrm{eff}}_{(k,e),\,(t,d)}\,\bigr]^\kappa
+    \;=\; A_{t,k}\, W_{v,e,d}^\kappa,
+    \qquad \kappa \in \{+,-\}.
+\end{align}
+For signed inputs $X$ (LayerNorm outputs), the per-token $\kappa$-stream split of the Value tensor
+(as in the fused input layer of the \ac{rg}, with the bias as a bias node) and the
+per-output-feature stream sum are
+\begin{align}\label{ptnb:eq:attn-Z-def}
+    \tilde{v}_{k,d}^\kappa \;\coloneqq\; \sum_e [X_{k,e} W_{v,e,d}]^\kappa + [b_{v,d}]^\kappa,
+    \qquad
+    Z_{t,d}^\kappa \;\coloneqq\; \sum_{k} A_{t,k}\, \tilde{v}_{k,d}^\kappa
+    \;=\; \sum_{k,e} A_{t,k}\, [X_{k,e} W_{v,e,d}]^\kappa + [b_{v,d}]^\kappa.
+\end{align}
+Note that $\tilde{v}_{k,d}^\kappa$ is the $\kappa$-stream split inherited from $W_v$ and the sign
+of $X$ (not the standard scalar positive part $[v_{k,d}]^+ = \max(0, v_{k,d})$); the two coincide
+only when $v_{k,d}$ has a single-signed predecessor decomposition.
+
+\paragraph{Target rule.} Let $R^O_{t,d}$ denote the relevance arriving at the output entry $O_{t,d}$ from the surrounding
+LRP recursion. We define the target rule as the $\alpha\beta$-\ac{lrp} \ch{rule~\eqref{ptnb:eq:lrp-ab}} on the
+composite map $X \mapsto O$, written in two stages that carry the $\kappa$-stream split $\tilde
+    v_{k,d}^\kappa$ inherited from $W_v$ via~\eqref{ptnb:eq:attn-composite-weight} through the Value
+entries. \ch{It is not sequential (layer-wise) $\alpha\beta$-\ac{lrp} on $X \to v \to O$, which splits
+by the sign of the netted Value entry $v_{k,d}$ and applies $(\alpha,\beta)$ at both stages; the two
+rules differ whenever a Value entry has mixed-sign predecessors. The sequential variant is the
+alternative that this paper does not use: the implementation (Section~\ref{ptnb:app:vit-implementation})
+and every ViT result reported here apply the composite rule stated below, and the numerical
+identity between the implementation and~\eqref{ptnb:eq:attn-target-input} is checked by the tests of
+Section~\ref{ptnb:app:code-tests}.}
+
+\emph{AV mixing $O \to v$.} Applied to $O_{t,d} = \sum_k A_{t,k}\,v_{k,d}$, the rule gives the
+relevance at the Value entry $v_{k,d}$ as the weighted difference of two per-stream contributions:
+\begin{align}\label{ptnb:eq:attn-target-rule}
+    R^{\mathrm{val}}_{k,d} \;=\; \alpha\,R^{\mathrm{val},+}_{k,d} \;-\;
+    \beta\,R^{\mathrm{val},-}_{k,d},
+    \qquad
+    R^{\mathrm{val},\kappa}_{k,d} \;\coloneqq\; \sum_t \frac{A_{t,k}\,\tilde
+    v_{k,d}^\kappa}{Z_{t,d}^\kappa}\,R^O_{t,d},
+    \quad \kappa \in \{+,-\}.
+\end{align}
+
+\emph{Value projection $v \to X$.} Applied to $v_{k,d} = \sum_e W_{v,e,d}\,X_{k,e} + b_{v,d}$, the
+rule routes each $\kappa$-stream contribution $R^{\mathrm{val},\kappa}_{k,d}$ to the input dim $e$
+via the matching $\kappa$-stream ratio $[X_{k,e}W_{v,e,d}]^\kappa/\tilde v_{k,d}^\kappa$ (the bias
+share is absorbed):
+\begin{align}\label{ptnb:eq:attn-target-input-via-V}
+    R^X_{k,e} \;=\; \sum_d \left(
+    \alpha\, \frac{[X_{k,e} W_{v,e,d}]^+}{\tilde v_{k,d}^+}\,R^{\mathrm{val},+}_{k,d}
+    \;-\;
+    \beta\, \frac{[X_{k,e} W_{v,e,d}]^-}{\tilde v_{k,d}^-}\,R^{\mathrm{val},-}_{k,d}
+    \right).
+\end{align}
+
+\emph{Aggregate.} Substituting~\eqref{ptnb:eq:attn-target-rule} into~\eqref{ptnb:eq:attn-target-input-via-V}
+and canceling $\tilde v_{k,d}^\kappa$ in numerator and denominator expresses $R^X_{k,e}$ directly
+in terms of $R^O_{t,d}$:
+\begin{align}\label{ptnb:eq:attn-target-input}
+    R^X_{k,e}
+    \;=\; \sum_{t,d} \left(
+    \alpha\, \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^+}{Z_{t,d}^+}
+    \;-\;
+    \beta\, \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^-}{Z_{t,d}^-}
+    \right) R^O_{t,d},
+\end{align}
+which coincides with what the standard $\alpha\beta$-\ac{lrp} rule produces directly on the
+conditioned effective map $X \mapsto O$ with effective weight $W^{\mathrm{eff}}_{(k,e),(t,d)} =
+    A_{t,k}\,W_{v,e,d}$ and bias $b_{v,d}$.
+
+\subsubsection{State space}\label{ptnb:app:attention-state-space}
+
+We embed the attention block into the routing-graph state space of \S\ref{ptnb:app:routing-formal} using
+the tuple-superscript notation $s_\bullet^{(\mathrm{att},\,\mathrm{Side},\,\mathrm{type})}$
+throughout, where $\mathrm{Side} \in \{\mathrm{O}, \mathrm{val}, \mathrm{X}\}$ identifies the
+activation slot inside the attention block and $\mathrm{type} \in \{\mathrm{act}, \mathrm{lin}\}$
+matches state types of \S\ref{ptnb:app:routing-formal}. The state indices encode the tensor structure of
+the AV mixing and the Value projection, with $t,k \in \{1,\dots,S\}$ ranging over output/key tokens
+(sequence axis), $d \in \{1,\dots,d_h\}$ over the within-head feature axis of the focused head
+(i.e.\ the head index $h$ is fixed and $d$ runs over that head's $d_h$ feature dimensions), and $e
+    \in \{1,\dots,D\}$ over the per-token input embedding dimensions.
+
+\paragraph{States for the composite $Av{+}W_v$ block.} The explanatory walk through the attention block visits three state types beyond the
+surrounding ReLU-network's; all are parametrized by the player label in turn.
+\begin{itemize}
+    \item \textbf{Output activation states} $s_{t,d,p}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}$ at the
+        head's output entry $O_{t,d}$, indexed by output token $t \in \{1,\dots,S\}$, within-head feature
+        dim $d \in \{1,\dots,d_h\}$, and player $p \in \{+,-\}$. These are the entry points of the
+        explanatory walk: the surrounding linear-layer recursion of \S\ref{ptnb:app:routing-attribution}
+        delivers occupation mass to $\{s_{t,d,p}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}\}_{t,d,p}$
+        from the layer behind the head.
+    \item \textbf{Output sign-branch (linear) states}
+        $s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}$, indexed by $(t, d, p, \kappa)$.
+        These mirror the linear routing states $s_{j,q,\kappa}^{(l,\mathrm{lin})}$ of
+        Definition~\ref{ptnb:def:routing-recursion} for the AV mixing at output entry $(t, d)$: \emph{this is
+        where the QK logits enter the routing} via the reference $\bar\pi_t = A_{t,\cdot}$. The active
+        player picks a key token $k$ by a mixed action $\pi_{t,d,\kappa}^\star \in \Delta(\{1,\dots,S\})$
+        that combines the AV reference $\bar\pi_t$ with the $\kappa$-stream Value mass
+        $\tilde{v}_{k,d}^\kappa$.
+    \item \textbf{Value-projection linear states}
+        $s_{(k,d),p,\kappa}^{(\mathrm{att},\,\mathrm{val},\,\mathrm{lin})}$, indexed by key token $k$,
+        within-head feature dim $d$, player $p$, and sign $\kappa$. These are the linear-routing states of
+        the per-token Value projection: the player picks an input dimension $e$ (or the bias node) and the
+        game value satisfies
+        $V_p\!\bigl(s_{(k,d),p,\kappa}^{(\mathrm{att},\,\mathrm{val},\,\mathrm{lin})}\bigr) =
+            \ell(\tilde{v}_{k,d}^\kappa)$ with $\tilde{v}_{k,d}^\kappa$ from~\eqref{ptnb:eq:attn-Z-def}.
+    \item \textbf{Input activation states} $s_{(k,e),p}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}$ at the
+        input embedding entry $X_{k,e}$, indexed by token--embedding-dim pair $(k,e)$ and player $p$. $X$
+        lives upstream of the Value projection and carries the input-embedding axis $e$; the within-head
+        feature axis $d$ enters first at the Value projection's output downstream. They are the exit points
+        of the attention block: the surrounding network's recursion resumes from the per-player occupation
+        on $\{s_{(k,e),p}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}\}_{(k,e),p}$.
+\end{itemize}
+
+\paragraph{Transitions.} The trajectory through the attention block has three steps; all transitions inside the block carry
+trajectory discount $1$ except the sign-oracle split, which uses the same $\{2\alpha, 2\beta\}$ as
+a ReLU activation state of Definition~\ref{ptnb:def:routing-recursion}. There is only \emph{one}
+sign-oracle split per output entry $(t,d)$, since $A_{t,k} \ge 0$ absorbs the AV mixing into the
+$W_v$ sign split.
+\begin{enumerate}
+    \item \emph{Sign-oracle split (output activation $\to$ output sign-branch, fixed $(t,d)$).} At
+        $s_{t,d,p}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}$ an unobserved Oracle transitions uniformly
+        to $s_{(t,d),p,+}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}$ (player $p$ retains the turn,
+        trajectory discount $2\alpha$) or to $s_{(t,d),p',-}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}$
+        (turn switches to opponent $p'$, discount $2\beta$), each with probability $\tfrac12$. The feature
+        index $d$ is preserved.
+    \item \emph{Value-routing policy (output sign-branch $\to$ Value-projection linear).} At
+        $s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}$ the active player picks a key
+        token $k$ by the mixed action
+        \begin{align}\label{ptnb:eq:attn-V-routing-policy-O}
+            \pi_{t,d,\kappa}^\star(k)
+            \;=\; \frac{A_{t,k}\, \tilde{v}_{k,d}^\kappa}{Z_{t,d}^\kappa},
+        \end{align}
+        derived in \S\ref{ptnb:app:attention-value-routing} as the equilibrium of a KL-regularized log-payoff
+        problem against the reference $\bar\pi_t = A_{t,\cdot}$. The trajectory transitions to
+        $s_{(k,d),p,\kappa}^{(\mathrm{att},\,\mathrm{val},\,\mathrm{lin})}$ \emph{with the player label,
+        the sign $\kappa$, and the within-head feature dim $d$ preserved}; the only thing changing is the
+        sequence-axis index from output token $t$ to key token $k$. The trajectory-discount on this
+        transition is $1$.
+    \item \emph{Value-projection routing (Value-projection linear $\to$ input activation).} At
+        $s_{(k,d),p,\kappa}^{(\mathrm{att},\,\mathrm{val},\,\mathrm{lin})}$ the active player picks an
+        input dim $e$ by the standard linear-state Gibbs policy of Definition~\ref{ptnb:def:routing-recursion}
+        on the $\kappa$-stream masses $[X_{k,e}W_{v,e,d}]^\kappa$ (the bias node receives
+        $[b_{v,d}]^\kappa/\tilde{v}_{k,d}^\kappa$ and is absorbed):
+        \begin{align}\label{ptnb:eq:attn-V-routing-policy}
+            \pi_{\mathrm{val},k,d,\kappa}^\star(e)
+            \;=\; \frac{[X_{k,e} W_{v,e,d}]^\kappa}{\tilde{v}_{k,d}^\kappa}.
+        \end{align}
+        The trajectory transitions to $s_{(k,e),p}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}$ with the
+        player label preserved and trajectory-discount factor $1$.
+\end{enumerate}
+The discounted occupation measure $\Gamma_x(\,\cdot\,)$ of \S\ref{ptnb:app:routing-attribution} is
+evaluated at all four state types along the explanatory walk. The recovery theorem of
+\S\ref{ptnb:app:attention-recovery} then compares the per-input-neuron player-difference of $\Gamma_x$
+at the input activation states with the target rule~\eqref{ptnb:eq:attn-target-input}.
+
+\subsubsection{Legendre--Fenchel transform of the KL divergence}\label{ptnb:app:kl-legendre-fenchel}
+
+The Value-routing equilibrium below is a direct corollary of the convex-conjugate identity for the
+KL divergence; we record it as a stand-alone Lemma to make the inheritance explicit.
+
+\begin{lemmaenv}[Legendre--Fenchel transform of KL divergence]\label{ptnb:lem:kl-legendre-fenchel}
+Let $\mathcal{X}$ be a finite set, $\bar\pi \in \Delta(\mathcal{X})$ a reference distribution with
+full support on $\mathcal{X}$, and $r : \mathcal{X} \to \RR$ a real-valued payoff. The
+KL-regularized linear maximization
+\begin{align}\label{ptnb:eq:kl-lf-objective}
+    F(r;\bar\pi) \;\coloneqq\; \max_{\pi \in \Delta(\mathcal{X})}
+    \Bigl\{ \E_\pi[r] \;-\; \mathrm{KL}(\pi \,\|\, \bar\pi) \Bigr\}
+\end{align}
+has the following optimizer and optimum:
+\begin{align}\label{ptnb:eq:kl-lf-optimizer}
+    \pi_r^\star(x) \;=\; \frac{\bar\pi(x)\,\exp\!\bigl(r(x)\bigr)}{Z(r;\bar\pi)},
+    \qquad
+    F(r;\bar\pi) \;=\; \log Z(r;\bar\pi) \;=\; \log\!\sum_{x \in \mathcal{X}}
+    \bar\pi(x)\,\exp\!\bigl(r(x)\bigr).
+\end{align}
+\hfill\LeanResult{ptnb:lem:kl-legendre-fenchel}
+\end{lemmaenv}
+
+Two specializations are central below. When $r(x) = \ell(u(x))$ for some non-negative $u :
+    \mathcal{X} \to \RR_{\geq 0}$ (so $\exp(r(x)) = u(x)$ with the convention $\exp(-\infty) \coloneqq
+    0$), the value collapses to the $\bar\pi$-weighted linear sum and the optimizer becomes the
+$\bar\pi$-tilted normalization of $u$:
+\begin{align}\label{ptnb:eq:kl-lf-linearized}
+    F\bigl(\ell(u);\,\bar\pi\bigr) \;=\; \ell\!\Bigl(\sum_{x}\bar\pi(x)\,u(x)\Bigr),
+    \qquad
+    \pi_{\ell(u)}^\star(x) \;=\; \frac{\bar\pi(x)\,u(x)}{\sum_{x'}\bar\pi(x')\,u(x')}.
+\end{align}
+When $\bar\pi$ is uniform on $\mathcal{X}$, $\mathrm{KL}(\pi\,\|\,\mathrm{Unif}_\mathcal{X}) =
+    \log|\mathcal{X}| - \mathcal{H}(\pi)$, so subtracting the KL penalty in~\eqref{ptnb:eq:kl-lf-objective}
+flips into a $+\mathcal{H}$ entropy bonus:
+\begin{align}
+    \E_\pi[r] \;-\; \mathrm{KL}\!\bigl(\pi\,\|\,\mathrm{Unif}_\mathcal{X}\bigr)
+    \;=\; \E_\pi[r] \;+\; \mathcal{H}(\pi) \;-\; \log|\mathcal{X}|.
+\end{align}
+Up to the additive constant $-\log|\mathcal{X}|$,~\eqref{ptnb:eq:kl-lf-objective} therefore reduces to
+the entropy-regularized maximization of~\eqref{ptnb:eq:gibbs-lse}, with value $\log\sum_{x}\exp(r(x))$
+and optimizer $\pi^\star(x) \propto \exp(r(x))$.
+
+\begin{proof}
+This is the Gibbs variational principle~\parencite{BoydVandenberghe2004}: for every $\pi$, $\E_\pi[r] -
+    \mathrm{KL}(\pi\,\|\,\bar\pi) = \log Z(r;\bar\pi) - \mathrm{KL}(\pi\,\|\,\pi_r^\star)$, which is
+maximal, with value $\log Z(r;\bar\pi)$, exactly at $\pi = \pi_r^\star$.
+\end{proof}
+
+\subsubsection{Value-routing equilibrium}\label{ptnb:app:attention-value-routing}
+
+Fix an output entry $(t, d)$, a sign $\kappa \in \{+,-\}$, and the reference $\bar\pi_t =
+    A_{t,\cdot}$ from \S\ref{ptnb:app:attention-state-space} (the \emph{same} $\bar\pi_t$ for every $d$,
+since the AV mixing reuses one row across all feature dims). At the output sign-branch state
+$s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}$ the active player $p$ solves the
+KL-regularized log-payoff maximization
+\begin{align}\label{ptnb:eq:attn-value-routing}
+    V_p\!\bigl(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}\bigr)
+    \;\coloneqq\;
+    \max_{\pi \in \Delta(\{1,\dots,S\})}
+    \left\{
+    \sum_{k=1}^S \pi(k)\, \ell\!\bigl(\tilde{v}_{k,d}^\kappa\bigr)
+    \;-\;
+    \mathrm{KL}\!\bigl(\pi \,\|\, \bar\pi_t\bigr)
+    \right\},
+\end{align}
+where $\tilde{v}_{k,d}^\kappa \ge 0$ is the $\kappa$-stream split of the Value entry $v_{k,d}$
+from~\eqref{ptnb:eq:attn-Z-def} and $\ell$ is the extended logarithm of \S\ref{ptnb:app:routing-formal}. The
+payoff $\ell(\tilde{v}_{k,d}^\kappa)$ on action $k$ is the active-player value of the predecessor
+Value-projection linear state,
+$V_p(s_{(k,d),p,\kappa}^{(\mathrm{att},\,\mathrm{val},\,\mathrm{lin})}) =
+    \ell(\tilde{v}_{k,d}^\kappa)$, so combining with the AV log-weight $\ell(A_{t,k})$ gives composite
+payoff $\ell(A_{t,k}\, \tilde{v}_{k,d}^\kappa)$ at the $(t,d)$-output. Define the per-output-entry
+$\bar\pi_t$-weighted Value mass
+\begin{align}\label{ptnb:eq:attn-z-def}
+    Z_{t,d}^\kappa \;\coloneqq\; \sum_{m=1}^S \bar\pi_t(m)\, \tilde{v}_{m,d}^\kappa.
+\end{align}
+The dependence on $d$ enters only through $\tilde{v}_{m,d}^\kappa$; the AV reference $\bar\pi_t$ is
+shared across all feature dims.
+
+\begin{proposition}[Value-side optimal policy]\label{ptnb:prop:attn-value-policy}
+If $Z_{t,d}^\kappa > 0$, the unique optimizer of~\eqref{ptnb:eq:attn-value-routing} is
+\begin{align}\label{ptnb:eq:attn-value-policy}
+    \pi_{t,d,\kappa}^\star(k)
+    \;=\;
+    \frac{\bar\pi_t(k)\, \tilde{v}_{k,d}^\kappa}{Z_{t,d}^\kappa},
+\end{align}
+with active-player value $V_p(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}) =
+    \ell(Z_{t,d}^\kappa)$ and inactive-player value
+$V_{p'}(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}) = -\infty$ as in
+Definition~\ref{ptnb:def:routing-recursion}. If $Z_{t,d}^\kappa = 0$, no key contributes mass on stream
+$\kappa$ and $V_p(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}) = -\infty$.
+\end{proposition}
+
+\begin{proof}
+Apply the logit specialization~\eqref{ptnb:eq:kl-lf-linearized} of Lemma~\ref{ptnb:lem:kl-legendre-fenchel}
+with $\mathcal{X} = \{1,\dots,S\}$, $\bar\pi = \bar\pi_t$, and $u(k) = \tilde{v}_{k,d}^\kappa$, so
+that the payoff $r(k) = \ell(\tilde{v}_{k,d}^\kappa)$ has $\exp r(k) = \tilde{v}_{k,d}^\kappa$.
+Equation~\eqref{ptnb:eq:kl-lf-linearized} immediately gives the optimizer $\pi_{t,d,\kappa}^\star$
+of~\eqref{ptnb:eq:attn-value-policy} and value $\ell(Z_{t,d}^\kappa)$ when $Z_{t,d}^\kappa > 0$. The
+inactive-player value $-\infty$ is the Routing-Game convention of
+Definition~\ref{ptnb:def:routing-recursion}, inherited from the $r = q'$ branch
+of~\eqref{ptnb:eq:routing-linear-action}. If $Z_{t,d}^\kappa = 0$ then
+$\bar\pi_t(k)\,\tilde{v}_{k,d}^\kappa = 0$ for every $k$ and the supremum
+of~\eqref{ptnb:eq:attn-value-routing} over the simplex is $-\infty$, consistent with $\ell(0) =
+    -\infty$.
+\end{proof}
+
+\paragraph{Specialization to the softmax reference.}
+Setting $\bar\pi_t = A_{t,\cdot}$ in~\eqref{ptnb:eq:attn-value-policy} yields the closed-form
+per-$(t,d,\kappa)$ policies used in the \ac{rg}'s backward walk through the attention block,
+\begin{align}\label{ptnb:eq:attn-branch-policy}
+    \pi_{t,d,+}^\star(k) \;=\; \frac{A_{t,k}\, \tilde{v}_{k,d}^+}{Z_{t,d}^+},
+    \qquad
+    \pi_{t,d,-}^\star(k) \;=\; \frac{A_{t,k}\, \tilde{v}_{k,d}^-}{Z_{t,d}^-},
+\end{align}
+with $Z_{t,d}^\kappa = \sum_m A_{t,m}\, \tilde{v}_{m,d}^\kappa$ from~\eqref{ptnb:eq:attn-z-def}. The
+numerical specification $\bar\pi_t = A_{t,\cdot}$ does not require the oracle interpretation of
+\S\ref{ptnb:app:attention-oracle}; it is enough that the cached softmax row is treated as a fixed input
+to~\eqref{ptnb:eq:attn-value-routing}.
+
+\subsubsection{\texorpdfstring{$\alpha\beta$-\ac{lrp}}{alpha-beta-LRP} recovery for the attention block}\label{ptnb:app:attention-recovery}
+
+We now show that, under the trajectory through the four state types of
+\S\ref{ptnb:app:attention-state-space} and the trajectory discount of~\eqref{ptnb:eq:routing-edge-discount},
+the player-difference of $\Gamma_x$ at the \emph{input activation states} (the predecessors of the
+Value-projection linear states, where the $W_v$ weights actually fire) recovers exactly the target
+rule~\eqref{ptnb:eq:attn-target-input} of \S\ref{ptnb:app:attention-target-rule}. We keep the game side and
+the attribution side strictly separate:
+\begin{itemize}
+    \item the \emph{game-side} object is the discounted occupation measure $\Gamma_x(\,\cdot\,)$ of
+        \S\ref{ptnb:app:routing-attribution} evaluated at the four attention-block state types of
+        \S\ref{ptnb:app:attention-state-space}. Following the per-neuron difference
+        convention~\eqref{ptnb:eq:routing-Gamma-pair} of the surrounding Routing-Game recursion, we form the
+        per-output-entry difference $\Gamma^{O}_{t,d}$ at the entry point (defined
+        in~\eqref{ptnb:eq:attn-Gamma-O} below) and the per-input-neuron difference at the exit
+        \begin{align}\label{ptnb:eq:attn-Gamma-X}
+            \Gamma^{X}_{k,e} \;\coloneqq\;
+            \Gamma_x\!\bigl(s_{(k,e),+}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}\bigr) -
+            \Gamma_x\!\bigl(s_{(k,e),-}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}\bigr).
+        \end{align}
+    \item the \emph{attribution-side} object is the standard $\alpha\beta$-\ac{lrp} relevance vector
+        $R^{X}_{k,e}$ given by the input-level target rule~\eqref{ptnb:eq:attn-target-input}, seeded by
+        $R^{O}_{t,d}$ from the surrounding linear-layer recursion above the head.
+\end{itemize}
+
+\begin{theoremenv}[$\alpha\beta$-\ac{lrp} recovery for attention]\label{ptnb:thm:attn-ab-recovery}\label{thm:attention_ab_recovery}
+For signed inputs $X$, under the SPNE of \S\ref{ptnb:app:attention-state-space} with reference
+$\bar\pi_t = A_{t,\cdot}$ and the trajectory discount of~\eqref{ptnb:eq:routing-edge-discount}
+restricted to the (sole) sign-oracle split at $s^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}$, the
+per-input-neuron player-difference $\Gamma^{X}_{k,e}$ from~\eqref{ptnb:eq:attn-Gamma-X} satisfies
+\begin{align}\label{ptnb:eq:attn-ab-recovery}
+    \Gamma^{X}_{k,e}
+    \;=\;
+    \sum_{t,d} \left(
+    \alpha\, \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^+}{Z_{t,d}^+}
+    \;-\;
+    \beta\, \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^-}{Z_{t,d}^-}
+    \right) \Gamma^{O}_{t,d},
+\end{align}
+where the per-output-entry input difference is
+\begin{align}\label{ptnb:eq:attn-Gamma-O}
+    \Gamma^{O}_{t,d} \;\coloneqq\;
+    \Gamma_x\!\bigl(s_{t,d,+}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}\bigr) \;-\;
+    \Gamma_x\!\bigl(s_{t,d,-}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}\bigr),
+\end{align}
+with $\Gamma^{O}_{t,d} = R^{O}_{t,d}$ by inductive hypothesis from the surrounding recursion, for
+the seed $R^{(L)}_u = 1$ (for the seed $f(x)$ every relevance equals $f(x)$ times the corresponding
+$\Gamma$, as in Theorem~\ref{ptnb:thm:ab-recovery}). The right-hand side is exactly the target
+rule~\eqref{ptnb:eq:attn-target-input}, hence $\Gamma^{X}_{k,e} = R^{X}_{k,e}$. Aggregating over $e$ and
+the bias node at fixed $(k,d)$ collects the relevance routed through the Value entry $v_{k,d}$:
+\begin{align}\label{ptnb:eq:attn-Gamma-V-corollary}
+    \Gamma^{\mathrm{val}}_{k,d}
+    \;=\;
+    \sum_t \left( \alpha\, \frac{A_{t,k}\, \tilde{v}_{k,d}^+}{Z_{t,d}^+} \;-\; \beta\, \frac{A_{t,k}\,
+    \tilde{v}_{k,d}^-}{Z_{t,d}^-} \right) \Gamma^{O}_{t,d}
+    \;=\; R^{\mathrm{val}}_{k,d},
+\end{align}
+recovering the per-Value-entry formula~\eqref{ptnb:eq:attn-target-rule}.
+\hfill\LeanResult{ptnb:thm:attn-ab-recovery}
+\end{theoremenv}
+
+\begin{proof}
+The statement is block-local: by hypothesis the surrounding recursion delivers the output-side
+per-entry differences $\Gamma^{O}_{t,d} = R^{O}_{t,d}$ at every output position $(t,d)$.
+
+\textbf{Per-state recursion at the input activation states.} Fix an input embedding $(k,e)$ and a
+player label $r \in \{+,-\}$. A trajectory reaches
+$s_{(k,e),r}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}$ from an output activation
+$s_{t,d,p}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}$ in three stages, with all transitions
+inside the attention block carrying their discounts and player-label switches as in the kernel of
+\S\ref{ptnb:app:attention-state-space}. The path goes through one specific within-head feature dim $d
+    \in \{1,\dots,d_h\}$ (an index along the focused head's $d_h$-wide feature axis): the sign-oracle
+is per $(t,d)$, the Value-routing policy $\pi_{t,d,\kappa}^\star$ depends on $d$ via
+$\tilde{v}_{k,d}^\kappa$, and the Value-projection routing $\pi_{\mathrm{val},k,d,\kappa}^\star$
+also depends on $d$. The $d$ index is dropped at the final transition into $X$, where the input
+embedding $X_{k,e}$ has indices $(k,e)$ and the within-head feature axis $d$ enters downstream at
+the Value projection's output.
+\begin{itemize}
+    \item \emph{$\kappa = +$ branch (per $(t,d)$).} Sign-oracle takes $s_{t,d,p}^{(\mathrm{O},\mathrm{act})}
+            \to s_{(t,d),p,+}^{(\mathrm{O},\mathrm{lin})}$ with probability $\tfrac12$ and trajectory discount
+        $2\alpha$ (player retained). The Value-routing policy $\pi_{t,d,+}^\star(k)$ takes the trajectory
+        to $s_{(k,d),p,+}^{(\mathrm{val},\mathrm{lin})}$ (player, sign, $d$ preserved, discount $1$). The
+        Value-projection routing $\pi_{\mathrm{val},k,d,+}^\star(e)$ takes the trajectory to
+        $s_{(k,e),p}^{(\mathrm{X},\mathrm{act})}$ (player preserved, $d$ dropped, discount $1$). The
+        composite per-$(t,d)$ contribution to $\Gamma_x(s_{(k,e),r}^{(\mathrm{X},\mathrm{act})})$ is
+        \begin{align}
+            \tfrac12 (2\alpha)\, \pi_{t,d,+}^\star(k)\, \pi_{\mathrm{val},k,d,+}^\star(e)\,
+            \Gamma_x\!\bigl(s_{t,d,r}^{(\mathrm{O},\mathrm{act})}\bigr)
+            &=\; \alpha\, \frac{A_{t,k}\, \tilde{v}_{k,d}^+}{Z_{t,d}^+}\,\frac{[X_{k,e}
+            W_{v,e,d}]^+}{\tilde{v}_{k,d}^+}\, \Gamma_x\!\bigl(s_{t,d,r}^{(\mathrm{O},\mathrm{act})}\bigr) \\
+            &=\; \alpha\, \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^+}{Z_{t,d}^+}\,
+            \Gamma_x\!\bigl(s_{t,d,r}^{(\mathrm{O},\mathrm{act})}\bigr),
+        \end{align}
+        where the $\tilde{v}_{k,d}^+$ in numerator and denominator cancel.
+    \item \emph{$\kappa = -$ branch (per $(t,d)$).} Sign-oracle takes $s_{t,d,p}^{(\mathrm{O},\mathrm{act})}
+            \to s_{(t,d),p',-}^{(\mathrm{O},\mathrm{lin})}$ with probability $\tfrac12$, discount $2\beta$,
+        turn switched to opponent $p'$; the rest of the path preserves $p'$, ending at
+        $s_{(k,e),p'}^{(\mathrm{X},\mathrm{act})}$. The contribution to
+        $\Gamma_x(s_{(k,e),r}^{(\mathrm{X},\mathrm{act})})$ comes from sources with player $p = r'$ (so the
+        switch yields $r$):
+        \begin{align}
+            \tfrac12 (2\beta)\, \pi_{t,d,-}^\star(k)\, \pi_{\mathrm{val},k,d,-}^\star(e)\,
+            \Gamma_x\!\bigl(s_{t,d,r'}^{(\mathrm{O},\mathrm{act})}\bigr)
+            \;=\; \beta\, \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^-}{Z_{t,d}^-}\,
+            \Gamma_x\!\bigl(s_{t,d,r'}^{(\mathrm{O},\mathrm{act})}\bigr).
+        \end{align}
+\end{itemize}
+Summing over $(t,d)$ and over the two branches,
+\begin{align}\label{ptnb:eq:attn-Gamma-X-recursion}
+    \Gamma_x\!\bigl(s_{(k,e),r}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}\bigr)
+    \;=\; \sum_{t,d} \Bigl[
+    \alpha\, \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^+}{Z_{t,d}^+}\,
+    \Gamma_x\!\bigl(s_{t,d,r}^{(\mathrm{O},\mathrm{act})}\bigr)
+    \;+\;
+    \beta\, \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^-}{Z_{t,d}^-}\,
+    \Gamma_x\!\bigl(s_{t,d,r'}^{(\mathrm{O},\mathrm{act})}\bigr)
+    \Bigr],
+\end{align}
+where the $\tfrac12$ from the sign-oracle splits cancels against the $2$ in $2\alpha, 2\beta$.
+
+\textbf{Player difference.} Differencing~\eqref{ptnb:eq:attn-Gamma-X-recursion} for $r{=}+$ minus
+$r{=}-$ uses $\Gamma_x(s_{t,d,+}^{(\mathrm{O},\mathrm{act})}) -
+    \Gamma_x(s_{t,d,-}^{(\mathrm{O},\mathrm{act})}) = \Gamma^{O}_{t,d}$ in the $+$ branch (player kept)
+and the opposite $-\Gamma^{O}_{t,d}$ in the $-$ branch (player switched):
+\begin{align}
+    \Gamma^{X}_{k,e}
+    \;=\; \alpha\, \sum_{t,d} \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^+}{Z_{t,d}^+}\, \Gamma^{O}_{t,d}
+    \;-\; \beta\, \sum_{t,d} \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^-}{Z_{t,d}^-}\, \Gamma^{O}_{t,d},
+\end{align}
+which is~\eqref{ptnb:eq:attn-ab-recovery}.
+
+\textbf{Target-rule identification.} The right-hand side matches~\eqref{ptnb:eq:attn-target-input}
+verbatim. Since $\Gamma^{O}_{t,d} = R^{O}_{t,d}$, $\Gamma^{X}_{k,e} = R^{X}_{k,e}$. Aggregating
+over $e$ and the bias node at fixed $(k,d)$ uses $\sum_e [X_{k,e} W_{v,e,d}]^\kappa +
+    [b_{v,d}]^\kappa = \tilde{v}_{k,d}^\kappa$, giving~\eqref{ptnb:eq:attn-Gamma-V-corollary}, which
+matches~\eqref{ptnb:eq:attn-target-rule}.
+\end{proof}
+
+\subsection{The reference as the policy of a QK oracle player}\label{ptnb:app:attention-oracle}
+
+\S\ref{ptnb:app:attention-kl-routing} treated the softmax row $A_{t,\cdot}$ as a fixed reference policy.
+It is itself the entropy-regularized best response of an auxiliary \emph{oracle} player whose
+payoff is the detached query--key logit $e_{tk} = Q_t K_k^\top/\sqrt{d_h}$: by~\eqref{ptnb:eq:gibbs-lse}
+at temperature $1$,
+\begin{align}\label{ptnb:eq:attn-qk-oracle}
+    A_{t,\cdot} \;=\; \argmax_{\pi \in \Delta(\{1,\dots,S\})} \Bigl\{ \textstyle\sum_{k} \pi(k)\,
+    e_{tk} + \mathcal{H}(\pi) \Bigr\},
+    \qquad
+    \max_{\pi} \Bigl\{ \textstyle\sum_{k} \pi(k)\, e_{tk} + \mathcal{H}(\pi) \Bigr\} = \log
+    \textstyle\sum_{k} \exp(e_{tk}).
+\end{align}
+The oracle acts in the forward pass only and hands $\bar\pi_t = A_{t,\cdot}$ to the Value-routing
+player; its states carry no occupation mass, so no relevance flows through $Q$ or $K$
+(\S\ref{ptnb:app:vit-implementation}).
+
+\subsection{Risk-Averse Attention via ADF}\label{ptnb:app:risk-attn}
+
+When \ac{ptnbADF} variance propagation is active, let $s_{tk}$ denote the uncertainty score attached to
+attending from query token $t$ to key token $k$ (in the current implementation, $s_{tk} =
+    \hat{\sigma}_k$, the square root of the feature-averaged \ac{ptnbADF} variance of token $k$'s query
+projection; it depends only on the key token and is a proxy for, not the standard deviation of,
+$e_{tk}$). Risk-averse attention shifts the QK-logits in the direction of reduced uncertainty,
+\begin{align}\label{ptnb:eq:risk-attn-policy}
+    \tilde e_{tk} = e_{tk} + \lambda_{\mathrm{sm}}\, s_{tk},
+    \qquad \lambda_{\mathrm{sm}} \le 0,
+\end{align}
+yielding the risk-modified policy
+\begin{align}\label{ptnb:eq:risk-attn-policy-softmax}
+    \tilde{\pi}_t(k) = \frac{\exp(\tilde e_{tk})}{\sum_{k'} \exp(\tilde e_{tk'})}.
+\end{align}
+The sign convention $\lambda_{\mathrm{sm}} \le 0$ is used throughout the paper and in all tables:
+more-negative values penalize high-uncertainty keys more strongly, so the shift always redirects
+relevance toward tokens whose QK-interactions are stable under input noise. The shift is computed
+in the AV-backward hook from cached pre-softmax logits, so the forward pass and model predictions
+remain unchanged.
+
+The naming \emph{softmax-shift risk aversion} is a deliberate analog of the activation-side risk
+aversion $\lambda$ but acts in a different direction: $\lambda$ is risk-averse on the value side
+(it routes through stable activations by lowering mean$-|\lambda|\sigma$), whereas
+$\lambda_{\mathrm{sm}}<0$ exponentially tilts the routing policy, $\tilde\pi_t(k) \propto
+    A_{t,k}\exp(\lambda_{\mathrm{sm}} s_{tk})$, toward \emph{low}-uncertainty keys: $\sum_k
+    \tilde\pi_t(k)\, s_{tk}$ is non-decreasing in $\lambda_{\mathrm{sm}}$, while the entropy of
+$\tilde\pi_t$ may rise or fall. We retain the ``risk-averse'' label because what is being avoided
+is uncertainty in the routed pathway, but the reader should note that the shift acts on the routing
+policy, not on the player's utility curvature.
+
+\subsection{Implementation details}\label{ptnb:app:vit-implementation}\label{sec:vit_implementation}
+
+The forward and backward passes \ch{of the \ac{rg} on ViT-B/16} share four operator-level conventions
+that together preserve \ac{lrp} conservation through the non-linearities of the ViT and align the
+explanatory walk with the state-space construction of \S\ref{ptnb:app:attention-state-space}. We refer to this collectively as
+the DAVE-style \emph{conditioned forward pass}~\parencite{Wrobel2024}, augmented with the QK gradient
+detachment that the QK oracle of \S\ref{ptnb:app:attention-oracle} requires.
+
+\paragraph{LayerNorm detachment.}\label{ptnb:app:dave-conditioned}
+Standard backpropagation through $\text{LN}(x) = w_{\mathrm{LN}} \odot (x - m(x))/s(x) +
+    b_{\mathrm{LN}}$ routes gradients through the data-dependent statistics $m(x), s(x)$, which \ch{couple the
+feature coordinates of each token (LayerNorm acts per token; it does not mix tokens)} and
+violate \ac{lrp} conservation~\parencite{Ali2022AttnLRP}. Following the detached-operator
+construction of~\textcite{Wrobel2024}, we compute $m, s$ from a detached copy $c = x.\text{detach}()$,
+so the backward pass sees only the pointwise map $x \mapsto w_{\mathrm{LN}} \odot (x - m(c))/s(c) +
+    b_{\mathrm{LN}}$ and conservation is preserved.
+
+\paragraph{GELU gate detachment.}
+GELU gates are conditioned analogously: the gate is implemented as $x \cdot \Phi(c)$ with $c =
+    x.\text{detach}()$ and $\Phi$ the standard normal CDF, so the backward pass treats the gate as a
+pointwise scaling by the (constant) activation $\Phi(c)$.
+
+\paragraph{Softmax detachment.}
+Softmax outputs are fully detached. This matches the QK oracle interpretation of
+\S\ref{ptnb:app:attention-oracle}: the cached softmax row $A_{t,\cdot}$ is the equilibrium policy of an
+auxiliary entropy-regularized problem, supplied as a fixed input to the Value-routing player; no
+trajectory of the explanatory walk enters $Q$ or $K$.
+
+\paragraph{QK gradient detachment.}\label{ptnb:app:attention-grad-detach}
+The softmax and QK-matmul backward hooks return zero gradients, ensuring that the QK pathway is
+used \emph{only} for computing the detached kernel $A_{t,\cdot}$ and that no relevance flows
+through $Q$ or $K$. The QK oracle therefore supplies the KL reference, and all explanatory mass
+through the attention block flows through the Value tensor. The implemented Value rule is the
+composite rule of Theorem~\ref{ptnb:thm:attn-ab-recovery}: each Value entry keeps the stream masses
+$\tilde v^\kappa_{k,d}$ of its Value-projection products, the attention step routes stream $\kappa$
+in proportion to $A_{t,k}\tilde v^\kappa_{k,d}$, and the Value projection routes stream $\kappa$
+only to the contributions $[X_{k,e}W_{v,e,d}]^\kappa$ of the same sign, so the discounts
+$(\alpha,\beta)$ act once per block, as in~\eqref{ptnb:eq:attn-target-input}. \ch{This composite rule is the
+only attention--Value rule in the released code (option \texttt{av\_rule='merged'}); the sequential
+variant of \S\ref{ptnb:app:attention-target-rule} was not used for any reported number. The identity
+tests of Section~\ref{ptnb:app:code-tests} check the implementation against an independent reference
+of~\eqref{ptnb:eq:attn-target-input}.}
+
+\ch{Together the four conventions realize the detached-operator semantics of~\textcite{Wrobel2024} for the
+\ac{rg} backward pass, so that its explanatory mass flows only through the linear effective
+transformation. They implement the explanation question of \S\ref{ptnb:app:attention-target-rule}
+(Value-only attribution conditioned on the realized attention matrix, as in
+CP-LRP~\parencite{Ali2022AttnLRP}) and are not the rules of AttnLRP~\parencite{Achtibat2024AttnLRP}, which
+propagates relevance through the softmax and the QK product as well.}
+
+\subsection{Equivariant Spatial Averaging}\label{ptnb:app:equivariant}
+
+The $16{\times}16$ patch tokenization breaks translation equivariance. Following DAVE's
+transform-averaging strategy~\parencite{Wrobel2024}, \ac{rg}+Eq computes explanations on transformed
+inputs, maps each explanation back to the original image coordinates, and averages the aligned maps
+(a Monte-Carlo Reynolds average),
+\begin{align}\label{ptnb:eq:equivariant-average}
+    \mathcal{M}_N(x) \;=\; \frac{1}{N}\sum_{n=1}^{N} T_n^{-1}\bigl[\mathcal{M}(T_n x)\bigr],
+\end{align}
+where $\mathcal{M}$ is the \ac{rg} attribution map and the $T_n$ are i.i.d.\ random rotations
+(uniform in $\pm 10^\circ$), translations (up to $\pm 5\%$ of the image extent per axis) and
+horizontal flips (probability $0.5$), with $N = 50$ and no input noise. The conditioned forward
+pass of \S\ref{ptnb:app:vit-implementation} separates operator variation from the effective
+transformation, in the same spirit as DAVE's conditioned-operator argument~\parencite{Wrobel2024}. The
+transforms do not form a group, so the average is an optional smoothing mode without an exactness
+claim.
+\par\medskip

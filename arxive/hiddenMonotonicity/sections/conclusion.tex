@@ -1,0 +1,15 @@
+\section{Conclusion}\label{sec:conclusion}
+
+We have presented a numerically stable framework for decomposing pretrained ReLU networks into split-pairs of monotone and convex split-streams, enabling improved explainability without retraining or altering model predictions.
+While there is no single saliency method excellent in \emph{all} metrics at the same time, our experiments establish splitting as a tool to boost various of them on trained networks. 
+By directly training DC-models, we initiate their application as a further approach to increase explainability of a network. 
+Especially the separation between factual and counterfactual attributes observed in the MNIST experiments is remarkable and may be understood further theoretically and experimentally.
+
+While we provided some details on the splitting of feedforward networks, with similar ideas, this can be extended to further architectures. 
+We provide a novel mathematical framework to decompose multiplicative networks as the transformer \citep{Vaswani2017} into the difference of monotone and convex parts in \cref{app:splitting_multiplicative_maxout_networks}.
+It is future work to analyze the properties of the proposed decomposition approach for such multiplicative networks and to adapt SplitCAM and SplitLRP to the transformer architecture.
+
+The split network need not duplicate parameters: instead of materializing a separate model, one can traverse the original \texttt{nn.Module} graph and realize the split using masked views of the same weights. It is future work to implement the network decomposition framework more memory efficient without duplicating model weights.
+
+Our experiments show that attribution quality heavily depends on layer selection, with different layers excelling at different metrics. 
+This motivates to develop principled methods for automatic layer selection or combining attributions across multiple layers for more robust explanations.

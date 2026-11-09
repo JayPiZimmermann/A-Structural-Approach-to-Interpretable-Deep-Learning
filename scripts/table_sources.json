@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "repositories": {
+    "hidden_monotonicity": {
+      "url": "https://github.com/JayPiZimmermann/DC-Decomposition-for-Explanability",
+      "submodule_path": "code/hidden_monotonicity",
+      "verified_commit": "31be19b460358a69516452402d41bd650845a344",
+      "license_file": "LICENSE",
+      "license_note": "MIT License plus academic-use citation notice",
+      "table_generation": {
+        "available_offline": false,
+        "reason": "The public code repository contains implementation and evaluation configurations, but no committed ImageNet per-image/result summary inputs or generator for the paper's XAI result tables. Recreating them from code would require rerunning data/model evaluations.",
+        "unrelated_generator": "difference_of_networks/multi_seed/generate_latex_table.py generates a separate model-accuracy table; it is not the source of the thesis XAI result tables.",
+        "static_table_sources": [
+          {
+            "paper_source": "arxive/hiddenMonotonicity/sections/table_main_generated_vgg.tex",
+            "thesis_table": "tex/tables/eval_vgg_main.tex",
+            "description": "VGG-16 main XAI results"
+          },
+          {
+            "paper_source": "arxive/hiddenMonotonicity/sections/table_main_generated_res.tex",
+            "thesis_table": "tex/tables/eval_res_main.tex",
+            "description": "ResNet-18 main XAI results"
+          },
+          {
+            "paper_source": "arxive/hiddenMonotonicity/appendix/table_appendix_generated_vgg_full_eval_sorted.tex",
+            "thesis_table": "tex/tables/appendix/xai_eval_vgg_full.tex",
+            "description": "VGG-16 full evaluation"
+          },
+          {
+            "paper_source": "arxive/hiddenMonotonicity/appendix/table_appendix_generated_res_full_eval_sorted.tex",
+            "thesis_table": "tex/tables/appendix/xai_eval_res_full.tex",
+            "description": "ResNet-18 full evaluation"
+          },
+          {
+            "paper_source": "arxive/hiddenMonotonicity/appendix/randomization_sanity_check_table.tex",
+            "thesis_table": "tex/tables/appendix/randomization_sanity_check.tex",
+            "description": "Randomization sanity check"
+          },
+          {
+            "paper_source": "arxive/hiddenMonotonicity/appendix/table_timing_comparison.tex",
+            "thesis_table": "tex/tables/appendix/timing_comparison.tex",
+            "description": "Runtime comparison"
+          },
+          {
+            "paper_source": "arxive/hiddenMonotonicity/appendix/table_ppendix_alpha_combined.tex",
+            "thesis_table": "tex/tables/appendix/alpha_combined.tex",
+            "description": "Combined alpha ablation"
+          },
+          {
+            "paper_source": "arxive/hiddenMonotonicity/appendix/table_lrp_scale_shift_comparison.tex",
+            "thesis_table": "tex/tables/appendix/lrp_scale_shift.tex",
+            "description": "LRP scale versus shift"
+          },
+          {
+            "paper_source": "arxive/hiddenMonotonicity/appendix/table_alpha_none.tex",
+            "thesis_table": "tex/tables/appendix/alpha_none.tex",
+            "description": "Alpha ablation without shift"
+          },
+          {
+            "paper_source": "arxive/hiddenMonotonicity/appendix/table_alpha_shift.tex",
+            "thesis_table": "tex/tables/appendix/alpha_shift.tex",
+            "description": "Alpha ablation with shift"
+          }
+        ]
+      }
+    },
+    "playing_backward": {
+      "url": "https://github.com/JayPiZimmermann/Playing_The_Network_Backward_Official_Repository",
+      "submodule_path": "code/playing_backward",
+      "verified_commit": "9cae01ce429c34b295aa06dd056895ddd4ef9ff7",
+      "license_file": "LICENSE",
+      "license_note": "Creative Commons Attribution-ShareAlike 4.0",
+      "table_generation": {
+        "available_offline": true,
+        "generator_module": "reproduce.make_tables",
+        "results_input": "results_summary",
+        "command": "python -m reproduce.make_tables --results results_summary --out OUTPUT --strict",
+        "generated_outputs": [
+          "main_vit_tabular.tex",
+          "test_resnet50_ci_longtable.tex",
+          "test_vgg16_ci_longtable.tex",
+          "test_vit_b16_ci_longtable.tex",
+          "test_voc_vit_b16_ci_longtable.tex",
+          "val_selection_resnet50_tabular.tex",
+          "val_selection_vgg16_tabular.tex",
+          "val_selection_vit_b16_tabular.tex",
+          "ablations_resnet50_longtable.tex",
+          "ablations_vgg16_longtable.tex",
+          "ablations_vit_b16_longtable.tex",
+          "attention_rule_vit_b16_tabular.tex",
+          "numbers.tex"
+        ],
+        "unavailable_from_results_summary": [
+          {
+            "file": "diagnostic_numbers.tex",
+            "reason": "Hellinger/randomization diagnostic results are not included in results_summary."
+          },
+          {
+            "file": "double_random_tabular.tex",
+            "reason": "Double-randomization experiment output is not included in results_summary."
+          },
+          {
+            "file": "input_baseline_tabular.tex",
+            "reason": "Input-noise baseline experiment output is not included in results_summary."
+          },
+          {
+            "file": "per_image_corr_tabular.tex",
+            "reason": "Per-image correlation experiment output is not included in results_summary."
+          },
+          {
+            "file": "pg_granularity_tabular.tex",
+            "reason": "The shipped result summaries do not include the cached maps needed for the pointing-game granularity analysis."
+          },
+          {
+            "file": "sanity_check_tabular.tex",
+            "reason": "Randomization sanity-check experiment outputs are not included in results_summary."
+          }
+        ],
+        "static_wrapper": {
+          "paper_source": "arxive/playingTheNetworkBackward/tables/sanity_check.tex",
+          "thesis_table": "tex/tables/ptnb_v2/sanity_check.tex",
+          "description": "Thesis-local caption, section references, table input path, and acronym forms adapt the archived wrapper."
+        }
+      }
+    }
+  }
+}

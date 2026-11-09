@@ -1,0 +1,67 @@
+\section{XAI Methods}\label{sec:methods_xai}
+
+In this section, we leverage the neural network decomposition framework introduced in the previous sections to boost two common XAI attribution methods: LayerCAM and LRP.
+
+\subsection{SplitCAM}\label{subsec:split_cam}
+
+Class Activation Mapping (CAM) \citep{Zhou2016} and its variants (Grad-CAM \citep{Selvaraju2017}, Grad-CAM++ \citep{Chattopadhay2018}, LayerCAM \citep{Jiang2021LayerCAM}) generate visual explanations by combining layer activation maps with class specific weights or layer gradients.
+
+For layer $l$, LayerCAM computes the saliency map as
+\begin{equation} \label{eq:layercam}
+    \text{LayerCAM}^{(l)} = \text{ReLU}\left(\sum_{c} \frac{\partial y}{\partial a^{(l)}_c} \odot a^{(l)}_c\right)
+\end{equation}
+where $a^{(l)}_c$ is the activation map of channel $c$ at layer $l$, $y$ is the class score, and $\odot$ denotes element-wise multiplication.
+
+\emph{SplitCAM} extends the LayerCAM framework to our split-pair architecture.
+For a given layer~$l$ in the decomposed model we combine the two split-stream activations with its gradients, namely $\delta_{\text{shift}}^{(l,+,g)}$ (one of the shifted local sensitivities) and $\delta_{\text{shift}}^{(l,g)}$ (a combination of such) defined in \cref{sec:backward}. Different from the original LayerCAM formula \cref{eq:layercam}, SplitCAM omits the positive filtering by the ReLU function.
+
+\begin{align}
+    \text{SplitCAM}^{(l, +, g)} &\coloneqq \sum_{c} \delta_{\text{shift}}^{(l,+,g)} \odot a^{(l,+)}_c, \\
+    \text{SplitCAM}^{(l, g)} &\coloneqq \sum_{c} \delta_{\text{shift}}^{(l,g)} \odot a^{(l)}_c,
+\end{align}
+where $a^{(l,+)}_c$ denotes the positive activation map of channel~$c$.
+$\text{SplitCAM}^{(l, -, g)}$ and the variants for $h$ are defined analogously.
+
+In the forward pass, we scale the entire activation tensor by a fixed \emph{minimize factor} $\theta$ whenever the absolute value of any activation entry exceeds a predefined \emph{minimize threshold} $\Theta$.
+In all our experiments we use $\theta = 0.1$ and $\Theta = 10$.
+We apply corrective shifts to the split-pair activations such that their difference matches the original network's activation.
+
+In the backward pass we apply the shifting procedure described in \cref{sec:backward} and slightly correct the four sensitivity maps in each layer to ensure the backward invariant \cref{eq:backward_invariant}.
+
+\paragraph{SplitGrad} As a simple attribution method we also propose SplitGrad, which resembles the channel mean of the shifted split-pair gradients in the previous setup.
+
+\subsection{SplitLRP}\label{subsec:split_lrp}
+
+Layer-wise Relevance Propagation \citep{Bach2015} redistributes the output score iteratively from the
+output layer to the input layer depending on the weights and activations. There are several extensions to the classical LRP rule. 
+Here we present the $\gamma$-rule, introduced by Montavon et al.\ in \citep{Montavon_2022_gammaLRP}, that tries to emphasize positive influences to the network's prediction by increasing the influence of positive weights.
+
+\paragraph{LRP-\(\gamma\) rule (linear / convolution layers)}
+For an affine mapping \(z^{(l+1)}_i=\sum_j W^{(l+1)}_{ij} a^{(l)}_j + b^{(l+1)}_i\) we define the $\gamma$-adapted positive forward contribution
+\begin{align}
+    \tilde{z}^{(l+1)}_{ij} \coloneqq a^{(l)}_j \left( W^{(l+1)}_{ij} + \gamma \max\left\{W^{(l+1)}_{ij},0\right\} \right),
+\end{align}
+with \(\gamma \ge 0\) accentuating positive contributions.
+Given relevances \(R^{(l+1)}_i\) at the outputs, the \(\gamma\)-rule redistributes them to inputs \(j\) as
+\begin{equation}
+\label{eq:lrp-gamma}
+R^{(l)}_j = \sum_i \frac{\tilde{z}^{(l+1)}_{ij}}{\sum_{j'} \tilde{z}^{(l+1)}_{ij'} + \varepsilon\,\mathrm{sign}\!\left(\sum_{j'} \tilde{z}^{(l+1)}_{ij'}\right)}\, R^{(l+1)}_i,
+\end{equation}
+with a small \(\varepsilon>0\) for numerical stability.
+
+\paragraph{SplitLRP implementation details}
+In the DC Decomposition, each layer consists of a positive and a negative split-stream, which we treat as two sets of neurons within a unified model. Accordingly, LRP on the split-pair produces two relevance tensors in each layer, $R^{(l,+)}$ and $R^{(l,-)}$.
+Since the LRP rule ignores any activation functions in the backward pass no special care is needed for the Maxout activation functions of the split-pair.
+We propagate relevance from the class-specific positive output $a^{(L,+)}$. Since all weights in the decomposed model are non-negative, we use the standard LRP-$\gamma$ rule with $\gamma=0$ and $\varepsilon = 10^{-6}$, essentially forming the so-called $\epsilon$-LRP rule. As common practice, layer-normalization modules are merged into adjacent linear or convolutional layers, and relevance is split evenly across residual addition branches.
+We scale and correct the activations in the forward pass just as we do in SplitCAM.
+Because LRP normalizes relevance at each layer, see \cref{eq:lrp-gamma}, the total relevance in $R^{(l,+)}$ and $R^{(l,-)}$ always sums to $a^{(L,+)}$, so no additional stabilization is required during the backward pass.
+
+We additionally report \emph{combined} LRP maps, defined as
+\begin{align}
+    R^{(l,\text{comb})} \coloneqq R^{(l,+)} - R^{(l,-)}.
+\end{align}
+This quantity aggregates the positive and negative streams into a single saliency map motivated by the following intuition: 
+$R^{(l,+)}$ highlights evidence supporting the prediction, while $R^{(l,-)}$ captures evidence against it.
+
+\paragraph{Maxpooling Nonlinearities}
+We propagate relevance backwards through Maxpooling layers using the ``winner-takes-all'' scheme, assigning all relevance to the location that achieved the maximum activation.

@@ -1,0 +1,125 @@
+\section{Generalization of the Split to Multiplicative Maxout Networks} \label{app:splitting_multiplicative_maxout_networks}
+
+In this chapter we lay the theoretical groundwork to split neural networks that use gating, SE-blocks and the attention mechanism into an exact difference of two networks monotone in non-negative split inputs. Products do not in general preserve convexity.
+For full generality let us switch to an abstract neural network model, containing so-called addition, multiplication and input neurons.
+Furthermore, we consider rank-$k$ Maxout networks, as they are a generalization of ReLU networks.
+For notational convenience we do not use bias, as it can be simply simulated by an additional input neuron of constant activation equal to $1$.
+The neurons and their connections, so-called arcs, form a directed, weighted and acyclic graph---we choose to not model neural network layers for conceptual simplicity.
+
+For an addition or multiplication neuron $v$ we denote the set of its input neurons by $\delta^{\text{in}}v$ and its incoming weights by $w^{uv} \in \NN \ (u \in \delta^{\text{in}}v)$.
+The weights of incoming archs are $\mathbb{R}^k$-vectors in case of addition neurons and natural numbers in case of multiplication neurons.
+Any neuron $v$ has a one-dimensional activation $a^v \in \RR$. In case of input neurons we consider it constant. In case of an addition neuron it calculates as
+\begin{align}
+    a^v &= \text{max}_{i \in [k]} z^v_i, \ \text{where the preactivations are given by} \label{eq:addition_neuron_activation}\\
+    z^v_i &= \sum_{u \in \delta^{\text{in}}v} w_i^{uv} \cdot a^u. \label{eq:addition_neuron_input_activation}
+\end{align}
+
+The activation of a multiplication neuron calculates as
+\begin{align}
+    a^v &= \prod_{u \in \delta^{\text{in}}v} \left( a^u \right) ^ {w^{uv}}. \label{eq:multiplication_neuron_activation}
+\end{align}
+We remark that we restrict input weights of multiplication neurons to natural numbers, as we do not want to handle division by zero or complex outputs.
+We do not use an activation function for the multiplication nodes, as one can combine multiplication neurons with addition neurons and obtain the same behaviour.
+
+We call a network made of such multiplication and addition neurons a rank-$k$ Maxout multiplication network.
+We call such a multiplication network \emph{monotone} in case all its weights are non-negative and \emph{input-sign-unrestricted} in case all weights are non-negative, except weights of arcs incident to input neurons. Unlike the additive ICNN case, this sign condition does not imply convexity in the presence of multiplication.
+The following Theorem is reminiscent of the maximum representation of the support function in \cref{eq:support_function}.
+Recall that a posynomial is a polynomial with only positive coefficients.
+
+\begin{theorem} \label{thm:monotone_maxout_main}
+    On the non-negative input orthant, a monotone rank-$k$ Maxout multiplication network represents the maximum over a finite set of polynomials with non-negative coefficients and natural exponents (allowing the zero polynomial).
+\end{theorem}
+
+\begin{proofref}{Theorem}{thm:monotone_maxout_main}
+    Let $N$ be a monotone rank-$k$ Maxout multiplication network. It is an acyclic graph of input, addition and multiplication neurons.
+    We prove the stronger statement that the activation $a^v$ of each neuron is the maximum of posynomials.
+    The base cases are trivial as the activation $a^v$ of a single input neuron $v$ is the projection of the activations of all network input neurons on exactly that network input neuron's activation.
+
+    On the non-negative orthant every polynomial in question is non-negative, so multiplication distributes over finite maxima. Thus the set of functions represented by the maximum of these polynomials is closed under scaling with positive constants, addition, taking the maximum and multiplication.
+    This observation yields the induction steps and therefore closes the proof of \cref{thm:monotone_maxout_main}.
+\end{proofref}
+
+For convenience let us define the simple addition neuron that just sums weighted incoming inputs without applying an activation function. It is equivalent to a rank-$k$ Maxout neuron with $k$-times copied weights.
+The proof of the following Theorem follows and extends the idea of Theorem in \citeapp{AppHertrich2025}.
+Weight matrices are split similar to the approach for ReLU networks in \cref{subsec:relu_mlp-split} into positive and negative parts while the Maxout units are decomposed using the idea introduced for Maxpooling in \cref{subsec:other_components}.
+Namely, for $a^+, \ a^- \in \RR^k$ we observe
+\begin{align}
+    \max_{j\in[k]}(a_j^+ - a_j^-) = \max_{j\in[k]}\Bigl\{a_j^+ + \sum_{i\neq j} a_i^- \Bigr\} - \sum_{i} a_i^-.
+\end{align}
+We split multiplication neurons by multiplying out the differences of the activations of positive and negative input neurons respectively.
+
+\begin{theorem} \label{thm:main}
+    Let $f: \ \RR^d \longrightarrow \RR$ be represented by a rank-$k$ Maxout multiplication network.
+    Then it can be written as an exact difference $f = g - h$ of two rank-$\max\{k,2\}$ Maxout multiplication networks, whose downstream maps are monotone in the non-negative split inputs $x^+=\max\{x,0\}$ and $x^-=\max\{-x,0\}$. The constructed functions need not be convex in $x$.
+    For fixed rank and uniformly bounded total multiplication degree $\sum_u w^{uv}$, the construction has linear size in the original graph size (counting arcs as well as neurons). A bound on the number of distinct inputs alone does not bound the number $\prod_u(w^{uv}+1)$ of binomial summands.
+\end{theorem}
+
+\begin{proofref}{Theorem}{thm:main}
+
+    Let $N_0$ be the Maxout multiplication network representing $f$ and let
+    $$
+    v_1, v_2, \dots, v_s
+    $$
+    be a topological order of the neurons of $N_0$.
+
+    We construct a sequence of equivalent neural networks $N_1, \dots, N_{s-1}$ and the final decomposition network $N_s$, where in each step we split a neuron into multiple neurons including $v^+, v^-$ such that all new neurons have only positive incoming weights.
+    Notice that in the intermediate networks we also make use of helping labels on input weights to multiplication neurons, changing their functionality.
+    After the algorithm, in $N_s$ all neurons are going to be split, there are no helping labels and no negative weights left. 
+    Setting the network outputs to $g = a^{(v^{+}_s)}$ and $h = a^{(v^-_s)}$ we obtain the final decomposition.
+
+    \textbf{case} $v \coloneqq v_p$ is an input neuron.
+        We want to ensure that all the inputs to addition and multiplication neurons are positive.
+        For this reason, we add addition neurons $v^+$ and $v^-$ and connect them only to $v$, where we set all weight entries to zero, except one weight entry that is set to $1$ in case of $v^+$ and $-1$ in case of $v^-$.
+        We note, that this simulates two ReLU activations -- $v^+$ transmits positive inputs and $v^-$ transmits negative inputs.
+
+        Then, we connect $v^+$ to all outputs of $v$ with the original weights and $v^-$ to all outputs of $v$ with signs flipped for weights that go to addition neurons.
+        Lastly, the output weights of $v^+$ and $v^-$ get a unique label, changing how multiplication nodes process their input. Namely, they consider $(a^{v^+} - a^{v^-})$ as a single input.
+
+    \textbf{case} $v$ is an addition neuron.
+        Let us consider the incoming weights $w^{uv}_i$ of $v \coloneqq v_p$. We split them into a positive and negative part, that is,
+        $$
+        w^{uv}_i = a^{uv}_i - b^{uv}_i, \quad \text{with } a^{uv}_i = \text{max} \{w^{uv}_i, 0\}, \quad b^{uv}_i = \text{max} \{-w^{uv}_i, 0\}
+        $$
+        
+        Observe that
+        \begin{align}
+                z^v = \max_{i = 1, \dots, k} \left\{ \sum_{u \in \delta^{\text{in}} v} \left(a^{uv}_i + \sum_{j \neq i} b^{uv}_j \right) z_u \right\} - \sum_{u \in \delta^{\text{in}} v} \sum_{j} b^{uv}_j z_u \label{eq:addition_correct}.
+        \end{align}
+        
+        Let us split $v$ into $v^+$ and $v^-$ where $v^+$ has input weights $w_i^{uv^+} \coloneqq a^{uv}_i + \sum_{j \neq i} b^{uv}_j$ and the same output weights as $v$.
+        $v^-$ is a simple addition neuron and has input weights $w^{uv^-} \coloneqq\sum_{j=1}^k b^{uv}_j$. Furthermore, it has the same output weights as $v$, only with a flipped sign towards addition neurons.
+        Again, the output weights of $v^+$ and $v^-$ get a unique label, changing how multiplication nodes process their input.
+
+    \textbf{case} $v \coloneqq v_p$ is a multiplication neuron.
+        We recall the following extension of the binomial Theorem.
+        \begin{align}
+            a^v = \prod_{u \in \delta^{\text{in}}v} (a^{u^+} - a^{u^-}) ^ {w^{uv}}
+                = \sum_{\underset{\forall u \in  \delta^{\text{in}}v: \ 0 \leq q_u \leq w_{uv}}{q \in \mathbb{N}^{\delta^{\text{in}}v}}} \sigma_q \prod_{ u \in \delta^{\text{in}}v } \binom{w_{uv}}{q_u} (a^{u^+}) ^ {(w_{uv}-q_u)} \cdot (a^{u^-}) ^ {q_u} \label{eq:multiplication_correct},
+        \end{align}
+        where $\sigma_q \coloneqq 2 \cdot \mathbf{1} \{ \sum_{u \in \delta^{\text{in}}v} q_u \ \text{is even} \} - 1$.
+
+        Let us introduce one multiplication neuron for each of the summands.
+        To collect the expanded monomials by sign, we introduce two simple addition neurons $v^+$ and $v^-$ that have multiplication neurons as input with weight $1$, one for all the positive and one for all the negative summands, respectively.
+        Now, similarly as before, we connect $v^+$ to all outputs of $v$ with the original weights and $v^-$ to all outputs of $v$ with sign flipped weights towards addition neurons. Moreover, we label the outputs of $v^+$ and $v^-$ uniquely, so they are correctly processed by multiplicative neurons.
+
+    \begin{claim}[Correctness] \label{claim:main_correct}
+        For any $0 \leq j < s, \ N_j$ represents $f$ and in $N_s$ the positive and negative output neuron represent $f$ by their difference, namely $f = g - h$.
+    \end{claim}
+
+    \begin{proofref}{Claim}{claim:main_correct}
+        We need to show that our input, addition and multiplication neuron transformations are not changing the function represented by the network.
+        Then it is also easy to see that the claim $f = g - h$ holds.
+        Indeed, the split of the input neurons into positive and negative input combined with the sign flip of weights towards addition neurons as well as the labels towards multiplication neurons does not change the function represented by the network.
+        The same holds for addition neurons, where we use \cref{eq:addition_correct}. Lastly, using \cref{eq:multiplication_correct} it is easy to see that also the multiplication neuron transformation does not change the function represented by the network.
+    \end{proofref}
+
+    Let $g'$ and $h'$ be the functions represented by positive and negative output neuron respectively, where we consider the positive and negative neurons $V'_{\text{in}}$ created when splitting the network input neurons as the new input neurons.
+    Let us call these networks $N_{g'}$ and $N_{h'}$.
+
+    By \cref{thm:monotone_maxout_main}, $g'$ and $h'$ are maxima of non-negative-coefficient polynomials on non-negative split inputs and are monotone there. This does not imply convexity: the monomial $xy$ violates the midpoint convexity inequality at $(1,3)$ and $(3,1)$. The input ReLU split requires rank at least two, so the resulting rank is $\max\{k,2\}$.
+
+    Now, together with Claim \ref{claim:main_correct} this concludes the proof of \cref{thm:main}.
+\end{proofref}
+
+Finally, let us remark that by not splitting the input neurons as done in the proof of \cref{thm:main}, one obtains two monotone networks in the split. However, these networks represent functions only monotone on positive input, as posynomials are only monotone on positive input.
+As a fix, one could simply manually add a big constant $C$ to all network inputs and circumvent by shifting the bias of the original model. This yields monotonicity on $\mathbb{R}_{\geq-C}^d$ when the original network is rewritten consistently in the translated coordinates; it provides no convexity guarantee.

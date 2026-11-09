@@ -1,0 +1,107 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+
+\PassOptionsToPackage{table}{xcolor}
+\PassOptionsToPackage{breaklinks,colorlinks}{hyperref}
+
+\usepackage[pagenumbers]{cvpr}
+
+\input{preamble}
+
+\usepackage{hyperref}
+\definecolor{cvprblue}{rgb}{0.21,0.49,0.74}
+\hypersetup{allcolors=cvprblue}
+
+\def\paperID{xxx}
+\def\confName{CVPR}
+\def\confYear{2026}
+
+\title{Hidden Monotonicity: Explaining Deep Neural Networks via their DC Decomposition}
+
+\author{Jakob Paul Zimmermann\\
+Technical University Berlin\\
+{\tt\small \href{mailto:jakob.paul.zimmermann@campus.tu-berlin.de}{jakob.paul.zimmermann@campus.tu-berlin.de}}
+\and
+Georg Loho\\
+Freie Universit\"at Berlin,\\University of Twente\\
+{\tt\small \href{mailto:georg.loho@math.fu-berlin.de}{georg.loho@math.fu-berlin.de}}
+}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+  It has been demonstrated in various contexts that monotonicity leads to better explainability in neural networks.
+  However, not every function can be well approximated by a monotone neural network.
+  We demonstrate that monotonicity can still be used in two ways to boost explainability.
+
+  First, we use an adaptation of the decomposition of a trained ReLU network into two monotone and convex parts, thereby overcoming numerical obstacles from an inherent blowup of the weights in this procedure.
+  Our proposed saliency methods -- SplitCAM and SplitLRP --
+  improve on
+  state of the art results on both VGG16 and Resnet18 networks on ImageNet-S across all Quantus saliency metric categories.
+
+  Second, we exhibit that training a model as the difference between two monotone neural networks results in a system with strong self-explainability properties.
+\end{abstract}
+
+\input{sections/introduction}
+\input{sections/preliminaries}
+\input{sections/method}
+\input{sections/DICs}
+\input{sections/table_main_generated_vgg}
+
+\input{sections/methods_xai}
+\input{sections/experiments}
+\input{sections/conclusion}
+
+\nocite{Amos2017}
+\nocite{Brandenburg2024b}
+\nocite{Haase2023}
+\nocite{Arora2018}
+\nocite{Sankaranarayanan2021CDINN}
+\nocite{Zhang2018}
+\nocite{Ziegler1995}
+
+\bibliographystyle{ieeenat_fullname}
+\bibliography{references}
+
+\clearpage
+\onecolumn
+\setlength{\columnwidth}{\textwidth}
+\setlength{\linewidth}{\textwidth}
+
+\appendix \label{app}
+
+\input{appendix/mathematical_perspective}
+\clearpage
+\input{appendix/saliency_analysis}
+\clearpage
+\input{appendix/ablation_studies}
+\clearpage
+\input{appendix/dcinns}
+\clearpage
+\input{appendix/maxout_networks}
+\clearpage
+\input{appendix/proofs}
+
+\section*{References (Appendix)}
+\addcontentsline{toc}{section}{References (Appendix)}
+
+\appbibitem{AppAdebayo2018}{Julius Adebayo, Justin Gilmer, Michael Muelly, Ian Goodfellow, Moritz Hardt, and Been Kim. Sanity checks for saliency maps. In \emph{Advances in Neural Information Processing Systems}. Curran Associates, Inc., 2018.}
+
+\appbibitem{AppBinder2023}{Alexander Binder, Leander Weber, Sebastian Lapuschkin, Gr\'egoire Montavon, Klaus-Robert M\"uller, and Wojciech Samek. Shortcomings of top-down randomization-based sanity checks for evaluations of deep neural network explanations. In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)}, pages 16143--16152, June 2023.}
+
+\appbibitem{AppAmos2017}{Brandon Amos, Lei Xu, and J.~Zico Kolter. Input convex neural networks. In \emph{Proceedings of the 34th International Conference on Machine Learning}, pages 146--155. PMLR, 2017.}
+
+\appbibitem{AppBrandenburg2024b}{Marie-Charlotte Brandenburg, Georg Loho, and Guido Montufar. The real tropical geometry of neural networks for binary classification. \emph{Transactions on Machine Learning Research}, 2024.}
+
+\appbibitem{AppHaase2023}{Christian~Alexander Haase, Christoph Hertrich, and Georg Loho. Lower bounds on the depth of integral {ReLU} neural networks via lattice polytopes. In \emph{The Eleventh International Conference on Learning Representations}, 2023.}
+
+\appbibitem{AppHertrich2025}{Christoph Hertrich and Georg Loho. Neural networks and (virtual) extended formulations, 2025.}
+
+\appbibitem{AppArora2018}{Anirbit Mukherjee, Amitabh Basu, Raman Arora, and Poorya Mianjy. Understanding deep neural networks with rectified linear units. In \emph{International Conference on Learning Representations}, 2018.}
+
+\appbibitem{AppSankaranarayanan2021CDINN}{Parameswaran Sankaranarayanan and Raghunathan Rengaswamy. Cdinn -- convex difference neural networks. \emph{Neurocomputing}, 495(C):153--168, 2022.}
+
+\appbibitem{AppZhang2018}{Liwen Zhang, Gregory Naitzat, and Lek-Heng Lim. Tropical geometry of deep neural networks. In \emph{Proceedings of the 35th International Conference on Machine Learning}, pages 5824--5832. PMLR, 2018.}
+
+\appbibitem{AppZiegler1995}{G{\"u}nter~M. Ziegler. \emph{Lectures on Polytopes}. Springer, New York, 1995.}
+
+\end{document}

@@ -1,0 +1,12 @@
+\subsection{Differences of networks analysis} \label{subsec:dc_network_training_methods}
+
+\input{sections/counterfactual_features}
+
+We train two base architectures on MNIST, \texttt{cnn\_maxout} and \texttt{mlp\_maxout}, and their difference-of-two variants.
+The \textbf{DIC-model} (directly trained as the difference of two input-convex neural networks) denotes $g-h$ with both streams input-convex, while the \textbf{DM-model} (directly trained as the difference of two monotone networks) denotes $g-h$ with both streams monotone.
+For each base model we also evaluate the \emph{inverted-input} variant (DIC\-IN / DM\-IN), where the $h$-stream processes $1-x$ so it can better focus on missing features.
+Implementation-wise, positivity is enforced by parameterizing all constrained weights and affine terms via a nonnegativity transform, and batch norm parameters are constrained analogously.
+
+On \texttt{mlp\_maxout}, DIC-models and DM-models slightly improve test accuracy over their single-stream counterparts.
+The complete evaluation and more training details can be found in \cref{app:explaining_io_convex_nns}.
+\cref{fig:mnist_split_ic_saliency_main} demonstrates the seperation of the two DIC models to focus on present and missing stroke features respectively.

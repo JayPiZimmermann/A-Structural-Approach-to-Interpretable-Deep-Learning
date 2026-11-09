@@ -1,0 +1,803 @@
+\appendix
+\chapter{Extended Experimental Results}\label{app:extended_results}
+
+% Data provenance: all numbers in this appendix are copied verbatim from the two papers
+% (hiddenMonotonicity and playingTheNetworkBackward) and restyled into thesis tables;
+% no experiment was re-run (see THESIS_PLAN.md §6).
+This appendix collects extended results for both experimental campaigns. The split-method sections retain the hidden-monotonicity evaluation; the game-method sections use the revised AISTATS protocol, confidence intervals, validation selections, ablations and cross-dataset results.
+
+\section{Full Evaluation Results for the Split Methods}\label{app:saliency}
+
+This section provides the comprehensive evaluation results for all \ac{xai} methods tested in the split-method setup of Section~\ref{sec:experimental_setup}.
+
+\subsection{VGG-16 Qualitative Saliency Map Comparison}\label{app:vgg_qualitative}
+
+Complementing Figure~\ref{fig:vgg_saliency_comparison_main}, Figure~\ref{fig:vgg_saliency_comparison} gives more saliency examples. Again, SplitCAM in layer 26 focuses more on the whole classified objects compared to LayerCAM in the same layer. SplitGrad in layer 0 detects too many edges of the original image to be a useful explanation of the model's decision; especially in images with many background details, e.g.\ the rubble in the wood rabbit image, it fails to focus on the important image parts. This aligns with the observed performance peaks of SplitGrad and SplitCAM in deeper layers.
+
+\input{figures/experiments/vgg_saliency_comparison_appendix}
+
+\subsection{Quantitative Analysis on VGG-16}\label{app:vgg_split}
+
+Table~\ref{tab:xai_eval_comprehensive_vgg} presents the detailed quantitative metrics across all split configurations, baselines, and classical methods for VGG-16. There is a consistent boost in performance for SplitCAM with $\alpha = 0.4$ compared to $\alpha = 0.5$ and compared to classical LayerCAM, respectively, indicating that the LayerCAM formulas indeed yield more powerful explanations on the split-pair than on the original model; this is even more pronounced in the ablation studies of Section~\ref{app:ablation}.
+
+\input{tables/appendix/xai_eval_vgg_full}
+
+\subsection{Quantitative Analysis on ResNet-18}\label{app:resnet_split}
+
+Table~\ref{tab:xai_eval_comprehensive_res} presents the detailed quantitative metrics across all split configurations, baselines, and classical methods for ResNet-18.
+
+\input{tables/appendix/xai_eval_res_full}
+
+\subsection{Randomization Sanity Check}\label{app:p1_sanity}
+
+The model-randomization sanity check~\parencite{Adebayo2018sanity} tests whether a saliency method truly depends on the model's learned parameters or merely reflects input-dependent patterns that survive when the model is corrupted. For each attribution method, saliency maps on the trained VGG-16 are compared with maps obtained after randomly reinitializing the weights of the last three feed-forward layers with Gaussian noise; a method genuinely sensitive to the trained parameters should show a substantial similarity drop. While \textcite{Binder2022shortcomings} discuss important shortcomings of top-down randomization-based sanity checks, the test is applied here as a complementary diagnostic (the trajectory-space randomization diagnostic of Section~\ref{subsec:hellinger_randomization} is the thesis' primary tool). Similarity is quantified by (i)~HOG similarity (Pearson correlation of the histograms of oriented gradients), (ii)~signed Spearman rank correlation, and (iii)~SSIM; lower similarity indicates stronger parameter dependence.
+
+\input{tables/appendix/randomization_sanity_check}
+
+The results in Table~\ref{tab:randomization_sanity_check} highlight that the backward-pass stabilization used in SplitCAM and SplitGrad effectively mitigates the gradient-explosion issues caused by the non-negative split-stream weights: both method families show substantially lower similarities than all considered baselines, particularly in Spearman and SSIM, demonstrating exceptionally strong dependence on the learned weights. SplitLRP, in contrast, remains fairly insensitive (HOG $\approx 0.99$, Spearman $\approx 1.00$; only SSIM registers the change at $\approx 0.45$--$0.56$). This insensitivity is attributable to the diminishing-gradient effect of the $\epsilon$-\ac{lrp} rule on the non-negative split stream: changes in the final-layer weights become largely insignificant for the propagated relevance, and indeed the layer-26 SplitLRP configuration shows the lowest similarity across all three metrics among the SplitLRP configurations.
+
+\subsection{Computational Efficiency}\label{app:p1_timing}
+
+Mean computation times across the custom 50-image validation subset of ImageNet-S are reported in Table~\ref{tab:timing_comparison} for both ResNet-18 and VGG-16. The model-splitting operation itself is performed once per model (averaged over 20 split procedures) and requires only 0.033\,s for ResNet-18 and 0.030\,s for VGG-16 --- negligible overhead. SplitCAM and SplitGrad achieve competitive per-image times (0.33--0.44\,s) compared to classical CAM-based methods while being orders of magnitude faster than the perturbation-based approaches Feature Ablation and Occlusion. The shifting parameter $\alpha$ does not affect runtime, as it only modifies the forward-pass computations. The measured implementation duplicates all weight matrices and does not use PyTorch hooks; since the split stream can in principle operate directly on the original model weights and both passes can be parallelized, the reported overhead is an upper bound.
+
+\input{tables/appendix/timing_comparison}
+
+\FloatBarrier
+
+\section{Stabilization Ablations for the Split Methods}\label{app:ablation}
+
+This section presents the ablation studies examining the effect of the proposed stabilization techniques for the forward and backward pass, as well as the influence of the selected max-pooling implementation (Section~\ref{sec:stabilization_dc}).
+
+\subsection{Backward-Pass Stabilization}\label{app:backward_ablation}
+
+Table~\ref{tab:alpha_comparison_by_method} reports the full $\alpha$-ablation for SplitCAM and SplitGrad across the selected configurations, extending the main-text Table~\ref{tab:alpha_ablation_main}. Performance generally improves as $\alpha$ decreases below $0.5$, while all metrics except Maximum Sensitivity exhibit a sharp drop at $\alpha = 0.0$: the backward-pass stabilization plays a crucial role in both methods. The improvements in Pixel Flipping are modest, but the gains in the two localization metrics and the robustness metric are substantial. The table also compares max-pooling in convex mode versus the winner-takes-it-all mode: for $\alpha$ close to $0.5$ the differences are minimal (for $\alpha = 0.5$, split-pair gradients coincide with scaled original gradients, so the max-pooling choice has no influence on the gradients), whereas for $\alpha \in \{0.30, 0.35\}$ the winner-takes-it-all mode shows mostly stronger performance across all methods and metrics.
+
+\input{tables/appendix/alpha_combined}
+
+\subsection{Forward-Pass Stabilization}\label{app:forward_ablation}
+
+This subsection investigates the influence of the forward stabilization on SplitLRP for the framework-selected layer configurations, and on SplitCAM for manually selected layer configurations. As a baseline, a shifting mode is introduced that shifts the activations of positive neurons to half of the respective original activation and those of negative neurons to the negative half. A SplitCAM variant without any forward stabilization exhibits an activation explosion in late VGG-16 layers on the order of $10^{18}$, resulting in numerical errors on the order of $10^{9}$ despite per-layer correction; for SplitLRP, the absence of forward stabilization produced nearly entirely white saliency maps with only small, random, semantically meaningless artifacts, so no quantitative metrics were computed for that setting.
+
+Table~\ref{tab:alpha_comparison_none} summarizes all SplitCAM configurations \emph{without} forward-pass stabilization, and Table~\ref{tab:alpha_comparison_shift} the results \emph{with} the shifting-based stabilization; both mirror the configurations of Table~\ref{tab:alpha_comparison_by_method}. Table~\ref{tab:lrp_scale_shift_comparison} directly compares SplitLRP with shifting versus scaling stabilization: for both layer-7 configurations, replacing scaling with shifting leads to substantial performance drops across all metrics; for the later-layer configurations the picture is mixed --- shifting yields slightly higher Attribution Localization, but scaling achieves markedly better Pointing Game performance and significantly improved robustness. These findings highlight the clear advantage of using scaled split-pair activations, and not the original activations, for \ac{lrp} within the \ac{dc}-decomposition framework.
+
+\input{tables/appendix/lrp_scale_shift}
+\input{tables/appendix/alpha_none}
+\input{tables/appendix/alpha_shift}
+
+\FloatBarrier
+
+\section{Evaluation Protocol}\label{ptnb:app:protocol}
+
+\subsection{Data and splits}
+
+We evaluate on a \emph{custom} 50-class subset of ImageNet-S~\parencite{gao2022luss}, sampled once at
+the start of the project and held fixed across all experiments. The subset has two partitions: a
+\textbf{custom validation split of 50 images} (one image per class, seed $42$) used only for
+configuration selection, and the \textbf{test split} of the remaining images, used for every
+reported test number. Images whose object mask lies entirely outside the $224{\times}224$ center
+crop are excluded after the split, because the mask-based metrics are undefined for them; this
+removes one test image and leaves \textbf{565 test images}. The Pascal VOC 2012 transfer split is
+described in Section~\ref{ptnb:app:voc-cross-data}.
+
+\paragraph{Backbone and dataset provenance.}
+All game-based experiments use the pretrained torchvision checkpoints shipped with the library
+release used for evaluation. Specifically, VGG-16 uses \texttt{VGG16\_Weights.IMAGENET1K\_V1}
+(\url{https://download.pytorch.org/models/vgg16-397923af.pth}; recipe
+\url{https://github.com/pytorch/vision/tree/main/references/classification#alexnet-and-vgg}),
+ResNet-50 uses \texttt{ResNet50\_Weights.IMAGENET1K\_V2}
+(\url{https://download.pytorch.org/models/resnet50-11ad3fa6.pth}; recipe
+\url{https://github.com/pytorch/vision/issues/3995#issuecomment-1013906621}), and ViT-B/16 uses
+\texttt{ViT\_B\_16\_Weights.IMAGENET1K\_V1}
+(\url{https://download.pytorch.org/models/vit_b_16-c867db91.pth}; recipe
+\url{https://github.com/pytorch/vision/tree/main/references/classification#vit_b_16}). These are
+ImageNet-1K classifiers trained on the ImageNet / ILSVRC
+benchmark~\parencite{Deng2009,Russakovsky2015ilsvrc}. Quantitative scoring is performed with
+Quantus~\parencite{Hedstrom2023}.
+
+\paragraph{Licenses.}\label{ptnb:app:licences}
+ImageNet images are used under the ImageNet terms of access (non-commercial research and
+educational use)~\parencite{Deng2009}. The ImageNet-S masks~\parencite{gao2022luss} are released by
+their authors without an explicit license; their images are ImageNet images and fall under the same
+terms. The Pascal VOC 2012 images~\parencite{Everingham2010voc} are subject to the Flickr terms of use,
+as stated by the dataset providers. The checkpoints are distributed with torchvision (BSD-3-Clause)
+and were trained on ImageNet-1K. Libraries: PyTorch and torchvision (BSD-3-Clause), Quantus
+(GPL-3.0), zennit (GPL-3.0/LGPL-3.0), lxt, captum and scikit-image (BSD-3-Clause), pytorch-grad-cam
+(MIT); the reference code of \acs{ptnbTIBAV} and \acs{ptnbGAE} (MIT) is included with its license notice.
+
+\subsection{Methods}\label{ptnb:app:baselines}\label{app:baselines}
+
+\paragraph{Gradient-based block.}
+\textbf{Gradient} is the raw input-gradient saliency map~\parencite{Simonyan2014}, the maximum over
+color channels of the absolute gradient. \textbf{SmGrad} is SmoothGrad, i.e.\ an average over noisy
+gradient maps~\parencite{Smilkov2017}. \textbf{IntGrad} is Integrated
+Gradients~\parencite{Sundararajan2017} with a black-image baseline. \textbf{DeepLift}
+propagates activation differences relative to a reference input with the Rescale
+rule~\parencite{Shrikumar2017} (CNNs only). \textbf{DAVE} is the distribution-aware ViT gradient
+decomposition of~\textcite{Wrobel2024}. \textbf{SG} is our \ac{sg}, included in this block because it
+recovers the gradient as a Stopping-Game occupation measure (Theorem~\ref{ptnb:thm:deriv-occ}).
+
+\paragraph{LRP / relevance-propagation block.}
+\textbf{LRP-$\varepsilon$} denotes the stabilized Layer-wise Relevance Propagation
+rule~\parencite{Bach2015}. \textbf{LRP-$\gamma$} is the positive-weight-amplified LRP variant used in
+best-practice comparisons~\parencite{Kohlbrenner2020}. \textbf{AttnLRP} is transformer LRP \ch{that
+propagates relevance through the softmax and the bilinear attention product as well as the Value
+path}~\parencite{Achtibat2024AttnLRP}. \textbf{RG} is our \ac{rg}.
+\textbf{RG+Eq} is the same method with equivariant Reynolds averaging, used mainly on ViT to
+suppress tokenization-grid artifacts. \textbf{TIBAV}~\parencite{Chefer2021GenericAttention},
+\textbf{GAE}~\parencite{Chefer2021ICCV} and Attention Rollout (\textbf{AR}) are the
+transformer-specific attention-map baselines.
+
+\paragraph{CAM block.}
+\textbf{GCAM} is Grad-CAM~\parencite{Selvaraju2017_existing}, \textbf{GCAM++} is
+Grad-CAM++~\parencite{Chattopadhyay2018gradcampp}, and \textbf{LCAM} is LayerCAM, which weights
+class-activation evidence per location~\parencite{Jiang2021LayerCAM}. All three are computed at the
+last convolutional block of the CNNs and upsampled bilinearly.
+
+\paragraph{Perturbation block.}
+\textbf{LIME} is Local Interpretable Model-agnostic Explanations~\parencite{Ribeiro2016}.
+\textbf{KShap} denotes KernelSHAP, the model-agnostic weighted-regression estimator of SHAP
+values~\parencite{LundbergLee2017_existing}. Both perturb SLIC superpixels~\parencite{Achanta2012slic}. These methods
+explain predictions by perturbing the input and fitting a local surrogate, so they are separated
+from the backward-propagation methods above.
+
+\subsection{Metric definitions}\label{ptnb:app:metrics}\label{app:metrics}
+
+Let $x \in \RR^{C \times H \times W}$ be an image, let $y$ be its target class, and let $a \in
+    \RR^{H \times W}$ be the scalar attribution map produced by an explanation method after channel
+reduction. Write $d \coloneqq HW$ and let $\text{vec}(a) \in \RR^d$ denote the flattened map. For
+any binary segmentation mask $m \in \{0,1\}^{H \times W}$, write $\text{vec}(m) \in \{0,1\}^d$.
+When a metric is configured with \texttt{abs=true} and \texttt{normalise=true}, the evaluator
+applies the max-abs normalization (not min--max)
+\begin{align}
+    \psi(a) = \frac{|\text{vec}(a)|}{\max_i |\text{vec}(a)_i|},
+\end{align}
+with the convention that the all-zero map remains zero. We denote the preprocessed attribution
+vector by $\bar{a}$. All metrics below use $\bar{a}$; faithfulness metrics use raw logits (no
+softmax) to avoid saturation effects, and the perturbation baseline is the channel-wise mean.
+
+\paragraph{Attribution localization (AL).} The inside-mass ratio of~\textcite{Kohlbrenner2020}, who compute it with ground-truth bounding boxes;
+we use the ImageNet-S pixel masks:
+\begin{align}
+    \text{AL}(a, m) = \frac{\sum_{i=1}^d \bar{a}_i m_i}{\sum_{i=1}^d \bar{a}_i + 10^{-9}}.
+\end{align}
+
+\paragraph{Pointing game (PG).} Following the Excitation Backprop protocol~\parencite{Zhang2018pointinggame}, the pointing-game config
+uses \texttt{abs=true} and no normalization. Let $M(a) \coloneqq \{i \in \{1, \dots, d\} :
+    \bar{a}_i = \max_j \bar{a}_j\}$ be the entire set of maximizers. Then
+\begin{align}
+    \text{PG}(a, m) = \1\bigl\{M(a) \cap \{i : m_i = 1\} \neq \varnothing\bigr\}.
+\end{align}
+Ties are scored as a hit whenever at least one maximizer lies inside the object mask. PG is binary
+per image, so its test mean is a multiple of $1/565$.
+
+\paragraph{Top-$k$ intersection (TK).} Following~\textcite{Theiner2021}, with $k = 1000$ and the permutation $\pi$ that sorts
+$\bar{a}$ in descending order:
+\begin{align}
+    \text{TK}(a, m) = \frac{1}{1000} \sum_{r=1}^{1000} m_{\pi_r}.
+\end{align}
+
+\paragraph{Pixel-flipping AUC (PF$_5$, PF$_{20}$).} Pixel flipping~\parencite{Bach2015,Samek2017evaluating} removes the most relevant features first
+and tracks the class score. The evaluator uses \texttt{pixel\_flipping\_abs} with
+\texttt{features\_in\_step = 1568} and \texttt{perturb\_baseline = mean}. For $T \coloneqq \lceil d
+    / 1568 \rceil$, define perturbed inputs $x^{(t)}$ by replacing features $\pi_{(t-1) \cdot 1568 +
+    1}, \dots, \pi_{\min\{t \cdot 1568, d\}}$ (and all earlier ones) with the per-sample mean baseline.
+The evaluator computes
+\begin{align}
+    f_t \coloneqq F(x^{(t)})_y, \qquad t = 1, \dots, T,
+\end{align}
+and PF$_p$ is the trapezoidal area over the first $p\%$ of this flipping curve, i.e.\ over its
+first $K_p$ points with the abscissa rescaled to $[0,1]$: $\text{PF}_p =
+    \text{trapz}\bigl(\{(t-1)/(K_p-1), f_t\}_{t=1}^{K_p}\bigr)$, $K_p = \max(2, \lceil pT/100 \rceil)$;
+with $T = 96$ steps of 1568 features (the attribution is broadcast over the three color channels),
+$K_5 = 5$ and $K_{20} = 20$. Lower is better.
+
+\paragraph{Selectivity (Sel).} Following~\textcite{Montavon2018} and its Quantus implementation~\parencite{Hedstrom2023},
+$\bar{a}$ is summed over square patches of $39{\times}39$ pixels (side
+$\lfloor\sqrt{1568}\rfloor$); non-overlapping patches are removed (replaced by the per-sample mean)
+in decreasing order of their summed attribution, and the target logit is recorded after each
+removal. Sel is the trapezoidal area under this curve, with the fraction of removed patches on the
+abscissa. Lower is better.
+
+\paragraph{Max and average sensitivity (MaxS, AvgS).} Following \textcite{Yeh2019}, the evaluator regenerates attributions on the same $N_s = 50$
+inputs for both metrics, $x + \xi_k$ with uniform noise $\xi_k \sim \mathcal{U}[-r, r]^{C \times H
+    \times W}$, $r = 0.2$, and reports the maximum (MaxS) or mean (AvgS) over $k$ of
+$\|\psi(a(x+\xi_k)) - \psi(a(x))\|_F / \|\psi(a(x))\|_F$. Lower is better, as it indicates
+stability of the explanation to input noise.
+The noise is seeded per image, so every row sees the same perturbed inputs. MaxS and AvgS are
+computed on a fixed random subset of 200 test images (seed 0) that is identical for all rows and
+models; all other metrics use the full test split.
+
+\subsection{Declared validation grids}\label{ptnb:app:grids}
+
+Table~\ref{ptnb:tab:main-search-grid} lists the grid of every method. Functionally duplicate rows (e.g.\
+different $\sigma^2$ when $\lambda = \lambda_{\mathrm{sm}} = 0$) are evaluated once; in total
+\nValGrid{} validation configurations are evaluated. On ViT-B/16 the activation-side $\lambda$ is
+fixed to $0$, which keeps GELU gates conditioned (Section~\ref{ptnb:sec:attention}). At attention--Value
+products, \ac{rg} applies $\alpha\beta$-\ac{lrp}-$\varepsilon$ to the composite map of the
+attention product and the Value projection (Theorem~\ref{ptnb:thm:attn-ab-recovery};
+Section~\ref{ptnb:app:vit-implementation}). Baselines without a declared grid are run at the settings
+of their reference implementations.
+
+\begin{table}[H]
+    \centering
+    \caption{Per-method validation grids (all architectures unless stated). Symbols:
+    Section~\ref{ptnb:app:config-symbols}.}
+    \label{ptnb:tab:main-search-grid}
+    \small
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabular}{@{}l p{0.73\textwidth}@{}}
+        \toprule
+        Method & Grid \\
+        \midrule
+        Gradient & single config \\
+        SmGrad & $N{=}50$, noise level $\sigma/(x_{\max}{-}x_{\min}) \in \{0.1, 0.15, 0.2\}$, mean
+        aggregation \quad (3 configs) \\
+        IntGrad & black-image baseline, $N_{\text{steps}} \in \{20, 50, 100, 300\}$ \quad (4 configs) \\
+        DeepLift & Rescale rule, single config \quad (CNNs only) \\
+        DAVE & $N \in \{25, 50\} \times \theta_{\max} \in \{0, 10, 20\} \times s_{\max} \in \{0, 0.05,
+            0.1\} \times t_{\max} \in \{0, 0.25, 0.5\}$, horizontal flips with probability $0.5$, averaged
+        effective map multiplied by the input \quad (54 configs; ViT-B/16 only) \\
+        SG & $\lambda \in \{-5, -2, -1, -0.3, 0\} \times \sigma^2 \in \{1, 2, 5, 10\} \times$ noisy gate
+        $\tilde\Phi \in \{\text{off}, \text{on}\}$ \quad (40 configs; VGG-16 only) \\
+        LRP-$\varepsilon$ & $\varepsilon \in \{0.01, 0.05, 0.1, 0.25, 0.5, 1, 2\}$ \quad (7 configs) \\
+        LRP-$\gamma$ & $(\varepsilon, \gamma) \in \{0.1, 0.25, 0.5\}\times\{0.1, 0.25, 0.5, 1, 2\}$;
+        ViT-B/16: $\gamma$ on all Linear layers (15 configs); CNNs: both zennit's EpsilonGammaBox composite
+        ($z^{\mathcal{B}}$ input layer, $\gamma$ on convolutions, $\varepsilon$ on dense layers) and
+        $\gamma$ on all layers (30 configs) \\
+        AttnLRP & $\gamma$-composite of~\textcite{Achtibat2024AttnLRP}: reference setting
+        $(\gamma_{\text{conv}}, \gamma_{\text{lin}}, \varepsilon_{\text{attn}}){=}(0.25, 0.05, 10^{-6})$ +
+        univariate sweeps $\gamma_{\text{lin}}\!\in\!\{0.01, 0.025, 0.1, 0.25\}$,
+        $\gamma_{\text{conv}}\!\in\!\{0.1, 0.5, 1\}$, $\varepsilon_{\text{attn}}\!\in\!\{0.01, 0.05,
+            0.25\}$ \quad (11 configs; ViT-B/16 only) \\
+        TIBAV & single config \quad (ViT-B/16 only) \\
+        GAE & single config \quad (ViT-B/16 only) \\
+        AR & residual weight $w_r \in \{0, 0.25, 0.5, 0.75\}$ \quad (4 configs; ViT-B/16 only) \\
+        RG & $\tau \in \{0.3, 0.4, \ldots, 1.0\}$, $(\alpha,\beta){=}(2,1)$, $\sigma^2 \in \{1, 2, 5,
+            10\}$, $\varepsilon \in \{0.1, 0.25, 0.5, 1\}$; ViT-B/16: $\lambda{=}0$, $\lambda_{\mathrm{sm}} \in
+            \{-50, -10, -5, -2, -1, 0\}$, composite Value rule of Theorem~\ref{ptnb:thm:attn-ab-recovery} (672
+        configs); CNNs: $\lambda \in \{-5, -2, -1, -0.3, 0\}$ (544 configs) \\
+        RG+Eq & $\tau \in \{0.3, 0.4, \ldots, 1.0\} \times \lambda_{\mathrm{sm}} \in \{0, -10\}$,
+        $\sigma^2{=}2$, $\varepsilon{=}0.5$, $N{=}50$, composite Value rule \quad (16 configs; ViT-B/16
+        only) \\
+        GCAM, GCAM++, LCAM & last convolutional block (VGG-16: \texttt{features.29}, ResNet-50:
+        \texttt{layer4}), single config \quad (CNNs only) \\
+        LIME & 80 SLIC superpixels, $N{=}1000$, ridge surrogate, exponential kernel of width $0.25$ on the
+        cosine distance of the binary superpixel vectors, removed superpixels filled with their mean color;
+        fixed reference row \\
+        KShap & 80 SLIC superpixels, $N{=}2M{+}2048$ for $M$ superpixels, removed superpixels filled with
+        the image mean; fixed reference row \\
+        Anchor & $\alpha\beta$-\ac{lrp} anchor $(\alpha,\beta,\varepsilon,\tau){=}(2,1,0.5,1)$ of \ac{rg}
+        and \ac{rg}+Eq, reported as the theorem-driven reference row (not selected) \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Selection}\label{ptnb:app:selection}
+
+For every tunable method, baselines and ours alike, two configurations are selected on the
+validation split: \texttt{loc} minimizes the rank-sum over $\{\text{AL}, \text{PG}, \text{TK}\}$
+and \texttt{faith} the rank-sum over $\{\text{PF}_5, \text{PF}_{20}, \text{Sel}\}$. Ranks are
+computed within each method's grid, respecting metric directions; ties are broken in favor of the
+default (for \ac{rg}, the anchor), then of fewer non-default parameters, then of grid order. A
+configuration is admissible only if its map is non-zero and every metric is defined on every
+validation image; inadmissible configurations are excluded before ranking (5 of the 40 \ac{sg}
+configurations on VGG-16, all with strong risk aversion and the deterministic gate, whose maps
+vanish on some images; no other configuration). MaxS and AvgS are not used for selection because
+each evaluation re-explains every image $2N_s$ times. The \texttt{loc} row is the one reported in
+the main tables, and the \texttt{faith} row of every method is reported alongside
+(Section~\ref{ptnb:app:results}): localization is a natural target because the analytical modes are
+designed to control routing focus, because mask localization has an external ground truth whereas
+perturbation metrics evaluate off-distribution inputs, and because comparing \ac{lrp} rule choices
+by object localization has precedent, there with bounding boxes~\parencite{Kohlbrenner2020};
+localization is not faithfulness, so both rows are reported and the trade-off stays visible.
+
+\subsection{Statistics}\label{ptnb:app:stats}
+
+Every test metric is reported with a 95\% percentile bootstrap confidence interval over test
+images~\parencite{Efron1993bootstrap} ($10{,}000$ resamples of the images; the same resampled image
+indices are used for all rows, so comparisons are paired). MaxS and AvgS are computed on the fixed
+200-image subset of Section~\ref{ptnb:app:metrics}, and their intervals resample the images of that
+subset. For each metric, every row is tested against the best row for that metric: continuous
+metrics with a two-sided paired bootstrap test of the mean per-image difference (the bootstrap
+distribution of the mean difference is centered at zero, and $p$ is the fraction of centered
+resampled differences at least as large in absolute value as the observed one), and the binary PG
+with McNemar's test~\parencite{McNemar1947} ($\chi^2$ statistic with continuity correction). The
+$p$-values are Holm-corrected~\parencite{Holm1979} within each metric: over the rows shown in the main
+table, over all rows of a column in the appendix tables, and, for the statement that a row is
+significantly ahead of every baseline row, over its comparisons with the baseline rows. We call a
+difference significant at level $0.05$ after correction and describe all other differences as
+comparable.
+
+\subsection{Compute resources}\label{ptnb:app:compute-resources}
+
+The attribution evaluations are inference-only. The main cost is the repeated backward attribution
+pass over the validation and test images across the method grids, including the
+equivariant-Reynolds and noise-averaged configurations. Runtime measurements were taken on a single
+NVIDIA A100-SXM4-40GB with batch size 1; evaluation sweeps were distributed over several GPUs of
+the same type, with up to two evaluation processes per GPU. The full pipeline (validation grids,
+test evaluation, robustness, Pascal VOC, ablations and randomization diagnostics) required about
+450 GPU-hours.
+
+\subsection{\texorpdfstring{\ch{Code and correctness tests}}{Code and correctness tests}}\label{ptnb:app:code-tests}
+
+\ch{The code (\coderepo) contains unit tests that pin the implemented backward rules to the statements
+of the appendix. Two of them concern the attention block.
+\texttt{tests/test\_attention\_ab\_recovery.py} runs the \ac{rg} hooks at $\tau = 1$ on a small
+attention block with signed inputs, a Value bias and $\varepsilon > 0$, in float64, and compares the
+result with an independent implementation of $\alpha\beta$-\ac{lrp}-$\varepsilon$ on the composite
+map $X \mapsto A(XW_v^\top + b_v)$, i.e.\ the target rule~\eqref{ptnb:eq:attn-target-input} of
+Theorem~\ref{ptnb:thm:attn-ab-recovery}, for a single head and for a multi-head block in the layout of
+\texttt{nn.MultiheadAttention}; it also asserts that the result differs from the sequential variant
+of \S\ref{ptnb:app:attention-target-rule}, which the released code does not offer (\texttt{av\_rule}
+accepts only \texttt{'merged'}).
+\texttt{tests/test\_hellinger\_merged\_attention.py} enumerates every backward trajectory of a small
+attention block under two models, at $\tau \in \{0.5, 1, 2\}$, and checks the per-input masses, the
+Bhattacharyya mass and the cemetery masses of the Hellinger pass (Section~\ref{ptnb:app:path-divergence})
+against this brute-force reference; a pre-norm residual block built from \texttt{nn.MultiheadAttention}
+must give the same distance as the same block with its attention matrix supplied as a constant.}
+\par\medskip
+\section{Additional Results}\label{ptnb:app:results}
+
+The validation, test and VOC tables of this section are generated by one pipeline from the
+declared grids and the selection rules of Section~\ref{ptnb:app:protocol}.
+
+\paragraph{Configuration symbols.}\label{ptnb:app:config-symbols}
+The configuration columns of all tables use the following parameters. \ac{rg}, \ac{rg}+Eq and
+\ac{sg} (Table~\ref{ptnb:tab:modes}): temperature $\tau$, activation-side risk aversion $\lambda$,
+attention-logit risk aversion $\lambda_{\mathrm{sm}}$, \ac{ptnbADF} input variance $\sigma^2$, \ac{lrp}
+stabilizer $\varepsilon$, stream weights $(\alpha,\beta)$ (default $(2,1)$), noisy-observation gate
+$\tilde\Phi$ (``gate on/off''), and the number $N$ of transformed inputs averaged by \ac{rg}+Eq.
+SmoothGrad: $N$ noisy samples with noise standard deviation $\sigma$ relative to the input range
+($\sigma/\mathrm{range}$). Integrated Gradients: $N_{\mathrm{steps}}$ integration steps from a
+black-image baseline. DAVE: $N$ transformed inputs with rotations up to $\theta_{\max}$ degrees,
+shifts up to $s_{\max}$ of the image extent, and variance-preserving Gaussian noise of
+interpolation weight up to $t_{\max}$. LRP-$\varepsilon$ and LRP-$\gamma$: stabilizer $\varepsilon$
+and positive-weight boost $\gamma$; on the CNNs, LRP-$\gamma$ is zennit's composite with the
+$z^{\mathcal{B}}$ rule at the input layer. AttnLRP: $\gamma$-rule parameters
+$\gamma_{\mathrm{conv}}$ and $\gamma_{\mathrm{lin}}$ of the convolutional and linear layers and the
+stabilizer $\varepsilon_{\mathrm{attn}}$ of the attention layers. AR (attention rollout): residual
+weight $w_r$. LIME and KernelSHAP: $N$ perturbation samples ($2M{+}2048$ for $M$ superpixels) on 80
+SLIC superpixels; LIME fits a ridge surrogate. DeepLift: Rescale rule. Grad-CAM, Grad-CAM++ and
+LayerCAM: the target layer (torchvision module name). Row labels in parentheses give the selection
+criterion (\texttt{loc}, \texttt{faith}); single-configuration methods have no criterion.
+
+\subsection{Validation selections}\label{ptnb:app:val-selection}
+
+Tables~\ref{ptnb:tab:val-selection-vit}--\ref{ptnb:tab:val-selection-resnet} list, for every method, the
+configurations selected on the 50-image validation split under the \texttt{loc} and \texttt{faith}
+criteria of Section~\ref{ptnb:app:selection}, together with both validation rank-sums.
+
+\begin{table}[H]
+    \centering
+    \caption{ViT-B/16: validation-selected configurations per method and criterion (\texttt{loc}:
+    minimal rank-sum over AL, PG, TK; \texttt{faith}: over PF$_5$, PF$_{20}$, Sel; rank-sums over the
+    configurations of one method, lower is better; the number of configurations is given after the
+    method name). Symbols: Section~\ref{ptnb:app:config-symbols}.}
+    \label{ptnb:tab:val-selection-vit}
+    \small
+    \appfitgen{tables/ptnb_v2/generated/val_selection_vit_b16_tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{VGG-16: validation-selected configurations per method and criterion, as in
+    Table~\ref{ptnb:tab:val-selection-vit}.}
+    \label{ptnb:tab:val-selection-vgg}
+    \small
+    \appfitgen{tables/ptnb_v2/generated/val_selection_vgg16_tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \caption{ResNet-50: validation-selected configurations per method and criterion, as in
+    Table~\ref{ptnb:tab:val-selection-vit}.}
+    \label{ptnb:tab:val-selection-resnet}
+    \small
+    \appfitgen{tables/ptnb_v2/generated/val_selection_resnet50_tabular}
+\end{table}
+
+\subsection{Test results with confidence intervals}\label{ptnb:app:test-ci}
+
+Tables~\ref{ptnb:tab:test-ci-vit}--\ref{ptnb:tab:test-ci-resnet} list every row evaluated on the 565-image
+test split (the \texttt{loc}- and \texttt{faith}-selected configuration of every method, the
+anchors and the single-configuration methods) with 95\% bootstrap confidence intervals and the
+tests of Section~\ref{ptnb:app:stats} (bold and dark shading: best row of a column; $^{\approx}$ and
+light shading: not significantly different from it). Per-image runtimes come from the single-GPU
+benchmark of Section~\ref{ptnb:app:compute-resources}.
+
+\appneedspace{12\baselineskip}
+\begin{center}
+    \captionof{table}{ViT-B/16, ImageNet-S test split: all rows with 95\% bootstrap confidence
+    intervals. Metrics as in Table~\ref{ptnb:tab:eval-vit}; configuration symbols and row labels:
+    Section~\ref{ptnb:app:config-symbols}.}
+    \label{ptnb:tab:test-ci-vit}
+\end{center}
+\appinputgenci{tables/ptnb_v2/generated/test_vit_b16_ci_longtable}
+
+\appneedspace{12\baselineskip}
+\begin{center}
+    \captionof{table}{VGG-16, ImageNet-S test split: all rows with 95\% bootstrap confidence intervals,
+    as in Table~\ref{ptnb:tab:test-ci-vit}.}
+    \label{ptnb:tab:test-ci-vgg}
+\end{center}
+\appinputgenci{tables/ptnb_v2/generated/test_vgg16_ci_longtable}
+
+\appneedspace{12\baselineskip}
+\begin{center}
+    \captionof{table}{ResNet-50, ImageNet-S test split: all rows with 95\% bootstrap confidence
+    intervals, as in Table~\ref{ptnb:tab:test-ci-vit}.}
+    \label{ptnb:tab:test-ci-resnet}
+\end{center}
+\appinputgenci{tables/ptnb_v2/generated/test_resnet50_ci_longtable}
+
+\subsection{Trade-off sweeps}\label{ptnb:app:tradeoff-sweeps}\label{ptnb:app:dual-sweeps}\label{app:dual-sweeps}
+
+Table~\ref{ptnb:tab:ablations-vit} includes one-at-a-time sweeps of $\tau$ and $\lambda_{\mathrm{sm}}$
+around the \texttt{loc}-selected ViT-B/16 \ac{rg} configuration. These sweep rows are evaluated on
+the test split only after selection and never feed back into it.
+
+\subsection{Cross-Dataset Evaluation: Pascal VOC 2012}\label{ptnb:app:voc-cross-data}\label{app:voc-cross-data}
+
+This part details the protocol behind the ViT-B/16 cross-dataset row of the summary table in
+Section~\ref{ptnb:sec:experiments} (all rows in Table~\ref{ptnb:tab:eval-vit-voc}). The goal is twofold: (i)
+test whether the \ac{rg} / \ac{rg}+Eq configurations selected on ImageNet-S transfer to a different
+dataset \emph{without} re-tuning, and (ii) put baselines on equal footing by re-running the same
+per-method validation selection on the new pool.
+
+\paragraph{Dataset.}
+We use Pascal VOC 2012~\parencite{Everingham2010voc} segmentation annotations: the trainval pool of
+$2{,}913$ images with pixel-accurate \texttt{Seg\-mentationClass} masks across $20$ foreground
+classes plus background. Each image is expanded to one (image, foreground-class) sample per
+distinct VOC class label present in its mask, yielding $3{,}422$ total samples after dropping the
+\texttt{person} class (no faithful ImageNet-1K target exists for it) and discarding sliver masks
+whose pixel area on the \emph{original} (pre-resize) annotation is below $64$ pixels. Each (image,
+class) sample carries the same input image and an explanation target equal to the most semantically
+central ImageNet-1K index for that VOC class (e.g.\ \texttt{horse}$\,\to\,$\textsc{n02389026
+sorrel}; \texttt{tvmonitor}$\,\to\,$\textsc{n03782006 monitor}); the curated mapping is part of the
+released code.
+
+\paragraph{Per-image disjoint val/test split.} The trainval pool is partitioned randomly with seed $42$ at the \emph{image} level (not the (image,
+class) level) into a $1{:}5$ val/test split: the trainval stems are shuffled deterministically and
+the first $1/6$ is assigned to val. All (image, class) samples for a given image stay in the same
+partition, so leakage between val tuning and test evaluation is structurally impossible. As on
+ImageNet-S, samples whose object mask lies entirely outside the $224{\times}224$ center crop are
+excluded after the split (18 val and 105 test samples). The resulting partitions:
+\begin{center}
+    \begin{tabular}{lcc}
+        \toprule
+        & Images & (image, class) samples \\
+        \midrule
+        val (tuning)  & $460$  & $556$ \\
+        test (eval)   & $2{,}293$ & $2{,}743$ \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+
+\paragraph{Pixel masks for localization.} \ac{ptnbAttrLoc}, \ac{ptnbPG}, and Top-$k$ Intersection are computed against the per-(image, class)
+\emph{binary VOC2012 segmentation pixel mask} for that class, not bounding boxes. The mask is
+resized via NEAREST interpolation and center-cropped to $224{\times}224$ to match the input
+pipeline (\texttt{Resize(256)$\,\to\,$CenterCrop(224)}), then passed verbatim into
+Quantus~\parencite{Hedstrom2023} alongside the attribution map. This avoids the well-known bbox
+over-credit issue~\parencite{Selvaraju2017_existing} where a method that puts mass anywhere inside the
+box wins the metric; pixel masks reward only mass on the actual foreground object.
+
+\paragraph{Tuning protocol.}
+The protocol mirrors the ImageNet-S protocol of Section~\ref{ptnb:app:protocol}, with one deliberate
+asymmetry: \ac{rg} and \ac{rg}+Eq do \emph{not} get a fresh grid search on VOC.
+\begin{itemize}
+    \item \textbf{Baselines.} Every row of the per-method ViT-B/16 grid of Table~\ref{ptnb:tab:main-search-grid}
+        is evaluated on the $556$-sample val pool, and the \texttt{loc} and \texttt{faith} configurations
+        are selected per method with the criteria of Section~\ref{ptnb:app:selection}. The selected rows are
+        re-evaluated on the $2{,}743$-sample test pool.
+    \item \textbf{\ac{rg} / \ac{rg}+Eq (transfer test).} The anchor and the \texttt{loc}- and
+        \texttt{faith}-selected ImageNet-S configurations are evaluated on the VOC test pool unchanged,
+        without any VOC-side re-tuning.
+\end{itemize}
+To save compute, VOC is evaluated on localization and faithfulness only (no MaxS/AvgS and no
+runtime column). Any tuning advantage flows to the baselines, not to us. Wins, ties and losses are
+counted per metric with the tests of Section~\ref{ptnb:app:stats}.
+
+\appneedspace{8\baselineskip}
+\begin{center}
+    \captionof{table}{ViT-B/16 on the Pascal VOC 2012 test pool ($2{,}743$ samples): all rows with 95\%
+    bootstrap confidence intervals. \ac{rg} / \ac{rg}+Eq use the ImageNet-S-selected configurations
+    without re-tuning; baselines are selected on the VOC val pool. Metrics as in
+    Table~\ref{ptnb:tab:eval-vit}; configuration symbols and row labels: Section~\ref{ptnb:app:config-symbols}.}
+    \label{ptnb:tab:eval-vit-voc}
+\end{center}
+\IfFileExists{tables/ptnb_v2/generated/test_voc_vit_b16_ci_longtable.tex}{\appinputgenci{tables/ptnb_v2/generated/test_voc_vit_b16_ci_longtable}}{%
+\begin{center}\textcolor{red}{To be generated by the cluster run.}\end{center}}
+
+\providecommand{\absval}[2]{
+\begin{tabular}[c]{@{}c@{}}#1\\\textcolor{gray!70}{\scriptsize #2}\end{tabular}}
+
+\subsection{One-factor ablations}\label{ptnb:app:abl-one-factor}
+
+Tables~\ref{ptnb:tab:ablations-vit}--\ref{ptnb:tab:ablations-resnet} vary one parameter at a time around each
+validation-selected configuration of \ac{rg}, \ac{rg}+Eq and \ac{sg} (bold: the selected value),
+over the values of the declared grid; all other parameters stay at their selected values. The rows
+are evaluated on the 565-image test split with the localization and faithfulness metrics and never
+feed back into the selection. On ViT-B/16, ``+Eq'' evaluates \ac{rg}+Eq at the parameters of the
+selected \ac{rg} row. Configurations that are inadmissible on the validation split
+(Section~\ref{ptnb:app:selection}) are not included.
+
+\appneedspace{8\baselineskip}
+\begin{center}
+    \captionof{table}{ViT-B/16, ImageNet-S test split: one-factor ablations around the selected
+    configurations. Center: the selected configuration (criterion in parentheses) around which the
+    parameter in the Factor column is varied over the Value column, all other parameters fixed; bold:
+    the center's own value. Symbols: Section~\ref{ptnb:app:config-symbols}.}
+    \label{ptnb:tab:ablations-vit}
+\end{center}
+{\small\appinputgenlt{tables/ptnb_v2/generated/ablations_vit_b16_longtable}}
+
+\appneedspace{8\baselineskip}
+\begin{center}
+    \captionof{table}{VGG-16, ImageNet-S test split: one-factor ablations around the selected
+    configurations, as in Table~\ref{ptnb:tab:ablations-vit}.}
+    \label{ptnb:tab:ablations-vgg}
+\end{center}
+{\small\appinputgenlt{tables/ptnb_v2/generated/ablations_vgg16_longtable}}
+
+\appneedspace{8\baselineskip}
+\begin{center}
+    \captionof{table}{ResNet-50, ImageNet-S test split: one-factor ablations around the selected
+    configurations, as in Table~\ref{ptnb:tab:ablations-vit}.}
+    \label{ptnb:tab:ablations-resnet}
+\end{center}
+{\small\appinputgenlt{tables/ptnb_v2/generated/ablations_resnet50_longtable}}
+
+\subsection{Pointing game at matched granularity}\label{ptnb:app:pg-granularity}
+
+The pointing game of Quantus counts a hit whenever any pixel attaining the map maximum lies in the
+mask. For piecewise-constant maps (superpixel methods; attention maps on the $14{\times}14$ patch
+grid) the maximum is a region of hundreds to thousands of pixels, for pixel-level maps usually a
+single pixel. Table~\ref{ptnb:tab:pg-granularity} reports, for the reported rows, the median size of the
+maximum set, the expected hit rate of a single maximum pixel drawn uniformly from that set
+(PG$_{1\mathrm{px}}$), and the pointing game after average-pooling every map to the same
+$16{\times}16$-pixel grid (PG$_{16\mathrm{px}}$). Drawing a single maximum pixel removes most of
+the advantage of the superpixel methods LIME and KernelSHAP. At the common $16{\times}16$ grid the
+leading methods move closer together: on ViT-B/16 LRP-$\gamma$ and AttnLRP lead, on VGG-16 the
+localization-selected \ac{sg} row and the faithfulness-selected \ac{rg} row are not significantly
+below the best baseline (Grad-CAM++), and on ResNet-50 Grad-CAM, LayerCAM and LRP-$\gamma$ lead
+(McNemar tests against the best baseline row).
+
+\begin{table}[H]
+    \centering
+    \caption{Pointing game under the Quantus tie rule (PG, as in the main tables) and at matched
+    granularity, ImageNet-S test split. max.\ set: median number of pixels attaining the map maximum;
+    PG$_{1\mathrm{px}}$: expected hit rate of one pixel drawn uniformly from that set;
+    PG$_{16\mathrm{px}}$: PG after average-pooling the map to $16{\times}16$-pixel cells. Rows: the
+    \texttt{loc}-selected or fixed configuration of every method, plus the \texttt{faith} rows of our
+    games. \textbf{Bold}: best per model and column.}
+    \label{ptnb:tab:pg-granularity}
+    \small
+    \appfitgen{tables/ptnb_v2/generated/pg_granularity_tabular}
+\end{table}
+
+\subsection{Gradient-fallback attention}\label{ptnb:app:abl-gradient-fallback}
+
+The \ac{rg} backward operates by default through a routing rule that holds the attention policy
+fixed and routes relevance only through the Value path, with zero gradient on $Q$, $K$ (Value-only
+routing \ch{conditioned on the realized attention matrix, as in CP-LRP~\parencite{Ali2022AttnLRP}}; see
+Section~\ref{ptnb:app:vit-implementation}).  The natural alternative is a gradient
+fallback: pure autograd through the attention block, recovering the zennit-style
+$\varepsilon$-\ac{lrp} attention treatment.  Table~\ref{ptnb:tab:abl-gradient-fallback} swaps the
+attention rule at the $\alpha\beta$-\ac{lrp} anchor and at the two validation-selected \ac{rg}
+configurations and evaluates both rules on the 565-image test split.  The softmax risk
+$\lambda_\text{sm}$ acts on the Value-path routing and is therefore inactive under the gradient
+fallback.  The gradient fallback lowers all three localization metrics at every configuration, AL
+and TK significantly throughout, and it does not improve faithfulness at any configuration: PF$_5$,
+PF$_{20}$ and Sel are worse in every cell, significantly so in four of the nine.
+
+\begin{table}[H]
+    \centering
+    \caption{\ac{vit}-B/16, \ac{rg}: attention rule ablation on the ImageNet-S test split (565 images),
+    at the anchor and at the loc- and faith-selected configurations.  Each cell shows the gradient
+    fallback on top and the composite Value rule of Theorem~\ref{ptnb:thm:attn-ab-recovery} (gray) below;
+    configuration symbols: Section~\ref{ptnb:app:config-symbols}; $^{\dagger}$: paired difference
+    significant (paired bootstrap / McNemar for PG, Holm-corrected over the table, $p<0.05$).}
+    \label{ptnb:tab:abl-gradient-fallback}
+    \setlength{\tabcolsep}{2pt}
+    \renewcommand{\arraystretch}{0.9}
+    \small
+    \appfitgen{tables/ptnb_v2/generated/attention_rule_vit_b16_tabular}
+\end{table}
+
+\subsection{Qualitative comparison}\label{ptnb:app:qualitative}\label{app:qualitative}
+
+Figure~\ref{ptnb:fig:qualitative} compares attribution maps for six ImageNet-S examples on ViT-B/16.
+Each column shows a method at its \texttt{loc}-selected configuration
+(Section~\ref{ptnb:app:selection}), or at its fixed configuration if the method has no tunable
+parameters (Gradient, TIBAV): \ac{rg} with
+$\tau{=}0.4,\lambda_{\mathrm{sm}}{=}{-}10,\sigma^2{=}5,\varepsilon{=}0.1$ and \ac{rg}+Eq with
+$\tau{=}0.5,\lambda_{\mathrm{sm}}{=}{-}10,\sigma^2{=}2,N{=}50$, both with the merged
+attention--Value rule, i.e.\ the composite rule of Theorem~\ref{ptnb:thm:attn-ab-recovery}, which routes
+through the conditioned attention block as one map $X \mapsto O$; SmoothGrad with
+$N{=}50,\sigma/\mathrm{range}{=}0.2$; Integrated Gradients with $N_{\mathrm{steps}}{=}100$ and a
+black baseline; DAVE with $N{=}50,\theta_{\max}{=}0,s_{\max}{=}0,t_{\max}{=}0.5$; LRP-$\gamma$ with
+$\varepsilon{=}0.1,\gamma{=}2$; and AttnLRP with
+$\gamma_{\mathrm{conv}}{=}0.25,\gamma_{\mathrm{lin}}{=}0.05,\varepsilon_{\mathrm{attn}}{=}0.25$. As
+in the evaluation, every map explains the ImageNet-S label, which is the top-1 prediction for all
+images except the kuvasz (predicted: English setter). The first image is from the test split, the
+other five are from the 50-image validation split used for the selection. Heatmaps show the raw
+evaluator-side maps, before the absolute value and max-abs normalization of
+Section~\ref{ptnb:app:metrics} (the $14{\times}14$ TIBAV map is upsampled by nearest neighbor, as for
+the metrics): red marks positive and blue negative attribution; each sign is divided by its 99th
+percentile over the image and clipped, so the top 1\% of pixels saturate and concentrated maps stay
+legible in print; the same display transform is used for every method.
+
+\begin{figure}[H]
+    \centering
+    \setlength{\tabcolsep}{0.6pt}
+    \renewcommand{\arraystretch}{0.3}
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{@{}r *{11}{c}@{}}
+        & {\scriptsize Orig.}
+        & {\scriptsize Mask}
+        & {\scriptsize RG (loc)}
+        & {\scriptsize RG+Eq (loc)}
+        & {\scriptsize Grad}
+        & {\scriptsize SmGrad}
+        & {\scriptsize IntGrad}
+        & {\scriptsize DAVE}
+        & {\scriptsize LRP-$\gamma$}
+        & {\scriptsize AttnLRP}
+        & {\scriptsize TIBAV} \\[2pt]
+        \rotatebox{90}{\scriptsize\hspace{2pt}Red fox (snow)}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/original.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/mask.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/rg_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/rgeq_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/gradient.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/smooth_grad.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/integrated_gradients.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/dave.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/lrp_gamma.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/attn_lrp.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/tibav.png} \\[1pt]
+        \rotatebox{90}{\scriptsize\hspace{6pt}Red fox}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/original.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/mask.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/rg_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/rgeq_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/gradient.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/smooth_grad.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/integrated_gradients.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/dave.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/lrp_gamma.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/attn_lrp.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/tibav.png} \\[1pt]
+        \rotatebox{90}{\scriptsize\hspace{9pt}Kuvasz}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/original.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/mask.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/rg_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/rgeq_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/gradient.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/smooth_grad.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/integrated_gradients.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/dave.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/lrp_gamma.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/attn_lrp.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/tibav.png} \\[1pt]
+        \rotatebox{90}{\scriptsize\hspace{7pt}Wild boar}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/original.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/mask.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/rg_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/rgeq_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/gradient.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/smooth_grad.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/integrated_gradients.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/dave.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/lrp_gamma.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/attn_lrp.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/tibav.png} \\[1pt]
+        \rotatebox{90}{\scriptsize\hspace{5pt}Black bear}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/original.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/mask.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/rg_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/rgeq_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/gradient.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/smooth_grad.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/integrated_gradients.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/dave.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/lrp_gamma.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/attn_lrp.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/tibav.png} \\[1pt]
+        \rotatebox{90}{\scriptsize\hspace{9pt}Airliner}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/original.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/mask.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/rg_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/rgeq_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/gradient.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/smooth_grad.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/integrated_gradients.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/dave.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/lrp_gamma.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/attn_lrp.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/tibav.png} \\
+    \end{tabular}
+    }
+    \caption{Dense qualitative comparison on six ImageNet-S examples (ViT-B/16). Columns: Original;
+    ImageNet-S pixel Mask; \ac{rg} and \ac{rg}+Eq (merged attention--Value rule); Gradient, SmoothGrad,
+    Integrated Gradients, DAVE, LRP-$\gamma$, AttnLRP and TIBAV. Every method is shown at its
+    \texttt{loc}-selected configuration, Gradient and TIBAV at their fixed configurations (values in
+    the text). Red: positive, blue: negative attribution, each sign divided by its 99th percentile over
+    the image and clipped.}
+    \label{ptnb:fig:qualitative}
+\end{figure}
+\par\medskip
+
+\section{Formal Verification and Mathematical Audit}\label{app:lean}
+
+The accompanying \href{https://github.com/JayPiZimmermann/structural-explainability-thesis}{thesis repository}
+contains the TeX sources, pinned links to both official code repositories, and a
+Lean~4 project with mathlib pinned to version~4.35.0. The formalization makes the
+assumptions of each checked statement explicit. It remains partial: a related
+lemma does not certify an entire theorem or either paper.
+
+The \textsf{[Lean variant]} badges link complete statements in the formal model;
+the \textsf{[Lean components]} badges link checked parts of a broader statement.
+The exact assumptions and remaining parts are recorded by source label in
+\texttt{formalization/coverage\_map.json}. Selected equation numbers also link to
+their checked identities or definitions. All links identify a fixed Git commit
+and the actual declaration line, following the TeX-linking approach of
+\href{https://arxiv.org/abs/2610.01728}{arXiv:2610.01728}; subsequent edits to the
+default branch cannot move these targets.
+
+Both papers use the same finite, varying-width MLP parameter definition in Lean.
+A network is either an identity output or an affine layer followed by a smaller
+network; its evaluators specify the ordinary activation or a pair activation.
+Local preservation of the difference is the only algebraic requirement for a
+valid pair activation, and induction proves recovery of the complete network.
+The same definition supports the ReLU, mixing, and Softplus developments.
+A separate affine readout accounts for an ungated target logit.
+
+A forward trace records the actual gate decisions. A sensitivity row is a linear
+function taking an input perturbation to the corresponding scalar output change;
+a pair of rows gives the partial sensitivities with respect to the two input
+streams. Their half-difference is the derivative along the balanced lift
+$(x/2,-x/2)$. At strict gate comparisons, the recursively constructed Jacobian is
+proved to be the actual Fr\'echet derivative of the complete network.
+
+The shifted backward algorithm is defined layer by layer and proved equal to its
+closed formula for arbitrary widths and shift parameters. Its source terms are
+actual derivatives of explicitly defined $Q$-networks, with the original prefix,
+one minimum, and a linear absolute-weight tail without biases. The suffix products
+of shift coefficients, sensitivity-mass law, separate cross-head partial identities,
+and original-gradient reconstruction are checked. Shifted algorithmic sensitivities
+are distinguished from derivatives through input-dependent forward re-centering;
+classical derivatives at gate ties are not asserted.
+
+The game developments define finite sign-labelled paths, their probabilities,
+discounts, and occupation sums. For the stated policies, the discounted stopping
+occupations recover the actual MLP gradient; routing occupations recover the
+complete $\alpha\beta$ recurrence from network-derived contributions. The smooth
+case includes the actual full Softplus derivative. The attention result treats a
+fixed attention matrix and the complete composite Value projection, including its
+bias. It does not assert Query/Key differentiation or a global equilibrium merely
+from the backward recovery identity. Generic finite layered-game saddle bounds
+and Bellman uniqueness are checked separately with actual randomized policies.
+
+The trajectory module checks finite path normalization, dynamic-programming
+identities, geometric-mean overlap, per-terminal-state disagreement, and positive
+survival conditioning. Ordinary probability laws used for Hellinger comparison
+are kept distinct from discounted occupation measures. The regularization module
+checks the finite Gibbs variational maximum, its attaining policy, the binary
+stop/continue optimizer, and actual Softplus derivatives.
+
+The audit exposed a missing factor $1/2$ in the four-partial backward invariant,
+a shift-product index error, an omitted weight matrix, and overly broad claims
+about differentiability, multiplicative convexity, re-centering, and nonzero
+combined gradients. The corrections and counterexamples are documented in
+\texttt{reports/mathematical-corrections.md}. In particular, nonzero raw sensitivity
+mass does not force a nonzero balanced head gradient.
+
+The source inventory records mathematical statements still outside the checked
+scope. Neither these proofs nor the corrections certify the Python implementations
+or empirical experiments. The table adapter independently regenerates the thirteen
+outputs supported by the revised game's published summaries and checks them against
+the thesis. Diagnostic and hidden-monotonicity tables whose raw summaries are
+unavailable retain their published source provenance. To reproduce the mathematical
+checks, build \texttt{formalization/} with \texttt{lake build} and run its explicit
+axiom audit; the README documents the complete commands.

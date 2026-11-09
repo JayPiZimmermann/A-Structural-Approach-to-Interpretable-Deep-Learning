@@ -1,0 +1,363 @@
+{
+  "thm:split_correct": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.correct"
+    ],
+    "scope": "Entire finite ReLU network with arbitrary varying widths and split biases; output-identity convention. Source tail theorem follows by choosing the corresponding tail network."
+  },
+  "thm:shift_forward": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.shift",
+      "HiddenMonotonicity.canonical_weight_split"
+    ],
+    "scope": "Whole-network common shift propagated by Wp+Wn. Canonical sign parts have Wp+Wn=abs(W), checked scalarwise."
+  },
+  "thm:convexity_monotonicity": {
+    "status": "partial",
+    "lean": [
+      "HiddenMonotonicity.Network.monotone",
+      "HiddenMonotonicity.Network.convex"
+    ],
+    "scope": "Proved for actual split ReLU/Maxout networks; broader arbitrary ICNN activation theorem is not formalized."
+  },
+  "prop:stream_properties": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.monotone",
+      "HiddenMonotonicity.Network.convex"
+    ],
+    "scope": "Both heads of arbitrary-width biased split networks, nonnegative split weights, Jensen form of convexity."
+  },
+  "thm:mixing_convex_extreme": {
+    "status": "partial",
+    "lean": [
+      "HiddenMonotonicity.Network.convex"
+    ],
+    "scope": "Convexity in split input pair proved; composition with an arbitrary convex input splitting is not packaged as a theorem."
+  },
+  "thm:monotonicity_positive_gradients": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.monotone_directional_nonnegative"
+    ],
+    "scope": "Any differentiable coordinatewise monotone real function in finite dimensions has nonnegative derivative in every nonnegative direction; stronger than the source CPWL differentiable-point assertion."
+  },
+  "thm:monotone_nonneg_gradients": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.monotone_directional_nonnegative"
+    ],
+    "scope": "Nonnegative directional derivative at differentiable points; no subdifferential theorem."
+  },
+  "thm:delta_pos_neg_connection": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.sensitivity_complementarity_absolute",
+      "HiddenMonotonicity.Network.local_sensitivities_correct"
+    ],
+    "scope": "Whole-network sensitivity complementarity equals the actual absolute weight product for canonical split weights. Actual head derivatives are identified at strict gates; the selected-mask algebra also holds without differentiability."
+  },
+  "thm:delta_connection": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.sensitivity_complementarity_absolute",
+      "HiddenMonotonicity.Network.local_sensitivities_correct"
+    ],
+    "scope": "Whole-network sensitivity complementarity equals the actual absolute weight product for canonical split weights. Actual head derivatives are identified at strict gates; the selected-mask algebra also holds without differentiability."
+  },
+  "thm:closed_formula": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.plain_head_gradient_formulas",
+      "HiddenMonotonicity.Network.plain_backward_absolute_Q_closed_form",
+      "HiddenMonotonicity.Network.affine_readout_closed_form"
+    ],
+    "scope": "Zero-shift full varying-width head derivatives and explicit finite Q-source sum. The canonical theorem specialized to zero shifts gives literal absolute-weight tails; actual balanced-input head derivatives are proved under strict gates."
+  },
+  "thm:closed_formula_shift": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.stabilized_backward_absolute_Q_closed_form",
+      "HiddenMonotonicity.Network.qSources_have_derivatives",
+      "HiddenMonotonicity.MaskedTrace.bulkCoefficient_product",
+      "HiddenMonotonicity.Network.affine_readout_closed_form"
+    ],
+    "scope": "Complete varying-width shifted backward algorithm, canonical sign-split weights, strict original preactivations, arbitrary shift parameters and output row. Every Q is explicitly defined with original prefix, one minimum, and a linear absolute-weight tail; its actual Frechet derivative and the suffix shift products are proved. Algorithmic shifted sensitivities are not claimed to be derivatives of input-dependent re-centered functions."
+  },
+  "claim:sum_delta_shif": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.MaskedTrace.stabilized_bulk",
+      "HiddenMonotonicity.MaskedTrace.bulkCoefficient_product"
+    ],
+    "scope": "Full varying-width backward induction and exact product of shift factors over the tail, including current and terminal shifts."
+  },
+  "cor:backward_invariant": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.backward_partial_invariants",
+      "HiddenMonotonicity.Network.stabilized_backward_invariant",
+      "HiddenMonotonicity.Network.symmetric_head_derivative",
+      "HiddenMonotonicity.MaskedTrace.difference_splitJac"
+    ],
+    "scope": "The difference of the actual implemented shifted unified sensitivities is the genuine original MLP derivative under strict gates, with the required one-half factor; the split Jacobian reconstructs the original one."
+  },
+  "lem:split_backward_recursion": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.layer_derivative",
+      "HiddenMonotonicity.matrix_backward_sum",
+      "HiddenMonotonicity.matrix_backward_difference",
+      "HiddenMonotonicity.actual_positive_pullback",
+      "HiddenMonotonicity.actual_negative_pullback"
+    ],
+    "scope": "Actual strict-branch Fr\u00e9chet derivative, explicit four Jacobian blocks and genuine two-contribution positive/negative partial pullbacks; source masked-matrix notation is represented equivalently by branch-selected linear maps."
+  },
+  "prop:sensitivity_mass": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.sensitivity_complementarity_absolute",
+      "HiddenMonotonicity.Network.local_sensitivities_correct"
+    ],
+    "scope": "Whole-network sensitivity complementarity equals the actual absolute weight product for canonical split weights. Actual head derivatives are identified at strict gates; the selected-mask algebra also holds without differentiability."
+  },
+  "prop:maxpool_correct": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.maxpool_correct"
+    ],
+    "scope": "Exact finite nonempty max-pooling split identity."
+  },
+  "lem:linear_chunk": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.pre_difference",
+      "HiddenMonotonicity.layer_difference"
+    ],
+    "scope": "Affine reconstruction, including arbitrary rectangular linear maps and split biases."
+  },
+  "prop:conv_correct": {
+    "status": "partial",
+    "lean": [
+      "HiddenMonotonicity.layer_difference"
+    ],
+    "scope": "Arbitrary rectangular linear operator algebra applies after flattening convolution; tensor/convolution index correspondence not encoded."
+  },
+  "thm:mixing_recovery": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.mixing_recovery",
+      "HiddenMonotonicity.mixPair_nonnegative",
+      "HiddenMonotonicity.Network.decomposition_nonnegative"
+    ],
+    "scope": "Full varying-width network eta-mixing recovery for every real eta; nonnegative streams when eta is in [0,1] and parameters/input pairs are nonnegative."
+  },
+  "cor:dc_split_endpoint": {
+    "status": "partial",
+    "lean": [
+      "HiddenMonotonicity.Network.mixing_one_is_split",
+      "HiddenMonotonicity.mixing_correct",
+      "HiddenMonotonicity.Network.correct",
+      "HiddenMonotonicity.Network.convex"
+    ],
+    "scope": "The eta=1 entire network is definitionally identified with the proved convex monotone split; recovery and convexity proved separately with explicit assumptions."
+  },
+  "lem:bc-chain-rule": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.Games.path_geometric_mean",
+      "Thesis.Games.trajectory_overlap_eq_DP"
+    ],
+    "scope": "Exact arbitrary finite trajectory overlap dynamic-programming identity for nonnegative kernels. Fixed finite state type; layered graphs can be represented with a common finite state space."
+  },
+  "lem:hellinger-backward-correctness": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.Games.trajectory_overlap_eq_DP"
+    ],
+    "scope": "Full finite-path overlap equals geometric-kernel DP; implementation-level backward code is not verified."
+  },
+  "lem:bc-monotone": {
+    "status": "partial",
+    "lean": [
+      "Thesis.Games.geometric_kernel_substochastic",
+      "Thesis.Games.overlap_mass_decreases"
+    ],
+    "scope": "Substochastic geometric kernel and one-step weighted-overlap mass contraction; source multi-layer formulation is obtained by iteration but not separately packaged."
+  },
+  "thm:per-pixel": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.Games.pixelDisagreement_nonneg",
+      "Thesis.Games.pixelDisagreement_formula",
+      "Thesis.Games.pixelDisagreement_total"
+    ],
+    "scope": "Exact nonnegative finite trajectory disagreement, terminal-fibre attribution, total equals squared Hellinger. Model-specific pixel-index encoding not required."
+  },
+  "thm:conditioned-survival": {
+    "status": "partial",
+    "lean": [
+      "Thesis.Games.survival_overlap",
+      "Thesis.Games.overlap_sq_le_masses",
+      "Thesis.Games.doob_kernel_normalized",
+      "Thesis.Games.doob_kernel_nonneg",
+      "Thesis.Games.doob_path_telescoping",
+      "Thesis.Games.doob_survival_path",
+      "Thesis.Games.overlap_eq_one_iff",
+      "Thesis.Games.overlap_eq_zero_iff"
+    ],
+    "scope": "Normalization identity and mass overlap bound; strictly positive survival Doob kernels normalize, stay nonnegative, and telescope to conditional path law; overlap endpoint equivalences proved for normalized finite laws. Source zero-survival pruning/layer-specific cemetery encoding not packaged."
+  },
+  "thm:deriv-occ": {
+    "status": "partial",
+    "lean": [
+      "Thesis.BackwardGames.thesis_gradient_representation",
+      "Thesis.BackwardGames.stopping_game_gradient",
+      "Thesis.BackwardGames.sgTransition_normalized"
+    ],
+    "scope": "Explicit discounted sign-labelled finite path occupation difference equals the actual shared Network Frechet derivative on a strict ReLU cell, with positive fan-in. Local cemetery-inclusive transition normalization and positivity are checked. This covers the gradient/occupation identity for the stated gate policy, not a global SPNE/equilibrium existence theorem."
+  },
+  "thm:gradient": {
+    "status": "partial",
+    "lean": [
+      "Thesis.BackwardGames.thesis_gradient_representation",
+      "Thesis.BackwardGames.stopping_game_gradient",
+      "Thesis.BackwardGames.sgTransition_normalized",
+      "Thesis.AffineOutputBackward.thesis_affine_output_gradient"
+    ],
+    "scope": "Explicit discounted sign-labelled finite path occupation difference equals the actual shared Network Frechet derivative on a strict ReLU cell, with positive fan-in. Local cemetery-inclusive transition normalization and positivity are checked. This covers the gradient/occupation identity for the stated gate policy, not a global SPNE/equilibrium existence theorem."
+  },
+  "thm:lrp-recovery": {
+    "status": "partial",
+    "lean": [
+      "Thesis.RoutingBackward.thesis_alpha_beta_recovery",
+      "Thesis.AffineOutputBackward.thesis_affine_output_lrp"
+    ],
+    "scope": "Entire shared Network alpha-beta backward recurrence from actual weights and activations equals signed discounted explicit paths for arbitrary output relevance. Positive epsilon and nonnegative alpha/beta give valid nonnegative path quantities. Recovery for the stated anchor policies is proved; global game SPNE and the epsilon=0 degenerate convention are not included."
+  },
+  "thm:ab-recovery": {
+    "status": "partial",
+    "lean": [
+      "Thesis.RoutingBackward.thesis_alpha_beta_recovery",
+      "Thesis.AffineOutputBackward.thesis_affine_output_lrp"
+    ],
+    "scope": "Entire shared Network alpha-beta backward recurrence from actual weights and activations equals signed discounted explicit paths for arbitrary output relevance. Positive epsilon and nonnegative alpha/beta give valid nonnegative path quantities. Recovery for the stated anchor policies is proved; global game SPNE and the epsilon=0 degenerate convention are not included."
+  },
+  "def:trajectory-distribution": {
+    "status": "encoded_definition",
+    "lean": [
+      "Thesis.Games.pathLaw",
+      "Thesis.Games.path_law_normalized"
+    ],
+    "scope": "Finite recursive walk law and normalization for stochastic kernels."
+  },
+  "lem:kl-legendre-fenchel": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.Regularization.finite_gibbs_bound",
+      "Thesis.Regularization.finite_gibbs_value",
+      "Thesis.Regularization.routing_variational"
+    ],
+    "scope": "Finite nonempty action set, real scores, positive temperature, policies including zero coordinates; full simplex maximum attained at Gibbs softmax. Extended-real -infinity actions and global multilayer equilibrium not included."
+  },
+  "lem:noisy-gate-dual": {
+    "status": "partial",
+    "lean": [
+      "Thesis.Regularization.softplus_variational",
+      "Thesis.Regularization.entropy_gate_unique"
+    ],
+    "scope": "Binary entropy/softplus variational identity and unique sigmoid optimizer; general regularizers and probit/Gaussian alternatives not formalized."
+  },
+  "thm:softplus-forward": {
+    "status": "partial",
+    "lean": [
+      "Thesis.SoftplusDecomposition.thesis_softplus_forward",
+      "Thesis.Regularization.softplus_variational"
+    ],
+    "scope": "Entire shared Network soft pair decomposition recovers the Softplus forward pass; scalar entropy optimizer proved separately. Full game SPNE not asserted."
+  },
+  "thm:softplus-gradient": {
+    "status": "partial",
+    "lean": [
+      "Thesis.SoftplusBackward.thesis_softplus_gradient",
+      "Thesis.SoftplusDecomposition.softEval_eq_forwardWith"
+    ],
+    "scope": "Actual full varying-width Softplus network derivative equals discounted sign-path occupations with sigmoid stopping and positive fan-in; same Network parameters/evaluator as the ReLU development. Positive temperature and nonnegative split weights for stochastic interpretation. Global equilibrium existence is not included."
+  },
+  "thm:freg_validity": {
+    "status": "partial",
+    "lean": [
+      "Thesis.Regularization.softSplit_recovery"
+    ],
+    "scope": "Scalar entropy/softplus regularized pair recovery; general convex regularizers and complete network induction not encoded."
+  },
+  "cor:fsoft": {
+    "status": "partial",
+    "lean": [
+      "Thesis.SoftplusDecomposition.thesis_softplus_forward",
+      "Thesis.Regularization.softplus_variational"
+    ],
+    "scope": "Entire shared Network soft pair decomposition recovers the Softplus forward pass; scalar entropy optimizer proved separately. Full game SPNE not asserted."
+  },
+  "prop:monotone_represents": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.Foundations.monotone_network",
+      "Thesis.Foundations.monotone_affine_output"
+    ],
+    "scope": "Shared varying-width Network evaluated with an arbitrary monotone scalar activation, nonnegative signed weights, and optional nonnegative affine output map."
+  },
+  "prop:icnn_convex": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.Foundations.icnn_convex",
+      "Thesis.Foundations.icnn_affine_output"
+    ],
+    "scope": "Generic convex monotone scalar activation on the shared varying-width Network; first affine weights unrestricted, later weights and final affine readout nonnegative. Actual coordinatewise ConvexOn over the whole input space."
+  },
+  "thm:shapley_bellman": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.LayeredGames.Game.saddle",
+      "Thesis.LayeredGames.Game.bellman_unique",
+      "Thesis.LayeredGames.Game.optimal_lower",
+      "Thesis.LayeredGames.Game.optimal_upper"
+    ],
+    "scope": "Finite-horizon layered stochastic game with actual randomized policies, normalized transitions, nonnegative discounts, constructed pure optimal selector, saddle inequalities at every layered state, and uniqueness of the Bellman recursion. Finite common nonempty action type; state-dependent actions represented by duplicate actions."
+  },
+  "prop:validity_recovery": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.valid_decomposition_recovery",
+      "HiddenMonotonicity.Network.decomposition_nonnegative"
+    ],
+    "scope": "Full varying-width shared network with arbitrary scalar and pair activations and biases. Scalar difference preservation implies full network recovery; nonnegative pair output is proved separately under explicit nonnegative parameter/input/activation assumptions."
+  },
+  "prop:gradient_blindness": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.regional_gradient_blindness",
+      "HiddenMonotonicity.Network.locally_constant_jacobian"
+    ],
+    "scope": "Strict preactivations imply an actual open neighborhood of fixed whole-network Jacobian. If every signed active path from a feature to an output has zero weight, the corresponding derivative is zero throughout that neighborhood."
+  },
+  "thm:attn-ab-recovery": {
+    "status": "partial",
+    "lean": [
+      "Thesis.AttentionBackward.thesis_attention_alpha_beta_recovery"
+    ],
+    "scope": "Fixed nonnegative row-stochastic attention matrix A, signed Value projection with bias, and arbitrary shared MLP backbone. Composite affine map, its actual derivative and signed probability/discount factorization recover full alpha-beta recurrence for positive epsilon and nonnegative alpha,beta. Query/Key derivatives and global SPNE not asserted."
+  },
+  "thm:relu_net_game_value": {
+    "status": "partial",
+    "lean": [
+      "Thesis.ReLUNetGame.signedValue_eq_network",
+      "Thesis.ReLUNetGame.affine_output_value",
+      "Thesis.ReLUNetGame.common_stopping_rule",
+      "Thesis.LayeredGames.Game.saddle"
+    ],
+    "scope": "Full normalized signed max/min value recursion recovers the shared varying-width ReLU network, including affine output and gate choices. Generic finite layered game saddle independently proved; direct policy/saddle bridge for this network-specific recursion remains to be packaged."
+  }
+}

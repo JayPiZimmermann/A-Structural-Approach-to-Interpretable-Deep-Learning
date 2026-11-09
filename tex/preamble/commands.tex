@@ -1,0 +1,532 @@
+%------------------------------
+% CLEVEREF - must be loaded after hyperref (loaded via pdfx in meta.tex)
+%------------------------------
+\usepackage[capitalize,noabbrev]{cleveref}
+%------------------------------
+% MICROTYPE
+%------------------------------
+\microtypecontext{spacing=nonfrench}
+%------------------------------
+% DIRECTORIES
+%------------------------------
+\setcounter{secnumdepth}{2}	% number chapter.section.subsection only (no numbered \paragraph)
+\setcounter{tocdepth}{2}	% table of contents down to subsection; deeper headings are run-in, unnumbered
+%------------------------------
+% DATE
+%------------------------------
+\makeatletter
+\newcommand{\monthyeardate}{\DTMenglishmonthname{\@dtm@month} \@dtm@year}
+\makeatother
+%------------------------------
+% FIGURES, TABLES, LISTS, NUMERATIONS, COUNTER
+%------------------------------
+\graphicspath{{figures/}} 		% directory in which LaTeX searches for figures
+\newcounter{includepdfpage}		% counter for pdfpages page references
+\newlist{myList}{itemize}{1}
+\setlist[myList]{leftmargin=0.0cm,nosep,label={}}
+\renewcommand{\topfraction}{0.98}
+\renewcommand{\bottomfraction}{0.98}
+%------------------------------
+% DEDICATION
+%------------------------------
+\newenvironment{dedication_env}	% defines the dedication environment
+{\Large\begin{quote}\begin{center}\begin{em}}
+{\par\end{em}\end{center}\end{quote}}
+%------------------------------
+% HEADER
+%------------------------------
+\lehead{\scshape\leftmark}		% left-even-head
+\cehead{}						% center-even-head
+\rehead{}						% right-even-head
+\lohead{}						% left-odd-head
+\cohead{}						% center-odd-head
+\rohead{\scshape\rightmark}		% right-odd-head
+%------------------------------
+% FOOTER
+%------------------------------
+\lefoot[\pagemark]{\pagemark}	% left-even-foot
+\cefoot{}						% center-even-foot
+\refoot{}						% right-even-foot
+\lofoot{} 						% left-odd-foot
+\cofoot{}						% center-odd-foot
+\rofoot[\pagemark]{\pagemark}	% right-odd-foot
+\renewcommand*{\chapterpagestyle}{plain}
+%------------------------------
+% LISTS OF ...
+%------------------------------
+\makeatletter					%
+\renewcommand*{\@pnumwidth}{2.5em}% column width for page numbers
+\makeatother					%
+%------------------------------
+% LIST OF ABBREVIATIONS
+%------------------------------
+\newlength{\myabbrevlength}
+\setlength{\myabbrevlength}{2cm}
+\newlength{\mydescriptionwidth}
+\setlength{\mydescriptionwidth}{\linewidth-2\tabcolsep-\myabbrevlength}
+\newcommand{\abbrevname}{List of Abbreviations}
+\NewAcroTemplate[list]{dbtalongtable}{
+	\AcroNeedPackage{array}%
+	\def\arraystretch{1.2}
+    \acronymsmapF{%
+		\AcroAddRow{%
+			\leavevmode\acrowrite{short} & \acrowrite{list} \acropagefill \tabularnewline}
+    }
+	{\AcroRerun}%
+	\acroheading%
+	\acropreamble%
+    \setlength\LTleft{0.5ex}    % Adjustment of left margin
+    \begin{longtable}{>{\bfseries\sffamily}lp{\mydescriptionwidth}}
+        \AcronymTable
+    \end{longtable}
+}
+\acsetup{
+	format/first-long=\itshape, % first appearance is set in italics
+	index/use=true,				% add abbrevs to index
+	make-links=true				% make links for abbrevs
+}
+%------------------------------
+% TODOS
+%------------------------------
+\makeatletter
+\renewcommand{\@todonotes@todolistname}{List of ToDos}
+\makeatother
+%------------------------------
+% THEOREM STYLE
+%------------------------------
+\newtheoremstyle{mytheoremstyle}
+{4pt}{4pt}{\itshape}{0pt}{\bfseries}{.}{5pt plus 1pt minus 1pt}
+{\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
+\newtheoremstyle{mydefinitionstyle}
+{4pt}{4pt}{\normalfont}{0pt}{\bfseries}{.}{5pt plus 1pt minus 1pt}
+{\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
+\newtheoremstyle{myremarkstyle}
+{4pt}{4pt}{\normalfont}{0pt}{\itshape}{.}{5pt plus 1pt minus 1pt}
+{\thmname{#1}\thmnumber{ #2}\thmnote{ (#3)}}
+%------------------------------
+% THEOREM-LIKE ENVIRONMENTS (plain, no boxes)
+%------------------------------
+\theoremstyle{mytheoremstyle}
+\newtheorem{theoremenv}{Theorem}[chapter]
+\newtheorem{lemmaenv}[theoremenv]{Lemma}
+\newtheorem{proposition}[theoremenv]{Proposition}
+\newtheorem{corollary}[theoremenv]{Corollary}
+\newtheorem{claim}{Claim}[chapter]
+\theoremstyle{mydefinitionstyle}
+\newtheorem{definition}{Definition}[chapter]
+\theoremstyle{myremarkstyle}
+\newtheorem{remarkenv}{Remark}[chapter]
+\newtheorem{remark}[remarkenv]{Remark}
+\newtheorem{observation}{Observation}[chapter]
+%------------------------------
+% MATH AND OPERATORS
+%------------------------------
+\DeclareMathOperator{\rot}{rot}	% declares the rot math operator
+\newcommand*\diff{\mathop{}\!\textrm{d}}	% differential d, e.g. in integrals
+%------------------------------
+% PAPER-SPECIFIC COMMANDS
+%------------------------------
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\CC}{\mathbb{C}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\relu}{\text{ReLU}}
+
+% Math operators and commands
+\DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\argmin}{argmin}
+\DeclareMathOperator{\diag}{diag}
+
+% Custom math symbols and notation
+\newcommand{\maxout}{\text{Maxout}}
+\newcommand{\1}{\mathbf{1}} % indicator function or vector of ones
+\renewcommand{\P}{\mathbb{P}} % probability symbol (redefines paragraph symbol)
+\newcommand{\E}{\mathbb{E}} % expectation symbol
+\newcommand{\indicator}[1]{\mathds{1}_{#1}} % for indicator function using dsfont package
+\newcommand{\abs}[1]{\lvert#1\rvert}
+\newcommand{\norm}[1]{\lVert#1\rVert}
+
+% Additional game-theoretic notation
+% \Gamma serves as the terminal state symbol (already defined in LaTeX, no macro needed)
+\newcommand{\textbfplus}{\textsuperscript{+}}
+\newcommand{\textbfminus}{\textsuperscript{-}}
+
+%------------------------------
+% SEMANTIC MACROS: SPLIT STREAMS & DECOMPOSITIONS
+% Change notation globally here; never hard-code splits inline.
+%------------------------------
+% Weights: \Wl{l} = W^{(l)},  \Wsig{l}{\sigma} = W^{(l,\sigma)},  \posneg{W}{+} = [W]^+
+\newcommand{\Wl}[1]{W^{(#1)}}
+\newcommand{\Wsig}[2]{W^{(#1,#2)}}
+\newcommand{\posneg}[2]{[#1]^{#2}}
+% Activations: \actl{l} = a^{(l)},  \act{l}{\sigma} = a^{(l,\sigma)}
+\newcommand{\actl}[1]{a^{(#1)}}
+\newcommand{\act}[2]{a^{(#1,#2)}}
+% Pre-activations: \preactl{l} = z^{(l)},  \preact{l}{\sigma} = z^{(l,\sigma)}
+\newcommand{\preactl}[1]{z^{(#1)}}
+\newcommand{\preact}[2]{z^{(#1,#2)}}
+% Decomposition functions (optional argument = parameter)
+\newcommand{\fmix}[1][\eta]{f_{\mathrm{mix}}^{\,#1}}
+\newcommand{\fstop}{f_{\mathrm{stop}}}
+\newcommand{\fsoft}[1][\theta]{f_{\mathrm{soft}}^{\,#1}}
+\newcommand{\freg}[1][\Omega]{f_{\mathrm{reg}}^{\,#1}}
+% Game theory: players P^+/P^-, generic p,q; opponent \opp{p} = p'
+\newcommand{\opp}[1]{#1'}
+\newcommand{\polstar}{\pi^{\star}}
+\newcommand{\Vp}[2]{V_{#1}(#2)}   % game value V_p(s)
+\newcommand{\Rp}[2]{R_{#1}(#2)}   % payoff R_p(s)
+
+% Redefine mathcal to use mathscr globally
+\renewcommand{\mathcal}{\mathscr}
+
+\newenvironment{proofref}[2]{%
+  \begin{proof}[Proof of #1~\ref{#2}]%
+}{%
+  \end{proof}%
+}
+
+\newcommand{\red}[1]{{\color{red}#1}}
+%% \todo is already provided by the todonotes package; we define inline annotation variants
+\newcommand{\todoinline}[1]{{\color{red}#1}}
+\newcommand{\TODO}[1]{\textbf{\color{red}[TODO: #1]}}
+%------------------------------
+% COLORS
+%------------------------------
+\definecolor{dbta_blue}{RGB}{51,102,153}
+\definecolor{tub_red}{RGB}{197,14,31}
+%------------------------------
+% XPARSE
+%------------------------------
+% O is an optional argument and {} is the default, m is the must-have argument
+\NewDocumentCommand{\pder}{ O{} O{} m }{\dfrac{\partial^{#2}#1}{\partial#3^{#2}}}				% a short command for partial derivatives
+\NewDocumentCommand{\roundbrack}{ m }{\left(#1 \right)} % a short command for round brackets
+\NewDocumentCommand{\squarebrack}{ m }{\left[#1 \right]}% a short command for squared brackets
+\NewDocumentCommand{\ind}{m O{}}{\mathrm{#1}\mathnormal{,#2}}			% a short command for indices
+%------------------------------
+% CODE
+%------------------------------
+\renewcommand{\lstlistingname}{Code}	% rename listings
+%------------------------------
+% ENUMERATE ENVIRONMENT
+%------------------------------
+\renewcommand{\labelenumi}{\arabic{enumi})} 				% 1)
+\renewcommand{\labelenumii}{\arabic{enumi}.\arabic{enumii}}	% 1.1)
+\renewcommand{\labelenumiii}{\arabic{enumi}.\arabic{enumii}.\arabic{enumiii}}	% 1.1.1)
+\setlist[enumerate,1]{%
+	itemsep=0pt,
+	parsep=0pt,
+	topsep=2pt,
+	labelindent=\parindent,
+}%
+%------------------------------
+% ITEMIZE ENVIRONMENT
+%------------------------------
+\setlist[itemize,1]{%
+	label={--},
+	itemsep=0pt,
+	parsep=0pt,
+	topsep=2pt,
+	labelindent=\parindent,
+}%
+%------------------------------
+% CAPTION REDEFINITIONS
+%------------------------------
+\addto\captionsenglish{
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\tablename}{Tab.}
+\renewcommand{\nomname}{List of Symbols}
+\renewcommand{\lstlistlistingname}{List of Codes}
+\def\indexname{Index}
+}
+%------------------------------
+% ADD TOCLIST ALGORITHM
+%------------------------------
+\addtotoclist[algorithm2e]{loa}
+\setuptoc{loa}{totoc}
+\newcommand*{\listofloaname}{\listalgorithmcfname}
+\renewcommand{\listofalgorithms}{\listoftoc{loa}}
+%------------------------------
+% AUTOREF ENGLISH
+%------------------------------
+\addto\extrasenglish{%
+	\def\chapterautorefname{Chap.}%
+	\def\sectionautorefname{Sec.}%
+	\def\subsectionautorefname{Sec.}%
+	\def\subsubsectionautorefname{Sec.}%
+	\def\figureautorefname{Fig.}%
+	\def\tableautorefname{Tab.}%
+	\def\equationautorefname~#1\null{Eq.~(#1)\null}%
+	\def\theoremenvautorefname{Theorem}%
+	\def\lemmaenvautorefname{Lemma}%
+	\def\remarkenvautorefname{Remark}%
+	\def\definitionautorefname{Def.}%
+	\def\algorithmautorefname{Alg.}%
+	\def\assumptionautorefname{Ass.}%
+	\def\chapterautorefnamelong{Chapter}%
+	\def\sectionautorefnamelong{Section}%
+	\def\subsectionautorefnamelong{Section}%
+	\def\subsubsectionautorefnamelong{Section}%
+	\def\figureautorefnamelong{Figure}%
+	\def\tableautorefnamelong{Table}%
+	\def\equationautorefnamelong~#1\null{Equation~(#1)\null}%
+	\def\theoremenvautorefnamelong{Theorem}%
+	\def\lemmaenvautorefnamelong{Lemma}%
+	\def\remarkenvautorefnamelong{Remark}%
+	\def\definitionautorefnamelong{Definition}%
+	\def\algorithmautorefnamelong{Algorithm}%
+}
+%------------------------------
+% AUTOREF (LONG FORM)
+%------------------------------
+\newcommand{\Autoref}[1]{%
+  \begingroup%
+  \renewcommand{\chapterautorefname}{\chapterautorefnamelong}%
+  \renewcommand{\sectionautorefname}{\subsectionautorefnamelong}%
+  \renewcommand{\subsectionautorefname}{\subsectionautorefnamelong}%
+  \renewcommand{\subsubsectionautorefname}{\subsubsectionautorefnamelong}%
+  \renewcommand{\figureautorefname}{\figureautorefnamelong}%
+  \renewcommand{\tableautorefname}{\tableautorefnamelong}%
+  \renewcommand{\equationautorefname}{\equationautorefnamelong}%
+  \renewcommand{\theoremenvautorefname}{\theoremenvautorefnamelong}%
+  \renewcommand{\lemmaenvautorefname}{\lemmaenvautorefnamelong}%
+  \renewcommand{\remarkenvautorefname}{\remarkenvautorefnamelong}%
+  \renewcommand{\definitionautorefname}{\definitionautorefnamelong}%
+  \renewcommand{\algorithmautorefname}{\algorithmautorefnamelong}%
+  \renewcommand{\assumptionautorefname}{\assumptionautorefnamelong}%
+  \autoref{#1}%
+  \endgroup%
+}
+%------------------------------
+% REFERENCES AND CITATIONS
+%------------------------------
+\renewcaptionname{english}{\bibname}{List of References}
+\renewcommand*{\bibfont}{\small}	% smaller font for the bibliography (saves pages)
+\setlength\bibitemsep{0pt}		% no extra vertical gap between references
+\setlength{\bibhang}{3ex}
+\DeclareFieldFormat[			% no quotation marks in citetitle
+	article,
+	inbook,
+	incollection,
+	inproceedings,
+	patent,
+	thesis,
+	unpublished
+]{citetitle}{#1\midsentence\isdot}
+\DeclareFieldFormat[			% no quotation marks in title
+	article,
+	inbook,
+	incollection,
+	inproceedings,
+	patent,
+	thesis,
+	unpublished
+]{title}{#1\midsentence\isdot}
+\DeclareFieldFormat[			% remove capitalization in title and use grammar of a sentence instead
+article,
+]{titlecase:title}{\MakeSentenceCase*{#1}}
+\DeclareFieldFormat[			% no quotation marks in title
+	inproceedings,
+]{booktitle}{\itshape #1}
+\renewcommand*{\nameyeardelim}{\addcomma\space}			% comma between author and year
+\DeclareFieldFormat{pages}{#1}	% no S. or pp. before pages
+\DeclareFieldFormat{type}{\itshape #1}	% print bachelor or master thesis in italics
+\DefineBibliographyStrings{english}{% for backreferencing in list of references
+  backrefpage = {cit. on p.},
+  backrefpages = {cit. on pp.},
+}
+\renewbibmacro{in:}{%			% suppress in: before name of journal, book, etc.
+  \ifboolexpr{%
+     test {\ifentrytype{article}}%
+     or
+     test {\ifentrytype{book}}%
+     or
+     test {\ifentrytype{inproceedings}}%
+  }{}{\printtext{\bibstring{in}\intitlepunct}}%
+}
+\DefineBibliographyStrings{english}{% before URL english
+urlseen = {last access},
+}
+\renewbibmacro*{volume+number+eid}{	% how volume and issue are printed in list of references
+  \printfield{volume}
+  \printfield[parens]{number}%
+  \setunit{\addcomma\space}%
+  \printfield{eid}
+}
+\DeclareDelimFormat[bib]{nametitledelim}{\addcolon\space} % use colon after year in list of references
+\DeclareDelimFormat{finalnamedelim}{\addcomma\space}	  % delimiter between authors
+\DeclareDelimFormat[textcite]{finalnamedelim}{			  % delimiter for textcite
+  \addspace\&\space}
+\DeclareDelimFormat[parencite]{finalnamedelim}{			  % delimiter for parencite
+  \addspace\bibstring{and}\space}
+
+\renewbibmacro*{begentry}{%
+	\iffieldundef{shorthand}{}{%
+		\printfield{shorthand}\addspace ---\addspace
+	}
+}
+\DeclareSortingTemplate{nyt}{%		sorting template for shorthand
+	\sort{%
+		\field{presort}%
+	}%
+	\sort[final]{%
+		\field{sortkey}%
+	}%
+	\sort{%
+		\field{shorthand}%
+		\field{author}%
+		\field{editor}%
+		\field{title}%
+	}%
+	\sort{%
+		\field{year}
+	}%
+	\sort{%
+		\field{title}%
+	}%
+}
+
+\renewbibmacro*{textcite}{%			redefines textcite so that shorthands also work with it
+    \ifnameundef{labelname}{%
+    	\iffieldundef{shorthand}{%
+    		\usebibmacro{cite:label}%
+            \setunit{%
+                \global\booltrue{cbx:parens}%
+                \printdelim{nonameyeardelim}\bibopenparen%
+            }%
+            \ifnumequal{%
+            	\value{citecount}%
+            }{1}{%
+            	\usebibmacro{prenote}%
+            }{}%
+            \usebibmacro{cite:labeldate+extradate}%
+        }{%
+        	\usebibmacro{cite:shorthand}%
+        }}{%
+        \iffieldundef{shorthand}{%
+        	\printnames{labelname}%
+            \setunit{%
+                \global\booltrue{cbx:parens}%
+                \printdelim{nameyeardelim}\bibopenparen%
+            }%
+           	\ifnumequal{%
+           		\value{citecount}%
+           	}{1}{%
+           		\usebibmacro{prenote}%
+           	}{}%
+            \usebibmacro{citeyear}%
+        }{%
+        	\ifciteseen{%
+        		\usebibmacro{cite:shorthand}%
+        	}{%
+        		\printnames{labelname}%
+                \setunit{%
+                    \global\booltrue{cbx:parens}%
+                    \printdelim{nameyeardelim}\bibopenparen%
+                }%
+                \ifnumequal{%
+                	\value{citecount}%
+                }{1}{%
+                	\usebibmacro{prenote}%
+               	}{}%
+                \iffieldundef{labelyear}{%
+                	\usebibmacro{cite:label}%
+                    \setunit{%
+                    	\addcomma%
+                    	\addspace%
+                    }%
+                    \iffieldundef{shorthandintro}{%
+	                	\printtext{\bibstring{citedas}}%
+	                }{%
+	                	\printtext{\printfield{shorthandintro}}%
+	                }%
+	                \addspace%
+                    \usebibmacro{cite:shorthand}%
+                }{%
+                	\usebibmacro{cite:labeldate+extradate}%
+                    \setunit{%
+                    	\addcomma%
+                    	\addspace%
+                    }%
+                    \iffieldundef{shorthandintro}{%
+	                    \printtext{\bibstring{citedas}}%
+	                }{%
+	                	\printtext{\printfield{shorthandintro}}%
+	                }%
+	                \addspace%
+                    \usebibmacro{cite:shorthand}}}}}}%
+%------------------------------
+% ONLY FOR DISSERTATIONS
+%------------------------------
+\DeclareBibliographyCategory{inbib}	% a specific category for all citations in the text, NOT in the publication list
+\newcommand{\printpublication}[1]{\AtNextCite{\defcounter{maxnames}{99}}\fullcite{#1}}						% print all authors in case the \printpublication command is used
+\makeatletter
+\AtEveryCitekey{%
+  \ifcsstring{blx@delimcontext}{fullcite}	% if a citation is made with the fullcite command, do not show it in the references
+    {}
+    {\addtocategory{inbib}{\thefield{entrykey}}}}	% if it is normally cited later, add it to the references
+\makeatother
+%------------------------------
+% INTERNET
+%------------------------------
+\renewcommand*{\UrlFont}{\upshape}
+%------------------------------
+% HYPERREF
+%------------------------------
+\hypersetup{%
+   	bookmarksnumbered=true,		% bookmarks are numbered in PDF
+   	bookmarksopen=false,			% bookmarks are closed when PDF is opened
+   	colorlinks=true,			% colored text instead of boxed links (no ugly borders)
+   	linkcolor={blue!45!black},	% internal links (sections, refs, equations)
+   	citecolor={green!35!black},	% citations
+   	urlcolor={blue!55!black},	% URLs
+   	hypertexnames=true, 			% use guessable names for links
+   	linktocpage, 				% use page numbers as links in table of contents
+   	pdfpagelayout=SinglePage, 	% automatically open PDF as single page
+}%
+%------------------------------
+% MAKEINDEX
+%------------------------------
+\makenomenclature				% generate an .nlo file for the List of Symbols
+\providecommand{\pfill}{\dotfill}	% page-number fill used by myindexstyle.ist (absent from newer nomencl)
+\newcommand{\indextitle}{Index}
+\makeindex[
+	columns=2,					% number of columns
+	intoc=true,					% add to List of Contents
+	options= -s bibliography/myindexstyle.ist,	% index style file
+	title={\indextitle},	    		% title of the Index
+	]							% generate an .idx file for the Index
+%------------------------------
+% VERTICAL SPACING / LAYOUT (fewer pages, no stretched-out gaps)
+%------------------------------
+% Do not stretch the page to fill it: prevents pages that are mostly one long
+% vertical gap (KOMA/twoside otherwise uses \flushbottom).
+\raggedbottom
+% Let floats occupy more of a page before spilling, and allow more floats.
+\renewcommand{\floatpagefraction}{0.75}
+\renewcommand{\textfraction}{0.08}
+\setcounter{totalnumber}{6}
+% Tighten space around headings (KOMA). Negative beforeskip keeps the following
+% paragraph unindented; the magnitude is the space above the heading.
+\RedeclareSectionCommand[beforeskip=-2.0ex plus -1ex minus -.2ex, afterskip=1.0ex plus .2ex]{section}
+\RedeclareSectionCommand[beforeskip=-1.7ex plus -.7ex minus -.2ex, afterskip=0.7ex plus .15ex]{subsection}
+\RedeclareSectionCommand[beforeskip=-1.4ex plus -.5ex minus -.2ex, afterskip=0.5ex plus .1ex]{subsubsection}
+% Trim the large blank band above KOMA chapter titles.
+\RedeclareSectionCommand[beforeskip=0pt, afterskip=1.5ex]{chapter}
+% This template writes \paragraph entries to the ToC regardless of tocdepth; drop them
+% (and \subparagraph) so the contents list stays at chapter/section/subsection.
+\let\dbtaOrigAddcontentsline\addcontentsline
+\renewcommand{\addcontentsline}[3]{%
+	\ifstrequal{#2}{paragraph}{}{\ifstrequal{#2}{subparagraph}{}{%
+		\dbtaOrigAddcontentsline{#1}{#2}{#3}}}%
+}
+% Slightly tighten space around display math and theorem environments.
+\setlength{\abovedisplayskip}{4pt plus 2pt minus 2pt}
+\setlength{\belowdisplayskip}{4pt plus 2pt minus 2pt}
+\setlength{\abovedisplayshortskip}{2pt plus 2pt}
+\setlength{\belowdisplayshortskip}{3pt plus 2pt minus 2pt}
+
+%------------------------------
+% OWN COMMANDS
+%------------------------------
+% You can use this area for additional own commands

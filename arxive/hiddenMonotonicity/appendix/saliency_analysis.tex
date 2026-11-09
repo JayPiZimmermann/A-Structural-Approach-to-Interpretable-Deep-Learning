@@ -1,0 +1,75 @@
+\newpage
+
+\section{Saliency Analysis} \label{app:saliency}
+
+This appendix provides comprehensive evaluation results for all XAI methods tested in the experimental setup described in \cref{subsec:eval_framework}.
+
+\subsection{VGG16 Qualitative Saliency Map Comparison} \label{app:vgg_qualitative}
+
+Complementing \cref{fig:vgg_saliency_comparison_main}, we give more saliency examples in \cref{fig:vgg_saliency_comparison}. Again, we observe more focus on the whole classified objects by SplitCAM in layer 26 compared to LayerCAM in the same layer.
+SplitGrad in layer 0 detects too many edges of the original image to be a useful explanation of the model's decision. Especially in images with many image details in the background, \eg the rubble in the wood rabbit image, it fails to focus on the important image parts. 
+This aligns with the observed performance peaks of SplitGrad and SplitCAM in deeper layers, presented in \cref{fig:layer_dependence} in the layer ablation studies.
+
+\input{appendix/figures/vgg_saliency_comparison}
+
+\newpage
+
+\subsection{Quantitative Analysis on VGG16} \label{app:vgg_split}
+
+\Cref{tab:xai_eval_comprehensive_vgg} presents detailed quantitative metrics analysis across all split configurations, baselines, and classical methods for VGG16. 
+We observe a slight boost in performance between SplitCAM with $\alpha = 0.4$ compared to $\alpha = 0.5$ and compared to the classical LayerCAM respectively, indicating that the LayerCAM formulas indeed yield more powerful explanations on the split-pair compared to the original model. This can be seen even more drastically in ablation studies \cref{app:ablation}.
+
+\input{appendix/table_appendix_generated_vgg_full_eval_sorted}
+
+\subsection{Quantitative Analysis on ResNet18} \label{app:resnet_split}
+
+\Cref{tab:xai_eval_comprehensive_res} presents detailed quantitative metrics across all split configurations, baselines, and classical methods for ResNet18.
+
+\input{appendix/table_appendix_generated_res_full_eval_sorted}
+
+\subsection{Randomization Sanity Check} \label{app:sanity}
+
+In this subsection, we apply the model randomization sanity check introduced by \citetapp{AppAdebayo2018}. 
+The test evaluates whether a saliency method truly depends on the model’s learned parameters 
+or whether it merely reflects input-dependent patterns that remain even when the model is corrupted.
+For each attribution method, we compute saliency maps on the trained VGG16 model and compare them 
+to saliency maps obtained after randomly reinitializing the weights of the last three feed-forward 
+layers using Gaussian noise. A method that is genuinely sensitive to the model's trained parameters should show a substantial
+drop in similarity between the two saliency maps, as proposed by the original paper.
+While \citetapp{AppBinder2023} discuss important shortcomings of top-down randomization-based sanity checks, we apply this test as a complementary diagnostic tool to assess the relative sensitivity of split-based methods to learned model parameters.
+
+We quantify similarity using three metrics:
+\textbf{(i) HOG similarity}, which measures agreement of gradient-orientation structure via the Pearson correlation of the two Histogram of Oriented Gradients; 
+\textbf{(ii) Spearman rank correlation (signed)}, which captures preservation of the pixel-wise 
+ordering and direction of attributions; and 
+\textbf{(iii) SSIM}, the Structural Similarity Index, assessing perceptual similarity based on 
+luminance, contrast, and structural information. 
+Lower similarity values indicate stronger dependence on learned model parameters.
+
+\input{appendix/randomization_sanity_check_table}
+
+\paragraph{Analysis}
+The results in \cref{tab:randomization_sanity_check} highlight that the backward-pass
+stabilization used in SplitCAM and SplitGrad effectively mitigates the gradient
+explosion issues caused by the non-negative split-stream weights. 
+In contrast, SplitLRP remains fairly insensitive to model randomization: across HOG and Spearman similarity metrics it shows values close to one (HOG~$\approx 0.99$,
+Spearman~$\approx 1.00$). The change of attribution maps when the final VGG16 layers are reinitialized is only measured by the SSIM metric (SSIM~$\approx 0.45$--$0.56$).
+By contrast, our SplitCAM and SplitGrad variants show substantially lower similarities than all of the considered baselines, 
+particularly in Spearman and SSIM, demonstrating their exceptionally strong dependence on the learned weights and the model's actual decision process.
+
+We attribute the insensitivity of SplitLRP to the last three VGG16 layer weights to the gradient explosion inherent to the split-stream due to its non-negative weight matrices. 
+Since we apply the $\epsilon$-LRP rule, which is closely related to the vanilla LRP rule and effectively reduces to a scaled version of $\text{Input}\times\text{Gradient}$ on the split-stream, the resulting SplitLRP attributions suffer from a diminishing-gradient effect. 
+This makes changes in the final-layer weights largely insignificant for the propagated relevance. Consequently, the deeper the considered split layer, the more stable the SplitLRP maps become under randomization. Indeed, the layer-26 SplitLRP configuration performs `best' (i.e., shows the lowest similarity to the original maps) across all three metrics and SplitLRP configurations, confirming its stronger sensitivity to the learned parameters compared to early-layer SplitLRP attribution maps. Here, the scaling in the backward pass of SplitGrad and SplitCAM described and analyzed in \cref{app:closed_formulas} proves powerful.
+
+\subsection{Computational Efficiency Analysis} \label{app:timing}
+
+To assess the computational overhead of our split-based methods, we measure mean computation times across the custom 50 image validation subset of ImageNet-S for both ResNet18 and VGG16 architectures.
+The model splitting operation itself is performed once per model. However, we averaged the running time over 20 split procedures for each of the models. It requires only 0.033 seconds for ResNet18 and 0.030 seconds for VGG16, representing negligible overhead.
+\Cref{tab:timing_comparison} presents the mean saliency computation times, revealing that SplitCAM and SplitGrad achieve competitive performance (0.33--0.44 seconds per image) compared to classical CAM-based methods, while being significantly faster than perturbation-based approaches such as Feature Ablation and Occlusion.
+Notably, the shifting parameter $\alpha$ used in SplitCAM and SplitGrad does not affect runtime, as it only modifies the forward pass computations without introducing additional computational complexity. For comparability in this test we compute the attribution maps with respect to the first model layer for all methods.
+
+We note that we manually implemented the split-pair forward and backward passes in PyTorch without using its hooking system. 
+Further, we build the split-pair as an independent module and duplicate all weight matrices when splitting into their positive and negative part. 
+As a result, our current implementation is not fully optimized; both running time and memory efficiency can be improved substantially. In principle, the split stream can operate directly on the original model weights, making weight duplication unnecessary. Moreover, the forward and backward computations for each layer can be parallelized, so the overall overhead relative to the standard forward and backward pass of the model is expected to be modest.
+
+\input{appendix/table_timing_comparison}

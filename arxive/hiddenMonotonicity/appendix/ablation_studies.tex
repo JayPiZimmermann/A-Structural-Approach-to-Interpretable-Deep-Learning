@@ -1,0 +1,75 @@
+\section{Ablation Studies}
+\label{app:ablation}
+
+In this appendix, we present ablation studies examining the effect of the proposed stabilization techniques for the forward and backward pass, as well as the influence of the selected max-pooling implementation, see \cref{subsec:other_components}.
+
+\subsection{Backward Pass Stabilization Ablation}
+
+\input{appendix/table_ppendix_alpha_combined.tex}
+
+In this subsection, we present the full ablation study referenced in \cref{subsec:ablation}. 
+\Cref{tab:alpha_comparison_by_method} reports the $\alpha$--ablation results for SplitCAM 
+and SplitGrad across selected configurations.
+
+Overall, we observe that performance generally improves as $\alpha$ decreases below $0.5$, 
+while all metrics---except Maximum Sensitivity---exhibit a sharp performance drop at 
+$\alpha = 0.0$. This highlights that the stabilization mechanism in the backward pass plays 
+a crucial role in the effectiveness of both methods. While the improvements in the 
+Pixel~Flipping metric are modest, the gains observed in the two localization metrics and 
+the robustness metric are substantial.
+
+The table further provides pairwise comparisons between configurations using max-pooling 
+in convex mode versus the ``winner-takes-it-all'' mode, see \cref{subsec:other_components}. For $\alpha$ values close to $0.5$, 
+the differences across the SplitCAM and SplitGrad variants are minimal, indicating that the 
+impact of max-pooling on SplitCAM's forward pass is minor in this regime. We emphasize that, 
+since split-pair gradients coincide with the scaled version of the original gradients for $\alpha = 0.5$, the choice 
+of max-pooling operation has no influence on the gradients in this case. The impact 
+becomes most apparent for $\alpha \in \{0.30, 0.35\}$, where the ``winner-takes-it-all'' mode 
+shows mostly stronger performance than the monotone mode across all methods and metrics.
+
+\subsection{Forward Pass Stabilization Ablation}
+
+In this subsection we want to investigate the influence of the forward stabilization procedure on SplitLRP's performance of layer configurations selected by the evaluation framework \cref{subsec:eval_framework} as well as performance of SplitCAM on manually selected layer configurations.
+As a baseline, we introduce a shifting mode that effectively shifts the activations of positive neurons to half of the respective original activation and the activations of negative neurons to the negative half of it.
+We also tested a SplitCAM variant with a forward pass without stabilization, where we observe an activation explosion in late VGG16 layers in the order of $10^{18}$ resulting in numerical errors in the order of $10^9$ despite trying to correct the activations in every layer such that their difference equals the original activation.
+For SplitLRP, the absence of the forward stabilization produced nearly entirely white saliency maps with only small, random, and semantically meaningless artifacts. Since these results were clearly unusable, we did not compute quantitative metrics for this setting.
+
+\subsubsection{SplitCAM}
+
+\Cref{tab:alpha_comparison_none} summarizes the performance of all SplitCAM configurations---corresponding to those in \cref{tab:alpha_comparison_shift}---\emph{without} forward-pass stabilization.
+\Cref{tab:alpha_comparison_shift} presents the results \emph{with} the shifting-based stabilization procedure.
+
+\subsubsection{SplitLRP}
+
+\Cref{tab:lrp_scale_shift_comparison} directly compares SplitLRP using shifting versus scaling stabilization in the forward pass.
+For both layer-7 configurations, replacing scaling with shifting leads to substantial performance drops across all metrics.
+For the later-layer configurations, the picture is mixed: while shifting yields slightly higher Attribution Localization scores, the scaling variants achieve markedly better Pointing Game performance and significantly improved robustness (Maximum Sensitivity).
+
+These findings highlight the clear advantage of using scaled split-pair activations -- and not the original activations -- for LRP within the DC-decomposition framework.
+
+\input{appendix/table_lrp_scale_shift_comparison}
+\input{appendix/table_alpha_none}
+\input{appendix/table_alpha_shift}
+
+\subsection{Layer Dependence Analysis}
+
+Figure~\ref{fig:layer_dependence} shows the layer dependence of different attribution methods.
+Each method is normalized independently to visualize the relative performance across different layers. Unlike the ablations of the previous section, here we only evaluated across the custom validation subset of ImageNet-S.
+
+Overall, the plots reveal a strong layer dependence of all considered methods and metrics.
+Surprisingly, the $\gamma$-LRP does not show the strongest performance in the first layer.
+There are clear patterns for each of the metrics, valid across different methods.
+Pixel Flipping performs exceptionally well in layer 14 across almost all methods, except SplitCAM and SplitGrad with $\alpha=0.3$.
+Maximum sensitivity performs best in later layers, while exploding in the last layers for LRP and SplitGrad with $\alpha=0.3$.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.5\textwidth]{figures/layer_dependence_all.pdf}
+\caption{Layer dependence for different attribution methods. Each method is normalized independently to show relative performance across layers.}
+\label{fig:layer_dependence}
+\end{figure}
+
+Figure~\ref{fig:layer_dependence} resembles a characteristic fingerprint of a trained classification model.
+It reveals which layers localize most accurately, which exhibit the highest robustness to small input perturbations, and which activation or gradient pathways most strongly influence the Pixel Flipping behavior.
+These layer-wise patterns may provide insights into how evidence is processed throughout the network and could potentially guide future diagnostics or architectural analysis.
+However, a deeper investigation of these research questions lies beyond the scope of this work.

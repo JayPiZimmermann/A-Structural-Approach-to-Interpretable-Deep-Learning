@@ -1,0 +1,104 @@
+%------------------------------
+% Master Thesis
+% Jakob Zimmermann
+% Technische Universität Berlin
+%------------------------------
+\PassOptionsToPackage{hyphens}{url}
+%------------------------------
+% SPECIFY METADATA FOR PDF
+%------------------------------
+\begin{filecontents*}[overwrite]{\jobname.xmpdata}
+ \Title{\mytitle}
+ \Author{\autor}
+ \Keywords{\englishkeywords; \germankeywords}
+ \Subject{\mydocumenttype}
+ \Language{English; German}
+ \Copyright{CC BY 4.0}
+ \CopyrightURL{https://creativecommons.org/licenses/by/4.0/}
+ \pdfxEnableCommands{\def\utext#1{#1,}}
+\end{filecontents*}
+%------------------------------
+% LOAD DOCUMENTCLASS
+%------------------------------
+\documentclass[
+	appendixprefix=true,
+	BCOR=5mm,
+	bibliography=totoc,
+    DIV=17,
+    draft=false,
+    fontsize=11pt,
+    headinclude=true,
+    headings=optiontohead,
+    listof=chaptergapsmall,
+    listof=totoc,
+    numbers=noenddot,
+    open=any,
+    paper=a4,
+    parskip=half-,
+    twoside,
+]{scrreprt}
+%------------------------------
+% PREAMBLE
+%------------------------------
+\input{preamble/packages}
+\input{preamble/meta}
+\input{preamble/commands}
+\input{preamble/paper_v2}
+\input{preamble/lean_links}
+\input{preamble/nomenclature}
+\input{preamble/abbreviations_def}
+\input{preamble/code_languages}
+\addbibresource{bibliography/references.bib}
+\KOMAoptions{DIV=last}
+%------------------------------
+% BEGIN DOCUMENT
+%------------------------------
+\begin{document}
+%------------------------------
+% COVER
+%------------------------------
+\begin{spacing}{1}
+	\pagenumbering{gobble}
+	\pagestyle{empty}
+	\input{frontmatter/cover}
+	\cleardoublepage
+	\input{frontmatter/declaration}
+	\cleardoublepage
+\end{spacing}
+%------------------------------
+% PREMATTER
+%------------------------------
+\input{frontmatter/acknowledgements}
+\cleardoublepage
+\input{frontmatter/abstract}
+\cleardoublepage
+%------------------------------
+% LISTS
+%------------------------------
+\begin{spacing}{1}
+	\tableofcontents
+	\cleardoublepage
+	\pagestyle{scrheadings}
+	\pagenumbering{roman}
+	\listoffigures
+	\listoftables
+	\include{frontmatter/nomenclature_list}
+	\printnomenclature
+	\cleardoublepage
+	\input{frontmatter/abbreviations_list}
+	\cleardoublepage
+\end{spacing}
+%------------------------------
+% MAIN CONTENT
+%------------------------------
+\pagenumbering{arabic}
+\input{chapters/00_text}
+\cleardoublepage
+%------------------------------
+% REFERENCES
+%------------------------------
+\printbibliography[category=inbib,resetnumbers]
+%------------------------------
+% END DOCUMENT
+%------------------------------
+\end{document}

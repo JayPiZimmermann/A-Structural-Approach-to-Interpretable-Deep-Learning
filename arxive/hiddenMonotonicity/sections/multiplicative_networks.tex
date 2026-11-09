@@ -1,0 +1,15 @@
+\subsection{Multiplicative Networks} \label{subsec:polynomial_ops}
+
+In this section we lay the theoretical foundation to split neural networks that contain non-additive network components as Gating, SE-Blocks or attention modules.
+For these components we need to split the stream through matrix multiplication layers and Hadamard product layers.
+Moreover, we need to approximate smooth functions (as Softmax and the Sigmoid function) by CPWL functions.
+
+We prove a general Theorem in \cref{app:splitting_multiplicative_maxout_networks}, where we define the framework of so-called rank-$k$ Maxout Multiplication networks.
+However, we want to state the Theorem here translated to a more application-focused language restricted to ReLU networks.
+Recall that a posynomial is a polynomial with positive coefficients.
+Here monotonicity is with respect to the non-negative split input variables. Non-negative multiplication preserves this monotonicity but does not preserve ordinary convexity.
+
+\begin{theorem} \label{thm:main_simplified}
+    Any (residual) ReLU network $N$ containing linear, convolutional, maximum, matrix product and Hadamard product components can be split into two rank-$2$ monotone Maxout networks $N^+$ and $N^-$, that each calculate the maximum of a finite set of posynomials in the non-negative split input variables ($N = N^+ - N^-$).
+    This construction gives an exact difference representation but does not generally give convex streams. For example, the positive monomial $xy$ is not convex on the positive orthant: it takes value $4$ at the midpoint of $(1,3)$ and $(3,1)$, whereas its value at both endpoints is $3$.
+\end{theorem}

@@ -1,0 +1,43 @@
+% Source: hiddenMonotonicity (Paper 1), appendix/randomization_sanity_check_table.tex — numbers verbatim.
+\begin{table}[htbp]
+\centering
+\caption{Randomization sanity check for the split methods on VGG-16: mean similarity between attribution maps of the trained model and of a copy whose last three feed-forward layers are randomly reinitialized, across the custom test subset of ImageNet-S. Lower similarity indicates stronger dependence on the learned parameters. Abbreviations as in Table~\ref{tab:eval_vgg_main}.}
+\label{tab:randomization_sanity_check}
+\begin{tabular}{l c c c}
+\toprule
+Method & HOG $\downarrow$ & Spearman $\downarrow$ & SSIM $\downarrow$ \\
+\midrule
+\multicolumn{4}{l}{\textbf{Baselines}} \\
+Deconvolution & 0.985 & 0.999 & 0.481 \\
+DeepLift & 0.365 & 0.274 & 0.716 \\
+GradientShap & 0.286 & 0.081 & 0.571 \\
+Input $\times$ Gradient & 0.313 & 0.082 & 0.621 \\
+Integrated Gradients & 0.303 & 0.102 & 0.584 \\
+LayerCAM (layer 14) & 0.688 & 0.123 & 0.417 \\
+LayerCAM (layer 2) & 0.542 & 0.114 & 0.475 \\
+Saliency & 0.188 & 0.416 & 0.353 \\
+\midrule
+\multicolumn{4}{l}{\textbf{SplitCAM}} \\
+SplitCAM (sc, $\alpha \ 0.4$) (12, g) & 0.736 & 0.729 & 0.202 \\
+SplitCAM (sc, $\alpha \ 0.4$) (14, g) & 0.724 & 0.194 & 0.174 \\
+SplitCAM (sc, $\alpha \ 0.4$, wta) (14, g) & 0.724 & 0.389 & 0.303 \\
+SplitCAM (sc, $\alpha \ 0.4$, wta) (26, +, g) abs & 0.728 & 0.342 & 0.319 \\
+SplitCAM (sc, $\alpha \ 0.5$, wta) (14, g) & 0.728 & 0.096 & 0.292 \\
+SplitCAM (sc, $\alpha \ 0.5$, wta) (26, +, g) & 0.804 & 0.186 & 0.148 \\
+\midrule
+\multicolumn{4}{l}{\textbf{SplitGrad}} \\
+SplitGrad ($\alpha \ 0.4$) (12, +, g) & 0.677 & 0.711 & 0.174 \\
+SplitGrad ($\alpha \ 0.4$) (14, +, g) abs & 0.704 & 0.197 & 0.091 \\
+SplitGrad ($\alpha \ 0.4$, wta) (12, +, g) & 0.706 & 0.454 & 0.174 \\
+SplitGrad ($\alpha \ 0.4$, wta) (14, +, g) abs & 0.721 & 0.211 & 0.199 \\
+SplitGrad ($\alpha \ 0.5$, wta) (12, +, g) abs & 0.725 & 0.238 & 0.206 \\
+SplitGrad ($\alpha \ 0.5$, wta) (26, +, g) abs & 0.795 & 0.149 & 0.306 \\
+\midrule
+\multicolumn{4}{l}{\textbf{SplitLRP}} \\
+SplitLRP (7, pos) & 0.997 & 1.000 & 0.471 \\
+SplitLRP (19, pos) & 0.998 & 1.000 & 0.562 \\
+SplitLRP (wta) (7, pos) & 0.998 & 1.000 & 0.456 \\
+SplitLRP (wta) (26, pos) abs & 0.994 & 0.999 & 0.446 \\
+\bottomrule
+\end{tabular}
+\end{table}
