@@ -1,0 +1,100 @@
+{
+  "targets": [
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.weighted_path_identity",
+      "expected_type": "∀ {S : Type} [Fintype S] (n : ℕ) (K : ℕ → S → S → ℝ)\n(h : ℕ → S → ℝ) (hK : ∀ i s t, 0 ≤ K i s t)\n(hh : ∀ i s, 0 ≤ h i s)\n(hrec : ∀ i < n, ∀ s, h i s = ∑ t, K i s t * h (i+1) t)\n(s : S) (path : Paths S n),\npathLaw n (kernel K h) s path * h 0 s =\npathLaw n K s path * h n (endpoint n s path)",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-weighted_path_identity",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Denominator-free finite-horizon Doob telescoping for nonnegative kernels and potentials satisfying the actual recurrence. No initial or intermediate strict positivity assumption; zero initial potential is included."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.path_zero_at_zero_potential",
+      "expected_type": "∀ {S : Type} (n : ℕ) (K : ℕ → S → S → ℝ)\n(h : ℕ → S → ℝ) (hh : ∀ i s, 0 ≤ h i s)\n(s : S) (hs : 0 < h 0 s) (path : Paths S n) (i : ℕ) (hi : i ≤ n)\n(hz : h i (stateAt n s path i) = 0),\npathLaw n (kernel K h) s path = 0",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-path_zero_at_zero_potential",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Actual full path state-at-index pruning: a zero-potential state visited anywhere on a path forces exactly zero conditioned path mass. Only the initial potential is assumed positive; no Fintype, recurrence or kernel-sign premise is required for this support fact."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.survival_recurrence",
+      "expected_type": "∀ {S : Type} [Fintype S] (N : ℕ) (K : ℕ → S → S → ℝ)\n(i : ℕ) (hi : i < N) (s : S),\nsurvival N K i s = ∑ t, K i s t * survival N K (i+1) t",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-survival_recurrence",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "The survival potential is defined by the original backwardDP with terminal payoff one; its finite-horizon recurrence is derived, not assumed."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.survival_eq_path_mass",
+      "expected_type": "∀ {S : Type} [Fintype S] (N : ℕ) (K : ℕ → S → S → ℝ) (s : S),\nsurvival N K 0 s = ∑ path : Paths S N, pathLaw N K s path",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-survival_eq_path_mass",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Exact identification of the backward survival value with total mass of the original full surviving path sublaw."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.survival_zero_path",
+      "expected_type": "∀ {S : Type} [Fintype S] (N : ℕ) (K : ℕ → S → S → ℝ)\n(hK : ∀ i s t, 0 ≤ K i s t) (s : S) (hs : survival N K 0 s = 0)\n(path : Paths S N), pathLaw N K s path = 0",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-survival_zero_path",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Zero initial survival implies every original full surviving trajectory has zero mass; no conditional probability at an impossible event is asserted."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.conditioned_survival",
+      "expected_type": "∀ {S : Type} [Fintype S] (N : ℕ) (K : ℕ → S → S → ℝ)\n(hK : ∀ i s t, 0 ≤ K i s t) (hrow : ∀ i s, ∑ t, K i s t ≤ 1)\n(s : S) (hs : 0 < survival N K 0 s),\n(∀ i t, 0 ≤ survival N K i t ∧ survival N K i t ≤ 1) ∧\n(∀ t, survival N K N t = 1) ∧\n(∀ i < N, ∀ u, survival N K i u = ∑ t, K i u t * survival N K (i+1) t) ∧\n(survival N K 0 s = ∑ path : Paths S N, pathLaw N K s path) ∧\n(∀ i < N, ∀ u, (∑ t, kernel K (survival N K) i u t) =\nif 0 < survival N K i u then 1 else 0) ∧\n(∀ i u t, survival N K (i+1) t = 0 → kernel K (survival N K) i u t = 0) ∧\n(∀ path : Paths S N, pathLaw N (kernel K (survival N K)) s path =\npathLaw N K s path / survival N K 0 s) ∧\n((∑ path : Paths S N, pathLaw N (kernel K (survival N K)) s path) = 1) ∧\n(∀ (path : Paths S N) (i : ℕ), i ≤ N →\nsurvival N K i (stateAt N s path i) = 0 →\npathLaw N (kernel K (survival N K)) s path = 0)",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-conditioned_survival",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Combined actual substochastic finite-kernel survival theorem: computed [0,1] potentials, terminal condition and recurrence, full path-mass identity, stochastic positive-potential rows and zero dead rows, zero-target support, exact normalized conditioned full path law, and explicit pruning of every path that visits a zero-potential state. Only initial survival must be positive. Does not by itself claim the marginal or Hellinger clauses of the wider source theorem."
+    }
+  ]
+}

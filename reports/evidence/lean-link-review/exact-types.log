@@ -1,0 +1,187 @@
+@HiddenMonotonicity.shiftPair : {n : ℕ} → ℝ → HiddenMonotonicity.Sensitivity n → HiddenMonotonicity.Sensitivity n
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.unified : {n : ℕ} → HiddenMonotonicity.Sensitivity n → HiddenMonotonicity.Row n
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.shiftPair_sum : ∀ {n : ℕ} (α : ℝ) (s : HiddenMonotonicity.Sensitivity n),
+  (HiddenMonotonicity.shiftPair α s).1 + (HiddenMonotonicity.shiftPair α s).2 = (1 - 2 * α) • (s.1 + s.2)
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.unified_shift : ∀ {n : ℕ} (α : ℝ) (s : HiddenMonotonicity.Sensitivity n),
+  HiddenMonotonicity.unified (HiddenMonotonicity.shiftPair α s) = HiddenMonotonicity.unified s
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.MaskedTrace.pull_unified : ∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (gate : Fin k → Bool)
+  (s : HiddenMonotonicity.Sensitivity k),
+  HiddenMonotonicity.unified (HiddenMonotonicity.MaskedTrace.pull wp wn gate s) =
+    HiddenMonotonicity.unified s ∘SL HiddenMonotonicity.MaskedTrace.signedMap wp wn gate -
+      (1 / 2) • (s.1 + s.2) ∘SL HiddenMonotonicity.MaskedTrace.deadMap wp wn gate
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.MaskedTrace.run_bulk : ∀ {n m : ℕ} (tr : HiddenMonotonicity.MaskedTrace n m) (α : ℕ → ℝ)
+  (seed : HiddenMonotonicity.Sensitivity m),
+  (tr.run α seed).1 + (tr.run α seed).2 = tr.bulkCoefficient α • (seed.1 + seed.2) ∘SL tr.absMap
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.MaskedTrace.bulkCoefficient_product : ∀ {n m : ℕ} (tr : HiddenMonotonicity.MaskedTrace n m)
+  (α : ℕ → ℝ), tr.bulkCoefficient α = ∏ i ∈ Finset.range (tr.depth + 1), (1 - 2 * α i)
+'_ThesisExactChecks.target_6' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.affineChunk : {n k : ℕ} →
+  Matrix (Fin k) (Fin n) ℝ →
+    Matrix (Fin k) (Fin n) ℝ →
+      HiddenMonotonicity.Vec k → HiddenMonotonicity.Vec k → HiddenMonotonicity.PairVec n → HiddenMonotonicity.PairVec k
+'_ThesisExactChecks.target_7' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.preactivation_difference : ∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ)
+  (bp bn : HiddenMonotonicity.Vec k) (x : HiddenMonotonicity.PairVec n),
+  (HiddenMonotonicity.preP wp wn) x + bp - ((HiddenMonotonicity.preN wp wn) x + bn) =
+    HiddenMonotonicity.affineLayer wp wn bp bn (x.1 - x.2)
+'_ThesisExactChecks.target_8' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.mixPair : ℝ → ℝ × ℝ → ℝ × ℝ
+'_ThesisExactChecks.target_9' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.max_sub : ∀ (p n : ℝ), max p n - n = HiddenMonotonicity.relu (p - n)
+'_ThesisExactChecks.target_10' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.layerFun : {n k : ℕ} →
+  Matrix (Fin k) (Fin n) ℝ →
+    Matrix (Fin k) (Fin n) ℝ →
+      HiddenMonotonicity.Vec k → HiddenMonotonicity.Vec k → HiddenMonotonicity.PairVec n → HiddenMonotonicity.PairVec k
+'_ThesisExactChecks.target_11' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.finitePool : {ι : Type u_1} →
+  [Fintype ι] → [Nonempty ι] → [DecidableEq ι] → (ι → ℝ) × (ι → ℝ) → ℝ × ℝ
+'_ThesisExactChecks.target_12' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.multiplicative_split_correct : ∀ (p q r s : ℝ), p * r + q * s - (p * s + q * r) = (p - q) * (r - s)
+'_ThesisExactChecks.target_13' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.StoppingDecomposition.stopPair : ℝ × ℝ → ℝ × ℝ
+'_ThesisExactChecks.target_14' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.StoppingDecomposition.stopLayer : {n k : ℕ} →
+  Matrix (Fin k) (Fin n) ℝ →
+    Matrix (Fin k) (Fin n) ℝ →
+      HiddenMonotonicity.Vec k → HiddenMonotonicity.Vec k → HiddenMonotonicity.PairVec n → HiddenMonotonicity.PairVec k
+'_ThesisExactChecks.target_15' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.GeneralRegularization.pairWith : Thesis.GeneralRegularization.Regularizer → (ℝ → ℝ) → ℝ × ℝ → ℝ × ℝ
+'_ThesisExactChecks.target_16' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.GeneralRegularization.entropyRegularizer : (θ : ℝ) → 0 < θ → Thesis.GeneralRegularization.Regularizer
+'_ThesisExactChecks.target_17' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.GeneralRegularization.hardGate_optimal : ∀ (z : ℝ),
+  Thesis.GeneralRegularization.hardGate z ∈ Set.Icc 0 1 ∧
+    IsMaxOn (Thesis.GeneralRegularization.objective Thesis.GeneralRegularization.zeroRegularizer z) (Set.Icc 0 1)
+      (Thesis.GeneralRegularization.hardGate z)
+'_ThesisExactChecks.target_18' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.Regularization.softSplit : ℝ → ℝ → ℝ → ℝ × ℝ
+'_ThesisExactChecks.target_19' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/lean-link-review/ExactTypes.lean:548:57: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+Thesis.Regularization.entropy_gate_value : ∀ (θ z : ℝ),
+  0 < θ →
+    Thesis.Regularization.gate θ z * z + θ * Real.binEntropy (Thesis.Regularization.gate θ z) =
+      Thesis.Regularization.softplus θ z
+'_ThesisExactChecks.target_20' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/lean-link-review/ExactTypes.lean:575:86: warning: Variable name `hu` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hu
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.ReferencePolicy.reference_log_policy : ∀ {A : Type u_1} [inst : Fintype A] (ρ u : A → ℝ),
+  (∀ (i : A), 0 < u i) →
+    (Thesis.ReferencePolicy.referencePolicy 1 ρ fun i => Real.log (u i)) = fun i => ρ i * u i / ∑ j, ρ j * u j
+'_ThesisExactChecks.target_21' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/lean-link-review/ExactTypes.lean:602:107: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/lean-link-review/ExactTypes.lean:602:118: warning: Variable name `hρ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hρ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.ReferencePolicy.reference_policy_value : ∀ {A : Type u_1} [inst : Fintype A] [Nonempty A] (θ : ℝ) (ρ q : A → ℝ),
+  0 < θ →
+    (∀ (i : A), 0 < ρ i) →
+      ∑ i, Thesis.ReferencePolicy.referencePolicy θ ρ q i * q i -
+          θ * Thesis.ReferencePolicy.kl (Thesis.ReferencePolicy.referencePolicy θ ρ q) ρ =
+        Thesis.ReferencePolicy.referenceValue θ ρ q
+'_ThesisExactChecks.target_22' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.Games.pixelDisagreement_formula : ∀ {X : Type u_1} {Y : Type u_2} [inst : Fintype X] [Fintype Y]
+  [inst_2 : DecidableEq Y] (p q : X → ℝ) (terminal : X → Y) (y : Y),
+  Thesis.Games.pixelDisagreement p q terminal y =
+    ((∑ x, if terminal x = y then p x else 0) + ∑ x, if terminal x = y then q x else 0) / 2 -
+      ∑ x, if terminal x = y then √(p x * q x) else 0
+'_ThesisExactChecks.target_23' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/lean-link-review/ExactTypes.lean:656:146: warning: Variable name `hp1` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp1
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/lean-link-review/ExactTypes.lean:656:164: warning: Variable name `hq1` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hq1
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.Games.pixelDisagreement_total : ∀ {X : Type u_1} {Y : Type u_2} [inst : Fintype X] [inst_1 : Fintype Y]
+  [inst_2 : DecidableEq Y] (p q : X → ℝ) (terminal : X → Y),
+  ∑ x, p x = 1 → ∑ x, q x = 1 → ∑ y, Thesis.Games.pixelDisagreement p q terminal y = 1 - Thesis.Games.overlap p q
+'_ThesisExactChecks.target_24' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/lean-link-review/ExactTypes.lean:683:86: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/lean-link-review/ExactTypes.lean:683:103: warning: Variable name `hq` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hq
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/lean-link-review/ExactTypes.lean:683:120: warning: Variable name `hp1` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp1
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/lean-link-review/ExactTypes.lean:683:138: warning: Variable name `hq1` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hq1
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.Games.overlap_le_one : ∀ {S : Type u_1} [inst : Fintype S] (p q : S → ℝ),
+  (∀ (s : S), 0 ≤ p s) → (∀ (s : S), 0 ≤ q s) → ∑ s, p s = 1 → ∑ s, q s = 1 → Thesis.Games.overlap p q ≤ 1
+'_ThesisExactChecks.target_25' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.Games.overlap_nonneg : ∀ {S : Type u_1} [inst : Fintype S] (p q : S → ℝ), 0 ≤ Thesis.Games.overlap p q
+'_ThesisExactChecks.target_26' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingSupport.sourceLayer : {n k : ℕ} →
+  Matrix (Fin k) (Fin n) ℝ →
+    Matrix (Fin k) (Fin n) ℝ →
+      HiddenMonotonicity.Vec k →
+        HiddenMonotonicity.Vec k → ℝ → ℝ → ℝ → HiddenMonotonicity.Vec n → Matrix (Fin k) (Fin n) ℝ
+'_ThesisExactChecks.target_27' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.RoutingSupport.sourceLRP : {n m : ℕ} →
+  ℝ →
+    ℝ →
+      ℝ →
+        HiddenMonotonicity.Network n m → HiddenMonotonicity.Vec n → HiddenMonotonicity.Vec m → HiddenMonotonicity.Vec n
+'_ThesisExactChecks.target_28' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.Games.pathLaw : {S : Type} → (n : ℕ) → (ℕ → S → S → ℝ) → S → Thesis.Games.Paths S n → ℝ
+'_ThesisExactChecks.target_29' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.Games.backwardDP : {S : Type} → [Fintype S] → ℕ → (ℕ → S → S → ℝ) → (S → ℝ) → S → ℝ
+'_ThesisExactChecks.target_30' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.Games.overlap : {S : Type u_1} → [Fintype S] → (S → ℝ) → (S → ℝ) → ℝ
+'_ThesisExactChecks.target_31' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.Tropical.Polynomial.eval : {I : Type} → [Fintype I] → Thesis.Tropical.Polynomial I → (I → ℝ) → ℝ
+'_ThesisExactChecks.target_32' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.Tropical.Polynomial.newton : {I : Type} → Thesis.Tropical.Polynomial I → Set (I → ℝ)
+'_ThesisExactChecks.target_33' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.Tropical.support : {I : Type} → [Fintype I] → Set (I → ℝ) → (I → ℝ) → ℝ
+'_ThesisExactChecks.target_34' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.StoppingDAG.pathProbability : {d n : ℕ} →
+  (c : HiddenMonotonicity.Circuit d n) → HiddenMonotonicity.PairVec d → Fin n → Thesis.StoppingDAG.DAGPaths c → ℝ
+'_ThesisExactChecks.target_35' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.StoppingDAG.fullOccupation : {d n : ℕ} →
+  HiddenMonotonicity.Circuit d n → HiddenMonotonicity.PairVec d → Fin n → Bool → ℕ → Bool → ℝ
+'_ThesisExactChecks.target_36' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 1322 project theorem declarations in the imported environment

@@ -1,0 +1,186 @@
+{
+  "schema_version": 1,
+  "reviewer": "independent adversarial reviewer /root/attack_hidden",
+  "review_date": "2026-11-09",
+  "verdict": "PASS_LOCAL_ATTENTION_REFERENCE_KL_ACTIVE_VALUE_AND_POLICY",
+  "findings": [],
+  "production_mutations": false,
+  "shared_olean_writes": false,
+  "summary": "The independently defined extended log-contribution-minus-reference-KL objective has the literal reference-times-contribution normalized optimizer. Zero support gives genuine bottom values. Uniqueness at positive total is proved over the full finite simplex.",
+  "source": [
+    "arxive/playingTheNetworkBackward/main.tex:2505\u20132563 local Value-routing objective and active-player policy/value proposition"
+  ],
+  "model_correspondence": [
+    {
+      "topic": "Independent objective",
+      "locations": [
+        "formalization/Thesis/AttentionReference.lean:17",
+        "formalization/Thesis/AttentionReference.lean:44"
+      ],
+      "verdict": "faithful",
+      "evidence": "The objective explicitly evaluates sum(p*log contribution)-ReferencePolicy.kl(p,reference), with independent support guards on reference and contribution. The equivalence to mass entropy is proved by weighted log-product algebra, handling zero policy terms before expanding logarithms. Unsupported policies have WithBot bottom, not real log-zero values."
+    },
+    {
+      "topic": "Boundary uniqueness",
+      "locations": [
+        "formalization/Thesis/AttentionReference.lean:68",
+        "formalization/Thesis/AttentionReference.lean:151"
+      ],
+      "verdict": "noncircular",
+      "evidence": "A strict coordinate entropy inequality covers zero policy probabilities and zero mass coordinates. Any difference from normalized mass yields a strict global gap. Unsupported policies cannot attain the finite maximum. No global positive-support assumption is introduced."
+    },
+    {
+      "topic": "Attainment and literal policy",
+      "locations": [
+        "formalization/Thesis/AttentionReference.lean:112",
+        "formalization/Thesis/AttentionReference.lean:130",
+        "formalization/Thesis/AttentionReference.lean:195"
+      ],
+      "verdict": "actual finite-simplex witness",
+      "evidence": "valuePolicy constructs a normalized Policy from actual product masses and positive total. IsGreatest includes attainment and a bound over every policy. The policy formula is literally reference_i*contribution_i divided by the total. Positive total rules out an empty action space without assuming an optimizer."
+    },
+    {
+      "topic": "Zero total",
+      "locations": [
+        "formalization/Thesis/AttentionReference.lean:180"
+      ],
+      "verdict": "correct impossible-stream boundary",
+      "evidence": "Nonnegative factors and zero total force all product masses to zero. Every normalized policy has a positive coordinate and therefore bottom objective. No unique zero-stream optimizer or normalized zero ratio is claimed."
+    }
+  ],
+  "validation": {
+    "contracts": 5,
+    "exact_types": "passed",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "fresh_source_compile_exit": 0,
+    "boundary_exit": 0,
+    "boundary_cases": [
+      "positive policy on zero reference is bottom",
+      "zero-policy impossible action does not spoil supported pure optimum",
+      "zero contribution independently forces bottom",
+      "disjoint supports give all-policy bottom",
+      "boundary optimizer assigns zero to unsupported action",
+      "literal nondegenerate optimizer ratio one seventh",
+      "empty action type admits no Policy"
+    ],
+    "independent_experiment": {
+      "seed": 20261109,
+      "decimal_precision": 60,
+      "absolute_log_tolerance": "1E-48",
+      "counts": {
+        "problems": 144,
+        "positive_total": 112,
+        "zero_total": 32,
+        "policies": 4432,
+        "unsupported": 3066,
+        "supported_nonoptimal": 1192,
+        "boundary_optimizers": 68,
+        "objective_bridges": 4432,
+        "strict_gaps": 1192
+      },
+      "failures": [],
+      "negative_controls": [
+        "dropping separate zero-reference support guard",
+        "treating log zero as finite real zero",
+        "claiming a unique policy when every stream mass vanishes"
+      ],
+      "cases_sha256": "81e13151e901060f2b3903de29c7d2478d692cfda4a5bf45b612610021b0dc9c",
+      "producer_sha256": "e2f54dee53816833ba5823948c8e76eb600dbd9415eb3dc25a7d528e73636fb4",
+      "scope": "Exact support and optimizer ratios with numerical high-precision logarithmic comparisons supplement universal Lean proofs. Only local active-player value optimization is tested."
+    },
+    "exact_driver": "reports/evidence/attention-reference-review/ExactTypes.lean",
+    "boundary_driver": "reports/evidence/attention-reference-review/Boundary.lean"
+  },
+  "scope_limits": [
+    "This is the active-player local Value-routing variational problem. It does not define or prove the inactive-player bottom convention, full attention SPNE, or attention occupation/relevance identities.",
+    "The zero-total theorem gives all-policy bottom value; it does not construct a cemetery absorption policy or assert uniqueness there.",
+    "Reference normalization is unnecessary for the algebraic generalization; the source specializes it to a row-stochastic attention reference. Actual QK/softmax construction and shared reference across feature dimensions remain separate."
+  ],
+  "reviewed_contracts": [
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.objective_eq_sourceValue",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (p : Policy A) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i),\nobjective reference contribution p = sourceValue 1 (mass reference contribution) p",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-objective_eq_sourceValue",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Independent expected log-contribution minus reference KL, with separate impossible-action support guards, equals the extended Gibbs mass objective."
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.valuePolicy_value",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nobjective reference contribution (valuePolicy reference contribution hr hc hz) = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d)",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-valuePolicy_value",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Exact extended-log optimum at the literal reference-weighted mass ratio, allowing zero individual masses."
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.valuePolicy_unique",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (p : Policy A) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nobjective reference contribution p = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2194 p.prob = (valuePolicy reference contribution hr hc hz).prob",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-valuePolicy_unique",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Unique maximizer over every finite simplex policy, including unsupported policies and simplex boundaries."
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.zero_mass_value",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (p : Policy A) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i)\n(hz : (\u2211 i, reference i * contribution i) = 0),\nobjective reference contribution p = \u22a5",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-zero_mass_value",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Every candidate policy has genuine minus-infinity value for a zero-total-contribution stream; no real log-zero replacement."
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.attention_value_routing",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nIsGreatest (Set.range (objective reference contribution)) (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2227\n(\u2200 p : Policy A, objective reference contribution p = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2194 p.prob = (valuePolicy reference contribution hr hc hz).prob) \u2227\n(\u2200 i, (valuePolicy reference contribution hr hc hz).prob i = reference i * contribution i / \u2211 j, reference j * contribution j)",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-attention_value_routing",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Full active-player attention Value-routing optimum, uniqueness and exact policy, with nonnegative reference and Value contributions. Local subgame; global attention SPNE and occupations remain separate."
+    }
+  ],
+  "evidence_directory": "reports/evidence/attention-reference-review"
+}

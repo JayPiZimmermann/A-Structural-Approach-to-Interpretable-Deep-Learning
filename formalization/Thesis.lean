@@ -42,3 +42,6 @@ import Thesis.GeneralRegularization
 import Thesis.StoppingDAGIntermediate
 import Thesis.StoppingOrderedPool
 import Thesis.SoftplusLimits
+import Thesis.SoftplusTransitionPayoff
+import Thesis.ConditionedSurvival
+import Thesis.AttentionReference

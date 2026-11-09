@@ -1,0 +1,69 @@
+../reports/evidence/attention-reference/ExactTypes.lean:10:119: warning: Variable name `hr` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hr
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/attention-reference/ExactTypes.lean:10:147: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.AttentionReference.objective_eq_sourceValue : ∀ {A : Type u_1} [inst : Fintype A]
+  (reference contribution : A → ℝ) (p : Thesis.RoutingExtended.Policy A),
+  (∀ (i : A), 0 ≤ reference i) →
+    (∀ (i : A), 0 ≤ contribution i) →
+      Thesis.AttentionReference.objective reference contribution p =
+        Thesis.RoutingExtended.sourceValue 1 (Thesis.AttentionReference.mass reference contribution) p
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.AttentionReference.valuePolicy_value : ∀ {A : Type u_1} [inst : Fintype A] (reference contribution : A → ℝ)
+  (hr : ∀ (i : A), 0 ≤ reference i) (hc : ∀ (i : A), 0 ≤ contribution i)
+  (hz : 0 < ∑ i, Thesis.AttentionReference.mass reference contribution i),
+  Thesis.AttentionReference.objective reference contribution
+      (Thesis.AttentionReference.valuePolicy reference contribution hr hc hz) =
+    ↑(Real.log (∑ i, reference i * contribution i))
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.AttentionReference.valuePolicy_unique : ∀ {A : Type u_1} [inst : Fintype A] (reference contribution : A → ℝ)
+  (p : Thesis.RoutingExtended.Policy A) (hr : ∀ (i : A), 0 ≤ reference i) (hc : ∀ (i : A), 0 ≤ contribution i)
+  (hz : 0 < ∑ i, Thesis.AttentionReference.mass reference contribution i),
+  Thesis.AttentionReference.objective reference contribution p = ↑(Real.log (∑ i, reference i * contribution i)) ↔
+    p.prob = (Thesis.AttentionReference.valuePolicy reference contribution hr hc hz).prob
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/attention-reference/ExactTypes.lean:91:119: warning: Variable name `hr` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hr
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/attention-reference/ExactTypes.lean:91:147: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/attention-reference/ExactTypes.lean:92:1: warning: Variable name `hz` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hz
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.AttentionReference.zero_mass_value : ∀ {A : Type u_1} [inst : Fintype A] (reference contribution : A → ℝ)
+  (p : Thesis.RoutingExtended.Policy A),
+  (∀ (i : A), 0 ≤ reference i) →
+    (∀ (i : A), 0 ≤ contribution i) →
+      ∑ i, reference i * contribution i = 0 → Thesis.AttentionReference.objective reference contribution p = ⊥
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.AttentionReference.attention_value_routing : ∀ {A : Type u_1} [inst : Fintype A]
+  (reference contribution : A → ℝ) (hr : ∀ (i : A), 0 ≤ reference i) (hc : ∀ (i : A), 0 ≤ contribution i)
+  (hz : 0 < ∑ i, Thesis.AttentionReference.mass reference contribution i),
+  IsGreatest (Set.range (Thesis.AttentionReference.objective reference contribution))
+      ↑(Real.log (∑ i, reference i * contribution i)) ∧
+    (∀ (p : Thesis.RoutingExtended.Policy A),
+        Thesis.AttentionReference.objective reference contribution p = ↑(Real.log (∑ i, reference i * contribution i)) ↔
+          p.prob = (Thesis.AttentionReference.valuePolicy reference contribution hr hc hz).prob) ∧
+      ∀ (i : A),
+        (Thesis.AttentionReference.valuePolicy reference contribution hr hc hz).prob i =
+          reference i * contribution i / ∑ j, reference j * contribution j
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 203 project theorem declarations in the imported environment

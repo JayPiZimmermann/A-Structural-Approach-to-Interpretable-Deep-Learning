@@ -11,24 +11,32 @@
     "scope": "The literal entrywise absolute readout row composed with the literal absolute backbone product; no gate hypothesis."
   },
   "eq:unified_split_gradients": {
-    "declaration": "HiddenMonotonicity.Network.symmetric_head_derivative",
+    "declaration": "HiddenMonotonicity.Network.affine_symmetric_derivative_of_differentiable",
+    "display": "Lean",
+    "scope": "At differentiability points of the actual lifted head; canonical nonnegative split heads satisfy the required monotone row conditions. Biases and ungated signed affine readout are explicit.",
     "equation": true,
-    "display": "Lean"
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "eq:closed_formula_g": {
-    "declaration": "HiddenMonotonicity.Network.stabilized_backward_absolute_Q_closed_form",
+    "declaration": "HiddenMonotonicity.Network.affine_readout_closed_form",
+    "display": "Lean",
+    "scope": "Strict gate cell as stipulated by the source subsection; arbitrary layer shifts and output shift beta; arbitrary signed affine readout. No final affine minimum source.",
     "equation": true,
-    "display": "Lean"
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "eq:closed_formula_h": {
-    "declaration": "HiddenMonotonicity.Network.stabilized_backward_absolute_Q_closed_form",
+    "declaration": "HiddenMonotonicity.Network.affine_readout_closed_form",
+    "display": "Lean",
+    "scope": "Strict gate cell as stipulated by the source subsection; arbitrary layer shifts and output shift beta; arbitrary signed affine readout. No final affine minimum source.",
     "equation": true,
-    "display": "Lean"
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "eq:claim_bulk": {
-    "declaration": "HiddenMonotonicity.MaskedTrace.stabilized_bulk",
+    "declaration": "HiddenMonotonicity.MaskedTrace.run_bulk",
+    "display": "Lean",
+    "scope": "Exact selected backward algebra for arbitrary readout partial seed; put the output-layer alpha in affineReadoutSeed and backbone alphas in run. Does not assert shifted sensitivities are derivatives of unchanged heads.",
     "equation": true,
-    "display": "Lean"
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "eq:delta_plus_recursion": {
     "declaration": "HiddenMonotonicity.actual_positive_pullback",
@@ -47,14 +55,18 @@
     "scope": "The literal entrywise absolute readout row composed with the literal absolute backbone product; no gate hypothesis."
   },
   "eq:backward_invariant": {
-    "declaration": "HiddenMonotonicity.Network.backward_partial_invariants",
+    "declaration": "HiddenMonotonicity.Network.affine_backward_invariants_of_differentiable",
+    "display": "Lean",
+    "scope": "At points where both balanced lifted heads are differentiable; source strict cells satisfy this. Arbitrary shifts including the affine readout; common a.e. version separately certified.",
     "equation": true,
-    "display": "Lean"
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "eq:shift_definition": {
-    "declaration": "HiddenMonotonicity.MaskedTrace.stabilized",
+    "declaration": "HiddenMonotonicity.shiftPair",
+    "display": "Lean",
+    "scope": "Definition link, not a classical derivative assertion for shifted quantities.",
     "equation": true,
-    "display": "Lean"
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "eq:shift_forward": {
     "declaration": "HiddenMonotonicity.Network.shift",
@@ -72,10 +84,673 @@
     "display": "Lean",
     "scope": "Pure activation-state log-space choice; stopping selected whenever continuation ties with bottom, including all nonpositive signed masses."
   },
+  "eq:weight_split": {
+    "declaration": "HiddenMonotonicity.canonical_weight_split",
+    "display": "Lean",
+    "scope": "Scalar canonical sign-part identities apply entrywise to weights and biases.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:cpwl_dc_representation": {
+    "declaration": "Thesis.PiecewiseLinear.cpwl_polynomial_difference",
+    "display": "Lean",
+    "scope": "Genuine finite-cover continuous scalar CPWL function gives two explicit finite max-affine polynomials, with exact difference.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:bellman_evaluation": {
+    "declaration": "Thesis.SourceFoundations.bellman_equations",
+    "display": "Lean",
+    "scope": "The exact policy and optimal Bellman fixed-point conjuncts unfold to the displayed finite discounted MDP equations; normalized finite nonempty action/state types.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:bellman_optimality": {
+    "declaration": "Thesis.SourceFoundations.bellman_equations",
+    "display": "Lean",
+    "scope": "The exact policy and optimal Bellman fixed-point conjuncts unfold to the displayed finite discounted MDP equations; normalized finite nonempty action/state types.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:shapley_bellman": {
+    "declaration": "Thesis.SourceFoundations.shapley_bellman",
+    "display": "Lean",
+    "scope": "Layered finite stochastic game, common nonempty action type. The arbitrary-DAG topological encoding is not in this contract.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:saddle_point": {
+    "declaration": "Thesis.SourceFoundations.shapley_bellman",
+    "display": "Lean",
+    "scope": "Layered finite stochastic game, common nonempty action type. The arbitrary-DAG topological encoding is not in this contract.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:rng_equilibrium_policy": {
+    "declaration": "Thesis.ReLUNetGame.optimalStrategy_subgamePerfect",
+    "display": "Lean",
+    "scope": "Actual layered Network with nonnegative split weights and NonzeroRows; stop at ties by the unfolded gateProbability definition.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:rng_value_identity": {
+    "declaration": "Thesis.SourceFoundations.relu_net_game_value_affine",
+    "display": "Lean",
+    "scope": "Layered Network, actual signed affine output; normalized game requires nonzero row fan-in.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:legendre_fenchel": {
+    "declaration": "Thesis.Regularization.routing_variational",
+    "display": "Lean",
+    "scope": "Actual finite nonempty simplex; positive temperature; optimizer clause uses the accompanying checked reference-policy declarations.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:legendre-fenchel-app": {
+    "declaration": "Thesis.Regularization.routing_variational",
+    "display": "Lean",
+    "scope": "Actual finite nonempty simplex; positive temperature; optimizer clause uses the accompanying checked reference-policy declarations.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:gibbs-lse": {
+    "declaration": "Thesis.Regularization.routing_variational",
+    "display": "Lean",
+    "scope": "Actual finite nonempty simplex; positive temperature; optimizer clause uses the accompanying checked reference-policy declarations.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:newton_calculus": {
+    "declaration": "Thesis.SourceGeometry.newton_calculus",
+    "display": "Lean",
+    "scope": "The exact Newton sum/hull and homogenized support-slice conjuncts are the displayed equations.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:lifted_support": {
+    "declaration": "Thesis.SourceGeometry.newton_calculus",
+    "display": "Lean",
+    "scope": "The exact Newton sum/hull and homogenized support-slice conjuncts are the displayed equations.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:split_preact_recursion": {
+    "declaration": "HiddenMonotonicity.affineChunk",
+    "display": "Lean",
+    "scope": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:split_pos": {
+    "declaration": "HiddenMonotonicity.affineChunk",
+    "display": "Lean",
+    "scope": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:split_neg": {
+    "declaration": "HiddenMonotonicity.affineChunk",
+    "display": "Lean",
+    "scope": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:split-pos": {
+    "declaration": "HiddenMonotonicity.affineChunk",
+    "display": "Lean",
+    "scope": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:split-neg": {
+    "declaration": "HiddenMonotonicity.affineChunk",
+    "display": "Lean",
+    "scope": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:split_act_recursion": {
+    "declaration": "HiddenMonotonicity.layerFun",
+    "display": "Lean",
+    "scope": "Hidden split layer only; the stated ungated terminal operation is affineChunk.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:dc_split_activations": {
+    "declaration": "HiddenMonotonicity.layerFun",
+    "display": "Lean",
+    "scope": "Hidden split layer only; the stated ungated terminal operation is affineChunk.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:split_maxout_gate": {
+    "declaration": "HiddenMonotonicity.layerFun",
+    "display": "Lean",
+    "scope": "Hidden split layer only; the stated ungated terminal operation is affineChunk.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:tropical_rational_split": {
+    "declaration": "Thesis.SourceFoundations.split_tropical_rational_affine",
+    "display": "Lean",
+    "scope": "The exact all-input polynomial-head difference is the original bias-free network followed by its signed affine readout.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:polytope_preact": {
+    "declaration": "Thesis.SourceGeometry.minkowski_propagation_affine_network",
+    "display": "Lean",
+    "scope": "polytopeSplit unfolds to basis-singleton initialization and weighted Minkowski/hull hidden updates; theorem identifies actual polynomial Newton sets and ungated final affine sums.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:polytope_act": {
+    "declaration": "Thesis.SourceGeometry.minkowski_propagation_affine_network",
+    "display": "Lean",
+    "scope": "polytopeSplit unfolds to basis-singleton initialization and weighted Minkowski/hull hidden updates; theorem identifies actual polynomial Newton sets and ungated final affine sums.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:curvature_antiderivatives": {
+    "declaration": "HiddenMonotonicity.SmoothDC.smooth_dc_split",
+    "display": "Lean",
+    "scope": "Differentiable f, locally absolutely continuous derivative and integrable actual curvature; definitions used by the theorem are audited, no generic replacement pair.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:smooth_split_pair": {
+    "declaration": "HiddenMonotonicity.SmoothDC.smooth_dc_split",
+    "display": "Lean",
+    "scope": "Differentiable f, locally absolutely continuous derivative and integrable actual curvature; definitions used by the theorem are audited, no generic replacement pair.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:smooth_splitting_identity": {
+    "declaration": "HiddenMonotonicity.SmoothDC.smooth_dc_split",
+    "display": "Lean",
+    "scope": "Differentiable f, locally absolutely continuous derivative and integrable actual curvature; definitions used by the theorem are audited, no generic replacement pair.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:preactivation_difference": {
+    "declaration": "HiddenMonotonicity.preactivation_difference",
+    "display": "Lean",
+    "scope": "Exact preP/preN bias-inclusive difference equals affineLayer applied to the input-stream difference.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:output_recovery": {
+    "declaration": "HiddenMonotonicity.Network.valid_decomposition_recovery",
+    "display": "Lean",
+    "scope": "Generic hidden scalar/pair activation and varying-width network; actual ungated affine output uses the separately checked affineChunk identity.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:fmix_def": {
+    "declaration": "HiddenMonotonicity.mixPair",
+    "display": "Lean",
+    "scope": "Literal definition equals both displayed eta max/min combinations.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:mixing_recovery": {
+    "declaration": "HiddenMonotonicity.Network.mixing_recovery",
+    "display": "Lean",
+    "scope": "Arbitrary real eta algebraic identity; source eta in [0,1] specializes it. Terminal affine recovery uses affineChunk.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:splitting_identity": {
+    "declaration": "HiddenMonotonicity.max_sub",
+    "display": "Lean",
+    "scope": "max_sub gives max(a,b)-b=relu(a-b); unfolding relu gives max(a-b,0).",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:split_correctness": {
+    "declaration": "HiddenMonotonicity.Network.affine_heads_recovery",
+    "display": "Lean",
+    "scope": "Same actual shared backbone and arbitrary signed ungated affine heads with both biases; instantiate any suffix and scalar output row.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:split_correctness_recall": {
+    "declaration": "HiddenMonotonicity.Network.affine_heads_recovery",
+    "display": "Lean",
+    "scope": "Same actual shared backbone and arbitrary signed ungated affine heads with both biases; instantiate any suffix and scalar output row.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:fstop_def": {
+    "declaration": "Thesis.StoppingDecomposition.stopPair",
+    "display": "Lean",
+    "scope": "Definition uses the common strict-positive difference gate and sets both streams to zero at ties.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:stop-relu": {
+    "declaration": "Thesis.StoppingDecomposition.stopPair",
+    "display": "Lean",
+    "scope": "Definition uses the common strict-positive difference gate and sets both streams to zero at ties.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:stopping_recovery": {
+    "declaration": "Thesis.StoppingDecomposition.thesis_stopping_validity",
+    "display": "Lean",
+    "scope": "Shared layered Network, all raw inputs including ties; final affine identity follows from affineChunk.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:decomp-recovery-stop-mix": {
+    "declaration": "Thesis.StoppingDecomposition.thesis_stopping_validity",
+    "display": "Lean",
+    "scope": "Shared layered Network, all raw inputs including ties; final affine identity follows from affineChunk.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:parity_path_sums": {
+    "declaration": "Thesis.StoppingStructure.stopping_preactivation_parity_paths",
+    "display": "Lean",
+    "scope": "Bias-free display; canonical sign split; zero-weight paths allowed. Source later bias extension is a separate theorem.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:parity-plus": {
+    "declaration": "Thesis.StoppingStructure.stopping_preactivation_parity_paths",
+    "display": "Lean",
+    "scope": "Bias-free display; canonical sign split; zero-weight paths allowed. Source later bias extension is a separate theorem.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:parity-minus": {
+    "declaration": "Thesis.StoppingStructure.stopping_preactivation_parity_paths",
+    "display": "Lean",
+    "scope": "Bias-free display; canonical sign split; zero-weight paths allowed. Source later bias extension is a separate theorem.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:gate_as_argmax": {
+    "declaration": "Thesis.GeneralRegularization.hardGate_optimal",
+    "display": "Lean",
+    "scope": "Unfold objective and zeroRegularizer: the strict-positive indicator belongs to argmax p*z on [0,1]; zero_activation identifies the attained value as ReLU.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:regularized_gate": {
+    "declaration": "Thesis.GeneralRegularization.activation_isGreatest",
+    "display": "Lean",
+    "scope": "Actual optimizer constructed from compactness/lower semicontinuity; gate is chosen from exists_optimizer and activation is objective at that gate.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:freg_def": {
+    "declaration": "Thesis.GeneralRegularization.pairWith",
+    "display": "Lean",
+    "scope": "Definition is the source chosen-policy pair: pi(delta)*positive minus cost, and pi(delta)*negative.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:freg_recovery": {
+    "declaration": "Thesis.GeneralRegularization.regularized_decomposition_validity",
+    "display": "Lean",
+    "scope": "ValidPairActivation conjunct gives exact local recovery, network/readout conjunct propagates it using the same parameters.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:entropy_regularizer": {
+    "declaration": "Thesis.GeneralRegularization.entropyRegularizer",
+    "display": "Lean",
+    "scope": "Definition cost is minus theta times Real.binEntropy; its unfolded zero-log convention matches the closed interval endpoints.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:sigmoid_gate": {
+    "declaration": "Thesis.GeneralRegularization.entropy_activation",
+    "display": "Lean",
+    "scope": "Actual entropy conjugate equals literal softplus; checked sigmoid_optimal supplies the maximizing logistic policy.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:fsoft_def": {
+    "declaration": "Thesis.Regularization.softSplit",
+    "display": "Lean",
+    "scope": "Definition is exactly both displayed softplus-decomposition streams; Real.binEntropy is applied to gate(theta,delta).",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:softplus-decomp": {
+    "declaration": "Thesis.Regularization.softSplit",
+    "display": "Lean",
+    "scope": "Definition is exactly both displayed softplus-decomposition streams; Real.binEntropy is applied to gate(theta,delta).",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:legendre_fenchel_softplus": {
+    "declaration": "Thesis.Regularization.entropy_gate_value",
+    "display": "Lean",
+    "scope": "Exact sigmoid*z plus binary entropy equals theta*log(1+exp(z/theta)).",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:split_layer_jacobians": {
+    "declaration": "HiddenMonotonicity.layer_derivative",
+    "display": "Lean",
+    "scope": "Strict hidden gate comparisons. The separate ungated affine terminal case follows from affine heads; this link certifies the displayed hidden-layer Jacobian.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:delta_int_pos": {
+    "declaration": "HiddenMonotonicity.actual_positive_pullback",
+    "display": "Lean",
+    "scope": "Hidden strict-cell derivative interpretation uses layer_derivative. The algebraic block contraction is unconditional; terminal affine case is a separate linear seed.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:delta_int_neg": {
+    "declaration": "HiddenMonotonicity.actual_negative_pullback",
+    "display": "Lean",
+    "scope": "Hidden strict-cell derivative interpretation uses layer_derivative. The algebraic block contraction is unconditional; terminal affine case is a separate linear seed.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:delta_shift_def": {
+    "declaration": "HiddenMonotonicity.shiftPair",
+    "display": "Lean",
+    "scope": "Definition link, not a classical derivative assertion for shifted quantities.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:shifted_recursion": {
+    "declaration": "HiddenMonotonicity.MaskedTrace.pull_unified",
+    "display": "Lean",
+    "scope": "Actual local implemented backward recurrence; arbitrary gate masks and arbitrary real shifts. Source strict-cell derivative interpretation is separate.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:conv_split": {
+    "declaration": "HiddenMonotonicity.Convolution.splitKernel_properties",
+    "display": "Lean",
+    "scope": "Definition/model link to actual finite channel/spatial/tap convolution, including padding and repeated taps.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:maxpool_split": {
+    "declaration": "HiddenMonotonicity.finitePool",
+    "display": "Lean",
+    "scope": "Exact finite nonempty max/sum definition, with the selected candidate excluding its own negative component.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:maxout_split_identity": {
+    "declaration": "HiddenMonotonicity.maxpool_correct",
+    "display": "Lean",
+    "scope": "Exact nonempty finite max-of-differences identity with all other negative branches in each candidate.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:pair_product_rule": {
+    "declaration": "HiddenMonotonicity.multiplicative_split_correct",
+    "display": "Lean",
+    "scope": "The checked four-real ring identity is exactly the displayed two-factor sign expansion, with equality orientation reversed.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:lrp-ab": {
+    "declaration": "Thesis.RoutingSupport.sourceLRP",
+    "display": "Lean",
+    "scope": "Definition link; arbitrary relevance. Equality to gated path occupation requires the source seed-support premise or ordinary output seeds.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:lrp-eps-recursion": {
+    "declaration": "Thesis.RoutingSupport.sourceLRP",
+    "display": "Lean",
+    "scope": "Definition link; arbitrary relevance. Equality to gated path occupation requires the source seed-support premise or ordinary output seeds.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:lrp-eps-recovery": {
+    "declaration": "Thesis.RoutingSupport.source_alpha_beta_recovery",
+    "display": "Lean",
+    "scope": "Layered Network, canonical raw contributions; supported seeds. Ordinary output/affine output seeds have separate checked wrappers. Epsilon zero uses Lean real zero-division.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:adf-astop-recursion": {
+    "declaration": "Thesis.StoppingDecomposition.stopLayer",
+    "display": "Lean",
+    "scope": "Literal stopping layer definition is the displayed common gate times split affine predecessor sums plus the corresponding bias.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:routing-forward-act": {
+    "declaration": "Thesis.RoutingNetwork.networkLayer_reported",
+    "display": "Lean",
+    "scope": "Exact reported active/inactive extended-log coordinates of the canonical anchor profile equal log of the actual ReLU activation and bottom.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:routing-forward-stop": {
+    "declaration": "Thesis.RoutingNetwork.inputLayerGames_selected_gate",
+    "display": "Lean",
+    "scope": "Exact canonical activation choice is strict-positive actual preactivation; layerGames_selected_gate gives the later-layer version.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:routing-spne-stop": {
+    "declaration": "Thesis.RoutingGate.chosenLogAction_optimal",
+    "display": "Lean",
+    "scope": "The pure activation choice compares continuation log value with bottom and selects stop at all ties, including nonpositive signed continuation mass.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:softplus-soft-bellman": {
+    "declaration": "Thesis.Regularization.entropy_gate_unique",
+    "display": "Lean",
+    "scope": "Local two-action entropy game. Player-specific and full-profile network interpretation are in the new SoftplusGame batch.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:softplus-policy": {
+    "declaration": "Thesis.Regularization.entropy_gate_unique",
+    "display": "Lean",
+    "scope": "Local two-action entropy game. Player-specific and full-profile network interpretation are in the new SoftplusGame batch.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:softplus-spne-tildes": {
+    "declaration": "Thesis.SoftplusGame.softplus_forward_spne",
+    "display": "Lean",
+    "scope": "Layered shared Network with arbitrary widths/biases/raw inputs and zero fan-in; does not assert residual/maxpool Circuit extension.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:kl-lf-objective": {
+    "declaration": "Thesis.ReferencePolicy.thesis_kl_legendre_fenchel",
+    "display": "Lean",
+    "scope": "At theta=1, exact real-score full-support reference KL maximization; KL and referenceValue are the literal finite sums.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:kl-lf-optimizer": {
+    "declaration": "Thesis.ReferencePolicy.reference_policy_unique",
+    "display": "Lean",
+    "scope": "Equality to the optimum iff policy is referencePolicy; its literal definition is reference*exp(score)/partition. Maximum and attained value have accompanying exact contracts.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:kl-lf-linearized": {
+    "declaration": "Thesis.AttentionReference.attention_value_routing",
+    "display": "Lean",
+    "scope": "Nonnegative reference/contribution and positive total mass. Zero individual masses allowed; all-zero value is certified separately. This is the active local Value-routing subgame, not global attention SPNE.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:attn-value-routing": {
+    "declaration": "Thesis.AttentionReference.attention_value_routing",
+    "display": "Lean",
+    "scope": "Nonnegative reference/contribution and positive total mass. Zero individual masses allowed; all-zero value is certified separately. This is the active local Value-routing subgame, not global attention SPNE.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:attn-value-policy": {
+    "declaration": "Thesis.AttentionReference.attention_value_routing",
+    "display": "Lean",
+    "scope": "Nonnegative reference/contribution and positive total mass. Zero individual masses allowed; all-zero value is certified separately. This is the active local Value-routing subgame, not global attention SPNE.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:attn-V-routing-policy-O": {
+    "declaration": "Thesis.AttentionReference.attention_value_routing",
+    "display": "Lean",
+    "scope": "Nonnegative reference/contribution and positive total mass. Zero individual masses allowed; all-zero value is certified separately. This is the active local Value-routing subgame, not global attention SPNE.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:attn-branch-policy": {
+    "declaration": "Thesis.AttentionReference.attention_value_routing",
+    "display": "Lean",
+    "scope": "Nonnegative reference/contribution and positive total mass. Zero individual masses allowed; all-zero value is certified separately. This is the active local Value-routing subgame, not global attention SPNE.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:attn-qk-oracle": {
+    "declaration": "Thesis.Regularization.routing_variational",
+    "display": "Lean",
+    "scope": "Local QK score oracle only; no Q/K attribution derivative or whole attention-game theorem.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:bc-def": {
+    "declaration": "Thesis.Games.overlap_le_one",
+    "display": "Lean",
+    "scope": "overlap is literally the finite square-root product sum; this theorem and overlap_nonneg give the stated [0,1] range for normalized laws.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:hellinger-def": {
+    "declaration": "Thesis.Games.hellinger_identity",
+    "display": "Lean",
+    "scope": "Exact one-half squared-root-difference sum equals one minus overlap; overlap bounds give the displayed interval.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:bc-chain-rule": {
+    "declaration": "Thesis.Games.path_geometric_mean",
+    "display": "Lean",
+    "scope": "Fixed finite state representation, every finite depth, no strictly positive edge requirement.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:per-pixel-h2": {
+    "declaration": "Thesis.Games.pixelDisagreement_formula",
+    "display": "Lean",
+    "scope": "Finite terminal grouping; includes cemetery as a terminal. Does not replace full paths by an endpoint-only overlap.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:per-pixel-sum": {
+    "declaration": "Thesis.Games.pixelDisagreement_total",
+    "display": "Lean",
+    "scope": "Exact sum over terminal fibres equals one minus full-path overlap for normalized laws; hellinger_identity identifies this with the source H squared.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:survival-recursion": {
+    "declaration": "Thesis.ConditionedSurvival.survival_recurrence",
+    "display": "Lean",
+    "scope": "Ordinary-state restriction; the separate cemetery-zero equality is by the stated absorbing-cemetery convention.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:conditioned-kernel": {
+    "declaration": "Thesis.ConditionedSurvival.conditioned_survival",
+    "display": "Lean",
+    "scope": "Ordinary substochastic kernel, positive initial survival only. Zero intermediate support is explicitly pruned; no global positivity premise.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:conditioned-path-measure": {
+    "declaration": "Thesis.ConditionedSurvival.conditioned_survival",
+    "display": "Lean",
+    "scope": "Ordinary substochastic kernel, positive initial survival only. Zero intermediate support is explicitly pruned; no global positivity premise.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:conditioned-bc-posthoc": {
+    "declaration": "Thesis.Games.survival_overlap",
+    "display": "Lean",
+    "scope": "Positive total survival for both ordinary path submeasures. Does not supply intermediate marginal or conditioned geometric-kernel formulas.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:tropical_polynomial": {
+    "declaration": "Thesis.Tropical.Polynomial.eval",
+    "display": "Lean",
+    "scope": "Definition is the literal nonempty finite maximum of intercept plus slope dot input.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:newton_polytope": {
+    "declaration": "Thesis.Tropical.Polynomial.newton",
+    "display": "Lean",
+    "scope": "Definition is the convex hull of the finite slope family.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:support_function": {
+    "declaration": "Thesis.Tropical.support",
+    "display": "Lean",
+    "scope": "Definition is the supremum of scalar products; the checked compact nonempty support theorem supplies attainment.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:path-measure": {
+    "declaration": "Thesis.Games.pathLaw",
+    "display": "Lean",
+    "scope": "Definition of fixed-length path law; first-hit terminated paths require explicit absorbing padding/erasure correspondence.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:eq:attribution": {
+    "declaration": "Thesis.StoppingDAG.fullOccupation",
+    "display": "Lean",
+    "scope": "Selected shared-DAG circuit policy; graph nodes and sign channels, including initial visit. The source general arbitrary-profile definition is more general.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:local_sensitivities": {
+    "declaration": "HiddenMonotonicity.Network.affine_head_derivative_of_differentiable",
+    "display": "Lean",
+    "scope": "Differentiability at the actual pair input; split weights/readout rows nonnegative. The source strict gate condition ensures this premise.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:masked_path_product": {
+    "declaration": "HiddenMonotonicity.Network.affine_backward_invariants_of_differentiable",
+    "display": "Lean",
+    "scope": "At differentiability of both actual balanced lifted heads; in particular on source strict cells. Final output is ungated and biased.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "eq:w_abs": {
+    "declaration": "HiddenMonotonicity.Network.affine_canonical_mass",
+    "display": "Lean",
+    "scope": "Definition/model correspondence for the complete affine readout absolute path product; this is not the signed Jacobian.",
+    "equation": true,
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
   "obs:relu_is_cpwl": {
     "declaration": "Thesis.PiecewiseLinear.affine_network_cpwl",
     "display": "Lean variant",
     "scope": "Arbitrary signed weights, biases, varying widths and depth imply continuity and a genuine finite closed-polyhedral affine cover. Affine readout included where stated. This is not the arbitrary-CPWL network converse."
+  },
+  "thm:cpwl_relu_equivalence": {
+    "declaration": "Thesis.PiecewiseLinear.cpwl_relu_equivalence",
+    "display": "Lean variant",
+    "scope": "Both directions for genuine continuous finite-polyhedral-cover scalar CPWL functions on R^d, with explicit shared Network and signed affine readout witnesses; exact ceil(log_2(d+1))+1 total-layer bound. Includes arbitrary biases, nonconvex functions, d=0 and negative constants. Lattice/DC/signed-max/compiler bridges derived rather than assumed."
   },
   "prop:monotone_represents": {
     "declaration": "Thesis.SourceFoundations.monotone_represents",
@@ -107,10 +782,28 @@
     "display": "Lean variant",
     "scope": "Actual normalized ReLU game with nonzero fan-in and forced ungated affine output: saddle against all randomized profiles, exact selected payoff, exact all-subgame iff tie-permitted 0/1 gate conditions, and same output payoff for every subgame-perfect profile. Direct recursive all-state randomized best-response predicate on Strategy iff both players continue with probability one at strictly positive preactivations and zero at strictly negative ones; arbitrary probabilities permitted at ties."
   },
+  "def:tropical_polynomial": {
+    "declaration": "Thesis.Tropical.Polynomial.eval",
+    "display": "Lean",
+    "scope": "Literal finite nonempty maximum of affine forms.",
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
   "obs:tropical_convex_cpwl": {
     "declaration": "Thesis.PiecewiseLinear.convex_cpwl_iff_max_affine",
     "display": "Lean variant",
     "scope": "Exact scalar convex CPWL iff finite max-affine representation, derived from the genuine finite closed-polyhedral cover by dense interiors and convex local-to-global minima; no representation assumption or substitute CPWL definition."
+  },
+  "def:newton_polytope": {
+    "declaration": "Thesis.Tropical.Polynomial.newton",
+    "display": "Lean",
+    "scope": "Literal convex hull of actual finite slopes.",
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "def:support_function": {
+    "declaration": "Thesis.Tropical.support",
+    "display": "Lean",
+    "scope": "Literal support supremum, with maximum attainment under source compact/nonempty assumptions.",
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "lem:support_properties": {
     "declaration": "Thesis.SourceGeometry.support_properties",
@@ -172,6 +865,12 @@
     "display": "Lean variant",
     "scope": "Full varying-width shared network with arbitrary scalar and pair activations and biases. Scalar difference preservation implies full network recovery; nonnegative pair output is proved separately under explicit nonnegative parameter/input/activation assumptions."
   },
+  "def:fmix": {
+    "declaration": "HiddenMonotonicity.mixPair",
+    "display": "Lean",
+    "scope": "Exact eta max/min interpolation definition.",
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
   "thm:mixing_recovery": {
     "declaration": "HiddenMonotonicity.Network.mixing_recovery",
     "display": "Lean variant",
@@ -183,7 +882,7 @@
     "scope": "Arbitrary coordinatewise convex input lifts, actual nonnegative split network, arbitrary biases and varying widths. Both mixing-one streams and actual ungated nonnegative affine heads are convex. Recovery is net.eval(p\u2212q); the source input-split identity specializes this to the original input."
   },
   "cor:dc_split_endpoint": {
-    "declaration": "HiddenMonotonicity.Network.mixing_one_convex_input",
+    "declaration": "HiddenMonotonicity.Network.mixing_one_is_split",
     "display": "Lean variant",
     "scope": "Literal eta-one identity with the actual DC split, exact reconstruction, convexity under arbitrary convex input lifts, and actual final affine-head convexity/recovery."
   },
@@ -196,6 +895,12 @@
     "declaration": "HiddenMonotonicity.Network.affine_heads_recovery",
     "display": "Lean variant",
     "scope": "Actual shared varying-width MLP backbone plus an arbitrary ungated signed affine readout with split biases; difference recovery for both real input streams. The generic backbone identity is also retained."
+  },
+  "def:fstop": {
+    "declaration": "Thesis.StoppingDecomposition.stopPair",
+    "display": "Lean",
+    "scope": "Exact strict-positive common stopping gate definition.",
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "thm:stopping_validity": {
     "declaration": "Thesis.StoppingDecomposition.thesis_stopping_validity",
@@ -212,14 +917,25 @@
     "display": "Lean variant",
     "scope": "Actual preactivation sums over geometric neuron-index paths, absolute signed-weight products and parity of the literal negative-edge count. Intermediate gates are used and the top preactivation edge is ungated. Zero-weight paths and a separate actual bias-source extension are included."
   },
+  "def:freg": {
+    "declaration": "Thesis.GeneralRegularization.pairWith",
+    "display": "Lean",
+    "scope": "Actual chosen-regularizer pair definition; optimizer/value and interval conditions are separately checked.",
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
   "thm:freg_validity": {
     "declaration": "Thesis.GeneralRegularization.regularized_decomposition_validity",
     "display": "Lean variant",
     "scope": "General finite closed convex nonpositive cost on [0,1]. Optimizer existence is derived from compactness and lower semicontinuity. Any fixed maximizing selection gives nonnegative pair validity; activation is convex, nondecreasing, 1-Lipschitz, and every optimizer equals the derivative at differentiable points. Full shared biased network and actual ungated signed affine readout recover the conjugate-activation network."
   },
+  "cor:freg_stop": {
+    "declaration": "Thesis.GeneralRegularization.zero_pair_is_stopping",
+    "display": "Lean variant",
+    "scope": "Literal equality of the zero-cost pair with the original stopping pair, using strict-positive hardGate so zero ties stop, and exact variational value ReLU."
+  },
   "cor:fsoft": {
-    "declaration": "Thesis.SoftplusDecomposition.thesis_softplus_forward",
-    "display": "Lean components",
+    "declaration": "Thesis.GeneralRegularization.entropy_activation",
+    "display": "Lean variant",
     "scope": "Actual negative binary entropy on [0,1], sigmoid optimizer and exact softplus conjugate/pair bridge, full shared-network decomposition recovery. Positive-temperature pair limit is strict stopping away from score ties; at a tie the actual limit is the half-input pair. This decomposition corollary makes no separate global-game SPNE claim."
   },
   "thm:shift_forward": {
@@ -255,7 +971,7 @@
   "thm:cnn_split_correct": {
     "declaration": "HiddenMonotonicity.Circuit.split_policy_correct",
     "display": "Lean components",
-    "scope": "Actual finite shared-node scalar DAG including affine/residual/max/product operations, per-node recentering and an actual maximizing-winner pooling policy: recovery and nonnegativity. Additive convex-pooling circuits without recentering have convex monotone heads. Concrete tensor flattening/indexing and source linear-size bound are not yet proved."
+    "scope": "Actual finite shared scalar DAG with affine/residual/max/product operations, recentering and maximizing-winner pooling: recovery and nonnegativity. Additive convex-pooling circuits without recentering have convex monotone heads. Concrete kernel/stencil tensor-to-matrix bridge and fixed-rank/degree linear vertices-plus-arcs size bound are now separate checked components. A single source-facing CNN architecture/compiler bundle remains to be assembled."
   },
   "ptnb:thm:gradient": {
     "declaration": "Thesis.BackwardGames.thesis_gradient_representation",
@@ -282,6 +998,28 @@
     "display": "Lean components",
     "scope": "Actual randomized two-player ReLU-network equilibrium with signed affine output and recursive subgame-perfect characterization, plus actual stopping decomposition recovery. The separate two-player bookkeeping coordinates and general DAG correspondence remain to be assembled."
   },
+  "ptnb:prop:addition-equivalence": {
+    "declaration": "Thesis.StoppingCircuit.addition_discounted_occupation",
+    "display": "Lean variant",
+    "scope": "The uniform two-operand oracle with structural discount two equals the sum of arbitrary operand values; the actual shared-DAG local kernel has the same probability/discount, including repeated operand references."
+  },
+  "ptnb:prop:maxpool-equivalence": {
+    "declaration": "Thesis.StoppingDAG.orderedInputPool_source",
+    "display": "Lean variant",
+    "scope": "The finite ordered pool selects the earliest maximal original operand, forwards both actual stopping streams and the exact selected predecessor kernel, and composes with the shared-DAG row. Smallest graph-index tie selection follows when original operand indices are sorted. No false identification with the generic binary right-tie primitive."
+  },
+  "ptnb:def:trajectory-distribution": {
+    "declaration": "Thesis.StoppingDAG.pathProbability",
+    "display": "Lean",
+    "scope": "Definition for the selected shared-DAG circuit policy, including residual/maxpool predecessor rows. Source arbitrary-profile game law and expanded Oracle microstates are not asserted.",
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
+  "ptnb:def:occupation": {
+    "declaration": "Thesis.StoppingDAG.fullOccupation",
+    "display": "Lean",
+    "scope": "Selected shared-DAG circuit policy; graph nodes and sign channels, including initial visit. The source general arbitrary-profile definition is more general.",
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
   "ptnb:thm:deriv-occ": {
     "declaration": "Thesis.StoppingDAG.intermediate_stopping_derivative_occupation",
     "display": "Lean variant",
@@ -297,20 +1035,17 @@
     "display": "Lean components",
     "scope": "The literal ungated source alpha-beta recurrence for ordinary output relevance is bridged to the actual network-derived routing path occupation. The affine-output wrapper includes biases and arbitrary scalar target seeds. The algebraic recovery includes epsilon zero with the zero-division convention; nonnegative probabilities and occupations are separately certified for epsilon at least zero."
   },
-  "ptnb:lem:noisy-gate-dual": {
-    "declaration": "Thesis.Regularization.softplus_variational",
-    "display": "Lean components",
-    "scope": "Binary entropy/softplus variational identity and unique sigmoid optimizer; general regularizers and probit/Gaussian alternatives not formalized."
-  },
   "ptnb:thm:softplus-forward": {
-    "declaration": "Thesis.SoftplusDecomposition.thesis_softplus_forward",
-    "display": "Lean components",
-    "scope": "Entire shared Network soft pair decomposition recovers the Softplus forward pass; scalar entropy optimizer proved separately. Full game SPNE not asserted."
+    "declaration": "Thesis.SoftplusGame.softplus_forward_spne",
+    "display": "Lean",
+    "scope": "Layered shared Network: unique entropy SPNE, player-specific softSplit values and actual softplus recovery. Includes zero fan-in and arbitrary raw input pairs. Source residual/maxpool Circuit extension remains unproved.",
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "ptnb:thm:softplus-gradient": {
-    "declaration": "Thesis.SoftplusBackward.thesis_softplus_gradient",
-    "display": "Lean components",
-    "scope": "Actual full varying-width Softplus network derivative equals discounted sign-path occupations with sigmoid stopping and positive fan-in; same Network parameters/evaluator as the ReLU development. Positive temperature and nonnegative split weights for stochastic interpretation. Global equilibrium existence is not included."
+    "declaration": "Thesis.SoftplusGame.spne_intermediate_gradient",
+    "display": "Lean",
+    "scope": "Layered shared Network, all real inputs, positive temperature, nonnegative split weights, zero fan-in allowed. Actual intermediate SPNE occupation; signed affine output is separately checked. No residual/maxpool Circuit extension.",
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "prop:gradient_blindness": {
     "declaration": "HiddenMonotonicity.Network.gradient_blindness",
@@ -332,6 +1067,12 @@
     "display": "Lean variant",
     "scope": "Actual original affine-logit derivative and both backward partial invariants, all shifts quantified after one common full-measure set. Actual original affine-logit derivative and both independent shifted partial invariants whenever both lifted heads are differentiable."
   },
+  "def:shifted_sensitivities": {
+    "declaration": "HiddenMonotonicity.shiftPair",
+    "display": "Lean",
+    "scope": "Literal common local backward shift; unified is the stated half-difference.",
+    "review_id": "attack_hidden/lean-link-coverage"
+  },
   "prop:posynomial_representation": {
     "declaration": "HiddenMonotonicity.MaxPolynomial.ordinary_finite_polynomial_witness",
     "display": "Lean variant",
@@ -348,9 +1089,10 @@
     "scope": "Finite nonempty actions, positive reference mass at every action, real scores and positive temperature: actual reference-KL objective maximum and unique tilted optimizer, allowing candidate policies with zero coordinates. Extended minus-infinity scores and zero reference support are not included."
   },
   "ptnb:prop:attn-value-policy": {
-    "declaration": "Thesis.ReferencePolicy.thesis_attention_value_policy",
-    "display": "Lean components",
-    "scope": "Exact reference-weighted Value-routing KL optimizer and uniqueness with strictly positive reference and contribution masses; the source zero-contribution/outside-option cases are not included."
+    "declaration": "Thesis.AttentionReference.attention_value_routing",
+    "display": "Lean",
+    "scope": "Active local Value-routing optimizer and value for nonnegative reference/contributions and positive total, including zero entries. All-zero active value is separately bottom. Inactive-player bookkeeping and whole attention SPNE remain separate.",
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "ptnb:thm:attn-ab-recovery": {
     "declaration": "Thesis.AttentionBackward.thesis_attention_alpha_beta_recovery",
@@ -378,14 +1120,16 @@
     "scope": "Corrected finite-law coarsening inequalities, exact reindexing with an erase/recover inverse, and normalized explicit absorption-history counterexample. Equality for the model survivor graph requires its stated reconstruction property."
   },
   "ptnb:thm:per-pixel": {
-    "declaration": "Thesis.Games.pixelDisagreement_nonneg",
-    "display": "Lean variant",
-    "scope": "Exact nonnegative finite trajectory disagreement, terminal-fibre attribution, total equals squared Hellinger. Model-specific pixel-index encoding not required."
+    "declaration": "Thesis.Games.pixelDisagreement_total",
+    "display": "Lean",
+    "scope": "Actual full-trajectory terminal-fibre formula, nonnegativity and total Hellinger via the companion checked declarations. Removing one cemetery term is finite-sum bookkeeping.",
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "ptnb:thm:conditioned-survival": {
-    "declaration": "Thesis.Games.survival_overlap",
-    "display": "Lean components",
-    "scope": "Normalization identity and mass overlap bound; strictly positive survival Doob kernels normalize, stay nonnegative, and telescope to conditional path law; overlap endpoint equivalences proved for normalized finite laws. Source zero-survival pruning/layer-specific cemetery encoding not packaged."
+    "declaration": "Thesis.ConditionedSurvival.conditioned_survival",
+    "display": "Lean",
+    "scope": "Actual backwardDP survival, support pruning, normalized positive-support kernel, normalized conditional path quotient. Intermediate marginals and conditioned geometric-kernel/BC/Hellinger composition remain unbundled; this is partial coverage of the full source theorem.",
+    "review_id": "attack_hidden/lean-link-coverage"
   },
   "ptnb:lem:alive-mismatch": {
     "declaration": "Thesis.Randomization.thesis_alive_mismatch_ordinary",
@@ -401,25 +1145,5 @@
     "declaration": "Thesis.RoutingExpectation.conditional_affinity_full_depth",
     "display": "Lean variant",
     "scope": "Full-depth expected ordinary overlap contraction under an explicit conditional row-affinity bound, with actual square-root geometric kernels. Continuous weight randomization alone is not asserted to establish that bound."
-  },
-  "thm:cpwl_relu_equivalence": {
-    "declaration": "Thesis.PiecewiseLinear.cpwl_relu_equivalence",
-    "display": "Lean",
-    "scope": "Both directions for genuine continuous finite-polyhedral-cover scalar CPWL functions on R^d, with explicit shared Network and signed affine readout witnesses; exact ceil(log_2(d+1))+1 total-layer bound. Includes arbitrary biases, nonconvex functions, d=0 and negative constants. Lattice/DC/signed-max/compiler bridges derived rather than assumed."
-  },
-  "cor:freg_stop": {
-    "declaration": "Thesis.GeneralRegularization.zero_pair_is_stopping",
-    "display": "Lean variant",
-    "scope": "Literal equality of the zero-cost pair with the original stopping pair, using strict-positive hardGate so zero ties stop, and exact variational value ReLU."
-  },
-  "ptnb:prop:addition-equivalence": {
-    "declaration": "Thesis.StoppingCircuit.addition_discounted_occupation",
-    "display": "Lean variant",
-    "scope": "The uniform two-operand oracle with structural discount two equals the sum of arbitrary operand values; the actual shared-DAG local kernel has the same probability/discount, including repeated operand references."
-  },
-  "ptnb:prop:maxpool-equivalence": {
-    "declaration": "Thesis.StoppingDAG.orderedInputPool_source",
-    "display": "Lean variant",
-    "scope": "The finite ordered pool selects the earliest maximal original operand, forwards both actual stopping streams and the exact selected predecessor kernel, and composes with the shared-DAG row. Smallest graph-index tie selection follows when original operand indices are sorted. No false identification with the generic binary right-tie primitive."
   }
 }

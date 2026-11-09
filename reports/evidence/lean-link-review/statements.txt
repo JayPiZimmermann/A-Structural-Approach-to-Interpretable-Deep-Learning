@@ -1,0 +1,1824 @@
+0 tex/chapters/02_foundations.tex:9 definition ['def:ffn_relu'] MISSING
+\begin{definition}[Feedforward \ac{relu} network]\label{def:ffn_relu}
+Let $L \in \NN$ and let $d^{(0)}, d^{(1)}, \ldots, d^{(L)} \in \NN$ denote the \emph{layer widths}, with input dimension $d^{(0)}$ and output dimension $d^{(L)}$. A \emph{feedforward \ac{relu} network} of depth $L$ is given by weight matrices $\Wl{l} \in \RR^{d^{(l)} \times d^{(l-1)}}$ and bias vectors $b^{(l)} \in \RR^{d^{(l)}}$ for $l = 1, \ldots, L$. On an input $x \in \RR^{d^{(0)}}$ it computes the recursion
+\begin{align}
+	\actl{0} &\coloneqq x, \notag\\
+	\preactl{l} &\coloneqq \Wl{l} \actl{l-1} + b^{(l)}, && l = 1, \ldots, L, \label{eq:forward_recursion}\\
+	\actl{l} &\coloneqq \relu\bigl(\preactl{l}\bigr), && l = 1, \ldots, L-1, \notag
+\end{align}
+where $\relu(z) \coloneqq \max\{z, 0\}$ acts componentwise, and the output layer is affine, $\actl{L} \coloneqq \preactl{L}$. We call $\preactl{l}$ the \emph{pre-activation} and $\actl{l}$ the \emph{(post-)activation} of layer $l$, and denote the \emph{network function} by
+\begin{equation}
+	f \colon \RR^{d^{(0)}} \longrightarrow \RR^{d^{(L)}},
+	\qquad
+	f(x) \coloneqq \actl{L}.
+	\label{eq:network_function}
+\end{equation}
+Layers $1, \ldots, L-1$ are the \emph{hidden layers}. Throughout we fix the boundary convention $\relu'(0) \coloneqq 0$, so that the gate indicator $\1\{\preactl{l}_i > 0\}$ returns $0$ at $\preactl{l}_i = 0$.
+\end{definition}
+
+3 tex/chapters/02_foundations.tex:30 definition ['def:posneg_parts'] MISSING
+\begin{definition}[Positive and negative parts]\label{def:posneg_parts}
+For a scalar $u \in \RR$ we write $u^{+} \coloneqq \max\{u, 0\}$ and $u^{-} \coloneqq \max\{-u, 0\}$, so that $u = u^{+} - u^{-}$ and $\abs{u} = u^{+} + u^{-}$, with $u^+ u^- = 0$. For a matrix or vector $W$ and a sign label $\sigma \in \{+,-\}$, the \emph{entrywise part} $\posneg{W}{\sigma}$ is obtained by applying $u \mapsto u^{\sigma}$ to every entry. For the layer weights and biases of Definition~\ref{def:ffn_relu} we abbreviate
+\begin{equation}
+	\Wsig{l}{\sigma} \coloneqq \posneg{\Wl{l}}{\sigma},
+	\qquad
+	b^{(l,\sigma)} \coloneqq \posneg{b^{(l)}}{\sigma},
+	\qquad \sigma \in \{+,-\},
+	\label{eq:weight_split}
+\end{equation}
+so that $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$ and $\abs{\Wl{l}} = \Wsig{l}{+} + \Wsig{l}{-}$ entrywise, and both $\Wsig{l}{\sigma}$ are entrywise non-negative.
+\end{definition}
+
+5 tex/chapters/02_foundations.tex:42 remark ['rem:pair_notation'] MISSING
+\begin{remark}[Pair notation for decomposed activations]\label{rem:pair_notation}
+Superscript sign labels on \emph{activations}, written $\act{l}{\sigma}$ for $\sigma \in \{+,-\}$, are reserved for the two non-negative \emph{streams} of a network decomposition and are defined in Section~\ref{sec:general_decomposition_def}; they do \emph{not} denote the entrywise parts $\posneg{\actl{l}}{\sigma}$ of the original activations. The distinction matters: the decomposed streams carry strictly more information than the sign pattern of $\actl{l}$---the source of the sub-threshold signals exploited in Chapter~\ref{ch:saliency}.
+\end{remark}
+
+6 tex/chapters/02_foundations.tex:50 definition ['def:cpwl'] MISSING
+\begin{definition}[\ac{cpwl} function]\label{def:cpwl}
+A function $f \colon \RR^{d} \to \RR^{m}$ is \emph{\acl{cpwl}} (\acs{cpwl}) if it is continuous and there exist finitely many closed polyhedra $Q_1, \ldots, Q_N \subseteq \RR^d$ with $\bigcup_{r=1}^{N} Q_r = \RR^d$ such that the restriction of $f$ to each $Q_r$ is an affine map. The full-dimensional polyhedra on which $f$ is affine, taken maximal with respect to inclusion, are called the \emph{linear regions} of $f$.
+\end{definition}
+
+7 tex/chapters/02_foundations.tex:56 observation ['obs:relu_is_cpwl'] LINKED
+\begin{observation}[\LeanResult{obs:relu_is_cpwl}]\label{obs:relu_is_cpwl}
+Every feedforward \ac{relu} network represents a \ac{cpwl} function.\end{observation}
+
+8 tex/chapters/02_foundations.tex:65 theoremenv ['thm:cpwl_relu_equivalence'] LINKED
+\begin{theoremenv}[\ac{cpwl}--\ac{relu} equivalence, \parencite{Arora2018}, \LeanResult{thm:cpwl_relu_equivalence}]\label{thm:cpwl_relu_equivalence}
+A function $f \colon \RR^{d} \to \RR$ is \ac{cpwl} if and only if it is representable by a feedforward \ac{relu} network. Moreover, every \ac{cpwl} function on $\RR^d$ is representable by a \ac{relu} network of depth at most $\bigl\lceil \log_2(d+1) \bigr\rceil + 1$.\end{theoremenv}
+
+11 tex/chapters/02_foundations.tex:88 remark ['rem:linear_regions'] MISSING
+\begin{remark}[Expressivity and linear regions]\label{rem:linear_regions}
+Theorem~\ref{thm:cpwl_relu_equivalence} identifies the function \emph{class}, not the \emph{cost} of representation: deep networks can represent \ac{cpwl} functions with exponentially many linear regions in the number of neurons, an interplay of depth, width, and region counts surveyed by \textcite{huchette2025deeplearningmeetspolyhedral}. The tropical reformulation by \textcite{Zhang2018}---\ac{relu} networks as tropical rational maps---is taken up in Sections~\ref{sec:tropical_polyhedra_foundations} and \ref{sec:tropical_rational_maps}. The representation \eqref{eq:cpwl_dc_representation} also foreshadows the central theme of this thesis: the convex \ac{cpwl} streams $g$ and $h$ of the DC split can be extracted \emph{constructively and locally} from a trained network, the subject of Section~\ref{sec:dc_splitting_relu}.
+\end{remark}
+
+12 tex/chapters/02_foundations.tex:98 definition ['def:monotone_network'] MISSING
+\begin{definition}[Monotone neural network]\label{def:monotone_network}
+A feedforward network with recursion \eqref{eq:forward_recursion} and monotone activation functions is called a \emph{monotone neural network} if all its weight matrices are entrywise non-negative, $\Wl{l} \ge 0$ for all $l = 1, \ldots, L$.
+\end{definition}
+
+13 tex/chapters/02_foundations.tex:104 proposition ['prop:monotone_represents'] LINKED
+\begin{proposition}[Monotone networks represent monotone functions, \LeanResult{prop:monotone_represents}]\label{prop:monotone_represents}
+A monotone neural network represents a monotone function; each coordinate function is non-decreasing in every input variable.\end{proposition}
+
+14 tex/chapters/02_foundations.tex:111 definition ['def:icnn'] MISSING
+\begin{definition}[\acl{icnn}, \parencite{Amos2017}]\label{def:icnn}
+A feedforward network with recursion \eqref{eq:forward_recursion} whose activation functions are convex \emph{and} monotone is called an \emph{\acl{icnn}} (\acs{icnn}) if all weight matrices except possibly the first are entrywise non-negative, $\Wl{l} \ge 0$ for all $l = 2, \ldots, L$, while $\Wl{1}$ is unconstrained.
+\end{definition}
+
+15 tex/chapters/02_foundations.tex:117 proposition ['prop:icnn_convex'] LINKED
+\begin{proposition}[\acp{icnn} represent convex functions, \LeanResult{prop:icnn_convex}]\label{prop:icnn_convex}
+An \ac{icnn} represents a convex function; each coordinate of every activation $\actl{l}$, $l \ge 1$, is a convex function of the input $x$.\end{proposition}
+
+16 tex/chapters/02_foundations.tex:132 remark ['rem:monotone_convex_combined'] MISSING
+\begin{remark}[Monotonicity and convexity combine]\label{rem:monotone_convex_combined}
+If, in addition, $\Wl{1} \ge 0$ in Definition~\ref{def:icnn}, the network is simultaneously monotone and input-convex, hence non-decreasing \emph{and} convex by Propositions~\ref{prop:monotone_represents} and \ref{prop:icnn_convex}. Both $\relu$ and Maxout (below) are convex and monotone, so non-negative-weight \ac{relu} networks are of exactly this type. These are the building blocks of the DC splitting of Section~\ref{sec:dc_splitting_relu}: the streams $g$ and $h$ are computed by monotone networks acting on a signed embedding of the input, and are input-convex in the original input. The sign constraint also \emph{limits} expressivity---a weight-constrained \ac{relu} network represents only convex functions, precisely Proposition~\ref{prop:icnn_convex}, which is why monotone architectures add concave counterparts of the activation \parencite{Runje_2023}. The decompositions of this thesis turn the limitation into a feature: the difference of two such networks recovers full generality by Theorem~\ref{thm:cpwl_relu_equivalence} and \eqref{eq:cpwl_dc_representation}.
+\end{remark}
+
+17 tex/chapters/02_foundations.tex:138 definition ['def:maxout'] MISSING
+\begin{definition}[Maxout unit and Maxout network, \parencite{Goodfellow2013Maxout}]\label{def:maxout}
+A \emph{rank-$k$ Maxout unit} with weights $w_1, \ldots, w_k \in \RR^{d}$ and biases $\beta_1, \ldots, \beta_k \in \RR$ computes
+\begin{equation}
+	x \longmapsto \maxout(x) \coloneqq \max_{j \in [k]} \bigl( w_j^{\top} x + \beta_j \bigr).
+	\label{eq:maxout_unit}
+\end{equation}
+A \emph{rank-$k$ Maxout network} is a feedforward network whose neurons are rank-$k$ Maxout units; equivalently, layer $l$ carries $k$ weight matrices $W^{(l)}_1, \ldots, W^{(l)}_k$ and biases $b^{(l)}_1, \ldots, b^{(l)}_k$, and
+\begin{equation}
+	\actl{l}_i \coloneqq \max_{j \in [k]} \bigl( W^{(l)}_j \actl{l-1} + b^{(l)}_j \bigr)_i .
+	\label{eq:maxout_layer}
+\end{equation}
+\end{definition}
+
+20 tex/chapters/02_foundations.tex:151 observation ['obs:relu_maxout_special_case'] LINKED
+\begin{observation}[\ac{relu} and max-pooling as Maxout, \LeanResult{obs:relu_maxout_special_case}]\label{obs:relu_maxout_special_case}
+The \ac{relu} activation is the rank-$2$ Maxout unit with parameters $(w_1, \beta_1) = (w, \beta)$ and $(w_2, \beta_2) = (0, 0)$, since $\relu(w^\top x + \beta) = \max\{w^\top x + \beta,\, 0\}$. Max-pooling over a group $J$ of neurons is the rank-$\abs{J}$ Maxout unit whose $j$-th argument is the coordinate projection onto the $j$-th element of $J$. Every rank-$k$ Maxout unit is convex in its input and non-decreasing in each pre-activation argument $w_j^\top x + \beta_j$; hence Maxout qualifies as an admissible activation in Definitions~\ref{def:monotone_network} and \ref{def:icnn}.\end{observation}
+
+21 tex/chapters/02_foundations.tex:158 remark ['rem:maxout_role'] MISSING
+\begin{remark}\label{rem:maxout_role}
+Maxout networks are the natural piecewise-linear generalization of \ac{relu}: a rank-$k$ unit expresses a maximum of $k$ affine functions in one neuron, matching the building blocks of the DC representation \eqref{eq:cpwl_dc_representation}. The DC splitting of Chapter~\ref{ch:decompositions} is developed for \ac{relu} networks and extended to Maxout units---and to the multiplicative interactions needed for attention---in Chapter~\ref{ch:transformers}, using the exchange identity $\max_{j \in [k]}(u_j - v_j) = \max_{j \in [k]}\bigl\{ u_j + \sum_{i \ne j} v_i \bigr\} - \sum_{i \in [k]} v_i$ for pairs of non-negative streams.
+\end{remark}
+
+22 tex/chapters/02_foundations.tex:166 definition ['def:mdp'] MISSING
+\begin{definition}[\acl{mdp}]\label{def:mdp}
+A (finite) \emph{\acl{mdp}} (\acs{mdp}) \parencite{Puterman1994mdp,SuttonBarto2018rl} is a tuple $\mathcal{M} = (S, A, \P, R, \gamma)$ consisting of a finite state set $S$, a finite action set $A(s)$ for each $s \in S$, a \emph{transition kernel} $\P(s' \mid s, a) \ge 0$ with $\sum_{s'} \P(s' \mid s, a) = 1$, a bounded \emph{reward function} $R(s, a) \in \RR$, and a \emph{discount factor} $\gamma \in [0, 1)$. A \emph{(stationary) policy} is a map $\pi$ assigning to each state $s$ a probability distribution $\pi(\cdot \mid s)$ over $A(s)$; $\pi$ is \emph{pure} (deterministic) if each $\pi(\cdot \mid s)$ is a point mass. A policy induces, for every start state, a Markov chain on $S$ and hence a distribution over trajectories $(s_0, a_0, s_1, a_1, \ldots)$; the \emph{value function} of $\pi$ is the expected discounted return
+\begin{equation}
+	V^{\pi}(s) \coloneqq \E^{\pi}\Bigl[ \textstyle\sum_{t=0}^{\infty} \gamma^{t}\, R(s_t, a_t) \,\Big|\, s_0 = s \Bigr],
+	\label{eq:mdp_value}
+\end{equation}
+and the \emph{optimal value function} is $V^{\star}(s) \coloneqq \max_{\pi} V^{\pi}(s)$.
+\end{definition}
+
+24 tex/chapters/02_foundations.tex:177 proposition ['prop:bellman'] LINKED
+\begin{proposition}[Bellman equations, \LeanResult{prop:bellman}]\label{prop:bellman}
+Let $\mathcal{M}$ be a finite \ac{mdp} with $\gamma \in [0,1)$. Then:
+\begin{enumerate}
+	\item $V^{\pi}$ is the unique solution of the linear system
+	\begin{equation}
+		V(s) = \sum_{a \in A(s)} \pi(a \mid s) \Bigl[ R(s,a) + \gamma \sum_{s'} \P(s' \mid s, a)\, V(s') \Bigr],
+		\qquad s \in S.
+		\label{eq:bellman_evaluation}
+	\end{equation}
+	\item $V^{\star}$ is the unique solution of the \emph{Bellman optimality equation}
+	\begin{equation}
+		V(s) = \max_{a \in A(s)} \Bigl\{ R(s, a) + \gamma \sum_{s'} \P(s' \mid s, a)\, V(s') \Bigr\},
+		\qquad s \in S,
+		\label{eq:bellman_optimality}
+	\end{equation}
+	and any pure policy $\polstar$ that selects, in every state, an action attaining the maximum in \eqref{eq:bellman_optimality} is optimal: $V^{\polstar} = V^{\star}$.
+\end{enumerate}\end{proposition}
+
+27 tex/chapters/02_foundations.tex:199 remark ['rem:structural_discount'] MISSING
+\begin{remark}[State-dependent structural discounts]\label{rem:structural_discount}
+The games of this thesis depart from Definition~\ref{def:mdp} in one respect: the discount is \emph{state-dependent}, $\gamma(s) \ge 0$, and may exceed $1$. Here discounts are not impatience parameters but \emph{structural} normalizers---for neuron $i$ in layer $l$ the absolute weight mass
+\begin{equation}
+	\gamma^{(l)}_i \coloneqq \sum_{j} \bigl( \Wsig{l}{+} + \Wsig{l}{-} \bigr)_{ij} = \sum_j \abs{\Wl{l}_{ij}},
+	\label{eq:structural_discount}
+\end{equation}
+which restores the weight mass after row $i$ of $\abs{\Wl{l}}$ is normalized into transition probabilities. Contraction is then unavailable, but also unnecessary: all games are played on \emph{layered acyclic} graphs, so every trajectory is finite and all value functions are well-defined finite sums. Backward induction gives a unique value and the existence of optimal policies; policies need not be unique when actions tie. The two-player statement follows below.
+\end{remark}
+
+29 tex/chapters/02_foundations.tex:212 definition ['def:turn_based_game'] MISSING
+\begin{definition}[Zero-sum turn-based game]\label{def:turn_based_game}
+A (finite) \emph{zero-sum turn-based game} is a tuple $\mathcal{G} = (S_{+}, S_{-}, S_{\mathrm{ter}}, A, \P, R, \gamma)$ where the state set $S = S_{+} \uplus S_{-} \uplus S_{\mathrm{ter}}$ is partitioned into states controlled by player $P^{+}$, states controlled by player $P^{-}$, and terminal states; the action sets $A(s)$, the transition kernel $\P$, and the reward $R$ are as in Definition~\ref{def:mdp} on non-terminal states; $\gamma \colon S \to \RR_{\ge 0}$ is a (possibly state-dependent) discount; and each terminal state $s \in S_{\mathrm{ter}}$ carries a fixed one-time payoff $R(s)$. A \emph{policy pair} $\pi = (\pi_{+}, \pi_{-})$ consists of a policy $\pi_{p}$ for player $P^{p}$ on $S_{p}$. Play generates a trajectory as in an \ac{mdp}, with the player in turn choosing the action; the expected total payoff $V^{\pi}(s)$, defined as in \eqref{eq:mdp_value} with the discount accumulated multiplicatively along the trajectory ($\gamma^t$ replaced by $\prod_{m=0}^{t-1}\gamma(s_m)$), is paid \emph{by $P^{-}$ to $P^{+}$}: player $P^{+}$ maximizes $V^{\pi}$ and player $P^{-}$ minimizes it.
+\end{definition}
+
+30 tex/chapters/02_foundations.tex:216 theoremenv ['thm:shapley_bellman'] LINKED
+\begin{theoremenv}[Shapley--Bellman optimality on layered games, \LeanResult{thm:shapley_bellman}]\label{thm:shapley_bellman}
+Let $\mathcal{G}$ be a finite zero-sum turn-based game whose transition graph is acyclic. Then $\mathcal{G}$ has a \emph{value}: there is a unique function $V^{\star} \colon S \to \RR$ satisfying the \emph{Shapley--Bellman optimality equations}
+\begin{equation}
+	V^{\star}(s) =
+	\begin{cases}
+		\displaystyle \max_{a \in A(s)} \Bigl\{ R(s,a) + \gamma(s) \sum_{s'} \P(s' \mid s, a)\, V^{\star}(s') \Bigr\}, & s \in S_{+}, \\[1.2em]
+		\displaystyle \min_{a \in A(s)} \Bigl\{ R(s,a) + \gamma(s) \sum_{s'} \P(s' \mid s, a)\, V^{\star}(s') \Bigr\}, & s \in S_{-}, \\[1.2em]
+		R(s), & s \in S_{\mathrm{ter}},
+	\end{cases}
+	\label{eq:shapley_bellman}
+\end{equation}
+and there exist pure stationary policies $\polstar = (\polstar_{+}, \polstar_{-})$, obtained by selecting maximizing respectively minimizing actions in \eqref{eq:shapley_bellman}, such that for all $s \in S$ and all policies $\pi_{+}, \pi_{-}$,
+\begin{equation}
+	V^{(\polstar_{+}, \pi_{-})}(s) \;\ge\; V^{\polstar}(s) = V^{\star}(s) \;\ge\; V^{(\pi_{+}, \polstar_{-})}(s).
+	\label{eq:saddle_point}
+\end{equation}
+In particular, $\polstar$ is a Nash equilibrium of every subgame, i.e.\ a subgame perfect equilibrium.\end{theoremenv}
+
+33 tex/chapters/02_foundations.tex:245 remark ['rem:shapley_history'] MISSING
+\begin{remark}\label{rem:shapley_history}
+For general discounted stochastic games with cycles, existence of the value and of optimal stationary policies is Shapley's theorem \parencite{Shapley1953stochastic}, proved by the contraction argument of Proposition~\ref{prop:bellman} applied to the \emph{Shapley operator}---the min-max analogue of the Bellman operator \eqref{eq:shapley_bellman}. \textcite{Gaubert2025} formulate their network games in this operator language. The layered acyclic case of Theorem~\ref{thm:shapley_bellman} is all we need, and it additionally delivers subgame perfection, on which Chapter~\ref{ch:trajectory} relies.
+\end{remark}
+
+34 tex/chapters/02_foundations.tex:255 definition ['def:relu_net_game'] MISSING
+\begin{definition}[ReLU Net Game, following \parencite{Gaubert2025}]\label{def:relu_net_game}
+The \emph{ReLU Net Game} on the network $f$ at input $x$ is the zero-sum turn-based game with the following components.
+\begin{itemize}
+	\item \textbf{States.} For every hidden layer $l \in \{1, \ldots, L-1\}$, every neuron $i \in [d^{(l)}]$, and every turn label $q \in \{+,-\}$ there is an \emph{activation state} $s^{(l)}_{i,q}$, controlled by player $P^{q}$, so that $S_q = \bigl\{ s^{(l)}_{i,q} : l \in [L-1],\, i \in [d^{(l)}] \bigr\}$. For every input coordinate $k \in [d^{(0)}]$ and every $q \in \{+,-\}$ there is a \emph{terminal state} $s^{(0)}_{k,q}$, and there is one absorbing \emph{cemetery state} $\perp$ with zero payoff. Finally, there is a single \emph{output state} $s^{(L)}$ at the affine output neuron, at which no decision is taken.
+	\item \textbf{Actions.} At every activation state the player in turn chooses an action from $\{\mathrm{stop}, \mathrm{cont}\}$. The output state has the single action $\mathrm{cont}$.
+	\item \textbf{Transitions.} Stopping moves deterministically to the cemetery, $\P(\perp \mid s^{(l)}_{i,q}, \mathrm{stop}) = 1$. Continuation at $s^{(l)}_{i,q}$ moves one layer backward, to neuron $j$ of layer $l-1$ with probability proportional to the absolute weight, keeping the turn on positive weights and passing it to the opponent on negative weights:
+	\begin{equation}
+		\P\bigl( s^{(l-1)}_{j,r} \,\big|\, s^{(l)}_{i,q}, \mathrm{cont} \bigr)
+		\coloneqq \frac{\Wsig{l}{q \oplus r}_{ij}}{\gamma^{(l)}_i},
+		\qquad
+		\gamma^{(l)}_i = \sum_{j} \bigl( \Wsig{l}{+} + \Wsig{l}{-} \bigr)_{ij},
+		\label{eq:rng_kernel}
+	\end{equation}
+	where for $l = 1$ the successor $s^{(0)}_{j,r}$ is the corresponding terminal state. The output state transitions by the same rule \eqref{eq:rng_kernel} with $l = L$ and turn label $q = +$.
+	\item \textbf{Payoffs and discounts.} Continuation at $s^{(l)}_{i,q}$ pays the signed bias $\xi_{q}\, b^{(l)}_i$; stopping pays $0$. A terminal state pays the signed input coordinate once, $R\bigl(s^{(0)}_{k,q}\bigr) \coloneqq \xi_{q}\, x_k$, and the game ends. The output state pays $b^{(L)}$ upon its forced continuation. The discount at every activation state and at the output state is the structural discount $\gamma\bigl(s^{(l)}_{i,q}\bigr) \coloneqq \gamma^{(l)}_i$ of \eqref{eq:structural_discount}.
+\end{itemize}
+Player $P^{+}$ maximizes and $P^{-}$ minimizes the expected discounted total payoff, as in Definition~\ref{def:turn_based_game}.
+\end{definition}
+
+36 tex/chapters/02_foundations.tex:276 theoremenv ['thm:relu_net_game_value'] LINKED
+\begin{theoremenv}[Forward pass as game value, \parencite{Gaubert2025}, \LeanResult{thm:relu_net_game_value}]\label{thm:relu_net_game_value}
+The ReLU Net Game of Definition~\ref{def:relu_net_game} admits the subgame perfect equilibrium $\polstar = (\polstar_{+}, \polstar_{-})$ in which both players use the same pure stopping rule,
+\begin{equation}
+	\polstar_{q}\bigl( s^{(l)}_{i,q} \bigr) = \mathrm{cont}
+	\quad \Longleftrightarrow \quad
+	\preactl{l}_i > 0,
+	\label{eq:rng_equilibrium_policy}
+\end{equation}
+and the value function of the game evaluates the network:
+\begin{equation}
+	V^{\star}\bigl(s^{(l)}_{i,q}\bigr) = \xi_{q}\, \actl{l}_i
+	\quad \text{for } l \in \{0, 1, \ldots, L-1\},
+	\qquad
+	V^{\star}\bigl(s^{(L)}\bigr) = f(x),
+	\label{eq:rng_value_identity}
+\end{equation}
+where for $l = 0$ we read $\actl{0}_k = x_k$. The equilibrium is unique up to tie-breaking at neurons with $\preactl{l}_i = 0$, where both actions are optimal; the convention \eqref{eq:rng_equilibrium_policy} stops at ties, matching $\relu'(0) = 0$.\end{theoremenv}
+
+40 tex/chapters/02_foundations.tex:319 remark ['rem:softplus_game'] MISSING
+\begin{remark}[Softplus networks from entropy regularization]\label{rem:softplus_game}
+\textcite{Gaubert2025} also treat softplus networks, by \emph{regularizing} the stop/continue decision. Replace the hard choice at an activation state by a mixed policy $\nu \in \Delta(\{\mathrm{stop}, \mathrm{cont}\})$ rewarded with a Shannon-entropy bonus at temperature $\theta > 0$. By the Legendre--Fenchel identity for the entropy \parencite{BoydVandenberghe2004},
+\begin{equation}
+	\max_{\nu \in \Delta_n} \Bigl\{ \textstyle\sum_{i=1}^{n} \nu_i r_i + \theta\, \mathcal{H}(\nu) \Bigr\}
+	= \theta \log \textstyle\sum_{i=1}^{n} e^{r_i / \theta},
+	\qquad
+	\mathcal{H}(\nu) = -\textstyle\sum_i \nu_i \log \nu_i,
+	\label{eq:legendre_fenchel}
+\end{equation}
+with the Gibbs distribution $\nu^{\star}_i \propto e^{r_i/\theta}$ as unique maximizer, the regularized value at a state with continuation value $\preactl{l}_i$ (computed as in \eqref{eq:rng_cont_value}) becomes $\theta \log\bigl(1 + e^{\preactl{l}_i / \theta}\bigr)$---the softplus activation at temperature $\theta$---and the equilibrium policy continues with the sigmoid probability $\bigl(1 + e^{-\preactl{l}_i/\theta}\bigr)^{-1}$. The hard game of Definition~\ref{def:relu_net_game} is recovered in the limit $\theta \to 0$. Chapter~\ref{ch:game_theory} re-derives this mechanism from the regularized decompositions of Section~\ref{sec:regularized_decompositions} and reuses it at the routing states of the \ac{rg}, with the two temperatures $\theta$ (activation gates) and $\tau$ (routing) kept distinct.
+\end{remark}
+
+42 tex/chapters/02_foundations.tex:331 remark ['rem:inherited_vs_new'] MISSING
+\begin{remark}[What Chapter~\ref{ch:game_theory} inherits and what it changes]\label{rem:inherited_vs_new}
+The \ac{sg} of Chapter~\ref{ch:game_theory} keeps the structural skeleton of Definition~\ref{def:relu_net_game}: per-neuron $\pm$ states, stop-versus-continue actions, the bias as continuation payoff and the input as final payoff, the transition kernel \eqref{eq:rng_kernel} driven by the weight parts $\Wsig{l}{\sigma}$, the cemetery state, and the structural discounts $\gamma^{(l)}_i$. Two changes are load-bearing for attribution. First, the original tracks only the single signed value \eqref{eq:rng_value_identity}; Chapter~\ref{ch:game_theory} additionally maintains a \emph{non-negative payoff per player}, identifying the pair of player-specific values $\Vp{p}{s}$, $p \in \{+,-\}$, with the two streams of the Stopping Decomposition of Section~\ref{sec:stopping_decomposition} and recovering \eqref{eq:rng_value_identity} as their difference. Second, the signed terminal payoffs $\xi_q\, x_k$ become the non-negative pair $(x_k^{+}, x_k^{-})$ of Definition~\ref{def:posneg_parts}, keeping every player-specific quantity non-negative and exposing the parity structure of backward trajectories. Chapter~\ref{ch:game_theory} further extends the graph to skip connections and max-pooling and adds risk aversion and regularized policies, none of which appear in the original game.
+\end{remark}
+
+43 tex/chapters/02_foundations.tex:339 definition ['def:maxplus_semiring'] MISSING
+\begin{definition}[Max-plus and min-plus semirings]\label{def:maxplus_semiring}
+The \emph{max-plus semiring} is the set $\RR_{\max} \coloneqq \RR \cup \{-\infty\}$ equipped with \emph{tropical addition} and \emph{tropical multiplication},
+\begin{equation}
+	u \oplus v \coloneqq \max\{u, v\},
+	\qquad
+	u \odot v \coloneqq u + v,
+	\label{eq:tropical_operations}
+\end{equation}
+with additive neutral element $-\infty$ and multiplicative neutral element $0$. Both operations are associative and commutative, and $\odot$ distributes over $\oplus$; additive inverses do not exist, so $\RR_{\max}$ is a semiring but not a ring. The \emph{min-plus semiring} $\RR_{\min} \coloneqq \RR \cup \{+\infty\}$ is defined dually with $u \oplus' v \coloneqq \min\{u,v\}$; the map $u \mapsto -u$ is an isomorphism between the two, so every statement below has a min-plus counterpart.
+\end{definition}
+
+45 tex/chapters/02_foundations.tex:352 definition ['def:tropical_polynomial'] MISSING
+\begin{definition}[Tropical polynomials and rational functions]\label{def:tropical_polynomial}
+A \emph{tropical monomial} in $d$ variables with exponent $\alpha \in \RR^{d}$ and coefficient $c \in \RR$ is the affine function $c \odot x_1^{\odot \alpha_1} \odot \cdots \odot x_d^{\odot \alpha_d} = c + \langle \alpha, x \rangle$. A \emph{tropical polynomial} with finite support $\mathcal{A} \subset \RR^{d}$ and coefficients $(c_{\alpha})_{\alpha \in \mathcal{A}}$, $c_\alpha \in \RR$, is the tropical sum of monomials,
+\begin{equation}
+	p(x) \;=\; \bigoplus_{\alpha \in \mathcal{A}} c_{\alpha} \odot x^{\odot \alpha}
+	\;=\; \max_{\alpha \in \mathcal{A}} \bigl( c_{\alpha} + \langle \alpha, x \rangle \bigr).
+	\label{eq:tropical_polynomial}
+\end{equation}
+A \emph{tropical rational function} is a tropical quotient of two tropical polynomials, $p \oslash q \coloneqq p - q$. In classical tropical geometry \parencite{MaclaganSturmfels2015tropical} the exponents are restricted to $\mathcal{A} \subset \NN^{d}$ or $\ZZ^{d}$; for neural networks, real exponents (network weights) are the natural setting, and all statements below hold verbatim in this generality.
+\end{definition}
+
+47 tex/chapters/02_foundations.tex:364 observation ['obs:tropical_convex_cpwl'] LINKED
+\begin{observation}[Tropical polynomials are the convex \ac{cpwl} functions, \LeanResult{obs:tropical_convex_cpwl}]\label{obs:tropical_convex_cpwl}
+A function $p \colon \RR^d \to \RR$ is a tropical polynomial \eqref{eq:tropical_polynomial} if and only if it is convex and \ac{cpwl}.\end{observation}
+
+48 tex/chapters/02_foundations.tex:377 definition ['def:newton_polytope'] MISSING
+\begin{definition}[Newton polytope]\label{def:newton_polytope}
+The \emph{Newton polytope} of a tropical polynomial $p$ with support $\mathcal{A}$ as in \eqref{eq:tropical_polynomial} is the convex hull of its exponent vectors,
+\begin{equation}
+	\operatorname{Newt}(p) \coloneqq \operatorname{conv}\bigl\{ \alpha : \alpha \in \mathcal{A} \bigr\} \subset \RR^{d}.
+	\label{eq:newton_polytope}
+\end{equation}
+The \emph{lifted Newton polytope} additionally records the coefficients,
+$\widehat{\operatorname{Newt}}(p) \coloneqq \operatorname{conv}\bigl\{ (\alpha, c_{\alpha}) : \alpha \in \mathcal{A} \bigr\} \subset \RR^{d+1}$.
+\end{definition}
+
+50 tex/chapters/02_foundations.tex:389 definition ['def:minkowski_sum'] MISSING
+\begin{definition}[Minkowski sum]\label{def:minkowski_sum}
+The \emph{Minkowski sum} of two sets $P, Q \subseteq \RR^{d}$ is $P + Q \coloneqq \{ u + v : u \in P,\, v \in Q \}$. For polytopes $P$ and $Q$ the Minkowski sum is again a polytope, and every vertex of $P + Q$ decomposes as the sum of a vertex of $P$ and a vertex of $Q$ \parencite{Ziegler1995}.
+\end{definition}
+
+51 tex/chapters/02_foundations.tex:395 definition ['def:support_function'] MISSING
+\begin{definition}[Support function]\label{def:support_function}
+The \emph{support function} of a nonempty compact convex set $P \subset \RR^{d}$ is
+\begin{equation}
+	h_{P} \colon \RR^{d} \to \RR,
+	\qquad
+	h_{P}(x) \coloneqq \max_{u \in P}\, \langle u, x \rangle .
+	\label{eq:support_function}
+\end{equation}
+\end{definition}
+
+53 tex/chapters/02_foundations.tex:405 lemmaenv ['lem:support_properties'] LINKED
+\begin{lemmaenv}[Properties of support functions, \LeanResult{lem:support_properties}]\label{lem:support_properties}
+Let $P, Q \subset \RR^{d}$ be nonempty compact convex sets. Then:
+\begin{enumerate}
+	\item $h_{P}$ is convex and positively homogeneous, i.e.\ $h_P(\lambda x) = \lambda h_P(x)$ for $\lambda \ge 0$; if $P$ is a polytope with vertex set $\operatorname{vert}(P)$, then $h_{P}(x) = \max_{u \in \operatorname{vert}(P)} \langle u, x \rangle$ is a tropical polynomial with zero coefficients and Newton polytope $P$.
+	\item For any nonempty finite set $A \subset \RR^d$ and $x \in \RR^d$, $\max_{u \in \operatorname{conv}(A)} \langle u, x \rangle = \max_{u \in A} \langle u, x \rangle$; in particular $h_{P + Q} = h_{P} + h_{Q}$ and $h_{\operatorname{conv}(P \cup Q)} = \max\{h_{P}, h_{Q}\} = h_P \oplus h_Q$.
+	\item $P \subseteq Q$ if and only if $h_{P} \le h_{Q}$ pointwise; in particular $h_{P} = h_{Q}$ implies $P = Q$, so a compact convex set is uniquely determined by its support function.
+\end{enumerate}\end{lemmaenv}
+
+54 tex/chapters/02_foundations.tex:423 proposition ['prop:newton_calculus'] LINKED
+\begin{proposition}[Newton polytope calculus, cf.\ \parencite{Zhang2018}, \LeanResult{prop:newton_calculus}]\label{prop:newton_calculus}
+Let $p$ and $q$ be tropical polynomials on $\RR^d$. Then
+\begin{equation}
+	\operatorname{Newt}(p \odot q) = \operatorname{Newt}(p) + \operatorname{Newt}(q),
+	\qquad
+	\operatorname{Newt}(p \oplus q) = \operatorname{conv}\bigl( \operatorname{Newt}(p) \cup \operatorname{Newt}(q) \bigr).
+	\label{eq:newton_calculus}
+\end{equation}
+Moreover, the lifted Newton polytope determines the polynomial function:
+\begin{equation}
+	p(x) = h_{\widehat{\operatorname{Newt}}(p)}(x, 1)
+	\qquad \text{for all } x \in \RR^{d},
+	\label{eq:lifted_support}
+\end{equation}
+and if all coefficients vanish, $c_{\alpha} \equiv 0$, then $p = h_{\operatorname{Newt}(p)}$.\end{proposition}
+
+57 tex/chapters/02_foundations.tex:462 remark ['rem:polytope_layer_transitions'] MISSING
+\begin{remark}[Layer transitions as polytope operations]\label{rem:polytope_layer_transitions}
+Proposition~\ref{prop:newton_calculus} is the dictionary used in the remaining subsections: an affine layer with non-negative weights acts on the tropical polynomials computed by the previous layer through tropical products and powers---Minkowski sums and scalings of Newton polytopes---while $\relu$ and Maxout gates act through tropical sums---convex hulls of unions. The convex streams $g$ and $h$ of the DC decomposition---developed in full in Chapter~\ref{ch:decompositions}---are, by Observation~\ref{obs:tropical_convex_cpwl}, tropical polynomials, so their (lifted) Newton polytopes are computable layer by layer. Section~\ref{sec:imaginative_polytopes} studies these polytopes: by Lemma~\ref{lem:support_properties}.3 they encode the split streams faithfully, and their vertices are exactly the attainable gradients of $g$ and $h$---the geometric objects behind the \emph{imaginative polytopes} of this thesis. For the broader landscape connecting polyhedral and tropical geometry with network expressivity, see \parencite{Zhang2018,Brandenburg2024b,huchette2025deeplearningmeetspolyhedral}.
+\end{remark}
+
+59 tex/chapters/02_foundations.tex:484 theoremenv ['thm:split_tropical_rational'] LINKED
+\begin{theoremenv}[The \ac{dc} split is a monotone tropical rational decomposition, \LeanResult{thm:split_tropical_rational}]\label{thm:split_tropical_rational}
+Let $f \colon \RR^d \to \RR$ be a bias-free \ac{relu} \ac{mlp} with scalar output and split streams $g, h \colon \RR^{2d} \to \RR$ defined by \eqref{eq:split_preact_recursion}--\eqref{eq:split_act_recursion}. Then:
+\begin{enumerate}
+    \item every coordinate of $\act{l}{+}$ and $\act{l}{-}$, and in particular $g$ and $h$, is a positively homogeneous \emph{monotone} tropical polynomial in the doubled variable $(x^+, x^-) \in \RR^{2d}$;
+    \item for every splitting $x = x^+ - x^-$,
+    \begin{equation}
+        f(x) \;=\; g(x^+, x^-) \;-\; h(x^+, x^-),
+        \label{eq:tropical_rational_split}
+    \end{equation}
+    i.e.\ $f$, precomposed with the difference map, is the tropical rational function $g \oslash h$.
+\end{enumerate}\end{theoremenv}
+
+61 tex/chapters/02_foundations.tex:502 theoremenv ['thm:monotone_nonneg_gradients'] LINKED
+\begin{theoremenv}[Monotone \ac{cpwl} functions have non-negative gradients, \LeanResult{thm:monotone_nonneg_gradients}]\label{thm:monotone_nonneg_gradients}
+Let $u \colon \RR^n \to \RR$ be monotone and \ac{cpwl}. Then every gradient attained by $u$ at a point of differentiability is entrywise non-negative.\end{theoremenv}
+
+63 tex/chapters/02_foundations.tex:518 corollary ['cor:minkowski_propagation'] LINKED
+\begin{corollary}[Minkowski-sum propagation across layers, \LeanResult{cor:minkowski_propagation}]\label{cor:minkowski_propagation}
+For a bias-free \ac{relu} \ac{mlp} with split streams \eqref{eq:split_preact_recursion}--\eqref{eq:split_act_recursion}, the Newton polytopes of the split activations satisfy
+\begin{align}
+    P^{(0,+)}_j &= \{ e_j \},
+    \qquad
+    P^{(0,-)}_j = \{ e_{d+j} \},
+    \qquad j \in [d], \notag \\
+    Q^{(l,+)}_i &\coloneqq \bigoplus_j \Bigl( \Wsig{l}{+}_{ij} P^{(l-1,+)}_j \oplus \Wsig{l}{-}_{ij} P^{(l-1,-)}_j \Bigr),
+    \qquad
+    Q^{(l,-)}_i \coloneqq \bigoplus_j \Bigl( \Wsig{l}{-}_{ij} P^{(l-1,+)}_j \oplus \Wsig{l}{+}_{ij} P^{(l-1,-)}_j \Bigr),
+    \label{eq:polytope_preact} \\
+    P^{(l,+)}_i &= \operatorname{conv}\Bigl( Q^{(l,+)}_i \cup Q^{(l,-)}_i \Bigr),
+    \qquad
+    P^{(l,-)}_i = Q^{(l,-)}_i,
+    \label{eq:polytope_act}
+\end{align}
+where the activation update~\eqref{eq:polytope_act} applies only to $l<L$; at the affine readout set $P^{(L,\pm)}_i=Q^{(L,\pm)}_i$. Here $e_1, \dots, e_{2d}$ are the standard basis of $\RR^{2d}$ and $\oplus$ the Minkowski sum. The Newton polytopes $P_g \coloneqq \operatorname{Newt}(g)$ and $P_h \coloneqq \operatorname{Newt}(h)$ of a scalar output neuron are obtained after $L$ steps.\end{corollary}
+
+65 tex/chapters/02_foundations.tex:542 proposition ['prop:subdifferential_face'] LINKED
+\begin{proposition}[Subdifferential of a support function, \LeanResult{prop:subdifferential_face}]\label{prop:subdifferential_face}
+Let $P \subseteq \RR^n$ be a polytope and $x \in \RR^n$. Then $\partial h_P(x) = F_P(x) = \{ p \in P : \langle p, x \rangle = h_P(x) \}$, the maximizing face. In particular, $h_P$ is differentiable at $x$ if and only if $F_P(x)$ is a singleton, in which case $\nabla h_P(x) \in P$.\end{proposition}
+
+66 tex/chapters/02_foundations.tex:553 definition ['def:imaginative_polytopes'] MISSING
+\begin{definition}[Imaginative Polytopes]\label{def:imaginative_polytopes}
+Let $g, h \colon \RR^{2d} \to \RR$ be the split streams of an output neuron of a bias-free \ac{relu} network. The \emph{Imaginative Polytopes} of that neuron are the Newton polytopes $P_g \coloneqq \operatorname{Newt}(g)$ and $P_h \coloneqq \operatorname{Newt}(h)$, i.e.\ the unique polytopes in $\RR^{2d}$ whose support functions are $g$ and $h$ (Lemma~\ref{lem:support_properties}).
+\end{definition}
+
+67 tex/chapters/02_foundations.tex:559 corollary ['cor:polytopes_nonneg'] LINKED
+\begin{corollary}[Imaginative Polytopes live in the non-negative orthant, \LeanResult{cor:polytopes_nonneg}]\label{cor:polytopes_nonneg}
+$P_g, P_h \subseteq \RR^{2d}_{\ge 0}$.\end{corollary}
+
+68 tex/chapters/02_foundations.tex:566 theoremenv ['thm:vertices_gradients'] LINKED
+\begin{theoremenv}[Vertices encode the attainable split-stream gradients, \LeanResult{thm:vertices_gradients}]\label{thm:vertices_gradients}
+Let $u \colon \RR^n \to \RR$ be a positively homogeneous convex \ac{cpwl} function with Newton polytope $P = \operatorname{Newt}(u)$. Then
+\begin{equation*}
+    \operatorname{vert}(P)
+    \;=\;
+    \bigl\{ \nabla u(\xi) \, : \, \xi \in \RR^n, \ u \text{ differentiable at } \xi \bigr\}.
+\end{equation*}
+In particular, the attainable gradients of the split streams $g$ and $h$ are exactly the vertex sets $\operatorname{vert}(P_g)$ and $\operatorname{vert}(P_h)$ of the Imaginative Polytopes.\end{theoremenv}
+
+70 tex/chapters/02_foundations.tex:601 theoremenv ['thm:smooth_dc_split'] LINKED
+\begin{theoremenv}[DC--monotone splitting under integrable curvature, \LeanResult{thm:smooth_dc_split}]\label{thm:smooth_dc_split}
+Let $f\colon \RR \to \RR$ be differentiable with locally absolutely continuous derivative $f'$ and $f'' \in L^1(\RR)$. Then the limit $s_- \coloneqq \lim_{u\to-\infty} f'(u)$ exists and $f'$ is bounded. Write $P \coloneqq \max\{f'',0\}$ and $N \coloneqq \max\{-f'',0\}$, so that $f'' = P - N$ with $P, N \ge 0$, and define
+\begin{align}
+	C_1(x) &\coloneqq f(0) + \int_0^x \Bigl( s_- + \int_{-\infty}^t P(u)\,\diff u \Bigr) \diff t,
+	&
+	C_2(x) &\coloneqq \int_0^x \int_{-\infty}^t N(u)\,\diff u \,\diff t,
+	\label{eq:curvature_antiderivatives}
+\end{align}
+as well as $M \coloneqq \max\bigl\{ \sup_{x\in\RR} \abs{C_1'(x)},\, \sup_{x\in\RR} \abs{C_2'(x)} \bigr\} < \infty$. Then the functions
+\begin{equation}
+	g(a,b) \coloneqq C_1(a-b) + M(a+b),
+	\qquad
+	h(a,b) \coloneqq C_2(a-b) + M(a+b)
+	\label{eq:smooth_split_pair}
+\end{equation}
+are convex on $\RR^2$, non-decreasing in each argument, and satisfy
+\begin{equation}
+	f(a-b) = g(a,b) - h(a,b) \qquad \text{for all } (a,b) \in \RR^2.
+	\label{eq:smooth_splitting_identity}
+\end{equation}\end{theoremenv}
+
+74 tex/chapters/02_foundations.tex:654 proposition ['prop:curvature_minimality'] LINKED
+\begin{proposition}[Minimality of the curvature split, \LeanResult{prop:curvature_minimality}]\label{prop:curvature_minimality}
+Let $f$ be as in Theorem~\ref{thm:smooth_dc_split} and suppose $f = c_1 - c_2$ for convex functions $c_1, c_2 \colon \RR \to \RR$ whose second distributional derivatives are locally integrable functions. Then $c_1'' \ge P$ and $c_2'' \ge N$ almost everywhere. In particular, $(C_1, C_2)$ is, up to a common affine summand, the unique pair of convex functions with $C_1 - C_2 = f$ of pointwise minimal curvature, and among all tilts of the form $(a,b) \mapsto \lambda(a+b)$, $\lambda \ge 0$, the constant $M$ in Theorem~\ref{thm:smooth_dc_split} is the smallest one rendering both components of \eqref{eq:smooth_split_pair} non-decreasing in each argument.\end{proposition}
+
+75 tex/chapters/02_foundations.tex:661 corollary ['cor:modern_activations'] LINKED
+\begin{corollary}[Modern activation functions, \LeanResult{cor:modern_activations}]\label{cor:modern_activations}
+Theorem~\ref{thm:smooth_dc_split} applies to the following activation functions, where $\varphi$ and $\Phi$ denote the standard Gaussian density and distribution function and $\sigma(x) = (1+e^{-x})^{-1}$ the logistic sigmoid:
+\begin{enumerate}
+	\item \emph{GELU}, $f(x) = x\,\Phi(x)$, with $f''(x) = (2 - x^2)\,\varphi(x)$; the curvature is positive on $(-\sqrt{2}, \sqrt{2})$ and negative outside.
+	\item \emph{Swish/SiLU}, $f(x) = x\,\sigma(\beta x)$ with $\beta > 0$, with $f''(x) = \beta\,\sigma'(\beta x)\bigl( 2 + \beta x\,(1 - 2\sigma(\beta x)) \bigr)$; the curvature is positive on a bounded interval around the origin and negative in both tails.
+	\item \emph{Mish}, $f(x) = x \tanh\bigl(\log(1 + e^{x})\bigr)$.
+	\item \emph{Hyperbolic tangent}, $f(x) = \tanh(x)$, with $f''(x) = -2 \tanh(x)\operatorname{sech}^2(x)$, so $P$ is supported on $(-\infty, 0]$ and $N$ on $[0, \infty)$.
+	\item \emph{Logistic sigmoid}, $f = \sigma$, with $f'' = \sigma'\,(1 - 2\sigma)$.
+	\item \emph{Softplus at temperature $\theta > 0$}, $f(x) = \theta \log(1 + e^{x/\theta})$, with $f''(x) = \sigma'(x/\theta)/\theta \ge 0$; here $N = 0$, $C_2 = 0$, and the decomposition degenerates to the statement that softplus itself is convex.
+\end{enumerate}
+In each case $f(0) \ge 0$, so by Remark~\ref{rem:smooth_valid_decomposition} below the resulting pair map preserves non-negativity of the split streams.\end{corollary}
+
+76 tex/chapters/02_foundations.tex:677 remark ['rem:bv_extension'] MISSING
+\begin{remark}[Bounded variation and the piecewise-linear case]\label{rem:bv_extension}
+The hypothesis of Theorem~\ref{thm:smooth_dc_split} can be weakened to $f'$ having bounded variation, i.e.\ $f''$ being a finite signed Radon measure $\mu$; replacing $P(u)\,\diff u$ and $N(u)\,\diff u$ in \eqref{eq:curvature_antiderivatives} by the Jordan decomposition $\mu = \mu_+ - \mu_-$ leaves every step of the proof intact. This covers the piecewise-linear activations: for $\relu$ one has $\mu = \delta_0$, hence $C_1(x) = \max\{x, 0\}$, $C_2 = 0$, $s_- = 0$ and $M = 1$, so that
+\begin{equation*}
+	g(a,b) - h(a,b) = \max\{a - b, 0\} = \max\{a, b\} - b,
+\end{equation*}
+recovering the splitting identity of Section~\ref{sec:dc_splitting_relu} up to the monotone tilt. Leaky $\relu$ corresponds to $\mu = (1 - \alpha)\,\delta_0$, and ELU to an absolutely continuous curvature $e^{x} \indicator{x < 0}$ plus a possible atom at the origin. Piecewise-linear and smooth activation splittings are thus instances of a single construction.
+\end{remark}
+
+77 tex/chapters/02_foundations.tex:685 remark ['rem:smooth_valid_decomposition'] MISSING
+\begin{remark}[Compatibility with valid decompositions]\label{rem:smooth_valid_decomposition}
+The pair map $(a,b) \mapsto \bigl(g(a,b), h(a,b)\bigr)$ fits the general decomposition framework of Section~\ref{sec:general_decomposition_def}. Indeed, for $a, b \ge 0$ the Lipschitz bounds $\abs{C_i(x) - C_i(0)} \le M \abs{x}$ and $\abs{a - b} \le a + b$ yield
+\begin{equation*}
+	g(a,b) \ge f(0) \ge 0,
+	\qquad
+	h(a,b) \ge 0,
+\end{equation*}
+for every activation of Corollary~\ref{cor:modern_activations}, so the map sends $\RR^2_{\ge 0}$ to $\RR^2_{\ge 0}$ and is a monotone pairwise activation function; exactness \eqref{eq:smooth_splitting_identity} is precisely the validity condition. For an activation with $f(0) < 0$, shifting both components by $\abs{f(0)}$ restores non-negativity without affecting the difference.
+\end{remark}
+
+79 tex/chapters/03_decompositions.tex:30 definition ['def:decomposition'] MISSING
+\begin{definition}[Decomposition]\label{def:decomposition}
+A \emph{decomposition} of a feedforward network~\eqref{eq:original_forward_pass} with $L$ layers is a calculation scheme that propagates non-negative activation pairs $\bigl(\act{l}{+}_i, \act{l}{-}_i\bigr) \in \RR^2_{\ge 0}$ from input to output using only
+\begin{enumerate}
+	\item \textbf{non-negative linear maps}---matrices with non-negative entries together with non-negative bias vectors---and
+	\item \textbf{pairwise activation functions} $\phi \colon \RR^2_{\ge 0} \to \RR^2_{\ge 0}$, $(z^+, z^-) \mapsto (a^+, a^-) = \phi(z^+, z^-)$, applied at every hidden neuron; the final affine readout uses the identity on the pair.
+\end{enumerate}
+Activations are indexed by $l \in \{0,\dots,L\}$, affine parameters by $l \in \{1,\dots,L\}$. The layer-$0$ pair is any non-negative split of the input,
+\begin{equation}
+	\bigl(\act{0}{+}_k, \act{0}{-}_k\bigr) \coloneqq \bigl(x_k^+, x_k^-\bigr),
+	\qquad
+	x_k^+ - x_k^- = x_k,
+	\qquad
+	x_k^+, x_k^- \ge 0,
+	\label{eq:input_split_convention}
+\end{equation}
+and at each affine layer $l$ a non-negative linear map sends the layer-$(l-1)$ activation pair to the layer-$l$ pre-activation pair $\bigl(\preact{l}{+}_i, \preact{l}{-}_i\bigr) \in \RR^2_{\ge 0}$, to which the pairwise activation is applied for $l<L$. At $l=L$ we set $\act{L}{\pm}=\preact{L}{\pm}$, with no activation or maximum. We call $\bigl(\act{l}{+}_i, \act{l}{-}_i\bigr)$ the \emph{decomposed activation} and $\bigl(\preact{l}{+}_i, \preact{l}{-}_i\bigr)$ the \emph{decomposed pre-activation}.
+\end{definition}
+
+83 tex/chapters/03_decompositions.tex:69 definition ['def:valid_decomposition'] MISSING
+\begin{definition}[Valid decomposition]\label{def:valid_decomposition}
+A decomposition (Definition~\ref{def:decomposition}) is \emph{valid} for the network~\eqref{eq:original_forward_pass} with activation function $\varrho$ if the propagated activation pairs satisfy
+\begin{equation}
+	\act{l}{+}_i - \act{l}{-}_i = \varrho_l\bigl(\preactl{l}_i\bigr) = \actl{l}_i
+	\label{eq:validity_condition}
+\end{equation}
+for every layer $l \in \{0, \dots, L\}$ and every neuron $i$, where at $l = 0$ condition~\eqref{eq:validity_condition} is read as $\act{0}{+}_k - \act{0}{-}_k = x_k$.
+\end{definition}
+
+85 tex/chapters/03_decompositions.tex:80 proposition ['prop:validity_recovery'] LINKED
+\begin{proposition}[Validity recovers the network, \LeanResult{prop:validity_recovery}]\label{prop:validity_recovery}
+Let a decomposition use the canonical non-negative linear map \eqref{eq:split_pos}--\eqref{eq:split_neg}. If the validity condition~\eqref{eq:validity_condition} holds at layer $l-1$, then the decomposed pre-activations at layer $l$ satisfy
+\begin{equation}
+	\preact{l}{+}_i - \preact{l}{-}_i = \preactl{l}_i
+	\qquad \text{for every neuron } i.
+	\label{eq:preactivation_difference}
+\end{equation}
+Consequently, every valid decomposition recovers the original network output as the difference of the final decomposed activations,
+\begin{equation}
+	f(x) = \act{L}{+} - \act{L}{-}.
+	\label{eq:output_recovery}
+\end{equation}\end{proposition}
+
+88 tex/chapters/03_decompositions.tex:110 definition ['def:fmix'] MISSING
+\begin{definition}[Mixing decomposition function]\label{def:fmix}
+For $\eta \in [0,1]$, the \emph{mixing decomposition function} is
+\begin{equation}
+	\fmix(z^+, z^-) \coloneqq \bigl(\, \eta \max\{z^+, z^-\} + (1-\eta)\, z^+, \;\; \eta\, z^- + (1-\eta) \min\{z^+, z^-\} \,\bigr).
+	\label{eq:fmix_def}
+\end{equation}
+The decomposition obtained by applying $\fmix$ at every hidden neuron and retaining the identity pair at the affine output on top of the canonical non-negative linear map \eqref{eq:split_pos}--\eqref{eq:split_neg}, with the input convention~\eqref{eq:input_split_convention}, is called the \emph{Mixing Decomposition}; when comparing decompositions we tag its activations as $a_{\mathrm{mix}}^{(l,\pm,\eta)}$.
+\end{definition}
+
+90 tex/chapters/03_decompositions.tex:121 theoremenv ['thm:mixing_recovery'] LINKED
+\begin{theoremenv}[Layerwise recovery of the Mixing Decomposition, \LeanResult{thm:mixing_recovery}]\label{thm:mixing_recovery}
+Let the activation pairs be propagated by the canonical non-negative linear map \eqref{eq:split_pos}--\eqref{eq:split_neg}, initialised by~\eqref{eq:input_split_convention}, and updated by $\fmix$ for some $\eta \in [0,1]$. Then for every layer $l$ and neuron $i$,
+\begin{equation}
+	a_{\mathrm{mix},i}^{(l,+,\eta)} - a_{\mathrm{mix},i}^{(l,-,\eta)} = \varrho_l\bigl(\preactl{l}_i\bigr) = \actl{l}_i,
+	\label{eq:mixing_recovery}
+\end{equation}
+i.e.\ the Mixing Decomposition is a valid decomposition (Definition~\ref{def:valid_decomposition}) of the \ac{relu} network for every $\eta \in [0,1]$.\end{theoremenv}
+
+92 tex/chapters/03_decompositions.tex:147 theoremenv ['thm:mixing_convex_extreme'] LINKED
+\begin{theoremenv}[$\eta = 1$ convex characterisation of the Mixing Decomposition, \LeanResult{thm:mixing_convex_extreme}]\label{thm:mixing_convex_extreme}
+Under the input convention~\eqref{eq:input_split_convention} with split components $x_k^\pm$ that are convex functions of $x$ (e.g.\ the entrywise split $x^\pm = \posneg{x}{\pm}$, or any affine split), the $\eta = 1$ mixing decomposed activations
+\begin{equation*}
+	a_{\mathrm{mix},i}^{(l,+,1)}(x) = \max\bigl\{ \preact{l}{+}_i(x),\, \preact{l}{-}_i(x) \bigr\}
+	\qquad \text{and} \qquad
+	a_{\mathrm{mix},i}^{(l,-,1)}(x) = \preact{l}{-}_i(x)
+\end{equation*}
+are convex in $x$ at every hidden layer $l$ and neuron $i$; at the final layer, both streams are nonnegative affine combinations of the previous streams and remain convex. Consequently $\actl{l}_i = a_{\mathrm{mix},i}^{(l,+,1)} - a_{\mathrm{mix},i}^{(l,-,1)}$ is a difference of convex functions, the standard \ac{dc} representation of the \ac{cpwl} function computed by the network \parencite{Arora2018,hiddenMono}.\end{theoremenv}
+
+93 tex/chapters/03_decompositions.tex:160 remark ['rem:eta_zero_extreme'] MISSING
+\begin{remark}[On the $\eta = 0$ extreme]\label{rem:eta_zero_extreme}
+The dual \ac{dc} representation writes the output as $u(x) - v(x)$ with $v$ \emph{concave}, and $\fmix[0]$ places $a_{\mathrm{mix},i}^{(l,-,0)} = \min\bigl\{\preact{l}{+}_i, \preact{l}{-}_i\bigr\}$ in the role of $v$. This is concave only when both decomposed pre-activations are concave (or affine): the minimum of two concave functions is concave, but of two convex functions is in general neither. Under the input convention~\eqref{eq:input_split_convention}, the first pre-activations are convex in $x$, but later $\eta=0$ streams and pre-activations need not remain convex or concave. A canonical scalar example is $W^{(1)}=1$, $b^{(1)}=1$, giving the negative stream $v(x)=\min\{\max(x,0)+1,\max(-x,0)\}$. It satisfies $v(-2)=v(-1)=1$, $v(0)=v(1)=0$: the midpoint tests at $-1$ and $0$ respectively exclude convexity and concavity. By Theorem~\ref{thm:mixing_recovery}, $\fmix[0]$ still yields a valid arithmetic decomposition, and the network-level concave representation is recoverable with an unsplit affine input convention, at the cost of the $\pm$ structure.
+\end{remark}
+
+95 tex/chapters/03_decompositions.tex:176 corollary ['cor:dc_split_endpoint'] LINKED
+\begin{corollary}[DC split as the $\eta = 1$ mixing endpoint, \LeanResult{cor:dc_split_endpoint}]\label{cor:dc_split_endpoint}
+Set $\eta = 1$ in Definition~\ref{def:fmix} and drop the decomposition tag, writing $\act{l}{\pm} \coloneqq a_{\mathrm{mix}}^{(l,\pm,1)}$. The resulting \emph{\ac{dc} split} propagates, for hidden layers $l = 1, \dots, L-1$,
+\begin{equation}
+	\act{l}{+} = \max\bigl\{ \preact{l}{+},\, \preact{l}{-} \bigr\},
+	\qquad
+	\act{l}{-} = \preact{l}{-}
+	\label{eq:dc_split_activations}
+\end{equation}
+entrywise, and sets $\act{L}{\pm}=\preact{L}{\pm}$ at the final affine readout, with the decomposed pre-activations \eqref{eq:split_pos}--\eqref{eq:split_neg} induced by the weight split $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$ and the input split $x = x^+ - x^-$. It is a valid decomposition of the \ac{relu} network, and under the input convention of Theorem~\ref{thm:mixing_convex_extreme} its decomposed activations are convex functions of the input.\end{corollary}
+
+99 tex/chapters/03_decompositions.tex:216 proposition ['prop:stream_properties'] LINKED
+\begin{proposition}[Monotonicity and convexity of the split streams, \LeanResult{prop:stream_properties}]\label{prop:stream_properties}
+For every $0 \le l \le L$, the stream functions $g^{(l)}$ and $h^{(l)}$ of~\eqref{eq:stream_functions} are convex and non-decreasing in each coordinate of the pair $(x^+, x^-) \in \RR^{d^{(l)}} \times \RR^{d^{(l)}}$.\end{proposition}
+
+100 tex/chapters/03_decompositions.tex:225 theoremenv ['thm:split_correct'] LINKED
+\begin{theoremenv}[Correctness of the split forward pass, \LeanResult{thm:split_correct}]\label{thm:split_correct}
+For every $0 \le l \le L$ and all $x^+, x^- \in \RR^{d^{(l)}}_{\ge 0}$,
+\begin{equation}
+	f^{(l)}\bigl( x^+ - x^- \bigr)
+	= \bigl( g^{(l)} - h^{(l)} \bigr)(x^+, x^-).
+	\label{eq:split_correctness}
+\end{equation}\end{theoremenv}
+
+102 tex/chapters/03_decompositions.tex:251 remark ['rem:subthreshold'] MISSING
+\begin{remark}[Preservation of sub-threshold signals]\label{rem:subthreshold}
+The correctness theorem hides an information-theoretic asymmetry between the original and the split network. When a neuron is inactive, $\preactl{l}_i \le 0$, the original \ac{relu} outputs $\actl{l}_i = 0$ and discards the \emph{magnitude} of the losing pre-activation: downstream computation is oblivious to how strongly the neuron was suppressed. The split pair reads $\bigl(\act{l}{+}_i, \act{l}{-}_i\bigr) = \bigl(\preact{l}{-}_i, \preact{l}{-}_i\bigr)$: the difference is zero, as validity demands, but both components retain the accumulated magnitude $\preact{l}{-}_i$ of the cancelled mass and propagate it forward. The split streams thus carry strictly more information than the original activations---sub-threshold contributions survive the gate---which the attribution methods of Chapter~\ref{ch:saliency} exploit. The same effect drives the numerical growth of Section~\ref{sec:stabilization_dc}: without cancellation by subtraction, both streams accumulate the absolute mass $\preact{l}{+}_i + \preact{l}{-}_i$ instead of the signed residual.
+\end{remark}
+
+103 tex/chapters/03_decompositions.tex:255 remark ['rem:input_split_flexibility'] MISSING
+\begin{remark}[Flexibility of the input split]\label{rem:input_split_flexibility}
+Theorem~\ref{thm:split_correct} holds for \emph{any} non-negative representation $x = x^+ - x^-$: the entrywise split $x^\pm = \posneg{x}{\pm}$ or the symmetric split $x^\pm = \posneg{x}{\pm} + c$ with $c \ge 0$. This degree of freedom is exploited both for numerical stabilization and for the baseline choices of the attribution methods in Chapter~\ref{ch:saliency}. The half--half split $x^\pm = \pm x/2$ of Section~\ref{sec:stabilization_dc} is \emph{not} such a non-negative input split---its negative component is signed---but a chain-rule device for the backward pass, used only to differentiate the split streams along the unified input direction.
+\end{remark}
+
+104 tex/chapters/03_decompositions.tex:260 remark ['rem:smooth_pointer'] MISSING
+\begin{remark}[Beyond \ac{relu}: smooth activations]\label{rem:smooth_pointer}
+The difference-of-convex split is not special to \ac{relu}. Theorem~\ref{thm:smooth_dc_split} (Section~\ref{sec:tropical_polyhedra_foundations}) gives a \ac{dc}--monotone splitting $f(a-b) = g(a,b) - h(a,b)$ for every activation with integrable curvature --- GELU, Swish, tanh, sigmoid, softplus --- so the constructions of this chapter carry over to networks with smooth activations by replacing the splitting identity \eqref{eq:splitting_identity} with that theorem's curvature-based split.
+\end{remark}
+
+105 tex/chapters/03_decompositions.tex:268 definition ['def:fstop'] MISSING
+\begin{definition}[Stopping decomposition function]\label{def:fstop}
+The \emph{stopping decomposition function} is
+\begin{equation}
+	\fstop(z^+, z^-) \coloneqq \bigl(\, \1\bigl[z^+ - z^- > 0\bigr]\, z^+, \;\; \1\bigl[z^+ - z^- > 0\bigr]\, z^- \,\bigr).
+	\label{eq:fstop_def}
+\end{equation}
+The decomposition obtained by applying $\fstop$ at every hidden neuron and retaining the identity pair at the affine output on top of the canonical non-negative linear map \eqref{eq:split_pos}--\eqref{eq:split_neg}, with the input convention~\eqref{eq:input_split_convention}, is called the \emph{Stopping Decomposition}; when comparing decompositions we tag its activations as $a_{\mathrm{stop}}^{(l,\pm)}$.
+\end{definition}
+
+107 tex/chapters/03_decompositions.tex:279 theoremenv ['thm:stopping_validity'] LINKED
+\begin{theoremenv}[Validity of the Stopping Decomposition, \LeanResult{thm:stopping_validity}]\label{thm:stopping_validity}
+Let the activation pairs be propagated by the canonical non-negative linear map \eqref{eq:split_pos}--\eqref{eq:split_neg}, initialised by~\eqref{eq:input_split_convention}, and updated by $\fstop$. Then for every layer $l$ and neuron $i$,
+\begin{equation}
+	a_{\mathrm{stop},i}^{(l,+)} - a_{\mathrm{stop},i}^{(l,-)} = \varrho_l\bigl(\preactl{l}_i\bigr) = \actl{l}_i,
+	\label{eq:stopping_recovery}
+\end{equation}
+i.e.\ the Stopping Decomposition is a valid decomposition (Definition~\ref{def:valid_decomposition}) of the \ac{relu} network.\end{theoremenv}
+
+109 tex/chapters/03_decompositions.tex:298 remark ['rem:gate_vs_maxima'] MISSING
+\begin{remark}[Shared gate versus per-stream maxima]\label{rem:gate_vs_maxima}
+The contrast with the mixing family is sharpest at an inactive neuron, $\preactl{l}_i \le 0$. The \ac{dc} split of Corollary~\ref{cor:dc_split_endpoint} outputs $\bigl(\preact{l}{-}_i, \preact{l}{-}_i\bigr)$, preserving the sub-threshold magnitude (Remark~\ref{rem:subthreshold}) at the price of letting cancelled mass flow onward. The Stopping Decomposition outputs $(0, 0)$: the shared hard gate annihilates \emph{both} streams exactly where the original \ac{relu} annihilates its activation, so decomposed mass flows only along neurons active in the original network. The mixing streams are convex (at $\eta = 1$) but blend contributions of dead neurons into every downstream pair; the stopping streams sacrifice global convexity---the gate is discontinuous---for exact support agreement with the original forward pass, while remaining as well-behaved as possible on each linear region.
+\end{remark}
+
+110 tex/chapters/03_decompositions.tex:302 lemmaenv ['lem:stop_monotone'] LINKED
+\begin{lemmaenv}[Monotonicity of the Stopping Decomposition on linear regions, \LeanResult{lem:stop_monotone}]\label{lem:stop_monotone}
+On each linear region of the \ac{relu} network---a maximal subset of input space on which all gate indicators $\1\bigl[\preactl{l}_j > 0\bigr]$ are constant---each stopping decomposed activation $a_{\mathrm{stop},i}^{(l,\pm)}$ is a non-negative-linear (i.e.\ affine with non-negative coefficients) function of the input pair $(x^+, x^-) \in \RR^{2 d^{(0)}}_{\ge 0}$, hence monotone non-decreasing in each coordinate $x_k^+$ and $x_k^-$.\end{lemmaenv}
+
+111 tex/chapters/03_decompositions.tex:312 lemmaenv ['lem:parity_path'] LINKED
+\begin{lemmaenv}[Parity path view on the Stopping Decomposition, \LeanResult{lem:parity_path}]\label{lem:parity_path}
+Fix a \ac{relu} network with weights $\Wl{l}$ and, for clarity, vanishing biases. For a neuron $i$ in layer $l \ge 1$, a \emph{backward path} to the input is a list $P = (P_l, \dots, P_0)$ with $P_l = i$ and $P_t$ a neuron in layer $t$, using weights $\Wl{t}_{P_t, P_{t-1}}$. Define the absolute weight product, parity sign, and gate factor
+\begin{equation*}
+	\abs{w}(P) \coloneqq \prod_{t=1}^{l} \bigl|\Wl{t}_{P_t, P_{t-1}}\bigr|,
+	\qquad
+	\operatorname{sgn}(P) = + \iff \#\bigl\{ t : \Wl{t}_{P_t, P_{t-1}} < 0 \bigr\} \text{ is even},
+	\qquad
+	G_{<l}(P) \coloneqq \prod_{t=1}^{l-1} \1\bigl[\preactl{t}_{P_t} > 0\bigr].
+\end{equation*}
+Then the decomposed pre-activations of the Stopping Decomposition admit the path-sum representation
+\begin{equation}
+	\preact{l}{+}_i = \sum_{P :\, P_l = i} G_{<l}(P)\, \abs{w}(P)\, x_{P_0}^{\operatorname{sgn}(P)},
+	\qquad
+	\preact{l}{-}_i = \sum_{P :\, P_l = i} G_{<l}(P)\, \abs{w}(P)\, x_{P_0}^{\operatorname{sgn}(P)'},
+	\label{eq:parity_path_sums}
+\end{equation}
+where $\operatorname{sgn}(P)' $ denotes the opposite sign of $\operatorname{sgn}(P)$.\end{lemmaenv}
+
+114 tex/chapters/03_decompositions.tex:357 definition ['def:freg'] MISSING
+\begin{definition}[Regularized decomposition function]\label{def:freg}
+Let $\Omega \colon [0,1] \to \RR_{\le 0}$ be a proper, closed, convex regularizer with $\Omega \le 0$. Define the \emph{regularized gate} and the \emph{conjugate activation}
+\begin{equation}
+	\pi_\Omega(\Delta) \in \argmax_{\pi \in [0,1]} \bigl\{ \pi \Delta - \Omega(\pi) \bigr\},
+	\qquad
+	\Omega^*(\Delta) \coloneqq \max_{\pi \in [0,1]} \bigl\{ \pi \Delta - \Omega(\pi) \bigr\},
+	\label{eq:regularized_gate}
+\end{equation}
+where an arbitrary maximizer is fixed if several exist. The \emph{regularized decomposition function} is
+\begin{equation}
+	\freg(z^+, z^-) \coloneqq \Bigl(\, \pi_\Omega(\Delta)\, z^+ - \Omega\bigl(\pi_\Omega(\Delta)\bigr), \;\; \pi_\Omega(\Delta)\, z^- \,\Bigr),
+	\qquad
+	\Delta \coloneqq z^+ - z^-.
+	\label{eq:freg_def}
+\end{equation}
+\end{definition}
+
+117 tex/chapters/03_decompositions.tex:376 theoremenv ['thm:freg_validity'] LINKED
+\begin{theoremenv}[Validity of regularized decompositions, \LeanResult{thm:freg_validity}]\label{thm:freg_validity}
+Let $\Omega$ be as in Definition~\ref{def:freg}, and let the activation pairs be propagated by the canonical non-negative linear map \eqref{eq:split_pos}--\eqref{eq:split_neg}, initialised by~\eqref{eq:input_split_convention}, and updated by $\freg$ at hidden layers, with the identity pair at the final affine readout. Then for every hidden layer $l$ and neuron $i$,
+\begin{equation}
+	\act{l}{+}_i - \act{l}{-}_i = \Omega^*\bigl(\preactl{l}_i\bigr),
+	\label{eq:freg_recovery}
+\end{equation}
+At the final affine layer, the difference is $\preactl{L}=\actl{L}$. Thus $\freg$ is a valid decomposition of the network~\eqref{eq:original_forward_pass} with activation function $\varrho = \Omega^*$. Moreover, $\Omega^*$ is convex, non-decreasing, and $1$-Lipschitz, and wherever $\Omega^*$ is differentiable the gate is its derivative, $\pi_\Omega(\Delta) = (\Omega^*)'(\Delta) \in [0,1]$.\end{theoremenv}
+
+119 tex/chapters/03_decompositions.tex:397 corollary ['cor:freg_stop'] LINKED
+\begin{corollary}[Unregularized case, \LeanResult{cor:freg_stop}]\label{cor:freg_stop}
+For $\Omega \equiv 0$ on $[0,1]$, Definition~\ref{def:freg} with the maximizer $\pi_\Omega(\Delta) = \1[\Delta > 0]$ recovers the stopping decomposition function, $\freg[0] = \fstop$, and Theorem~\ref{thm:freg_validity} specialises to Theorem~\ref{thm:stopping_validity} with $\Omega^*(\Delta) = \max_{\pi \in [0,1]} \pi\Delta = \relu(\Delta)$.\end{corollary}
+
+121 tex/chapters/03_decompositions.tex:415 corollary ['cor:fsoft'] LINKED
+\begin{corollary}[Softplus Decomposition, \LeanResult{cor:fsoft}]\label{cor:fsoft}
+For $\Omega = \Omega_\theta$ as in~\eqref{eq:entropy_regularizer}, the regularized gate and conjugate activation are
+\begin{equation}
+	\pi_{\Omega_\theta}(\Delta) = \sigma'_\theta(\Delta) \coloneqq \frac{1}{1 + e^{-\Delta/\theta}},
+	\qquad
+	\Omega_\theta^*(\Delta) = \sigma_\theta(\Delta) \coloneqq \theta \log\bigl( 1 + e^{\Delta/\theta} \bigr),
+	\label{eq:sigmoid_gate}
+\end{equation}
+the sigmoid gate and the softplus function at temperature $\theta$. The resulting decomposition function is the \emph{softplus decomposition function}
+\begin{equation}
+	\fsoft(z^+, z^-) = \Bigl(\, \sigma'_\theta(\Delta)\, z^+ + \theta\, H\bigl(\sigma'_\theta(\Delta)\bigr), \;\; \sigma'_\theta(\Delta)\, z^- \,\Bigr),
+	\qquad
+	\Delta = z^+ - z^-,
+	\label{eq:fsoft_def}
+\end{equation}
+and by Theorem~\ref{thm:freg_validity} it yields a valid decomposition---the \emph{Softplus Decomposition}---of the softplus network with parameter $\beta = 1/\theta$. In the limit $\theta \to 0$, $\fsoft \to \fstop$ pointwise on $\{\Delta \neq 0\}$.\end{corollary}
+
+125 tex/chapters/03_decompositions.tex:443 remark ['rem:soft-monotone'] MISSING
+\begin{remark}[Loss of stream monotonicity]\label{rem:soft-monotone}
+The soft gate does not inherit the well-behavedness of the hard-gated Stopping Decomposition. Consider the negative stream $\act{l}{-} = \sigma'_\theta(\Delta)\, z^-$ with $\Delta = z^+ - z^-$: holding $z^+$ fixed and increasing $z^-$ both raises the factor $z^-$ and, through $\Delta$, \emph{lowers} the gate $\sigma'_\theta(\Delta)$. Differentiating, $\partial \act{l}{-} / \partial z^- = \sigma'_\theta(\Delta)\bigl(1 - z^-\, \sigma''_\theta(\Delta)/\sigma'_\theta(\Delta)\bigr)$ turns negative once $z^-$ exceeds $\theta / \bigl(1 - \sigma'_\theta(\Delta)\bigr)$, so $a_{\mathrm{soft}}^{(l,-)}$ is \emph{not} monotone non-decreasing in $z^-$. The per-region monotonicity of the Stopping Decomposition (Lemma~\ref{lem:stop_monotone}) therefore does not lift to the soft-gated family; the reader should not expect the Softplus Decomposition to inherit the monotone or convex structure of the hard-gated and \ac{dc} decompositions. Only the difference recovery of Theorem~\ref{thm:freg_validity} survives.
+\end{remark}
+
+126 tex/chapters/03_decompositions.tex:447 remark ['rem:probit_gelu'] MISSING
+\begin{remark}[Probit regularizer and GELU]\label{rem:probit_gelu}
+The framework is not tied to the entropy. For the probit regularizer $\Omega_\Phi(\pi) \coloneqq -\phi\bigl(\Phi^{-1}(\pi)\bigr)$, with $\phi, \Phi$ the standard Gaussian density and distribution function, one has $\frac{\diff}{\diff \pi}\bigl(-\Omega_\Phi\bigr)(\pi) = -\Phi^{-1}(\pi)$, so the first-order condition for~\eqref{eq:regularized_gate} gives the gate $\pi_{\Omega_\Phi}(\Delta) = \Phi(\Delta)$ and the conjugate activation
+\begin{equation*}
+	\Omega_\Phi^*(\Delta) = \Delta\, \Phi(\Delta) + \phi(\Delta) = \E_{\varepsilon \sim \mathcal{N}(0,1)}\bigl[ \max(\Delta + \varepsilon, 0) \bigr],
+\end{equation*}
+the Gaussian smoothing of the \ac{relu}. Up to $\phi(\Delta)$, which common implementations drop, this is GELU \parencite{Hendrycks2016}, and the gate $\Phi(\Delta) = \E_\varepsilon\bigl[\1[\Delta + \varepsilon > 0]\bigr]$ is the hard stopping gate averaged over a Gaussian shift of its threshold---matching the original stochastic-gate motivation for GELU. The distinction matters for exact decomposability: the conjugate activation $\Omega_\Phi^*(\Delta) = \Delta\,\Phi(\Delta) + \phi(\Delta)$ is the object recovered by $\freg$ and, being a Fenchel conjugate, is convex, non-decreasing, and $1$-Lipschitz (Theorem~\ref{thm:freg_validity}). The \emph{implemented} GELU $\Delta \mapsto \Delta\,\Phi(\Delta)$ that drops $\phi(\Delta)$ is non-monotone---it dips below zero for $\Delta < 0$---and is therefore \emph{not} itself a conjugate activation $\Omega^*$; the exactly decomposable object is the $+\phi(\Delta)$ variant, and networks using the dropped-term GELU are only approximately captured by this decomposition.
+\end{remark}
+
+127 tex/chapters/03_decompositions.tex:455 remark ['rem:freg_smooth_connection'] MISSING
+\begin{remark}[Connection to the integrable-curvature splitting]\label{rem:freg_smooth_connection}
+Regularized gates produce exactly the smooth activations covered by Theorem~\ref{thm:smooth_dc_split}. If $\Omega$ is strictly convex and smooth on $(0,1)$, then $\Omega^*$ is differentiable with $(\Omega^*)' = \pi_\Omega$ increasing from $0$ to $1$; hence the curvature $(\Omega^*)'' \ge 0$ exists weakly and integrates to $1$. Theorem~\ref{thm:smooth_dc_split} then applies with $N = 0$, $C_2 = 0$: every conjugate activation $\Omega^*$ is convex and admits the degenerate \ac{dc}--monotone splitting, as recorded for the softplus in Corollary~\ref{cor:modern_activations}(6). Regularizing the \emph{gate} (this section) and the curvature-based smooth split of Section~\ref{sec:dc_splitting_smooth} thus meet: the two routes yield compatible valid decompositions of the same smoothed networks, cf.\ Remark~\ref{rem:smooth_valid_decomposition}.
+\end{remark}
+
+129 tex/chapters/03_decompositions.tex:473 theoremenv ['thm:shift_forward'] LINKED
+\begin{theoremenv}[Shift equivariance of the split streams, \LeanResult{thm:shift_forward}]\label{thm:shift_forward}
+For any $0 \le l \le L$ and any $c, a^{(+)}, a^{(-)} \in \RR^{d^{(l)}}$ with $a^{(\pm)}, a^{(\pm)} + c \ge 0$,
+\begin{equation}
+	g^{(l)}\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr) = g^{(l)}\bigl( a^{(+)},\, a^{(-)} \bigr) + W_{\mathrm{abs}}^{[l, \rightarrow]}\, c,
+	\qquad
+	h^{(l)}\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr) = h^{(l)}\bigl( a^{(+)},\, a^{(-)} \bigr) + W_{\mathrm{abs}}^{[l, \rightarrow]}\, c.
+	\label{eq:shift_forward}
+\end{equation}
+In particular, $\bigl(g^{(l)} - h^{(l)}\bigr)\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr) = \bigl(g^{(l)} - h^{(l)}\bigr)\bigl( a^{(+)},\, a^{(-)} \bigr)$.\end{theoremenv}
+
+132 tex/chapters/03_decompositions.tex:516 theoremenv ['thm:delta_connection'] LINKED
+\begin{theoremenv}[Sensitivity complementarity, \LeanResult{thm:delta_connection}]\label{thm:delta_connection}
+For every $0 \le l \le L$,
+\begin{equation}
+	\delta^{(l,+,g)} = W_{\mathrm{abs}}^{[l, \rightarrow]} - \delta^{(l,-,g)},
+	\qquad
+	\delta^{(l,+,h)} = W_{\mathrm{abs}}^{[l, \rightarrow]} - \delta^{(l,-,h)}.
+	\label{eq:delta_complementarity}
+\end{equation}\end{theoremenv}
+
+138 tex/chapters/03_decompositions.tex:572 theoremenv ['thm:closed_formula_shift'] LINKED
+\begin{theoremenv}[Closed formulas for the stabilized split gradients, \LeanResult{thm:closed_formula_shift}]\label{thm:closed_formula_shift}
+With $\overline{\alpha}_j \coloneqq \prod_{j \le i \le L} \bigl( 1 - 2 \alpha^{(i)} \bigr)$, the stabilized backward pass \eqref{eq:delta_int_pos}--\eqref{eq:delta_shift_def} computes, for every $0 \le l \le L$,
+\begin{align}
+	\delta_{\mathrm{shift}}^{(l,g)}
+	&= \frac{1}{2} \Bigl[ \delta^{(l)} - \sum_{l \le j < L} \overline{\alpha}_{j+1}\; W_{\mathrm{abs}}^{[j+1, \rightarrow]} \bigl( M^{(j+1,-)} \Wl{j+1} \bigr) \prod_{i = (j-1), \dots, l} W^{(i+1,x)} \Bigr],
+	\label{eq:closed_formula_g}\\
+	\delta_{\mathrm{shift}}^{(l,h)}
+	&= -\frac{1}{2} \Bigl[ \delta^{(l)} + \sum_{l \le j < L} \overline{\alpha}_{j+1}\; W_{\mathrm{abs}}^{[j+1, \rightarrow]} \bigl( M^{(j+1,-)} \Wl{j+1} \bigr) \prod_{i = (j-1), \dots, l} W^{(i+1,x)} \Bigr].
+	\label{eq:closed_formula_h}
+\end{align}
+The $j=L-1$ correction term is zero because $M^{(L,-)}=0$: no minimum or auxiliary $Q$ source is inserted at the affine readout. In particular, $\delta_{\mathrm{shift}}^{(l,g)} - \delta_{\mathrm{shift}}^{(l,h)} = \delta^{(l)}$ for all $l$; for $\alpha^{(i)} \equiv 0$ (i.e.\ $\overline{\alpha}_j = 1$) the formulas describe the plain split-pair gradients, and for $\alpha^{(i)} \equiv 1/2$ all correction terms vanish and the stabilized quantities are $\pm\delta^{(l)}/2$, halves of the original gradient.\end{theoremenv}
+
+142 tex/chapters/03_decompositions.tex:621 remark ['rem:Q_network'] MISSING
+\begin{remark}[Interpretation of the correction terms]\label{rem:Q_network}
+The correction summands in~\eqref{eq:closed_formula_g} are gradients of an auxiliary network: define $Q[j](x) \coloneqq W_{\mathrm{abs}}^{[j,\rightarrow]}\min\{\preactl{j}(x),0\}$, with the original prefix through layer $j$ followed by a linear absolute-weight tail without biases or activation gates. In a bias-free tail this agrees in value with subsequent minimum activations, but the explicit definition also handles arbitrary prefix biases. Then the $j$-th summand equals $\overline{\alpha}_{j+1}\, \partial Q[j+1] / \partial x$ (at $l = 0$), capturing the mass that switches streams at layer $j+1$. These gradients grow rapidly toward the input, so the factors $\overline{\alpha}_j$ act as a per-layer lever that both prevents gradient explosion and regulates how strongly each layer's stream-switching enters the stabilized gradients. In practice all $\alpha^{(l)}$ equal a common $\alpha$; for $\alpha = 1/2$ the sensitivities are exact halves of the original gradient, for $\alpha = 0$ the raw split-pair gradients, and $0 < \alpha < 1/2$ is the interesting regime. These stabilized gradients are the backbone of the split saliency methods in Chapter~\ref{ch:saliency}.
+\end{remark}
+
+144 tex/chapters/03_decompositions.tex:638 proposition ['prop:conv_correct'] LINKED
+\begin{proposition}[Correctness of split convolution, \LeanResult{prop:conv_correct}]\label{prop:conv_correct}
+The chunk~\eqref{eq:conv_split} maps non-negative pairs to non-negative pairs, each output component is a non-negative linear (affine) function of $(u^+, u^-)$---hence convex and non-decreasing in each coordinate---and
+\begin{equation*}
+	v^+ - v^- = K * (u^+ - u^-) + b.
+\end{equation*}\end{proposition}
+
+145 tex/chapters/03_decompositions.tex:653 lemmaenv ['lem:linear_chunk'] LINKED
+\begin{lemmaenv}[Non-negative linear chunks preserve the invariants, \LeanResult{lem:linear_chunk}]\label{lem:linear_chunk}
+Let a chunk compute an affine map $u \mapsto A u + c$ with real matrix $A = \posneg{A}{+} - \posneg{A}{-}$ and bias $c = \posneg{c}{+} - \posneg{c}{-}$, split streamwise as
+\begin{equation*}
+	v^+ \coloneqq \posneg{A}{+} u^+ + \posneg{A}{-} u^- + \posneg{c}{+},
+	\qquad
+	v^- \coloneqq \posneg{A}{-} u^+ + \posneg{A}{+} u^- + \posneg{c}{-}.
+\end{equation*}
+Then the chunk maps non-negative pairs to non-negative pairs, each component is affine with non-negative coefficients in $(u^+, u^-)$---hence convex and non-decreasing in each coordinate---and $v^+ - v^- = A(u^+ - u^-) + c$.\end{lemmaenv}
+
+146 tex/chapters/03_decompositions.tex:689 proposition ['prop:maxpool_correct'] LINKED
+\begin{proposition}[Correctness of gated max-pooling, \LeanResult{prop:maxpool_correct}]\label{prop:maxpool_correct}
+For a pooling window $[q]$, define the split chunk
+\begin{equation}
+	v^+ \coloneqq \max_{j \in [q]} \Bigl\{ u_j^+ + \sum_{i \in [q],\, i \neq j} u_i^- \Bigr\},
+	\qquad
+	v^- \coloneqq \sum_{i \in [q]} u_i^-.
+	\label{eq:maxpool_split}
+\end{equation}
+Then $v^\pm \ge 0$ for $u^\pm \ge 0$, both components are convex and non-decreasing in each coordinate of $(u^+, u^-)$, and
+\begin{equation}
+	v^+ - v^- = \max_{j \in [q]} \bigl( u_j^+ - u_j^- \bigr).
+	\label{eq:maxpool_identity}
+\end{equation}\end{proposition}
+
+149 tex/chapters/03_decompositions.tex:722 theoremenv ['thm:cnn_split_correct'] LINKED
+\begin{theoremenv}[Correctness of the CNN split pass, \LeanResult{thm:cnn_split_correct}]\label{thm:cnn_split_correct}
+Let $\mathcal{G}$ be a feedforward computation graph composed of the chunk types above, computing the function $x \mapsto f(x)$. Then for every input split $x = x^+ - x^-$ with $x^\pm \ge 0$, the split pass produces non-negative pairs satisfying the difference invariant
+\begin{equation*}
+	v_m^+ - v_m^- = v_m \qquad \text{for every chunk } C_m,
+\end{equation*}
+where $v_m$ is the corresponding original activation; in particular $f(x) = v_M^+ - v_M^-$. If neither winner-takes-all pooling nor input-dependent re-centering is used, every $v_m^\pm$ is convex in $(x^+, x^-)$ and non-decreasing in each coordinate.\end{theoremenv}
+
+153 tex/chapters/04_game_theory.tex:144 theoremenv ['ptnb:thm:gradient'] LINKED
+\begin{theoremenv}[Gradient representation, \LeanResult{ptnb:thm:gradient}]\label{ptnb:thm:gradient}
+The Stopping Game allows a subgame-perfect Nash equilibrium, unique up to tie-breaking at
+zero-activation neurons.
+On strict gate cells (and with unique max-pooling winners where applicable), under the stop-at-tie-breaks equilibrium the discounted occupation measure $\Gamma_x(s_{i,p}^{(l)})
+    \ge 0$ equals the output derivative with respect to the corresponding \emph{Stopping Decomposition}
+activation. At ties, the corresponding identities refer to the backward quantities selected by the stated gate and winner conventions.
+On these cells, the gradient of $f$ with respect to the input is the difference $\Gamma_x(s_{i,+}^{(0)}) -
+    \Gamma_x(s_{i,-}^{(0)})$.\end{theoremenv}
+
+156 tex/chapters/04_game_theory.tex:194 theoremenv ['ptnb:thm:lrp-recovery', 'thm:lrp_recovery'] LINKED
+\begin{theoremenv}[$\alpha\beta$-\ac{lrp} representation, \LeanResult{ptnb:thm:lrp-recovery}]\label{ptnb:thm:lrp-recovery}\label{thm:lrp_recovery}
+For $\tau>0$, the Gibbs policies of Eq.~\eqref{ptnb:eq:gibbs-policy} and stopping decisions from the corresponding continuation values yield a canonical SPNE of the entropy-regularized \ac{rg}. We select stopping at every activation log tie and absorption for an empty routing stream, as specified in Remark~\ref{ptnb:rem:routing-spne-uniqueness}. At the anchor $\tau=1$, the selected gate is $\mathbf{1}[z>0]$ and the
+$\alpha\beta$-\ac{lrp} attribution map in~\eqref{ptnb:eq:lrp-ab} equals $R_i^{(l)} =
+    f(x)\,\bigl(\Gamma_x(s_{i,+}^{(l)}) - \Gamma_x(s_{i,-}^{(l)})\bigr)$.\end{theoremenv}
+
+161 tex/chapters/04_game_theory.tex:402 theoremenv ['ptnb:thm:decomp-recovery'] LINKED
+\begin{theoremenv}[Layerwise Recovery of the Original Activations, \LeanResult{ptnb:thm:decomp-recovery}]\label{ptnb:thm:decomp-recovery}
+For every layer $l$ and neuron $j$,
+\begin{align}\label{ptnb:eq:decomp-recovery-stop-mix}
+    a_{\mathrm{stop},j}^{(l,+)} - a_{\mathrm{stop},j}^{(l,-)}
+    =
+    a_j^{(l)} = \relu\!\bigl(z_j^{(l)}\bigr).
+\end{align}\end{theoremenv}
+
+163 tex/chapters/04_game_theory.tex:436 lemmaenv ['ptnb:lem:parity-path'] LINKED
+\begin{lemmaenv}[Path view on the Stopping Decomposition, \LeanResult{ptnb:lem:parity-path}]\label{ptnb:lem:parity-path}
+Fix a feedforward ReLU network with weights $W^{(l)}$ (biases ignored; see remark at end of proof).
+For neuron $j$ in layer $l \ge 1$, call a \emph{backward path} from $j$ to the input layer a list
+of neuron indices
+\begin{align}
+    P = (P_l, P_{l-1}, \dots, P_0), \qquad P_l = j,
+\end{align}
+with $P_t$ indexing a neuron in layer $t$. The edges of $P$ use the weights $W^{(t)}_{P_{t-1},
+    P_t}$ for $t = 1, \dots, l$. Define
+\begin{align}
+    w(P) \coloneqq \prod_{t=1}^{l} W^{(t)}_{P_{t-1}, P_t},
+    \qquad
+    |w|(P) \coloneqq \prod_{t=1}^{l} \bigl| W^{(t)}_{P_{t-1}, P_t} \bigr|,
+\end{align}
+the parity sign
+\begin{align}
+    \mathrm{sgn}(P) \in \{+,-\},
+    \qquad
+    \mathrm{sgn}(P) = + \iff \#\bigl\{t : W^{(t)}_{P_{t-1}, P_t} < 0\bigr\} \text{ is even,}
+\end{align}
+and the \emph{gate factor} (1 iff every gate on $P$ at intermediate layers $1,\dots,l-1$ is open)
+\begin{align}
+    G_{<l}(P) \coloneqq \prod_{t=1}^{l-1} \1\!\bigl[z_{P_t}^{(t)} > 0\bigr].
+\end{align}
+Then the decomposed pre-activations~\eqref{ptnb:eq:split-pos}--\eqref{ptnb:eq:split-neg} admit the path-sum
+representation
+\begin{align}
+    z_j^{(l,+)} &= \sum_{P:\, P_l = j} G_{<l}(P)\, |w|(P)\, x_{P_0}^{\mathrm{sgn}(P)},
+    \label{ptnb:eq:parity-plus}\\
+    z_j^{(l,-)} &= \sum_{P:\, P_l = j} G_{<l}(P)\, |w|(P)\, x_{P_0}^{\mathrm{sgn}(P)'}.
+    \label{ptnb:eq:parity-minus}
+\end{align}\end{lemmaenv}
+
+173 tex/chapters/04_game_theory.tex:582 definition ['ptnb:def:adf-game-states'] MISSING
+\begin{definition}[Stopping Game State Space]\label{ptnb:def:adf-game-states} The game is played on the following states:
+\begin{itemize}
+    \item \textbf{Activation States:} $s_{j,q}^{(l, \mathrm{act})}$ where layer $l \in \{1, \dots, L\}$ and
+        player $q \in \{+,-\}$ is in turn at neuron $j$.
+    \item \textbf{Terminal States:} $s_{k,q}^{(0)}$ where $k$ is an input dimension and $q \in \{+,-\}$ is
+        the final turn label.
+    \item \textbf{Cemetery State:} $\dagger$, an absorbing state reached upon stopping.
+\end{itemize}
+We adopt the convention that, when a transition kernel or recursion at layer $l$ references the
+predecessor state $s_{i,r}^{(l-1, \mathrm{act})}$, the symbol denotes the activation state at layer
+$l-1 \ge 1$ as defined above and, in the boundary case $l = 1$, is interpreted as the terminal
+state $s_{i,r}^{(0)}$.
+\end{definition}
+
+174 tex/chapters/04_game_theory.tex:596 definition ['ptnb:def:adf-recursion'] MISSING
+\begin{definition}[Payoffs, Transitions, and Value Recursion]\label{ptnb:def:adf-recursion}
+Fix an input $x$.
+
+\textbf{Payoffs.} The player-specific \emph{payoff} $r_p$ at activation states is paid out
+depending on the action chosen by the active player, and paid out at terminal and cemetery states
+without prerequisites:
+\begin{itemize}
+    \item Cemetery: $r_p(\dagger) \coloneqq 0$.
+    \item Active state: $r_p(s_{j,q}^{(l, \mathrm{act})}, \mathrm{stop}) \coloneqq 0$ (stopping pays nothing)
+        and $r_p(s_{j,q}^{(l, \mathrm{act})}, \mathrm{cont}) \coloneqq b_j^{(l, p \oplus q)}$ (continuation
+        pays a positive bias to the active player $q$---covered by the case $p \oplus q = +$---and the
+        absolute value of a negative bias to its opponent $q'$---covered by the case $p \oplus q = -$).
+    \item Terminal: $r_p(s_{k,q}^{(0)}) \coloneqq x_k^{p \oplus q}$ (at terminal states the payoff depends on
+        state only---the game ends here. A positive input is paid to the active player $q$---covered by the
+        case $p \oplus q = +$---whereas the absolute value of a negative input is paid to its opponent
+        $q'$---covered by the case $p \oplus q = -$).
+\end{itemize}
+
+\textbf{Transition kernel.} Stopping at state $s^{(l, \text{act})}_{j,p}$ deterministically sends
+the game to the cemetery; continuation transports backward by one layer with transition
+probabilities depending on the fraction of the respective absolute network weight compared to the
+sum of absolute incoming weights at neuron $j$ of layer $l$. In case of a positive weight, the
+active player $p$ stays in turn, in case of a negative weight, the turn switches to its opponent
+$p'$.
+\begin{align}\label{ptnb:eq:adf-kernel-stop}
+    \P\bigl(\dagger \,\big|\, s_{j,q}^{(l, \mathrm{act})}, \mathrm{stop}\bigr) \coloneqq 1,
+\end{align}
+\begin{align}\label{ptnb:eq:adf-kernel}
+    \P\bigl(s_{i,r}^{(l-1, \mathrm{act})} \,\big|\, s_{j,q}^{(l, \mathrm{act})}, \mathrm{cont}\bigr)
+    \coloneqq \frac{W_{ij}^{(l, q \oplus r)}}{\gamma_j^{(l)}},
+    \qquad
+    \gamma_j^{(l)} \coloneqq \sum_i \bigl(W_{ij}^{(l,+)} + W_{ij}^{(l,-)}\bigr) = \sum_i
+    \bigl|W_{ij}^{(l)}\bigr|,
+\end{align}
+where $\gamma_j^{(l)}$ is the local structural discount that restores unit row-sum (if
+$\gamma_j^{(l)} = 0$, continuation leads to $\dagger$). For understanding the idea of the
+occupation measure, we remark that those $\gamma^{(l)}_j$ are going to weight the trajectories in
+the occupation measure.
+
+\textbf{Policy.} A pure, i.e., deterministic policy $\pi = (\pi_+, \pi_-)$ assigns each active
+state $s_{j,q}^{(l, \mathrm{act})}$ a binary stop/continue decision by the player in turn,
+\begin{align}
+    \pi_q\bigl(s_{j,q}^{(l, \mathrm{act})}\bigr) \in \{0, 1\},
+    \qquad
+    1 = \mathrm{cont},\ 0 = \mathrm{stop}.
+\end{align}
+\textbf{Player-specific action and game values.} For each policy $\pi$, the player-specific
+\textbf{action value} $\tilde{Q}_p^\pi(s, a)$ is the expected discounted payoff for player $p$
+starting at $s$ with action $a$ and following $\pi$ thereafter, defined by the standard Bellman
+equation
+\begin{align}\label{ptnb:eq:adf-q-bellman}
+    \tilde{Q}_p^\pi(s, a) \coloneqq r_p(s, a) + \gamma(s)\, \textstyle\sum_{s'} \P\bigl(s' \,\big|\, s,
+    a\bigr)\, \tilde{V}_p^\pi(s'),
+\end{align}
+where $\tilde{V}_p^\pi$ is the player-specific game value defined below. We use tildes to reserve
+$V_p^\pi$ for the advantage further down, which already carries a subtracted $\tilde{V}_{p'}^\pi$.
+At active states~\eqref{ptnb:eq:adf-q-bellman} specializes,
+using~\eqref{ptnb:eq:adf-kernel-stop}--\eqref{ptnb:eq:adf-kernel}, to
+\begin{align}\label{ptnb:eq:adf-q-stop}
+    \tilde{Q}_p^\pi\bigl(s_{j,q}^{(l, \mathrm{act})},\, \mathrm{stop}\bigr) &= 0 + 1 \cdot
+    \tilde{V}_p^\pi(\dagger) = 0 \\ \label{ptnb:eq:adf-q-cont}
+    \tilde{Q}_p^\pi\bigl(s_{j,q}^{(l, \mathrm{act})},\, \mathrm{cont}\bigr)
+    &= b_j^{(l, p \oplus q)} + \gamma_j^{(l)} \textstyle\sum_{s'} \P\bigl(s' \,\big|\, s_{j,q}^{(l,
+    \mathrm{act})}, \mathrm{cont}\bigr)\, \tilde{V}_p^\pi(s') \\
+    &= b_j^{(l, p \oplus q)} + \sum_{i,r} W_{ij}^{(l, q \oplus r)}\,
+    \tilde{V}_p^\pi\bigl(s_{i,r}^{(l-1, \mathrm{act})}\bigr).
+\end{align}
+The \textbf{player-specific game value} $\tilde{V}_p^\pi(s)$ is the action value averaged by the
+policy. At terminal and cemetery states it equals the local payoff there:
+\begin{align}\label{ptnb:eq:adf-v-terminal}
+    \tilde{V}_p^\pi\bigl(s_{k,q}^{(0)}\bigr) \coloneqq x_k^{p \oplus q},
+    \qquad
+    \tilde{V}_p^\pi(\dagger) \coloneqq 0.
+\end{align}
+At active states,
+\begin{align}\label{ptnb:eq:adf-v-active}
+    \tilde{V}_p^\pi\bigl(s_{j,q}^{(l, \mathrm{act})}\bigr) \coloneqq \pi_q\bigl(s_{j,q}^{(l,
+    \mathrm{act})}\bigr)\, \tilde{Q}_p^\pi\bigl(s_{j,q}^{(l, \mathrm{act})},\, \mathrm{cont}\bigr) +
+    \bigl(1 - \pi_q\bigl(s_{j,q}^{(l, \mathrm{act})}\bigr)\bigr)\, \tilde{Q}_p^\pi\bigl(s_{j,q}^{(l,
+    \mathrm{act})},\, \mathrm{stop}\bigr).
+\end{align}
+Since $\pi_q$ is binary,~\eqref{ptnb:eq:adf-v-active} selects either $\tilde{Q}_p^\pi(\cdot,
+    \mathrm{cont})$ or $\tilde{Q}_p^\pi(\cdot, \mathrm{stop}) = 0$.
+
+\textbf{Game value.} The quantity the player in turn maximizes at each active state is the
+advantage of player $p$ at $s$,
+\begin{align}\label{ptnb:eq:adf-advantage}
+    V_p^\pi(s) \coloneqq \tilde{V}_p^\pi(s) - \tilde{V}_{p'}^\pi(s).
+\end{align}
+\end{definition}
+
+183 tex/chapters/04_game_theory.tex:690 theoremenv ['ptnb:thm:forward-stopping'] LINKED
+\begin{theoremenv}[Forward Equivalence for Stopping Game, \LeanResult{ptnb:thm:forward-stopping}]\label{ptnb:thm:forward-stopping}
+The game admits a Subgame Perfect Nash Equilibrium (SPNE) where both players follow the same pure
+strategy:
+\begin{align} \label{ptnb:eq:adf-spne-policy}
+    \pi_q^{\star}\bigl(s_{j,q}^{(l, \mathrm{act})}\bigr) = \1\bigl[z_j^{(l)} > 0\bigr].
+\end{align}
+Under this equilibrium, the player-specific game values and the game values satisfy
+\begin{align}\label{ptnb:eq:adf-spne-values}
+    \tilde{V}_p^{\pi^\star}\bigl(s_{j,q}^{(l, \mathrm{act})}\bigr) = a_{\mathrm{stop},j}^{(l, p \oplus
+    q)},
+    \qquad
+    V_p^{\pi^\star}\bigl(s_{j,q}^{(l, \mathrm{act})}\bigr) = \xi_{p,q}\, a_j^{(l)}.
+\end{align}\end{theoremenv}
+
+186 tex/chapters/04_game_theory.tex:704 remark ['ptnb:rem:adf-spne-uniqueness'] MISSING
+\begin{remark}[Uniqueness of the SPNE up to tie-breaking] \label{ptnb:rem:adf-spne-uniqueness}
+It is easy to see in the following proof that the SPNE \eqref{ptnb:eq:adf-spne-policy} is unique up to
+tie-breaking at states where continuing yields zero advantage $\tilde
+    Q_q^{\pi^\star}(\cdot,\mathrm{cont})-\tilde Q_{q'}^{\pi^\star}(\cdot,\mathrm{cont}) = z_j^{(l)} =
+    0$---representing neurons of preactivation zero. The pinned Stopping-Game attribution code selects continuation at exact zero in its hard backward mask, while the Routing Game and Hellinger diagnostic use strict positivity. These choices give the same original forward activation at a tie but can give different selected backward quantities there. The theorem here uses stopping at ties. We refer to the policy
+\eqref{ptnb:eq:adf-spne-policy} by \textbf{stop-at-tie-breaks} equilibrium.
+\end{remark}
+
+192 tex/chapters/04_game_theory.tex:789 definition ['ptnb:def:addition-subgame'] MISSING
+\begin{definition}[Addition Oracle]\label{ptnb:def:addition-subgame}
+For a residual node $z = x + y$, the \emph{addition state} $s_{z,q}^{\mathrm{add}}$ has active
+player $q \in \{+,-\}$ and operand states $s_{x,q}, s_{y,q}$ at the two summands. The transition
+kernel is the uniform Oracle
+\begin{align}
+    \P\bigl(s_{x,q} \,\big|\, s_{z,q}^{\mathrm{add}}\bigr) \coloneqq \tfrac{1}{2},
+    \qquad
+    \P\bigl(s_{y,q} \,\big|\, s_{z,q}^{\mathrm{add}}\bigr) \coloneqq \tfrac{1}{2},
+\end{align}
+with player $q$ retained at the chosen operand. The immediate payoff is
+$r_p(s_{z,q}^{\mathrm{add}}) \coloneqq 0$ for both $p \in \{+,-\}$, and the structural discount is
+$\gamma_{\mathrm{O}} \coloneqq 2$.
+\end{definition}
+
+194 tex/chapters/04_game_theory.tex:803 proposition ['ptnb:prop:addition-equivalence'] LINKED
+\begin{proposition}[Forward Equivalence for Addition, \LeanResult{ptnb:prop:addition-equivalence}]\label{ptnb:prop:addition-equivalence}
+The player-specific state value at the addition state equals the sum of the operand state values,
+\begin{align}
+    \tilde V_p^{\pi}\bigl(s_{z,q}^{\mathrm{add}}\bigr)
+    \;=\;
+    \tilde V_p^{\pi}(s_{x,q}) + \tilde V_p^{\pi}(s_{y,q}).
+\end{align}
+Consequently, if the operand states recover the Stopping-Decomposition activations---$\tilde
+    V_p^{\pi^\star}(s_{x,q}) = x^{(p\oplus q)}$ and $\tilde V_p^{\pi^\star}(s_{y,q}) = y^{(p\oplus
+    q)}$---then $\tilde V_p^{\pi^\star}(s_{z,q}^{\mathrm{add}}) = z^{(p\oplus q)}$, preserving the
+forward equivalence of Theorem~\ref{ptnb:thm:forward-stopping} across the residual sum.\end{proposition}
+
+197 tex/chapters/04_game_theory.tex:848 definition ['ptnb:def:maxpool-subgame'] MISSING
+\begin{definition}[Max-Pooling Decision State]\label{ptnb:def:maxpool-subgame}
+For a pooled scalar output $z = \max\{x_1, \dots, x_m\}$, the \emph{pooling state} $s_{z,q}^{\max}$
+has active player $q \in \{+, -\}$ and admissible action set $\mathcal{A}(s_{z,q}^{\max}) = \{1,
+    \dots, m\}$ indexing the operand states $s_{x_1,q}, \dots, s_{x_m,q}$. Under action $k$, the
+transition is deterministic,
+\begin{align}
+    \P\bigl(s_{x_k,q} \,\big|\, s_{z,q}^{\max}, k\bigr) \coloneqq 1,
+\end{align}
+with player $q$ retained at the chosen operand. The immediate payoff is $r_p(s_{z,q}^{\max}, k)
+    \coloneqq 0$ for both $p \in \{+,-\}$, and the structural discount is $\gamma_{\mathrm{O}}
+    \coloneqq 1$.
+\end{definition}
+
+199 tex/chapters/04_game_theory.tex:871 proposition ['ptnb:prop:maxpool-equivalence'] LINKED
+\begin{proposition}[Forward Equivalence for Max Pooling, \LeanResult{ptnb:prop:maxpool-equivalence}]\label{ptnb:prop:maxpool-equivalence}
+Assume the operand states recover the Stopping-Decomposition activations, $\tilde
+    V_p^{\pi^\star}(s_{x_k,q}) = x_k^{(p\oplus q)}$ for all $k$, with non-negative operand activations
+$x_k \ge 0$. Then at the SPNE of the subgame rooted at $s_{z,q}^{\max}$,
+\begin{align}
+    \tilde V_p^{\pi^\star}\bigl(s_{z,q}^{\max}\bigr) \;=\; z^{(p\oplus q)},
+\end{align}
+so the pooling state inherits the same Stopping-Decomposition identity as its winning operand and
+the forward equivalence of Theorem~\ref{ptnb:thm:forward-stopping} extends across the pooling node.\end{proposition}
+
+202 tex/chapters/04_game_theory.tex:902 definition ['ptnb:def:trajectory-distribution'] MISSING
+\begin{definition}[Game trajectory and trajectory law]\label{ptnb:def:trajectory-distribution}
+Fix an input $x$ and a root state $s$. A \emph{game trajectory} rooted at $s$ is a finite sequence
+of game states
+\begin{align}
+    \zeta \;=\; (\zeta_0, \zeta_1, \dots, \zeta_T), \qquad \zeta_0 = s,
+\end{align}
+that follows the admissible transitions of the game (Definition~\ref{ptnb:def:adf-recursion} together
+with the addition/max-pooling Oracle splits of
+Definitions~\ref{ptnb:def:addition-subgame}--\ref{ptnb:def:maxpool-subgame}) until it terminates either at a
+layer-$0$ terminal state $\zeta_T = s_{k,r}^{(0)}$ (reaching an input dimension $k$) or at the
+cemetery state $\zeta_T = \dagger$ (reached the first time a player chooses \emph{stop}). The set
+of all such trajectories is the trajectory \emph{ground set} $\mathcal{T}_s$. Composing the
+transition kernel~\eqref{ptnb:eq:adf-kernel-stop}--\eqref{ptnb:eq:adf-kernel}, the Oracle splits, and a
+(possibly stochastic) policy $\pi$ at every activation state defines a Markov kernel on game
+states, which together with the deterministic start at $s$ induces a probability distribution
+$\Pi_x^\pi(\cdot \mid s)$ on $\mathcal{T}_s$. Trajectories that pass through closed gates---neurons
+$j$ with $\1[z_j^{(l)} > 0] = 0$---are admissible elements of $\mathcal{T}_s$, but under the
+equilibrium policy $\pi^\star$ the player at the activation state stops there, so any trajectory
+continuing past a closed gate carries probability zero. We write $\Pi_x(\cdot \mid s) \coloneqq
+    \Pi_x^{\pi^\star}(\cdot \mid s)$ for the equilibrium \emph{trajectory law} and $\Pi_x \coloneqq
+    \Pi_x(\cdot \mid s_0)$ for the law rooted at the output state $s_0 \coloneqq
+    s_{u,+}^{(L,\mathrm{act})}$.
+\end{definition}
+
+204 tex/chapters/04_game_theory.tex:926 definition ['ptnb:def:occupation'] MISSING
+\begin{definition}[Discounted Occupation Measure]\label{ptnb:def:occupation}
+Let $\Pi_x(\cdot \mid s)$ be the equilibrium trajectory law of
+Definition~\ref{ptnb:def:trajectory-distribution}.
+Define the cumulative discount
+\begin{align}
+    d_t(\zeta) \coloneqq \prod_{m=0}^{t-1} \gamma(\zeta_m), \qquad d_0(\zeta) = 1,
+\end{align}
+where $\gamma(\zeta_m) = \gamma_{\mathrm{O}} = 2$ for addition Oracle states, $\gamma(\zeta_m) =
+    \gamma_{\mathrm{O}} = 1$ for max-pooling states, and $\gamma(\zeta_m) = \gamma_j^{(l)}$ for
+continuation at activation states $\zeta_m = s_{j,q}^{(l,\mathrm{act})}$ (per-neuron
+weight-magnitude discount). The \emph{discounted occupation measure} of state $v$ for trajectories
+rooted at $s$ is
+\begin{align}
+    \Gamma_x(v \mid s) \coloneq \E_{\zeta \sim \Pi_x(\cdot \mid s)}\left[\sum_t d_t(\zeta)\,\1\{\zeta_t
+    = v\}\right],
+    \qquad
+    \Gamma_x(v) \coloneqq \Gamma_x(v \mid s_0).
+\end{align}
+\end{definition}
+
+207 tex/chapters/04_game_theory.tex:946 theoremenv ['ptnb:thm:deriv-occ', 'thm:gradient_occupation'] LINKED
+\begin{theoremenv}[Activation--Occupation Correspondence, \LeanResult{ptnb:thm:deriv-occ}]\label{ptnb:thm:deriv-occ}\label{thm:gradient_occupation}
+Fix a neuron state $s = s_{j,q}^{(m, \mathrm{act})}$ and a layer $l \le m$ (for $l = 0$,
+$s_{i,\cdot}^{(0,\mathrm{act})}$ denotes the terminal state $s_{i,\cdot}^{(0)}$). Under the
+stop-at-tie-breaks equilibrium fixed by the boundary conventions of
+Section~\ref{ptnb:app:notation-identities} (uniquely fixing the SPNE at ReLU gates with $z = 0$ and at
+max-pooling states with multiple maximizers), the discounted occupation measures exactly represent,
+in a multi-trajectory ReLU network (e.g., a ResNet or a CNN with max pooling), the local
+Stopping-Decomposition and scalar activation derivatives on open cells with nonzero ReLU preactivations and unique max-pooling winners. At ties, the same formulas represent the backward quantities computed using the selected gates and winners; they do not assert classical differentiability of the individual stopping streams, which can be discontinuous there:
+\begin{enumerate}
+    \item \textbf{Stopping-Decomposition Gradient:}
+        \begin{align}
+            \frac{\partial a_{\mathrm{stop},j}^{(m, p \oplus q)}}{\partial a_{\mathrm{stop},i}^{(l, k)}}
+            \;=\;
+            \Gamma_x\!\bigl(s_{i, p \oplus k}^{(l, \mathrm{act})} \bigm| s\bigr).
+        \end{align}
+    \item \textbf{Network Activation Gradient.} The ordinary-network gradient of $a_j^{(m)}$ with respect to
+        the scalar activation $a_i^{(l)}$ is
+        \begin{align}
+            \frac{\partial a_j^{(m)}}{\partial a_i^{(l)}}
+            \;=\;
+            \xi_{q, +}\bigl(\Gamma_x(s_{i, +}^{(l, \mathrm{act})} \mid s) - \Gamma_x(s_{i, -}^{(l,
+            \mathrm{act})} \mid s)\bigr).
+        \end{align}
+\end{enumerate}\end{theoremenv}
+
+221 tex/chapters/04_game_theory.tex:1117 definition ['ptnb:def:routing-recursion'] MISSING
+\begin{definition}[Entropy-Regularized Two-Player Routing Game]\label{ptnb:def:routing-recursion}
+Fix an input $x$ and a stabilizer $\varepsilon \ge 0$. At each activation state $s_{j,p}^{(l,
+    act)}$, the player in turn chooses \emph{stop} or \emph{continue} with similar mechanics as in the
+Stopping Game (Section~\ref{ptnb:app:relu-net-game}) reflecting the open-closed state of a ReLU gate:
+stopping sends the game to the cemetery $\dagger$ giving immediate payoff $\ell(0) = -\infty$---and
+continuation transitions backward with structural discount $\gamma=2$ and the uniform $1/2$
+sign-branch kernel given above. Here happens the critical step: gains of the opponent on the
+negative stream state $s_{j,p',-}^{(l, \text{lin})}$ shall be counted as losses of the active
+player $p$. At each linear routing state $s_{j,q,\kappa}^{(l, lin)}$, the player in turn instead
+chooses a mixed action $\nu \in \Delta(\mathrm{Pred}_j^{(l)} \cup \{\mathrm{bias},
+    \perp_{\mathrm{lin}}\})$ over the predecessors of neuron $j$ augmented by a terminal \emph{bias
+node} with immediate payoff $\ell([b_j^{(l)}]^\kappa)$ and a fictitious \emph{outside option}
+$\perp_{\mathrm{lin}}$ which routes the game's mass to the cemetery with immediate payoff $\ell
+    (\varepsilon)$; trajectories entering either are absorbed. Let $\mathcal{H}(\nu) \coloneqq
+    -\sum_{a} \nu(a)\log \nu(a)$ be Shannon entropy over this augmented action set. At $\varepsilon =
+    0$ the outside option carries $\ell (0) = -\infty$ and is dominated by every positive-mass
+predecessor, so the augmented game reduces to the Routing Game over $\mathrm{Pred}_j^{(l)} \cup
+    \{\mathrm{bias}\}$.
+
+An admissible profile chooses a pure stop/continue action at each activation state and a probability vector at each linear routing state. Under any profile, evaluate the displayed recursions using those choices, without taking maxima: use the chosen activation action and the chosen routing vector's expected log score plus entropy. A zero-probability term contributes zero even when its score is $-\infty$; positive probability on a $-\infty$ score makes the routing value $-\infty$.
+
+Throughout, $\mathbf{V}(\cdot) = (V_p(\cdot), V_{p'}(\cdot))^\top$ denotes the game's
+backward-induction player-specific log-value function, defined jointly at linear routing states
+by~\eqref{ptnb:eq:routing-linear-value} and at activation states by~\eqref{ptnb:eq:routing-activation-value}
+below. The recursion is well-posed because the layered state graph is a finite DAG: the $l=1$ case
+of~\eqref{ptnb:eq:routing-linear-action} needs no lower-layer $\mathbf{V}$, and every subsequent layer
+uses only $\mathbf{V}$ at strictly lower layers.
+
+For a \textbf{linear routing state} at $l \geq 2$ the active player continuing to the $i$th
+neuron's activation state receives an immediate payoff of the logarithm of the respective weight
+summed with the respective log-value function of the next state, whereas in the first layer the
+final payoff is paid out to the active player. The inactive player always obtains an immediate
+payoff of $\ell(0) = -\infty$. Let us denote by $Q_r(s, a)$ player $r$'s gain for the game value in
+case action $a$ actually happens, whereas $\bar Q_r$ denotes the mixture of the differences between
+the payoffs of the opponents including the entropy regularization term given the mixed strategy
+chosen by the active player.
+\begin{align}\label{ptnb:eq:routing-linear-action}
+    Q_r \bigl( s_{j,q,\kappa}^{(l, lin)}, i \bigr)
+    \coloneqq
+    \begin{cases}
+        \ell\!\bigl(W_{ij}^{(l,\kappa)}\bigr) + V_r\bigl(s_{i,q}^{(l-1, act)}\bigr), & r=q,\ l \ge 2,\\[0.35em]
+        \ell\!\bigl([x_iW_{ij}^{(1)}]^\kappa\bigr), & r=q,\ l = 1,\\[0.35em]
+        -\infty, & r=q'.
+    \end{cases}
+\end{align}
+The outside option $\perp_{\mathrm{lin}}$ and the bias node have log-scores
+$Q_r(s_{j,q,\kappa}^{(l,\mathrm{lin})}, \perp_{\mathrm{lin}}) \coloneqq \ell(\varepsilon)$ and
+$Q_r(s_{j,q,\kappa}^{(l,\mathrm{lin})}, \mathrm{bias}) \coloneqq \ell([b_j^{(l)}]^\kappa)$ for $r =
+    q$ and $-\infty$ for $r = q'$; they route the $\varepsilon$-fraction and the bias share of the mass
+to absorbing terminals instead of to any predecessor.
+If player $q$ uses mixed action $\nu$ at this state, the induced \emph{individual routed masses}
+are
+\begin{align}\label{ptnb:eq:optimal-linear}
+    \bar Q_r \bigl( s_{j,q,\kappa}^{(l, lin)};\nu \bigr)
+    &\coloneqq
+    \sum_a \nu(a)\, \ell \left( \exp \left( Q_r \bigl( s_{j,q,\kappa}^{(l, lin)}, a \bigr) \right) -
+    \exp \left( Q_{r'} \bigl( s_{j,q,\kappa}^{(l, lin)}, a \bigr) \right) \right) \notag\\
+    &\quad + \tau \mathcal{H}(\nu),
+    \qquad r \in \{q,q'\},
+\end{align}
+which, as $\exp(-\infty)=0$, evaluates to
+\begin{align}
+    \bar Q_q \bigl( s_{j,q,\kappa}^{(l, lin)};\nu \bigr)
+    &=
+    \sum_a \nu(a)\, Q_q \bigl( s_{j,q,\kappa}^{(l, lin)}, a \bigr)
+    + \tau \mathcal{H}(\nu) \\
+    \bar Q_{q'} \bigl( s_{j,q,\kappa}^{(l, lin)};\nu \bigr)
+    &= -\infty.
+\end{align}
+If $W_{ij}^{(l,\kappa)} = 0$ for every predecessor $i$ and $[b_j^{(l)}]^\kappa = 0$ (i.e.\ the
+stream-$\kappa$ part of the fan-in to neuron $j$ is identically zero), then
+$Q_q(s_{j,q,\kappa}^{(l,\mathrm{lin})},i) = -\infty$ for all $i$ as well and the
+value~\eqref{ptnb:eq:routing-linear-value} equals $\ell(\varepsilon)$. If $\varepsilon=0$ and every
+action scores $-\infty$ (e.g.\ $\Sigma_j^{(l,\kappa)}=0$ at $\tau=1$), every $\nu$ is a best
+response; we fix $\nu=\delta_{\perp_{\mathrm{lin}}}$ (absorption), matching the convention
+$0/0\coloneqq0$ in~\eqref{ptnb:eq:lrp-eps-recursion}.
+We define the corresponding equilibrium linear-game values by
+\begin{align}\label{ptnb:eq:routing-linear-value}
+    V^\star_q \bigl( s_{j,q,\kappa}^{(l, lin)} \bigr)
+    &\coloneqq
+    \max_{\nu \in \Delta(\mathrm{Pred}_j^{(l)} \cup \{\mathrm{bias}, \perp_{\mathrm{lin}}\})}
+    \bar Q_q\bigl(s_{j,q,\kappa}^{(l, lin)};\nu\bigr) \nonumber \\
+    &=
+    \max_{\nu \in \Delta(\mathrm{Pred}_j^{(l)} \cup \{\mathrm{bias}, \perp_{\mathrm{lin}}\})}
+    \left\{
+    \sum_{a} \nu(a)\, Q_q \bigl( s_{j,q,\kappa}^{(l, lin)}, a \bigr)
+    + \tau \mathcal{H}(\nu)
+    \right\} \nonumber \\
+    &=
+    \tau \cdot \ell \left( \varepsilon^{ \frac{1}{\tau} } +
+    \bigl([b_j^{(l)}]^\kappa\bigr)^{\frac{1}{\tau}} + \sum_i \exp\left( Q_q(s_{j,q,\kappa}^{(l, lin)},
+    i) \right)^{ \frac{ 1 }{ \tau } } \right), \\
+    V^\star_{q'} \bigl( s_{j,q,\kappa}^{(l, lin)} \bigr)
+    &\coloneqq -\infty,
+\end{align}
+where we used~\eqref{ptnb:eq:gibbs-lse}. At $\tau = 1$ the associated Gibbs policy assigns the outside
+option the probability $\varepsilon / (\varepsilon + \sum_{a \neq \perp_{\mathrm{lin}}} \exp
+    Q_q(\cdots, a))$ and distributes the remaining mass over the predecessors and the bias node in
+proportion to $\exp Q_q$.
+
+For an \textbf{activation state}, continuing exposes both sign branches. Let $s_+ \coloneqq
+    s_{j,p,+}^{(l, \text{lin})}$ and $s_- \coloneqq s_{j,p',-}^{(l, \text{lin})}$. If player $p$
+chooses \emph{continue} at $s_{j,p}^{(l, act)}$, the game transitions to $s_+$ or to $s_-$ with
+equal probability, while \emph{stop} sends the game to the cemetery with game value
+$V_r(\dagger)=\ell(0)=-\infty$. Taking the expectation over the uniform sign-branch kernel
+($\frac{1}{2}$ each) and respecting the discount $\gamma_O = 2$ interpreted in logarithmic space,
+the continuation value becomes
+\begin{align}\label{ptnb:eq:routing-activation-continue}
+    Q_r \bigl( s_{j,p}^{(l, act)}, \mathrm{continue} \bigr)
+    &\coloneqq
+    \ell \left( \sum_{s' \in \{s_+, s_-\}} \P(s' \mid s_{j,p}^{(l, act)}) \cdot \gamma_{\mathrm{O}}
+    \cdot \Bigl( \exp V_r(s') - \exp V_{r'}(s') \Bigr) \right) \nonumber \\
+    &= \ell \left(
+    \xi_{r,p} \Bigl( \exp\left( V_p\left( s_+ \right) \right) - \exp\left( V_{p'}\left( s_- \right)
+    \right) \Bigr)
+    \right).
+\end{align}
+
+Stopping yields $-\infty$ for both players. We select \emph{stop at every activation-state tie in log space}, so the selected policy and active-player value are
+\begin{align}\label{ptnb:eq:routing-activation-value}
+    \pi_p^\star(\mathrm{continue}\mid s_{j,p}^{(l,\mathrm{act})})
+    &\coloneqq \1\!\left[Q_p(s_{j,p}^{(l,\mathrm{act})},\mathrm{continue})>-\infty\right],\\
+    V_p(s_{j,p}^{(l,\mathrm{act})})
+    &\coloneqq \max\{-\infty,Q_p(s_{j,p}^{(l,\mathrm{act})},\mathrm{continue})\}.
+\end{align}
+Writing $D_p=\exp V_p(s_+)-\exp V_{p'}(s_-)$, this selects continuing exactly when $D_p>0$. When $D_p\leq0$, both actions have log value $-\infty$ and the convention selects stopping. If continuing is selected, the opponent's continuation value is $-\infty$; if stopping is selected, both players receive $-\infty$. Thus in either case
+\begin{align}
+    V_{p'}(s_{j,p}^{(l,\mathrm{act})})=-\infty.
+\end{align}
+\end{definition}
+
+230 tex/chapters/04_game_theory.tex:1275 theoremenv ['ptnb:thm:routing-forward'] LINKED
+\begin{theoremenv}[SPNE and Forward Equivalence of the Routing Game, \LeanResult{ptnb:thm:routing-forward}]\label{ptnb:thm:routing-forward}
+\leavevmode
+\begin{description}
+    \item[\textnormal{(i) \emph{SPNE existence for every $\tau > 0$ and $\varepsilon \ge 0$.}}]
+        For every $\tau > 0$ and every $\varepsilon \ge 0$, the entropy-regularized two-player Routing Game
+        of Definition~\ref{ptnb:def:routing-recursion} (with linear-state entropy weight $\tau\,\mathcal{H}$ and
+        outside-option stabilizer $\varepsilon$) admits a subgame-perfect Nash equilibrium
+        (see~\eqref{ptnb:eq:routing-spne-linear}--\eqref{ptnb:eq:routing-spne-stop} in the proof for the explicit
+        form of the equilibrium policy). We write $\cdot^\star$ for equilibrium quantities throughout.
+
+    \item[\textnormal{(ii) \emph{Forward equivalence at the anchor $\tau=1$, $\varepsilon\geq 0$.}}]
+        At $\tau=1$ and $\varepsilon \geq 0$, the equilibrium quantities recover the network forward pass:
+        for every layer $l$, neuron $j$, player labels $p,q,r$, and stream sign $\kappa\in\{+,-\}$,
+        \begin{align}
+            V_r\bigl(s_{j,q,\kappa}^{(l, lin)}\bigr) &= \ell\bigl(\delta_{r,q} \, (\Sigma_j^{(l,\kappa)} +
+            \varepsilon)\bigr), \label{ptnb:eq:routing-forward-linear}\\
+            Q_r\left( s_{j,p}^{(l, act)}, \text{continue} \right) &= \ell \left( \xi_{r,p} \cdot z^{(l)}_j
+            \right), \label{ptnb:eq:routing-forward-continue} \\
+            V_r\bigl(s_{j,p}^{(l, act)}\bigr) &= \ell\bigl( \delta_{r,p}\ \cdot a_j^{(l)} \bigr),
+            \label{ptnb:eq:routing-forward-act}\\
+            \pi_p^\star\bigl(s_{j,p}^{(l, act)}\bigr) &= \1[z_j^{(l)} > 0]. \label{ptnb:eq:routing-forward-stop}
+        \end{align}
+\end{description}\end{theoremenv}
+
+232 tex/chapters/04_game_theory.tex:1299 remark ['ptnb:rem:routing-spne-uniqueness'] MISSING
+\begin{remark}[Uniqueness]\label{ptnb:rem:routing-spne-uniqueness}
+The linear-state Gibbs best response~\eqref{ptnb:eq:routing-spne-linear} is the unique maximizer of the
+strictly concave entropy-regularized objective whenever some action has a finite score (otherwise
+Definition~\ref{ptnb:def:routing-recursion} fixes $\perp_{\mathrm{lin}}$). At activation states the active player is indifferent whenever the signed continuation mass $\exp V_p(s_+) - \exp V_{p'}(s_-)$ is nonpositive ($z_j^{(l)}\leq0$ at $\tau=1$), because both log-space action values are then $-\infty$. Thus the unconstrained best-response set can contain several policies. The theorem specifies the
+tie-breaker $\pi_p^\star = \1[Q_p(\cdot,\mathrm{continue}) > -\infty]$, which at $\tau=1$ reduces
+to $\1[z_j^{(l)} > 0]$. Just like in the \ac{sg} (Section~\ref{ptnb:app:relu-net-game}), we refer to
+this SPNE as the \textbf{stop-at-tie-breaks} equilibrium. This canonical choice also selects the absorbing outside action whenever every routing action has zero mass; without these conventions, both activation log ties and empty routing streams permit multiple optimal choices.
+\end{remark}
+
+244 tex/chapters/04_game_theory.tex:1484 remark ['ptnb:rem:starting-player'] MISSING
+\begin{remark}[Choice of starting player]\label{ptnb:rem:starting-player}
+Rooting $\Pi_x$ at $s_{u,-}^{(L,\mathrm{act})}$ instead of $s_{u,+}^{(L,\mathrm{act})}$ swaps the
+two output-layer occupations and therefore negates $\Gamma^{(l)}_j$ at every layer. We fix the
+canonical convention that the game starts at the $+$-state.
+\end{remark}
+
+245 tex/chapters/04_game_theory.tex:1490 remark ['ptnb:rem:signed-discount-alt'] MISSING
+\begin{remark}[Equivalent signed-discount sum formulation]\label{ptnb:rem:signed-discount-alt}
+The same recovery theorem can be phrased with the signed trajectory discount
+$\gamma(s_{j,q,+}^{(l,\mathrm{lin})}) = 2\alpha$, $\gamma(s_{j,q,-}^{(l,\mathrm{lin})}) = -2\beta$
+and the per-neuron \emph{sum} $\Gamma^{(l)}_j = \Gamma_x(s_{j,+}^{(l,\mathrm{act})}) +
+    \Gamma_x(s_{j,-}^{(l,\mathrm{act})})$ in place of~\eqref{ptnb:eq:routing-Gamma-pair}. We have chosen the
+non-negative-discount version because it is easier to comprehend---$\Gamma_x$ remains a genuine
+non-negative occupation measure, and the LRP sign is generated by an explicit algebraic difference
+rather than absorbed into the trajectory weights.
+\end{remark}
+
+247 tex/chapters/04_game_theory.tex:1519 theoremenv ['ptnb:thm:ab-recovery'] LINKED
+\begin{theoremenv}[Recovery of Multi-Path $\alpha\beta$-\ac{lrp}, \LeanResult{ptnb:thm:ab-recovery}]\label{ptnb:thm:ab-recovery}
+For every $\varepsilon \ge 0$ and every input with $f(x)=a_u^{(L)}>0$ (if $f(x)=0$ the root player
+stops and $R^{(l)}=f(x)\Gamma^{(l)}=0$ trivially), under the stop-at-tie-breaks equilibrium
+(Remark~\ref{ptnb:rem:routing-spne-uniqueness}; ties at max-pooling states broken by the smallest index)
+at the anchor temperature $\tau = 1$ and stabilizer $\varepsilon$, with the cumulative trajectory
+discount~\eqref{ptnb:eq:routing-discount} and the occupation measure $\Gamma_j^{(l)}$
+from~\eqref{ptnb:eq:routing-Gamma-pair}:
+\begin{enumerate}
+    \item \textbf{Linear Map.} The per-neuron difference $\Gamma^{(l)}_j$ of~\eqref{ptnb:eq:routing-Gamma-pair}
+        satisfies
+        \begin{align}\label{ptnb:eq:lrp-eps-recovery}
+            \Gamma^{(l-1)}_i
+            \;=\; \sum_j \left(
+            \alpha \frac{[a_i^{(l-1)} W_{ij}^{(l)}]^+}{\varepsilon + \Sigma_j^{(l,+)}}
+            -
+            \beta \frac{[a_i^{(l-1)} W_{ij}^{(l)}]^-}{\varepsilon + \Sigma_j^{(l,-)}}
+            \right) \Gamma^{(l)}_j.
+        \end{align}
+        Because~\eqref{ptnb:eq:lrp-eps-recovery} and~\eqref{ptnb:eq:lrp-eps-recursion} share their computational
+        step, $\Gamma^{(l)}_j \cdot R_u^{(L)} = R^{(l)}_j$ at every layer; in particular $R^{(l)}_j =
+            f(x)\,\Gamma^{(l)}_j$ for the seed $R^{(L)}_u = f(x)$. The same formula covers the fused input
+        layer with $a^{(0)} = x$. At $\varepsilon = 0$ this reduces to the unstabilized
+        $\alpha\beta$-\ac{lrp} redistribution (not conservative: bias nodes absorb relevance); at
+        $\varepsilon > 0$ \ch{it is the $\alpha\beta$ rule with the stabilization convention adopted here,
+        i.e.\ \eqref{ptnb:eq:lrp-ab} with $\varepsilon$ added to each sign denominator separately.}
+    \item \textbf{Residual Addition.} Let $z = x_{\mathrm{op}} + y_{\mathrm{op}}$ be an addition node with
+        addition state $s^{\mathrm{add}}_{z,p}$ and operand states $s_{x_{\mathrm{op}},p},
+            s_{y_{\mathrm{op}},p}$ as in Section~\ref{ptnb:app:routing-skip}. For every player label $p\in\{+,-\}$,
+        with the edge occupation $\Gamma_x(s\to s')\coloneqq\E_{\zeta\sim\Pi_x}\bigl[\sum_t
+            d_{t+1}(\zeta)\1\{\zeta_t=s,\zeta_{t+1}=s'\}\bigr]$ (an operand's total occupation adds the edges
+        from its other parents),
+        \begin{align}
+            \Gamma_x\!\bigl(s^{\mathrm{add}}_{z,p}\to s_{x_{\mathrm{op}},p}\bigr) \;=\;
+            \tfrac12\,\Gamma_x\!\bigl(s^{\mathrm{add}}_{z,p}\bigr),
+            \qquad
+            \Gamma_x\!\bigl(s^{\mathrm{add}}_{z,p}\to s_{y_{\mathrm{op}},p}\bigr) \;=\;
+            \tfrac12\,\Gamma_x\!\bigl(s^{\mathrm{add}}_{z,p}\bigr),
+        \end{align}
+        so the operand pair carries the full addition-state mass with no duplication.
+    \item \textbf{Max Pooling.} For a pooled output $z = \max\{x_1,\dots,x_m\}$ with winner $k^\star$ and
+        pooling state $s_{z,p}^{\max}$ (Section~\ref{ptnb:app:routing-skip}), the deterministic
+        value-maximizing transition concentrates all mass on the winner: for every player label $p \in
+            \{+,-\}$,
+        \begin{align}
+            \Gamma_x\!\bigl(s^{\max}_{z,p}\to s_{x_{k^\star},p}\bigr) \;=\;
+            \Gamma_x\!\bigl(s_{z,p}^{\max}\bigr),
+            \qquad
+            \Gamma_x\!\bigl(s^{\max}_{z,p}\to s_{x_{k},p}\bigr) \;=\; 0 \text{ for } k \neq k^\star.
+        \end{align}
+\end{enumerate}\end{theoremenv}
+
+260 tex/chapters/04_game_theory.tex:1817 lemmaenv ['ptnb:lem:noisy-gate-dual'] LINKED
+\begin{lemmaenv}[Probit dual of the soft gate, \LeanResult{ptnb:lem:noisy-gate-dual}]\label{ptnb:lem:noisy-gate-dual}
+For every $z\in\RR$, the regularized maximization
+\begin{align}\label{ptnb:eq:noisy-gate-objective}
+    \max_{\pi \in [0,1]}\; \bigl\{\,\pi z \;+\; \mathcal{R}_\Phi(\pi)\,\bigr\}
+\end{align}
+admits the unique maximizer $\pi^\star = \Phi(z)$ and optimum value
+\begin{align}\label{ptnb:eq:noisy-gate-optimum}
+    z\,\Phi(z) + \phi(z) \;=\; \E_{\eta\sim\mathcal{N}(0,1)}\!\bigl[\max(z+\eta,\,0)\bigr].
+\end{align}\end{lemmaenv}
+
+264 tex/chapters/04_game_theory.tex:1841 remark ['ptnb:rem:noisy-gate-perception'] MISSING
+\begin{remark}[Optimal policy under perceived payoff noise]\label{ptnb:rem:noisy-gate-perception}
+The optimum $\pi^\star = \Phi(z_i^{(l)})$ admits an equivalent interpretation as the marginal of an
+optimal pure rule: the player perceives the continuation payoff at $s_{i,q}^{(l)}$ as the noisy
+quantity $z_i^{(l)} + \eta$ with $\eta \sim \mathcal{N}(0,1)$ independent across states, and
+applies the noiseless-optimal pure rule \emph{``continue iff the perceived payoff is strictly
+positive''} on this perception. Marginalizing the rule over $\eta$ at fixed $z_i^{(l)}$ recovers
+the continue probability,
+\begin{align}\label{ptnb:eq:noisy-gate-marginal}
+    \P_{\eta\sim\mathcal{N}(0,1)}\!\bigl(z_i^{(l)} + \eta > 0\bigr) \;=\; \Phi(z_i^{(l)}).
+\end{align}
+The realized continuation payoff is the deterministic $z_i^{(l)}$ from the actual network forward
+pass: the noise $\eta$ lives in the player's perception of the payoff while the environment pays
+out $z_i^{(l)}$ on continuation, so the expected backward Bellman comparison at $s_{i,q}^{(l)}$ is
+the soft mass $\Phi(z_i^{(l)}) \cdot z_i^{(l)}$ in place of the deterministic $\1[z_i^{(l)} >
+    0]\cdot z_i^{(l)}$.
+\end{remark}
+
+269 tex/chapters/04_game_theory.tex:1949 theoremenv ['ptnb:thm:softplus-forward', 'prop:softplus_game'] LINKED
+\begin{theoremenv}[Softplus forward equivalence, \LeanResult{ptnb:thm:softplus-forward}]\label{ptnb:thm:softplus-forward}\label{prop:softplus_game}
+The entropy-regularized Stopping Game of~\eqref{ptnb:eq:softplus-soft-bellman} admits an SPNE whose
+activation-state policy is the Gibbs policy~\eqref{ptnb:eq:softplus-policy}; it is unique on networks
+without max-pooling nodes, since~\eqref{ptnb:eq:softplus-soft-bellman} is strictly concave (ties at
+max-pooling states are resolved as in Section~\ref{ptnb:app:notation-identities}). Under this
+equilibrium, at every activation state $s_{j,q}^{(l, \mathrm{act})}$,
+\begin{align}\label{ptnb:eq:softplus-spne-tildes}
+    \tilde V_p^{\pi^\star}\!\bigl(s_{j,q}^{(l, \mathrm{act})}\bigr)
+    \;=\;
+    a_{\mathrm{soft},j}^{(l, p \oplus q,\,\theta)},
+    \qquad
+    V_q^{\pi^\star}\!\bigl(s_{j,q}^{(l, \mathrm{act})}\bigr)
+    \;=\;
+    \mathrm{sp}_\theta\!\bigl(z_j^{(l)}\bigr),
+\end{align}
+where $a_{\mathrm{soft},j}^{(l, \pm,\,\theta)}$ are the Softplus-Decomposition activations of the
+Softplus network with activation $\mathrm{sp}_\theta$, propagated
+by~\eqref{ptnb:eq:split-pos}--\eqref{ptnb:eq:split-neg} from $a_{\mathrm{soft},k}^{(0,\pm,\theta)} = x_k^\pm$
+with the decomposition function
+\begin{align}\label{ptnb:eq:softplus-decomp}
+    f_{\mathrm{soft}}^{\,\theta}(z^+, z^-) \;\coloneqq\; \bigl(\,\mathrm{sp}'_\theta(z^+ - z^-)\, z^+ +
+    \theta\, \mathcal{H}_\theta(z^+ - z^-),\;\; \mathrm{sp}'_\theta(z^+ - z^-)\, z^-\,\bigr),
+\end{align}
+and $\mathcal{H}_\theta(z) \coloneqq \mathcal{H}(\mathrm{sp}'_\theta(z))$ the binary entropy of the
+Gibbs weight.\end{theoremenv}
+
+272 tex/chapters/04_game_theory.tex:2014 theoremenv ['ptnb:thm:softplus-gradient'] LINKED
+\begin{theoremenv}[Softplus gradient recovery, \LeanResult{ptnb:thm:softplus-gradient}]\label{ptnb:thm:softplus-gradient}
+Under the SPNE of Theorem~\ref{ptnb:thm:softplus-forward} on the Softplus network with activation
+$\mathrm{sp}_\theta$, the discounted occupation difference recovers the Softplus-network gradient
+exactly as in Theorem~\ref{ptnb:thm:deriv-occ}:
+\begin{align}
+    \frac{\partial a_j^{(m)}}{\partial a_i^{(l)}}
+    \;=\;
+    \xi_{q,+}\Bigl(\Gamma_x\bigl(s_{i,+}^{(l, \mathrm{act})} \bigm| s\bigr) -
+    \Gamma_x\bigl(s_{i,-}^{(l, \mathrm{act})} \bigm| s\bigr)\Bigr),
+    \qquad s = s_{j,q}^{(m, \mathrm{act})},
+\end{align}
+with $\Gamma_x$ now driven by $\Pi_x^\theta$.\end{theoremenv}
+
+275 tex/chapters/07_transformers.tex:34 definition ['def:maxout_multiplication_network'] MISSING
+\begin{definition}[Maxout multiplication network]\label{def:maxout_multiplication_network}
+A \emph{rank-$k$ Maxout multiplication network} is a finite directed acyclic graph of \emph{input neurons}, \emph{addition neurons}, and \emph{multiplication neurons}. An addition neuron $v$ carries weight vectors $w^{uv} \in \RR^k$ on its incoming arcs and computes the rank-$k$ Maxout activation $a^v = \max_{i \in [k]} \sum_{u} w^{uv}_i a^u$; a multiplication neuron carries natural exponents $w^{uv} \in \NN$ and computes the monomial $a^v = \prod_{u} (a^u)^{w^{uv}}$. The network is called \emph{monotone} if all weights are non-negative, and \emph{input-convex} if all weights are non-negative except possibly those on arcs leaving input neurons.
+\end{definition}
+
+276 tex/chapters/07_transformers.tex:40 proposition ['prop:posynomial_representation'] LINKED
+\begin{proposition}[Representation by maxima of posynomials, \LeanResult{prop:posynomial_representation}]\label{prop:posynomial_representation}
+A monotone rank-$k$ Maxout multiplication network with non-negative intermediate quantities represents the maximum of finitely many posynomials in its non-negative input variables, and is monotone on the non-negative orthant. This representation does not imply ordinary convexity: the positive-coefficient monomial $xy$ is a counterexample. Allowing signed input-incident affine maps likewise supplies no general input-convexity guarantee in the presence of multiplication.\end{proposition}
+
+278 tex/chapters/07_transformers.tex:59 theoremenv ['thm:multiplicative_split'] LINKED
+\begin{theoremenv}[Monotone split of multiplicative \ac{relu} networks, \LeanResult{thm:multiplicative_split}]\label{thm:multiplicative_split}
+Let $N$ be a (residual) \ac{relu} network containing linear, convolutional, maximum, matrix-product, and Hadamard-product components. Then, on non-negative split-input variables, $N$ has two \emph{monotone} rank-$2$ Maxout multiplication networks $N^{+}$ and $N^{-}$ satisfying
+\begin{equation*}
+	N(x) = N^{+}(x^+,x^-) - N^{-}(x^+,x^-), \qquad x=x^+-x^-,\quad x^\pm\ge0,
+\end{equation*}
+Each component is monotone as a function of its non-negative split inputs and is representable there by a finite maximum of posynomials. This gives a difference-of-monotone representation; it does not establish a difference-of-convex representation in the original inputs. If the number of expanded monomials per multiplication neuron is uniformly bounded, the sizes of the split networks are linear in the size of $N$.\end{theoremenv}
+
+279 tex/chapters/07_transformers.tex:72 remark ['rem:smooth_gates'] MISSING
+\begin{remark}[Smooth normalizers: softmax and sigmoid gates]\label{rem:smooth_gates}
+Theorem~\ref{thm:multiplicative_split} covers the piecewise-polynomial skeleton of an attention block --- projections, the bilinear products $QK^\top$ and $AV$, residual additions --- but not the softmax, which is smooth and divides by the partition sum. Three treatments are available. \emph{(i) \ac{cpwl} approximation:} replacing $\exp$ and the division by \ac{cpwl} surrogates on a compact range turns the block into a Maxout multiplication network, at a size cost proportional to the resolution. \emph{(ii) Streamwise smooth splitting:} the scalar non-linearities (sigmoid gates, $\exp$ of bounded scores, GELU in the \ac{mlp} blocks \parencite{Hendrycks2016}) have integrable curvature on bounded domains, so Theorem~\ref{thm:smooth_dc_split} splits them pointwise into monotone pairs that enter the product rule \eqref{eq:pair_product_rule}. \emph{(iii) Detachment:} the softmax output $A$ is treated as a forward-pass constant, so the block becomes the fixed-coefficient linear map $X \mapsto AV(X)$ with no multiplicative machinery. Option (iii) is what transformer-\ac{lrp} practice converged to \parencite{Ali2022AttnLRP,Achtibat2024AttnLRP,Wrobel2024}; the next section shows it is not an approximation but an exact statement about \emph{whose} decision the softmax is.
+\end{remark}
+
+280 tex/chapters/07_transformers.tex:85 theoremenv ['ptnb:thm:attention'] MISSING
+\begin{theoremenv}[Attention, informal]\label{ptnb:thm:attention}
+With reference policy $A_{t\cdot}$, the KL-regularized Value-routing subgame has an SPNE whose
+occupation measure at the block input equals $\alpha\beta$-\ac{lrp} on the conditioned effective
+map $x \mapsto \sum_k A_{tk}\, x_k W_v + b_v$ (Theorem~\ref{ptnb:thm:attn-ab-recovery}).
+\end{theoremenv}
+
+290 tex/chapters/07_transformers.tex:313 lemmaenv ['ptnb:lem:kl-legendre-fenchel'] LINKED
+\begin{lemmaenv}[Legendre--Fenchel transform of KL divergence, \LeanResult{ptnb:lem:kl-legendre-fenchel}]\label{ptnb:lem:kl-legendre-fenchel}
+Let $\mathcal{X}$ be a finite set, $\bar\pi \in \Delta(\mathcal{X})$ a reference distribution with
+full support on $\mathcal{X}$, and $r : \mathcal{X} \to \RR$ a real-valued payoff. The
+KL-regularized linear maximization
+\begin{align}\label{ptnb:eq:kl-lf-objective}
+    F(r;\bar\pi) \;\coloneqq\; \max_{\pi \in \Delta(\mathcal{X})}
+    \Bigl\{ \E_\pi[r] \;-\; \mathrm{KL}(\pi \,\|\, \bar\pi) \Bigr\}
+\end{align}
+has the following optimizer and optimum:
+\begin{align}\label{ptnb:eq:kl-lf-optimizer}
+    \pi_r^\star(x) \;=\; \frac{\bar\pi(x)\,\exp\!\bigl(r(x)\bigr)}{Z(r;\bar\pi)},
+    \qquad
+    F(r;\bar\pi) \;=\; \log Z(r;\bar\pi) \;=\; \log\!\sum_{x \in \mathcal{X}}
+    \bar\pi(x)\,\exp\!\bigl(r(x)\bigr).
+\end{align}\end{lemmaenv}
+
+297 tex/chapters/07_transformers.tex:386 proposition ['ptnb:prop:attn-value-policy'] LINKED
+\begin{proposition}[Value-side optimal policy, \LeanResult{ptnb:prop:attn-value-policy}]\label{ptnb:prop:attn-value-policy}
+If $Z_{t,d}^\kappa > 0$, the unique optimizer of~\eqref{ptnb:eq:attn-value-routing} is
+\begin{align}\label{ptnb:eq:attn-value-policy}
+    \pi_{t,d,\kappa}^\star(k)
+    \;=\;
+    \frac{\bar\pi_t(k)\, \tilde{v}_{k,d}^\kappa}{Z_{t,d}^\kappa},
+\end{align}
+with active-player value $V_p(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}) =
+    \ell(Z_{t,d}^\kappa)$ and inactive-player value
+$V_{p'}(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}) = -\infty$ as in
+Definition~\ref{ptnb:def:routing-recursion}. If $Z_{t,d}^\kappa = 0$, no key contributes mass on stream
+$\kappa$ and $V_p(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}) = -\infty$.\end{proposition}
+
+301 tex/chapters/07_transformers.tex:451 theoremenv ['ptnb:thm:attn-ab-recovery', 'thm:attention_ab_recovery'] LINKED
+\begin{theoremenv}[$\alpha\beta$-\ac{lrp} recovery for attention, \LeanResult{ptnb:thm:attn-ab-recovery}]\label{ptnb:thm:attn-ab-recovery}\label{thm:attention_ab_recovery}
+For signed inputs $X$, under the SPNE of \S\ref{ptnb:app:attention-state-space} with reference
+$\bar\pi_t = A_{t,\cdot}$ and the trajectory discount of~\eqref{ptnb:eq:routing-edge-discount}
+restricted to the (sole) sign-oracle split at $s^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}$, the
+per-input-neuron player-difference $\Gamma^{X}_{k,e}$ from~\eqref{ptnb:eq:attn-Gamma-X} satisfies
+\begin{align}\label{ptnb:eq:attn-ab-recovery}
+    \Gamma^{X}_{k,e}
+    \;=\;
+    \sum_{t,d} \left(
+    \alpha\, \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^+}{Z_{t,d}^+}
+    \;-\;
+    \beta\, \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^-}{Z_{t,d}^-}
+    \right) \Gamma^{O}_{t,d},
+\end{align}
+where the per-output-entry input difference is
+\begin{align}\label{ptnb:eq:attn-Gamma-O}
+    \Gamma^{O}_{t,d} \;\coloneqq\;
+    \Gamma_x\!\bigl(s_{t,d,+}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}\bigr) \;-\;
+    \Gamma_x\!\bigl(s_{t,d,-}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}\bigr),
+\end{align}
+with $\Gamma^{O}_{t,d} = R^{O}_{t,d}$ by inductive hypothesis from the surrounding recursion, for
+the seed $R^{(L)}_u = 1$ (for the seed $f(x)$ every relevance equals $f(x)$ times the corresponding
+$\Gamma$, as in Theorem~\ref{ptnb:thm:ab-recovery}). The right-hand side is exactly the target
+rule~\eqref{ptnb:eq:attn-target-input}, hence $\Gamma^{X}_{k,e} = R^{X}_{k,e}$. Aggregating over $e$ and
+the bias node at fixed $(k,d)$ collects the relevance routed through the Value entry $v_{k,d}$:
+\begin{align}\label{ptnb:eq:attn-Gamma-V-corollary}
+    \Gamma^{\mathrm{val}}_{k,d}
+    \;=\;
+    \sum_t \left( \alpha\, \frac{A_{t,k}\, \tilde{v}_{k,d}^+}{Z_{t,d}^+} \;-\; \beta\, \frac{A_{t,k}\,
+    \tilde{v}_{k,d}^-}{Z_{t,d}^-} \right) \Gamma^{O}_{t,d}
+    \;=\; R^{\mathrm{val}}_{k,d},
+\end{align}
+recovering the per-Value-entry formula~\eqref{ptnb:eq:attn-target-rule}.\end{theoremenv}
+
+314 tex/chapters/05_saliency.tex:19 proposition ['prop:gradient_blindness'] LINKED
+\begin{proposition}[Regional blindness of the input gradient, \LeanResult{prop:gradient_blindness}]\label{prop:gradient_blindness}
+Let $f$ be a \ac{relu} network as above, let $x_0$ be an input at which no pre-activation is exactly zero, and let $i$ be an input coordinate such that every path from input neuron $i$ to the output neuron passes through at least one neuron that is inactive at $x_0$. Then there is an open neighborhood $U \ni x_0$ with
+\begin{equation*}
+	\frac{\partial f}{\partial x_i} \equiv 0 \quad \text{on } U,
+\end{equation*}
+even if $f$ depends on $x_i$ elsewhere.\end{proposition}
+
+316 tex/chapters/05_saliency.tex:38 remark ['rem:sensitivity_counterexample'] MISSING
+\begin{remark}[The canonical counterexample]\label{rem:sensitivity_counterexample}
+Following \textcite{Sundararajan2017}, consider the one-dimensional \ac{relu} network
+\begin{equation}
+	f(x) = 1 - \relu(1 - x),
+	\label{eq:ig_counterexample}
+\end{equation}
+and compare the input $x = 2$ against the baseline $x' = 0$. The prediction changes, $f(2) - f(0) = 1 - 0 = 1$, so the single feature is plainly relevant; yet $f$ is constant on $x \geq 1$, so the gradient at $x = 2$ --- and with it Input$\times$Gradient and every purely local backward rule --- assigns exactly zero attribution. The single hidden neuron is inactive at $x = 2$, and Proposition~\ref{prop:gradient_blindness} applies with $U = (1, \infty)$.
+\end{remark}
+
+318 tex/chapters/05_saliency.tex:49 definition ['def:sensitivity'] MISSING
+\begin{definition}[Sensitivity]\label{def:sensitivity}
+An attribution method $A$, mapping an input $x$ and a baseline $x'$ to feature scores $A_i(x, x') \in \RR$, satisfies \emph{Sensitivity} if for every pair $(x, x')$ that differs in exactly one feature $i$ and satisfies $f(x) \neq f(x')$, the attribution of that feature is non-zero, $A_i(x, x') \neq 0$.
+\end{definition}
+
+320 tex/chapters/05_saliency.tex:64 definition ['def:local_sensitivities'] MISSING
+\begin{definition}[Local sensitivities]\label{def:local_sensitivities}
+For $s \in \{g, h\}$, $\sigma \in \{+, -\}$ and $0 \leq l \leq L$, the \emph{local sensitivities} of the split-pair at layer $l$ are the row vectors
+\begin{equation*}
+	\delta^{(l, \sigma, s)} \coloneqq \frac{\partial s^{(l)}}{\partial \act{l}{\sigma}} \in \RR^{1 \times d^{(l)}},
+\end{equation*}
+the derivatives of the stream outputs with respect to the positive and negative split activations of layer $l$. We further abbreviate the original-network sensitivity by $\delta^{(l)} \coloneqq \partial f^{(l)} / \partial \actl{l}$ and define the \emph{absolute weight product}
+\begin{equation*}
+	W_{\mathrm{abs}}^{[l]} \coloneqq \abs{\Wl{L}} \, \abs{\Wl{L-1}} \cdots \abs{\Wl{l+1}} \in \RR^{1 \times d^{(l)}},
+	\qquad
+	W_{\mathrm{abs}}^{[L]} \coloneqq \1^{\top},
+\end{equation*}
+where $\abs{\cdot}$ is taken entrywise. Since the attributed output is scalar, $W_{\mathrm{abs}}^{[l]}$ is a row vector, and its $i$-th entry sums the absolute weight products over \emph{all} paths from neuron $i$ of layer $l$ to the output --- active or not.
+\end{definition}
+
+321 tex/chapters/05_saliency.tex:80 lemmaenv ['lem:split_backward_recursion'] LINKED
+\begin{lemmaenv}[Split backward recursions, \LeanResult{lem:split_backward_recursion}]\label{lem:split_backward_recursion}
+With the activation masks $M^{(l,\pm)}$ of Proposition~\ref{prop:gradient_blindness}, extended by $M^{(L,+)}=I$ and $M^{(L,-)}=0$ for the affine readout, for every $0 \leq l < L$ and $s \in \{g, h\}$,
+\begin{align}
+	\delta^{(l, +, s)}
+	&= \delta^{(l+1, +, s)} \bigl( M^{(l+1, +)} \Wsig{l+1}{+} + M^{(l+1, -)} \Wsig{l+1}{-} \bigr)
+	+ \delta^{(l+1, -, s)} \, \Wsig{l+1}{-},
+	\label{eq:delta_plus_recursion} \\
+	\delta^{(l, -, s)}
+	&= \delta^{(l+1, +, s)} \bigl( M^{(l+1, +)} \Wsig{l+1}{-} + M^{(l+1, -)} \Wsig{l+1}{+} \bigr)
+	+ \delta^{(l+1, -, s)} \, \Wsig{l+1}{+},
+	\label{eq:delta_minus_recursion}
+\end{align}
+with base case $\delta^{(L, +, g)} = \delta^{(L, -, h)} = \1^{\top}$ and $\delta^{(L, -, g)} = \delta^{(L, +, h)} = 0$.\end{lemmaenv}
+
+323 tex/chapters/05_saliency.tex:96 proposition ['prop:sensitivity_mass'] LINKED
+\begin{proposition}[Sensitivity mass conservation, \LeanResult{prop:sensitivity_mass}]\label{prop:sensitivity_mass}
+For every $0 \leq l \leq L$ and both streams $s \in \{g, h\}$,
+\begin{equation}
+	\delta^{(l, +, s)} + \delta^{(l, -, s)} = W_{\mathrm{abs}}^{[l]}.
+	\label{eq:mass_conservation}
+\end{equation}\end{proposition}
+
+325 tex/chapters/05_saliency.tex:115 corollary ['cor:backward_invariant'] LINKED
+\begin{corollary}[Backward invariant, \LeanResult{cor:backward_invariant}]\label{cor:backward_invariant}
+For every $0 \leq l \leq L$,
+\begin{equation}
+	\delta^{(l, +, g)} - \delta^{(l, +, h)} = \delta^{(l)} = -\bigl( \delta^{(l, -, g)} - \delta^{(l, -, h)} \bigr),
+	\quad \text{hence} \quad
+	\bigl( \delta^{(l,+,g)} - \delta^{(l,-,g)} \bigr) - \bigl( \delta^{(l,+,h)} - \delta^{(l,-,h)} \bigr) = 2\,\delta^{(l)}.
+	\label{eq:backward_invariant}
+\end{equation}\end{corollary}
+
+327 tex/chapters/05_saliency.tex:130 remark ['rem:counterexample_split'] MISSING
+\begin{remark}[The counterexample, revisited]\label{rem:counterexample_split}
+Split the network \eqref{eq:ig_counterexample} with the balanced input split $\act{0}{\pm} = \pm x/2$. A short computation along Section~\ref{sec:dc_splitting_relu} gives, for $x > 1$,
+\begin{equation*}
+	g(x) = \frac{x}{2} + 1, \qquad h(x) = \frac{x}{2}, \qquad g(x) - h(x) = 1 = f(x),
+\end{equation*}
+so at $x = 2$ both stream gradients equal $\tfrac{1}{2} \neq 0$ while $f'(2) = 0$: the split representation \emph{sees} that the feature matters --- consistent with $f(2) \neq f(0)$ --- and encodes the vanishing of $f'$ as the cancellation $\tfrac{1}{2} - \tfrac{1}{2}$. For this example and the baseline $x'=0$, the pair of head gradients therefore supplies a nonzero signal even though the output gradient vanishes. This example does not establish the sensitivity axiom of Definition~\ref{def:sensitivity} for a general attribution rule or baseline. The attribution methods of the following sections differ in how they turn this pair-valued signal into a scalar map; the shifted combinations of Section~\ref{sec:split_grad} keep the two streams from cancelling exactly, and in this example assign the feature a strictly positive attribution for every shift parameter $\alpha < \tfrac{1}{2}$.
+\end{remark}
+
+329 tex/chapters/05_saliency.tex:151 definition ['def:shifted_sensitivities'] MISSING
+\begin{definition}[Shifted local sensitivities]\label{def:shifted_sensitivities}
+Fix shift parameters $\alpha^{(l)} \in [0, \tfrac{1}{2}]$. For $s \in \{g, h\}$ define, backward from layer $L$, intermediate sensitivities $\delta_{\mathrm{int}}^{(l, \pm, s)}$ by evaluating the recursions \eqref{eq:delta_plus_recursion}--\eqref{eq:delta_minus_recursion} (respectively the base case of Lemma~\ref{lem:split_backward_recursion} at $l = L$) with the already-shifted sensitivities of the subsequent layer, and set
+\begin{equation}
+	\delta_{\mathrm{shift}}^{(l, \pm, s)}
+	\coloneqq \delta_{\mathrm{int}}^{(l, \pm, s)} - \alpha^{(l)} \bigl( \delta_{\mathrm{int}}^{(l, +, s)} + \delta_{\mathrm{int}}^{(l, -, s)} \bigr),
+	\qquad
+	\delta_{\mathrm{shift}}^{(l, s)} \coloneqq \frac{\delta_{\mathrm{shift}}^{(l, +, s)} - \delta_{\mathrm{shift}}^{(l, -, s)}}{2}.
+	\label{eq:shift_definition}
+\end{equation}
+\end{definition}
+
+331 tex/chapters/05_saliency.tex:165 definition ['def:splitcam'] MISSING
+\begin{definition}[SplitCAM]\label{def:splitcam}
+For a layer $l$ of the decomposed model, a stream $s \in \{g, h\}$ and a sign $\sigma \in \{+, -\}$, the SplitCAM attribution maps are
+\begin{align}
+	\text{SplitCAM}^{(l, \sigma, s)} &\coloneqq \sum_{c} \delta_{\mathrm{shift}}^{(l, \sigma, s)}\big\vert_c \odot \act{l}{\sigma}_c,
+	\label{eq:splitcam_stream} \\
+	\text{SplitCAM}^{(l, s)} &\coloneqq \sum_{c} \delta_{\mathrm{shift}}^{(l, s)}\big\vert_c \odot \actl{l}_c,
+	\label{eq:splitcam_combined}
+\end{align}
+where $\act{l}{\sigma}_c$ denotes the channel-$c$ activation map of the $\sigma$-stream, $\actl{l}_c = \act{l}{+}_c - \act{l}{-}_c$ the reconstructed original activation map, and $\cdot\vert_c$ the restriction of a sensitivity tensor to channel $c$.
+\end{definition}
+
+335 tex/chapters/05_saliency.tex:208 definition ['def:splitlrp_combined'] MISSING
+\begin{definition}[Combined SplitLRP map]\label{def:splitlrp_combined}
+The SplitLRP attribution at layer $l$ is the pair $\bigl(R^{(l,+)}, R^{(l,-)}\bigr)$; the \emph{combined} map is
+\begin{equation}
+	R^{(l, \mathrm{comb})} \coloneqq R^{(l, +)} - R^{(l, -)}.
+	\label{eq:splitlrp_combined}
+\end{equation}
+\end{definition}
+
+337 tex/chapters/05_saliency.tex:218 remark ['rem:splitlrp_markov'] MISSING
+\begin{remark}[A probabilistic reading]\label{rem:splitlrp_markov}
+On the original network the $\varepsilon$-rule mixes signed contributions, and the resulting backward transport is a \emph{signed} measure on paths --- the source of the interpretability caveats discussed in Chapter~\ref{ch:trajectory}. On the split-pair all contributions $\tilde{z}^{(l+1)}_{ij}$ are products of non-negative activations and non-negative weights, so up to the stabilizer the \ac{lrp} propagation matrices are genuinely stochastic: SplitLRP is a Markov chain on the doubled computational graph, and the pair $\bigl(R^{(l,+)}, R^{(l,-)}\bigr)$ is an honest, unsigned relevance measure. This is the same mechanism --- doubling the state space to absorb the weight signs --- by which the stopping game of Chapter~\ref{ch:game_theory} turns backward relevance flow into probability.
+\end{remark}
+
+338 tex/chapters/05_saliency.tex:222 remark ['rem:splitlrp_sanity'] MISSING
+\begin{remark}[Sensitivity to learned parameters]\label{rem:splitlrp_sanity}
+The parameter-randomization sanity check of \textcite{Adebayo2018sanity} differentiates the three split methods. SplitCAM and SplitGrad react strongly to reinitialized late layers --- more strongly than all considered baselines --- confirming that the shifted sensitivities track the learned decision process. SplitLRP is markedly less sensitive: on the split-pair the $\varepsilon$-rule essentially reduces to a rescaled Input$\times$Gradient, and the layerwise renormalization in \eqref{eq:lrp_gamma_rule} suppresses the influence of late-layer weights on the propagated relevance, a known limitation of purely conservative rules~\parencite{sixt2020whenexplanationslie}. The quantitative results, together with the caveats of \textcite{Binder2022shortcomings} on randomization-based checks, are reported in Chapter~\ref{ch:experiments}.
+\end{remark}
+
+339 tex/chapters/05_saliency.tex:230 definition ['def:splitgrad'] MISSING
+\begin{definition}[SplitGrad]\label{def:splitgrad}
+For a layer $l$ and stream $s \in \{g, h\}$, the SplitGrad attribution map is the channel mean of the combined shifted sensitivity,
+\begin{equation}
+	\text{SplitGrad}^{(l, s)} \coloneqq \frac{1}{C^{(l)}} \sum_{c = 1}^{C^{(l)}} \delta_{\mathrm{shift}}^{(l, s)}\big\vert_c,
+	\label{eq:splitgrad}
+\end{equation}
+where $C^{(l)}$ is the number of channels of layer $l$; the default configuration reads the $g$-stream, with forward and backward stabilization exactly as in Section~\ref{sec:split_cam}.
+\end{definition}
+
+341 tex/chapters/05_saliency.tex:253 definition ['def:dcinn'] MISSING
+\begin{definition}[DCINN and difference-of-monotone models]\label{def:dcinn}
+Fix a base architecture. A \emph{DCINN} (in short: DIC model) is the function
+\begin{equation*}
+	f_{\mathrm{DIC}} \coloneqq g - h,
+\end{equation*}
+where $g$ and $h$ are two \acp{icnn} of the base architecture with independent parameters, trained \emph{jointly} by standard empirical risk minimization on the difference. The \emph{DM model} is defined analogously with both streams monotone networks. The \emph{inverted-input} variants DICIN and DMIN feed the $h$-stream the complemented input $\1 - x$ (for inputs normalized to $[0,1]^d$) instead of $x$.
+\end{definition}
+
+342 tex/chapters/05_saliency.tex:473 remark ['rem:posthoc_bydesign'] MISSING
+\begin{remark}[Post-hoc and by-design, reconciled]\label{rem:posthoc_bydesign}
+The two routes of this chapter probe the same structural hypothesis --- that difference-of-monotone representations are inherently more legible --- from opposite ends. The MNIST study answers the two underlying questions affirmatively: constrained monotone and input-convex networks are self-interpretable, and differences of two such networks can be trained directly to competitive accuracy, with gradients that separate factual from counterfactual evidence more cleanly than the split-pairs of the pretrained VGG16 and ResNet18 models, for which such a disentanglement of concerns is observed only partially and has not been established rigorously. Transferring the by-design disentanglement to large-scale architectures --- or explaining why splitting a pretrained model cannot fully reproduce it --- remains an open direction, taken up again in Chapter~\ref{ch:conclusion}.
+\end{remark}
+
+357 tex/chapters/11_trajectory.tex:295 lemmaenv ['ptnb:lem:bc-chain-rule'] LINKED
+\begin{lemmaenv}[Chain rule, \LeanResult{ptnb:lem:bc-chain-rule}]\label{ptnb:lem:bc-chain-rule}
+For every $l \in \{0, 1, \ldots, L\}$, the Bhattacharyya coefficient of the prefix distributions
+factorizes along trajectories:
+\begin{align}\label{ptnb:eq:bc-chain-rule}
+    \mathrm{BC}\!\bigl(\Pi^{(l)}_A,\, \Pi^{(l)}_B\bigr) \;=\; \sum_{(\zeta_L, \ldots, \zeta_l)}
+    \mathbf{1}\{\zeta_L = s_0\} \prod_{k=l+1}^{L} \widetilde{T}^{(k)}(\zeta_k, \zeta_{k-1}).
+\end{align}\end{lemmaenv}
+
+360 tex/chapters/11_trajectory.tex:317 lemmaenv ['ptnb:lem:bc-monotone'] LINKED
+\begin{lemmaenv}[Monotonicity, \LeanResult{ptnb:lem:bc-monotone}]\label{ptnb:lem:bc-monotone}
+Let $\mathrm{BC}^{(l)} \coloneqq \mathrm{BC}(\Pi^{(l)}_A, \Pi^{(l)}_B)$.  Then $\mathrm{BC}^{(l)}$
+is monotonically non-increasing as $l$ decreases from $L$ to $0$:
+\begin{align}
+    1 \;=\; \mathrm{BC}^{(L)} \;\geq\; \mathrm{BC}^{(L-1)} \;\geq\; \cdots \;\geq\; \mathrm{BC}^{(0)}
+    \;\geq\; 0.
+\end{align}
+Equivalently, the squared Hellinger distance $\mathrm{H}^{2}_{(l)} = 1 - \mathrm{BC}^{(l)}$ is
+monotonically non-decreasing.\end{lemmaenv}
+
+364 tex/chapters/11_trajectory.tex:369 lemmaenv ['ptnb:lem:hellinger-backward-correctness'] LINKED
+\begin{lemmaenv}[Backward pass correctness, \LeanResult{ptnb:lem:hellinger-backward-correctness}]\label{ptnb:lem:hellinger-backward-correctness}
+Algorithm~\ref{ptnb:alg:hellinger} computes $g^{(l)}$, hence $\mathrm{BC}^{(l)}$, $\mathrm{H}^{(l)}$,
+and $\mathrm{H}^2(s)$ correctly for every $l$ and $s$.  In particular,
+\begin{align}
+    \sum_{s \in \mathcal{S}^{(0)}_+} \mathrm{H}^2(s) \;=\; \mathrm{H}^{2}_{(0)}.
+\end{align}\end{lemmaenv}
+
+369 tex/chapters/11_trajectory.tex:417 remark ['ptnb:rem:rg-natural-equivalence'] LINKED
+\begin{remark}[Routing-state elimination and absorption histories, \LeanResult{ptnb:rem:rg-natural-equivalence}]\label{ptnb:rem:rg-natural-equivalence}
+The refined diagnostic routing process just defined alternates activation and linear-routing states.
+A dead activation stops at the gate substep; an alive activation chooses its
+$\kappa$ branch uniformly, after which an empty branch or outside option can
+absorb at the routing substep. The refined layered process retains these
+substeps and pads the cemetery state after absorption. Algorithm~\ref{ptnb:alg:hellinger}
+applies to this expanded state graph; the diagnostics are read at the activation
+boundaries. This is the process implemented by the separate gate and branch
+absorption updates.
+
+For a trajectory that remains ordinary, deleting each intermediate routing
+state is a bijection: its neuron and player are determined by the adjacent
+activation states, and its branch by whether the player is kept or switched
+(or by the pixel-stream tag at the input). The act-to-act formulas therefore
+preserve ordinary surviving-path probabilities and their Bhattacharyya overlap.
+The same applies after conditioning both laws on survival.
+
+For absorbing trajectories, deletion need not be injective: a gate stop and a
+later empty-branch stop can become the same act-only trajectory. Thus full-law
+Bhattacharyya and Hellinger equality is asserted only when absorption histories
+are recoverable, for example when no alive routing branch leaks to the cemetery.
+In general the finite-fibre Cauchy--Schwarz inequality gives
+\[
+ \mathrm{BC}_{\mathrm{refined}}\leq\mathrm{BC}_{\mathrm{act\text{-}only}},
+ \qquad
+ \mathrm{H}_{\mathrm{refined}}\geq\mathrm{H}_{\mathrm{act\text{-}only}}.
+\]
+For example, take one input $x=1$ and weight $W=1$. Model $A$ has bias $0$ and
+continues, with its empty negative branch absorbing with probability $1/2$;
+model $B$ has bias $-2$ and stops at the gate. Their refined path supports are
+disjoint, so $\mathrm{BC}_{\mathrm{refined}}=0$. Collapsing the two absorption
+substeps instead gives $\mathrm{BC}_{\mathrm{act\text{-}only}}=1/\sqrt2$.\end{remark}
+
+370 tex/chapters/11_trajectory.tex:463 theoremenv ['ptnb:thm:per-pixel'] LINKED
+\begin{theoremenv}[Per-pixel decomposition, \LeanResult{ptnb:thm:per-pixel}]\label{ptnb:thm:per-pixel}
+Let $\mathrm{H}^2 \coloneqq \mathrm{H}^2\!\bigl(\Pi^{(0)}_A,\, \Pi^{(0)}_B\bigr)$.  For $s \in
+    \mathcal{S}^{(0)}_+$, define
+\begin{align}\label{ptnb:eq:per-pixel-h2}
+    \mathrm{H}^2(s) \;\coloneqq\; \tfrac{1}{2}\bigl(m^{(0)}_A(s) + m^{(0)}_B(s)\bigr) \;-\; g^{(0)}(s),
+\end{align}
+where $g^{(0)}(s)$ is the cumulative $\widetilde{T}$-mass at $s$.  Then:
+\begin{enumerate}
+    \item[(i)] $\mathrm{H}^2(s) \geq 0$ for every $s \in \mathcal{S}^{(0)}_+$.
+    \item[(ii)]
+        \begin{align}\label{ptnb:eq:per-pixel-sum}
+            \mathrm{H}^2 \;=\; \sum_{s \in \mathcal{S}^{(0)}_+} \mathrm{H}^2(s).
+        \end{align}
+    \item[(iii)]
+        \begin{align}\label{ptnb:eq:ordinary-h2}
+            \mathrm{H}^2_{\mathrm{ord}} \;\coloneqq\; \sum_{s \in \mathcal{S}^{(0)}} \mathrm{H}^2(s) \;=\;
+            \mathrm{H}^2 - \mathrm{H}^2(\dagger)
+        \end{align}
+\end{enumerate}\end{theoremenv}
+
+379 tex/chapters/11_trajectory.tex:561 theoremenv ['ptnb:thm:conditioned-survival'] LINKED
+\begin{theoremenv}[Conditioned-survival trajectory law and conditioned Hellinger distance, \LeanResult{ptnb:thm:conditioned-survival}]\label{ptnb:thm:conditioned-survival}
+Let $\mathsf{Surv} \coloneqq \{(\zeta_L,\ldots,\zeta_0) : \zeta_0 \in \mathcal{S}^{(0)}\}$ be the
+event, in the trajectory space $\prod_{l=0}^{L} \mathcal{S}^{(l)}_+$, that the backward trajectory
+ends in an ordinary input-layer state — equivalently, the event that the trajectory never enters
+the cemetery~$\dagger$.  For each model $M \in \{A,B\}$ define the survival function
+\begin{align}\label{ptnb:eq:survival-function}
+    \psi_M^{(l)}(s)
+    \;\coloneqq\;
+    \mathbb{P}_M(\mathsf{Surv} \mid \zeta_l = s),
+    \qquad s \in \mathcal{S}^{(l)}_+, \;\; l \in \{0,\ldots,L\}.
+\end{align}
+Then:
+\begin{enumerate}
+    \item[(i)] The boundary and recursion are
+        \begin{align}\label{ptnb:eq:survival-boundary}
+            \psi_M^{(0)}(s) = 1 \;\; \text{for } s \in \mathcal{S}^{(0)},
+            \qquad
+            \psi_M^{(0)}(\dagger) = 0,
+        \end{align}
+        and for every $l \ge 1$,
+        \begin{align}\label{ptnb:eq:survival-recursion}
+            \psi_M^{(l)}(s)
+            \;=\;
+            \sum_{s' \in \mathcal{S}^{(l-1)}_+} T_M^{(l)}(s \to s')\, \psi_M^{(l-1)}(s')
+            \;=\;
+            \sum_{s' \in \mathcal{S}^{(l-1)}} T_M^{(l)}(s \to s')\, \psi_M^{(l-1)}(s').
+        \end{align}
+        In particular,
+        \begin{align}\label{ptnb:eq:survival-mass}
+            Z_M \;\coloneqq\; \mathbb{P}_M(\mathsf{Surv}) \;=\; \psi_M^{(L)}(s_0) \;=\; \sum_{s \in
+            \mathcal{S}^{(0)}} m_M^{(0)}(s) \;=\; 1 - m_M^{(0)}(\dagger).
+        \end{align}
+    \item[(ii)] Assume $Z_M > 0$.  For every ordinary state $s \in \mathcal{S}^{(l)}$ with $\psi_M^{(l)}(s) >
+            0$, define the conditioned kernel on ordinary states by
+        \begin{align}\label{ptnb:eq:conditioned-kernel}
+            T_{M,\mathrm{surv}}^{(l)}(s \to s')
+            \;\coloneqq\;
+            \frac{T_M^{(l)}(s \to s')\, \psi_M^{(l-1)}(s')}{\psi_M^{(l)}(s)},
+            \qquad s' \in \mathcal{S}^{(l-1)}.
+        \end{align}
+        Then $T_{M,\mathrm{surv}}^{(l)}(s \to \cdot)$ is row-stochastic on $\mathcal{S}^{(l-1)}$, and the
+        conditional trajectory distribution $\Pi_{M,\mathrm{surv}} \coloneqq \Pi_M(\,\cdot \mid
+            \mathsf{Surv}\,)$ factorizes as the layered Markov law
+        \begin{align}\label{ptnb:eq:conditioned-path-measure}
+            \Pi_{M,\mathrm{surv}}(\zeta_L,\ldots,\zeta_0)
+            = \mathbf{1}\{\zeta_L = s_0\} \prod_{k=1}^{L} T_{M,\mathrm{surv}}^{(k)}(\zeta_k \to \zeta_{k-1}),
+            \qquad (\zeta_L,\ldots,\zeta_0) \in \mathsf{Surv}.
+        \end{align}
+        Its layer-$l$ marginals satisfy
+        \begin{align}\label{ptnb:eq:conditioned-alpha}
+            m_{M,\mathrm{surv}}^{(l)}(s)
+            \;=\;
+            \frac{m_M^{(l)}(s)\, \psi_M^{(l)}(s)}{Z_M},
+            \qquad s \in \mathcal{S}^{(l)}.
+        \end{align}
+    \item[(iii)] Define the conditioned geometric-mean kernel
+        \begin{align}\label{ptnb:eq:conditioned-geom-kernel}
+            \widetilde{T}_{\mathrm{surv}}^{(l)}(s,s')
+            \coloneqq \sqrt{T_{A,\mathrm{surv}}^{(l)}(s \to s')\, T_{B,\mathrm{surv}}^{(l)}(s \to s')}
+            = \frac{\widetilde{T}^{(l)}(s,s')\, \sqrt{\psi_A^{(l-1)}(s')\,
+            \psi_B^{(l-1)}(s')}}{\sqrt{\psi_A^{(l)}(s)\, \psi_B^{(l)}(s)}}.
+        \end{align}
+        The Bhattacharyya coefficient of the conditioned trajectory laws is
+        \begin{align}\label{ptnb:eq:conditioned-bc-kernel}
+            \mathrm{BC}\!\bigl(\Pi_{A,\mathrm{surv}}, \Pi_{B,\mathrm{surv}}\bigr)
+            \;=\;
+            \sum_{(\zeta_L,\ldots,\zeta_0) \in \mathsf{Surv}}
+            \mathbf{1}\{\zeta_L = s_0\}
+            \prod_{k=1}^{L} \widetilde{T}_{\mathrm{surv}}^{(k)}(\zeta_k, \zeta_{k-1}),
+        \end{align}
+        so it is computed by the same Hellinger pass (Algorithm~\ref{ptnb:alg:hellinger}), but on the
+        ordinary-state graph with the conditioned kernel.
+    \item[(iv)] Let
+        \begin{align}\label{ptnb:eq:ordinary-bc}
+            \mathrm{BC}_{\mathrm{ord}}^{(0)}
+            \;\coloneqq\;
+            \sum_{s \in \mathcal{S}^{(0)}} g^{(0)}(s)
+            \;=\;
+            \sum_{(\zeta_L,\ldots,\zeta_0) \in \mathsf{Surv}} \sqrt{\Pi_A(\zeta_L,\ldots,\zeta_0)\,
+            \Pi_B(\zeta_L,\ldots,\zeta_0)}.
+        \end{align}
+        Then
+        \begin{align}\label{ptnb:eq:conditioned-bc-posthoc}
+            \mathrm{BC}\!\bigl(\Pi_{A,\mathrm{surv}}, \Pi_{B,\mathrm{surv}}\bigr)
+            \;=\;
+            \frac{\mathrm{BC}_{\mathrm{ord}}^{(0)}}{\sqrt{Z_A Z_B}},
+        \end{align}
+        and the conditioned-survival Hellinger distance is
+        \begin{align}\label{ptnb:eq:conditioned-h2}
+            \mathrm{H}_{\mathrm{surv}}^2
+            \;\coloneqq\;
+            \mathrm{H}^2\!\bigl(\Pi_{A,\mathrm{surv}}, \Pi_{B,\mathrm{surv}}\bigr)
+            \;=\;
+            1 - \frac{\mathrm{BC}_{\mathrm{ord}}^{(0)}}{\sqrt{Z_A Z_B}}.
+        \end{align}
+\end{enumerate}\end{theoremenv}
+
+399 tex/chapters/11_trajectory.tex:862 lemmaenv ['ptnb:lem:alive-mismatch'] LINKED
+\begin{lemmaenv}[Alive-set mismatch, \LeanResult{ptnb:lem:alive-mismatch}]\label{ptnb:lem:alive-mismatch}
+Suppose a dead state sends all its mass to the cemetery. Every state in the
+alive symmetric difference then has zero geometric-mean mass to ordinary
+successors:
+$\sum_{s'\in\mathcal S^{(l-1)}}\widetilde T^{(l)}(s_i,s')=0$.
+If alive states have no cemetery leakage, as for the stated nondegenerate
+Stopping-Game kernel, its full geometric-mean row is also zero.\end{lemmaenv}
+
+400 tex/chapters/11_trajectory.tex:888 theoremenv ['ptnb:thm:rand-adf', 'thm:rand_stopping'] LINKED
+\begin{theoremenv}[Randomization in the Stopping Game, \LeanResult{ptnb:thm:rand-adf}]\label{ptnb:thm:rand-adf}\label{thm:rand_stopping}
+$\mathbb{E}_B\bigl[\mathrm{BC}^{(0)}_{\mathrm{ord}}(\Pi_A, \Pi_B)\bigr] \leq \eta^{N}$.  Hence, for
+every $z > 0$, the conditioned-survival distance of Theorem~\ref{ptnb:thm:conditioned-survival}
+satisfies $\mathbb{E}_B\bigl[\mathrm{H}^2_{\mathrm{surv}}\,\1\{Z_A Z_B \geq z\}\bigr] \geq
+    \mathbb{P}_B(Z_A Z_B \geq z) - \eta^{N}/\sqrt{z}$, while the plain distance is $\mathrm{H}^2 = 1 -
+    \mathrm{BC}^{(0)}_{\mathrm{ord}} - g^{(0)}(\dagger)$.\end{theoremenv}
+
+401 tex/chapters/11_trajectory.tex:911 remark ['ptnb:rem:adf-cemetery-floor'] MISSING
+\begin{remark}[Cemetery floor]\label{ptnb:rem:adf-cemetery-floor}
+Theorem~\ref{ptnb:thm:rand-adf} bounds only the ordinary-state overlap.  Overlap mass that reaches a
+neuron dead in both models enters the cemetery in both, $g^{(l-1)}(\dagger) = g^{(l)}(\dagger) +
+    \sum_{s \in \mathrm{dead}^{(l)}_A \cap \mathrm{dead}^{(l)}_B} g^{(l)}(s)$, and is never thinned
+again, so plain $\mathrm{H}$ saturates below one.  In a mean-field approximation with uniform dead
+fraction $q$ under $A$ and alive probability $p$ under $B$, the ordinary overlap shrinks by
+$(1-q)p$ per layer while a fraction $q(1-p)$ is absorbed, so $g^{(0)}(\dagger) \to
+    q(1-p)/(1-(1-q)p)$ as $N \to \infty$; for illustrative values $q = 0.2$, $p = \tfrac{1}{2}$ this
+gives $\mathrm{H} \approx 0.91$, the same order as the observed $\drFloorMin$--$\drFloorMax$
+(Table~\ref{ptnb:tab:double-random-hellinger}).  The conditioned-survival distance removes the cemetery
+floor exactly, and $\mathbb{E}_B[\mathrm{H}^2_{\mathrm{surv}} \mid Z_A Z_B \geq z] \to 1$ for every
+fixed $z > 0$ with $\mathbb{P}_B(Z_A Z_B \geq z)$ bounded away from zero.  For the Routing Game the
+activation-weighted kernel concentrates $g^{(l)}$ on neurons with largest $|a W|$, which rarely
+coincide with $\mathrm{dead}_A \cap \mathrm{dead}_B$, so $\mathrm{H}$ is nearly identical to
+$\mathrm{H}_{\mathrm{surv}}$ in practice.
+\end{remark}
+
+402 tex/chapters/11_trajectory.tex:928 theoremenv ['ptnb:thm:rand-routing', 'thm:rand_routing'] LINKED
+\begin{theoremenv}[Randomization in the Routing Game, \LeanResult{ptnb:thm:rand-routing}]\label{ptnb:thm:rand-routing}\label{thm:rand_routing}
+Under the same setup without the alive-set assumption, take the \ac{rg} kernel at temperature $\tau
+    > 0$ and assume that for every $l \geq l^*$ each state alive in both models has row mass
+$\sum_{s'}\widetilde{T}^{(l)}(s, s') \leq \bar{b}$ for some $0 \leq \bar{b} < 1$.  Then
+$\mathrm{BC}^{(0)}_{\mathrm{ord}}(\Pi_A, \Pi_B) \leq \bar{b}^{N}$.\end{theoremenv}

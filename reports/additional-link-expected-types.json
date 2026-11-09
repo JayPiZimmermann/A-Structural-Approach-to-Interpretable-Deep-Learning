@@ -1,0 +1,638 @@
+{
+  "version": 1,
+  "targets": [
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.shiftPair",
+      "expected_type": "\u2200 {n : \u2115}, \u211d \u2192 Sensitivity n \u2192 Sensitivity n",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: subtract alpha times the shared sensitivity sum from both entries."
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.unified",
+      "expected_type": "\u2200 {n : \u2115}, Sensitivity n \u2192 Row n",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: exactly one half of positive minus negative partials."
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.shiftPair_sum",
+      "expected_type": "\u2200 {n : \u2115} (\u03b1 : \u211d) (s : Sensitivity n), (shiftPair \u03b1 s).1+(shiftPair \u03b1 s).2 = (1-2*\u03b1) \u2022 (s.1+s.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Exact local bulk scaling, all real alpha."
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.unified_shift",
+      "expected_type": "\u2200 {n : \u2115} (\u03b1 : \u211d) (s : Sensitivity n), unified (shiftPair \u03b1 s)=unified s",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Local recentering preserves the half-difference."
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.MaskedTrace.pull_unified",
+      "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (gate : Fin k \u2192 Bool) (s : Sensitivity k), unified (MaskedTrace.pull wp wn gate s)=(unified s).comp (MaskedTrace.signedMap wp wn gate)-(1/2 : \u211d) \u2022 ((s.1+s.2).comp (MaskedTrace.deadMap wp wn gate))",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Actual four-block pullback rewritten as active signed Jacobian minus inactive source, arbitrary masks."
+    },
+    {
+      "module": "HiddenMonotonicity.AffineReadout",
+      "declaration": "HiddenMonotonicity.MaskedTrace.run_bulk",
+      "expected_type": "\u2200 {n m : \u2115} (tr : MaskedTrace n m) (\u03b1 : \u2115 \u2192 \u211d) (seed : Sensitivity m), (tr.run \u03b1 seed).1+(tr.run \u03b1 seed).2=tr.bulkCoefficient \u03b1 \u2022 ((seed.1+seed.2).comp tr.absMap)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Arbitrary terminal affine partial seed; readout shift belongs in seed, each backbone state shifted once."
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.MaskedTrace.bulkCoefficient_product",
+      "expected_type": "\u2200 {n m : \u2115} (tr : MaskedTrace n m) (\u03b1 : \u2115 \u2192 \u211d), tr.bulkCoefficient \u03b1=\u220f i \u2208 Finset.range (tr.depth+1), (1-2*\u03b1 i)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Exact finite product including current and terminal hidden states."
+    },
+    {
+      "module": "HiddenMonotonicity.AffineChunk",
+      "declaration": "HiddenMonotonicity.affineChunk",
+      "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: both signed affine streams and split biases, no terminal activation."
+    },
+    {
+      "module": "HiddenMonotonicity.OriginalTrace",
+      "declaration": "HiddenMonotonicity.preactivation_difference",
+      "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Vec k) (x : PairVec n), preP wp wn x+bp-(preN wp wn x+bn)=affineLayer wp wn bp bn (x.1-x.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Literal split affine preactivations recover original signed affine layer."
+    },
+    {
+      "module": "HiddenMonotonicity.Decomposition",
+      "declaration": "HiddenMonotonicity.mixPair",
+      "expected_type": "\u211d \u2192 (\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: exact eta max/min interpolation."
+    },
+    {
+      "module": "HiddenMonotonicity.Core",
+      "declaration": "HiddenMonotonicity.max_sub",
+      "expected_type": "\u2200 p n : \u211d, max p n-n=relu (p-n)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Exact scalar ReLU/max subtraction identity."
+    },
+    {
+      "module": "HiddenMonotonicity.NetworkDerivative",
+      "declaration": "HiddenMonotonicity.layerFun",
+      "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: hidden split max/identity layer, excludes final affine output."
+    },
+    {
+      "module": "HiddenMonotonicity.MaxPool",
+      "declaration": "HiddenMonotonicity.finitePool",
+      "expected_type": "\u2200 {\u03b9 : Type u} [Fintype \u03b9] [Nonempty \u03b9] [DecidableEq \u03b9], ((\u03b9 \u2192 \u211d) \u00d7 (\u03b9 \u2192 \u211d)) \u2192 \u211d \u00d7 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: max positive-plus-other-negative and total negative sum."
+    },
+    {
+      "module": "HiddenMonotonicity.Chunks",
+      "declaration": "HiddenMonotonicity.multiplicative_split_correct",
+      "expected_type": "\u2200 p q r s : \u211d, (p*r+q*s)-(p*s+q*r)=(p-q)*(r-s)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Exact signed two-factor product."
+    },
+    {
+      "module": "Thesis.StoppingDecomposition",
+      "declaration": "Thesis.StoppingDecomposition.stopPair",
+      "expected_type": "(\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: common strict-positive difference gate, stopping at ties."
+    },
+    {
+      "module": "Thesis.StoppingDecomposition",
+      "declaration": "Thesis.StoppingDecomposition.stopLayer",
+      "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: exact stopping affine recursion on both streams."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "declaration": "Thesis.GeneralRegularization.pairWith",
+      "expected_type": "Regularizer \u2192 (\u211d \u2192 \u211d) \u2192 (\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.GeneralRegularization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: chosen-policy cost in positive stream; optimizer premise belongs to validity theorem."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "declaration": "Thesis.GeneralRegularization.entropyRegularizer",
+      "expected_type": "\u2200 \u03b8 : \u211d, 0<\u03b8 \u2192 Regularizer",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.GeneralRegularization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: actual negative binary entropy on [0,1]."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "declaration": "Thesis.GeneralRegularization.hardGate_optimal",
+      "expected_type": "\u2200 z : \u211d, hardGate z \u2208 Set.Icc (0 : \u211d) 1 \u2227 IsMaxOn (objective zeroRegularizer z) (Set.Icc 0 1) (hardGate z)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.GeneralRegularization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Strict-positive zero-cost maximizing selection includes ties."
+    },
+    {
+      "module": "Thesis.Regularization",
+      "declaration": "Thesis.Regularization.softSplit",
+      "expected_type": "\u211d \u2192 \u211d \u2192 \u211d \u2192 \u211d \u00d7 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: sigmoid-times-positive plus active entropy, sigmoid-times-negative."
+    },
+    {
+      "module": "Thesis.Regularization",
+      "declaration": "Thesis.Regularization.entropy_gate_value",
+      "expected_type": "\u2200 (\u03b8 z : \u211d) (h\u03b8 : 0<\u03b8), gate \u03b8 z*z+\u03b8*Real.binEntropy (gate \u03b8 z)=softplus \u03b8 z",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Binary Legendre identity at sigmoid policy."
+    },
+    {
+      "module": "Thesis.ReferencePolicy",
+      "declaration": "Thesis.ReferencePolicy.reference_log_policy",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (\u03c1 u : A \u2192 \u211d) (hu : \u2200 i,0<u i), referencePolicy 1 \u03c1 (fun i => Real.log (u i))=(fun i => \u03c1 i*u i/\u2211 j,\u03c1 j*u j)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.ReferencePolicy"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Positive-contribution formula only; zeros use AttentionReference."
+    },
+    {
+      "module": "Thesis.ReferencePolicy",
+      "declaration": "Thesis.ReferencePolicy.reference_policy_value",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] [Nonempty A] (\u03b8 : \u211d) (\u03c1 q : A \u2192 \u211d) (h\u03b8 : 0<\u03b8) (h\u03c1 : \u2200 i,0<\u03c1 i), (\u2211 i,referencePolicy \u03b8 \u03c1 q i*q i)-\u03b8*kl (referencePolicy \u03b8 \u03c1 q) \u03c1=referenceValue \u03b8 \u03c1 q",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.ReferencePolicy"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Real-score full-support optimizer attains log partition."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.pixelDisagreement_formula",
+      "expected_type": "\u2200 {X : Type u} {Y : Type v} [Fintype X] [Fintype Y] [DecidableEq Y] (p q : X \u2192 \u211d) (terminal : X \u2192 Y) (y : Y), pixelDisagreement p q terminal y=((\u2211 x,if terminal x=y then p x else 0)+(\u2211 x,if terminal x=y then q x else 0))/2-\u2211 x,if terminal x=y then Real.sqrt (p x*q x) else 0",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u",
+        "v"
+      ],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Exact terminal-fibre disagreement formula on whole trajectories."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.pixelDisagreement_total",
+      "expected_type": "\u2200 {X : Type u} {Y : Type v} [Fintype X] [Fintype Y] [DecidableEq Y] (p q : X \u2192 \u211d) (terminal : X \u2192 Y) (hp1 : \u2211 x,p x=1) (hq1 : \u2211 x,q x=1), (\u2211 y,pixelDisagreement p q terminal y)=1-overlap p q",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u",
+        "v"
+      ],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Actual finite terminal-fibre total; normalized path laws supply probability premises."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.overlap_le_one",
+      "expected_type": "\u2200 {S : Type u} [Fintype S] (p q : S \u2192 \u211d) (hp : \u2200 s,0\u2264p s) (hq : \u2200 s,0\u2264q s) (hp1 : \u2211 s,p s=1) (hq1 : \u2211 s,q s=1), overlap p q\u22641",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Finite probability overlap upper bound."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.overlap_nonneg",
+      "expected_type": "\u2200 {S : Type u} [Fintype S] (p q : S \u2192 \u211d), 0\u2264overlap p q",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Finite overlap nonnegativity."
+    },
+    {
+      "module": "Thesis.RoutingSupport",
+      "declaration": "Thesis.RoutingSupport.sourceLayer",
+      "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 \u211d \u2192 \u211d \u2192 \u211d \u2192 Vec n \u2192 Matrix (Fin k) (Fin n) \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingSupport"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: literal ungated alpha-beta epsilon redistribution matrix; raw signed inputs and biases."
+    },
+    {
+      "module": "Thesis.RoutingSupport",
+      "declaration": "Thesis.RoutingSupport.sourceLRP",
+      "expected_type": "\u2200 {n m : \u2115}, \u211d \u2192 \u211d \u2192 \u211d \u2192 Network n m \u2192 Vec n \u2192 Vec m \u2192 Vec n",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingSupport"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: full source recurrence with arbitrary output relevance."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.pathLaw",
+      "expected_type": "\u2200 {S : Type}, (n : \u2115) \u2192 (\u2115 \u2192 S \u2192 S \u2192 \u211d) \u2192 S \u2192 Paths S n \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: product of fixed-length transition probabilities from a fixed root; absorbing cemetery padding is explicit in its use."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.backwardDP",
+      "expected_type": "\u2200 {S : Type} [Fintype S], \u2115 \u2192 (\u2115 \u2192 S \u2192 S \u2192 \u211d) \u2192 (S \u2192 \u211d) \u2192 S \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: finite kernel backward dynamic program with actual terminal payoff."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.overlap",
+      "expected_type": "\u2200 {S : Type u} [Fintype S], (S \u2192 \u211d) \u2192 (S \u2192 \u211d) \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: finite sum of square-root products."
+    },
+    {
+      "module": "Thesis.Tropical",
+      "declaration": "Thesis.Tropical.Polynomial.eval",
+      "expected_type": "\u2200 {I : Type} [Fintype I], Polynomial I \u2192 (I \u2192 \u211d) \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Tropical"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: finite nonempty max of actual slope dot input plus intercept."
+    },
+    {
+      "module": "Thesis.Tropical",
+      "declaration": "Thesis.Tropical.Polynomial.newton",
+      "expected_type": "\u2200 {I : Type}, Polynomial I \u2192 Set (I \u2192 \u211d)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Tropical"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: convex hull of actual polynomial slopes."
+    },
+    {
+      "module": "Thesis.Tropical",
+      "declaration": "Thesis.Tropical.support",
+      "expected_type": "\u2200 {I : Type} [Fintype I], Set (I \u2192 \u211d) \u2192 (I \u2192 \u211d) \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Tropical"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: supremum of dot products; equality with maximum requires the checked compact/nonempty support theorem."
+    },
+    {
+      "module": "Thesis.StoppingDAGPaths",
+      "declaration": "Thesis.StoppingDAG.pathProbability",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n), PairVec d \u2192 Fin n \u2192 Thesis.StoppingDAG.DAGPaths c \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: selected shared-DAG predecessor trajectory product with explicit terminal cemetery alternatives."
+    },
+    {
+      "module": "Thesis.StoppingDAGVisits",
+      "declaration": "Thesis.StoppingDAG.fullOccupation",
+      "expected_type": "\u2200 {d n : \u2115}, Circuit d n \u2192 PairVec d \u2192 Fin n \u2192 Bool \u2192 \u2115 \u2192 Bool \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: actual expected sum of cumulative-discount-weighted graph-node visits, including starting visit."
+    }
+  ]
+}

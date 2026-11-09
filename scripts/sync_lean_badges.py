@@ -11,7 +11,7 @@ import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-PATTERN = r'\\begin\{(theorem(?:env)?|lemma(?:env)?|proposition(?:env)?|corollary(?:env)?|claim|remark|observation)\}(.*?)\\end\{\1\}'
+PATTERN = r'\\begin\{(theorem(?:env)?|lemma(?:env)?|proposition(?:env)?|corollary(?:env)?|definition(?:env)?|claim|remark|observation)\}(.*?)\\end\{\1\}'
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
@@ -27,13 +27,33 @@ def main():
         def annotate(match):
             env,body=match.group(1),match.group(2)
             body=re.sub(r'\n\\hfill\\LeanResult\{[^}]+\}\s*$', '', body)
+            # Older links were trailing badges; the paper uses the optional
+            # theorem heading, next to its title, for numbered Lean references.
+            body=re.sub(r',?\s*\\LeanResult\{[^}]+\}', '', body)
             label=re.search(r'\\label\{([^}]+)\}',body)
             claim=coverage.get(label[1].removeprefix('ptnb:')) if label else None
-            if claim and claim.get('lean'):
+            reviewed=previous.get(label[1],{}) if label else {}
+            if reviewed.get('review_id') or (claim and claim.get('lean')):
                 key=label[1]
-                display='Lean variant' if claim['status']=='formalized_variant' else 'Lean components'
-                links[key]={'declaration':claim['lean'][0],'display':display,'scope':claim['scope']}
-                body=body.rstrip()+'\n\\hfill\\LeanResult{'+key+'}\n'
+                if reviewed.get('review_id'):
+                    links[key]=reviewed
+                else:
+                    display='Lean variant' if claim['status']=='formalized_variant' else 'Lean components'
+                    links[key]={'declaration':claim['lean'][0],'display':display,'scope':claim['scope']}
+                if body.startswith('['):
+                    depth=1; brace_depth=0; end=1
+                    while end<len(body) and depth:
+                        char=body[end]
+                        if char=='{' and body[end-1]!='\\':brace_depth+=1
+                        elif char=='}' and body[end-1]!='\\':brace_depth-=1
+                        elif not brace_depth and char=='[':depth+=1
+                        elif not brace_depth and char==']':depth-=1
+                        end+=1
+                    if depth:raise ValueError('Unclosed theorem title: '+key)
+                    title=body[1:end-1].rstrip()
+                    body='['+title+(', ' if title else '')+'\\LeanResult{'+key+'}]'+body[end:]
+                else:
+                    body='[\\LeanResult{'+key+'}]'+body
             return '\\begin{'+env+'}'+body+'\\end{'+env+'}'
         result=re.sub(PATTERN,annotate,original,flags=re.S)
         if result!=original:

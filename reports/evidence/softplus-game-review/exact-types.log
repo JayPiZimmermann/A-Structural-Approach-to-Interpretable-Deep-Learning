@@ -1,0 +1,1243 @@
+@mixedTransition_normalized : ∀ {n k : Nat}
+  (r :
+    @Set.Elem.{0} Real
+      (@Set.Icc.{0} Real Real.instPreorder (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+  (wp wn : Matrix.{0, 0, 0} (Fin k) (Fin n) Real) (j : Fin k) (turn : Bool),
+  @Eq.{1} Real (∑ target, @mixedTransition n k r wp wn j turn target)
+    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+'Thesis.SoftplusGame.mixedTransition_normalized' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:21:83: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@mixedTransition_nonnegative : ∀ {n k : Nat}
+  (r :
+    @Set.Elem.{0} Real
+      (@Set.Icc.{0} Real Real.instPreorder (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+  (wp wn : Matrix.{0, 0, 0} (Fin k) (Fin n) Real),
+  (∀ (j : Fin k) (i : Fin n),
+      And
+        (@LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (wp j i))
+        (@LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (wn j i))) →
+    ∀ (j : Fin k) (turn : Bool) (target : Option.{0} (Prod.{0, 0} (Fin n) Bool)),
+      @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+        (@mixedTransition n k r wp wn j turn target)
+'Thesis.SoftplusGame.mixedTransition_nonnegative' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:28:109: warning: Variable name `hz` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hz
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@mixed_zero_fanIn_absorbs : ∀ {n k : Nat}
+  (r :
+    @Set.Elem.{0} Real
+      (@Set.Icc.{0} Real Real.instPreorder (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+  (wp wn : Matrix.{0, 0, 0} (Fin k) (Fin n) Real) (j : Fin k) (turn : Bool),
+  @Eq.{1} Real (@fanIn n k wp wn j) (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) →
+    @Eq.{1} Real (@mixedTransition n k r wp wn j turn (@none.{0} (Prod.{0, 0} (Fin n) Bool)))
+      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+'Thesis.SoftplusGame.mixed_zero_fanIn_absorbs' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:35:59: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@continuation_recovery_total : ∀ {n k : Nat} (wp wn : Matrix.{0, 0, 0} (Fin k) (Fin n) Real),
+  (∀ (j : Fin k) (i : Fin n),
+      And
+        (@LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (wp j i))
+        (@LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (wn j i))) →
+    ∀ (b : Vec k) (p q : Vec n) (j : Fin k),
+      @Eq.{1} Real (@continuation n k wp wn b p q j)
+        (@HAdd.hAdd.{0, 0, 0} (Fin k → Real) (Vec k) (Fin k → Real)
+          (@instHAdd.{0} (Fin k → Real) (@Pi.instAdd.{0, 0} (Fin k) (fun a => Real) fun i => Real.instAdd))
+          (@HAdd.hAdd.{0, 0, 0} (Fin k → Real) (Fin k → Real) (Fin k → Real)
+            (@instHAdd.{0} (Fin k → Real) (@Pi.instAdd.{0, 0} (Fin k) (fun a => Real) fun i => Real.instAdd))
+            (@mulVec.{0, 0, 0} (Fin k) (Fin n) Real
+              (@NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} Real
+                (@NonUnitalNonAssocCommRing.toNonUnitalNonAssocRing.{0} Real
+                  (@NonUnitalCommRing.toNonUnitalNonAssocCommRing.{0} Real
+                    (@CommRing.toNonUnitalCommRing.{0} Real Real.commRing))))
+              (Fin.fintype n) wp p)
+            (@mulVec.{0, 0, 0} (Fin k) (Fin n) Real
+              (@NonUnitalNonAssocRing.toNonUnitalNonAssocSemiring.{0} Real
+                (@NonUnitalNonAssocCommRing.toNonUnitalNonAssocRing.{0} Real
+                  (@NonUnitalCommRing.toNonUnitalNonAssocCommRing.{0} Real
+                    (@CommRing.toNonUnitalCommRing.{0} Real Real.commRing))))
+              (Fin.fintype n) wn q))
+          b j)
+'Thesis.SoftplusGame.continuation_recovery_total' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:42:52: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:42:63: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@softplus_saddle : ∀ {n m : Nat} (net : Network n m) (θ : Real),
+  @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) θ →
+    @Network.Nonnegative n m net →
+      ∀ (x : Vec n) (plus minus : @Strategy n m net),
+        And
+          (@LE.le.{0} (Vec m) (@Pi.hasLe.{0, 0} (Fin m) (fun a => Real) fun i => Real.instLE)
+            (@Prod.fst.{0, 0} (Vec m) (Vec m)
+              (@Thesis.SoftplusGame.policyValue n m θ net plus (@gibbsStrategy n m θ net x) x
+                (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg) x)))
+            (@softEval n m θ net x))
+          (And
+            (@LE.le.{0} (Vec m) (@Pi.hasLe.{0, 0} (Fin m) (fun a => Real) fun i => Real.instLE)
+              (@Prod.snd.{0, 0} (Vec m) (Vec m)
+                (@Thesis.SoftplusGame.policyValue n m θ net plus (@gibbsStrategy n m θ net x) x
+                  (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg) x)))
+              (@Neg.neg.{0} (Vec m) (@Pi.instNeg.{0, 0} (Fin m) (fun a => Real) fun i => Real.instNeg)
+                (@softEval n m θ net x)))
+            (And
+              (@Eq.{1} (PairVec m)
+                (@Thesis.SoftplusGame.policyValue n m θ net (@gibbsStrategy n m θ net x) (@gibbsStrategy n m θ net x) x
+                  (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg) x))
+                (@Prod.mk.{0, 0} (Vec m) (Vec m) (@softEval n m θ net x)
+                  (@Neg.neg.{0} (Vec m) (@Pi.instNeg.{0, 0} (Fin m) (fun a => Real) fun i => Real.instNeg)
+                    (@softEval n m θ net x))))
+              (And
+                (@LE.le.{0} (Vec m) (@Pi.hasLe.{0, 0} (Fin m) (fun a => Real) fun i => Real.instLE)
+                  (@softEval n m θ net x)
+                  (@Prod.fst.{0, 0} (Vec m) (Vec m)
+                    (@Thesis.SoftplusGame.policyValue n m θ net (@gibbsStrategy n m θ net x) minus x
+                      (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg) x))))
+                (@LE.le.{0} (Vec m) (@Pi.hasLe.{0, 0} (Fin m) (fun a => Real) fun i => Real.instLE)
+                  (@Neg.neg.{0} (Vec m) (@Pi.instNeg.{0, 0} (Fin m) (fun a => Real) fun i => Real.instNeg)
+                    (@softEval n m θ net x))
+                  (@Prod.snd.{0, 0} (Vec m) (Vec m)
+                    (@Thesis.SoftplusGame.policyValue n m θ net (@gibbsStrategy n m θ net x) minus x
+                      (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg) x)))))))
+'Thesis.SoftplusGame.softplus_saddle' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:49:52: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:49:63: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@subgamePerfect_iff : ∀ {n m : Nat} (net : Network n m) (θ : Real),
+  @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) θ →
+    @Network.Nonnegative n m net →
+      ∀ (x : Vec n) (plus minus : @Strategy n m net),
+        Iff
+          (@Thesis.SoftplusGame.SubgamePerfect n m θ net plus minus x
+            (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg) x))
+          (And (@Eq.{1} (@Strategy n m net) plus (@gibbsStrategy n m θ net x))
+            (@Eq.{1} (@Strategy n m net) minus (@gibbsStrategy n m θ net x)))
+'Thesis.SoftplusGame.subgamePerfect_iff' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:56:52: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@playerValue_advantage : ∀ {n m : Nat} (net : Network n m) (θ : Real),
+  @Network.Nonnegative n m net →
+    ∀ (plus minus : @Strategy n m net) (v : PlayerValues n),
+      @Eq.{1} (PairVec m) (@advantage m (@playerValue n m θ net plus minus v))
+        (@Thesis.SoftplusGame.policyValue n m θ net plus minus (@Prod.fst.{0, 0} (Vec n) (Vec n) (@advantage n v))
+          (@Prod.snd.{0, 0} (Vec n) (Vec n) (@advantage n v)))
+'Thesis.SoftplusGame.playerValue_advantage' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:63:52: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:63:63: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@playerValue_gibbs : ∀ {n m : Nat} (net : Network n m) (θ : Real),
+  @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) θ →
+    @Network.Nonnegative n m net →
+      ∀ (x : PairVec n),
+        @Eq.{1} (PlayerValues m)
+          (@playerValue n m θ net
+            (@gibbsStrategy n m θ net
+              (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x)))
+            (@gibbsStrategy n m θ net
+              (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x)))
+            (@pairValues n x))
+          (@pairValues m
+            (@Network.decomposeWith n m net
+              (fun z => softSplit θ (@Prod.fst.{0, 0} Real Real z) (@Prod.snd.{0, 0} Real Real z)) x))
+'Thesis.SoftplusGame.playerValue_gibbs' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:70:54: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:70:65: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:70:163: warning: Variable name `hrow` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hrow
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@affine_saddle : ∀ {n m r : Nat} (net : Network n m) (θ : Real),
+  @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) θ →
+    @Network.Nonnegative n m net →
+      ∀ (x : Vec n) (plus minus : @Strategy n m net) (wp wn : Matrix.{0, 0, 0} (Fin r) (Fin m) Real),
+        (∀ (j : Fin r) (i : Fin m),
+            And
+              (@LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+                (wp j i))
+              (@LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+                (wn j i))) →
+          ∀ (b : Vec r) (j : Fin r),
+            have read := fun v =>
+              @continuation m r wp wn b (@Prod.fst.{0, 0} (Vec m) (Vec m) v) (@Prod.snd.{0, 0} (Vec m) (Vec m) v) j;
+            And
+              (@LE.le.{0} Real Real.instLE
+                (read
+                  (@Thesis.SoftplusGame.policyValue n m θ net plus (@gibbsStrategy n m θ net x) x
+                    (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg) x)))
+                (@affineOutput n m r θ net
+                  (@HSub.hSub.{0, 0, 0} (Matrix.{0, 0, 0} (Fin r) (Fin m) Real) (Matrix.{0, 0, 0} (Fin r) (Fin m) Real)
+                    (Matrix.{0, 0, 0} (Fin r) (Fin m) Real)
+                    (@instHSub.{0} (Matrix.{0, 0, 0} (Fin r) (Fin m) Real)
+                      (@sub.{0, 0, 0} (Fin r) (Fin m) Real Real.instSub))
+                    wp wn)
+                  b x j))
+              (And
+                (@Eq.{1} Real
+                  (read
+                    (@Thesis.SoftplusGame.policyValue n m θ net (@gibbsStrategy n m θ net x)
+                      (@gibbsStrategy n m θ net x) x
+                      (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg) x)))
+                  (@affineOutput n m r θ net
+                    (@HSub.hSub.{0, 0, 0} (Matrix.{0, 0, 0} (Fin r) (Fin m) Real)
+                      (Matrix.{0, 0, 0} (Fin r) (Fin m) Real) (Matrix.{0, 0, 0} (Fin r) (Fin m) Real)
+                      (@instHSub.{0} (Matrix.{0, 0, 0} (Fin r) (Fin m) Real)
+                        (@sub.{0, 0, 0} (Fin r) (Fin m) Real Real.instSub))
+                      wp wn)
+                    b x j))
+                (@LE.le.{0} Real Real.instLE
+                  (@affineOutput n m r θ net
+                    (@HSub.hSub.{0, 0, 0} (Matrix.{0, 0, 0} (Fin r) (Fin m) Real)
+                      (Matrix.{0, 0, 0} (Fin r) (Fin m) Real) (Matrix.{0, 0, 0} (Fin r) (Fin m) Real)
+                      (@instHSub.{0} (Matrix.{0, 0, 0} (Fin r) (Fin m) Real)
+                        (@sub.{0, 0, 0} (Fin r) (Fin m) Real Real.instSub))
+                      wp wn)
+                    b x j)
+                  (read
+                    (@Thesis.SoftplusGame.policyValue n m θ net (@gibbsStrategy n m θ net x) minus x
+                      (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg) x)))))
+'Thesis.SoftplusGame.affine_saddle' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:77:52: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:77:63: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@softplus_forward_spne : ∀ {n m : Nat} (net : Network n m) (θ : Real),
+  @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) θ →
+    @Network.Nonnegative n m net →
+      ∀ (x : PairVec n),
+        And
+          (@Thesis.SoftplusGame.SubgamePerfect n m θ net
+            (@gibbsStrategy n m θ net
+              (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x)))
+            (@gibbsStrategy n m θ net
+              (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x)))
+            (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+              (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+              (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x))
+            (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg)
+              (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x))))
+          (And
+            (∀ (plus minus : @Strategy n m net),
+              Iff
+                (@Thesis.SoftplusGame.SubgamePerfect n m θ net plus minus
+                  (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                    (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                    (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x))
+                  (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg)
+                    (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                      (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                      (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x))))
+                (And
+                  (@Eq.{1} (@Strategy n m net) plus
+                    (@gibbsStrategy n m θ net
+                      (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                        (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                        (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x))))
+                  (@Eq.{1} (@Strategy n m net) minus
+                    (@gibbsStrategy n m θ net
+                      (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                        (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                        (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x))))))
+            (And
+              (@Eq.{1} (PlayerValues m)
+                (@playerValue n m θ net
+                  (@gibbsStrategy n m θ net
+                    (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                      (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                      (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x)))
+                  (@gibbsStrategy n m θ net
+                    (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                      (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                      (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x)))
+                  (@pairValues n x))
+                (@pairValues m
+                  (@Network.decomposeWith n m net
+                    (fun z => softSplit θ (@Prod.fst.{0, 0} Real Real z) (@Prod.snd.{0, 0} Real Real z)) x)))
+              (@Eq.{1} (Vec m)
+                (@HSub.hSub.{0, 0, 0} (Vec m) (Vec m) (Vec m)
+                  (@instHSub.{0} (Vec m) (@Pi.instSub.{0, 0} (Fin m) (fun a => Real) fun i => Real.instSub))
+                  (@Prod.fst.{0, 0} (Vec m) (Vec m)
+                    (@Network.decomposeWith n m net
+                      (fun z => softSplit θ (@Prod.fst.{0, 0} Real Real z) (@Prod.snd.{0, 0} Real Real z)) x))
+                  (@Prod.snd.{0, 0} (Vec m) (Vec m)
+                    (@Network.decomposeWith n m net
+                      (fun z => softSplit θ (@Prod.fst.{0, 0} Real Real z) (@Prod.snd.{0, 0} Real Real z)) x)))
+                (@softEval n m θ net
+                  (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                    (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                    (@Prod.fst.{0, 0} (Vec n) (Vec n) x) (@Prod.snd.{0, 0} (Vec n) (Vec n) x))))))
+'Thesis.SoftplusGame.softplus_forward_spne' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@profile_step_transition : ∀ {n k : Nat} (wp wn : Matrix.{0, 0, 0} (Fin k) (Fin n) Real)
+  (plus minus :
+    Fin k →
+      @Set.Elem.{0} Real
+        (@Set.Icc.{0} Real Real.instPreorder (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+  (j : Fin k) (i : Fin n) (r b : Bool),
+  @Eq.{1} Real
+    (@mixedTransition n k
+      (@ite.{1}
+        (@Set.Elem.{0} Real
+          (@Set.Icc.{0} Real Real.instPreorder
+            (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+            (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+        (@Eq.{1} Bool (r.xor b) true) (instDecidableEqBool (r.xor b) true) (minus j) (plus j))
+      wp wn j (r.xor b) (@some.{0} (Prod.{0, 0} (Fin n) Bool) (@Prod.mk.{0, 0} (Fin n) Bool i r)))
+    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@ite.{1} Real (@Eq.{1} Bool (r.xor b) true) (instDecidableEqBool (r.xor b) true)
+          (@Subtype.val.{1} Real
+            (fun x =>
+              @Membership.mem.{0, 0} Real (Set.{0} Real) (@Set.instMembership.{0} Real)
+                (@Set.Icc.{0} Real Real.instPreorder
+                  (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                x)
+            (minus j))
+          (@Subtype.val.{1} Real
+            (fun x =>
+              @Membership.mem.{0, 0} Real (Set.{0} Real) (@Set.instMembership.{0} Real)
+                (@Set.Icc.{0} Real Real.instPreorder
+                  (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                x)
+            (plus j)))
+        (@ite.{1} Real (@Eq.{1} Bool b true) (instDecidableEqBool b true) (wn j i) (wp j i)))
+      (@fanIn n k wp wn j))
+'Thesis.SoftplusGame.profile_step_transition' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@profileProbability_gibbs : ∀ {n m : Nat} (net : Network n m) (θ : Real) (x : Vec n) (j : Fin m) (i : Fin n)
+  (q r : Bool) (path : @Paths n m (@softTrace n m θ net x)),
+  @Eq.{1} Real (@profileProbability n m θ net (@gibbsStrategy n m θ net x) (@gibbsStrategy n m θ net x) x j i q r path)
+    (@softProbability n m θ net x j i (q.xor r) path)
+'Thesis.SoftplusGame.profileProbability_gibbs' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:98:52: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:98:63: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:98:126: warning: Variable name `hsp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hsp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@spne_occupation_eq : ∀ {n m : Nat} (net : Network n m) (θ : Real),
+  @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) θ →
+    @Network.Nonnegative n m net →
+      ∀ (x : Vec n) (plus minus : @Strategy n m net),
+        @Thesis.SoftplusGame.SubgamePerfect n m θ net plus minus x
+            (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg) x) →
+          ∀ (j : Fin m) (i : Fin n) (q r : Bool),
+            @Eq.{1} Real (@profileOccupation n m net θ plus minus x j i q r) (@softOccupation n m net θ x j i (q.xor r))
+'Thesis.SoftplusGame.spne_occupation_eq' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:105:52: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:105:63: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:105:126: warning: Variable name `hsp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hsp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@spne_gradient : ∀ {n m : Nat} (net : Network n m) (θ : Real),
+  @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) θ →
+    @Network.Nonnegative n m net →
+      ∀ (x : Vec n) (plus minus : @Strategy n m net),
+        @Thesis.SoftplusGame.SubgamePerfect n m θ net plus minus x
+            (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg) x) →
+          ∀ (j : Fin m) (i : Fin n) (q : Bool),
+            @Eq.{1} Real
+              (@DFunLike.coe.{1, 1, 1}
+                (@ContinuousLinearMap.{0, 0, 0, 0} Real Real
+                  (@CommSemiring.toSemiring.{0} Real
+                    (@Semifield.toCommSemiring.{0} Real
+                      (@Field.toSemifield.{0} Real
+                        (@NormedField.toField.{0} Real
+                          (@NontriviallyNormedField.toNormedField.{0} Real
+                            (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                  (@CommSemiring.toSemiring.{0} Real
+                    (@Semifield.toCommSemiring.{0} Real
+                      (@Field.toSemifield.{0} Real
+                        (@NormedField.toField.{0} Real
+                          (@NontriviallyNormedField.toNormedField.{0} Real
+                            (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                  (@RingHom.id.{0} Real
+                    (@Semiring.toNonAssocSemiring.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                  (Vec n)
+                  (@Pi.topologicalSpace.{0, 0} (Fin n) (fun a => Real) fun i =>
+                    @UniformSpace.toTopologicalSpace.{0} Real
+                      (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                  (@AddCommGroup.toAddCommMonoid.{0} (Vec n)
+                    (@Pi.addCommGroup.{0, 0} (Fin n) (fun a => Real) fun i => Real.instAddCommGroup))
+                  (Vec m)
+                  (@Pi.topologicalSpace.{0, 0} (Fin m) (fun a => Real) fun i =>
+                    @UniformSpace.toTopologicalSpace.{0} Real
+                      (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                  (@AddCommGroup.toAddCommMonoid.{0} (Vec m)
+                    (@Pi.addCommGroup.{0, 0} (Fin m) (fun a => Real) fun i => Real.instAddCommGroup))
+                  (@Pi.Function.module.{0, 0, 0} (Fin n) Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                    (@Semiring.toModule.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                  (@Pi.Function.module.{0, 0, 0} (Fin m) Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                    (@Semiring.toModule.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField)))))))))
+                (Vec n) (fun x => Vec m)
+                (@ContinuousLinearMap.funLike.{0, 0, 0, 0} Real Real
+                  (@CommSemiring.toSemiring.{0} Real
+                    (@Semifield.toCommSemiring.{0} Real
+                      (@Field.toSemifield.{0} Real
+                        (@NormedField.toField.{0} Real
+                          (@NontriviallyNormedField.toNormedField.{0} Real
+                            (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                  (@CommSemiring.toSemiring.{0} Real
+                    (@Semifield.toCommSemiring.{0} Real
+                      (@Field.toSemifield.{0} Real
+                        (@NormedField.toField.{0} Real
+                          (@NontriviallyNormedField.toNormedField.{0} Real
+                            (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                  (@RingHom.id.{0} Real
+                    (@Semiring.toNonAssocSemiring.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                  (Vec n)
+                  (@Pi.topologicalSpace.{0, 0} (Fin n) (fun a => Real) fun i =>
+                    @UniformSpace.toTopologicalSpace.{0} Real
+                      (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                  (@AddCommGroup.toAddCommMonoid.{0} (Vec n)
+                    (@Pi.addCommGroup.{0, 0} (Fin n) (fun a => Real) fun i => Real.instAddCommGroup))
+                  (Vec m)
+                  (@Pi.topologicalSpace.{0, 0} (Fin m) (fun a => Real) fun i =>
+                    @UniformSpace.toTopologicalSpace.{0} Real
+                      (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                  (@AddCommGroup.toAddCommMonoid.{0} (Vec m)
+                    (@Pi.addCommGroup.{0, 0} (Fin m) (fun a => Real) fun i => Real.instAddCommGroup))
+                  (@Pi.Function.module.{0, 0, 0} (Fin n) Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                    (@Semiring.toModule.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                  (@Pi.Function.module.{0, 0, 0} (Fin m) Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                    (@Semiring.toModule.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField)))))))))
+                (@fderiv.{0, 0, 0} Real (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField)
+                  (Vec n) (@Pi.addCommGroup.{0, 0} (Fin n) (fun a => Real) fun i => Real.instAddCommGroup)
+                  (@Pi.Function.module.{0, 0, 0} (Fin n) Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                    (@Semiring.toModule.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                  (@Pi.topologicalSpace.{0, 0} (Fin n) (fun a => Real) fun i =>
+                    @UniformSpace.toTopologicalSpace.{0} Real
+                      (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                  (Vec m) (@Pi.addCommGroup.{0, 0} (Fin m) (fun a => Real) fun i => Real.instAddCommGroup)
+                  (@Pi.Function.module.{0, 0, 0} (Fin m) Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                    (@Semiring.toModule.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                  (@Pi.topologicalSpace.{0, 0} (Fin m) (fun a => Real) fun i =>
+                    @UniformSpace.toTopologicalSpace.{0} Real
+                      (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                  (@softEval n m θ net) x)
+                (@Pi.single.{0, 0} (Fin n) (fun a => Real) (fun i => Real.instZero) (instDecidableEqFin n) i
+                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                j)
+              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                (@ite.{1} Real (@Eq.{1} Bool q true) (instDecidableEqBool q true)
+                  (@Neg.neg.{0} Real Real.instNeg
+                    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                  (@profileOccupation n m net θ plus minus x j i q false)
+                  (@profileOccupation n m net θ plus minus x j i q true)))
+'Thesis.SoftplusGame.spne_gradient' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:112:54: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:112:65: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:112:128: warning: Variable name `hsp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hsp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@spne_affine_gradient_profile : ∀ {n m r : Nat} (net : Network n m) (θ : Real),
+  @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) θ →
+    @Network.Nonnegative n m net →
+      ∀ (x : Vec n) (plus minus : @Strategy n m net),
+        @Thesis.SoftplusGame.SubgamePerfect n m θ net plus minus x
+            (@Neg.neg.{0} (Vec n) (@Pi.instNeg.{0, 0} (Fin n) (fun a => Real) fun i => Real.instNeg) x) →
+          ∀ (C : Matrix.{0, 0, 0} (Fin r) (Fin m) Real) (b : Vec r) (j : Fin r) (i : Fin n) (q : Bool),
+            @Eq.{1} Real
+              (@DFunLike.coe.{1, 1, 1}
+                (@ContinuousLinearMap.{0, 0, 0, 0} Real Real
+                  (@CommSemiring.toSemiring.{0} Real
+                    (@Semifield.toCommSemiring.{0} Real
+                      (@Field.toSemifield.{0} Real
+                        (@NormedField.toField.{0} Real
+                          (@NontriviallyNormedField.toNormedField.{0} Real
+                            (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                  (@CommSemiring.toSemiring.{0} Real
+                    (@Semifield.toCommSemiring.{0} Real
+                      (@Field.toSemifield.{0} Real
+                        (@NormedField.toField.{0} Real
+                          (@NontriviallyNormedField.toNormedField.{0} Real
+                            (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                  (@RingHom.id.{0} Real
+                    (@Semiring.toNonAssocSemiring.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                  (Vec n)
+                  (@Pi.topologicalSpace.{0, 0} (Fin n) (fun a => Real) fun i =>
+                    @UniformSpace.toTopologicalSpace.{0} Real
+                      (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                  (@AddCommGroup.toAddCommMonoid.{0} (Vec n)
+                    (@Pi.addCommGroup.{0, 0} (Fin n) (fun a => Real) fun i => Real.instAddCommGroup))
+                  (Vec r)
+                  (@Pi.topologicalSpace.{0, 0} (Fin r) (fun a => Real) fun i =>
+                    @UniformSpace.toTopologicalSpace.{0} Real
+                      (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                  (@AddCommGroup.toAddCommMonoid.{0} (Vec r)
+                    (@Pi.addCommGroup.{0, 0} (Fin r) (fun a => Real) fun i => Real.instAddCommGroup))
+                  (@Pi.Function.module.{0, 0, 0} (Fin n) Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                    (@Semiring.toModule.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                  (@Pi.Function.module.{0, 0, 0} (Fin r) Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                    (@Semiring.toModule.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField)))))))))
+                (Vec n) (fun x => Vec r)
+                (@ContinuousLinearMap.funLike.{0, 0, 0, 0} Real Real
+                  (@CommSemiring.toSemiring.{0} Real
+                    (@Semifield.toCommSemiring.{0} Real
+                      (@Field.toSemifield.{0} Real
+                        (@NormedField.toField.{0} Real
+                          (@NontriviallyNormedField.toNormedField.{0} Real
+                            (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                  (@CommSemiring.toSemiring.{0} Real
+                    (@Semifield.toCommSemiring.{0} Real
+                      (@Field.toSemifield.{0} Real
+                        (@NormedField.toField.{0} Real
+                          (@NontriviallyNormedField.toNormedField.{0} Real
+                            (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                  (@RingHom.id.{0} Real
+                    (@Semiring.toNonAssocSemiring.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                  (Vec n)
+                  (@Pi.topologicalSpace.{0, 0} (Fin n) (fun a => Real) fun i =>
+                    @UniformSpace.toTopologicalSpace.{0} Real
+                      (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                  (@AddCommGroup.toAddCommMonoid.{0} (Vec n)
+                    (@Pi.addCommGroup.{0, 0} (Fin n) (fun a => Real) fun i => Real.instAddCommGroup))
+                  (Vec r)
+                  (@Pi.topologicalSpace.{0, 0} (Fin r) (fun a => Real) fun i =>
+                    @UniformSpace.toTopologicalSpace.{0} Real
+                      (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                  (@AddCommGroup.toAddCommMonoid.{0} (Vec r)
+                    (@Pi.addCommGroup.{0, 0} (Fin r) (fun a => Real) fun i => Real.instAddCommGroup))
+                  (@Pi.Function.module.{0, 0, 0} (Fin n) Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                    (@Semiring.toModule.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                  (@Pi.Function.module.{0, 0, 0} (Fin r) Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                    (@Semiring.toModule.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField)))))))))
+                (@fderiv.{0, 0, 0} Real (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField)
+                  (Vec n) (@Pi.addCommGroup.{0, 0} (Fin n) (fun a => Real) fun i => Real.instAddCommGroup)
+                  (@Pi.Function.module.{0, 0, 0} (Fin n) Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                    (@Semiring.toModule.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                  (@Pi.topologicalSpace.{0, 0} (Fin n) (fun a => Real) fun i =>
+                    @UniformSpace.toTopologicalSpace.{0} Real
+                      (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                  (Vec r) (@Pi.addCommGroup.{0, 0} (Fin r) (fun a => Real) fun i => Real.instAddCommGroup)
+                  (@Pi.Function.module.{0, 0, 0} (Fin r) Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                    (@Semiring.toModule.{0} Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))))
+                  (@Pi.topologicalSpace.{0, 0} (Fin r) (fun a => Real) fun i =>
+                    @UniformSpace.toTopologicalSpace.{0} Real
+                      (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                  (@affineOutput n m r θ net C b) x)
+                (@Pi.single.{0, 0} (Fin n) (fun a => Real) (fun i => Real.instZero) (instDecidableEqFin n) i
+                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                j)
+              (∑ h,
+                @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                  (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (C j h)
+                    (@ite.{1} Real (@Eq.{1} Bool q true) (instDecidableEqBool q true)
+                      (@Neg.neg.{0} Real Real.instNeg
+                        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+                  (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                    (@profileOccupation n m net θ plus minus x h i q false)
+                    (@profileOccupation n m net θ plus minus x h i q true)))
+'Thesis.SoftplusGame.spne_affine_gradient_profile' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@softEval_append : ∀ {a b c : Nat} (pre : Network a b) (suffix : Network b c) (θ : Real) (x : Vec a),
+  @Eq.{1} (Vec c) (@softEval a c θ (@Network.append a b c pre suffix) x)
+    (@softEval b c θ suffix (@softEval a b θ pre x))
+'Thesis.SoftplusGame.softEval_append' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:126:77: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:126:88: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:126:111: warning: Variable name `hs` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hs
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:126:193: warning: Variable name `hsp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hsp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@spne_suffix : ∀ {a b c : Nat} (pre : Network a b) (suffix : Network b c) (θ : Real),
+  @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) θ →
+    @Network.Nonnegative a b pre →
+      @Network.Nonnegative b c suffix →
+        ∀ (x : Vec a) (plus minus : @Strategy a c (@Network.append a b c pre suffix)),
+          @Thesis.SoftplusGame.SubgamePerfect a c θ (@Network.append a b c pre suffix) plus minus x
+              (@Neg.neg.{0} (Vec a) (@Pi.instNeg.{0, 0} (Fin a) (fun a => Real) fun i => Real.instNeg) x) →
+            @Thesis.SoftplusGame.SubgamePerfect b c θ suffix (@suffixStrategy a b c pre suffix plus)
+              (@suffixStrategy a b c pre suffix minus) (@softEval a b θ pre x)
+              (@Neg.neg.{0} (Vec b) (@Pi.instNeg.{0, 0} (Fin b) (fun a => Real) fun i => Real.instNeg)
+                (@softEval a b θ pre x))
+'Thesis.SoftplusGame.spne_suffix' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:133:77: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:133:88: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:133:111: warning: Variable name `hs` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hs
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:133:193: warning: Variable name `hsp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hsp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@spne_prefix_saddle : ∀ {a b c : Nat} (pre : Network a b) (suffix : Network b c) (θ : Real),
+  @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) θ →
+    @Network.Nonnegative a b pre →
+      @Network.Nonnegative b c suffix →
+        ∀ (x : Vec a) (plus minus : @Strategy a c (@Network.append a b c pre suffix)),
+          @Thesis.SoftplusGame.SubgamePerfect a c θ (@Network.append a b c pre suffix) plus minus x
+              (@Neg.neg.{0} (Vec a) (@Pi.instNeg.{0, 0} (Fin a) (fun a => Real) fun i => Real.instNeg) x) →
+            ∀ (plusDev minusDev : @Strategy a b pre),
+              And
+                (@LE.le.{0} (Vec b) (@Pi.hasLe.{0, 0} (Fin b) (fun a => Real) fun i => Real.instLE)
+                  (@Prod.fst.{0, 0} (Vec b) (Vec b)
+                    (@Thesis.SoftplusGame.policyValue a b θ pre plusDev (@prefixStrategy a b c pre suffix minus) x
+                      (@Neg.neg.{0} (Vec a) (@Pi.instNeg.{0, 0} (Fin a) (fun a => Real) fun i => Real.instNeg) x)))
+                  (@softEval a b θ pre x))
+                (And
+                  (@LE.le.{0} (Vec b) (@Pi.hasLe.{0, 0} (Fin b) (fun a => Real) fun i => Real.instLE)
+                    (@Prod.snd.{0, 0} (Vec b) (Vec b)
+                      (@Thesis.SoftplusGame.policyValue a b θ pre plusDev (@prefixStrategy a b c pre suffix minus) x
+                        (@Neg.neg.{0} (Vec a) (@Pi.instNeg.{0, 0} (Fin a) (fun a => Real) fun i => Real.instNeg) x)))
+                    (@Neg.neg.{0} (Vec b) (@Pi.instNeg.{0, 0} (Fin b) (fun a => Real) fun i => Real.instNeg)
+                      (@softEval a b θ pre x)))
+                  (And
+                    (@Eq.{1} (PairVec b)
+                      (@Thesis.SoftplusGame.policyValue a b θ pre (@prefixStrategy a b c pre suffix plus)
+                        (@prefixStrategy a b c pre suffix minus) x
+                        (@Neg.neg.{0} (Vec a) (@Pi.instNeg.{0, 0} (Fin a) (fun a => Real) fun i => Real.instNeg) x))
+                      (@Prod.mk.{0, 0} (Vec b) (Vec b) (@softEval a b θ pre x)
+                        (@Neg.neg.{0} (Vec b) (@Pi.instNeg.{0, 0} (Fin b) (fun a => Real) fun i => Real.instNeg)
+                          (@softEval a b θ pre x))))
+                    (And
+                      (@LE.le.{0} (Vec b) (@Pi.hasLe.{0, 0} (Fin b) (fun a => Real) fun i => Real.instLE)
+                        (@softEval a b θ pre x)
+                        (@Prod.fst.{0, 0} (Vec b) (Vec b)
+                          (@Thesis.SoftplusGame.policyValue a b θ pre (@prefixStrategy a b c pre suffix plus) minusDev x
+                            (@Neg.neg.{0} (Vec a) (@Pi.instNeg.{0, 0} (Fin a) (fun a => Real) fun i => Real.instNeg)
+                              x))))
+                      (@LE.le.{0} (Vec b) (@Pi.hasLe.{0, 0} (Fin b) (fun a => Real) fun i => Real.instLE)
+                        (@Neg.neg.{0} (Vec b) (@Pi.instNeg.{0, 0} (Fin b) (fun a => Real) fun i => Real.instNeg)
+                          (@softEval a b θ pre x))
+                        (@Prod.snd.{0, 0} (Vec b) (Vec b)
+                          (@Thesis.SoftplusGame.policyValue a b θ pre (@prefixStrategy a b c pre suffix plus) minusDev x
+                            (@Neg.neg.{0} (Vec a) (@Pi.instNeg.{0, 0} (Fin a) (fun a => Real) fun i => Real.instNeg)
+                              x)))))))
+'Thesis.SoftplusGame.spne_prefix_saddle' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/softplus-game-review/ExactTypes.lean:140:77: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:140:88: warning: Variable name `hp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:140:111: warning: Variable name `hs` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hs
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-game-review/ExactTypes.lean:140:193: warning: Variable name `hsp` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hsp
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@spne_intermediate_gradient : ∀ {a b c : Nat} (pre : Network a b) (suffix : Network b c) (θ : Real),
+  @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) θ →
+    @Network.Nonnegative a b pre →
+      @Network.Nonnegative b c suffix →
+        ∀ (x : Vec a) (plus minus : @Strategy a c (@Network.append a b c pre suffix)),
+          @Thesis.SoftplusGame.SubgamePerfect a c θ (@Network.append a b c pre suffix) plus minus x
+              (@Neg.neg.{0} (Vec a) (@Pi.instNeg.{0, 0} (Fin a) (fun a => Real) fun i => Real.instNeg) x) →
+            ∀ (j : Fin c) (i : Fin b) (q : Bool),
+              @Eq.{1} Real
+                (@DFunLike.coe.{1, 1, 1}
+                  (@ContinuousLinearMap.{0, 0, 0, 0} Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@RingHom.id.{0} Real
+                      (@Semiring.toNonAssocSemiring.{0} Real
+                        (@CommSemiring.toSemiring.{0} Real
+                          (@Semifield.toCommSemiring.{0} Real
+                            (@Field.toSemifield.{0} Real
+                              (@NormedField.toField.{0} Real
+                                (@NontriviallyNormedField.toNormedField.{0} Real
+                                  (@DenselyNormedField.toNontriviallyNormedField.{0} Real
+                                    Real.denselyNormedField))))))))
+                    (Vec b)
+                    (@Pi.topologicalSpace.{0, 0} (Fin b) (fun a => Real) fun i =>
+                      @UniformSpace.toTopologicalSpace.{0} Real
+                        (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                    (@AddCommGroup.toAddCommMonoid.{0} (Vec b)
+                      (@Pi.addCommGroup.{0, 0} (Fin b) (fun a => Real) fun i => Real.instAddCommGroup))
+                    (Vec c)
+                    (@Pi.topologicalSpace.{0, 0} (Fin c) (fun a => Real) fun i =>
+                      @UniformSpace.toTopologicalSpace.{0} Real
+                        (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                    (@AddCommGroup.toAddCommMonoid.{0} (Vec c)
+                      (@Pi.addCommGroup.{0, 0} (Fin c) (fun a => Real) fun i => Real.instAddCommGroup))
+                    (@Pi.Function.module.{0, 0, 0} (Fin b) Real Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                      (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                      (@Semiring.toModule.{0} Real
+                        (@CommSemiring.toSemiring.{0} Real
+                          (@Semifield.toCommSemiring.{0} Real
+                            (@Field.toSemifield.{0} Real
+                              (@NormedField.toField.{0} Real
+                                (@NontriviallyNormedField.toNormedField.{0} Real
+                                  (@DenselyNormedField.toNontriviallyNormedField.{0} Real
+                                    Real.denselyNormedField))))))))
+                    (@Pi.Function.module.{0, 0, 0} (Fin c) Real Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                      (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                      (@Semiring.toModule.{0} Real
+                        (@CommSemiring.toSemiring.{0} Real
+                          (@Semifield.toCommSemiring.{0} Real
+                            (@Field.toSemifield.{0} Real
+                              (@NormedField.toField.{0} Real
+                                (@NontriviallyNormedField.toNormedField.{0} Real
+                                  (@DenselyNormedField.toNontriviallyNormedField.{0} Real
+                                    Real.denselyNormedField)))))))))
+                  (Vec b) (fun x => Vec c)
+                  (@ContinuousLinearMap.funLike.{0, 0, 0, 0} Real Real
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@CommSemiring.toSemiring.{0} Real
+                      (@Semifield.toCommSemiring.{0} Real
+                        (@Field.toSemifield.{0} Real
+                          (@NormedField.toField.{0} Real
+                            (@NontriviallyNormedField.toNormedField.{0} Real
+                              (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                    (@RingHom.id.{0} Real
+                      (@Semiring.toNonAssocSemiring.{0} Real
+                        (@CommSemiring.toSemiring.{0} Real
+                          (@Semifield.toCommSemiring.{0} Real
+                            (@Field.toSemifield.{0} Real
+                              (@NormedField.toField.{0} Real
+                                (@NontriviallyNormedField.toNormedField.{0} Real
+                                  (@DenselyNormedField.toNontriviallyNormedField.{0} Real
+                                    Real.denselyNormedField))))))))
+                    (Vec b)
+                    (@Pi.topologicalSpace.{0, 0} (Fin b) (fun a => Real) fun i =>
+                      @UniformSpace.toTopologicalSpace.{0} Real
+                        (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                    (@AddCommGroup.toAddCommMonoid.{0} (Vec b)
+                      (@Pi.addCommGroup.{0, 0} (Fin b) (fun a => Real) fun i => Real.instAddCommGroup))
+                    (Vec c)
+                    (@Pi.topologicalSpace.{0, 0} (Fin c) (fun a => Real) fun i =>
+                      @UniformSpace.toTopologicalSpace.{0} Real
+                        (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                    (@AddCommGroup.toAddCommMonoid.{0} (Vec c)
+                      (@Pi.addCommGroup.{0, 0} (Fin c) (fun a => Real) fun i => Real.instAddCommGroup))
+                    (@Pi.Function.module.{0, 0, 0} (Fin b) Real Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                      (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                      (@Semiring.toModule.{0} Real
+                        (@CommSemiring.toSemiring.{0} Real
+                          (@Semifield.toCommSemiring.{0} Real
+                            (@Field.toSemifield.{0} Real
+                              (@NormedField.toField.{0} Real
+                                (@NontriviallyNormedField.toNormedField.{0} Real
+                                  (@DenselyNormedField.toNontriviallyNormedField.{0} Real
+                                    Real.denselyNormedField))))))))
+                    (@Pi.Function.module.{0, 0, 0} (Fin c) Real Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                      (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                      (@Semiring.toModule.{0} Real
+                        (@CommSemiring.toSemiring.{0} Real
+                          (@Semifield.toCommSemiring.{0} Real
+                            (@Field.toSemifield.{0} Real
+                              (@NormedField.toField.{0} Real
+                                (@NontriviallyNormedField.toNormedField.{0} Real
+                                  (@DenselyNormedField.toNontriviallyNormedField.{0} Real
+                                    Real.denselyNormedField)))))))))
+                  (@fderiv.{0, 0, 0} Real
+                    (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField) (Vec b)
+                    (@Pi.addCommGroup.{0, 0} (Fin b) (fun a => Real) fun i => Real.instAddCommGroup)
+                    (@Pi.Function.module.{0, 0, 0} (Fin b) Real Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                      (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                      (@Semiring.toModule.{0} Real
+                        (@CommSemiring.toSemiring.{0} Real
+                          (@Semifield.toCommSemiring.{0} Real
+                            (@Field.toSemifield.{0} Real
+                              (@NormedField.toField.{0} Real
+                                (@NontriviallyNormedField.toNormedField.{0} Real
+                                  (@DenselyNormedField.toNontriviallyNormedField.{0} Real
+                                    Real.denselyNormedField))))))))
+                    (@Pi.topologicalSpace.{0, 0} (Fin b) (fun a => Real) fun i =>
+                      @UniformSpace.toTopologicalSpace.{0} Real
+                        (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                    (Vec c) (@Pi.addCommGroup.{0, 0} (Fin c) (fun a => Real) fun i => Real.instAddCommGroup)
+                    (@Pi.Function.module.{0, 0, 0} (Fin c) Real Real
+                      (@CommSemiring.toSemiring.{0} Real
+                        (@Semifield.toCommSemiring.{0} Real
+                          (@Field.toSemifield.{0} Real
+                            (@NormedField.toField.{0} Real
+                              (@NontriviallyNormedField.toNormedField.{0} Real
+                                (@DenselyNormedField.toNontriviallyNormedField.{0} Real Real.denselyNormedField))))))
+                      (@Semiring.toAddCommMonoid.{0} Real (@Ring.toSemiring.{0} Real Real.instRing))
+                      (@Semiring.toModule.{0} Real
+                        (@CommSemiring.toSemiring.{0} Real
+                          (@Semifield.toCommSemiring.{0} Real
+                            (@Field.toSemifield.{0} Real
+                              (@NormedField.toField.{0} Real
+                                (@NontriviallyNormedField.toNormedField.{0} Real
+                                  (@DenselyNormedField.toNontriviallyNormedField.{0} Real
+                                    Real.denselyNormedField))))))))
+                    (@Pi.topologicalSpace.{0, 0} (Fin c) (fun a => Real) fun i =>
+                      @UniformSpace.toTopologicalSpace.{0} Real
+                        (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+                    (@softEval b c θ suffix) (@softEval a b θ pre x))
+                  (@Pi.single.{0, 0} (Fin b) (fun a => Real) (fun i => Real.instZero) (instDecidableEqFin b) i
+                    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                  j)
+                (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                  (@ite.{1} Real (@Eq.{1} Bool q true) (instDecidableEqBool q true)
+                    (@Neg.neg.{0} Real Real.instNeg
+                      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                  (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                    (@profileOccupation b c suffix θ (@suffixStrategy a b c pre suffix plus)
+                      (@suffixStrategy a b c pre suffix minus) (@softEval a b θ pre x) j i q false)
+                    (@profileOccupation b c suffix θ (@suffixStrategy a b c pre suffix plus)
+                      (@suffixStrategy a b c pre suffix minus) (@softEval a b θ pre x) j i q true)))
+'Thesis.SoftplusGame.spne_intermediate_gradient' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@mixed_expected_value : ∀ {n k : Nat}
+  (r :
+    @Set.Elem.{0} Real
+      (@Set.Icc.{0} Real Real.instPreorder (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+  (wp wn : Matrix.{0, 0, 0} (Fin k) (Fin n) Real) (j : Fin k) (turn : Bool) (v : Bool → Vec n),
+  @Eq.{1} Real
+    (∑ target,
+      @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@mixedTransition n k r wp wn j turn target)
+        (@Option.elim.{0, 1} (Prod.{0, 0} (Fin n) Bool) Real target
+          (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) fun t =>
+          v (@Prod.snd.{0, 0} (Fin n) Bool t) (@Prod.fst.{0, 0} (Fin n) Bool t)))
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (@Subtype.val.{1} Real
+        (fun x =>
+          @Membership.mem.{0, 0} Real (Set.{0} Real) (@Set.instMembership.{0} Real)
+            (@Set.Icc.{0} Real Real.instPreorder
+              (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+              (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+            x)
+        r)
+      (∑ i,
+        @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (wp j i)
+              (@rowDiscount n k wp wn j))
+            (v turn i))
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid)) (wn j i)
+              (@rowDiscount n k wp wn j))
+            (v turn.not i))))
+'Thesis.SoftplusGame.mixed_expected_value' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@playerStep_transition : ∀ {n k : Nat} (θ : Real) (wp wn : Matrix.{0, 0, 0} (Fin k) (Fin n) Real) (bp bn : Vec k)
+  (plus minus :
+    Fin k →
+      @Set.Elem.{0} Real
+        (@Set.Icc.{0} Real Real.instPreorder (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+  (v : PlayerValues n) (player turn : Bool) (j : Fin k),
+  have r :=
+    @ite.{1}
+      (@Set.Elem.{0} Real
+        (@Set.Icc.{0} Real Real.instPreorder (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+          (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+      (@Eq.{1} Bool turn true) (instDecidableEqBool turn true) (minus j) (plus j);
+  @Eq.{1} Real (@playerStep n k θ wp wn bp bn plus minus v player turn j)
+    (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+      (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+          (@Subtype.val.{1} Real
+            (fun x =>
+              @Membership.mem.{0, 0} Real (Set.{0} Real) (@Set.instMembership.{0} Real)
+                (@Set.Icc.{0} Real Real.instPreorder
+                  (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                x)
+            r)
+          (@ite.{1} Real (@Eq.{1} Bool player turn) (instDecidableEqBool player turn) (bp j) (bn j)))
+        (@ite.{1} Real (@Eq.{1} Bool player turn) (instDecidableEqBool player turn)
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) θ
+            (Real.binEntropy
+              (@Subtype.val.{1} Real
+                (fun x =>
+                  @Membership.mem.{0, 0} Real (Set.{0} Real) (@Set.instMembership.{0} Real)
+                    (@Set.Icc.{0} Real Real.instPreorder
+                      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+                      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                    x)
+                r)))
+          (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (@rowDiscount n k wp wn j)
+        (∑ target,
+          @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+            (@mixedTransition n k r wp wn j turn target)
+            (@Option.elim.{0, 1} (Prod.{0, 0} (Fin n) Bool) Real target
+              (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) fun t =>
+              v player (@Prod.snd.{0, 0} (Fin n) Bool t) (@Prod.fst.{0, 0} (Fin n) Bool t)))))
+'Thesis.SoftplusGame.playerStep_transition' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]

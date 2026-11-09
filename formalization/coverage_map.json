@@ -195,16 +195,14 @@
   "thm:conditioned-survival": {
     "status": "partial",
     "lean": [
+      "Thesis.ConditionedSurvival.conditioned_survival",
+      "Thesis.ConditionedSurvival.weighted_path_identity",
+      "Thesis.ConditionedSurvival.path_zero_at_zero_potential",
       "Thesis.Games.survival_overlap",
-      "Thesis.Games.overlap_sq_le_masses",
-      "Thesis.Games.doob_kernel_normalized",
-      "Thesis.Games.doob_kernel_nonneg",
-      "Thesis.Games.doob_path_telescoping",
-      "Thesis.Games.doob_survival_path",
       "Thesis.Games.overlap_eq_one_iff",
       "Thesis.Games.overlap_eq_zero_iff"
     ],
-    "scope": "Normalization identity and mass overlap bound; strictly positive survival Doob kernels normalize, stay nonnegative, and telescope to conditional path law; overlap endpoint equivalences proved for normalized finite laws. Source zero-survival pruning/layer-specific cemetery encoding not packaged."
+    "scope": "Actual survival backward recursion, terminal boundary, normalization, zero-potential rows and denominator-free telescoping on actual finite paths; positive initial survival alone ensures every visited state has positive support. Source layer-marginal and BC/Hellinger compositions remain separately checked components, not a single assembled source theorem."
   },
   "thm:deriv-occ": {
     "status": "formalized_variant",
@@ -261,28 +259,27 @@
     "scope": "Finite nonempty actions, positive reference mass at every action, real scores and positive temperature: actual reference-KL objective maximum and unique tilted optimizer, allowing candidate policies with zero coordinates. Extended minus-infinity scores and zero reference support are not included."
   },
   "lem:noisy-gate-dual": {
-    "status": "partial",
-    "lean": [
-      "Thesis.Regularization.softplus_variational",
-      "Thesis.Regularization.entropy_gate_unique"
-    ],
-    "scope": "Binary entropy/softplus variational identity and unique sigmoid optimizer; general regularizers and probit/Gaussian alternatives not formalized."
+    "status": "not_formalized",
+    "lean": [],
+    "scope": "The source lemma is the Gaussian/probit variational identity and smoothed-ReLU expectation. Binary-entropy/softplus lemmas do not prove it; the former unrelated link was removed after adversarial link review."
   },
   "thm:softplus-forward": {
     "status": "partial",
     "lean": [
-      "Thesis.SoftplusDecomposition.thesis_softplus_forward",
-      "Thesis.Regularization.softplus_variational"
+      "Thesis.SoftplusGame.softplus_forward_spne",
+      "Thesis.SoftplusGame.subgamePerfect_iff",
+      "Thesis.SoftplusGame.playerStep_transition"
     ],
-    "scope": "Entire shared Network soft pair decomposition recovers the Softplus forward pass; scalar entropy optimizer proved separately. Full game SPNE not asserted."
+    "scope": "Full varying-width layered Network: arbitrary normalized mixed profiles, actual active-player entropy and two player payoffs, unique subgame-perfect Gibbs policies, saddle against all deviations, exact softplus forward recovery, zero fan-in absorption, and actual ungated signed affine readout. Additive/residual/max-pool DAG extension remains separate."
   },
   "thm:softplus-gradient": {
     "status": "partial",
     "lean": [
-      "Thesis.SoftplusBackward.thesis_softplus_gradient",
-      "Thesis.SoftplusDecomposition.softEval_eq_forwardWith"
+      "Thesis.SoftplusGame.spne_affine_gradient_profile",
+      "Thesis.SoftplusGame.spne_intermediate_gradient",
+      "Thesis.SoftplusGame.spne_gradient"
     ],
-    "scope": "Actual full varying-width Softplus network derivative equals discounted sign-path occupations with sigmoid stopping and positive fan-in; same Network parameters/evaluator as the ReLU development. Positive temperature and nonnegative split weights for stochastic interpretation. Global equilibrium existence is not included."
+    "scope": "Actual layered Network equilibrium profile probabilities and discounted occupations, all actual prefix/suffix intermediate cuts, true Softplus derivatives, arbitrary varying widths and ungated affine readout. Zero fan-in included. Hard residual/max-pool DAG extension remains separate."
   },
   "thm:freg_validity": {
     "status": "formalized_variant",
@@ -444,12 +441,12 @@
     "scope": "Actual finite shared Maxout/product DAG with arbitrary signed affine weights/biases and natural exponents. Constructed positive rank-two DAG has exact all-node recovery, monotonicity on nonnegative split inputs and finite maxima of nonnegative-coefficient ordinary polynomials; explicit vertices-plus-arcs size bound C(K,D) times source size under fixed rank and bounded total multiplication degree. Canonical input recovery is explicit; raw-input splitting is a separate preprocessing map."
   },
   "claim:main_correct": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
       "HiddenMonotonicity.Circuit.maxout_multiplication_split_correct",
       "HiddenMonotonicity.Circuit.cnn_split_correct"
     ],
-    "scope": "Exact constructive topological DAG splitting and all-node recovery including products; the source fixed-rank/bounded-degree linear SIZE clause is not formalized."
+    "scope": "Constructive topological shared-DAG splitting with exact all-node recovery, including products and arbitrary signed affine data. This source claim concerns correctness; the separate fixed-rank/degree linear-size theorem is now also formalized in MaxoutProductSize."
   },
   "thm:monotone_maxout_main": {
     "status": "formalized_variant",
@@ -470,11 +467,13 @@
     "scope": "Constructive nonempty finite ordinary polynomial witnesses for positive arithmetic/max/product expressions, evaluated on the nonnegative input orthant, with actual nonnegative MvPolynomial coefficients."
   },
   "prop:attn-value-policy": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
-      "Thesis.ReferencePolicy.thesis_attention_value_policy"
+      "Thesis.AttentionReference.attention_value_routing",
+      "Thesis.AttentionReference.zero_mass_value",
+      "Thesis.AttentionReference.objective_eq_sourceValue"
     ],
-    "scope": "Exact reference-weighted Value-routing KL optimizer and uniqueness with strictly positive reference and contribution masses; the source zero-contribution/outside-option cases are not included."
+    "scope": "Actual extended expected log-contribution minus reference KL over the full finite simplex. Arbitrary nonnegative reference and Value contributions, unique literal mass-ratio optimizer for positive total mass, exact log-total value, and all-policy minus-infinity for a zero-total stream. This proves the local active-player Value-routing proposition; inactive-player bookkeeping and full attention-game/occupation composition remain separate."
   },
   "rem:rg-natural-equivalence": {
     "status": "formalized_variant",

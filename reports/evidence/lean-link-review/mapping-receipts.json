@@ -1,0 +1,2299 @@
+{
+  "eq:weight_split": {
+    "verdict": "faithful_result",
+    "correspondence": "Scalar canonical sign-part identities apply entrywise to weights and biases.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.canonical_weight_split",
+    "module": "HiddenMonotonicity.Sensitivities",
+    "kind": "theorem",
+    "expected_type": "\u2200 (w : \u211d), max w 0 - max (-w) 0 = w \u2227 max w 0 + max (-w) 0 = |w|",
+    "expected_type_sha256": "20cd1efa040b649ce7a3fd841303a305e038ec16221392a8dd2e82e538b0660b",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/Sensitivities.lean",
+      "line": 77,
+      "kind": "theorem"
+    },
+    "module_sha256": "f28299acbc4133b95b15cfde00ce3869293afd046fb281a9b089fa0c161cfb9b",
+    "scope": "Scalar canonical sign-part identities apply entrywise to weights and biases."
+  },
+  "eq:cpwl_dc_representation": {
+    "verdict": "faithful_result",
+    "correspondence": "Genuine finite-cover continuous scalar CPWL function gives two explicit finite max-affine polynomials, with exact difference.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.PiecewiseLinear.cpwl_polynomial_difference",
+    "module": "Thesis.CPWLLattice",
+    "kind": "theorem",
+    "expected_type": "\u2200 {I : Type} [Fintype I] (f : (I \u2192 \u211d) \u2192 \u211d)\n(hf : CPWL (fun x (_ : Unit) => f x)),\n\u2203 g h : Thesis.Tropical.Polynomial I, \u2200 x, f x=g.eval x-h.eval x",
+    "expected_type_sha256": "42c59bd28f95f3cb9e497d69868cb5729190cf92312fd23633ce0defb3e28aa4",
+    "source": {
+      "path": "formalization/Thesis/CPWLLattice.lean",
+      "line": 219,
+      "kind": "theorem"
+    },
+    "module_sha256": "db33b174a5c5d40039302970484446fcfe49fbd48e567cf5c31c9be18a0c6c4b",
+    "scope": "Genuine finite-cover continuous scalar CPWL function gives two explicit finite max-affine polynomials, with exact difference."
+  },
+  "eq:bellman_evaluation": {
+    "verdict": "faithful_result",
+    "correspondence": "The exact policy and optimal Bellman fixed-point conjuncts unfold to the displayed finite discounted MDP equations; normalized finite nonempty action/state types.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.SourceFoundations.bellman_equations",
+    "module": "Thesis.SourceFoundationsStatements",
+    "kind": "theorem",
+    "expected_type": "\u2200 {S A : Type} [Fintype S] [Nonempty S] [Fintype A] [Nonempty A]\n    (M : Bellman.MDP S A) (\u03c0 : Bellman.Policy S A),\n    ((\u2211' n, (M.discount : \u211d)^n \u2022 (M.markovOperator \u03c0)^[n] (M.policyReward \u03c0)) = M.policyValue \u03c0) \u2227\n    (M.policyBellman \u03c0 (M.policyValue \u03c0) = M.policyValue \u03c0) \u2227\n    (\u2200 v, M.policyBellman \u03c0 v=v \u2192 v=M.policyValue \u03c0) \u2227\n    (M.bellman M.optimalValue=M.optimalValue) \u2227\n    (\u2200 v, M.bellman v=v \u2192 v=M.optimalValue) \u2227\n    (M.policyValue (Bellman.pure M.greedy)=M.optimalValue) \u2227\n    (\u2200 \u03c1 : Bellman.Policy S A, M.policyValue \u03c1 \u2264 M.optimalValue) \u2227\n    (\u2200 choice : S \u2192 A, (\u2200 s, M.action M.optimalValue s (choice s)=M.optimalValue s) \u2192\n      M.policyValue (Bellman.pure choice)=M.optimalValue)",
+    "expected_type_sha256": "24746cd1a334f5e50851fe1fb66457366ee26205bc7483ef94f1b22ebbbc363e",
+    "source": {
+      "path": "formalization/Thesis/SourceFoundationsStatements.lean",
+      "line": 61,
+      "kind": "theorem"
+    },
+    "module_sha256": "4909baf1d961149ad4aa2432cfeae75df9ccb715c71b45c90cde039a8de9a8f0",
+    "scope": "The exact policy and optimal Bellman fixed-point conjuncts unfold to the displayed finite discounted MDP equations; normalized finite nonempty action/state types."
+  },
+  "eq:bellman_optimality": {
+    "verdict": "faithful_result",
+    "correspondence": "The exact policy and optimal Bellman fixed-point conjuncts unfold to the displayed finite discounted MDP equations; normalized finite nonempty action/state types.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.SourceFoundations.bellman_equations",
+    "module": "Thesis.SourceFoundationsStatements",
+    "kind": "theorem",
+    "expected_type": "\u2200 {S A : Type} [Fintype S] [Nonempty S] [Fintype A] [Nonempty A]\n    (M : Bellman.MDP S A) (\u03c0 : Bellman.Policy S A),\n    ((\u2211' n, (M.discount : \u211d)^n \u2022 (M.markovOperator \u03c0)^[n] (M.policyReward \u03c0)) = M.policyValue \u03c0) \u2227\n    (M.policyBellman \u03c0 (M.policyValue \u03c0) = M.policyValue \u03c0) \u2227\n    (\u2200 v, M.policyBellman \u03c0 v=v \u2192 v=M.policyValue \u03c0) \u2227\n    (M.bellman M.optimalValue=M.optimalValue) \u2227\n    (\u2200 v, M.bellman v=v \u2192 v=M.optimalValue) \u2227\n    (M.policyValue (Bellman.pure M.greedy)=M.optimalValue) \u2227\n    (\u2200 \u03c1 : Bellman.Policy S A, M.policyValue \u03c1 \u2264 M.optimalValue) \u2227\n    (\u2200 choice : S \u2192 A, (\u2200 s, M.action M.optimalValue s (choice s)=M.optimalValue s) \u2192\n      M.policyValue (Bellman.pure choice)=M.optimalValue)",
+    "expected_type_sha256": "24746cd1a334f5e50851fe1fb66457366ee26205bc7483ef94f1b22ebbbc363e",
+    "source": {
+      "path": "formalization/Thesis/SourceFoundationsStatements.lean",
+      "line": 61,
+      "kind": "theorem"
+    },
+    "module_sha256": "4909baf1d961149ad4aa2432cfeae75df9ccb715c71b45c90cde039a8de9a8f0",
+    "scope": "The exact policy and optimal Bellman fixed-point conjuncts unfold to the displayed finite discounted MDP equations; normalized finite nonempty action/state types."
+  },
+  "eq:shapley_bellman": {
+    "verdict": "faithful_result",
+    "correspondence": "Unique backward Bellman value and both randomized-profile saddle inequalities for the explicit layered finite game.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.SourceFoundations.shapley_bellman",
+    "module": "Thesis.SourceFoundationsStatements",
+    "kind": "theorem",
+    "expected_type": "\u2200 {S A : Type} [Fintype S] [Fintype A] [Nonempty A]\n    (G : LayeredGames.Game S A),\n    (\u2200 v : \u2115 \u2192 S \u2192 \u211d, v 0=G.terminal \u2192\n      (\u2200 n s, v (n+1) s=LayeredGames.best (G.maximize n s) (fun a => G.action n s a (v n))) \u2192\n      v=G.value) \u2227\n    \u2200 plus minus : LayeredGames.Policy S A, \u2200 n s,\n      G.payoff plus G.optimalPolicy n s \u2264 G.value n s \u2227\n      G.payoff G.optimalPolicy G.optimalPolicy n s=G.value n s \u2227\n      G.value n s \u2264 G.payoff G.optimalPolicy minus n s",
+    "expected_type_sha256": "a8384b46fa5a0b3246b32c5af40471beb7a4a007f849ba90e633dcaba796c726",
+    "source": {
+      "path": "formalization/Thesis/SourceFoundationsStatements.lean",
+      "line": 78,
+      "kind": "theorem"
+    },
+    "module_sha256": "4909baf1d961149ad4aa2432cfeae75df9ccb715c71b45c90cde039a8de9a8f0",
+    "scope": "Layered finite stochastic game, common nonempty action type. The arbitrary-DAG topological encoding is not in this contract."
+  },
+  "eq:saddle_point": {
+    "verdict": "faithful_result",
+    "correspondence": "Unique backward Bellman value and both randomized-profile saddle inequalities for the explicit layered finite game.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.SourceFoundations.shapley_bellman",
+    "module": "Thesis.SourceFoundationsStatements",
+    "kind": "theorem",
+    "expected_type": "\u2200 {S A : Type} [Fintype S] [Fintype A] [Nonempty A]\n    (G : LayeredGames.Game S A),\n    (\u2200 v : \u2115 \u2192 S \u2192 \u211d, v 0=G.terminal \u2192\n      (\u2200 n s, v (n+1) s=LayeredGames.best (G.maximize n s) (fun a => G.action n s a (v n))) \u2192\n      v=G.value) \u2227\n    \u2200 plus minus : LayeredGames.Policy S A, \u2200 n s,\n      G.payoff plus G.optimalPolicy n s \u2264 G.value n s \u2227\n      G.payoff G.optimalPolicy G.optimalPolicy n s=G.value n s \u2227\n      G.value n s \u2264 G.payoff G.optimalPolicy minus n s",
+    "expected_type_sha256": "a8384b46fa5a0b3246b32c5af40471beb7a4a007f849ba90e633dcaba796c726",
+    "source": {
+      "path": "formalization/Thesis/SourceFoundationsStatements.lean",
+      "line": 78,
+      "kind": "theorem"
+    },
+    "module_sha256": "4909baf1d961149ad4aa2432cfeae75df9ccb715c71b45c90cde039a8de9a8f0",
+    "scope": "Layered finite stochastic game, common nonempty action type. The arbitrary-DAG topological encoding is not in this contract."
+  },
+  "eq:rng_equilibrium_policy": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual optimalStrategy uses gateProbability with strict-positive gate; the theorem certifies the displayed selected strategy as subgame perfect.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.ReLUNetGame.optimalStrategy_subgamePerfect",
+    "module": "Thesis.ReLUNetEquilibrium",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m)\n    (hr : NonzeroRows net) (x : Fin n \u2192 \u211d),\n    SubgamePerfect net (optimalStrategy net x) (optimalStrategy net x) x (-x)",
+    "expected_type_sha256": "44b93673207d604dd0248fdab31e6c4ffcd0421964fe10ec9d86f8e7aae5bf24",
+    "source": {
+      "path": "formalization/Thesis/ReLUNetEquilibrium.lean",
+      "line": 307,
+      "kind": "theorem"
+    },
+    "module_sha256": "32b1bd84e7d16fc3347e7fde18dfdccbbc560bd903a99241cfd070f85d270563",
+    "scope": "Actual layered Network with nonnegative split weights and NonzeroRows; stop at ties by the unfolded gateProbability definition."
+  },
+  "eq:rng_value_identity": {
+    "verdict": "faithful_result",
+    "correspondence": "The displayed scalar logit is the actual forced affine readout of the selected game values; hidden sign values are supplied by subgamePerfect_value.",
+    "supporting_declarations": [
+      "Thesis.ReLUNetGame.subgamePerfect_value"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.SourceFoundations.relu_net_game_value_affine",
+    "module": "Thesis.SourceFoundationsStatements",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m k : \u2115} (net : Network n m) (hn : net.Nonnegative)\n    (hr : ReLUNetGame.NonzeroRows net) (x : Fin n \u2192 \u211d)\n    (plus minus : ReLUNetGame.Strategy net) (wp wn : Matrix (Fin k) (Fin m) \u211d)\n    (b : Fin k \u2192 \u211d) (hwp : \u2200 i j, 0 \u2264 wp i j) (hwn : \u2200 i j, 0 \u2264 wn i j)\n    (hrow : \u2200 i, ReLUNetGame.rowDiscount wp wn i\u22600) (i : Fin k),\n    let read := fun v : (Fin m \u2192 \u211d) \u00d7 (Fin m \u2192 \u211d) => ReLUNetGame.continuation wp wn b v.1 v.2 i\n    let logit := ((wp-wn).mulVec (net.eval x)+b) i\n    read (ReLUNetGame.policyValue net plus (ReLUNetGame.optimalStrategy net x) x (-x)) \u2264 logit \u2227\n    read (ReLUNetGame.policyValue net (ReLUNetGame.optimalStrategy net x)\n      (ReLUNetGame.optimalStrategy net x) x (-x))=logit \u2227\n    logit \u2264 read (ReLUNetGame.policyValue net (ReLUNetGame.optimalStrategy net x) minus x (-x)) \u2227\n    (ReLUNetGame.SubgamePerfect net plus minus x (-x) \u2194\n      ReLUNetGame.GateOptimalStrategy net x plus \u2227 ReLUNetGame.GateOptimalStrategy net x minus) \u2227\n    (ReLUNetGame.SubgamePerfect net plus minus x (-x) \u2192\n      read (ReLUNetGame.policyValue net plus minus x (-x))=logit)",
+    "expected_type_sha256": "4b0d1cb595bb859c1f2bab5736c09939d33deb800fe9d8ea3e1135907ed03760",
+    "source": {
+      "path": "formalization/Thesis/SourceFoundationsStatements.lean",
+      "line": 248,
+      "kind": "theorem"
+    },
+    "module_sha256": "4909baf1d961149ad4aa2432cfeae75df9ccb715c71b45c90cde039a8de9a8f0",
+    "scope": "Layered Network, actual signed affine output; normalized game requires nonzero row fan-in."
+  },
+  "eq:legendre_fenchel": {
+    "verdict": "faithful_result",
+    "correspondence": "Finite real scores and positive temperature: IsGreatest states the actual simplex entropy maximum equals logPartition. The optimizer is obtained from the checked reference-policy value and uniqueness at reference mass identically one.",
+    "supporting_declarations": [
+      "Thesis.ReferencePolicy.reference_policy_value",
+      "Thesis.ReferencePolicy.reference_policy_unique"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.Regularization.routing_variational",
+    "module": "Thesis.Regularization",
+    "kind": "theorem",
+    "expected_type": "\u2200 {A : Type u} [Fintype A] [Nonempty A] (\u03b8 : \u211d) (q : A \u2192 \u211d) (h\u03b8 : 0 < \u03b8),\n    IsGreatest ((fun p : A \u2192 \u211d => (\u2211 i, p i * q i) + \u03b8 * entropy p) ''\n      {p | (\u2200 i, 0 \u2264 p i) \u2227 \u2211 i, p i = 1}) (logPartition \u03b8 q)",
+    "expected_type_sha256": "45d29e5326a7bc93049209864d690a268600dcdb2ad550b922d15e884f821e1a",
+    "source": {
+      "path": "formalization/Thesis/Regularization.lean",
+      "line": 316,
+      "kind": "theorem"
+    },
+    "module_sha256": "3c7a8baeeafe35a7a84741f4ec9432461a26302aff41b4cb2ffd7228b47429f2",
+    "scope": "Actual finite nonempty simplex; positive temperature; optimizer clause uses the accompanying checked reference-policy declarations."
+  },
+  "ptnb:eq:legendre-fenchel-app": {
+    "verdict": "faithful_result",
+    "correspondence": "Finite real scores and positive temperature: IsGreatest states the actual simplex entropy maximum equals logPartition. The optimizer is obtained from the checked reference-policy value and uniqueness at reference mass identically one.",
+    "supporting_declarations": [
+      "Thesis.ReferencePolicy.reference_policy_value",
+      "Thesis.ReferencePolicy.reference_policy_unique"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.Regularization.routing_variational",
+    "module": "Thesis.Regularization",
+    "kind": "theorem",
+    "expected_type": "\u2200 {A : Type u} [Fintype A] [Nonempty A] (\u03b8 : \u211d) (q : A \u2192 \u211d) (h\u03b8 : 0 < \u03b8),\n    IsGreatest ((fun p : A \u2192 \u211d => (\u2211 i, p i * q i) + \u03b8 * entropy p) ''\n      {p | (\u2200 i, 0 \u2264 p i) \u2227 \u2211 i, p i = 1}) (logPartition \u03b8 q)",
+    "expected_type_sha256": "45d29e5326a7bc93049209864d690a268600dcdb2ad550b922d15e884f821e1a",
+    "source": {
+      "path": "formalization/Thesis/Regularization.lean",
+      "line": 316,
+      "kind": "theorem"
+    },
+    "module_sha256": "3c7a8baeeafe35a7a84741f4ec9432461a26302aff41b4cb2ffd7228b47429f2",
+    "scope": "Actual finite nonempty simplex; positive temperature; optimizer clause uses the accompanying checked reference-policy declarations."
+  },
+  "ptnb:eq:gibbs-lse": {
+    "verdict": "faithful_result",
+    "correspondence": "Finite real scores and positive temperature: IsGreatest states the actual simplex entropy maximum equals logPartition. The optimizer is obtained from the checked reference-policy value and uniqueness at reference mass identically one.",
+    "supporting_declarations": [
+      "Thesis.ReferencePolicy.reference_policy_value",
+      "Thesis.ReferencePolicy.reference_policy_unique"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.Regularization.routing_variational",
+    "module": "Thesis.Regularization",
+    "kind": "theorem",
+    "expected_type": "\u2200 {A : Type u} [Fintype A] [Nonempty A] (\u03b8 : \u211d) (q : A \u2192 \u211d) (h\u03b8 : 0 < \u03b8),\n    IsGreatest ((fun p : A \u2192 \u211d => (\u2211 i, p i * q i) + \u03b8 * entropy p) ''\n      {p | (\u2200 i, 0 \u2264 p i) \u2227 \u2211 i, p i = 1}) (logPartition \u03b8 q)",
+    "expected_type_sha256": "45d29e5326a7bc93049209864d690a268600dcdb2ad550b922d15e884f821e1a",
+    "source": {
+      "path": "formalization/Thesis/Regularization.lean",
+      "line": 316,
+      "kind": "theorem"
+    },
+    "module_sha256": "3c7a8baeeafe35a7a84741f4ec9432461a26302aff41b4cb2ffd7228b47429f2",
+    "scope": "Actual finite nonempty simplex; positive temperature; optimizer clause uses the accompanying checked reference-policy declarations."
+  },
+  "eq:newton_calculus": {
+    "verdict": "faithful_result",
+    "correspondence": "The exact Newton sum/hull and homogenized support-slice conjuncts are the displayed equations.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.SourceGeometry.newton_calculus",
+    "module": "Thesis.SourceGeometryStatements",
+    "kind": "theorem",
+    "expected_type": "\u2200 {I : Type} [Fintype I] (p q : Tropical.Polynomial I),\n    (p.add q).newton = p.newton+q.newton \u2227\n    (p.max q).newton = convexHull \u211d (p.newton\u222aq.newton) \u2227\n    (\u2200 x, (p.add q).eval x=p.eval x+q.eval x) \u2227\n    (\u2200 x, (p.max q).eval x=max (p.eval x) (q.eval x)) \u2227\n    (\u2200 x, p.eval x=support p.lift.newton (Sum.elim x (fun _ => 1))) \u2227\n    ((\u2200 a, p.intercept a=0) \u2192 \u2200 x, p.eval x=support p.newton x)",
+    "expected_type_sha256": "b62049bd7a95cdf86cdf055a90ce9cc29f90af88f0e349c3595a902dea746f0b",
+    "source": {
+      "path": "formalization/Thesis/SourceGeometryStatements.lean",
+      "line": 55,
+      "kind": "theorem"
+    },
+    "module_sha256": "6b6663c4364ba1913fb159cc4c52a8f3859a16dca72fa50f4c13c58666db2a15",
+    "scope": "The exact Newton sum/hull and homogenized support-slice conjuncts are the displayed equations."
+  },
+  "eq:lifted_support": {
+    "verdict": "faithful_result",
+    "correspondence": "The exact Newton sum/hull and homogenized support-slice conjuncts are the displayed equations.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.SourceGeometry.newton_calculus",
+    "module": "Thesis.SourceGeometryStatements",
+    "kind": "theorem",
+    "expected_type": "\u2200 {I : Type} [Fintype I] (p q : Tropical.Polynomial I),\n    (p.add q).newton = p.newton+q.newton \u2227\n    (p.max q).newton = convexHull \u211d (p.newton\u222aq.newton) \u2227\n    (\u2200 x, (p.add q).eval x=p.eval x+q.eval x) \u2227\n    (\u2200 x, (p.max q).eval x=max (p.eval x) (q.eval x)) \u2227\n    (\u2200 x, p.eval x=support p.lift.newton (Sum.elim x (fun _ => 1))) \u2227\n    ((\u2200 a, p.intercept a=0) \u2192 \u2200 x, p.eval x=support p.newton x)",
+    "expected_type_sha256": "b62049bd7a95cdf86cdf055a90ce9cc29f90af88f0e349c3595a902dea746f0b",
+    "source": {
+      "path": "formalization/Thesis/SourceGeometryStatements.lean",
+      "line": 55,
+      "kind": "theorem"
+    },
+    "module_sha256": "6b6663c4364ba1913fb159cc4c52a8f3859a16dca72fa50f4c13c58666db2a15",
+    "scope": "The exact Newton sum/hull and homogenized support-slice conjuncts are the displayed equations."
+  },
+  "eq:split_preact_recursion": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.affineChunk",
+    "module": "HiddenMonotonicity.AffineChunk",
+    "kind": "definition",
+    "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+    "expected_type_sha256": "c7e2d64688d10bfe454a949f691666c7a54eb0b186dee2f0c5fefc88b199bdb3",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/AffineChunk.lean",
+      "line": 8,
+      "kind": "def"
+    },
+    "module_sha256": "bf06fc275ec08ecaa09a6482ef641511366770cb30033816216e932f0f94e382",
+    "scope": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation."
+  },
+  "eq:split_pos": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.affineChunk",
+    "module": "HiddenMonotonicity.AffineChunk",
+    "kind": "definition",
+    "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+    "expected_type_sha256": "c7e2d64688d10bfe454a949f691666c7a54eb0b186dee2f0c5fefc88b199bdb3",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/AffineChunk.lean",
+      "line": 8,
+      "kind": "def"
+    },
+    "module_sha256": "bf06fc275ec08ecaa09a6482ef641511366770cb30033816216e932f0f94e382",
+    "scope": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation."
+  },
+  "eq:split_neg": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.affineChunk",
+    "module": "HiddenMonotonicity.AffineChunk",
+    "kind": "definition",
+    "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+    "expected_type_sha256": "c7e2d64688d10bfe454a949f691666c7a54eb0b186dee2f0c5fefc88b199bdb3",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/AffineChunk.lean",
+      "line": 8,
+      "kind": "def"
+    },
+    "module_sha256": "bf06fc275ec08ecaa09a6482ef641511366770cb30033816216e932f0f94e382",
+    "scope": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation."
+  },
+  "ptnb:eq:split-pos": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.affineChunk",
+    "module": "HiddenMonotonicity.AffineChunk",
+    "kind": "definition",
+    "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+    "expected_type_sha256": "c7e2d64688d10bfe454a949f691666c7a54eb0b186dee2f0c5fefc88b199bdb3",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/AffineChunk.lean",
+      "line": 8,
+      "kind": "def"
+    },
+    "module_sha256": "bf06fc275ec08ecaa09a6482ef641511366770cb30033816216e932f0f94e382",
+    "scope": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation."
+  },
+  "ptnb:eq:split-neg": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.affineChunk",
+    "module": "HiddenMonotonicity.AffineChunk",
+    "kind": "definition",
+    "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+    "expected_type_sha256": "c7e2d64688d10bfe454a949f691666c7a54eb0b186dee2f0c5fefc88b199bdb3",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/AffineChunk.lean",
+      "line": 8,
+      "kind": "def"
+    },
+    "module_sha256": "bf06fc275ec08ecaa09a6482ef641511366770cb30033816216e932f0f94e382",
+    "scope": "Definition unfolds to both bias-inclusive signed affine streams; set both biases to zero in the homogeneous foundation equation."
+  },
+  "eq:split_act_recursion": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition unfolds to hidden max-positive/identity-negative activation after the two affine preactivations.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.affineChunk"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.layerFun",
+    "module": "HiddenMonotonicity.NetworkDerivative",
+    "kind": "definition",
+    "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+    "expected_type_sha256": "c7e2d64688d10bfe454a949f691666c7a54eb0b186dee2f0c5fefc88b199bdb3",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 22,
+      "kind": "def"
+    },
+    "module_sha256": "b0c2e84b0ca39dfbfb01a9249861d838e22cc51587f39fee75be41400174c49b",
+    "scope": "Hidden split layer only; the stated ungated terminal operation is affineChunk."
+  },
+  "eq:dc_split_activations": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition unfolds to hidden max-positive/identity-negative activation after the two affine preactivations.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.affineChunk"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.layerFun",
+    "module": "HiddenMonotonicity.NetworkDerivative",
+    "kind": "definition",
+    "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+    "expected_type_sha256": "c7e2d64688d10bfe454a949f691666c7a54eb0b186dee2f0c5fefc88b199bdb3",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 22,
+      "kind": "def"
+    },
+    "module_sha256": "b0c2e84b0ca39dfbfb01a9249861d838e22cc51587f39fee75be41400174c49b",
+    "scope": "Hidden split layer only; the stated ungated terminal operation is affineChunk."
+  },
+  "eq:split_maxout_gate": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition unfolds to hidden max-positive/identity-negative activation after the two affine preactivations.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.affineChunk"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.layerFun",
+    "module": "HiddenMonotonicity.NetworkDerivative",
+    "kind": "definition",
+    "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+    "expected_type_sha256": "c7e2d64688d10bfe454a949f691666c7a54eb0b186dee2f0c5fefc88b199bdb3",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 22,
+      "kind": "def"
+    },
+    "module_sha256": "b0c2e84b0ca39dfbfb01a9249861d838e22cc51587f39fee75be41400174c49b",
+    "scope": "Hidden split layer only; the stated ungated terminal operation is affineChunk."
+  },
+  "eq:tropical_rational_split": {
+    "verdict": "faithful_result",
+    "correspondence": "The exact all-input polynomial-head difference is the original bias-free network followed by its signed affine readout.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.SourceFoundations.split_tropical_rational_affine",
+    "module": "Thesis.SourceFoundationsStatements",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m k : \u2115} (net : Network n m)\n    (hn : net.Nonnegative) (hb : BiasFree net)\n    (wp wn : Matrix (Fin k) (Fin m) \u211d)\n    (hwp : \u2200 i j, 0 \u2264 wp i j) (hwn : \u2200 i j, 0 \u2264 wn i j),\n    let hidden := tropicalSplit net (inputPolynomials n).1 (inputPolynomials n).2\n    let g := polynomialAffine wp wn 0 hidden.1 hidden.2\n    let h := polynomialAffine wn wp 0 hidden.1 hidden.2\n    (\u2200 i, (g i).ZeroIntercepts \u2227 (h i).ZeroIntercepts \u2227\n      (g i).NonnegativeSlopes \u2227 (h i).NonnegativeSlopes \u2227\n      Monotone (g i).eval \u2227 Monotone (h i).eval \u2227\n      ConvexOn \u211d Set.univ (g i).eval \u2227 ConvexOn \u211d Set.univ (h i).eval \u2227\n      (\u2200 c : \u211d, 0 \u2264 c \u2192 \u2200 x, (g i).eval (c \u2022 x)=c*(g i).eval x \u2227\n        (h i).eval (c \u2022 x)=c*(h i).eval x)) \u2227\n    (\u2200 p q, (fun i => (g i).eval (Sum.elim p q))=\n        wp.mulVec (net.split p q).1+wn.mulVec (net.split p q).2 \u2227\n      (fun i => (h i).eval (Sum.elim p q))=\n        wn.mulVec (net.split p q).1+wp.mulVec (net.split p q).2) \u2227\n    (\u2200 p q i, (g i).eval (Sum.elim p q)-(h i).eval (Sum.elim p q)=\n      (wp-wn).mulVec (net.eval (p-q)) i) \u2227\n    (\u2200 i, (g i).newton=(\u2211 j, wp i j \u2022 (hidden.1 j).newton)+\n        (\u2211 j, wn i j \u2022 (hidden.2 j).newton) \u2227\n      (h i).newton=(\u2211 j, wn i j \u2022 (hidden.1 j).newton)+\n        (\u2211 j, wp i j \u2022 (hidden.2 j).newton))",
+    "expected_type_sha256": "b56ca1fdfbc76aa8c8d51621a0a458f3c2bb99473640af3213fb34e1098169e5",
+    "source": {
+      "path": "formalization/Thesis/SourceFoundationsStatements.lean",
+      "line": 148,
+      "kind": "theorem"
+    },
+    "module_sha256": "4909baf1d961149ad4aa2432cfeae75df9ccb715c71b45c90cde039a8de9a8f0",
+    "scope": "The exact all-input polynomial-head difference is the original bias-free network followed by its signed affine readout."
+  },
+  "eq:polytope_preact": {
+    "verdict": "faithful_result",
+    "correspondence": "polytopeSplit unfolds to basis-singleton initialization and weighted Minkowski/hull hidden updates; theorem identifies actual polynomial Newton sets and ungated final affine sums.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.SourceGeometry.minkowski_propagation_affine_network",
+    "module": "Thesis.SourceGeometryStatements",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m k : \u2115} (net : Network n m)\n    (wp wn : Matrix (Fin k) (Fin m) \u211d) (bp bn : Fin k \u2192 \u211d),\n    let hidden := tropicalSplit net (inputPolynomials n).1 (inputPolynomials n).2\n    let sets := polytopeSplit net (fun j => {Pi.single (Sum.inl j : Fin n \u2295 Fin n) (1 : \u211d)})\n      (fun j => {Pi.single (Sum.inr j : Fin n \u2295 Fin n) (1 : \u211d)})\n    (\u2200 i, (hidden.1 i).newton=sets.1 i \u2227 (hidden.2 i).newton=sets.2 i) \u2227\n    \u2200 i, (polynomialAffine wp wn bp hidden.1 hidden.2 i).newton=\n        (\u2211 j, wp i j \u2022 sets.1 j)+(\u2211 j, wn i j \u2022 sets.2 j) \u2227\n      (polynomialAffine wn wp bn hidden.1 hidden.2 i).newton=\n        (\u2211 j, wn i j \u2022 sets.1 j)+(\u2211 j, wp i j \u2022 sets.2 j)",
+    "expected_type_sha256": "c92f6e086fa994b56e83c2180982120d3c9cd97dd466bb2bb1c499d01af2a89d",
+    "source": {
+      "path": "formalization/Thesis/SourceGeometryStatements.lean",
+      "line": 167,
+      "kind": "theorem"
+    },
+    "module_sha256": "6b6663c4364ba1913fb159cc4c52a8f3859a16dca72fa50f4c13c58666db2a15",
+    "scope": "polytopeSplit unfolds to basis-singleton initialization and weighted Minkowski/hull hidden updates; theorem identifies actual polynomial Newton sets and ungated final affine sums."
+  },
+  "eq:polytope_act": {
+    "verdict": "faithful_result",
+    "correspondence": "polytopeSplit unfolds to basis-singleton initialization and weighted Minkowski/hull hidden updates; theorem identifies actual polynomial Newton sets and ungated final affine sums.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.SourceGeometry.minkowski_propagation_affine_network",
+    "module": "Thesis.SourceGeometryStatements",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m k : \u2115} (net : Network n m)\n    (wp wn : Matrix (Fin k) (Fin m) \u211d) (bp bn : Fin k \u2192 \u211d),\n    let hidden := tropicalSplit net (inputPolynomials n).1 (inputPolynomials n).2\n    let sets := polytopeSplit net (fun j => {Pi.single (Sum.inl j : Fin n \u2295 Fin n) (1 : \u211d)})\n      (fun j => {Pi.single (Sum.inr j : Fin n \u2295 Fin n) (1 : \u211d)})\n    (\u2200 i, (hidden.1 i).newton=sets.1 i \u2227 (hidden.2 i).newton=sets.2 i) \u2227\n    \u2200 i, (polynomialAffine wp wn bp hidden.1 hidden.2 i).newton=\n        (\u2211 j, wp i j \u2022 sets.1 j)+(\u2211 j, wn i j \u2022 sets.2 j) \u2227\n      (polynomialAffine wn wp bn hidden.1 hidden.2 i).newton=\n        (\u2211 j, wn i j \u2022 sets.1 j)+(\u2211 j, wp i j \u2022 sets.2 j)",
+    "expected_type_sha256": "c92f6e086fa994b56e83c2180982120d3c9cd97dd466bb2bb1c499d01af2a89d",
+    "source": {
+      "path": "formalization/Thesis/SourceGeometryStatements.lean",
+      "line": 167,
+      "kind": "theorem"
+    },
+    "module_sha256": "6b6663c4364ba1913fb159cc4c52a8f3859a16dca72fa50f4c13c58666db2a15",
+    "scope": "polytopeSplit unfolds to basis-singleton initialization and weighted Minkowski/hull hidden updates; theorem identifies actual polynomial Newton sets and ungated final affine sums."
+  },
+  "eq:curvature_antiderivatives": {
+    "verdict": "faithful_result",
+    "correspondence": "C1, C2 and tilt in the checked theorem are the literal displayed curvature antiderivatives and common linear tilt; final conjunct proves their exact difference.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.SmoothDC.smooth_dc_split",
+    "module": "HiddenMonotonicity.SmoothCurvatureSplit",
+    "kind": "theorem",
+    "expected_type": "\u2200 (f : \u211d \u2192 \u211d) (hf : Differentiable \u211d f)\n    (hAC : \u2200 a b, AbsolutelyContinuousOnInterval (deriv f) a b)\n    (hq : Integrable (curvature f)),\n    Tendsto (deriv f) atBot (\ud835\udcdd (minusInfinitySlope f)) \u2227\n    (\u2203 B : \u211d, \u2200 x, |deriv f x| \u2264 B) \u2227\n    ConvexOn \u211d univ (tilt (C1 f) (commonTilt f)) \u2227\n    ConvexOn \u211d univ (tilt (C2 f) (commonTilt f)) \u2227\n    Monotone (tilt (C1 f) (commonTilt f)) \u2227\n    Monotone (tilt (C2 f) (commonTilt f)) \u2227\n    \u2200 z : \u211d \u00d7 \u211d, tilt (C1 f) (commonTilt f) z-tilt (C2 f) (commonTilt f) z=f (z.1-z.2)",
+    "expected_type_sha256": "99c13c01f7dfcaec04b6d761ec6b195159788773ebc128f6b338ef0b662a4056",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 85,
+      "kind": "theorem"
+    },
+    "module_sha256": "888dd65622bd7d6e85e5a3c9da47d152e540305a97aa6e58cc9f23a3ced3c699",
+    "scope": "Differentiable f, locally absolutely continuous derivative and integrable actual curvature; definitions used by the theorem are audited, no generic replacement pair."
+  },
+  "eq:smooth_split_pair": {
+    "verdict": "faithful_result",
+    "correspondence": "C1, C2 and tilt in the checked theorem are the literal displayed curvature antiderivatives and common linear tilt; final conjunct proves their exact difference.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.SmoothDC.smooth_dc_split",
+    "module": "HiddenMonotonicity.SmoothCurvatureSplit",
+    "kind": "theorem",
+    "expected_type": "\u2200 (f : \u211d \u2192 \u211d) (hf : Differentiable \u211d f)\n    (hAC : \u2200 a b, AbsolutelyContinuousOnInterval (deriv f) a b)\n    (hq : Integrable (curvature f)),\n    Tendsto (deriv f) atBot (\ud835\udcdd (minusInfinitySlope f)) \u2227\n    (\u2203 B : \u211d, \u2200 x, |deriv f x| \u2264 B) \u2227\n    ConvexOn \u211d univ (tilt (C1 f) (commonTilt f)) \u2227\n    ConvexOn \u211d univ (tilt (C2 f) (commonTilt f)) \u2227\n    Monotone (tilt (C1 f) (commonTilt f)) \u2227\n    Monotone (tilt (C2 f) (commonTilt f)) \u2227\n    \u2200 z : \u211d \u00d7 \u211d, tilt (C1 f) (commonTilt f) z-tilt (C2 f) (commonTilt f) z=f (z.1-z.2)",
+    "expected_type_sha256": "99c13c01f7dfcaec04b6d761ec6b195159788773ebc128f6b338ef0b662a4056",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 85,
+      "kind": "theorem"
+    },
+    "module_sha256": "888dd65622bd7d6e85e5a3c9da47d152e540305a97aa6e58cc9f23a3ced3c699",
+    "scope": "Differentiable f, locally absolutely continuous derivative and integrable actual curvature; definitions used by the theorem are audited, no generic replacement pair."
+  },
+  "eq:smooth_splitting_identity": {
+    "verdict": "faithful_result",
+    "correspondence": "C1, C2 and tilt in the checked theorem are the literal displayed curvature antiderivatives and common linear tilt; final conjunct proves their exact difference.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.SmoothDC.smooth_dc_split",
+    "module": "HiddenMonotonicity.SmoothCurvatureSplit",
+    "kind": "theorem",
+    "expected_type": "\u2200 (f : \u211d \u2192 \u211d) (hf : Differentiable \u211d f)\n    (hAC : \u2200 a b, AbsolutelyContinuousOnInterval (deriv f) a b)\n    (hq : Integrable (curvature f)),\n    Tendsto (deriv f) atBot (\ud835\udcdd (minusInfinitySlope f)) \u2227\n    (\u2203 B : \u211d, \u2200 x, |deriv f x| \u2264 B) \u2227\n    ConvexOn \u211d univ (tilt (C1 f) (commonTilt f)) \u2227\n    ConvexOn \u211d univ (tilt (C2 f) (commonTilt f)) \u2227\n    Monotone (tilt (C1 f) (commonTilt f)) \u2227\n    Monotone (tilt (C2 f) (commonTilt f)) \u2227\n    \u2200 z : \u211d \u00d7 \u211d, tilt (C1 f) (commonTilt f) z-tilt (C2 f) (commonTilt f) z=f (z.1-z.2)",
+    "expected_type_sha256": "99c13c01f7dfcaec04b6d761ec6b195159788773ebc128f6b338ef0b662a4056",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/SmoothCurvatureSplit.lean",
+      "line": 85,
+      "kind": "theorem"
+    },
+    "module_sha256": "888dd65622bd7d6e85e5a3c9da47d152e540305a97aa6e58cc9f23a3ced3c699",
+    "scope": "Differentiable f, locally absolutely continuous derivative and integrable actual curvature; definitions used by the theorem are audited, no generic replacement pair."
+  },
+  "eq:preactivation_difference": {
+    "verdict": "faithful_result",
+    "correspondence": "Exact preP/preN bias-inclusive difference equals affineLayer applied to the input-stream difference.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.preactivation_difference",
+    "module": "HiddenMonotonicity.OriginalTrace",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Vec k) (x : PairVec n), preP wp wn x+bp-(preN wp wn x+bn)=affineLayer wp wn bp bn (x.1-x.2)",
+    "expected_type_sha256": "99792c0e65c2ab5e357f5cf73dc6200de9c02ba8cbe8fbad649eb57eb4502cca",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/OriginalTrace.lean",
+      "line": 34,
+      "kind": "theorem"
+    },
+    "module_sha256": "f5ddaab218ac516ddf5784278ba081764b589a80d6fd84f9888bb387be13f241",
+    "scope": "Exact preP/preN bias-inclusive difference equals affineLayer applied to the input-stream difference."
+  },
+  "eq:output_recovery": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual full network difference under ValidPairActivation; the source identity terminal readout is supplied by affineChunk reconstruction.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.linear_chunk_properties"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.Network.valid_decomposition_recovery",
+    "module": "HiddenMonotonicity.Decomposition",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03c3 : \u211d \u2192 \u211d) (\u03c6 : (\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d)\n (hv : ValidPairActivation \u03c3 \u03c6) (x : PairVec n),\n (net.decomposeWith \u03c6 x).1-(net.decomposeWith \u03c6 x).2 = net.forwardWith \u03c3 (x.1-x.2)",
+    "expected_type_sha256": "4a10399cb5d271e77e06fe13f9a23f8bc189969a8e736e021304b276397798ec",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 29,
+      "kind": "theorem"
+    },
+    "module_sha256": "1e2a27911a881e8bd134e50558fc07c0f6b426eb260257e0dd4f1fdfc4844441",
+    "scope": "Generic hidden scalar/pair activation and varying-width network; actual ungated affine output uses the separately checked affineChunk identity."
+  },
+  "eq:fmix_def": {
+    "verdict": "faithful_definition",
+    "correspondence": "Literal definition equals both displayed eta max/min combinations.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.mixPair",
+    "module": "HiddenMonotonicity.Decomposition",
+    "kind": "definition",
+    "expected_type": "\u211d \u2192 (\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+    "expected_type_sha256": "5c4c4b8592518e5b0a749a54b4c36a9b8af18e44d2cc0b13c9dc4ee94a641420",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 50,
+      "kind": "def"
+    },
+    "module_sha256": "1e2a27911a881e8bd134e50558fc07c0f6b426eb260257e0dd4f1fdfc4844441",
+    "scope": "Literal definition equals both displayed eta max/min combinations."
+  },
+  "eq:mixing_recovery": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual varying-width network mixing-pair difference equals eval; every prefix supplies every hidden layer.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.linear_chunk_properties"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.Network.mixing_recovery",
+    "module": "HiddenMonotonicity.Decomposition",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b7 : \u211d) (x : PairVec n),\n (net.decomposeWith (mixPair \u03b7) x).1-(net.decomposeWith (mixPair \u03b7) x).2 = net.eval (x.1-x.2)",
+    "expected_type_sha256": "194c5f1eb40de2665fc5251991e771b370865b4199e9815315f0ce0f1e93ac28",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 59,
+      "kind": "theorem"
+    },
+    "module_sha256": "1e2a27911a881e8bd134e50558fc07c0f6b426eb260257e0dd4f1fdfc4844441",
+    "scope": "Arbitrary real eta algebraic identity; source eta in [0,1] specializes it. Terminal affine recovery uses affineChunk."
+  },
+  "eq:splitting_identity": {
+    "verdict": "faithful_result",
+    "correspondence": "max_sub gives max(a,b)-b=relu(a-b); unfolding relu gives max(a-b,0).",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.max_sub",
+    "module": "HiddenMonotonicity.Core",
+    "kind": "theorem",
+    "expected_type": "\u2200 p n : \u211d, max p n-n=relu (p-n)",
+    "expected_type_sha256": "4510c76736314050106c89881f814a21981c80f62cbe202a6d94d57971691d01",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/Core.lean",
+      "line": 16,
+      "kind": "theorem"
+    },
+    "module_sha256": "9b524bea04db8a73ef0d3af53461ae3dc2693f57cebbcc772546c179949a45c0",
+    "scope": "max_sub gives max(a,b)-b=relu(a-b); unfolding relu gives max(a-b,0)."
+  },
+  "eq:split_correctness": {
+    "verdict": "faithful_result",
+    "correspondence": "Same actual shared backbone and arbitrary signed ungated affine heads with both biases; instantiate any suffix and scalar output row.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.Network.affine_heads_recovery",
+    "module": "HiddenMonotonicity.AffineHeads",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (rp rn : Row m) (bp bn : \u211d) (x : PairVec n),\n (net.affineHeads rp rn bp bn x).1 - (net.affineHeads rp rn bp bn x).2 = net.affineLogit rp rn bp bn (x.1-x.2)",
+    "expected_type_sha256": "9f872012fc5333fae316d6d54248e6bf78f6a6023d2a86adba57879ddd003489",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/AffineHeads.lean",
+      "line": 16,
+      "kind": "theorem"
+    },
+    "module_sha256": "a546cbee9282f9c4260c6169b2e82665ed7e27b9fc41e28b166e30d119cf52f5",
+    "scope": "Same actual shared backbone and arbitrary signed ungated affine heads with both biases; instantiate any suffix and scalar output row."
+  },
+  "eq:split_correctness_recall": {
+    "verdict": "faithful_result",
+    "correspondence": "Same actual shared backbone and arbitrary signed ungated affine heads with both biases; instantiate any suffix and scalar output row.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.Network.affine_heads_recovery",
+    "module": "HiddenMonotonicity.AffineHeads",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (rp rn : Row m) (bp bn : \u211d) (x : PairVec n),\n (net.affineHeads rp rn bp bn x).1 - (net.affineHeads rp rn bp bn x).2 = net.affineLogit rp rn bp bn (x.1-x.2)",
+    "expected_type_sha256": "9f872012fc5333fae316d6d54248e6bf78f6a6023d2a86adba57879ddd003489",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/AffineHeads.lean",
+      "line": 16,
+      "kind": "theorem"
+    },
+    "module_sha256": "a546cbee9282f9c4260c6169b2e82665ed7e27b9fc41e28b166e30d119cf52f5",
+    "scope": "Same actual shared backbone and arbitrary signed ungated affine heads with both biases; instantiate any suffix and scalar output row."
+  },
+  "eq:fstop_def": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition uses the common strict-positive difference gate and sets both streams to zero at ties.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.StoppingDecomposition.stopPair",
+    "module": "Thesis.StoppingDecomposition",
+    "kind": "definition",
+    "expected_type": "(\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+    "expected_type_sha256": "96adffc27ad4b0da149b9c7cd738c30913c8158edb19e92889595e771c8a27a8",
+    "source": {
+      "path": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 13,
+      "kind": "def"
+    },
+    "module_sha256": "3b36c457c06dce5f1babaef5f9e0ce44d18c158d143e50f2a7dd7975ff7ced73",
+    "scope": "Definition uses the common strict-positive difference gate and sets both streams to zero at ties."
+  },
+  "ptnb:eq:stop-relu": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition uses the common strict-positive difference gate and sets both streams to zero at ties.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.StoppingDecomposition.stopPair",
+    "module": "Thesis.StoppingDecomposition",
+    "kind": "definition",
+    "expected_type": "(\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+    "expected_type_sha256": "96adffc27ad4b0da149b9c7cd738c30913c8158edb19e92889595e771c8a27a8",
+    "source": {
+      "path": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 13,
+      "kind": "def"
+    },
+    "module_sha256": "3b36c457c06dce5f1babaef5f9e0ce44d18c158d143e50f2a7dd7975ff7ced73",
+    "scope": "Definition uses the common strict-positive difference gate and sets both streams to zero at ties."
+  },
+  "eq:stopping_recovery": {
+    "verdict": "faithful_result",
+    "correspondence": "Exact actual stopping-network difference; each prefix gives the stated hidden activation identity.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.linear_chunk_properties"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.StoppingDecomposition.thesis_stopping_validity",
+    "module": "Thesis.StoppingDecomposition",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m} (net : Network n m) (x : PairVec n),\n    (net.decomposeWith stopPair x).1 - (net.decomposeWith stopPair x).2 = net.eval (x.1-x.2)",
+    "expected_type_sha256": "fee606aa03e935ddfd171ed2f37d7c32ce7932937098d701a30e1c0d6820e47f",
+    "source": {
+      "path": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 29,
+      "kind": "theorem"
+    },
+    "module_sha256": "3b36c457c06dce5f1babaef5f9e0ce44d18c158d143e50f2a7dd7975ff7ced73",
+    "scope": "Shared layered Network, all raw inputs including ties; final affine identity follows from affineChunk."
+  },
+  "ptnb:eq:decomp-recovery-stop-mix": {
+    "verdict": "faithful_result",
+    "correspondence": "Exact actual stopping-network difference; each prefix gives the stated hidden activation identity.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.linear_chunk_properties"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.StoppingDecomposition.thesis_stopping_validity",
+    "module": "Thesis.StoppingDecomposition",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m} (net : Network n m) (x : PairVec n),\n    (net.decomposeWith stopPair x).1 - (net.decomposeWith stopPair x).2 = net.eval (x.1-x.2)",
+    "expected_type_sha256": "fee606aa03e935ddfd171ed2f37d7c32ce7932937098d701a30e1c0d6820e47f",
+    "source": {
+      "path": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 29,
+      "kind": "theorem"
+    },
+    "module_sha256": "3b36c457c06dce5f1babaef5f9e0ce44d18c158d143e50f2a7dd7975ff7ced73",
+    "scope": "Shared layered Network, all raw inputs including ties; final affine identity follows from affineChunk."
+  },
+  "eq:parity_path_sums": {
+    "verdict": "faithful_result",
+    "correspondence": "Both actual stopping preactivation streams are sums over literal geometric paths, absolute signed weights and negative-edge parity.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.StoppingStructure.stopping_preactivation_parity_paths",
+    "module": "Thesis.StoppingPaths",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m k : \u2115} (net : Network n m) (hc : net.Canonical) (hb : ZeroBias net)\n (wp wn : Matrix (Fin k) (Fin m) \u211d)\n (hw : \u2200 j i, wp j i=max (wp j i-wn j i) 0 \u2227 wn j i=max (-(wp j i-wn j i)) 0)\n (x : PairVec n) (j : Fin k),\n let tr := preactivationTrace net (x.1-x.2) wp wn\n preP wp wn (net.decomposeWith stopPair x) j = \u2211 i, \u2211 path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.2 i else x.1 i) \u2227\n preN wp wn (net.decomposeWith stopPair x) j = \u2211 i, \u2211 path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.1 i else x.2 i)",
+    "expected_type_sha256": "82cf7f6f045c8170f459994ed15d3552ded288fc0637528778f0d95f3a87bcc2",
+    "source": {
+      "path": "formalization/Thesis/StoppingPaths.lean",
+      "line": 182,
+      "kind": "theorem"
+    },
+    "module_sha256": "64579e52bb9284daa4f37b9aa37e3a34bcccff746a5b9fe24079a60221116968",
+    "scope": "Bias-free display; canonical sign split; zero-weight paths allowed. Source later bias extension is a separate theorem."
+  },
+  "ptnb:eq:parity-plus": {
+    "verdict": "faithful_result",
+    "correspondence": "Both actual stopping preactivation streams are sums over literal geometric paths, absolute signed weights and negative-edge parity.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.StoppingStructure.stopping_preactivation_parity_paths",
+    "module": "Thesis.StoppingPaths",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m k : \u2115} (net : Network n m) (hc : net.Canonical) (hb : ZeroBias net)\n (wp wn : Matrix (Fin k) (Fin m) \u211d)\n (hw : \u2200 j i, wp j i=max (wp j i-wn j i) 0 \u2227 wn j i=max (-(wp j i-wn j i)) 0)\n (x : PairVec n) (j : Fin k),\n let tr := preactivationTrace net (x.1-x.2) wp wn\n preP wp wn (net.decomposeWith stopPair x) j = \u2211 i, \u2211 path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.2 i else x.1 i) \u2227\n preN wp wn (net.decomposeWith stopPair x) j = \u2211 i, \u2211 path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.1 i else x.2 i)",
+    "expected_type_sha256": "82cf7f6f045c8170f459994ed15d3552ded288fc0637528778f0d95f3a87bcc2",
+    "source": {
+      "path": "formalization/Thesis/StoppingPaths.lean",
+      "line": 182,
+      "kind": "theorem"
+    },
+    "module_sha256": "64579e52bb9284daa4f37b9aa37e3a34bcccff746a5b9fe24079a60221116968",
+    "scope": "Bias-free display; canonical sign split; zero-weight paths allowed. Source later bias extension is a separate theorem."
+  },
+  "ptnb:eq:parity-minus": {
+    "verdict": "faithful_result",
+    "correspondence": "Both actual stopping preactivation streams are sums over literal geometric paths, absolute signed weights and negative-edge parity.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.StoppingStructure.stopping_preactivation_parity_paths",
+    "module": "Thesis.StoppingPaths",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m k : \u2115} (net : Network n m) (hc : net.Canonical) (hb : ZeroBias net)\n (wp wn : Matrix (Fin k) (Fin m) \u211d)\n (hw : \u2200 j i, wp j i=max (wp j i-wn j i) 0 \u2227 wn j i=max (-(wp j i-wn j i)) 0)\n (x : PairVec n) (j : Fin k),\n let tr := preactivationTrace net (x.1-x.2) wp wn\n preP wp wn (net.decomposeWith stopPair x) j = \u2211 i, \u2211 path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.2 i else x.1 i) \u2227\n preN wp wn (net.decomposeWith stopPair x) j = \u2211 i, \u2211 path : GeometricPaths tr,\n geometricWeight tr j i path * (if geometricParity tr i path then x.1 i else x.2 i)",
+    "expected_type_sha256": "82cf7f6f045c8170f459994ed15d3552ded288fc0637528778f0d95f3a87bcc2",
+    "source": {
+      "path": "formalization/Thesis/StoppingPaths.lean",
+      "line": 182,
+      "kind": "theorem"
+    },
+    "module_sha256": "64579e52bb9284daa4f37b9aa37e3a34bcccff746a5b9fe24079a60221116968",
+    "scope": "Bias-free display; canonical sign split; zero-weight paths allowed. Source later bias extension is a separate theorem."
+  },
+  "eq:gate_as_argmax": {
+    "verdict": "faithful_result",
+    "correspondence": "Unfold objective and zeroRegularizer: the strict-positive indicator belongs to argmax p*z on [0,1]; zero_activation identifies the attained value as ReLU.",
+    "supporting_declarations": [
+      "Thesis.GeneralRegularization.zero_activation"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.GeneralRegularization.hardGate_optimal",
+    "module": "Thesis.GeneralRegularization",
+    "kind": "theorem",
+    "expected_type": "\u2200 z : \u211d, hardGate z \u2208 Set.Icc (0 : \u211d) 1 \u2227 IsMaxOn (objective zeroRegularizer z) (Set.Icc 0 1) (hardGate z)",
+    "expected_type_sha256": "6e8a4d571c6a261b9bb46340d63d3edd41c2ae3af373d9b61a4b8cd636297388",
+    "source": {
+      "path": "formalization/Thesis/GeneralRegularization.lean",
+      "line": 181,
+      "kind": "theorem"
+    },
+    "module_sha256": "9dec1ff3a4a84fd2c737e77a5ac9ceb683d213bdb525d15d5e71c6538b113192",
+    "scope": "Unfold objective and zeroRegularizer: the strict-positive indicator belongs to argmax p*z on [0,1]; zero_activation identifies the attained value as ReLU."
+  },
+  "eq:regularized_gate": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual optimizer constructed from compactness/lower semicontinuity; gate is chosen from exists_optimizer and activation is objective at that gate.",
+    "supporting_declarations": [
+      "Thesis.GeneralRegularization.exists_optimizer"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.GeneralRegularization.activation_isGreatest",
+    "module": "Thesis.GeneralRegularization",
+    "kind": "theorem",
+    "expected_type": "\u2200 (R : Regularizer) (z : \u211d), IsGreatest ((objective R z) '' Icc (0 : \u211d) 1) (activation R z)",
+    "expected_type_sha256": "fdc28ac19742ab980a495abc8c16501b177506b2d99ab17906c402d4ff512aa1",
+    "source": {
+      "path": "formalization/Thesis/GeneralRegularization.lean",
+      "line": 54,
+      "kind": "theorem"
+    },
+    "module_sha256": "9dec1ff3a4a84fd2c737e77a5ac9ceb683d213bdb525d15d5e71c6538b113192",
+    "scope": "Actual optimizer constructed from compactness/lower semicontinuity; gate is chosen from exists_optimizer and activation is objective at that gate."
+  },
+  "eq:freg_def": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition is the source chosen-policy pair: pi(delta)*positive minus cost, and pi(delta)*negative.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.GeneralRegularization.pairWith",
+    "module": "Thesis.GeneralRegularization",
+    "kind": "definition",
+    "expected_type": "Regularizer \u2192 (\u211d \u2192 \u211d) \u2192 (\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+    "expected_type_sha256": "64ceef8ec1f2018e5e316c0fdc37a1cf78e67a5a78e79b29ea31d21055a89804",
+    "source": {
+      "path": "formalization/Thesis/GeneralRegularization.lean",
+      "line": 135,
+      "kind": "def"
+    },
+    "module_sha256": "9dec1ff3a4a84fd2c737e77a5ac9ceb683d213bdb525d15d5e71c6538b113192",
+    "scope": "Definition is the source chosen-policy pair: pi(delta)*positive minus cost, and pi(delta)*negative."
+  },
+  "eq:freg_recovery": {
+    "verdict": "faithful_result",
+    "correspondence": "ValidPairActivation conjunct gives exact local recovery, network/readout conjunct propagates it using the same parameters.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.GeneralRegularization.regularized_decomposition_validity",
+    "module": "Thesis.GeneralRegularization",
+    "kind": "theorem",
+    "expected_type": "\u2200 (R : Regularizer) (\u03c0 : \u211d \u2192 \u211d)\n(h\u03c0 : \u2200 z, \u03c0 z \u2208 Icc (0 : \u211d) 1 \u2227 IsMaxOn (objective R z) (Icc 0 1) (\u03c0 z))\n{n m k : \u2115} (net : Network n m) (x : PairVec n)\n(wp wn : Matrix (Fin k) (Fin m) \u211d) (bp bn : Vec k),\nValidPairActivation (activation R) (pairWith R \u03c0) \u2227\nNonnegativePairActivation (pairWith R \u03c0) \u2227\nConvexOn \u211d univ (activation R) \u2227 Monotone (activation R) \u2227\nLipschitzWith 1 (activation R) \u2227\n(\u2200 z, DifferentiableAt \u211d (activation R) z \u2192 \u03c0 z = deriv (activation R) z) \u2227\n(preP wp wn (net.decomposeWith (pairWith R \u03c0) x)+bp -\n(preN wp wn (net.decomposeWith (pairWith R \u03c0) x)+bn) =\naffineLayer wp wn bp bn (net.forwardWith (activation R) (x.1-x.2)))",
+    "expected_type_sha256": "6a2658e250be64100d9a6eb1788aa73b85d928d052baedab10beb6e28d584a07",
+    "source": {
+      "path": "formalization/Thesis/GeneralRegularization.lean",
+      "line": 249,
+      "kind": "theorem"
+    },
+    "module_sha256": "9dec1ff3a4a84fd2c737e77a5ac9ceb683d213bdb525d15d5e71c6538b113192",
+    "scope": "ValidPairActivation conjunct gives exact local recovery, network/readout conjunct propagates it using the same parameters."
+  },
+  "eq:entropy_regularizer": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition cost is minus theta times Real.binEntropy; its unfolded zero-log convention matches the closed interval endpoints.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.GeneralRegularization.entropyRegularizer",
+    "module": "Thesis.GeneralRegularization",
+    "kind": "definition",
+    "expected_type": "\u2200 \u03b8 : \u211d, 0<\u03b8 \u2192 Regularizer",
+    "expected_type_sha256": "6b53e12839aca41a99fb65b04dbbb17ddc5f83f623d224990dcacbdaa1dd7d64",
+    "source": {
+      "path": "formalization/Thesis/GeneralRegularization.lean",
+      "line": 211,
+      "kind": "def"
+    },
+    "module_sha256": "9dec1ff3a4a84fd2c737e77a5ac9ceb683d213bdb525d15d5e71c6538b113192",
+    "scope": "Definition cost is minus theta times Real.binEntropy; its unfolded zero-log convention matches the closed interval endpoints."
+  },
+  "eq:sigmoid_gate": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual entropy conjugate equals literal softplus; checked sigmoid_optimal supplies the maximizing logistic policy.",
+    "supporting_declarations": [
+      "Thesis.GeneralRegularization.sigmoid_optimal",
+      "Thesis.Regularization.entropy_gate_unique"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.GeneralRegularization.entropy_activation",
+    "module": "Thesis.GeneralRegularization",
+    "kind": "theorem",
+    "expected_type": "\u2200 (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8) (z : \u211d), activation (entropyRegularizer \u03b8 h\u03b8) z = Thesis.Regularization.softplus \u03b8 z",
+    "expected_type_sha256": "e8c0b7b458e1d189b4a2cb4692273c572ca087e17c0ab20dc8befa0c49ea1f1b",
+    "source": {
+      "path": "formalization/Thesis/GeneralRegularization.lean",
+      "line": 232,
+      "kind": "theorem"
+    },
+    "module_sha256": "9dec1ff3a4a84fd2c737e77a5ac9ceb683d213bdb525d15d5e71c6538b113192",
+    "scope": "Actual entropy conjugate equals literal softplus; checked sigmoid_optimal supplies the maximizing logistic policy."
+  },
+  "eq:fsoft_def": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition is exactly both displayed softplus-decomposition streams; Real.binEntropy is applied to gate(theta,delta).",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.Regularization.softSplit",
+    "module": "Thesis.Regularization",
+    "kind": "definition",
+    "expected_type": "\u211d \u2192 \u211d \u2192 \u211d \u2192 \u211d \u00d7 \u211d",
+    "expected_type_sha256": "71c4ace4d6a44e10e954af7ebbfaf95da35904c037dfbbf15877b436036c61ff",
+    "source": {
+      "path": "formalization/Thesis/Regularization.lean",
+      "line": 194,
+      "kind": "def"
+    },
+    "module_sha256": "3c7a8baeeafe35a7a84741f4ec9432461a26302aff41b4cb2ffd7228b47429f2",
+    "scope": "Definition is exactly both displayed softplus-decomposition streams; Real.binEntropy is applied to gate(theta,delta)."
+  },
+  "ptnb:eq:softplus-decomp": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition is exactly both displayed softplus-decomposition streams; Real.binEntropy is applied to gate(theta,delta).",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.Regularization.softSplit",
+    "module": "Thesis.Regularization",
+    "kind": "definition",
+    "expected_type": "\u211d \u2192 \u211d \u2192 \u211d \u2192 \u211d \u00d7 \u211d",
+    "expected_type_sha256": "71c4ace4d6a44e10e954af7ebbfaf95da35904c037dfbbf15877b436036c61ff",
+    "source": {
+      "path": "formalization/Thesis/Regularization.lean",
+      "line": 194,
+      "kind": "def"
+    },
+    "module_sha256": "3c7a8baeeafe35a7a84741f4ec9432461a26302aff41b4cb2ffd7228b47429f2",
+    "scope": "Definition is exactly both displayed softplus-decomposition streams; Real.binEntropy is applied to gate(theta,delta)."
+  },
+  "eq:legendre_fenchel_softplus": {
+    "verdict": "faithful_result",
+    "correspondence": "Exact sigmoid*z plus binary entropy equals theta*log(1+exp(z/theta)).",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.Regularization.entropy_gate_value",
+    "module": "Thesis.Regularization",
+    "kind": "theorem",
+    "expected_type": "\u2200 (\u03b8 z : \u211d) (h\u03b8 : 0<\u03b8), gate \u03b8 z*z+\u03b8*Real.binEntropy (gate \u03b8 z)=softplus \u03b8 z",
+    "expected_type_sha256": "664f79b8068841cc86820b81e27e1aa2b74241ab43b3be0fd83c2dc307180bd6",
+    "source": {
+      "path": "formalization/Thesis/Regularization.lean",
+      "line": 126,
+      "kind": "theorem"
+    },
+    "module_sha256": "3c7a8baeeafe35a7a84741f4ec9432461a26302aff41b4cb2ffd7228b47429f2",
+    "scope": "Exact sigmoid*z plus binary entropy equals theta*log(1+exp(z/theta))."
+  },
+  "eq:split_layer_jacobians": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual hidden HasFDerivAt with explicit layerJac; its positive/negative input blocks unfold to the four displayed masked matrices.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.actual_positive_pullback",
+      "HiddenMonotonicity.actual_negative_pullback"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.layer_derivative",
+    "module": "HiddenMonotonicity.NetworkDerivative",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Vec k) (x : PairVec n)\n (hx : \u2200 i, (preP wp wn x+bp) i \u2260 (preN wp wn x+bn) i),\n HasFDerivAt (layerFun wp wn bp bn) (layerJac wp wn bp bn x) x",
+    "expected_type_sha256": "1a74e5af8103ee1c2f56428b2caa63d75096003c82d632f5da0e45c1b4637855",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 37,
+      "kind": "theorem"
+    },
+    "module_sha256": "b0c2e84b0ca39dfbfb01a9249861d838e22cc51587f39fee75be41400174c49b",
+    "scope": "Strict hidden gate comparisons. The separate ungated affine terminal case follows from affine heads; this link certifies the displayed hidden-layer Jacobian."
+  },
+  "eq:delta_int_pos": {
+    "verdict": "faithful_result",
+    "correspondence": "For any downstream linear functional D, the actual positive-coordinate pullback is the displayed two-term block contraction.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.layer_derivative"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.actual_positive_pullback",
+    "module": "HiddenMonotonicity.NetworkDerivative",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Vec k) (x : PairVec n) (v : Vec n) (D : PairVec k \u2192L[\u211d] \u211d),\n (D.comp (layerJac wp wn bp bn x)) (v,0) = D (blockPP wp wn bp bn x v,0) + D (0,matrixCLM wn v)",
+    "expected_type_sha256": "b949430af896546e1c6676d1a60ce9a05ac67c3a9f97abbe9da9f1c04e682ed9",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 122,
+      "kind": "theorem"
+    },
+    "module_sha256": "b0c2e84b0ca39dfbfb01a9249861d838e22cc51587f39fee75be41400174c49b",
+    "scope": "Hidden strict-cell derivative interpretation uses layer_derivative. The algebraic block contraction is unconditional; terminal affine case is a separate linear seed."
+  },
+  "eq:delta_int_neg": {
+    "verdict": "faithful_result",
+    "correspondence": "For any downstream linear functional D, the actual negative-coordinate pullback is the displayed two-term block contraction.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.layer_derivative"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.actual_negative_pullback",
+    "module": "HiddenMonotonicity.NetworkDerivative",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Vec k) (x : PairVec n) (v : Vec n) (D : PairVec k \u2192L[\u211d] \u211d),\n (D.comp (layerJac wp wn bp bn x)) (0,v) = D (blockPN wp wn bp bn x v,0) + D (0,matrixCLM wp v)",
+    "expected_type_sha256": "7dfa748f324091c1e00437daf22309cebf9fee68883b18bcd282654b05943697",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/NetworkDerivative.lean",
+      "line": 131,
+      "kind": "theorem"
+    },
+    "module_sha256": "b0c2e84b0ca39dfbfb01a9249861d838e22cc51587f39fee75be41400174c49b",
+    "scope": "Hidden strict-cell derivative interpretation uses layer_derivative. The algebraic block contraction is unconditional; terminal affine case is a separate linear seed."
+  },
+  "eq:delta_shift_def": {
+    "verdict": "faithful_definition",
+    "correspondence": "Literal local sensitivity update; the second definition in eq:shift_definition is exactly unified.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.unified"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.shiftPair",
+    "module": "HiddenMonotonicity.StabilizedBackward",
+    "kind": "definition",
+    "expected_type": "\u2200 {n : \u2115}, \u211d \u2192 Sensitivity n \u2192 Sensitivity n",
+    "expected_type_sha256": "618a4b04e619f6313c66cb3f52745c81c2e9bb423eecbb896187ab41f5527023",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 15,
+      "kind": "def"
+    },
+    "module_sha256": "ecde07ec52bc9d1de88bd8cd4486072c32f8c19c6c52a2ca7aa6892ee7955c06",
+    "scope": "Definition link, not a classical derivative assertion for shifted quantities."
+  },
+  "eq:shift_definition": {
+    "verdict": "faithful_definition",
+    "correspondence": "Literal local sensitivity update; the second definition in eq:shift_definition is exactly unified.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.unified"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.shiftPair",
+    "module": "HiddenMonotonicity.StabilizedBackward",
+    "kind": "definition",
+    "expected_type": "\u2200 {n : \u2115}, \u211d \u2192 Sensitivity n \u2192 Sensitivity n",
+    "expected_type_sha256": "618a4b04e619f6313c66cb3f52745c81c2e9bb423eecbb896187ab41f5527023",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 15,
+      "kind": "def"
+    },
+    "module_sha256": "ecde07ec52bc9d1de88bd8cd4486072c32f8c19c6c52a2ca7aa6892ee7955c06",
+    "scope": "Definition link, not a classical derivative assertion for shifted quantities."
+  },
+  "eq:unified_split_gradients": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual affine head composed with balancedLift x=(x/2,-x/2) has derivative unified; unfolding unified gives the factor one half.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.Network.affine_head_derivative_of_differentiable"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.Network.affine_symmetric_derivative_of_differentiable",
+    "module": "HiddenMonotonicity.DifferentiableHeads",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (hw : net.Nonnegative) (x : Vec n) (rp rn : Row m)\n (hp : Monotone rp) (hn : Monotone rn) (bp bn : \u211d) (head : Bool)\n (hd : DifferentiableAt \u211d (fun y => if head then (net.affineHeads rp rn bp bn (balancedLift n y)).1 else (net.affineHeads rp rn bp bn (balancedLift n y)).2) x),\n HasFDerivAt (fun y => if head then (net.affineHeads rp rn bp bn (balancedLift n y)).1 else (net.affineHeads rp rn bp bn (balancedLift n y)).2)\n (unified ((net.originalTrace x).run (fun _ => 0) (affineReadoutSeed rp rn 0 head))) x",
+    "expected_type_sha256": "53940e0c417bb6cb199895c8aca29991ed288500314f967d9d179faa2869b7a7",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/DifferentiableHeads.lean",
+      "line": 139,
+      "kind": "theorem"
+    },
+    "module_sha256": "27179d5aaf2ffabe643cb6cb5f3921d6936efa493df631b8a6dd6de6db5f2a99",
+    "scope": "At differentiability points of the actual lifted head; canonical nonnegative split heads satisfy the required monotone row conditions. Biases and ungated signed affine readout are explicit."
+  },
+  "eq:closed_formula_g": {
+    "verdict": "faithful_result",
+    "correspondence": "The strict-cell theorem contains both actual Q derivatives and both shifted affine-head half-difference formulas. sourceRows is the explicitly weighted vector-Q derivative list; rp-rn is the signed output row and rp+rn its absolute row.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.Network.affine_Q_closed_form_ae",
+      "HiddenMonotonicity.Network.affine_Q_row_formulas"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.Network.affine_readout_closed_form",
+    "module": "HiddenMonotonicity.AffineReadout",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (hc : net.Canonical)\n    (x : Vec n) (hx : net.Strict x) (\u03b1 : \u2115 \u2192 \u211d)\n    (rPlus rMinus : Row m) (\u03b2 : \u211d),\n    (\u2200 q \u2208 net.absoluteQSources x \u03b1, HasFDerivAt q.value q.jacobian x) \u2227\n    unified ((net.originalTrace x).run \u03b1 (affineReadoutSeed rPlus rMinus \u03b2 true)) =\n      (1/2 : \u211d) \u2022 ((rPlus-rMinus).comp (net.originalTrace x).originalJac -\n        (sourceRows (net.absoluteQSources x \u03b1) ((1-2*\u03b2) \u2022 (rPlus+rMinus))).sum) \u2227\n    unified ((net.originalTrace x).run \u03b1 (affineReadoutSeed rPlus rMinus \u03b2 false)) =\n      (-1/2 : \u211d) \u2022 ((rPlus-rMinus).comp (net.originalTrace x).originalJac +\n        (sourceRows (net.absoluteQSources x \u03b1) ((1-2*\u03b2) \u2022 (rPlus+rMinus))).sum)",
+    "expected_type_sha256": "be36ed3e3dd3ee9fd52ad90535470779f68666da1f097446b60345587ccaad72",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/AffineReadout.lean",
+      "line": 60,
+      "kind": "theorem"
+    },
+    "module_sha256": "12dc4275c45b72b35aeb460804ffff366e793d617cad5007399db931d9100824",
+    "scope": "Strict gate cell as stipulated by the source subsection; arbitrary layer shifts and output shift beta; arbitrary signed affine readout. No final affine minimum source."
+  },
+  "eq:closed_formula_h": {
+    "verdict": "faithful_result",
+    "correspondence": "The strict-cell theorem contains both actual Q derivatives and both shifted affine-head half-difference formulas. sourceRows is the explicitly weighted vector-Q derivative list; rp-rn is the signed output row and rp+rn its absolute row.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.Network.affine_Q_closed_form_ae",
+      "HiddenMonotonicity.Network.affine_Q_row_formulas"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.Network.affine_readout_closed_form",
+    "module": "HiddenMonotonicity.AffineReadout",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (hc : net.Canonical)\n    (x : Vec n) (hx : net.Strict x) (\u03b1 : \u2115 \u2192 \u211d)\n    (rPlus rMinus : Row m) (\u03b2 : \u211d),\n    (\u2200 q \u2208 net.absoluteQSources x \u03b1, HasFDerivAt q.value q.jacobian x) \u2227\n    unified ((net.originalTrace x).run \u03b1 (affineReadoutSeed rPlus rMinus \u03b2 true)) =\n      (1/2 : \u211d) \u2022 ((rPlus-rMinus).comp (net.originalTrace x).originalJac -\n        (sourceRows (net.absoluteQSources x \u03b1) ((1-2*\u03b2) \u2022 (rPlus+rMinus))).sum) \u2227\n    unified ((net.originalTrace x).run \u03b1 (affineReadoutSeed rPlus rMinus \u03b2 false)) =\n      (-1/2 : \u211d) \u2022 ((rPlus-rMinus).comp (net.originalTrace x).originalJac +\n        (sourceRows (net.absoluteQSources x \u03b1) ((1-2*\u03b2) \u2022 (rPlus+rMinus))).sum)",
+    "expected_type_sha256": "be36ed3e3dd3ee9fd52ad90535470779f68666da1f097446b60345587ccaad72",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/AffineReadout.lean",
+      "line": 60,
+      "kind": "theorem"
+    },
+    "module_sha256": "12dc4275c45b72b35aeb460804ffff366e793d617cad5007399db931d9100824",
+    "scope": "Strict gate cell as stipulated by the source subsection; arbitrary layer shifts and output shift beta; arbitrary signed affine readout. No final affine minimum source."
+  },
+  "eq:claim_bulk": {
+    "verdict": "faithful_result",
+    "correspondence": "General terminal sensitivity seed includes both signed affine partial rows. Combine its exact sum with bulkCoefficient_product and shiftPair_sum for all displayed factors.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.MaskedTrace.bulkCoefficient_product",
+      "HiddenMonotonicity.shiftPair_sum",
+      "HiddenMonotonicity.Network.affine_canonical_mass"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.MaskedTrace.run_bulk",
+    "module": "HiddenMonotonicity.AffineReadout",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (tr : MaskedTrace n m) (\u03b1 : \u2115 \u2192 \u211d) (seed : Sensitivity m), (tr.run \u03b1 seed).1+(tr.run \u03b1 seed).2=tr.bulkCoefficient \u03b1 \u2022 ((seed.1+seed.2).comp tr.absMap)",
+    "expected_type_sha256": "3bbf7db53caf78dd0049e3518a18476e858b5f3c81d5e724b0b131d94082bca0",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/AffineReadout.lean",
+      "line": 13,
+      "kind": "theorem"
+    },
+    "module_sha256": "12dc4275c45b72b35aeb460804ffff366e793d617cad5007399db931d9100824",
+    "scope": "Exact selected backward algebra for arbitrary readout partial seed; put the output-layer alpha in affineReadoutSeed and backbone alphas in run. Does not assert shifted sensitivities are derivatives of unchanged heads."
+  },
+  "eq:shifted_recursion": {
+    "verdict": "faithful_result",
+    "correspondence": "Multiply pull_unified by two, use unified_shift, then substitute run_bulk and bulkCoefficient_product. signedMap and deadMap are the displayed active/inactive signed-weight maps.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.unified_shift",
+      "HiddenMonotonicity.MaskedTrace.run_bulk",
+      "HiddenMonotonicity.MaskedTrace.bulkCoefficient_product"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.MaskedTrace.pull_unified",
+    "module": "HiddenMonotonicity.StabilizedBackward",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (gate : Fin k \u2192 Bool) (s : Sensitivity k), unified (MaskedTrace.pull wp wn gate s)=(unified s).comp (MaskedTrace.signedMap wp wn gate)-(1/2 : \u211d) \u2022 ((s.1+s.2).comp (MaskedTrace.deadMap wp wn gate))",
+    "expected_type_sha256": "1f8783ecdc6ed77949a8c9904598944986665e91b792296d415e3894921789fb",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 122,
+      "kind": "theorem"
+    },
+    "module_sha256": "ecde07ec52bc9d1de88bd8cd4486072c32f8c19c6c52a2ca7aa6892ee7955c06",
+    "scope": "Actual local implemented backward recurrence; arbitrary gate masks and arbitrary real shifts. Source strict-cell derivative interpretation is separate."
+  },
+  "eq:backward_invariant": {
+    "verdict": "faithful_result",
+    "correspondence": "Both separate signed affine-head partial differences equal plus/minus the actual original logit derivative; subtracting them gives twice that derivative.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.Network.affine_ae_backward_invariants"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.Network.affine_backward_invariants_of_differentiable",
+    "module": "HiddenMonotonicity.DifferentiableHeads",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (hw : net.Nonnegative) (x : Vec n) (rp rn : Row m)\n (hp : Monotone rp) (hn : Monotone rn) (bp bn : \u211d)\n (hg : DifferentiableAt \u211d (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).1) x)\n (hh : DifferentiableAt \u211d (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).2) x)\n (\u03b1 : \u2115 \u2192 \u211d) (\u03b2 : \u211d),\n HasFDerivAt (net.affineLogit rp rn bp bn) ((rp-rn).comp (net.originalTrace x).originalJac) x \u2227\n ((net.originalTrace x).run \u03b1 (affineReadoutSeed rp rn \u03b2 true)).1-((net.originalTrace x).run \u03b1 (affineReadoutSeed rp rn \u03b2 false)).1 = (rp-rn).comp (net.originalTrace x).originalJac \u2227\n ((net.originalTrace x).run \u03b1 (affineReadoutSeed rp rn \u03b2 true)).2-((net.originalTrace x).run \u03b1 (affineReadoutSeed rp rn \u03b2 false)).2 = -((rp-rn).comp (net.originalTrace x).originalJac)",
+    "expected_type_sha256": "9fafbda5ed001d6eeee5da14734ed54e08de47d959daeb330754dbc4519b4683",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/DifferentiableHeads.lean",
+      "line": 191,
+      "kind": "theorem"
+    },
+    "module_sha256": "27179d5aaf2ffabe643cb6cb5f3921d6936efa493df631b8a6dd6de6db5f2a99",
+    "scope": "At points where both balanced lifted heads are differentiable; source strict cells satisfy this. Arbitrary shifts including the affine readout; common a.e. version separately certified."
+  },
+  "eq:conv_split": {
+    "verdict": "faithful_result",
+    "correspondence": "splitKernel is the literal tensor/stencil split convolution with shared kernel and bias; theorem verifies nonnegativity, monotonicity, convexity and exact recovery of that definition.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.Convolution.splitKernel_properties",
+    "module": "HiddenMonotonicity.Convolution",
+    "kind": "theorem",
+    "expected_type": "\u2200 {ci co ip op taps : \u2115}\n(K : Fin co \u2192 Fin ci \u2192 Fin taps \u2192 \u211d)\n(stencil : Fin op \u2192 Fin taps \u2192 Option (Fin ip)) (b : Fin co \u2192 \u211d),\n(\u2200 x, 0 \u2264 x \u2192 0 \u2264 splitKernel K stencil b x) \u2227\nMonotone (splitKernel K stencil b) \u2227\n(\u2200 i, ConvexOn \u211d Set.univ (fun x => (splitKernel K stencil b x).1 i) \u2227\nConvexOn \u211d Set.univ (fun x => (splitKernel K stencil b x).2 i)) \u2227\n(\u2200 x, (splitKernel K stencil b x).1-(splitKernel K stencil b x).2 =\napplyKernel K stencil (x.1-x.2)+(fun u => b (unflat u).1))",
+    "expected_type_sha256": "74de35bcced3df29b408b951316de21fb29e372ed9b0dced8d2695081c33f35b",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/Convolution.lean",
+      "line": 147,
+      "kind": "theorem"
+    },
+    "module_sha256": "2afd7181914e49bb3add5cd509d080e125df2b4915a818ddf138b82937c08348",
+    "scope": "Definition/model link to actual finite channel/spatial/tap convolution, including padding and repeated taps."
+  },
+  "eq:maxpool_split": {
+    "verdict": "faithful_definition",
+    "correspondence": "Exact finite nonempty max/sum definition, with the selected candidate excluding its own negative component.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.finitePool",
+    "module": "HiddenMonotonicity.MaxPool",
+    "kind": "definition",
+    "expected_type": "\u2200 {\u03b9 : Type u} [Fintype \u03b9] [Nonempty \u03b9] [DecidableEq \u03b9], ((\u03b9 \u2192 \u211d) \u00d7 (\u03b9 \u2192 \u211d)) \u2192 \u211d \u00d7 \u211d",
+    "expected_type_sha256": "bf3ec21bec72ba46cd06a3ba286db9bafc27607a2a30eac21fd68dbb0f61712a",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/MaxPool.lean",
+      "line": 9,
+      "kind": "def"
+    },
+    "module_sha256": "e040609d7e4cdae7e22d4b796be14773ece1b8c5fd935e88f6b053c30ecc5f7c",
+    "scope": "Exact finite nonempty max/sum definition, with the selected candidate excluding its own negative component."
+  },
+  "eq:maxout_split_identity": {
+    "verdict": "faithful_result",
+    "correspondence": "Exact nonempty finite max-of-differences identity with all other negative branches in each candidate.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.maxpool_correct",
+    "module": "HiddenMonotonicity.Chunks",
+    "kind": "theorem",
+    "expected_type": "\u2200 {\u03b9 : Type u} [Fintype \u03b9] [Nonempty \u03b9] [DecidableEq \u03b9] (p n : \u03b9 \u2192 \u211d),\n Finset.univ.sup' Finset.univ_nonempty (fun j => p j + \u2211 i \u2208 Finset.univ.erase j, n i) - \u2211 i, n i = Finset.univ.sup' Finset.univ_nonempty (fun j => p j-n j)",
+    "expected_type_sha256": "5db2689ecef8634cfb010ab299ad1d3a23766fcda69a3d3075a15eba2706a125",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/Chunks.lean",
+      "line": 26,
+      "kind": "theorem"
+    },
+    "module_sha256": "40f075f8e48a908a43e074376bcfee5e36a8dd8bd823fa3b7a1e7afe1bfdbdfb",
+    "scope": "Exact nonempty finite max-of-differences identity with all other negative branches in each candidate."
+  },
+  "eq:pair_product_rule": {
+    "verdict": "faithful_result",
+    "correspondence": "The checked four-real ring identity is exactly the displayed two-factor sign expansion, with equality orientation reversed.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.multiplicative_split_correct",
+    "module": "HiddenMonotonicity.Chunks",
+    "kind": "theorem",
+    "expected_type": "\u2200 p q r s : \u211d, (p*r+q*s)-(p*s+q*r)=(p-q)*(r-s)",
+    "expected_type_sha256": "4801abcac274da2ba680e5ed7e022ab7735a1d9ba07ab4fb26343f7e141807b4",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/Chunks.lean",
+      "line": 49,
+      "kind": "theorem"
+    },
+    "module_sha256": "40f075f8e48a908a43e074376bcfee5e36a8dd8bd823fa3b7a1e7afe1bfdbdfb",
+    "scope": "The checked four-real ring identity is exactly the displayed two-factor sign expansion, with equality orientation reversed."
+  },
+  "ptnb:eq:lrp-ab": {
+    "verdict": "faithful_definition",
+    "correspondence": "sourceLRP unfolds into the displayed sourceLayer redistribution; pos/neg contributions are actual signed input-weight products, denominators include split bias and epsilon.",
+    "supporting_declarations": [
+      "Thesis.RoutingSupport.sourceLayer"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.RoutingSupport.sourceLRP",
+    "module": "Thesis.RoutingSupport",
+    "kind": "definition",
+    "expected_type": "\u2200 {n m : \u2115}, \u211d \u2192 \u211d \u2192 \u211d \u2192 Network n m \u2192 Vec n \u2192 Vec m \u2192 Vec n",
+    "expected_type_sha256": "1008acd5227116cbca3bc62a183bc8fc82925e49554479835e8838a020dd3cd9",
+    "source": {
+      "path": "formalization/Thesis/RoutingSupport.lean",
+      "line": 17,
+      "kind": "def"
+    },
+    "module_sha256": "a7a3cf72e9205d0ab902107bc6b567a7a30288d60a866ee1618e9f35a6a27113",
+    "scope": "Definition link; arbitrary relevance. Equality to gated path occupation requires the source seed-support premise or ordinary output seeds."
+  },
+  "ptnb:eq:lrp-eps-recursion": {
+    "verdict": "faithful_definition",
+    "correspondence": "sourceLRP unfolds into the displayed sourceLayer redistribution; pos/neg contributions are actual signed input-weight products, denominators include split bias and epsilon.",
+    "supporting_declarations": [
+      "Thesis.RoutingSupport.sourceLayer"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.RoutingSupport.sourceLRP",
+    "module": "Thesis.RoutingSupport",
+    "kind": "definition",
+    "expected_type": "\u2200 {n m : \u2115}, \u211d \u2192 \u211d \u2192 \u211d \u2192 Network n m \u2192 Vec n \u2192 Vec m \u2192 Vec n",
+    "expected_type_sha256": "1008acd5227116cbca3bc62a183bc8fc82925e49554479835e8838a020dd3cd9",
+    "source": {
+      "path": "formalization/Thesis/RoutingSupport.lean",
+      "line": 17,
+      "kind": "def"
+    },
+    "module_sha256": "a7a3cf72e9205d0ab902107bc6b567a7a30288d60a866ee1618e9f35a6a27113",
+    "scope": "Definition link; arbitrary relevance. Equality to gated path occupation requires the source seed-support premise or ordinary output seeds."
+  },
+  "ptnb:eq:lrp-eps-recovery": {
+    "verdict": "faithful_result",
+    "correspondence": "Exact actual source recurrence equals signed discounted occupation under the model-derived anchor policy.",
+    "supporting_declarations": [
+      "Thesis.RoutingSupport.source_alpha_beta_output_seed",
+      "Thesis.RoutingSupport.source_affine_output_lrp"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.RoutingSupport.source_alpha_beta_recovery",
+    "module": "Thesis.RoutingSupport",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m} (net : Network n m) (\u03b1 \u03b2 \u03b5 : \u211d)\n    (x : Vec n) (R : Vec m) (hR : \u2200 j, net.eval x j = 0 \u2192 R j = 0) (i : Fin n),\n    sourceLRP \u03b1 \u03b2 \u03b5 net x R i = \u2211 j, R j *\n      (rgOccupation net \u03b1 \u03b2 \u03b5 x j i false - rgOccupation net \u03b1 \u03b2 \u03b5 x j i true)",
+    "expected_type_sha256": "3be19790b0b5c64e6a2e9a2295a4b4dc40fac7f2c6d8ef2c04aa8d19de7ee7d0",
+    "source": {
+      "path": "formalization/Thesis/RoutingSupport.lean",
+      "line": 66,
+      "kind": "theorem"
+    },
+    "module_sha256": "a7a3cf72e9205d0ab902107bc6b567a7a30288d60a866ee1618e9f35a6a27113",
+    "scope": "Layered Network, canonical raw contributions; supported seeds. Ordinary output/affine output seeds have separate checked wrappers. Epsilon zero uses Lean real zero-division."
+  },
+  "ptnb:eq:adf-astop-recursion": {
+    "verdict": "faithful_definition",
+    "correspondence": "Literal stopping layer definition is the displayed common gate times split affine predecessor sums plus the corresponding bias.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.StoppingDecomposition.stopLayer",
+    "module": "Thesis.StoppingDecomposition",
+    "kind": "definition",
+    "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+    "expected_type_sha256": "c7e2d64688d10bfe454a949f691666c7a54eb0b186dee2f0c5fefc88b199bdb3",
+    "source": {
+      "path": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 39,
+      "kind": "def"
+    },
+    "module_sha256": "3b36c457c06dce5f1babaef5f9e0ce44d18c158d143e50f2a7dd7975ff7ced73",
+    "scope": "Literal stopping layer definition is the displayed common gate times split affine predecessor sums plus the corresponding bias."
+  },
+  "ptnb:eq:routing-forward-act": {
+    "verdict": "faithful_result",
+    "correspondence": "Exact reported active/inactive extended-log coordinates of the canonical anchor profile equal log of the actual ReLU activation and bottom.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.RoutingNetwork.networkLayer_reported",
+    "module": "Thesis.RoutingNetwork",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n k m} (wp wn : Matrix (Fin k) (Fin n) \u211d)\n    (bp bn : Vec k) (tail : Network k m) (\u03b5 : \u211d) (h\u03b5 : 0 \u2264 \u03b5)\n    (x : Vec n) (j : Fin m) (q : Bool),\n    reported 1 (networkGame (.layer wp wn bp bn tail) \u03b5 h\u03b5 x j q)\n      (canonical 1 (networkGame (.layer wp wn bp bn tail) \u03b5 h\u03b5 x j q))\n      (canonical 1 (networkGame (.layer wp wn bp bn tail) \u03b5 h\u03b5 x j q)) =\n      if q then (Thesis.RoutingGate.logCoordinate ((Network.layer wp wn bp bn tail).eval x j), \u22a5)\n      else (\u22a5, Thesis.RoutingGate.logCoordinate ((Network.layer wp wn bp bn tail).eval x j))",
+    "expected_type_sha256": "b05115008acea4102908dcaef71a9333da48d3a176d082846fdcd5cbab4f53a0",
+    "source": {
+      "path": "formalization/Thesis/RoutingNetwork.lean",
+      "line": 236,
+      "kind": "theorem"
+    },
+    "module_sha256": "094bc28031ad7f611d3776207a292bf3eb5a62f308db8c93521c4d569ffe528c",
+    "scope": "Exact reported active/inactive extended-log coordinates of the canonical anchor profile equal log of the actual ReLU activation and bottom."
+  },
+  "ptnb:eq:routing-forward-stop": {
+    "verdict": "faithful_result",
+    "correspondence": "Exact canonical activation choice is strict-positive actual preactivation; layerGames_selected_gate gives the later-layer version.",
+    "supporting_declarations": [
+      "Thesis.RoutingNetwork.layerGames_selected_gate"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.RoutingNetwork.inputLayerGames_selected_gate",
+    "module": "Thesis.RoutingNetwork",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n k} (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Vec k)\n    (\u03b5 : \u211d) (h\u03b5 : 0 \u2264 \u03b5) (x : Vec n) (j : Fin k) (q : Bool),\n    (canonical 1 (inputLayerGames wp wn bp bn \u03b5 h\u03b5 x j q)).1 =\n      decide (0 < preactivation wp wn bp bn x j)",
+    "expected_type_sha256": "8f5082e6f3ad81783c549b59a475a7ee84b79fe94227b6f1c54339e20cb5b68d",
+    "source": {
+      "path": "formalization/Thesis/RoutingNetwork.lean",
+      "line": 295,
+      "kind": "theorem"
+    },
+    "module_sha256": "094bc28031ad7f611d3776207a292bf3eb5a62f308db8c93521c4d569ffe528c",
+    "scope": "Exact canonical activation choice is strict-positive actual preactivation; layerGames_selected_gate gives the later-layer version."
+  },
+  "ptnb:eq:routing-spne-stop": {
+    "verdict": "faithful_result",
+    "correspondence": "The pure activation choice compares continuation log value with bottom and selects stop at all ties, including nonpositive signed continuation mass.",
+    "supporting_declarations": [
+      "Thesis.RoutingGate.chosenLogAction_stops_at_nonpositive"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.RoutingGate.chosenLogAction_optimal",
+    "module": "Thesis.RoutingGate",
+    "kind": "theorem",
+    "expected_type": "\u2200 (z : \u211d) (cont : Bool),\n    logAction z cont \u2264 logAction z (chosenLogAction z)",
+    "expected_type_sha256": "2fa744400bc60bed1f3cfdbdbbbb3ea908c46dda075f95b2173b4d24bb0f3c53",
+    "source": {
+      "path": "formalization/Thesis/RoutingGate.lean",
+      "line": 36,
+      "kind": "theorem"
+    },
+    "module_sha256": "c3503e9dad985abb8a542328bfb18a995e24aa7159c5b76c160dc7f10b843417",
+    "scope": "The pure activation choice compares continuation log value with bottom and selects stop at all ties, including nonpositive signed continuation mass."
+  },
+  "ptnb:eq:softplus-soft-bellman": {
+    "verdict": "faithful_result",
+    "correspondence": "Binary stop/continue advantage z is optimized over [0,1]; the checked variational theorem gives softplus value and equality iff the sigmoid gate.",
+    "supporting_declarations": [
+      "Thesis.Regularization.softplus_variational"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.Regularization.entropy_gate_unique",
+    "module": "Thesis.Regularization",
+    "kind": "theorem",
+    "expected_type": "\u2200 (\u03b8 z p : \u211d) (h\u03b8 : 0 < \u03b8)\n    (hp : 0 \u2264 p) (hp1 : p \u2264 1),\n    p * z + \u03b8 * Real.binEntropy p = softplus \u03b8 z \u2194 p = gate \u03b8 z",
+    "expected_type_sha256": "a363787a7266022fad8c73faacfd5f048703f0aa1b4072ccd25e3b02c43da93c",
+    "source": {
+      "path": "formalization/Thesis/Regularization.lean",
+      "line": 148,
+      "kind": "theorem"
+    },
+    "module_sha256": "3c7a8baeeafe35a7a84741f4ec9432461a26302aff41b4cb2ffd7228b47429f2",
+    "scope": "Local two-action entropy game. Player-specific and full-profile network interpretation are in the new SoftplusGame batch."
+  },
+  "ptnb:eq:softplus-policy": {
+    "verdict": "faithful_result",
+    "correspondence": "Binary stop/continue advantage z is optimized over [0,1]; the checked variational theorem gives softplus value and equality iff the sigmoid gate.",
+    "supporting_declarations": [
+      "Thesis.Regularization.softplus_variational"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.Regularization.entropy_gate_unique",
+    "module": "Thesis.Regularization",
+    "kind": "theorem",
+    "expected_type": "\u2200 (\u03b8 z p : \u211d) (h\u03b8 : 0 < \u03b8)\n    (hp : 0 \u2264 p) (hp1 : p \u2264 1),\n    p * z + \u03b8 * Real.binEntropy p = softplus \u03b8 z \u2194 p = gate \u03b8 z",
+    "expected_type_sha256": "a363787a7266022fad8c73faacfd5f048703f0aa1b4072ccd25e3b02c43da93c",
+    "source": {
+      "path": "formalization/Thesis/Regularization.lean",
+      "line": 148,
+      "kind": "theorem"
+    },
+    "module_sha256": "3c7a8baeeafe35a7a84741f4ec9432461a26302aff41b4cb2ffd7228b47429f2",
+    "scope": "Local two-action entropy game. Player-specific and full-profile network interpretation are in the new SoftplusGame batch."
+  },
+  "ptnb:eq:softplus-spne-tildes": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual arbitrary-profile layered game has the unique Gibbs SPNE; playerValue_gibbs equates both player bookkeeping coordinates to the actual softSplit network; their advantage equals softEval.",
+    "supporting_declarations": [
+      "Thesis.SoftplusGame.playerValue_gibbs",
+      "Thesis.SoftplusGame.playerValue_advantage"
+    ],
+    "contract_manifest": "reports/softplus-game-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.SoftplusGame.softplus_forward_spne",
+    "module": "Thesis.SoftplusReadout",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : PairVec n),\n SubgamePerfect \u03b8 net (gibbsStrategy \u03b8 net (x.1-x.2)) (gibbsStrategy \u03b8 net (x.1-x.2)) (x.1-x.2) (-(x.1-x.2)) \u2227\n (\u2200 plus minus : Strategy net,SubgamePerfect \u03b8 net plus minus (x.1-x.2) (-(x.1-x.2)) \u2194 plus=gibbsStrategy \u03b8 net (x.1-x.2) \u2227 minus=gibbsStrategy \u03b8 net (x.1-x.2)) \u2227\n playerValue \u03b8 net (gibbsStrategy \u03b8 net (x.1-x.2)) (gibbsStrategy \u03b8 net (x.1-x.2)) (pairValues x)=pairValues (net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x) \u2227\n (net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x).1-(net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x).2=softEval \u03b8 net (x.1-x.2)",
+    "expected_type_sha256": "d61012e820f39bd48639f8dfaabb6424f7ddb3b41dd30e56f736ec9068c3a7a3",
+    "source": {
+      "path": "formalization/Thesis/SoftplusReadout.lean",
+      "line": 65,
+      "kind": "theorem"
+    },
+    "module_sha256": "eb99ef0969590ac6a21a29fbcd2382725b039179b9f508b0456b0a37cefc6931",
+    "scope": "Layered shared Network with arbitrary widths/biases/raw inputs and zero fan-in; does not assert residual/maxpool Circuit extension."
+  },
+  "ptnb:eq:kl-lf-objective": {
+    "verdict": "faithful_result",
+    "correspondence": "At theta=1, exact real-score full-support reference KL maximization; KL and referenceValue are the literal finite sums.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.ReferencePolicy.thesis_kl_legendre_fenchel",
+    "module": "Thesis.ReferencePolicy",
+    "kind": "theorem",
+    "expected_type": "\u2200 {A : Type u} [Fintype A] [Nonempty A] (\u03b8 : \u211d) (\u03c1 q : A \u2192 \u211d) (h\u03b8 : 0 < \u03b8)\n    (h\u03c1 : \u2200 i, 0 < \u03c1 i),\n    IsGreatest ((fun p : A \u2192 \u211d => (\u2211 i, p i * q i) - \u03b8 * kl p \u03c1) ''\n      {p | (\u2200 i, 0 \u2264 p i) \u2227 \u2211 i, p i = 1}) (referenceValue \u03b8 \u03c1 q)",
+    "expected_type_sha256": "42401a510045b18326aa834984c83c38f7241806743a7f379cdabf2f5281fef5",
+    "source": {
+      "path": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 120,
+      "kind": "theorem"
+    },
+    "module_sha256": "3aa070779d35eb5f89c7f88659516c86192c320aebb74784e6087c9223099d67",
+    "scope": "At theta=1, exact real-score full-support reference KL maximization; KL and referenceValue are the literal finite sums."
+  },
+  "ptnb:eq:kl-lf-optimizer": {
+    "verdict": "faithful_result",
+    "correspondence": "Equality to the optimum iff policy is referencePolicy; its literal definition is reference*exp(score)/partition. Maximum and attained value have accompanying exact contracts.",
+    "supporting_declarations": [
+      "Thesis.ReferencePolicy.thesis_kl_legendre_fenchel",
+      "Thesis.ReferencePolicy.reference_policy_value"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.ReferencePolicy.reference_policy_unique",
+    "module": "Thesis.ReferencePolicy",
+    "kind": "theorem",
+    "expected_type": "\u2200 {A : Type u} [Fintype A] [Nonempty A] (\u03b8 : \u211d) (\u03c1 q p : A \u2192 \u211d) (h\u03b8 : 0 < \u03b8)\n    (h\u03c1 : \u2200 i, 0 < \u03c1 i) (hp : \u2200 i, 0 \u2264 p i) (hsum : \u2211 i, p i = 1),\n    (\u2211 i, p i * q i) - \u03b8 * kl p \u03c1 = referenceValue \u03b8 \u03c1 q \u2194 p = referencePolicy \u03b8 \u03c1 q",
+    "expected_type_sha256": "cff3537889c94ba372bc845a81bd4264cf8afac3193d34a48c8bf6dab61bee04",
+    "source": {
+      "path": "formalization/Thesis/ReferencePolicy.lean",
+      "line": 106,
+      "kind": "theorem"
+    },
+    "module_sha256": "3aa070779d35eb5f89c7f88659516c86192c320aebb74784e6087c9223099d67",
+    "scope": "Equality to the optimum iff policy is referencePolicy; its literal definition is reference*exp(score)/partition. Maximum and attained value have accompanying exact contracts."
+  },
+  "ptnb:eq:kl-lf-linearized": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual support-guarded expected log-contribution minus reference KL has maximum log(sum reference*contribution), unique optimizer and exact displayed probability.",
+    "supporting_declarations": [
+      "Thesis.AttentionReference.objective_eq_sourceValue",
+      "Thesis.AttentionReference.zero_mass_value"
+    ],
+    "contract_manifest": "reports/attention-reference-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.AttentionReference.attention_value_routing",
+    "module": "Thesis.AttentionReference",
+    "kind": "theorem",
+    "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nIsGreatest (Set.range (objective reference contribution)) (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2227\n(\u2200 p : Policy A, objective reference contribution p = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2194 p.prob = (valuePolicy reference contribution hr hc hz).prob) \u2227\n(\u2200 i, (valuePolicy reference contribution hr hc hz).prob i = reference i * contribution i / \u2211 j, reference j * contribution j)",
+    "expected_type_sha256": "d921b8524845abc3934037190e40f82cb6d927c362b24446d03a3be7549e1766",
+    "source": {
+      "path": "formalization/Thesis/AttentionReference.lean",
+      "line": 198,
+      "kind": "theorem"
+    },
+    "module_sha256": "e3747c70cd88c735b0187e70373291ace6a52455c2c9249910d84e39e8a55491",
+    "scope": "Nonnegative reference/contribution and positive total mass. Zero individual masses allowed; all-zero value is certified separately. This is the active local Value-routing subgame, not global attention SPNE."
+  },
+  "ptnb:eq:attn-value-routing": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual support-guarded expected log-contribution minus reference KL has maximum log(sum reference*contribution), unique optimizer and exact displayed probability.",
+    "supporting_declarations": [
+      "Thesis.AttentionReference.objective_eq_sourceValue",
+      "Thesis.AttentionReference.zero_mass_value"
+    ],
+    "contract_manifest": "reports/attention-reference-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.AttentionReference.attention_value_routing",
+    "module": "Thesis.AttentionReference",
+    "kind": "theorem",
+    "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nIsGreatest (Set.range (objective reference contribution)) (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2227\n(\u2200 p : Policy A, objective reference contribution p = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2194 p.prob = (valuePolicy reference contribution hr hc hz).prob) \u2227\n(\u2200 i, (valuePolicy reference contribution hr hc hz).prob i = reference i * contribution i / \u2211 j, reference j * contribution j)",
+    "expected_type_sha256": "d921b8524845abc3934037190e40f82cb6d927c362b24446d03a3be7549e1766",
+    "source": {
+      "path": "formalization/Thesis/AttentionReference.lean",
+      "line": 198,
+      "kind": "theorem"
+    },
+    "module_sha256": "e3747c70cd88c735b0187e70373291ace6a52455c2c9249910d84e39e8a55491",
+    "scope": "Nonnegative reference/contribution and positive total mass. Zero individual masses allowed; all-zero value is certified separately. This is the active local Value-routing subgame, not global attention SPNE."
+  },
+  "ptnb:eq:attn-value-policy": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual support-guarded expected log-contribution minus reference KL has maximum log(sum reference*contribution), unique optimizer and exact displayed probability.",
+    "supporting_declarations": [
+      "Thesis.AttentionReference.objective_eq_sourceValue",
+      "Thesis.AttentionReference.zero_mass_value"
+    ],
+    "contract_manifest": "reports/attention-reference-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.AttentionReference.attention_value_routing",
+    "module": "Thesis.AttentionReference",
+    "kind": "theorem",
+    "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nIsGreatest (Set.range (objective reference contribution)) (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2227\n(\u2200 p : Policy A, objective reference contribution p = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2194 p.prob = (valuePolicy reference contribution hr hc hz).prob) \u2227\n(\u2200 i, (valuePolicy reference contribution hr hc hz).prob i = reference i * contribution i / \u2211 j, reference j * contribution j)",
+    "expected_type_sha256": "d921b8524845abc3934037190e40f82cb6d927c362b24446d03a3be7549e1766",
+    "source": {
+      "path": "formalization/Thesis/AttentionReference.lean",
+      "line": 198,
+      "kind": "theorem"
+    },
+    "module_sha256": "e3747c70cd88c735b0187e70373291ace6a52455c2c9249910d84e39e8a55491",
+    "scope": "Nonnegative reference/contribution and positive total mass. Zero individual masses allowed; all-zero value is certified separately. This is the active local Value-routing subgame, not global attention SPNE."
+  },
+  "ptnb:eq:attn-V-routing-policy-O": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual support-guarded expected log-contribution minus reference KL has maximum log(sum reference*contribution), unique optimizer and exact displayed probability.",
+    "supporting_declarations": [
+      "Thesis.AttentionReference.objective_eq_sourceValue",
+      "Thesis.AttentionReference.zero_mass_value"
+    ],
+    "contract_manifest": "reports/attention-reference-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.AttentionReference.attention_value_routing",
+    "module": "Thesis.AttentionReference",
+    "kind": "theorem",
+    "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nIsGreatest (Set.range (objective reference contribution)) (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2227\n(\u2200 p : Policy A, objective reference contribution p = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2194 p.prob = (valuePolicy reference contribution hr hc hz).prob) \u2227\n(\u2200 i, (valuePolicy reference contribution hr hc hz).prob i = reference i * contribution i / \u2211 j, reference j * contribution j)",
+    "expected_type_sha256": "d921b8524845abc3934037190e40f82cb6d927c362b24446d03a3be7549e1766",
+    "source": {
+      "path": "formalization/Thesis/AttentionReference.lean",
+      "line": 198,
+      "kind": "theorem"
+    },
+    "module_sha256": "e3747c70cd88c735b0187e70373291ace6a52455c2c9249910d84e39e8a55491",
+    "scope": "Nonnegative reference/contribution and positive total mass. Zero individual masses allowed; all-zero value is certified separately. This is the active local Value-routing subgame, not global attention SPNE."
+  },
+  "ptnb:eq:attn-branch-policy": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual support-guarded expected log-contribution minus reference KL has maximum log(sum reference*contribution), unique optimizer and exact displayed probability.",
+    "supporting_declarations": [
+      "Thesis.AttentionReference.objective_eq_sourceValue",
+      "Thesis.AttentionReference.zero_mass_value"
+    ],
+    "contract_manifest": "reports/attention-reference-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.AttentionReference.attention_value_routing",
+    "module": "Thesis.AttentionReference",
+    "kind": "theorem",
+    "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nIsGreatest (Set.range (objective reference contribution)) (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2227\n(\u2200 p : Policy A, objective reference contribution p = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2194 p.prob = (valuePolicy reference contribution hr hc hz).prob) \u2227\n(\u2200 i, (valuePolicy reference contribution hr hc hz).prob i = reference i * contribution i / \u2211 j, reference j * contribution j)",
+    "expected_type_sha256": "d921b8524845abc3934037190e40f82cb6d927c362b24446d03a3be7549e1766",
+    "source": {
+      "path": "formalization/Thesis/AttentionReference.lean",
+      "line": 198,
+      "kind": "theorem"
+    },
+    "module_sha256": "e3747c70cd88c735b0187e70373291ace6a52455c2c9249910d84e39e8a55491",
+    "scope": "Nonnegative reference/contribution and positive total mass. Zero individual masses allowed; all-zero value is certified separately. This is the active local Value-routing subgame, not global attention SPNE."
+  },
+  "ptnb:eq:attn-qk-oracle": {
+    "verdict": "faithful_result",
+    "correspondence": "At temperature one the finite score-vector entropy optimum is log-sum-exp; optimizer follows from the checked Gibbs/reference-policy uniqueness.",
+    "supporting_declarations": [
+      "Thesis.ReferencePolicy.reference_policy_unique",
+      "Thesis.ReferencePolicy.reference_policy_value"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.Regularization.routing_variational",
+    "module": "Thesis.Regularization",
+    "kind": "theorem",
+    "expected_type": "\u2200 {A : Type u} [Fintype A] [Nonempty A] (\u03b8 : \u211d) (q : A \u2192 \u211d) (h\u03b8 : 0 < \u03b8),\n    IsGreatest ((fun p : A \u2192 \u211d => (\u2211 i, p i * q i) + \u03b8 * entropy p) ''\n      {p | (\u2200 i, 0 \u2264 p i) \u2227 \u2211 i, p i = 1}) (logPartition \u03b8 q)",
+    "expected_type_sha256": "45d29e5326a7bc93049209864d690a268600dcdb2ad550b922d15e884f821e1a",
+    "source": {
+      "path": "formalization/Thesis/Regularization.lean",
+      "line": 316,
+      "kind": "theorem"
+    },
+    "module_sha256": "3c7a8baeeafe35a7a84741f4ec9432461a26302aff41b4cb2ffd7228b47429f2",
+    "scope": "Local QK score oracle only; no Q/K attribution derivative or whole attention-game theorem."
+  },
+  "ptnb:eq:bc-def": {
+    "verdict": "faithful_result",
+    "correspondence": "overlap is literally the finite square-root product sum; this theorem and overlap_nonneg give the stated [0,1] range for normalized laws.",
+    "supporting_declarations": [
+      "Thesis.Games.overlap_nonneg"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.Games.overlap_le_one",
+    "module": "Thesis.Games",
+    "kind": "theorem",
+    "expected_type": "\u2200 {S : Type u} [Fintype S] (p q : S \u2192 \u211d) (hp : \u2200 s,0\u2264p s) (hq : \u2200 s,0\u2264q s) (hp1 : \u2211 s,p s=1) (hq1 : \u2211 s,q s=1), overlap p q\u22641",
+    "expected_type_sha256": "27b1280cd5a86d3a201a0a2bf55708bd3d99134752fbf9bf3489c78b1754d2d3",
+    "source": {
+      "path": "formalization/Thesis/Games.lean",
+      "line": 48,
+      "kind": "theorem"
+    },
+    "module_sha256": "585f3fadd0c405584ec7ddb0b76be7a1606d8005ce8d179c9de6095f831fd312",
+    "scope": "overlap is literally the finite square-root product sum; this theorem and overlap_nonneg give the stated [0,1] range for normalized laws."
+  },
+  "ptnb:eq:hellinger-def": {
+    "verdict": "faithful_result",
+    "correspondence": "Exact one-half squared-root-difference sum equals one minus overlap; overlap bounds give the displayed interval.",
+    "supporting_declarations": [
+      "Thesis.Games.overlap_le_one",
+      "Thesis.Games.overlap_nonneg"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.Games.hellinger_identity",
+    "module": "Thesis.Games",
+    "kind": "theorem",
+    "expected_type": "\u2200 {S : Type u} [Fintype S] (p q : S \u2192 \u211d)\n    (hp : \u2200 s, 0 \u2264 p s) (hq : \u2200 s, 0 \u2264 q s)\n    (hp1 : \u2211 s, p s = 1) (hq1 : \u2211 s, q s = 1),\n    (1/2 : \u211d) * (\u2211 s, (Real.sqrt (p s) - Real.sqrt (q s))^2) = 1-overlap p q",
+    "expected_type_sha256": "3b2d81a16284138b2fdec811ad1d0cf56bb65c1da52739b0476c03668208c01d",
+    "source": {
+      "path": "formalization/Thesis/Games.lean",
+      "line": 121,
+      "kind": "theorem"
+    },
+    "module_sha256": "585f3fadd0c405584ec7ddb0b76be7a1606d8005ce8d179c9de6095f831fd312",
+    "scope": "Exact one-half squared-root-difference sum equals one minus overlap; overlap bounds give the displayed interval."
+  },
+  "ptnb:eq:bc-chain-rule": {
+    "verdict": "faithful_result",
+    "correspondence": "Exact pointwise full-path square-root factorization for arbitrary nonnegative kernels. Summing over Paths gives the printed prefix overlap identity for every selected prefix length.",
+    "supporting_declarations": [
+      "Thesis.Games.trajectory_overlap_eq_DP"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.Games.path_geometric_mean",
+    "module": "Thesis.Games",
+    "kind": "theorem",
+    "expected_type": "\u2200 {S : Type} [Fintype S] (n : \u2115) (A B : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n    (hA : \u2200 i s t, 0 \u2264 A i s t) (hB : \u2200 i s t, 0 \u2264 B i s t)\n    (s : S) (path : Paths S n),\n    Real.sqrt (pathLaw n A s path * pathLaw n B s path) =\n      pathLaw n (fun i u v => Real.sqrt (A i u v * B i u v)) s path",
+    "expected_type_sha256": "d9b4ac042bff042086faa9a79cee84b2440c170cfc3bdf5a65357bd4b5bd143b",
+    "source": {
+      "path": "formalization/Thesis/Games.lean",
+      "line": 197,
+      "kind": "theorem"
+    },
+    "module_sha256": "585f3fadd0c405584ec7ddb0b76be7a1606d8005ce8d179c9de6095f831fd312",
+    "scope": "Fixed finite state representation, every finite depth, no strictly positive edge requirement."
+  },
+  "ptnb:eq:per-pixel-h2": {
+    "verdict": "faithful_result",
+    "correspondence": "Exact formula after grouping whole trajectories by terminal state; terminal-fibre sums are the two endpoint masses and geometric path mass.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.Games.pixelDisagreement_formula",
+    "module": "Thesis.Games",
+    "kind": "theorem",
+    "expected_type": "\u2200 {X : Type u} {Y : Type v} [Fintype X] [Fintype Y] [DecidableEq Y] (p q : X \u2192 \u211d) (terminal : X \u2192 Y) (y : Y), pixelDisagreement p q terminal y=((\u2211 x,if terminal x=y then p x else 0)+(\u2211 x,if terminal x=y then q x else 0))/2-\u2211 x,if terminal x=y then Real.sqrt (p x*q x) else 0",
+    "expected_type_sha256": "06856e422023f4ff01559c4b3876b58088ade5b4b6f4b707116d2a3cb752130c",
+    "source": {
+      "path": "formalization/Thesis/Games.lean",
+      "line": 267,
+      "kind": "theorem"
+    },
+    "module_sha256": "585f3fadd0c405584ec7ddb0b76be7a1606d8005ce8d179c9de6095f831fd312",
+    "scope": "Finite terminal grouping; includes cemetery as a terminal. Does not replace full paths by an endpoint-only overlap."
+  },
+  "ptnb:eq:per-pixel-sum": {
+    "verdict": "faithful_result",
+    "correspondence": "Exact sum over terminal fibres equals one minus full-path overlap for normalized laws; hellinger_identity identifies this with the source H squared.",
+    "supporting_declarations": [
+      "Thesis.Games.hellinger_identity"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.Games.pixelDisagreement_total",
+    "module": "Thesis.Games",
+    "kind": "theorem",
+    "expected_type": "\u2200 {X : Type u} {Y : Type v} [Fintype X] [Fintype Y] [DecidableEq Y] (p q : X \u2192 \u211d) (terminal : X \u2192 Y) (hp1 : \u2211 x,p x=1) (hq1 : \u2211 x,q x=1), (\u2211 y,pixelDisagreement p q terminal y)=1-overlap p q",
+    "expected_type_sha256": "d9ec6e0e0833bec07dcee7da7f1ef9ab1a0e8f584a9264c647ef49737337a70b",
+    "source": {
+      "path": "formalization/Thesis/Games.lean",
+      "line": 279,
+      "kind": "theorem"
+    },
+    "module_sha256": "585f3fadd0c405584ec7ddb0b76be7a1606d8005ce8d179c9de6095f831fd312",
+    "scope": "Exact sum over terminal fibres equals one minus full-path overlap for normalized laws; hellinger_identity identifies this with the source H squared."
+  },
+  "ptnb:eq:survival-recursion": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual finite backwardDP survival on the ordinary substochastic kernel obeys the displayed recurrence after reversing the source layer index.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/conditioned-survival-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.ConditionedSurvival.survival_recurrence",
+    "module": "Thesis.ConditionedSurvival",
+    "kind": "theorem",
+    "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(i : \u2115) (hi : i < N) (s : S),\nsurvival N K i s = \u2211 t, K i s t * survival N K (i+1) t",
+    "expected_type_sha256": "815b84f8dfa894e6e8d0408517ae98ed479a89d4b8ba1a671f5b55b587cf8f9e",
+    "source": {
+      "path": "formalization/Thesis/ConditionedSurvival.lean",
+      "line": 172,
+      "kind": "theorem"
+    },
+    "module_sha256": "1e7539c0f323f6bab04d66c673b7b8fe64fe71eba42ed20e104df3bf6456a756",
+    "scope": "Ordinary-state restriction; the separate cemetery-zero equality is by the stated absorbing-cemetery convention."
+  },
+  "ptnb:eq:conditioned-kernel": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual guarded kernel has the displayed positive-survival quotient, row normalization on positive support, normalized path law and exact original-path/survival quotient.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/conditioned-survival-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.ConditionedSurvival.conditioned_survival",
+    "module": "Thesis.ConditionedSurvival",
+    "kind": "theorem",
+    "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hK : \u2200 i s t, 0 \u2264 K i s t) (hrow : \u2200 i s, \u2211 t, K i s t \u2264 1)\n(s : S) (hs : 0 < survival N K 0 s),\n(\u2200 i t, 0 \u2264 survival N K i t \u2227 survival N K i t \u2264 1) \u2227\n(\u2200 t, survival N K N t = 1) \u2227\n(\u2200 i < N, \u2200 u, survival N K i u = \u2211 t, K i u t * survival N K (i+1) t) \u2227\n(survival N K 0 s = \u2211 path : Paths S N, pathLaw N K s path) \u2227\n(\u2200 i < N, \u2200 u, (\u2211 t, kernel K (survival N K) i u t) =\nif 0 < survival N K i u then 1 else 0) \u2227\n(\u2200 i u t, survival N K (i+1) t = 0 \u2192 kernel K (survival N K) i u t = 0) \u2227\n(\u2200 path : Paths S N, pathLaw N (kernel K (survival N K)) s path =\npathLaw N K s path / survival N K 0 s) \u2227\n((\u2211 path : Paths S N, pathLaw N (kernel K (survival N K)) s path) = 1) \u2227\n(\u2200 (path : Paths S N) (i : \u2115), i \u2264 N \u2192\nsurvival N K i (stateAt N s path i) = 0 \u2192\npathLaw N (kernel K (survival N K)) s path = 0)",
+    "expected_type_sha256": "38c02fe1c3380f675cb260bdcd5ee0aa9c3a086002a8b216daafa013b5ec8765",
+    "source": {
+      "path": "formalization/Thesis/ConditionedSurvival.lean",
+      "line": 217,
+      "kind": "theorem"
+    },
+    "module_sha256": "1e7539c0f323f6bab04d66c673b7b8fe64fe71eba42ed20e104df3bf6456a756",
+    "scope": "Ordinary substochastic kernel, positive initial survival only. Zero intermediate support is explicitly pruned; no global positivity premise."
+  },
+  "ptnb:eq:conditioned-path-measure": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual guarded kernel has the displayed positive-survival quotient, row normalization on positive support, normalized path law and exact original-path/survival quotient.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/conditioned-survival-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.ConditionedSurvival.conditioned_survival",
+    "module": "Thesis.ConditionedSurvival",
+    "kind": "theorem",
+    "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hK : \u2200 i s t, 0 \u2264 K i s t) (hrow : \u2200 i s, \u2211 t, K i s t \u2264 1)\n(s : S) (hs : 0 < survival N K 0 s),\n(\u2200 i t, 0 \u2264 survival N K i t \u2227 survival N K i t \u2264 1) \u2227\n(\u2200 t, survival N K N t = 1) \u2227\n(\u2200 i < N, \u2200 u, survival N K i u = \u2211 t, K i u t * survival N K (i+1) t) \u2227\n(survival N K 0 s = \u2211 path : Paths S N, pathLaw N K s path) \u2227\n(\u2200 i < N, \u2200 u, (\u2211 t, kernel K (survival N K) i u t) =\nif 0 < survival N K i u then 1 else 0) \u2227\n(\u2200 i u t, survival N K (i+1) t = 0 \u2192 kernel K (survival N K) i u t = 0) \u2227\n(\u2200 path : Paths S N, pathLaw N (kernel K (survival N K)) s path =\npathLaw N K s path / survival N K 0 s) \u2227\n((\u2211 path : Paths S N, pathLaw N (kernel K (survival N K)) s path) = 1) \u2227\n(\u2200 (path : Paths S N) (i : \u2115), i \u2264 N \u2192\nsurvival N K i (stateAt N s path i) = 0 \u2192\npathLaw N (kernel K (survival N K)) s path = 0)",
+    "expected_type_sha256": "38c02fe1c3380f675cb260bdcd5ee0aa9c3a086002a8b216daafa013b5ec8765",
+    "source": {
+      "path": "formalization/Thesis/ConditionedSurvival.lean",
+      "line": 217,
+      "kind": "theorem"
+    },
+    "module_sha256": "1e7539c0f323f6bab04d66c673b7b8fe64fe71eba42ed20e104df3bf6456a756",
+    "scope": "Ordinary substochastic kernel, positive initial survival only. Zero intermediate support is explicitly pruned; no global positivity premise."
+  },
+  "ptnb:eq:conditioned-bc-posthoc": {
+    "verdict": "faithful_result",
+    "correspondence": "The exact finite-law overlap identity under dividing the two path masses by positive survival constants. Actual conditioned path law is supplied by ConditionedSurvival.",
+    "supporting_declarations": [
+      "Thesis.ConditionedSurvival.conditioned_survival"
+    ],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "Thesis.Games.survival_overlap",
+    "module": "Thesis.Games",
+    "kind": "theorem",
+    "expected_type": "\u2200 {S : Type u} [Fintype S] (p q : S \u2192 \u211d) (ZA ZB : \u211d)\n    (hp : \u2200 s, 0 \u2264 p s) (hq : \u2200 s, 0 \u2264 q s)\n    (_hZA : 0 < ZA) (_hZB : 0 < ZB),\n    overlap (fun s => p s / ZA) (fun s => q s / ZB) = overlap p q / Real.sqrt (ZA*ZB)",
+    "expected_type_sha256": "18cb7e77e9d6e434d9b6ff59cd558c24a791bffb5178499854c3cbffba5ce4aa",
+    "source": {
+      "path": "formalization/Thesis/Games.lean",
+      "line": 109,
+      "kind": "theorem"
+    },
+    "module_sha256": "585f3fadd0c405584ec7ddb0b76be7a1606d8005ce8d179c9de6095f831fd312",
+    "scope": "Positive total survival for both ordinary path submeasures. Does not supply intermediate marginal or conditioned geometric-kernel formulas."
+  },
+  "ptnb:thm:softplus-forward": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual unique layered Gibbs SPNE, true arbitrary-profile game and both player bookkeeping coordinates.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/softplus-game-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.SoftplusGame.softplus_forward_spne",
+    "module": "Thesis.SoftplusReadout",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : PairVec n),\n SubgamePerfect \u03b8 net (gibbsStrategy \u03b8 net (x.1-x.2)) (gibbsStrategy \u03b8 net (x.1-x.2)) (x.1-x.2) (-(x.1-x.2)) \u2227\n (\u2200 plus minus : Strategy net,SubgamePerfect \u03b8 net plus minus (x.1-x.2) (-(x.1-x.2)) \u2194 plus=gibbsStrategy \u03b8 net (x.1-x.2) \u2227 minus=gibbsStrategy \u03b8 net (x.1-x.2)) \u2227\n playerValue \u03b8 net (gibbsStrategy \u03b8 net (x.1-x.2)) (gibbsStrategy \u03b8 net (x.1-x.2)) (pairValues x)=pairValues (net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x) \u2227\n (net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x).1-(net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x).2=softEval \u03b8 net (x.1-x.2)",
+    "expected_type_sha256": "d61012e820f39bd48639f8dfaabb6424f7ddb3b41dd30e56f736ec9068c3a7a3",
+    "source": {
+      "path": "formalization/Thesis/SoftplusReadout.lean",
+      "line": 65,
+      "kind": "theorem"
+    },
+    "module_sha256": "eb99ef0969590ac6a21a29fbcd2382725b039179b9f508b0456b0a37cefc6931",
+    "scope": "Layered shared Network: unique entropy SPNE, player-specific softSplit values and actual softplus recovery. Includes zero fan-in and arbitrary raw input pairs. Source residual/maxpool Circuit extension remains unproved."
+  },
+  "ptnb:thm:softplus-gradient": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual any-SPNE policy trajectory occupation gives the derivative at every actual prefix/suffix cut.",
+    "supporting_declarations": [
+      "Thesis.SoftplusGame.spne_affine_gradient_profile"
+    ],
+    "contract_manifest": "reports/softplus-game-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.SoftplusGame.spne_intermediate_gradient",
+    "module": "Thesis.SoftplusSubgames",
+    "kind": "theorem",
+    "expected_type": "\u2200 {a b c : \u2115} (pre : Network a b) (suffix : Network b c) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hp : pre.Nonnegative) (hs : suffix.Nonnegative) (x : Vec a) (plus minus : Strategy (pre.append suffix)) (hsp : SubgamePerfect \u03b8 (pre.append suffix) plus minus x (-x)) (j : Fin c) (i : Fin b) (q : Bool),\n fderiv \u211d (softEval \u03b8 suffix) (softEval \u03b8 pre x) (Pi.single i 1) j=(if q then (-1 : \u211d) else 1)*(profileOccupation suffix \u03b8 (suffixStrategy pre suffix plus) (suffixStrategy pre suffix minus) (softEval \u03b8 pre x) j i q false-profileOccupation suffix \u03b8 (suffixStrategy pre suffix plus) (suffixStrategy pre suffix minus) (softEval \u03b8 pre x) j i q true)",
+    "expected_type_sha256": "1ff2a325e02827702c214592329f07a939ce9cf892c0362016f954ae74cd0b35",
+    "source": {
+      "path": "formalization/Thesis/SoftplusSubgames.lean",
+      "line": 77,
+      "kind": "theorem"
+    },
+    "module_sha256": "0704cd335881e77c3c1919f122ea49cd3ec8b77c30c463015fbbed7e48fc4d65",
+    "scope": "Layered shared Network, all real inputs, positive temperature, nonnegative split weights, zero fan-in allowed. Actual intermediate SPNE occupation; signed affine output is separately checked. No residual/maxpool Circuit extension."
+  },
+  "ptnb:prop:attn-value-policy": {
+    "verdict": "faithful_result",
+    "correspondence": "Upgrade removes strictly-positive-entry limitation and adds actual guarded reference-KL uniqueness.",
+    "supporting_declarations": [
+      "Thesis.AttentionReference.zero_mass_value"
+    ],
+    "contract_manifest": "reports/attention-reference-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.AttentionReference.attention_value_routing",
+    "module": "Thesis.AttentionReference",
+    "kind": "theorem",
+    "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nIsGreatest (Set.range (objective reference contribution)) (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2227\n(\u2200 p : Policy A, objective reference contribution p = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2194 p.prob = (valuePolicy reference contribution hr hc hz).prob) \u2227\n(\u2200 i, (valuePolicy reference contribution hr hc hz).prob i = reference i * contribution i / \u2211 j, reference j * contribution j)",
+    "expected_type_sha256": "d921b8524845abc3934037190e40f82cb6d927c362b24446d03a3be7549e1766",
+    "source": {
+      "path": "formalization/Thesis/AttentionReference.lean",
+      "line": 198,
+      "kind": "theorem"
+    },
+    "module_sha256": "e3747c70cd88c735b0187e70373291ace6a52455c2c9249910d84e39e8a55491",
+    "scope": "Active local Value-routing optimizer and value for nonnegative reference/contributions and positive total, including zero entries. All-zero active value is separately bottom. Inactive-player bookkeeping and whole attention SPNE remain separate."
+  },
+  "ptnb:thm:conditioned-survival": {
+    "verdict": "faithful_result",
+    "correspondence": "Upgrade certifies the actual zero-support survival/conditioned path law; does not promote the theorem\u2019s other clauses.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/conditioned-survival-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.ConditionedSurvival.conditioned_survival",
+    "module": "Thesis.ConditionedSurvival",
+    "kind": "theorem",
+    "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hK : \u2200 i s t, 0 \u2264 K i s t) (hrow : \u2200 i s, \u2211 t, K i s t \u2264 1)\n(s : S) (hs : 0 < survival N K 0 s),\n(\u2200 i t, 0 \u2264 survival N K i t \u2227 survival N K i t \u2264 1) \u2227\n(\u2200 t, survival N K N t = 1) \u2227\n(\u2200 i < N, \u2200 u, survival N K i u = \u2211 t, K i u t * survival N K (i+1) t) \u2227\n(survival N K 0 s = \u2211 path : Paths S N, pathLaw N K s path) \u2227\n(\u2200 i < N, \u2200 u, (\u2211 t, kernel K (survival N K) i u t) =\nif 0 < survival N K i u then 1 else 0) \u2227\n(\u2200 i u t, survival N K (i+1) t = 0 \u2192 kernel K (survival N K) i u t = 0) \u2227\n(\u2200 path : Paths S N, pathLaw N (kernel K (survival N K)) s path =\npathLaw N K s path / survival N K 0 s) \u2227\n((\u2211 path : Paths S N, pathLaw N (kernel K (survival N K)) s path) = 1) \u2227\n(\u2200 (path : Paths S N) (i : \u2115), i \u2264 N \u2192\nsurvival N K i (stateAt N s path i) = 0 \u2192\npathLaw N (kernel K (survival N K)) s path = 0)",
+    "expected_type_sha256": "38c02fe1c3380f675cb260bdcd5ee0aa9c3a086002a8b216daafa013b5ec8765",
+    "source": {
+      "path": "formalization/Thesis/ConditionedSurvival.lean",
+      "line": 217,
+      "kind": "theorem"
+    },
+    "module_sha256": "1e7539c0f323f6bab04d66c673b7b8fe64fe71eba42ed20e104df3bf6456a756",
+    "scope": "Actual backwardDP survival, support pruning, normalized positive-support kernel, normalized conditional path quotient. Intermediate marginals and conditioned geometric-kernel/BC/Hellinger composition remain unbundled; this is partial coverage of the full source theorem."
+  },
+  "ptnb:thm:per-pixel": {
+    "verdict": "faithful_result",
+    "correspondence": "Upgrade primary link to the exact total identity; formula and nonnegativity are separately exact checked declarations.",
+    "supporting_declarations": [
+      "Thesis.Games.pixelDisagreement_formula",
+      "Thesis.Games.pixelDisagreement_nonneg",
+      "Thesis.Games.hellinger_identity"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": false,
+    "declaration": "Thesis.Games.pixelDisagreement_total",
+    "module": "Thesis.Games",
+    "kind": "theorem",
+    "expected_type": "\u2200 {X : Type u} {Y : Type v} [Fintype X] [Fintype Y] [DecidableEq Y] (p q : X \u2192 \u211d) (terminal : X \u2192 Y) (hp1 : \u2211 x,p x=1) (hq1 : \u2211 x,q x=1), (\u2211 y,pixelDisagreement p q terminal y)=1-overlap p q",
+    "expected_type_sha256": "d9ec6e0e0833bec07dcee7da7f1ef9ab1a0e8f584a9264c647ef49737337a70b",
+    "source": {
+      "path": "formalization/Thesis/Games.lean",
+      "line": 279,
+      "kind": "theorem"
+    },
+    "module_sha256": "585f3fadd0c405584ec7ddb0b76be7a1606d8005ce8d179c9de6095f831fd312",
+    "scope": "Actual full-trajectory terminal-fibre formula, nonnegativity and total Hellinger via the companion checked declarations. Removing one cemetery term is finite-sum bookkeeping."
+  },
+  "eq:tropical_polynomial": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition is the literal nonempty finite maximum of intercept plus slope dot input.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.Tropical.Polynomial.eval",
+    "module": "Thesis.Tropical",
+    "kind": "definition",
+    "expected_type": "\u2200 {I : Type} [Fintype I], Polynomial I \u2192 (I \u2192 \u211d) \u2192 \u211d",
+    "expected_type_sha256": "1d19ddc7765c8489bfc24f8b67c1ffc6c6d246d57a8da4e061d54b95ab470ce3",
+    "source": {
+      "path": "formalization/Thesis/Tropical.lean",
+      "line": 38,
+      "kind": "def"
+    },
+    "module_sha256": "f44edf72d1737f7a673473e15c90301c421345d74e4e1da535b549ae12cbfad0",
+    "scope": "Definition is the literal nonempty finite maximum of intercept plus slope dot input."
+  },
+  "eq:newton_polytope": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition is the convex hull of the finite slope family.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.Tropical.Polynomial.newton",
+    "module": "Thesis.Tropical",
+    "kind": "definition",
+    "expected_type": "\u2200 {I : Type}, Polynomial I \u2192 Set (I \u2192 \u211d)",
+    "expected_type_sha256": "2515b88b797a818013cd121e3c36329f409ede16ca12c955e3c836f4c623ad0c",
+    "source": {
+      "path": "formalization/Thesis/Tropical.lean",
+      "line": 41,
+      "kind": "def"
+    },
+    "module_sha256": "f44edf72d1737f7a673473e15c90301c421345d74e4e1da535b549ae12cbfad0",
+    "scope": "Definition is the convex hull of the finite slope family."
+  },
+  "eq:support_function": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition is the supremum of scalar products; the checked compact nonempty support theorem supplies attainment.",
+    "supporting_declarations": [
+      "Thesis.SourceGeometry.support_properties"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.Tropical.support",
+    "module": "Thesis.Tropical",
+    "kind": "definition",
+    "expected_type": "\u2200 {I : Type} [Fintype I], Set (I \u2192 \u211d) \u2192 (I \u2192 \u211d) \u2192 \u211d",
+    "expected_type_sha256": "f296bbee2feb5de6ad59a633d235c1a8156958105e49490132af5adf0ae22e6c",
+    "source": {
+      "path": "formalization/Thesis/Tropical.lean",
+      "line": 161,
+      "kind": "def"
+    },
+    "module_sha256": "f44edf72d1737f7a673473e15c90301c421345d74e4e1da535b549ae12cbfad0",
+    "scope": "Definition is the supremum of scalar products; the checked compact nonempty support theorem supplies attainment."
+  },
+  "ptnb:eq:path-measure": {
+    "verdict": "faithful_definition",
+    "correspondence": "Recursive definition is the displayed product of fixed-length kernels conditional on the fixed root. The start indicator is represented by passing that fixed start state.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.Games.pathLaw",
+    "module": "Thesis.Games",
+    "kind": "definition",
+    "expected_type": "\u2200 {S : Type}, (n : \u2115) \u2192 (\u2115 \u2192 S \u2192 S \u2192 \u211d) \u2192 S \u2192 Paths S n \u2192 \u211d",
+    "expected_type_sha256": "7ed49df321108aaa7fef0f6276b549fdba4483980afbe89878da37d081612899",
+    "source": {
+      "path": "formalization/Thesis/Games.lean",
+      "line": 150,
+      "kind": "def"
+    },
+    "module_sha256": "585f3fadd0c405584ec7ddb0b76be7a1606d8005ce8d179c9de6095f831fd312",
+    "scope": "Definition of fixed-length path law; first-hit terminated paths require explicit absorbing padding/erasure correspondence."
+  },
+  "ptnb:def:trajectory-distribution": {
+    "verdict": "faithful_definition",
+    "correspondence": "The actual selected shared-DAG path law enumerates predecessor moves and genuine cemetery termination, with no fictitious tail after termination.",
+    "supporting_declarations": [
+      "Thesis.StoppingDAG.pathProbability_normalized",
+      "Thesis.StoppingDAG.pathProbability_nonnegative"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.StoppingDAG.pathProbability",
+    "module": "Thesis.StoppingDAGPaths",
+    "kind": "definition",
+    "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n), PairVec d \u2192 Fin n \u2192 Thesis.StoppingDAG.DAGPaths c \u2192 \u211d",
+    "expected_type_sha256": "7b4fb45719abf999e7cfd8d88907645dc1f0a195fc5fb965610d4c7b5fbd32ea",
+    "source": {
+      "path": "formalization/Thesis/StoppingDAGPaths.lean",
+      "line": 65,
+      "kind": "def"
+    },
+    "module_sha256": "532887e4e529e01dc8199fcc62901062f9272a9fcac042dac714bc279c56f413",
+    "scope": "Definition for the selected shared-DAG circuit policy, including residual/maxpool predecessor rows. Source arbitrary-profile game law and expanded Oracle microstates are not asserted."
+  },
+  "ptnb:def:occupation": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition is a finite expectation of the actual sum of cumulative-discount-weighted node visits.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.StoppingDAG.fullOccupation",
+    "module": "Thesis.StoppingDAGVisits",
+    "kind": "definition",
+    "expected_type": "\u2200 {d n : \u2115}, Circuit d n \u2192 PairVec d \u2192 Fin n \u2192 Bool \u2192 \u2115 \u2192 Bool \u2192 \u211d",
+    "expected_type_sha256": "42640b7e5be1c3c0b17685e673d888c1a69a188f2c87752d0ec28b908cd087c3",
+    "source": {
+      "path": "formalization/Thesis/StoppingDAGVisits.lean",
+      "line": 28,
+      "kind": "def"
+    },
+    "module_sha256": "609d4af4e9895dd09ba5b14610e11b5b23e621e4c463abacc4df299ccf0b4d88",
+    "scope": "Selected shared-DAG circuit policy; graph nodes and sign channels, including initial visit. The source general arbitrary-profile definition is more general."
+  },
+  "ptnb:eq:attribution": {
+    "verdict": "faithful_definition",
+    "correspondence": "Definition is a finite expectation of the actual sum of cumulative-discount-weighted node visits.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.StoppingDAG.fullOccupation",
+    "module": "Thesis.StoppingDAGVisits",
+    "kind": "definition",
+    "expected_type": "\u2200 {d n : \u2115}, Circuit d n \u2192 PairVec d \u2192 Fin n \u2192 Bool \u2192 \u2115 \u2192 Bool \u2192 \u211d",
+    "expected_type_sha256": "42640b7e5be1c3c0b17685e673d888c1a69a188f2c87752d0ec28b908cd087c3",
+    "source": {
+      "path": "formalization/Thesis/StoppingDAGVisits.lean",
+      "line": 28,
+      "kind": "def"
+    },
+    "module_sha256": "609d4af4e9895dd09ba5b14610e11b5b23e621e4c463abacc4df299ccf0b4d88",
+    "scope": "Selected shared-DAG circuit policy; graph nodes and sign channels, including initial visit. The source general arbitrary-profile definition is more general."
+  },
+  "def:fmix": {
+    "verdict": "faithful_definition",
+    "correspondence": "Exact eta max/min interpolation definition.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.mixPair",
+    "module": "HiddenMonotonicity.Decomposition",
+    "kind": "definition",
+    "expected_type": "\u211d \u2192 (\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+    "expected_type_sha256": "5c4c4b8592518e5b0a749a54b4c36a9b8af18e44d2cc0b13c9dc4ee94a641420",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/Decomposition.lean",
+      "line": 50,
+      "kind": "def"
+    },
+    "module_sha256": "1e2a27911a881e8bd134e50558fc07c0f6b426eb260257e0dd4f1fdfc4844441",
+    "scope": "Exact eta max/min interpolation definition."
+  },
+  "def:fstop": {
+    "verdict": "faithful_definition",
+    "correspondence": "Exact strict-positive common stopping gate definition.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.StoppingDecomposition.stopPair",
+    "module": "Thesis.StoppingDecomposition",
+    "kind": "definition",
+    "expected_type": "(\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+    "expected_type_sha256": "96adffc27ad4b0da149b9c7cd738c30913c8158edb19e92889595e771c8a27a8",
+    "source": {
+      "path": "formalization/Thesis/StoppingDecomposition.lean",
+      "line": 13,
+      "kind": "def"
+    },
+    "module_sha256": "3b36c457c06dce5f1babaef5f9e0ce44d18c158d143e50f2a7dd7975ff7ced73",
+    "scope": "Exact strict-positive common stopping gate definition."
+  },
+  "def:freg": {
+    "verdict": "faithful_definition",
+    "correspondence": "Actual chosen-regularizer pair definition; optimizer/value and interval conditions are separately checked.",
+    "supporting_declarations": [
+      "Thesis.GeneralRegularization.exists_optimizer",
+      "Thesis.GeneralRegularization.regularized_decomposition_validity"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.GeneralRegularization.pairWith",
+    "module": "Thesis.GeneralRegularization",
+    "kind": "definition",
+    "expected_type": "Regularizer \u2192 (\u211d \u2192 \u211d) \u2192 (\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+    "expected_type_sha256": "64ceef8ec1f2018e5e316c0fdc37a1cf78e67a5a78e79b29ea31d21055a89804",
+    "source": {
+      "path": "formalization/Thesis/GeneralRegularization.lean",
+      "line": 135,
+      "kind": "def"
+    },
+    "module_sha256": "9dec1ff3a4a84fd2c737e77a5ac9ceb683d213bdb525d15d5e71c6538b113192",
+    "scope": "Actual chosen-regularizer pair definition; optimizer/value and interval conditions are separately checked."
+  },
+  "def:tropical_polynomial": {
+    "verdict": "faithful_definition",
+    "correspondence": "Literal finite nonempty maximum of affine forms.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.Tropical.Polynomial.eval",
+    "module": "Thesis.Tropical",
+    "kind": "definition",
+    "expected_type": "\u2200 {I : Type} [Fintype I], Polynomial I \u2192 (I \u2192 \u211d) \u2192 \u211d",
+    "expected_type_sha256": "1d19ddc7765c8489bfc24f8b67c1ffc6c6d246d57a8da4e061d54b95ab470ce3",
+    "source": {
+      "path": "formalization/Thesis/Tropical.lean",
+      "line": 38,
+      "kind": "def"
+    },
+    "module_sha256": "f44edf72d1737f7a673473e15c90301c421345d74e4e1da535b549ae12cbfad0",
+    "scope": "Literal finite nonempty maximum of affine forms."
+  },
+  "def:newton_polytope": {
+    "verdict": "faithful_definition",
+    "correspondence": "Literal convex hull of actual finite slopes.",
+    "supporting_declarations": [],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.Tropical.Polynomial.newton",
+    "module": "Thesis.Tropical",
+    "kind": "definition",
+    "expected_type": "\u2200 {I : Type}, Polynomial I \u2192 Set (I \u2192 \u211d)",
+    "expected_type_sha256": "2515b88b797a818013cd121e3c36329f409ede16ca12c955e3c836f4c623ad0c",
+    "source": {
+      "path": "formalization/Thesis/Tropical.lean",
+      "line": 41,
+      "kind": "def"
+    },
+    "module_sha256": "f44edf72d1737f7a673473e15c90301c421345d74e4e1da535b549ae12cbfad0",
+    "scope": "Literal convex hull of actual finite slopes."
+  },
+  "def:support_function": {
+    "verdict": "faithful_definition",
+    "correspondence": "Literal support supremum, with maximum attainment under source compact/nonempty assumptions.",
+    "supporting_declarations": [
+      "Thesis.SourceGeometry.support_properties"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "Thesis.Tropical.support",
+    "module": "Thesis.Tropical",
+    "kind": "definition",
+    "expected_type": "\u2200 {I : Type} [Fintype I], Set (I \u2192 \u211d) \u2192 (I \u2192 \u211d) \u2192 \u211d",
+    "expected_type_sha256": "f296bbee2feb5de6ad59a633d235c1a8156958105e49490132af5adf0ae22e6c",
+    "source": {
+      "path": "formalization/Thesis/Tropical.lean",
+      "line": 161,
+      "kind": "def"
+    },
+    "module_sha256": "f44edf72d1737f7a673473e15c90301c421345d74e4e1da535b549ae12cbfad0",
+    "scope": "Literal support supremum, with maximum attainment under source compact/nonempty assumptions."
+  },
+  "def:shifted_sensitivities": {
+    "verdict": "faithful_definition",
+    "correspondence": "Literal common local backward shift; unified is the stated half-difference.",
+    "supporting_declarations": [
+      "HiddenMonotonicity.unified"
+    ],
+    "contract_manifest": "reports/additional-link-expected-types.json",
+    "definition_link": true,
+    "declaration": "HiddenMonotonicity.shiftPair",
+    "module": "HiddenMonotonicity.StabilizedBackward",
+    "kind": "definition",
+    "expected_type": "\u2200 {n : \u2115}, \u211d \u2192 Sensitivity n \u2192 Sensitivity n",
+    "expected_type_sha256": "618a4b04e619f6313c66cb3f52745c81c2e9bb423eecbb896187ab41f5527023",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/StabilizedBackward.lean",
+      "line": 15,
+      "kind": "def"
+    },
+    "module_sha256": "ecde07ec52bc9d1de88bd8cd4486072c32f8c19c6c52a2ca7aa6892ee7955c06",
+    "scope": "Literal common local backward shift; unified is the stated half-difference."
+  },
+  "eq:local_sensitivities": {
+    "verdict": "faithful_result",
+    "correspondence": "Actual final affine head derivative is assemble of both zero-shift partial rows, exactly the two coordinate sensitivities for either head.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.Network.affine_head_derivative_of_differentiable",
+    "module": "HiddenMonotonicity.DifferentiableHeads",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (hw : net.Nonnegative) (x : PairVec n) (rp rn : Row m)\n (hp : Monotone rp) (hn : Monotone rn) (bp bn : \u211d) (head : Bool)\n (hd : DifferentiableAt \u211d (fun y => if head then (net.affineHeads rp rn bp bn y).1 else (net.affineHeads rp rn bp bn y).2) x),\n HasFDerivAt (fun y => if head then (net.affineHeads rp rn bp bn y).1 else (net.affineHeads rp rn bp bn y).2)\n (assemble ((net.originalTrace (x.1-x.2)).run (fun _ => 0) (affineReadoutSeed rp rn 0 head))) x",
+    "expected_type_sha256": "a125e0d5fcc1da8cbf419a4c5a06b3093ddaf6f1d47a437131864c10353447ba",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/DifferentiableHeads.lean",
+      "line": 125,
+      "kind": "theorem"
+    },
+    "module_sha256": "27179d5aaf2ffabe643cb6cb5f3921d6936efa493df631b8a6dd6de6db5f2a99",
+    "scope": "Differentiability at the actual pair input; split weights/readout rows nonnegative. The source strict gate condition ensures this premise."
+  },
+  "eq:masked_path_product": {
+    "verdict": "faithful_result",
+    "correspondence": "The actual affineLogit HasFDerivAt is the signed readout row composed with originalTrace.originalJac; that definition is the exact ordered product of active signed layer maps.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.Network.affine_backward_invariants_of_differentiable",
+    "module": "HiddenMonotonicity.DifferentiableHeads",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (hw : net.Nonnegative) (x : Vec n) (rp rn : Row m)\n (hp : Monotone rp) (hn : Monotone rn) (bp bn : \u211d)\n (hg : DifferentiableAt \u211d (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).1) x)\n (hh : DifferentiableAt \u211d (fun y => (net.affineHeads rp rn bp bn (balancedLift n y)).2) x)\n (\u03b1 : \u2115 \u2192 \u211d) (\u03b2 : \u211d),\n HasFDerivAt (net.affineLogit rp rn bp bn) ((rp-rn).comp (net.originalTrace x).originalJac) x \u2227\n ((net.originalTrace x).run \u03b1 (affineReadoutSeed rp rn \u03b2 true)).1-((net.originalTrace x).run \u03b1 (affineReadoutSeed rp rn \u03b2 false)).1 = (rp-rn).comp (net.originalTrace x).originalJac \u2227\n ((net.originalTrace x).run \u03b1 (affineReadoutSeed rp rn \u03b2 true)).2-((net.originalTrace x).run \u03b1 (affineReadoutSeed rp rn \u03b2 false)).2 = -((rp-rn).comp (net.originalTrace x).originalJac)",
+    "expected_type_sha256": "9fafbda5ed001d6eeee5da14734ed54e08de47d959daeb330754dbc4519b4683",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/DifferentiableHeads.lean",
+      "line": 191,
+      "kind": "theorem"
+    },
+    "module_sha256": "27179d5aaf2ffabe643cb6cb5f3921d6936efa493df631b8a6dd6de6db5f2a99",
+    "scope": "At differentiability of both actual balanced lifted heads; in particular on source strict cells. Final output is ungated and biased."
+  },
+  "eq:w_abs": {
+    "verdict": "faithful_result",
+    "correspondence": "The result uses the literal coefficientRow(abs w) composed with net.absoluteMap; absoluteMap unfolds to the ordered composition of entrywise absolute hidden matrices.",
+    "supporting_declarations": [],
+    "contract_manifest": "formalization/verification.json",
+    "definition_link": false,
+    "declaration": "HiddenMonotonicity.Network.affine_canonical_mass",
+    "module": "HiddenMonotonicity.AffineHeads",
+    "kind": "theorem",
+    "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (hc : net.Canonical) (x : Vec n) (w : Vec m) (head : Bool),\n ((net.originalTrace x).run (fun _ => 0) (affineReadoutSeed (coefficientRow (fun i => max (w i) 0)) (coefficientRow (fun i => max (-w i) 0)) 0 head)).1 +\n ((net.originalTrace x).run (fun _ => 0) (affineReadoutSeed (coefficientRow (fun i => max (w i) 0)) (coefficientRow (fun i => max (-w i) 0)) 0 head)).2 =\n (coefficientRow (fun i => |w i|)).comp net.absoluteMap",
+    "expected_type_sha256": "dab9273f16e5b60dd908ec98c19001c0d7ff2593d548eafbfd52e68807b88078",
+    "source": {
+      "path": "formalization/HiddenMonotonicity/AffineHeads.lean",
+      "line": 158,
+      "kind": "theorem"
+    },
+    "module_sha256": "a546cbee9282f9c4260c6169b2e82665ed7e27b9fc41e28b166e30d119cf52f5",
+    "scope": "Definition/model correspondence for the complete affine readout absolute path product; this is not the signed Jacobian."
+  }
+}

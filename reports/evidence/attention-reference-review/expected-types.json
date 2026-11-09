@@ -1,0 +1,84 @@
+{
+  "targets": [
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.objective_eq_sourceValue",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (p : Policy A) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i),\nobjective reference contribution p = sourceValue 1 (mass reference contribution) p",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-objective_eq_sourceValue",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Independent expected log-contribution minus reference KL, with separate impossible-action support guards, equals the extended Gibbs mass objective."
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.valuePolicy_value",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nobjective reference contribution (valuePolicy reference contribution hr hc hz) = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d)",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-valuePolicy_value",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Exact extended-log optimum at the literal reference-weighted mass ratio, allowing zero individual masses."
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.valuePolicy_unique",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (p : Policy A) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nobjective reference contribution p = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2194 p.prob = (valuePolicy reference contribution hr hc hz).prob",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-valuePolicy_unique",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Unique maximizer over every finite simplex policy, including unsupported policies and simplex boundaries."
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.zero_mass_value",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (p : Policy A) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i)\n(hz : (\u2211 i, reference i * contribution i) = 0),\nobjective reference contribution p = \u22a5",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-zero_mass_value",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Every candidate policy has genuine minus-infinity value for a zero-total-contribution stream; no real log-zero replacement."
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.attention_value_routing",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nIsGreatest (Set.range (objective reference contribution)) (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2227\n(\u2200 p : Policy A, objective reference contribution p = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2194 p.prob = (valuePolicy reference contribution hr hc hz).prob) \u2227\n(\u2200 i, (valuePolicy reference contribution hr hc hz).prob i = reference i * contribution i / \u2211 j, reference j * contribution j)",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-attention_value_routing",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Full active-player attention Value-routing optimum, uniqueness and exact policy, with nonnegative reference and Value contributions. Local subgame; global attention SPNE and occupations remain separate."
+    }
+  ]
+}

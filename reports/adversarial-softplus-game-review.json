@@ -1,0 +1,616 @@
+{
+  "schema_version": 1,
+  "reviewer": "independent adversarial reviewer /root/attack_hidden",
+  "review_date": "2026-11-09",
+  "verdict": "PASS_LAYERED_SOFTPLUS_ARBITRARY_PROFILE_GAME_SPNE_VALUES_AND_GRADIENTS",
+  "findings": [],
+  "production_mutations": false,
+  "shared_olean_writes": false,
+  "summary": "The finite layered game has actual independent mixed policies, normalized total transitions and source player-specific payoffs. Gibbs optimality and uniqueness are derived against arbitrary profiles; source payoff recovery and ordinary-gradient occupation formulas use the actual shared Network and its true layer cuts. No general softplus DAG result is credited.",
+  "source": [
+    "arxive/playingTheNetworkBackward/main.tex:2994\u20133110 softplus rules and forward equilibrium",
+    "arxive/playingTheNetworkBackward/main.tex:3111\u20133147 gradient occupation difference"
+  ],
+  "model_correspondence": [
+    {
+      "topic": "Actual profile space, total kernel, zero fan-in",
+      "locations": [
+        "formalization/Thesis/SoftplusPolicies.lean:14",
+        "formalization/Thesis/SoftplusPolicies.lean:25",
+        "formalization/Thesis/SoftplusPolicies.lean:60"
+      ],
+      "verdict": "faithful finite game definitions",
+      "evidence": "Each player uses the existing Strategy net, containing an independent Icc[0,1] probability at every controlled signed state. Both pure endpoints are admissible. Mixed transitions combine stop probability with the normalized signed continuation kernel and a real cemetery; zero rows absorb but do not erase immediate continuation bias. No structural discount upper bound or positive-fan-in hypothesis is assumed."
+    },
+    {
+      "topic": "Source player payoffs and signed game bridge",
+      "locations": [
+        "formalization/Thesis/SoftplusPlayerValues.lean:11",
+        "formalization/Thesis/SoftplusPlayerValues.lean:23",
+        "formalization/Thesis/SoftplusPlayerValues.lean:67",
+        "formalization/Thesis/SoftplusTransitionPayoff.lean:28"
+      ],
+      "verdict": "actual all-profile Bellman interpretation",
+      "evidence": "All four player/turn coordinates are retained. Continuation probability multiplies each player\u2019s correct split bias and routed expectation; entropy is credited only to the active player. playerStep_transition proves the exact discounted expectation under the actual mixed transition, with cemetery value zero. playerValue_advantage proves the source two-payoff difference equals policyValue for every off-equilibrium profile, rather than postulating a zero-sum replacement."
+    },
+    {
+      "topic": "Equilibrium and uniqueness",
+      "locations": [
+        "formalization/Thesis/SoftplusPolicies.lean:112",
+        "formalization/Thesis/SoftplusEquilibrium.lean:9",
+        "formalization/Thesis/SoftplusEquilibrium.lean:64",
+        "formalization/Thesis/SoftplusEquilibrium.lean:81",
+        "formalization/Thesis/SoftplusEquilibrium.lean:95"
+      ],
+      "verdict": "noncircular full layered proof",
+      "evidence": "SubgamePerfect quantifies best responses over all mixed actions against the profile\u2019s own realized predecessor values; it contains no Gibbs/network-value invariant. Strict entropy optimality gives a unique local probability, and induction proves both entire strategies equal the actual forward Gibbs strategy. Separate arbitrary-profile saddle bounds control deviations through multiple layers. Zero scores and zero fan-in still have unique entropy optima at positive temperature."
+    },
+    {
+      "topic": "Actual decomposition coordinates and signed affine output",
+      "locations": [
+        "formalization/Thesis/SoftplusPlayerValues.lean:103",
+        "formalization/Thesis/SoftplusPlayerValues.lean:118",
+        "formalization/Thesis/SoftplusReadout.lean:10",
+        "formalization/Thesis/SoftplusReadout.lean:65"
+      ],
+      "verdict": "genuine shared forward recovery",
+      "evidence": "The equilibrium four player coordinates equal the actual net.decomposeWith softSplit values, with player/turn parity. This is stronger than merely proving their difference. The final affineOutput is forced and ungated, allows arbitrary signed matrix and bias, and has neither sigmoid nor entropy at readout. Its saddle bounds use nonnegative sign-split coefficients; its derivative formula accepts the unrestricted signed matrix."
+    },
+    {
+      "topic": "Actual profile paths and ordinary derivatives",
+      "locations": [
+        "formalization/Thesis/SoftplusGameOccupation.lean:13",
+        "formalization/Thesis/SoftplusGameOccupation.lean:24",
+        "formalization/Thesis/SoftplusGameOccupation.lean:45",
+        "formalization/Thesis/SoftplusGameOccupation.lean:60"
+      ],
+      "verdict": "real probability products and correct derivative target",
+      "evidence": "profileProbability multiplies the actual state-owner profile probabilities and signed normalized weight transitions; the step-factor bridge verifies both absolute-sign/XOR conventions. Gibbs path equality is proved after the SPNE characterization. The resulting discounted occupation difference equals the actual ordinary Softplus derivative, including zero rows. No individual soft-stream derivative is falsely identified with occupation."
+    },
+    {
+      "topic": "True intermediate-layer subgames",
+      "locations": [
+        "formalization/Thesis/SoftplusSubgames.lean:11",
+        "formalization/Thesis/SoftplusSubgames.lean:31",
+        "formalization/Thesis/SoftplusSubgames.lean:46",
+        "formalization/Thesis/SoftplusSubgames.lean:59",
+        "formalization/Thesis/SoftplusSubgames.lean:77"
+      ],
+      "verdict": "actual shared cut and profile restriction",
+      "evidence": "Network.append is the existing composition; prefix/suffix strategies are actual restrictions. Gibbs restrictions and evaluation composition are proved. Every true predecessor prefix inherits arbitrary-deviation saddle bounds, and the suffix derivative is evaluated at the actual softEval prefix value using the restricted whole-network equilibrium, not an independent activation vector."
+    }
+  ],
+  "validation": {
+    "contracts": 21,
+    "exact_types": "passed",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "fresh_source_compiles": {
+      "Thesis.SoftplusPolicies": 0,
+      "Thesis.SoftplusEquilibrium": 0,
+      "Thesis.SoftplusPlayerValues": 0,
+      "Thesis.SoftplusReadout": 0,
+      "Thesis.SoftplusGameOccupation": 0,
+      "Thesis.SoftplusSubgames": 0,
+      "Thesis.SoftplusTransitionPayoff": 0
+    },
+    "boundary_exit": 0,
+    "boundary_cases": [
+      "zero score Gibbs probability exactly one half",
+      "dimension-zero mixed transition absorbs",
+      "zero-fan-in continuation retains positive and negative bias coordinates",
+      "entropy credited only to active player",
+      "zero-input zero-score network has an actual Gibbs SPNE",
+      "all-stop profile fails equilibrium despite identical cemetery outcomes",
+      "forced signed affine output gives negative seven",
+      "both pure actions occur in strategy space"
+    ],
+    "independent_numerical_experiment": {
+      "seed": 20261109,
+      "decimal_precision": 60,
+      "identity_relative_tolerance": "1E-45",
+      "finite_difference_relative_tolerance": "1E-20",
+      "counts": {
+        "networks": 96,
+        "zero_input_networks": 24,
+        "zero_rows": 122,
+        "profiles": 384,
+        "normalized_path_laws": 1536,
+        "player_payoff_checks": 3072,
+        "arbitrary_profile_advantage_checks": 1536,
+        "saddle_checks": 384,
+        "occupation_derivatives": 576,
+        "finite_differences": 288,
+        "affine_readout_checks": 96,
+        "intermediate_derivatives": 896,
+        "pure_action_probabilities": 630
+      },
+      "failures": [],
+      "negative_controls": [
+        "crediting entropy to both players falsely cancels positive zero-preactivation value",
+        "individual soft positive-stream derivative at (1,1) is 3/4 while occupation is 1/2",
+        "dropping continuation bias loses nonzero values at zero-fan-in nodes"
+      ],
+      "cases_sha256": "bf5bda76f9e6fdce9fbfb2181c517ebd951864e691c396d90f1238cc40a66974",
+      "producer_sha256": "aa89a3212c4fad152b96a6a25990eb17ae54e0a51bbef4699b1bfb83d059f886",
+      "scope": "Independent finite high-precision checks for layered arbitrary profiles and complete action histories; they supplement the universal kernel proofs and do not certify a residual/maxpool extension."
+    },
+    "exact_driver": "reports/evidence/softplus-game-review/ExactTypes.lean",
+    "boundary_driver": "reports/evidence/softplus-game-review/Boundary.lean"
+  },
+  "scope_limits": [
+    "Complete results here apply to finite varying-width layered Network. The source\u2019s residual/addition/maxpool Circuit softplus extension remains separate and is not promoted by this review.",
+    "The strategy datatype is state-based behavioral probabilities, matching source pi(s); no separate history-dependent strategy datatype is claimed.",
+    "The occupation path type indexes ordinary-input-reaching histories. Cemetery/stopped paths contribute zero to that occupation; total one-step transition normalization is proved, but this batch does not add a full-history PMF datatype.",
+    "Positive temperature is explicit for equilibrium uniqueness and forward/derivative claims. There is no theta=0 SPNE uniqueness claim.",
+    "Only the ordinary activation/logit derivative is an occupation difference. Individual soft-decomposition derivatives have extra gate/entropy terms."
+  ],
+  "reviewed_contracts": [
+    {
+      "module": "Thesis.SoftplusPolicies",
+      "declaration": "Thesis.SoftplusGame.mixedTransition_normalized",
+      "expected_type": "\u2200 {n k : \u2115} (r : Set.Icc (0 : \u211d) 1) (wp wn : Matrix (Fin k) (Fin n) \u211d) (j : Fin k) (turn : Bool), (\u2211 target,mixedTransition r wp wn j turn target)=1",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/mixedTransition_normalized",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "All mixed stop/continue actions have normalized total predecessor/cemetery transitions."
+    },
+    {
+      "module": "Thesis.SoftplusPolicies",
+      "declaration": "Thesis.SoftplusGame.mixedTransition_nonnegative",
+      "expected_type": "\u2200 {n k : \u2115} (r : Set.Icc (0 : \u211d) 1) (wp wn : Matrix (Fin k) (Fin n) \u211d) (hw : \u2200 j i,0\u2264wp j i \u2227 0\u2264wn j i) (j : Fin k) (turn : Bool) (target : Option (Fin n \u00d7 Bool)), 0\u2264mixedTransition r wp wn j turn target",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/mixedTransition_nonnegative",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Actual transition nonnegativity under canonical nonnegative split weights."
+    },
+    {
+      "module": "Thesis.SoftplusPolicies",
+      "declaration": "Thesis.SoftplusGame.mixed_zero_fanIn_absorbs",
+      "expected_type": "\u2200 {n k : \u2115} (r : Set.Icc (0 : \u211d) 1) (wp wn : Matrix (Fin k) (Fin n) \u211d) (j : Fin k) (turn : Bool) (hz : fanIn wp wn j=0), mixedTransition r wp wn j turn none=1",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/mixed_zero_fanIn_absorbs",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Zero-fan-in cemetery law for every mixed policy, without discarding immediate biases."
+    },
+    {
+      "module": "Thesis.SoftplusPolicies",
+      "declaration": "Thesis.SoftplusGame.continuation_recovery_total",
+      "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (hw : \u2200 j i,0\u2264wp j i \u2227 0\u2264wn j i) (b : Vec k) (p q : Vec n) (j : Fin k), continuation wp wn b p q j=((wp *\u1d65 p+wn *\u1d65 q)+b) j",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/continuation_recovery_total",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Existing normalized source continuation recovers affine expectation including zero rows."
+    },
+    {
+      "module": "Thesis.SoftplusEquilibrium",
+      "declaration": "Thesis.SoftplusGame.softplus_saddle",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net),\n (policyValue \u03b8 net plus (gibbsStrategy \u03b8 net x) x (-x)).1\u2264softEval \u03b8 net x \u2227\n (policyValue \u03b8 net plus (gibbsStrategy \u03b8 net x) x (-x)).2\u2264 -softEval \u03b8 net x \u2227\n policyValue \u03b8 net (gibbsStrategy \u03b8 net x) (gibbsStrategy \u03b8 net x) x (-x)=(softEval \u03b8 net x,-softEval \u03b8 net x) \u2227\n softEval \u03b8 net x\u2264(policyValue \u03b8 net (gibbsStrategy \u03b8 net x) minus x (-x)).1 \u2227\n -softEval \u03b8 net x\u2264(policyValue \u03b8 net (gibbsStrategy \u03b8 net x) minus x (-x)).2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/softplus_saddle",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "All-profile actual two-player entropy saddle on the original varying-width Network, no positive-fan-in restriction. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusEquilibrium",
+      "declaration": "Thesis.SoftplusGame.subgamePerfect_iff",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net), SubgamePerfect \u03b8 net plus minus x (-x) \u2194 plus=gibbsStrategy \u03b8 net x \u2227 minus=gibbsStrategy \u03b8 net x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/subgamePerfect_iff",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "SPNE existence and exact uniqueness of both complete randomized strategies, including zero preactivation/fan-in. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusPlayerValues",
+      "declaration": "Thesis.SoftplusGame.playerValue_advantage",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (hw : net.Nonnegative) (plus minus : Strategy net) (v : PlayerValues n), advantage (playerValue \u03b8 net plus minus v)=policyValue \u03b8 net plus minus (advantage v).1 (advantage v).2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/playerValue_advantage",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "All-profile source-model bridge, not only equilibrium equality: signed game is actual plus-minus player payoff difference. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusPlayerValues",
+      "declaration": "Thesis.SoftplusGame.playerValue_gibbs",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : PairVec n), playerValue \u03b8 net (gibbsStrategy \u03b8 net (x.1-x.2)) (gibbsStrategy \u03b8 net (x.1-x.2)) (pairValues x)=pairValues (net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/playerValue_gibbs",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "All four source player/turn coordinates equal the actual Softplus split decomposition; active player alone gets entropy. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusReadout",
+      "declaration": "Thesis.SoftplusGame.affine_saddle",
+      "expected_type": "\u2200 {n m r : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net) (wp wn : Matrix (Fin r) (Fin m) \u211d) (hrow : \u2200 j i,0\u2264wp j i \u2227 0\u2264wn j i) (b : Vec r) (j : Fin r),\n let read := fun v : PairVec m => continuation wp wn b v.1 v.2 j;\n read (policyValue \u03b8 net plus (gibbsStrategy \u03b8 net x) x (-x))\u2264affineOutput \u03b8 net (wp-wn) b x j \u2227\n read (policyValue \u03b8 net (gibbsStrategy \u03b8 net x) (gibbsStrategy \u03b8 net x) x (-x))=affineOutput \u03b8 net (wp-wn) b x j \u2227\n affineOutput \u03b8 net (wp-wn) b x j\u2264read (policyValue \u03b8 net (gibbsStrategy \u03b8 net x) minus x (-x))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/affine_saddle",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Forced ungated signed affine readout saddle with arbitrary biases and zero readout fan-in. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusReadout",
+      "declaration": "Thesis.SoftplusGame.softplus_forward_spne",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : PairVec n),\n SubgamePerfect \u03b8 net (gibbsStrategy \u03b8 net (x.1-x.2)) (gibbsStrategy \u03b8 net (x.1-x.2)) (x.1-x.2) (-(x.1-x.2)) \u2227\n (\u2200 plus minus : Strategy net,SubgamePerfect \u03b8 net plus minus (x.1-x.2) (-(x.1-x.2)) \u2194 plus=gibbsStrategy \u03b8 net (x.1-x.2) \u2227 minus=gibbsStrategy \u03b8 net (x.1-x.2)) \u2227\n playerValue \u03b8 net (gibbsStrategy \u03b8 net (x.1-x.2)) (gibbsStrategy \u03b8 net (x.1-x.2)) (pairValues x)=pairValues (net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x) \u2227\n (net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x).1-(net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x).2=softEval \u03b8 net (x.1-x.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/softplus_forward_spne",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "ptnb:thm:softplus-forward for the actual finite MLP: existence, unique SPNE, all player coordinates, and ordinary forward recovery. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusGameOccupation",
+      "declaration": "Thesis.SoftplusGame.profile_step_transition",
+      "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (plus minus : Fin k \u2192 Set.Icc (0 : \u211d) 1) (j : Fin k) (i : Fin n) (r b : Bool), mixedTransition (if Bool.xor r b then minus j else plus j) wp wn j (Bool.xor r b) (some (i,r))=(if Bool.xor r b then (minus j).val else (plus j).val)*(if b then wn j i else wp j i)/fanIn wp wn j",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/profile_step_transition",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Off-equilibrium path factor equals the actual mixed action/weight transition with absolute state-owner signs. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusGameOccupation",
+      "declaration": "Thesis.SoftplusGame.profileProbability_gibbs",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (x : Vec n) (j : Fin m) (i : Fin n) (q r : Bool) (path : Paths (softTrace \u03b8 net x)), profileProbability \u03b8 net (gibbsStrategy \u03b8 net x) (gibbsStrategy \u03b8 net x) x j i q r path=softProbability \u03b8 net x j i (Bool.xor q r) path",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/profileProbability_gibbs",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Actual Gibbs-profile ordinary-input path probabilities equal the existing derivative-path law. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusGameOccupation",
+      "declaration": "Thesis.SoftplusGame.spne_occupation_eq",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net) (hsp : SubgamePerfect \u03b8 net plus minus x (-x)) (j : Fin m) (i : Fin n) (q r : Bool), profileOccupation net \u03b8 plus minus x j i q r=softOccupation net \u03b8 x j i (Bool.xor q r)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/spne_occupation_eq",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Every actual SPNE profile induces the source sigmoid-policy occupation. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusGameOccupation",
+      "declaration": "Thesis.SoftplusGame.spne_gradient",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net) (hsp : SubgamePerfect \u03b8 net plus minus x (-x)) (j : Fin m) (i : Fin n) (q : Bool), fderiv \u211d (softEval \u03b8 net) x (Pi.single i 1) j=(if q then (-1 : \u211d) else 1)*(profileOccupation net \u03b8 plus minus x j i q false-profileOccupation net \u03b8 plus minus x j i q true)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/spne_gradient",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "ptnb:thm:softplus-gradient under the proved actual SPNE; ordinary activation derivative only, zero rows included. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusGameOccupation",
+      "declaration": "Thesis.SoftplusGame.spne_affine_gradient_profile",
+      "expected_type": "\u2200 {n m r : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net) (hsp : SubgamePerfect \u03b8 net plus minus x (-x)) (C : Matrix (Fin r) (Fin m) \u211d) (b : Vec r) (j : Fin r) (i : Fin n) (q : Bool), fderiv \u211d (affineOutput \u03b8 net C b) x (Pi.single i 1) j=\u2211 h,C j h*(if q then (-1 : \u211d) else 1)*(profileOccupation net \u03b8 plus minus x h i q false-profileOccupation net \u03b8 plus minus x h i q true)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/spne_affine_gradient_profile",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Actual signed ungated affine logit gradient in terms of the actual SPNE profile occupation. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusSubgames",
+      "declaration": "Thesis.SoftplusGame.softEval_append",
+      "expected_type": "\u2200 {a b c : \u2115} (pre : Network a b) (suffix : Network b c) (\u03b8 : \u211d) (x : Vec a), softEval \u03b8 (pre.append suffix) x=softEval \u03b8 suffix (softEval \u03b8 pre x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/softEval_append",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Actual shared-network prefix/suffix forward composition. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusSubgames",
+      "declaration": "Thesis.SoftplusGame.spne_suffix",
+      "expected_type": "\u2200 {a b c : \u2115} (pre : Network a b) (suffix : Network b c) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hp : pre.Nonnegative) (hs : suffix.Nonnegative) (x : Vec a) (plus minus : Strategy (pre.append suffix)) (hsp : SubgamePerfect \u03b8 (pre.append suffix) plus minus x (-x)), SubgamePerfect \u03b8 suffix (suffixStrategy pre suffix plus) (suffixStrategy pre suffix minus) (softEval \u03b8 pre x) (-(softEval \u03b8 pre x))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/spne_suffix",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Actual full strategy restriction at a shared layer cut, evaluated at genuine forward prefix activations. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusSubgames",
+      "declaration": "Thesis.SoftplusGame.spne_prefix_saddle",
+      "expected_type": "\u2200 {a b c : \u2115} (pre : Network a b) (suffix : Network b c) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hp : pre.Nonnegative) (hs : suffix.Nonnegative) (x : Vec a) (plus minus : Strategy (pre.append suffix)) (hsp : SubgamePerfect \u03b8 (pre.append suffix) plus minus x (-x)) (plusDev minusDev : Strategy pre),\n (policyValue \u03b8 pre plusDev (prefixStrategy pre suffix minus) x (-x)).1 \u2264 softEval \u03b8 pre x \u2227\n (policyValue \u03b8 pre plusDev (prefixStrategy pre suffix minus) x (-x)).2 \u2264 -softEval \u03b8 pre x \u2227\n policyValue \u03b8 pre (prefixStrategy pre suffix plus) (prefixStrategy pre suffix minus) x (-x)=(softEval \u03b8 pre x,-softEval \u03b8 pre x) \u2227\n softEval \u03b8 pre x \u2264 (policyValue \u03b8 pre (prefixStrategy pre suffix plus) minusDev x (-x)).1 \u2227\n -softEval \u03b8 pre x \u2264 (policyValue \u03b8 pre (prefixStrategy pre suffix plus) minusDev x (-x)).2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/spne_prefix_saddle",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Full-profile arbitrary-deviation saddle at every true predecessor subgame, not merely local one-step optimality. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusSubgames",
+      "declaration": "Thesis.SoftplusGame.spne_intermediate_gradient",
+      "expected_type": "\u2200 {a b c : \u2115} (pre : Network a b) (suffix : Network b c) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hp : pre.Nonnegative) (hs : suffix.Nonnegative) (x : Vec a) (plus minus : Strategy (pre.append suffix)) (hsp : SubgamePerfect \u03b8 (pre.append suffix) plus minus x (-x)) (j : Fin c) (i : Fin b) (q : Bool),\n fderiv \u211d (softEval \u03b8 suffix) (softEval \u03b8 pre x) (Pi.single i 1) j=(if q then (-1 : \u211d) else 1)*(profileOccupation suffix \u03b8 (suffixStrategy pre suffix plus) (suffixStrategy pre suffix minus) (softEval \u03b8 pre x) j i q false-profileOccupation suffix \u03b8 (suffixStrategy pre suffix plus) (suffixStrategy pre suffix minus) (softEval \u03b8 pre x) j i q true)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/spne_intermediate_gradient",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "ptnb:thm:softplus-gradient activation-to-activation form at every shared layer cut under the actual whole-network SPNE. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusTransitionPayoff",
+      "declaration": "Thesis.SoftplusGame.mixed_expected_value",
+      "expected_type": "\u2200 {n k : \u2115} (r : Set.Icc (0 : \u211d) 1) (wp wn : Matrix (Fin k) (Fin n) \u211d) (j : Fin k) (turn : Bool) (v : Bool \u2192 Vec n), (\u2211 target : Option (Fin n \u00d7 Bool),mixedTransition r wp wn j turn target*target.elim 0 (fun t => v t.2 t.1))=r.val*\u2211 i,(wp j i/rowDiscount wp wn j*v turn i+wn j i/rowDiscount wp wn j*v (!turn) i)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/mixed_expected_value",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Normalized transition expectation is the exact continuation term, including zero fan-in."
+    },
+    {
+      "module": "Thesis.SoftplusTransitionPayoff",
+      "declaration": "Thesis.SoftplusGame.playerStep_transition",
+      "expected_type": "\u2200 {n k : \u2115} (\u03b8 : \u211d) (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Vec k) (plus minus : Fin k \u2192 Set.Icc (0 : \u211d) 1) (v : PlayerValues n) (player turn : Bool) (j : Fin k), let r := if turn then minus j else plus j; playerStep \u03b8 wp wn bp bn plus minus v player turn j=r.val*(if player=turn then bp j else bn j)+(if player=turn then \u03b8*Real.binEntropy r.val else 0)+rowDiscount wp wn j*\u2211 target : Option (Fin n \u00d7 Bool),mixedTransition r wp wn j turn target*target.elim 0 (fun t => v player t.2 t.1)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/playerStep_transition",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Full source payoff model bridge for every profile and player, with actual normalized stochastic transition, bias and active-player-only entropy."
+    }
+  ],
+  "evidence_directory": "reports/evidence/softplus-game-review"
+}

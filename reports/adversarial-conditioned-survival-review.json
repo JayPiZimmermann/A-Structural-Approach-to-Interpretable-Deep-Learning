@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "reviewer": "independent adversarial reviewer /root/attack_hidden",
+  "review_date": "2026-11-09",
+  "verdict": "PASS_ZERO_SUPPORT_FINITE_SURVIVAL_CONDITIONING_AND_PRUNING",
+  "findings": [],
+  "production_mutations": false,
+  "shared_olean_writes": false,
+  "summary": "Survival potentials are actually computed by backwardDP and proved equal to surviving path mass. The transformed law needs positive survival only at its initial state; zero intermediate potentials are handled by proved zero support rather than excluded by hypothesis.",
+  "source": [
+    "arxive/playingTheNetworkBackward/main.tex:3696\u20133743 source conditioned-survival clauses i and path-law part of ii"
+  ],
+  "model_correspondence": [
+    {
+      "topic": "Actual potential and recurrence",
+      "locations": [
+        "formalization/Thesis/ConditionedSurvival.lean:175",
+        "formalization/Thesis/ConditionedSurvival.lean:182",
+        "formalization/Thesis/ConditionedSurvival.lean:201"
+      ],
+      "verdict": "derived, noncircular",
+      "evidence": "survival N K i s is backwardDP(N-i) on the original shifted kernels with terminal payoff one. Terminal identity, recurrence, [0,1] bounds under substochastic kernels and equality to total full ordinary-path mass are proved independently. The desired survival representation is not a field or hypothesis."
+    },
+    {
+      "topic": "Zeros and telescoping",
+      "locations": [
+        "formalization/Thesis/ConditionedSurvival.lean:14",
+        "formalization/Thesis/ConditionedSurvival.lean:69"
+      ],
+      "verdict": "no hidden global positivity",
+      "evidence": "The guarded kernel is K*h_next/h_current only at positive current potential, zero otherwise. Under nonnegative potentials it also equals the total Lean quotient. Weighted telescoping multiplies by the initial potential rather than cancelling intermediate denominators; its zero-start case follows from each nonnegative recurrence summand being zero. Initial positivity is imposed only when deriving a normalized quotient."
+    },
+    {
+      "topic": "Actual path support",
+      "locations": [
+        "formalization/Thesis/ConditionedSurvival.lean:118",
+        "formalization/Thesis/ConditionedSurvival.lean:124",
+        "formalization/Thesis/ConditionedSurvival.lean:145"
+      ],
+      "verdict": "real visited states, not assumed reachability",
+      "evidence": "stateAt recursively reads the actual state after i path transitions. Every nonzero conditioned path from a positive initial potential visits only strictly positive-potential states. Consequently every full path through a zero-potential state has zero mass. No Fintype, recurrence or nonnegative-K assumption is hidden in this support-only lemma; nonzero path factors and nonnegative h suffice."
+    },
+    {
+      "topic": "Normalization and impossible conditioning",
+      "locations": [
+        "formalization/Thesis/ConditionedSurvival.lean:206",
+        "formalization/Thesis/ConditionedSurvival.lean:215",
+        "formalization/Thesis/ConditionedSurvival.lean:226",
+        "formalization/Thesis/ConditionedSurvival.lean:237"
+      ],
+      "verdict": "correct boundary behavior",
+      "evidence": "Positive-potential rows sum to one, dead rows to zero. The full path product equals original surviving mass divided by actual initial survival and sums to one. A zero initial survival instead implies every original surviving path has zero mass; no normalized conditioning on that impossible event is claimed. Horizon zero yields one empty path with survival one."
+    }
+  ],
+  "validation": {
+    "contracts": 6,
+    "exact_types": "passed",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "fresh_source_compile_exit": 0,
+    "boundary_exit": 0,
+    "boundary_cases": [
+      "two-state chain with initial survival 1/2 and reachable dead ordinary state",
+      "actual positive transition into a dead state is pruned to zero",
+      "remaining conditioned transition becomes one",
+      "explicit negation of global strict positivity",
+      "full conditioned law normalized",
+      "zero-start surviving path mass and transformed row both zero",
+      "zero-horizon empty path normalized"
+    ],
+    "independent_exact_experiment": {
+      "seed": 20261109,
+      "counts": {
+        "chains": 161,
+        "zero_horizon": 32,
+        "starts": 402,
+        "positive_starts": 263,
+        "zero_starts": 139,
+        "zero_potential_states": 328,
+        "ordinary_paths": 14360,
+        "completed_paths": 35378,
+        "pruned_paths": 5358,
+        "weighted_generic_checks": 14360,
+        "normalized_conditioned_laws": 263,
+        "marginal_checks": 2165
+      },
+      "failures": [],
+      "negative_controls": [
+        "reachable dead ordinary state violates global h>0 although initial survival>0",
+        "zero-potential transformed row sums to zero, not one",
+        "zero initial survival gives no surviving original path and cannot support normalized conditioning"
+      ],
+      "cases_sha256": "84c34f48c08d1dad56df9090fb96fe83e435ecc0e1593210a12ba34fa7dde36d",
+      "producer_sha256": "52dccf238e6514b65e0b5c934ad834fa59a68e3a6e1e83eb1c5c22737460f1e7",
+      "scope": "Exact rational independent completed-cemetery enumeration plus dynamic-program survival. Marginal experiments are supplemental and do not claim a Lean marginal theorem in the reviewed leaf."
+    },
+    "exact_driver": "reports/evidence/conditioned-survival-review/ExactTypes.lean",
+    "boundary_driver": "reports/evidence/conditioned-survival-review/Boundary.lean"
+  },
+  "scope_limits": [
+    "This leaf proves the finite ordinary-substochastic-kernel survival and path-factorization clauses. It does not by itself prove the wider source theorem\u2019s conditioned marginals, geometric-mean kernel, Bhattacharyya or Hellinger clauses.",
+    "The time convention runs from root at time zero to input at horizon N, reversing the source layer labels without changing the finite trajectory product.",
+    "The displayed finite-state type is shared across times; genuinely varying layer state types require the usual tagged-state embedding or a separate bridge.",
+    "Only positive initial survival is required for normalized conditioning. No normalized law is claimed at zero survival."
+  ],
+  "reviewed_contracts": [
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.weighted_path_identity",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (n : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(h : \u2115 \u2192 S \u2192 \u211d) (hK : \u2200 i s t, 0 \u2264 K i s t)\n(hh : \u2200 i s, 0 \u2264 h i s)\n(hrec : \u2200 i < n, \u2200 s, h i s = \u2211 t, K i s t * h (i+1) t)\n(s : S) (path : Paths S n),\npathLaw n (kernel K h) s path * h 0 s =\npathLaw n K s path * h n (endpoint n s path)",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-weighted_path_identity",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Denominator-free finite-horizon Doob telescoping for nonnegative kernels and potentials satisfying the actual recurrence. No initial or intermediate strict positivity assumption; zero initial potential is included."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.path_zero_at_zero_potential",
+      "expected_type": "\u2200 {S : Type} (n : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(h : \u2115 \u2192 S \u2192 \u211d) (hh : \u2200 i s, 0 \u2264 h i s)\n(s : S) (hs : 0 < h 0 s) (path : Paths S n) (i : \u2115) (hi : i \u2264 n)\n(hz : h i (stateAt n s path i) = 0),\npathLaw n (kernel K h) s path = 0",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-path_zero_at_zero_potential",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Actual full path state-at-index pruning: a zero-potential state visited anywhere on a path forces exactly zero conditioned path mass. Only the initial potential is assumed positive; no Fintype, recurrence or kernel-sign premise is required for this support fact."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.survival_recurrence",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(i : \u2115) (hi : i < N) (s : S),\nsurvival N K i s = \u2211 t, K i s t * survival N K (i+1) t",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-survival_recurrence",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "The survival potential is defined by the original backwardDP with terminal payoff one; its finite-horizon recurrence is derived, not assumed."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.survival_eq_path_mass",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d) (s : S),\nsurvival N K 0 s = \u2211 path : Paths S N, pathLaw N K s path",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-survival_eq_path_mass",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Exact identification of the backward survival value with total mass of the original full surviving path sublaw."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.survival_zero_path",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hK : \u2200 i s t, 0 \u2264 K i s t) (s : S) (hs : survival N K 0 s = 0)\n(path : Paths S N), pathLaw N K s path = 0",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-survival_zero_path",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Zero initial survival implies every original full surviving trajectory has zero mass; no conditional probability at an impossible event is asserted."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.conditioned_survival",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hK : \u2200 i s t, 0 \u2264 K i s t) (hrow : \u2200 i s, \u2211 t, K i s t \u2264 1)\n(s : S) (hs : 0 < survival N K 0 s),\n(\u2200 i t, 0 \u2264 survival N K i t \u2227 survival N K i t \u2264 1) \u2227\n(\u2200 t, survival N K N t = 1) \u2227\n(\u2200 i < N, \u2200 u, survival N K i u = \u2211 t, K i u t * survival N K (i+1) t) \u2227\n(survival N K 0 s = \u2211 path : Paths S N, pathLaw N K s path) \u2227\n(\u2200 i < N, \u2200 u, (\u2211 t, kernel K (survival N K) i u t) =\nif 0 < survival N K i u then 1 else 0) \u2227\n(\u2200 i u t, survival N K (i+1) t = 0 \u2192 kernel K (survival N K) i u t = 0) \u2227\n(\u2200 path : Paths S N, pathLaw N (kernel K (survival N K)) s path =\npathLaw N K s path / survival N K 0 s) \u2227\n((\u2211 path : Paths S N, pathLaw N (kernel K (survival N K)) s path) = 1) \u2227\n(\u2200 (path : Paths S N) (i : \u2115), i \u2264 N \u2192\nsurvival N K i (stateAt N s path i) = 0 \u2192\npathLaw N (kernel K (survival N K)) s path = 0)",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-conditioned_survival",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Combined actual substochastic finite-kernel survival theorem: computed [0,1] potentials, terminal condition and recurrence, full path-mass identity, stochastic positive-potential rows and zero dead rows, zero-target support, exact normalized conditioned full path law, and explicit pruning of every path that visits a zero-potential state. Only initial survival must be positive. Does not by itself claim the marginal or Hellinger clauses of the wider source theorem."
+    }
+  ],
+  "evidence_directory": "reports/evidence/conditioned-survival-review"
+}

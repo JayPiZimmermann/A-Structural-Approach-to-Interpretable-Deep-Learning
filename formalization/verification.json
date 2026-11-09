@@ -4812,6 +4812,1292 @@
       "review_id": "SOURCE-ADDITION-FORWARD",
       "review_evidence": "reports/source-addition-forward-review.json",
       "scope": "Uniform two-operand oracle with structural discount 2 gives the exact arbitrary-value Bellman sum; no optimality assumption is needed because routing is fixed."
+    },
+    {
+      "module": "Thesis.SoftplusPolicies",
+      "declaration": "Thesis.SoftplusGame.mixedTransition_normalized",
+      "expected_type": "\u2200 {n k : \u2115} (r : Set.Icc (0 : \u211d) 1) (wp wn : Matrix (Fin k) (Fin n) \u211d) (j : Fin k) (turn : Bool), (\u2211 target,mixedTransition r wp wn j turn target)=1",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/mixedTransition_normalized",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "All mixed stop/continue actions have normalized total predecessor/cemetery transitions."
+    },
+    {
+      "module": "Thesis.SoftplusPolicies",
+      "declaration": "Thesis.SoftplusGame.mixedTransition_nonnegative",
+      "expected_type": "\u2200 {n k : \u2115} (r : Set.Icc (0 : \u211d) 1) (wp wn : Matrix (Fin k) (Fin n) \u211d) (hw : \u2200 j i,0\u2264wp j i \u2227 0\u2264wn j i) (j : Fin k) (turn : Bool) (target : Option (Fin n \u00d7 Bool)), 0\u2264mixedTransition r wp wn j turn target",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/mixedTransition_nonnegative",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Actual transition nonnegativity under canonical nonnegative split weights."
+    },
+    {
+      "module": "Thesis.SoftplusPolicies",
+      "declaration": "Thesis.SoftplusGame.mixed_zero_fanIn_absorbs",
+      "expected_type": "\u2200 {n k : \u2115} (r : Set.Icc (0 : \u211d) 1) (wp wn : Matrix (Fin k) (Fin n) \u211d) (j : Fin k) (turn : Bool) (hz : fanIn wp wn j=0), mixedTransition r wp wn j turn none=1",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/mixed_zero_fanIn_absorbs",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Zero-fan-in cemetery law for every mixed policy, without discarding immediate biases."
+    },
+    {
+      "module": "Thesis.SoftplusPolicies",
+      "declaration": "Thesis.SoftplusGame.continuation_recovery_total",
+      "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (hw : \u2200 j i,0\u2264wp j i \u2227 0\u2264wn j i) (b : Vec k) (p q : Vec n) (j : Fin k), continuation wp wn b p q j=((wp *\u1d65 p+wn *\u1d65 q)+b) j",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/continuation_recovery_total",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Existing normalized source continuation recovers affine expectation including zero rows."
+    },
+    {
+      "module": "Thesis.SoftplusEquilibrium",
+      "declaration": "Thesis.SoftplusGame.softplus_saddle",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net),\n (policyValue \u03b8 net plus (gibbsStrategy \u03b8 net x) x (-x)).1\u2264softEval \u03b8 net x \u2227\n (policyValue \u03b8 net plus (gibbsStrategy \u03b8 net x) x (-x)).2\u2264 -softEval \u03b8 net x \u2227\n policyValue \u03b8 net (gibbsStrategy \u03b8 net x) (gibbsStrategy \u03b8 net x) x (-x)=(softEval \u03b8 net x,-softEval \u03b8 net x) \u2227\n softEval \u03b8 net x\u2264(policyValue \u03b8 net (gibbsStrategy \u03b8 net x) minus x (-x)).1 \u2227\n -softEval \u03b8 net x\u2264(policyValue \u03b8 net (gibbsStrategy \u03b8 net x) minus x (-x)).2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/softplus_saddle",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "All-profile actual two-player entropy saddle on the original varying-width Network, no positive-fan-in restriction. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusEquilibrium",
+      "declaration": "Thesis.SoftplusGame.subgamePerfect_iff",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net), SubgamePerfect \u03b8 net plus minus x (-x) \u2194 plus=gibbsStrategy \u03b8 net x \u2227 minus=gibbsStrategy \u03b8 net x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/subgamePerfect_iff",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "SPNE existence and exact uniqueness of both complete randomized strategies, including zero preactivation/fan-in. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusPlayerValues",
+      "declaration": "Thesis.SoftplusGame.playerValue_advantage",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (hw : net.Nonnegative) (plus minus : Strategy net) (v : PlayerValues n), advantage (playerValue \u03b8 net plus minus v)=policyValue \u03b8 net plus minus (advantage v).1 (advantage v).2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/playerValue_advantage",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "All-profile source-model bridge, not only equilibrium equality: signed game is actual plus-minus player payoff difference. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusPlayerValues",
+      "declaration": "Thesis.SoftplusGame.playerValue_gibbs",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : PairVec n), playerValue \u03b8 net (gibbsStrategy \u03b8 net (x.1-x.2)) (gibbsStrategy \u03b8 net (x.1-x.2)) (pairValues x)=pairValues (net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/playerValue_gibbs",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "All four source player/turn coordinates equal the actual Softplus split decomposition; active player alone gets entropy. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusReadout",
+      "declaration": "Thesis.SoftplusGame.affine_saddle",
+      "expected_type": "\u2200 {n m r : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net) (wp wn : Matrix (Fin r) (Fin m) \u211d) (hrow : \u2200 j i,0\u2264wp j i \u2227 0\u2264wn j i) (b : Vec r) (j : Fin r),\n let read := fun v : PairVec m => continuation wp wn b v.1 v.2 j;\n read (policyValue \u03b8 net plus (gibbsStrategy \u03b8 net x) x (-x))\u2264affineOutput \u03b8 net (wp-wn) b x j \u2227\n read (policyValue \u03b8 net (gibbsStrategy \u03b8 net x) (gibbsStrategy \u03b8 net x) x (-x))=affineOutput \u03b8 net (wp-wn) b x j \u2227\n affineOutput \u03b8 net (wp-wn) b x j\u2264read (policyValue \u03b8 net (gibbsStrategy \u03b8 net x) minus x (-x))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/affine_saddle",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Forced ungated signed affine readout saddle with arbitrary biases and zero readout fan-in. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusReadout",
+      "declaration": "Thesis.SoftplusGame.softplus_forward_spne",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : PairVec n),\n SubgamePerfect \u03b8 net (gibbsStrategy \u03b8 net (x.1-x.2)) (gibbsStrategy \u03b8 net (x.1-x.2)) (x.1-x.2) (-(x.1-x.2)) \u2227\n (\u2200 plus minus : Strategy net,SubgamePerfect \u03b8 net plus minus (x.1-x.2) (-(x.1-x.2)) \u2194 plus=gibbsStrategy \u03b8 net (x.1-x.2) \u2227 minus=gibbsStrategy \u03b8 net (x.1-x.2)) \u2227\n playerValue \u03b8 net (gibbsStrategy \u03b8 net (x.1-x.2)) (gibbsStrategy \u03b8 net (x.1-x.2)) (pairValues x)=pairValues (net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x) \u2227\n (net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x).1-(net.decomposeWith (fun z => softSplit \u03b8 z.1 z.2) x).2=softEval \u03b8 net (x.1-x.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/softplus_forward_spne",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "ptnb:thm:softplus-forward for the actual finite MLP: existence, unique SPNE, all player coordinates, and ordinary forward recovery. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusGameOccupation",
+      "declaration": "Thesis.SoftplusGame.profile_step_transition",
+      "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (plus minus : Fin k \u2192 Set.Icc (0 : \u211d) 1) (j : Fin k) (i : Fin n) (r b : Bool), mixedTransition (if Bool.xor r b then minus j else plus j) wp wn j (Bool.xor r b) (some (i,r))=(if Bool.xor r b then (minus j).val else (plus j).val)*(if b then wn j i else wp j i)/fanIn wp wn j",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/profile_step_transition",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Off-equilibrium path factor equals the actual mixed action/weight transition with absolute state-owner signs. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusGameOccupation",
+      "declaration": "Thesis.SoftplusGame.profileProbability_gibbs",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (x : Vec n) (j : Fin m) (i : Fin n) (q r : Bool) (path : Paths (softTrace \u03b8 net x)), profileProbability \u03b8 net (gibbsStrategy \u03b8 net x) (gibbsStrategy \u03b8 net x) x j i q r path=softProbability \u03b8 net x j i (Bool.xor q r) path",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/profileProbability_gibbs",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Actual Gibbs-profile ordinary-input path probabilities equal the existing derivative-path law. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusGameOccupation",
+      "declaration": "Thesis.SoftplusGame.spne_occupation_eq",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net) (hsp : SubgamePerfect \u03b8 net plus minus x (-x)) (j : Fin m) (i : Fin n) (q r : Bool), profileOccupation net \u03b8 plus minus x j i q r=softOccupation net \u03b8 x j i (Bool.xor q r)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/spne_occupation_eq",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Every actual SPNE profile induces the source sigmoid-policy occupation. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusGameOccupation",
+      "declaration": "Thesis.SoftplusGame.spne_gradient",
+      "expected_type": "\u2200 {n m : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net) (hsp : SubgamePerfect \u03b8 net plus minus x (-x)) (j : Fin m) (i : Fin n) (q : Bool), fderiv \u211d (softEval \u03b8 net) x (Pi.single i 1) j=(if q then (-1 : \u211d) else 1)*(profileOccupation net \u03b8 plus minus x j i q false-profileOccupation net \u03b8 plus minus x j i q true)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/spne_gradient",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "ptnb:thm:softplus-gradient under the proved actual SPNE; ordinary activation derivative only, zero rows included. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusGameOccupation",
+      "declaration": "Thesis.SoftplusGame.spne_affine_gradient_profile",
+      "expected_type": "\u2200 {n m r : \u2115} (net : Network n m) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net) (hsp : SubgamePerfect \u03b8 net plus minus x (-x)) (C : Matrix (Fin r) (Fin m) \u211d) (b : Vec r) (j : Fin r) (i : Fin n) (q : Bool), fderiv \u211d (affineOutput \u03b8 net C b) x (Pi.single i 1) j=\u2211 h,C j h*(if q then (-1 : \u211d) else 1)*(profileOccupation net \u03b8 plus minus x h i q false-profileOccupation net \u03b8 plus minus x h i q true)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/spne_affine_gradient_profile",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Actual signed ungated affine logit gradient in terms of the actual SPNE profile occupation. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusSubgames",
+      "declaration": "Thesis.SoftplusGame.softEval_append",
+      "expected_type": "\u2200 {a b c : \u2115} (pre : Network a b) (suffix : Network b c) (\u03b8 : \u211d) (x : Vec a), softEval \u03b8 (pre.append suffix) x=softEval \u03b8 suffix (softEval \u03b8 pre x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/softEval_append",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Actual shared-network prefix/suffix forward composition. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusSubgames",
+      "declaration": "Thesis.SoftplusGame.spne_suffix",
+      "expected_type": "\u2200 {a b c : \u2115} (pre : Network a b) (suffix : Network b c) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hp : pre.Nonnegative) (hs : suffix.Nonnegative) (x : Vec a) (plus minus : Strategy (pre.append suffix)) (hsp : SubgamePerfect \u03b8 (pre.append suffix) plus minus x (-x)), SubgamePerfect \u03b8 suffix (suffixStrategy pre suffix plus) (suffixStrategy pre suffix minus) (softEval \u03b8 pre x) (-(softEval \u03b8 pre x))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/spne_suffix",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Actual full strategy restriction at a shared layer cut, evaluated at genuine forward prefix activations. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusSubgames",
+      "declaration": "Thesis.SoftplusGame.spne_prefix_saddle",
+      "expected_type": "\u2200 {a b c : \u2115} (pre : Network a b) (suffix : Network b c) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hp : pre.Nonnegative) (hs : suffix.Nonnegative) (x : Vec a) (plus minus : Strategy (pre.append suffix)) (hsp : SubgamePerfect \u03b8 (pre.append suffix) plus minus x (-x)) (plusDev minusDev : Strategy pre),\n (policyValue \u03b8 pre plusDev (prefixStrategy pre suffix minus) x (-x)).1 \u2264 softEval \u03b8 pre x \u2227\n (policyValue \u03b8 pre plusDev (prefixStrategy pre suffix minus) x (-x)).2 \u2264 -softEval \u03b8 pre x \u2227\n policyValue \u03b8 pre (prefixStrategy pre suffix plus) (prefixStrategy pre suffix minus) x (-x)=(softEval \u03b8 pre x,-softEval \u03b8 pre x) \u2227\n softEval \u03b8 pre x \u2264 (policyValue \u03b8 pre (prefixStrategy pre suffix plus) minusDev x (-x)).1 \u2227\n -softEval \u03b8 pre x \u2264 (policyValue \u03b8 pre (prefixStrategy pre suffix plus) minusDev x (-x)).2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/spne_prefix_saddle",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Full-profile arbitrary-deviation saddle at every true predecessor subgame, not merely local one-step optimality. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusSubgames",
+      "declaration": "Thesis.SoftplusGame.spne_intermediate_gradient",
+      "expected_type": "\u2200 {a b c : \u2115} (pre : Network a b) (suffix : Network b c) (\u03b8 : \u211d) (h\u03b8 : 0<\u03b8) (hp : pre.Nonnegative) (hs : suffix.Nonnegative) (x : Vec a) (plus minus : Strategy (pre.append suffix)) (hsp : SubgamePerfect \u03b8 (pre.append suffix) plus minus x (-x)) (j : Fin c) (i : Fin b) (q : Bool),\n fderiv \u211d (softEval \u03b8 suffix) (softEval \u03b8 pre x) (Pi.single i 1) j=(if q then (-1 : \u211d) else 1)*(profileOccupation suffix \u03b8 (suffixStrategy pre suffix plus) (suffixStrategy pre suffix minus) (softEval \u03b8 pre x) j i q false-profileOccupation suffix \u03b8 (suffixStrategy pre suffix plus) (suffixStrategy pre suffix minus) (softEval \u03b8 pre x) j i q true)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/spne_intermediate_gradient",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "ptnb:thm:softplus-gradient activation-to-activation form at every shared layer cut under the actual whole-network SPNE. Scope: layered Network; does not alone cover residual/maxpool Circuit games."
+    },
+    {
+      "module": "Thesis.SoftplusTransitionPayoff",
+      "declaration": "Thesis.SoftplusGame.mixed_expected_value",
+      "expected_type": "\u2200 {n k : \u2115} (r : Set.Icc (0 : \u211d) 1) (wp wn : Matrix (Fin k) (Fin n) \u211d) (j : Fin k) (turn : Bool) (v : Bool \u2192 Vec n), (\u2211 target : Option (Fin n \u00d7 Bool),mixedTransition r wp wn j turn target*target.elim 0 (fun t => v t.2 t.1))=r.val*\u2211 i,(wp j i/rowDiscount wp wn j*v turn i+wn j i/rowDiscount wp wn j*v (!turn) i)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/mixed_expected_value",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Normalized transition expectation is the exact continuation term, including zero fan-in."
+    },
+    {
+      "module": "Thesis.SoftplusTransitionPayoff",
+      "declaration": "Thesis.SoftplusGame.playerStep_transition",
+      "expected_type": "\u2200 {n k : \u2115} (\u03b8 : \u211d) (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Vec k) (plus minus : Fin k \u2192 Set.Icc (0 : \u211d) 1) (v : PlayerValues n) (player turn : Bool) (j : Fin k), let r := if turn then minus j else plus j; playerStep \u03b8 wp wn bp bn plus minus v player turn j=r.val*(if player=turn then bp j else bn j)+(if player=turn then \u03b8*Real.binEntropy r.val else 0)+rowDiscount wp wn j*\u2211 target : Option (Fin n \u00d7 Bool),mixedTransition r wp wn j turn target*target.elim 0 (fun t => v player t.2 t.1)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization",
+        "Thesis.SoftplusBackward",
+        "Thesis.ReLUNetGame",
+        "Thesis.RoutingBackward",
+        "Thesis.BackwardGames",
+        "Matrix",
+        "Thesis.SoftplusGame"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-game/playerStep_transition",
+      "review_evidence": "reports/softplus-game-repairs.md",
+      "scope": "Full source payoff model bridge for every profile and player, with actual normalized stochastic transition, bias and active-player-only entropy."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.weighted_path_identity",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (n : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(h : \u2115 \u2192 S \u2192 \u211d) (hK : \u2200 i s t, 0 \u2264 K i s t)\n(hh : \u2200 i s, 0 \u2264 h i s)\n(hrec : \u2200 i < n, \u2200 s, h i s = \u2211 t, K i s t * h (i+1) t)\n(s : S) (path : Paths S n),\npathLaw n (kernel K h) s path * h 0 s =\npathLaw n K s path * h n (endpoint n s path)",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-weighted_path_identity",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Denominator-free finite-horizon Doob telescoping for nonnegative kernels and potentials satisfying the actual recurrence. No initial or intermediate strict positivity assumption; zero initial potential is included."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.path_zero_at_zero_potential",
+      "expected_type": "\u2200 {S : Type} (n : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(h : \u2115 \u2192 S \u2192 \u211d) (hh : \u2200 i s, 0 \u2264 h i s)\n(s : S) (hs : 0 < h 0 s) (path : Paths S n) (i : \u2115) (hi : i \u2264 n)\n(hz : h i (stateAt n s path i) = 0),\npathLaw n (kernel K h) s path = 0",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-path_zero_at_zero_potential",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Actual full path state-at-index pruning: a zero-potential state visited anywhere on a path forces exactly zero conditioned path mass. Only the initial potential is assumed positive; no Fintype, recurrence or kernel-sign premise is required for this support fact."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.survival_recurrence",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(i : \u2115) (hi : i < N) (s : S),\nsurvival N K i s = \u2211 t, K i s t * survival N K (i+1) t",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-survival_recurrence",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "The survival potential is defined by the original backwardDP with terminal payoff one; its finite-horizon recurrence is derived, not assumed."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.survival_eq_path_mass",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d) (s : S),\nsurvival N K 0 s = \u2211 path : Paths S N, pathLaw N K s path",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-survival_eq_path_mass",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Exact identification of the backward survival value with total mass of the original full surviving path sublaw."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.survival_zero_path",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hK : \u2200 i s t, 0 \u2264 K i s t) (s : S) (hs : survival N K 0 s = 0)\n(path : Paths S N), pathLaw N K s path = 0",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-survival_zero_path",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Zero initial survival implies every original full surviving trajectory has zero mass; no conditional probability at an impossible event is asserted."
+    },
+    {
+      "module": "Thesis.ConditionedSurvival",
+      "declaration": "Thesis.ConditionedSurvival.conditioned_survival",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (K : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hK : \u2200 i s t, 0 \u2264 K i s t) (hrow : \u2200 i s, \u2211 t, K i s t \u2264 1)\n(s : S) (hs : 0 < survival N K 0 s),\n(\u2200 i t, 0 \u2264 survival N K i t \u2227 survival N K i t \u2264 1) \u2227\n(\u2200 t, survival N K N t = 1) \u2227\n(\u2200 i < N, \u2200 u, survival N K i u = \u2211 t, K i u t * survival N K (i+1) t) \u2227\n(survival N K 0 s = \u2211 path : Paths S N, pathLaw N K s path) \u2227\n(\u2200 i < N, \u2200 u, (\u2211 t, kernel K (survival N K) i u t) =\nif 0 < survival N K i u then 1 else 0) \u2227\n(\u2200 i u t, survival N K (i+1) t = 0 \u2192 kernel K (survival N K) i u t = 0) \u2227\n(\u2200 path : Paths S N, pathLaw N (kernel K (survival N K)) s path =\npathLaw N K s path / survival N K 0 s) \u2227\n((\u2211 path : Paths S N, pathLaw N (kernel K (survival N K)) s path) = 1) \u2227\n(\u2200 (path : Paths S N) (i : \u2115), i \u2264 N \u2192\nsurvival N K i (stateAt N s path i) = 0 \u2192\npathLaw N (kernel K (survival N K)) s path = 0)",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-ZERO-conditioned_survival",
+      "review_evidence": "reports/conditioned-survival-repairs.md",
+      "scope": "Combined actual substochastic finite-kernel survival theorem: computed [0,1] potentials, terminal condition and recurrence, full path-mass identity, stochastic positive-potential rows and zero dead rows, zero-target support, exact normalized conditioned full path law, and explicit pruning of every path that visits a zero-potential state. Only initial survival must be positive. Does not by itself claim the marginal or Hellinger clauses of the wider source theorem."
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.objective_eq_sourceValue",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (p : Policy A) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i),\nobjective reference contribution p = sourceValue 1 (mass reference contribution) p",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-objective_eq_sourceValue",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Independent expected log-contribution minus reference KL, with separate impossible-action support guards, equals the extended Gibbs mass objective.",
+      "open_scopes": [
+        "BigOperators"
+      ]
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.valuePolicy_value",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nobjective reference contribution (valuePolicy reference contribution hr hc hz) = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d)",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-valuePolicy_value",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Exact extended-log optimum at the literal reference-weighted mass ratio, allowing zero individual masses.",
+      "open_scopes": [
+        "BigOperators"
+      ]
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.valuePolicy_unique",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (p : Policy A) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nobjective reference contribution p = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2194 p.prob = (valuePolicy reference contribution hr hc hz).prob",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-valuePolicy_unique",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Unique maximizer over every finite simplex policy, including unsupported policies and simplex boundaries.",
+      "open_scopes": [
+        "BigOperators"
+      ]
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.zero_mass_value",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (p : Policy A) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i)\n(hz : (\u2211 i, reference i * contribution i) = 0),\nobjective reference contribution p = \u22a5",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-zero_mass_value",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Every candidate policy has genuine minus-infinity value for a zero-total-contribution stream; no real log-zero replacement.",
+      "open_scopes": [
+        "BigOperators"
+      ]
+    },
+    {
+      "module": "Thesis.AttentionReference",
+      "declaration": "Thesis.AttentionReference.attention_value_routing",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (reference contribution : A \u2192 \u211d) (hr : \u2200 i, 0 \u2264 reference i) (hc : \u2200 i, 0 \u2264 contribution i) (hz : 0 < \u2211 i, mass reference contribution i),\nIsGreatest (Set.range (objective reference contribution)) (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2227\n(\u2200 p : Policy A, objective reference contribution p = (Real.log (\u2211 i, reference i * contribution i) : WithBot \u211d) \u2194 p.prob = (valuePolicy reference contribution hr hc hz).prob) \u2227\n(\u2200 i, (valuePolicy reference contribution hr hc hz).prob i = reference i * contribution i / \u2211 j, reference j * contribution j)",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "Finset",
+        "Thesis.RoutingExtended",
+        "Thesis.AttentionReference"
+      ],
+      "review_id": "ATTENTION-REFERENCE-attention_value_routing",
+      "review_evidence": "reports/attention-reference-repairs.json",
+      "scope": "Full active-player attention Value-routing optimum, uniqueness and exact policy, with nonnegative reference and Value contributions. Local subgame; global attention SPNE and occupations remain separate.",
+      "open_scopes": [
+        "BigOperators"
+      ]
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.shiftPair",
+      "expected_type": "\u2200 {n : \u2115}, \u211d \u2192 Sensitivity n \u2192 Sensitivity n",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: subtract alpha times the shared sensitivity sum from both entries."
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.unified",
+      "expected_type": "\u2200 {n : \u2115}, Sensitivity n \u2192 Row n",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: exactly one half of positive minus negative partials."
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.shiftPair_sum",
+      "expected_type": "\u2200 {n : \u2115} (\u03b1 : \u211d) (s : Sensitivity n), (shiftPair \u03b1 s).1+(shiftPair \u03b1 s).2 = (1-2*\u03b1) \u2022 (s.1+s.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Exact local bulk scaling, all real alpha."
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.unified_shift",
+      "expected_type": "\u2200 {n : \u2115} (\u03b1 : \u211d) (s : Sensitivity n), unified (shiftPair \u03b1 s)=unified s",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Local recentering preserves the half-difference."
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.MaskedTrace.pull_unified",
+      "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (gate : Fin k \u2192 Bool) (s : Sensitivity k), unified (MaskedTrace.pull wp wn gate s)=(unified s).comp (MaskedTrace.signedMap wp wn gate)-(1/2 : \u211d) \u2022 ((s.1+s.2).comp (MaskedTrace.deadMap wp wn gate))",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Actual four-block pullback rewritten as active signed Jacobian minus inactive source, arbitrary masks."
+    },
+    {
+      "module": "HiddenMonotonicity.AffineReadout",
+      "declaration": "HiddenMonotonicity.MaskedTrace.run_bulk",
+      "expected_type": "\u2200 {n m : \u2115} (tr : MaskedTrace n m) (\u03b1 : \u2115 \u2192 \u211d) (seed : Sensitivity m), (tr.run \u03b1 seed).1+(tr.run \u03b1 seed).2=tr.bulkCoefficient \u03b1 \u2022 ((seed.1+seed.2).comp tr.absMap)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Arbitrary terminal affine partial seed; readout shift belongs in seed, each backbone state shifted once."
+    },
+    {
+      "module": "HiddenMonotonicity.StabilizedBackward",
+      "declaration": "HiddenMonotonicity.MaskedTrace.bulkCoefficient_product",
+      "expected_type": "\u2200 {n m : \u2115} (tr : MaskedTrace n m) (\u03b1 : \u2115 \u2192 \u211d), tr.bulkCoefficient \u03b1=\u220f i \u2208 Finset.range (tr.depth+1), (1-2*\u03b1 i)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Exact finite product including current and terminal hidden states."
+    },
+    {
+      "module": "HiddenMonotonicity.AffineChunk",
+      "declaration": "HiddenMonotonicity.affineChunk",
+      "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: both signed affine streams and split biases, no terminal activation."
+    },
+    {
+      "module": "HiddenMonotonicity.OriginalTrace",
+      "declaration": "HiddenMonotonicity.preactivation_difference",
+      "expected_type": "\u2200 {n k : \u2115} (wp wn : Matrix (Fin k) (Fin n) \u211d) (bp bn : Vec k) (x : PairVec n), preP wp wn x+bp-(preN wp wn x+bn)=affineLayer wp wn bp bn (x.1-x.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Literal split affine preactivations recover original signed affine layer."
+    },
+    {
+      "module": "HiddenMonotonicity.Decomposition",
+      "declaration": "HiddenMonotonicity.mixPair",
+      "expected_type": "\u211d \u2192 (\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: exact eta max/min interpolation."
+    },
+    {
+      "module": "HiddenMonotonicity.Core",
+      "declaration": "HiddenMonotonicity.max_sub",
+      "expected_type": "\u2200 p n : \u211d, max p n-n=relu (p-n)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Exact scalar ReLU/max subtraction identity."
+    },
+    {
+      "module": "HiddenMonotonicity.NetworkDerivative",
+      "declaration": "HiddenMonotonicity.layerFun",
+      "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: hidden split max/identity layer, excludes final affine output."
+    },
+    {
+      "module": "HiddenMonotonicity.MaxPool",
+      "declaration": "HiddenMonotonicity.finitePool",
+      "expected_type": "\u2200 {\u03b9 : Type u} [Fintype \u03b9] [Nonempty \u03b9] [DecidableEq \u03b9], ((\u03b9 \u2192 \u211d) \u00d7 (\u03b9 \u2192 \u211d)) \u2192 \u211d \u00d7 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: max positive-plus-other-negative and total negative sum."
+    },
+    {
+      "module": "HiddenMonotonicity.Chunks",
+      "declaration": "HiddenMonotonicity.multiplicative_split_correct",
+      "expected_type": "\u2200 p q r s : \u211d, (p*r+q*s)-(p*s+q*r)=(p-q)*(r-s)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Exact signed two-factor product."
+    },
+    {
+      "module": "Thesis.StoppingDecomposition",
+      "declaration": "Thesis.StoppingDecomposition.stopPair",
+      "expected_type": "(\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: common strict-positive difference gate, stopping at ties."
+    },
+    {
+      "module": "Thesis.StoppingDecomposition",
+      "declaration": "Thesis.StoppingDecomposition.stopLayer",
+      "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 PairVec n \u2192 PairVec k",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDecomposition"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: exact stopping affine recursion on both streams."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "declaration": "Thesis.GeneralRegularization.pairWith",
+      "expected_type": "Regularizer \u2192 (\u211d \u2192 \u211d) \u2192 (\u211d \u00d7 \u211d) \u2192 \u211d \u00d7 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.GeneralRegularization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: chosen-policy cost in positive stream; optimizer premise belongs to validity theorem."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "declaration": "Thesis.GeneralRegularization.entropyRegularizer",
+      "expected_type": "\u2200 \u03b8 : \u211d, 0<\u03b8 \u2192 Regularizer",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.GeneralRegularization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: actual negative binary entropy on [0,1]."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "declaration": "Thesis.GeneralRegularization.hardGate_optimal",
+      "expected_type": "\u2200 z : \u211d, hardGate z \u2208 Set.Icc (0 : \u211d) 1 \u2227 IsMaxOn (objective zeroRegularizer z) (Set.Icc 0 1) (hardGate z)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.GeneralRegularization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Strict-positive zero-cost maximizing selection includes ties."
+    },
+    {
+      "module": "Thesis.Regularization",
+      "declaration": "Thesis.Regularization.softSplit",
+      "expected_type": "\u211d \u2192 \u211d \u2192 \u211d \u2192 \u211d \u00d7 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: sigmoid-times-positive plus active entropy, sigmoid-times-negative."
+    },
+    {
+      "module": "Thesis.Regularization",
+      "declaration": "Thesis.Regularization.entropy_gate_value",
+      "expected_type": "\u2200 (\u03b8 z : \u211d) (h\u03b8 : 0<\u03b8), gate \u03b8 z*z+\u03b8*Real.binEntropy (gate \u03b8 z)=softplus \u03b8 z",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Regularization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Binary Legendre identity at sigmoid policy."
+    },
+    {
+      "module": "Thesis.ReferencePolicy",
+      "declaration": "Thesis.ReferencePolicy.reference_log_policy",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] (\u03c1 u : A \u2192 \u211d) (hu : \u2200 i,0<u i), referencePolicy 1 \u03c1 (fun i => Real.log (u i))=(fun i => \u03c1 i*u i/\u2211 j,\u03c1 j*u j)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.ReferencePolicy"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Positive-contribution formula only; zeros use AttentionReference."
+    },
+    {
+      "module": "Thesis.ReferencePolicy",
+      "declaration": "Thesis.ReferencePolicy.reference_policy_value",
+      "expected_type": "\u2200 {A : Type u} [Fintype A] [Nonempty A] (\u03b8 : \u211d) (\u03c1 q : A \u2192 \u211d) (h\u03b8 : 0<\u03b8) (h\u03c1 : \u2200 i,0<\u03c1 i), (\u2211 i,referencePolicy \u03b8 \u03c1 q i*q i)-\u03b8*kl (referencePolicy \u03b8 \u03c1 q) \u03c1=referenceValue \u03b8 \u03c1 q",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.ReferencePolicy"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Real-score full-support optimizer attains log partition."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.pixelDisagreement_formula",
+      "expected_type": "\u2200 {X : Type u} {Y : Type v} [Fintype X] [Fintype Y] [DecidableEq Y] (p q : X \u2192 \u211d) (terminal : X \u2192 Y) (y : Y), pixelDisagreement p q terminal y=((\u2211 x,if terminal x=y then p x else 0)+(\u2211 x,if terminal x=y then q x else 0))/2-\u2211 x,if terminal x=y then Real.sqrt (p x*q x) else 0",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u",
+        "v"
+      ],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Exact terminal-fibre disagreement formula on whole trajectories."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.pixelDisagreement_total",
+      "expected_type": "\u2200 {X : Type u} {Y : Type v} [Fintype X] [Fintype Y] [DecidableEq Y] (p q : X \u2192 \u211d) (terminal : X \u2192 Y) (hp1 : \u2211 x,p x=1) (hq1 : \u2211 x,q x=1), (\u2211 y,pixelDisagreement p q terminal y)=1-overlap p q",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u",
+        "v"
+      ],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Actual finite terminal-fibre total; normalized path laws supply probability premises."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.overlap_le_one",
+      "expected_type": "\u2200 {S : Type u} [Fintype S] (p q : S \u2192 \u211d) (hp : \u2200 s,0\u2264p s) (hq : \u2200 s,0\u2264q s) (hp1 : \u2211 s,p s=1) (hq1 : \u2211 s,q s=1), overlap p q\u22641",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Finite probability overlap upper bound."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.overlap_nonneg",
+      "expected_type": "\u2200 {S : Type u} [Fintype S] (p q : S \u2192 \u211d), 0\u2264overlap p q",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "kind": "theorem",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Finite overlap nonnegativity."
+    },
+    {
+      "module": "Thesis.RoutingSupport",
+      "declaration": "Thesis.RoutingSupport.sourceLayer",
+      "expected_type": "\u2200 {n k : \u2115}, Matrix (Fin k) (Fin n) \u211d \u2192 Matrix (Fin k) (Fin n) \u211d \u2192 Vec k \u2192 Vec k \u2192 \u211d \u2192 \u211d \u2192 \u211d \u2192 Vec n \u2192 Matrix (Fin k) (Fin n) \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingSupport"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: literal ungated alpha-beta epsilon redistribution matrix; raw signed inputs and biases."
+    },
+    {
+      "module": "Thesis.RoutingSupport",
+      "declaration": "Thesis.RoutingSupport.sourceLRP",
+      "expected_type": "\u2200 {n m : \u2115}, \u211d \u2192 \u211d \u2192 \u211d \u2192 Network n m \u2192 Vec n \u2192 Vec m \u2192 Vec n",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.RoutingSupport"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: full source recurrence with arbitrary output relevance."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.pathLaw",
+      "expected_type": "\u2200 {S : Type}, (n : \u2115) \u2192 (\u2115 \u2192 S \u2192 S \u2192 \u211d) \u2192 S \u2192 Paths S n \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: product of fixed-length transition probabilities from a fixed root; absorbing cemetery padding is explicit in its use."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.backwardDP",
+      "expected_type": "\u2200 {S : Type} [Fintype S], \u2115 \u2192 (\u2115 \u2192 S \u2192 S \u2192 \u211d) \u2192 (S \u2192 \u211d) \u2192 S \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: finite kernel backward dynamic program with actual terminal payoff."
+    },
+    {
+      "module": "Thesis.Games",
+      "declaration": "Thesis.Games.overlap",
+      "expected_type": "\u2200 {S : Type u} [Fintype S], (S \u2192 \u211d) \u2192 (S \u2192 \u211d) \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Games"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [
+        "u"
+      ],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: finite sum of square-root products."
+    },
+    {
+      "module": "Thesis.Tropical",
+      "declaration": "Thesis.Tropical.Polynomial.eval",
+      "expected_type": "\u2200 {I : Type} [Fintype I], Polynomial I \u2192 (I \u2192 \u211d) \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Tropical"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: finite nonempty max of actual slope dot input plus intercept."
+    },
+    {
+      "module": "Thesis.Tropical",
+      "declaration": "Thesis.Tropical.Polynomial.newton",
+      "expected_type": "\u2200 {I : Type}, Polynomial I \u2192 Set (I \u2192 \u211d)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Tropical"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: convex hull of actual polynomial slopes."
+    },
+    {
+      "module": "Thesis.Tropical",
+      "declaration": "Thesis.Tropical.support",
+      "expected_type": "\u2200 {I : Type} [Fintype I], Set (I \u2192 \u211d) \u2192 (I \u2192 \u211d) \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.Tropical"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: supremum of dot products; equality with maximum requires the checked compact/nonempty support theorem."
+    },
+    {
+      "module": "Thesis.StoppingDAGPaths",
+      "declaration": "Thesis.StoppingDAG.pathProbability",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n), PairVec d \u2192 Fin n \u2192 Thesis.StoppingDAG.DAGPaths c \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: selected shared-DAG predecessor trajectory product with explicit terminal cemetery alternatives."
+    },
+    {
+      "module": "Thesis.StoppingDAGVisits",
+      "declaration": "Thesis.StoppingDAG.fullOccupation",
+      "expected_type": "\u2200 {d n : \u2115}, Circuit d n \u2192 PairVec d \u2192 Fin n \u2192 Bool \u2192 \u2115 \u2192 Bool \u2192 \u211d",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "kind": "definition",
+      "review_id": "attack_hidden/lean-link-coverage",
+      "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
+      "scope": "Definition: actual expected sum of cumulative-discount-weighted graph-node visits, including starting visit."
     }
   ]
 }
