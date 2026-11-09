@@ -1,6 +1,6 @@
 \chapter{Mathematical Foundations}\label{ch:foundations}
 
-This chapter fixes the notation, definitions, and background theory used throughout. Section~\ref{sec:nn_notation_pwl} fixes the feedforward network notation and recalls the equivalence between \ac{relu} networks and \ac{cpwl} functions. Section~\ref{sec:convex_monotone_foundations} introduces the two structured classes---monotone networks and \acp{icnn}---into which Chapter~\ref{ch:decompositions} splits a general network, together with the Maxout units generalizing \ac{relu}. Section~\ref{sec:game_theory_mdp_foundations} collects the background on \acp{mdp} and zero-sum turn-based games and presents the ReLU Net Game of Gaubert and Vlassopoulos in full, so that Chapter~\ref{ch:game_theory} can state which parts of the framework it inherits and which are new. Section~\ref{sec:tropical_polyhedra_foundations} provides the tropical-geometric vocabulary---semirings, tropical polynomials, Newton polytopes, Minkowski sums, and support functions---and, in its later subsections, develops the tropical reading of the DC split, the resulting Imaginative Polytopes (Sections~\ref{sec:tropical_rational_maps}--\ref{sec:imaginative_polytopes}), and the difference-of-convex splitting of smooth activation functions (Section~\ref{sec:dc_splitting_smooth}) that lets the decompositions of Chapter~\ref{ch:decompositions} extend beyond \ac{relu}.
+This chapter fixes the notation, definitions, and background theory used throughout. Section~\ref{sec:nn_notation_pwl} fixes the feedforward network notation and recalls the equivalence between \ac{relu} networks and \ac{cpwl} functions. Section~\ref{sec:convex_monotone_foundations} introduces the two structured classes---monotone networks and \acp{icnn}---into which Chapter~\ref{ch:decompositions} splits a general network, together with the Maxout units generalizing \ac{relu}. Section~\ref{sec:game_theory_mdp_foundations} collects the background on \acp{mdp} and zero-sum turn-based games and presents the ReLU Net Game of Gaubert and Vlassopoulos in full, so that Chapter~\ref{ch:game_theory} can state which parts of the framework it inherits and which are new. Section~\ref{sec:tropical_polyhedra_foundations} provides the tropical-geometric vocabulary---semirings, tropical polynomials, Newton polytopes, Minkowski sums, and support functions---and, in its later subsections, develops the tropical reading of the DC split and the resulting Imaginative Polytopes (Sections~\ref{sec:tropical_rational_maps}--\ref{sec:imaginative_polytopes}). The activation-level construction from absolute curvature, including smooth activations, is developed with the network decomposition theorem in Section~\ref{sec:dc_splitting_smooth}.
 
 \section{Neural Network Notation and PWL Mappings}\label{sec:nn_notation_pwl}
 
@@ -594,100 +594,4 @@ so each split stream scans a finite catalog of non-negative linear templates (Co
 
 The split pair $(g, h)$ is in general \emph{not} minimal---the recursion accumulates common monomials in both streams---but it is computed by the network's own architecture, both components are monotone, and the split activations stay in one-to-one correspondence with the original neurons, properties that Chapters~\ref{ch:saliency} and \ref{ch:game_theory} exploit.\footnote{That every \ac{cpwl} function is a difference of convex \ac{cpwl} functions is classical \parencite{Melzer1986_PLasDC,Kripfganz1987_PWAasDC,Zalgaller2000_DCRepresentation}; algorithmic and minimality aspects, including the polyhedral structure of the set of all \ac{dc} decompositions of a fixed function, were developed by \textcite{Griewank2020_PolyhedralDCDecomposition} and in \parencite{Brandenburg2025_DecompositionPolyhedra,Koutschan2024_MinimalArity}.}
 
-\subsection{DC Splitting of Smooth Activation Functions}\label{sec:dc_splitting_smooth}
-
-The tropical picture above rests on the piecewise-linear structure of \ac{relu}, but the difference-of-convex splitting itself does not: the only property that matters is that the activation function has integrable curvature. The following general theory lets the decompositions of Chapter~\ref{ch:decompositions} extend beyond \ac{relu} to smooth-activation networks and, conversely, exhibits \ac{relu} networks as the piecewise-linear special case of a single construction. Throughout this subsection the symbols $g$ and $h$ are reused \emph{locally} for the scalar per-activation split $g, h \colon \RR^2 \to \RR$ of a single unit; they no longer denote the network split streams $g, h \colon \RR^{2d} \to \RR$ of the preceding subsections.
-
-\begin{theoremenv}[DC--monotone splitting under integrable curvature, \LeanResult{thm:smooth_dc_split}]\label{thm:smooth_dc_split}
-Let $f\colon \RR \to \RR$ be differentiable with locally absolutely continuous derivative $f'$ and $f'' \in L^1(\RR)$. Then the limit $s_- \coloneqq \lim_{u\to-\infty} f'(u)$ exists and $f'$ is bounded. Write $P \coloneqq \max\{f'',0\}$ and $N \coloneqq \max\{-f'',0\}$, so that $f'' = P - N$ with $P, N \ge 0$, and define
-\begin{align}
-	C_1(x) &\coloneqq f(0) + \int_0^x \Bigl( s_- + \int_{-\infty}^t P(u)\,\diff u \Bigr) \diff t,
-	&
-	C_2(x) &\coloneqq \int_0^x \int_{-\infty}^t N(u)\,\diff u \,\diff t,
-	\label{eq:curvature_antiderivatives}
-\end{align}
-as well as $M \coloneqq \max\bigl\{ \sup_{x\in\RR} \abs{C_1'(x)},\, \sup_{x\in\RR} \abs{C_2'(x)} \bigr\} < \infty$. Then the functions
-\begin{equation}
-	g(a,b) \coloneqq C_1(a-b) + M(a+b),
-	\qquad
-	h(a,b) \coloneqq C_2(a-b) + M(a+b)
-	\label{eq:smooth_split_pair}
-\end{equation}
-are convex on $\RR^2$, non-decreasing in each argument, and satisfy
-\begin{equation}
-	f(a-b) = g(a,b) - h(a,b) \qquad \text{for all } (a,b) \in \RR^2.
-	\label{eq:smooth_splitting_identity}
-\end{equation}\end{theoremenv}
-
-\begin{proof}
-\emph{Well-definedness.}
-For $x \le y$ we have $\abs{f'(y) - f'(x)} \le \int_x^y \abs{f''(u)} \diff u$, which tends to $0$ as $x, y \to -\infty$ because $f'' \in L^1(\RR)$; by the Cauchy criterion the limit $s_-$ exists. Consequently $\abs{f'(x)} \le \abs{s_-} + \norm{f''}_{L^1(\RR)}$ for all $x$, so the boundedness of $f'$ is automatic and need not be assumed. Since $0 \le P, N \le \abs{f''}$, both $P$ and $N$ lie in $L^1(\RR)$, the inner integrals in \eqref{eq:curvature_antiderivatives} are well-defined, non-decreasing in $t$, and bounded by $\norm{P}_{L^1(\RR)}$ and $\norm{N}_{L^1(\RR)}$ respectively. Hence $C_1, C_2$ are well-defined with locally absolutely continuous derivatives
-\begin{equation*}
-	C_1'(x) = s_- + \int_{-\infty}^{x} P(u) \,\diff u,
-	\qquad
-	C_2'(x) = \int_{-\infty}^{x} N(u) \,\diff u,
-\end{equation*}
-and $\abs{C_1'} \le \abs{s_-} + \norm{P}_{L^1(\RR)}$, $\abs{C_2'} \le \norm{N}_{L^1(\RR)}$, so $M < \infty$.
-
-\emph{Exactness.}
-For almost every $x$,
-\begin{equation*}
-	C_1'(x) - C_2'(x) = s_- + \int_{-\infty}^{x} \bigl( P(u) - N(u) \bigr) \diff u = s_- + \int_{-\infty}^{x} f''(u) \,\diff u = f'(x),
-\end{equation*}
-and $C_1(0) - C_2(0) = f(0)$, so integrating from $0$ yields $C_1 - C_2 = f$ on all of $\RR$. The linear tilt cancels upon subtraction, and \eqref{eq:smooth_splitting_identity} follows by evaluating at $x = a - b$.
-
-\emph{Convexity.}
-$C_1'$ and $C_2'$ are non-decreasing, being (shifted) antiderivatives of the non-negative functions $P$ and $N$, so $C_1$ and $C_2$ are convex on $\RR$. Precomposition with the linear map $(a,b) \mapsto a - b$ preserves convexity, and so does adding the linear function $M(a+b)$; hence $g$ and $h$ are convex on $\RR^2$. (When $f''$ is continuous, this is also visible directly: the Hessian of $(a,b) \mapsto C_1(a-b)$ has eigenvalues $0$ and $2 C_1''(a-b) = 2P(a-b) \ge 0$.)
-
-\emph{Monotonicity.}
-By the choice of $M$,
-\begin{equation*}
-	\frac{\partial g}{\partial a}(a,b) = C_1'(a-b) + M \ge 0,
-	\qquad
-	\frac{\partial g}{\partial b}(a,b) = -C_1'(a-b) + M \ge 0,
-\end{equation*}
-and analogously for $h$ with $C_2'$ in place of $C_1'$. Hence $g$ and $h$ are non-decreasing in each argument.
-\end{proof}
-
-The construction is less arbitrary than it may first appear: the split of the curvature into $P$ and $N$ is canonical, and the tilt $M$ is the smallest possible.
-
-\begin{proposition}[Minimality of the curvature split, \LeanResult{prop:curvature_minimality}]\label{prop:curvature_minimality}
-Let $f$ be as in Theorem~\ref{thm:smooth_dc_split} and suppose $f = c_1 - c_2$ for convex functions $c_1, c_2 \colon \RR \to \RR$ whose second distributional derivatives are locally integrable functions. Then $c_1'' \ge P$ and $c_2'' \ge N$ almost everywhere. In particular, $(C_1, C_2)$ is, up to a common affine summand, the unique pair of convex functions with $C_1 - C_2 = f$ of pointwise minimal curvature, and among all tilts of the form $(a,b) \mapsto \lambda(a+b)$, $\lambda \ge 0$, the constant $M$ in Theorem~\ref{thm:smooth_dc_split} is the smallest one rendering both components of \eqref{eq:smooth_split_pair} non-decreasing in each argument.\end{proposition}
-
-\begin{proof}
-From $c_1'' = f'' + c_2''$ and $c_2'' \ge 0$ we get $c_1'' \ge f''$, and convexity of $c_1$ gives $c_1'' \ge 0$; together $c_1'' \ge \max\{f'', 0\} = P$ almost everywhere, and symmetrically $c_2'' \ge N$. If equality holds a.e.\ in both bounds, then $c_1 - C_1$ and $c_2 - C_2$ are affine and, since $c_1 - c_2 = f = C_1 - C_2$, they coincide. For the tilt, non-decreasingness of $g$ in both arguments is equivalent to $\lambda \ge C_1'(x)$ and $\lambda \ge -C_1'(x)$ for all $x$, i.e.\ $\lambda \ge \sup_x \abs{C_1'(x)}$, and analogously for $h$; the smallest admissible $\lambda$ is exactly $M$.
-\end{proof}
-
-\begin{corollary}[Modern activation functions, \LeanResult{cor:modern_activations}]\label{cor:modern_activations}
-Theorem~\ref{thm:smooth_dc_split} applies to the following activation functions, where $\varphi$ and $\Phi$ denote the standard Gaussian density and distribution function and $\sigma(x) = (1+e^{-x})^{-1}$ the logistic sigmoid:
-\begin{enumerate}
-	\item \emph{GELU}, $f(x) = x\,\Phi(x)$, with $f''(x) = (2 - x^2)\,\varphi(x)$; the curvature is positive on $(-\sqrt{2}, \sqrt{2})$ and negative outside.
-	\item \emph{Swish/SiLU}, $f(x) = x\,\sigma(\beta x)$ with $\beta > 0$, with $f''(x) = \beta\,\sigma'(\beta x)\bigl( 2 + \beta x\,(1 - 2\sigma(\beta x)) \bigr)$; the curvature is positive on a bounded interval around the origin and negative in both tails.
-	\item \emph{Mish}, $f(x) = x \tanh\bigl(\log(1 + e^{x})\bigr)$.
-	\item \emph{Hyperbolic tangent}, $f(x) = \tanh(x)$, with $f''(x) = -2 \tanh(x)\operatorname{sech}^2(x)$, so $P$ is supported on $(-\infty, 0]$ and $N$ on $[0, \infty)$.
-	\item \emph{Logistic sigmoid}, $f = \sigma$, with $f'' = \sigma'\,(1 - 2\sigma)$.
-	\item \emph{Softplus at temperature $\theta > 0$}, $f(x) = \theta \log(1 + e^{x/\theta})$, with $f''(x) = \sigma'(x/\theta)/\theta \ge 0$; here $N = 0$, $C_2 = 0$, and the decomposition degenerates to the statement that softplus itself is convex.
-\end{enumerate}
-In each case $f(0) \ge 0$, so by Remark~\ref{rem:smooth_valid_decomposition} below the resulting pair map preserves non-negativity of the split streams.\end{corollary}
-
-\begin{proof}
-All listed functions are smooth with the stated second derivatives, obtained by direct differentiation. In each case $f''$ is continuous and decays at least exponentially as $\abs{x} \to \infty$ (with Gaussian decay for GELU): for Swish and Mish the polynomial factor $x$ is dominated by the exponential decay of $\sigma'(\beta x)$ and of the derivatives of $\tanh \circ \operatorname{softplus}$, respectively. Hence $f'' \in L^1(\RR)$ and $f'$ is locally absolutely continuous, so Theorem~\ref{thm:smooth_dc_split} applies. The values $f(0) \in \{0, \tfrac{1}{2}, \theta \log 2\}$ are non-negative in every case.
-\end{proof}
-
-\begin{remark}[Bounded variation and the piecewise-linear case]\label{rem:bv_extension}
-The hypothesis of Theorem~\ref{thm:smooth_dc_split} can be weakened to $f'$ having bounded variation, i.e.\ $f''$ being a finite signed Radon measure $\mu$; replacing $P(u)\,\diff u$ and $N(u)\,\diff u$ in \eqref{eq:curvature_antiderivatives} by the Jordan decomposition $\mu = \mu_+ - \mu_-$ leaves every step of the proof intact. This covers the piecewise-linear activations: for $\relu$ one has $\mu = \delta_0$, hence $C_1(x) = \max\{x, 0\}$, $C_2 = 0$, $s_- = 0$ and $M = 1$, so that
-\begin{equation*}
-	g(a,b) - h(a,b) = \max\{a - b, 0\} = \max\{a, b\} - b,
-\end{equation*}
-recovering the splitting identity of Section~\ref{sec:dc_splitting_relu} up to the monotone tilt. Leaky $\relu$ corresponds to $\mu = (1 - \alpha)\,\delta_0$, and ELU to an absolutely continuous curvature $e^{x} \indicator{x < 0}$ plus a possible atom at the origin. Piecewise-linear and smooth activation splittings are thus instances of a single construction.
-\end{remark}
-
-\begin{remark}[Compatibility with valid decompositions]\label{rem:smooth_valid_decomposition}
-The pair map $(a,b) \mapsto \bigl(g(a,b), h(a,b)\bigr)$ fits the general decomposition framework of Section~\ref{sec:general_decomposition_def}. Indeed, for $a, b \ge 0$ the Lipschitz bounds $\abs{C_i(x) - C_i(0)} \le M \abs{x}$ and $\abs{a - b} \le a + b$ yield
-\begin{equation*}
-	g(a,b) \ge f(0) \ge 0,
-	\qquad
-	h(a,b) \ge 0,
-\end{equation*}
-for every activation of Corollary~\ref{cor:modern_activations}, so the map sends $\RR^2_{\ge 0}$ to $\RR^2_{\ge 0}$ and is a monotone pairwise activation function; exactness \eqref{eq:smooth_splitting_identity} is precisely the validity condition. For an activation with $f(0) < 0$, shifting both components by $\abs{f(0)}$ restores non-negativity without affecting the difference.
-\end{remark}
+The tropical representation depends on piecewise linearity. The convex and monotone stream construction itself is more general: Section~\ref{sec:dc_decompositions} characterizes suitable activation pairs, constructs them from absolute curvature, and recovers ReLU as the maximum/identity special case. It also gives explicit formulas for smooth activations.

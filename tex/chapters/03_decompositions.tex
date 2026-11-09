@@ -98,14 +98,494 @@ Subtracting~\eqref{eq:split_neg} from~\eqref{eq:split_pos} and regrouping by pre
 	= b_i^{(l)} + \sum_j \Wl{l}_{ij}\, \actl{l-1}_j
 	= \preactl{l}_i,
 \end{equation*}
-where the second equality uses $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$, $b^{(l)} = b^{(l,+)} - b^{(l,-)}$, and the validity condition at layer $l-1$. This proves~\eqref{eq:preactivation_difference}. For~\eqref{eq:output_recovery}, validity at the final layer $L$ gives $\act{L}{+} - \act{L}{-} = \varrho\bigl(\preactl{L}\bigr) = \actl{L} = f(x)$.
+where the second equality uses $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$, $b^{(l)} = b^{(l,+)} - b^{(l,-)}$, and the validity condition at layer $l-1$. This proves~\eqref{eq:preactivation_difference}. For~\eqref{eq:output_recovery}, validity at the final layer $L$ gives $\act{L}{+} - \act{L}{-} = \varrho_L\bigl(\preactl{L}\bigr) = \preactl{L} = f(x)$.
 \end{proof}
 
-By Proposition~\ref{prop:validity_recovery}, the pre-activation pair always carries the original pre-activation in its difference; validity therefore hinges entirely on the pairwise activation function $\phi$, which must turn the pre-activation difference $\preactl{l}_i = \preact{l}{+}_i - \preact{l}{-}_i$ into the activation difference $\varrho\bigl(\preactl{l}_i\bigr) = \act{l}{+}_i - \act{l}{-}_i$ while keeping both components non-negative. The remainder of this chapter constructs concrete choices of $\phi$: the mixing family (Section~\ref{sec:mixing_decomposition}) with its convex \ac{dc} endpoint (Section~\ref{sec:dc_splitting_relu}), the stopping decomposition (Section~\ref{sec:stopping_decomposition}), and its regularized relatives (Section~\ref{sec:regularized_decompositions}); the splitting of smooth activations is developed as foundational material in Section~\ref{sec:dc_splitting_smooth} and imported here via Remark~\ref{rem:smooth_pointer}.
+By Proposition~\ref{prop:validity_recovery}, the pre-activation pair always carries the original pre-activation in its difference. A valid pairwise activation must therefore recover $\varrho(z^+-z^-)$ by subtraction and preserve non-negativity on the input quadrant. We first identify the additional conditions that make both streams convex and coordinatewise non-decreasing, construct such pairs from absolute curvature, and recover the ReLU maximum/identity pair as a special case (Section~\ref{sec:dc_decompositions}). Closed formulas then extend the same network construction to smooth activations. The mixing family (Section~\ref{sec:mixing_decomposition}), stopping decomposition (Section~\ref{sec:stopping_decomposition}), and regularized decompositions (Section~\ref{sec:regularized_decompositions}) retain the difference invariant with different structural properties.
+
+\section{Convex and Monotone DC Decompositions}\label{sec:dc_decompositions}
+
+The required activation-level object is a pair of functions $F_+,F_-\colon\RR^2\to\RR$ satisfying
+\begin{equation}
+    \begin{gathered}
+    \varrho(x-y)=F_+(x,y)-F_-(x,y),\\
+    F_+,F_-\text{ convex and coordinatewise non-decreasing}.
+    \end{gathered}
+    \label{eq:general_dc_pair}
+\end{equation}
+Convexity alone is insufficient for recursive composition: a convex function of convex inputs need not be convex unless the outer function is non-decreasing in those inputs. Conversely, coordinatewise monotonicity does not mean that a function has non-negative values everywhere. We require the pair to be non-negative only on $\RR^2_{\ge0}$, the domain visited by the split network. The global domain $\RR^2$ in~\eqref{eq:general_dc_pair} makes the analytic requirements precise and permits signed inputs to the stream functions.
+
+\subsection{The profile criterion and network composition}
+
+A scalar DC decomposition $\varrho=p-q$ becomes a suitable pair after adding the same affine correction to both components. In this activation-level construction, $L$ denotes a slope bound, independently of the network depth. The following criterion states exactly when this construction works, including at the kink of ReLU.
+
+\begin{proposition}[Criterion for a convex, monotone pair, \LeanResult{prop:dc_profile_lift}]\label{prop:dc_profile_lift}
+Let $L\ge0$ and $C\colon\RR\to\RR$, and define
+\begin{equation}
+    T_{C,L}(x,y)\coloneqq C(x-y)+Ly.
+    \label{eq:dc_profile_lift}
+\end{equation}
+Then $T_{C,L}$ is convex on $\RR^2$ if and only if $C$ is convex. It is coordinatewise non-decreasing on $\RR^2$ if and only if
+\begin{equation}
+    0\le C(v)-C(u)\le L(v-u)\qquad(u\le v).
+    \label{eq:dc_profile_increments}
+\end{equation}
+If $C$ is differentiable, condition~\eqref{eq:dc_profile_increments} is equivalent to $0\le C'\le L$. Consequently, given $p-q=\varrho$, the pair
+\begin{equation}
+    F_+(x,y)=p(x-y)+Ly,
+    \qquad F_-(x,y)=q(x-y)+Ly
+    \label{eq:asymmetric_dc_pair}
+\end{equation}
+is convex and coordinatewise non-decreasing exactly when both profiles are convex and satisfy~\eqref{eq:dc_profile_increments}. Under these conditions it maps $\RR^2_{\ge0}$ to itself exactly when $p(0),q(0)\ge0$.
+\end{proposition}
+
+\begin{proof}
+Affine precomposition and addition of an affine function preserve convexity; conversely, restriction to $y=0$ recovers $C$. Increasing $x$ gives the lower bound in~\eqref{eq:dc_profile_increments}. Increasing $y$ by $v-u$ changes the profile argument from $v$ to $u$ and gives the upper bound. These two inequalities also suffice for monotonicity in the respective coordinates. For a differentiable profile, the equivalence with the derivative bounds follows by taking difference quotients and by the mean value theorem. The common term $Ly$ cancels in $F_+-F_-$. Finally, monotonicity gives $F_\pm(x,y)\ge F_\pm(0,0)$ on the non-negative quadrant, and evaluation at the origin proves necessity of the two normalization inequalities.
+\end{proof}
+
+\begin{theoremenv}[Network DC decomposition from activation pairs, \LeanResult{thm:general_dc_network}]\label{thm:general_dc_network}
+Consider the network~\eqref{eq:original_forward_pass} with hidden activation $\varrho$. Choose a pair $F_+,F_-$ satisfying~\eqref{eq:general_dc_pair} on all of $\RR^2$ and $F_\pm(0,0)\ge0$. Use this pair entrywise after the canonical affine split~\eqref{eq:split_pos}--\eqref{eq:split_neg}, and use the identity pair at the final affine readout. Then every decomposed activation, and each of the two output streams $G,H$, is convex and coordinatewise non-decreasing as a function of the independent doubled input coordinates $(x^+,x^-)$. Moreover,
+\begin{equation}
+    G(x^+,x^-)-H(x^+,x^-)=f(x^+-x^-),
+    \label{eq:general_network_dc_recovery}
+\end{equation}
+and both streams are non-negative when $x^+,x^-\ge0$. These conclusions also hold for every tail network starting at an intermediate layer.
+
+If each component of an input split $x\mapsto(x^+(x),x^-(x))$ is convex, then $x\mapsto G(x^+(x),x^-(x))$ and $x\mapsto H(x^+(x),x^-(x))$ are convex. In particular, the usual split $x^\pm=\posneg{x}{\pm}$ gives a DC representation on the original input space.
+\end{theoremenv}
+
+\begin{proof}
+The initial doubled coordinates are affine and non-decreasing. At each affine layer, non-negative coefficients preserve convexity and coordinatewise monotonicity. At a hidden layer, a convex, coordinatewise non-decreasing pair component composed with these convex inputs is again convex; composition also preserves monotonicity. At the final layer there is no activation: its two affine combinations retain both properties. This proves the structural assertions by induction, equally for a network or any of its tails.
+
+For recovery, subtraction of the affine pair yields the original affine map by Proposition~\ref{prop:validity_recovery}. A hidden pair then gives $F_+(z^+,z^-)-F_-(z^+,z^-)=\varrho(z^+-z^-)$. At $l=L$ the identity pair instead gives the ungated pre-activation difference. Induction proves~\eqref{eq:general_network_dc_recovery}, including negative output logits. The origin normalization and monotonicity preserve non-negativity on the quadrant at every hidden step, and the canonical affine maps do so as well. Finally, the composition rule for a convex non-decreasing function with convex component functions proves the assertion for a convex input split \parencite{Amos2017}.
+\end{proof}
+
+Coordinatewise monotonicity in this theorem refers to the independent pair coordinates. It generally does \emph{not} survive as monotonicity in the original signed input $x$: for example, $x\mapsto x^- =\max\{-x,0\}$ decreases as $x$ increases. Convexity does survive this input split. Thus the theorem yields monotone networks on doubled input space and a difference of convex functions on the original input space, with these two domains kept distinct.
+
+\subsection{Construction from absolute second derivatives}\label{sec:dc_splitting_smooth}
+
+A finite amount of positive and negative curvature provides the required bounded profile slopes. The construction below uses $|f''|$ directly; here $f$ denotes a scalar activation, not the whole network.
+
+\begin{theoremenv}[Absolute-curvature construction, \LeanResult{thm:absolute_curvature_split}]\label{thm:absolute_curvature_split}
+Let $f\colon\RR\to\RR$ be differentiable, let $f'$ be locally absolutely continuous, and assume $f''\in L^1(\RR)$. Set
+\begin{equation}
+\begin{gathered}
+    s_-\coloneqq\lim_{t\to-\infty}f'(t),\qquad
+    V(t)\coloneqq\int_{-\infty}^{t}|f''(u)|\,\diff u,\\
+    D(z)\coloneqq |f(0)|+|s_-|z+\int_0^z V(t)\,\diff t,\\
+    p\coloneqq\frac{D+f}{2},\qquad q\coloneqq\frac{D-f}{2}.
+\end{gathered}
+    \label{eq:absolute_curvature_primitive}
+\end{equation}
+The limits $s_-$ and $s_+\coloneqq\lim_{t\to+\infty}f'(t)$ exist. With
+\begin{equation}
+    L\coloneqq\frac{\|f''\|_{L^1(\RR)}+|s_-|+|s_+|}{2},
+    \label{eq:absolute_curvature_coefficient}
+\end{equation}
+the profiles $p,q$ are convex, satisfy $p-q=f$ and $0\le p',q'\le L$, and have $p(0)=\max\{f(0),0\}$, $q(0)=\max\{-f(0),0\}$. Therefore~\eqref{eq:asymmetric_dc_pair} is a convex, coordinatewise non-decreasing pair on $\RR^2$, is non-negative on $\RR^2_{\ge0}$, and recovers $f(x-y)$ exactly.
+\end{theoremenv}
+
+\begin{proof}
+Local absolute continuity gives
+$|f'(v)-f'(u)|\le\int_u^v|f''(t)|\,\diff t$ for $u\le v$.
+Integrability makes $f'$ Cauchy at both ends of the real line, so its finite limits exist. Write
+\begin{equation}
+    P=\frac{|f''|+f''}{2},\qquad N=\frac{|f''|-f''}{2}.
+    \label{eq:curvature_jordan_parts}
+\end{equation}
+Differentiating~\eqref{eq:absolute_curvature_primitive} yields
+\begin{equation}
+    p'(z)=\max\{s_-,0\}+\int_{-\infty}^z P(u)\,\diff u,
+    \qquad
+    q'(z)=\max\{-s_-,0\}+\int_{-\infty}^z N(u)\,\diff u.
+    \label{eq:canonical_profile_slopes}
+\end{equation}
+Both derivatives are non-negative, non-decreasing, and bounded, and $p''=P$, $q''=N$ almost everywhere. Their upper limits are
+$A=\max\{s_-,0\}+\int_{\RR}P$ and
+$B=\max\{-s_-,0\}+\int_{\RR}N$.
+Since $A+B=|s_-|+\|f''\|_1$ and $A-B=s_+$, their maximum is precisely~\eqref{eq:absolute_curvature_coefficient}. The difference and origin values follow directly from the definition. Proposition~\ref{prop:dc_profile_lift} now proves all pair properties.
+\end{proof}
+
+The functions $P$ and $N$ are the positive and negative parts of curvature. They are minimal: any twice weakly differentiable convex profiles $\widetilde p,\widetilde q$ with $\widetilde p-\widetilde q=f$ satisfy $\widetilde p''\ge P$ and $\widetilde q''\ge N$ almost everywhere. Within the affine lift~\eqref{eq:asymmetric_dc_pair}, the coefficient in~\eqref{eq:absolute_curvature_coefficient} is also the least possible common slope bound for globally convex non-decreasing profiles. Indeed, their non-negative limiting slopes at $-\infty$ differ by $s_-$, so they are at least $\max\{s_-,0\}$ and $\max\{-s_-,0\}$; their curvature measures dominate $P\,\diff z$ and $N\,\diff z$. Both upper slope bounds are therefore at least $A$ and $B$ from the proof. This is a minimality statement for this profile-and-affine-lift construction, not for arbitrary bivariate decompositions or for the sizes of the resulting network streams.
+
+\begin{remark}[Why the global domain matters]\label{rem:global_curvature_necessity}
+Under the regularity assumptions on $f'$ above, integrability of $f''$ is also necessary for the existence of \emph{finite-valued} convex, coordinatewise non-decreasing $F_+,F_-$ on all of $\RR^2$ with difference $f(x-y)$. To see this, restrict each component to $(t,0)$ for $t\le0$. The resulting convex non-decreasing function has slopes bounded between $0$ and a finite one-sided slope at the origin, hence finite curvature mass on the negative half-line. Next restrict each component to $(0,-t)$ for $t\ge0$. These restrictions are convex and non-increasing, so their slopes lie between a finite slope at the origin and $0$, giving finite curvature mass on the positive half-line. In both restrictions the difference is $f(t)$; the total variation of its curvature is bounded by the sum of the two positive curvature measures. Thus $\int_{\RR}|f''|<\infty$. This necessity argument concerns the global domain and does not apply if the pair is defined only on the non-negative quadrant. For example,
+\begin{equation*}
+    (x-y)^2=\bigl(2x^2+2y^2\bigr)-(x+y)^2
+\end{equation*}
+is a difference of two convex, coordinatewise non-decreasing functions on that quadrant, although the curvature of $f(z)=z^2$ is not integrable on $\RR$.
+\end{remark}
+
+\begin{corollary}[Exact splitting on a bounded activation interval]\label{cor:local_curvature_split}
+Let $a<b$ and let $f\in C^1([a,b])$ have absolutely continuous derivative. There exist finite-valued convex, coordinatewise non-decreasing functions $F_+,F_-\colon\RR^2\to\RR$, non-negative on $\RR^2_{\ge0}$, such that $F_+(x,y)-F_-(x,y)=f(x-y)$ whenever $x-y\in[a,b]$.
+\end{corollary}
+
+\begin{proof}
+Extend $f$ by its tangent affine functions at $a$ and $b$. The extension is continuously differentiable, its derivative is locally absolutely continuous, and its curvature vanishes outside $[a,b]$. Apply Theorem~\ref{thm:absolute_curvature_split} to this extension.
+\end{proof}
+
+This local statement applies, for example, to exponentiation on a fixed bounded score interval. It does not assert a global monotone convex split for $e^z$ on all of $\RR$, whose curvature is not integrable.
+
+\subsection{ReLU: the maximum and identity pair}\label{sec:dc_splitting_relu}
+
+For $f(z)=\relu(z)$ choose $p(z)=\relu(z)$, $q(z)=0$, and $L=1$. Both profiles are convex and satisfy~\eqref{eq:dc_profile_increments}, even though $p$ is not differentiable at the origin. The profile lift gives the exact pair
+\begin{equation}
+    \begin{gathered}
+    F_+(a,b)=\relu(a-b)+b=\max\{a,b\},\qquad F_-(a,b)=b,\\
+    \relu(a-b)=\max\{a,b\}-b.
+    \end{gathered}
+    \label{eq:splitting_identity}
+\end{equation}
+Thus the ReLU construction is a special case of the general criterion: its positive component is a Maxout unit \parencite{Goodfellow2013Maxout} and its negative component is the identity in the second coordinate. The same pair is obtained from the absolute-curvature construction by replacing $f''\,\diff z$ with the curvature measure $\delta_0$ (Remark~\ref{rem:bv_extension}). It recovers the classical DC splitting of ReLU networks \parencite{Zhang2018,Siahkamari2020_DCRegression,Awasthi2023DCNN,hiddenMono}, and underlies the stabilized passes, convolutional generalization, and saliency methods developed later in this thesis.
+
+The hidden-layer update is therefore
+\begin{equation}
+    \act{l}{+}=\max\{\preact{l}{+},\preact{l}{-}\},
+    \qquad \act{l}{-}=\preact{l}{-},\qquad 1\le l<L,
+    \label{eq:dc_split_activations}
+\end{equation}
+with $\act{L}{\pm}=\preact{L}{\pm}$ at the final affine readout. Theorem~\ref{thm:general_dc_network} immediately gives validity and convexity of this decomposition. Section~\ref{sec:mixing_decomposition} will identify it as the $\eta=1$ endpoint of a larger family.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=.75\linewidth]{figures/decompositions/split_streams.pdf}
+	\caption{The monotone, convex split streams (top) versus a standard \ac{relu} layer (bottom). The negative weight part transitions positive input to negative pre-activation and vice versa, while the positive part maps positive to positive and negative to negative.}
+	\label{fig:splitstreams}
+\end{figure}
+
+\paragraph{The stream functions $g$ and $h$.}
+The \ac{dc} split replaces each layer by a \emph{split pair} of two monotone \emph{split streams}, non-negative on the input quadrant (Figure~\ref{fig:splitstreams}). In analogy to the tail networks $f^{(l)} \colon \RR^{d^{(l)}} \to \RR$ restricting the original network to layers $l+1, \dots, L$, we denote the split streams restricted to those layers by
+\begin{equation}
+	g^{(l)} \colon \RR^{d^{(l)}} \times \RR^{d^{(l)}} \to \RR,
+	\qquad
+	h^{(l)} \colon \RR^{d^{(l)}} \times \RR^{d^{(l)}} \to \RR,
+	\label{eq:stream_functions}
+\end{equation}
+mapping an activation pair at layer $l$ to the $+$ and $-$ components of the decomposed output; we abbreviate $g \coloneqq g^{(0)}$, $h \coloneqq h^{(0)}$. On the output layer $g^{(L)}(x^+, x^-) = x^+$, $h^{(L)}(x^+, x^-) = x^-$, and for $0 \le l < L$,
+\begin{equation}
+	g^{(l)}(x^+, x^-) = g^{(l+1)}\bigl(\act{l+1}{+}, \act{l+1}{-}\bigr),
+	\qquad
+	h^{(l)}(x^+, x^-) = h^{(l+1)}\bigl(\act{l+1}{+}, \act{l+1}{-}\bigr),
+	\label{eq:stream_recursion}
+\end{equation}
+where the pair $\bigl(\act{l+1}{+}, \act{l+1}{-}\bigr)$ is computed from $(x^+, x^-)$ by \eqref{eq:split_pos}--\eqref{eq:split_neg} and \eqref{eq:dc_split_activations}. These stream functions---not the individual layer activations---are the central objects of the \ac{dc} sections of this chapter and of the saliency derivations of Chapter~\ref{ch:saliency}: the network is exhibited as $f = g - h$ with structured subnetworks $g$ and $h$. Concretely, the split forward pass for an \ac{mlp} initialises $\bigl(\act{0}{+}, \act{0}{-}\bigr) = (x^+, x^-)$ and, for $l = 1, \dots, L-1$, computes the pre-activation pair \eqref{eq:split_pos}--\eqref{eq:split_neg} followed by the entrywise update $\act{l}{+} = \max\{\preact{l}{+}, \preact{l}{-}\}$, $\act{l}{-} = \preact{l}{-}$ of \eqref{eq:dc_split_activations}. The final layer uses only the affine pair \eqref{eq:split_pos}--\eqref{eq:split_neg}, so the two heads may reconstruct a negative logit.
+
+The split streams are affine maps with non-negative coefficients followed by entrywise Maxout gates and projections, i.e.\ monotone networks with convex, monotone activations; by the composition principles of Section~\ref{sec:convex_monotone_foundations} \parencite{Amos2017} this yields their two defining properties.
+
+\begin{proposition}[Monotonicity and convexity of the split streams, \LeanResult{prop:stream_properties}]\label{prop:stream_properties}
+For every $0 \le l \le L$, the stream functions $g^{(l)}$ and $h^{(l)}$ of~\eqref{eq:stream_functions} are convex and non-decreasing in each coordinate of the pair $(x^+, x^-) \in \RR^{d^{(l)}} \times \RR^{d^{(l)}}$.\end{proposition}
+
+\begin{proof}
+Apply Theorem~\ref{thm:general_dc_network} to each tail network using the pair $(\max\{a,b\},b)$ from~\eqref{eq:splitting_identity}. The final pair is the identity, so the same argument includes the ungated affine head.
+\end{proof}
+
+The correctness statement asserts that the difference of the two split-stream outputs equals the original tail network evaluated at the difference of their inputs---at \emph{every} layer, not only at the input.
+
+\begin{theoremenv}[Correctness of the split forward pass, \LeanResult{thm:split_correct}]\label{thm:split_correct}
+For every $0 \le l \le L$ and all $x^+, x^- \in \RR^{d^{(l)}}_{\ge 0}$,
+\begin{equation}
+	f^{(l)}\bigl( x^+ - x^- \bigr)
+	= \bigl( g^{(l)} - h^{(l)} \bigr)(x^+, x^-).
+	\label{eq:split_correctness}
+\end{equation}\end{theoremenv}
+
+\begin{proof}
+The recovery part of Theorem~\ref{thm:general_dc_network} applies to every tail network. At each hidden layer, subtraction of the maximum/identity pair gives $\relu(z^+-z^-)$ by~\eqref{eq:splitting_identity}; at the final layer, subtraction gives $z^+-z^-$ directly, because $\varrho_L=\mathrm{id}$. The base tail at $l=L$ is the identity, and the recursion~\eqref{eq:stream_recursion} gives~\eqref{eq:split_correctness} at every preceding layer.
+\end{proof}
+
+\begin{remark}[Preservation of sub-threshold signals]\label{rem:subthreshold}
+The correctness theorem hides an information-theoretic asymmetry between the original and the split network. When a neuron is inactive, $\preactl{l}_i \le 0$, the original \ac{relu} outputs $\actl{l}_i = 0$ and discards the \emph{magnitude} of the losing pre-activation: downstream computation is oblivious to how strongly the neuron was suppressed. The split pair reads $\bigl(\act{l}{+}_i, \act{l}{-}_i\bigr) = \bigl(\preact{l}{-}_i, \preact{l}{-}_i\bigr)$: the difference is zero, as validity demands, but both components retain the accumulated magnitude $\preact{l}{-}_i$ of the cancelled mass and propagate it forward. The split streams thus carry strictly more information than the original activations---sub-threshold contributions survive the gate---which the attribution methods of Chapter~\ref{ch:saliency} exploit. The same effect drives the numerical growth of Section~\ref{sec:stabilization_dc}: without cancellation by subtraction, both streams accumulate the absolute mass $\preact{l}{+}_i + \preact{l}{-}_i$ instead of the signed residual.
+\end{remark}
+
+\begin{remark}[Flexibility of the input split]\label{rem:input_split_flexibility}
+Theorem~\ref{thm:split_correct} holds for \emph{any} non-negative representation $x = x^+ - x^-$: the entrywise split $x^\pm = \posneg{x}{\pm}$ or the symmetric split $x^\pm = \posneg{x}{\pm} + c$ with $c \ge 0$. This degree of freedom is exploited both for numerical stabilization and for the baseline choices of the attribution methods in Chapter~\ref{ch:saliency}. The half--half split $x^\pm = \pm x/2$ of Section~\ref{sec:stabilization_dc} is \emph{not} such a non-negative input split---its negative component is signed---but a chain-rule device for the backward pass, used only to differentiate the split streams along the unified input direction.
+\end{remark}
+
+\subsection{Closed formulas for smooth activations}\label{sec:closed_form_dc_activations}
+
+The absolute-curvature construction can be integrated explicitly for the activations below. There is also a useful choice: a smooth curvature majorant may give a shorter formula than the minimal positive/negative curvature split. We provide both, distinguishing exact recovery from curvature minimality. Write $\sigma(z)=(1+e^{-z})^{-1}$, let $\varphi,\Phi$ be the standard Gaussian density and distribution function, and set
+\begin{equation*}
+    s_\beta(z)\coloneqq\frac{1}{\beta}\log(1+e^{\beta z}),\qquad \beta>0.
+\end{equation*}
+
+\begin{corollary}[Explicit convex, monotone activation pairs, \LeanResult{cor:closed_form_dc_activations}]\label{cor:closed_form_dc_activations}
+For $f(z)=z\Phi(z)$ (GELU), $f(z)=z\sigma(\beta z)$ (Swish), $f=\sigma$ (sigmoid), and $f=s_{1/\theta}$ (softplus), choose the corresponding row of Table~\ref{tab:closed_form_dc_profiles}. Then the functions $F_+(x,y)=p(x-y)+Ly$ and $F_-(x,y)=q(x-y)+Ly$ are convex and coordinatewise non-decreasing on $\RR^2$, map $\RR^2_{\ge0}$ to itself, and satisfy $F_+-F_-=f(x-y)$.
+\end{corollary}
+
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabularx}{\linewidth}{@{}l>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}Xc@{}}
+\toprule
+Activation & $p(z)$ & $q(z)$ & $L$ \\
+\midrule
+GELU & $2z\Phi(z)+2\varphi(z)$ & $z\Phi(z)+2\varphi(z)$ & $2$ \\[3pt]
+Swish & $2s_\beta(z)$ & $2s_\beta(z)-z\sigma(\beta z)$ & $2$ \\[3pt]
+Sigmoid & $\tfrac12(s_1(z)+\sigma(z))$ & $\tfrac12(s_1(z)-\sigma(z))$ & $\tfrac12$ \\[3pt]
+Softplus & $s_{1/\theta}(z)$ & $0$ & $1$ \\
+\bottomrule
+\end{tabularx}
+\caption{Closed scalar profiles for the lift~\eqref{eq:asymmetric_dc_pair}, with $\beta,\theta>0$. These smooth profiles prioritize a short expression; the GELU, Swish, and sigmoid rows use more curvature than the canonical split. GELU means the exact Gaussian activation, not its tanh approximation; SiLU is the case $\beta=1$ of Swish.}
+\label{tab:closed_form_dc_profiles}
+\end{table}
+
+\begin{proof}
+In every row $p-q=f$. For GELU \parencite{Hendrycks2016}, direct differentiation gives
+\begin{equation*}
+    p'=2\Phi,\quad p''=2\varphi,\qquad
+    q'=\Phi-z\varphi,\quad q''=z^2\varphi.
+\end{equation*}
+Hence both profiles are convex; $p'$ increases from $0$ to $2$ and $q'$ from $0$ to $1$. For Swish \parencite{Ramachandran2017_swish}, writing $u=\beta z$ gives
+\begin{equation*}
+    p'=2\sigma(u),\quad p''=2\beta\sigma'(u),\qquad
+    q'=\sigma(u)-u\sigma'(u),\quad
+    q''=\beta u\bigl(2\sigma(u)-1\bigr)\sigma'(u)\ge0.
+\end{equation*}
+The last inequality uses that $u$ and $2\sigma(u)-1$ have the same sign. The slopes again have limits $0,2$ for $p'$ and $0,1$ for $q'$, so they lie in $[0,2]$. For the sigmoid profiles,
+\begin{equation*}
+    p'=\tfrac12\sigma(2-\sigma),\quad
+    q'=\tfrac12\sigma^2,\qquad
+    p''=\sigma'(1-\sigma)\ge0,\quad q''=\sigma'\sigma\ge0,
+\end{equation*}
+with slopes in $[0,1/2]$. Softplus has $p'=\sigma(z/\theta)\in[0,1]$ and $p''=\sigma'(z/\theta)/\theta\ge0$, while $q=0$. All profile values at zero are non-negative (for sigmoid, $s_1(0)=\log2>1/2$). Proposition~\ref{prop:dc_profile_lift} proves the claim.
+\end{proof}
+
+These formulas require no numerical integration or auxiliary root solve. For example, the softplus row simplifies directly to
+\begin{equation}
+    F_+(x,y)=\theta\log\bigl(e^{x/\theta}+e^{y/\theta}\bigr),
+    \qquad F_-(x,y)=y,
+    \label{eq:softplus_dc_closed}
+\end{equation}
+whose limit as $\theta\downarrow0$ is exactly $(\max\{x,y\},y)$. The sigmoid row gives
+\begin{equation}
+    F_\pm(x,y)=\frac{\log(e^x+e^y)\pm\sigma(x-y)}{2}.
+    \label{eq:sigmoid_dc_closed}
+\end{equation}
+Writing $d=x-y$, the GELU and Swish pairs are explicitly
+\begin{equation}
+\begin{aligned}
+    F_+^{\mathrm{GELU}}(x,y)&=2\bigl(d\Phi(d)+\varphi(d)+y\bigr),\\
+    F_-^{\mathrm{GELU}}(x,y)&=d\Phi(d)+2\varphi(d)+2y,
+\end{aligned}
+    \label{eq:gelu_dc_closed}
+\end{equation}
+and
+\begin{equation}
+\begin{aligned}
+    F_+^{\mathrm{Swish}}(x,y)&=\frac{2}{\beta}\log\bigl(e^{\beta x}+e^{\beta y}\bigr),\\
+    F_-^{\mathrm{Swish}}(x,y)&=F_+^{\mathrm{Swish}}(x,y)-d\sigma(\beta d).
+\end{aligned}
+    \label{eq:swish_dc_closed}
+\end{equation}
+Stable implementations of the exponential formulas should evaluate log-sum-exp through its usual shifted form.
+
+\paragraph{Closed forms for the canonical absolute-curvature split.}
+The smaller coefficients in Theorem~\ref{thm:absolute_curvature_split} can also be attained explicitly. For sigmoid,
+\begin{equation}
+    p(z)=\begin{cases}
+        \sigma(z),&z\le0,\\
+        \tfrac12+\tfrac14z,&z\ge0,
+    \end{cases}
+    \qquad q(z)=p(z)-\sigma(z),\qquad L=\tfrac14.
+    \label{eq:sigmoid_canonical_dc}
+\end{equation}
+For both GELU and Swish, let $a>0$ be the positive zero of $f''$, and define $m=f'(a)-1$, $c=af'(a)-f(a)$ and $L=1+2m$. Then
+\begin{equation}
+    p(z)=\begin{cases}
+        -c,&z\le-a,\\
+        f(z)+mz,&-a\le z\le a,\\
+        Lz-c,&z\ge a,
+    \end{cases}
+    \qquad q(z)=p(z)-f(z).
+    \label{eq:gelu_swish_canonical_dc}
+\end{equation}
+The constants are
+\begin{equation}
+\begin{aligned}
+    \text{GELU:}\quad &a=\sqrt2,\quad
+    m=\Phi(\sqrt2)+\sqrt2\varphi(\sqrt2)-1,\quad c=2\varphi(\sqrt2),\\
+    \text{Swish:}\quad &a=r/\beta,\quad m=(r-2)/4,\quad
+    c=(r^2-4)/(4\beta),\quad L=r/2,
+\end{aligned}
+    \label{eq:canonical_activation_constants}
+\end{equation}
+where $r$ is the unique positive solution of $r\tanh(r/2)=2$ ($r\approx2.39936$). The left-hand side is strictly increasing from $0$ to infinity on $r>0$, so this fixed constant is unambiguous. Once it is fixed, the Swish pair has a pointwise closed expression with no quadrature. For softplus the canonical profiles are already the last row of Table~\ref{tab:closed_form_dc_profiles}.
+
+To verify~\eqref{eq:gelu_swish_canonical_dc}, note that both activations satisfy $f(-z)=f(z)-z$, have $f'(-\infty)=0$, $f'(+\infty)=1$, and have positive curvature precisely on $(-a,a)$. Differentiating the displayed pieces gives $p''=\max\{f'',0\}$ and $q''=\max\{-f'',0\}$; the values and first derivatives match at $\pm a$. At zero $p(0)=q(0)=0$, so these are exactly the normalized profiles of Theorem~\ref{thm:absolute_curvature_split}. For sigmoid the curvature changes sign at zero and the same verification gives~\eqref{eq:sigmoid_canonical_dc}. The canonical GELU and Swish profiles can take negative values on the negative half-line; their lifted pair is nevertheless non-negative on the non-negative quadrant by the origin normalization and coordinatewise monotonicity. No global non-negativity claim for the scalar profiles is needed.
+
+\begin{corollary}[Modern activation functions, \LeanResult{cor:modern_activations}]\label{cor:modern_activations}
+Theorems~\ref{thm:absolute_curvature_split} and~\ref{thm:smooth_dc_split} apply to the following activation functions, where $\varphi$ and $\Phi$ denote the standard Gaussian density and distribution function and $\sigma(x) = (1+e^{-x})^{-1}$ the logistic sigmoid:
+\begin{enumerate}
+	\item \emph{GELU}, $f(x) = x\,\Phi(x)$, with $f''(x) = (2 - x^2)\,\varphi(x)$; the curvature is positive on $(-\sqrt{2}, \sqrt{2})$ and negative outside.
+	\item \emph{Swish/SiLU}, $f(x) = x\,\sigma(\beta x)$ with $\beta > 0$, with $f''(x) = \beta\,\sigma'(\beta x)\bigl( 2 + \beta x\,(1 - 2\sigma(\beta x)) \bigr)$; the curvature is positive on a bounded interval around the origin and negative in both tails.
+	\item \emph{Mish}, $f(x) = x \tanh\bigl(\log(1 + e^{x})\bigr)$.
+	\item \emph{Hyperbolic tangent}, $f(x) = \tanh(x)$, with $f''(x) = -2 \tanh(x)\operatorname{sech}^2(x)$, so $P$ is supported on $(-\infty, 0]$ and $N$ on $[0, \infty)$.
+	\item \emph{Logistic sigmoid}, $f = \sigma$, with $f'' = \sigma'\,(1 - 2\sigma)$.
+	\item \emph{Softplus at temperature $\theta > 0$}, $f(x) = \theta \log(1 + e^{x/\theta})$, with $f''(x) = \sigma'(x/\theta)/\theta \ge 0$; here $N = 0$, $C_2 = 0$, and the decomposition degenerates to the statement that softplus itself is convex.
+\end{enumerate}
+In each case $f(0) \ge 0$, and both constructions preserve non-negativity on the input quadrant (Remark~\ref{rem:smooth_valid_decomposition}).\end{corollary}
+
+\begin{proof}
+All listed functions are smooth with the stated second derivatives, obtained by direct differentiation. In each case $f''$ is continuous and decays at least exponentially as $\abs{x} \to \infty$ (with Gaussian decay for GELU): for Swish and Mish the polynomial factor $x$ is dominated by the exponential decay of $\sigma'(\beta x)$ and of the derivatives of $\tanh \circ \operatorname{softplus}$, respectively. Hence $f'' \in L^1(\RR)$ and $f'$ is locally absolutely continuous, so both constructions apply. The values $f(0) \in \{0, \tfrac{1}{2}, \theta \log 2\}$ are non-negative in every case.
+\end{proof}
+
+\begin{corollary}[Networks with smooth activations, \LeanResult{cor:smooth_dc_networks}]\label{cor:smooth_dc_networks}
+Every finite feedforward network with GELU, Swish/SiLU, sigmoid, or softplus hidden activations, arbitrary signed weights and biases, and an affine output admits an exact decomposition into two convex, coordinatewise non-decreasing streams on doubled input space. Either the explicit profiles of Corollary~\ref{cor:closed_form_dc_activations} or the canonical profiles~\eqref{eq:sigmoid_canonical_dc}--\eqref{eq:gelu_swish_canonical_dc} and~\eqref{eq:softplus_dc_closed} may be used at every hidden neuron. With the usual non-negative input split, the streams remain non-negative and their pullbacks are convex functions of the original signed input. The same existence result holds for Mish and tanh by Theorem~\ref{thm:absolute_curvature_split}.
+\end{corollary}
+
+\begin{proof}
+The activation pairs have the properties required by Theorem~\ref{thm:general_dc_network}, by Corollaries~\ref{cor:closed_form_dc_activations} and~\ref{cor:modern_activations}; apply that theorem with the identity pair at the output.
+\end{proof}
+
+The same layerwise induction also permits different qualifying activations or profile choices at different hidden layers, because each step uses only the properties of that layer's pair. The network theorem above states the uniform-activation case used in the formal network interface.
+
+\begin{remark}[Scope of the smooth extension]\label{rem:smooth_pointer}
+The extension above is an exact structural theorem about the scalar activations and their composition into feedforward networks. It does not establish empirical attribution quality for these smooth networks, nor does it by itself extend the ReLU-specific tropical polytope representation, hard-gate games, or numerical stabilization formulas. The experiments later in the thesis evaluate the architectures and methods described in their protocols; the new smooth formulas are not additional experimental results.
+\end{remark}
+
+\subsection{Multivariate activations and softmax}\label{sec:multivariate_dc_softmax}
+
+The same lifting principle applies to activations that couple several coordinates. Convexity of a vector-valued pair means convexity of every scalar output component. The following differentiable version suffices for softmax.
+
+\begin{proposition}[Multivariate profile lift, \LeanResult{prop:multivariate_dc_lift}]\label{prop:multivariate_dc_lift}
+Let $C\in C^1(\RR^n)$ and $\ell\in\RR^n_{\ge0}$. Define
+\begin{equation}
+    T_{C,\ell}(x,y)=C(x-y)+\langle\ell,y\rangle,
+    \qquad x,y\in\RR^n.
+    \label{eq:multivariate_dc_lift}
+\end{equation}
+Then $T_{C,\ell}$ is convex on $\RR^{2n}$ if and only if $C$ is convex, and is coordinatewise non-decreasing if and only if
+$0\le\partial_j C(z)\le\ell_j$ for all $z$ and $j$.
+Consequently, if $C_+-C_-=f$, both profiles are convex, and both satisfy these derivative bounds, the common lift gives a convex, coordinatewise non-decreasing pair with difference $f(x-y)$. If $C_+(0),C_-(0)\ge0$, the lifted pair is non-negative on $\RR^{2n}_{\ge0}$.
+\end{proposition}
+
+\begin{proof}
+Affine precomposition preserves convexity, and restriction to $y=0$ proves the converse. The partial derivatives of the lift are $\partial_{x_j}T=\partial_jC$ and $\partial_{y_j}T=\ell_j-\partial_jC$, which proves the monotonicity criterion. The common affine term cancels in the difference, and monotonicity compares every point of the non-negative orthant with the origin.
+\end{proof}
+
+Softmax admits a particularly short pair because its curvature is dominated by the Hessian of log-sum-exp. This is a multivariate curvature comparison, rather than a componentwise application of the scalar integrability theorem.
+
+\begin{theoremenv}[Explicit convex, monotone softmax pair, \LeanResult{thm:softmax_dc_split}]\label{thm:softmax_dc_split}
+Let $n\ge1$, and define
+\begin{equation*}
+    H(z)=\log\!\left(\sum_{j=1}^n e^{z_j}\right),
+    \qquad \pi_i(z)=\frac{e^{z_i}}{\sum_{j=1}^n e^{z_j}},
+    \qquad c_n=\frac{\log n-1/n}{2}.
+\end{equation*}
+For each output coordinate $i$, set
+\begin{equation}
+    F_{i,\pm}(x,y)
+    =\frac{H(x-y)\pm\pi_i(x-y)+\sum_{j=1}^n y_j}{2}-c_n.
+    \label{eq:softmax_dc_pair}
+\end{equation}
+Both components are finite, convex, and coordinatewise non-decreasing on all of $\RR^{2n}$. They are non-negative on $\RR^{2n}_{\ge0}$ and satisfy
+$F_{i,+}(x,y)-F_{i,-}(x,y)=\pi_i(x-y)$.
+\end{theoremenv}
+
+\begin{proof}
+Fix $z$ and a direction $v\in\RR^n$, and abbreviate
+$\mu=\sum_j\pi_j(z)v_j$ and
+$V=\sum_j\pi_j(z)(v_j-\mu)^2$.
+Differentiation along $z+tv$ gives
+\begin{equation}
+\begin{aligned}
+    D^2H(z)[v,v]&=V,\\
+    D^2\pi_i(z)[v,v]
+    &=\sum_j\pi_j(z)\bigl(\1[j=i]-\pi_i(z)\bigr)(v_j-\mu)^2.
+\end{aligned}
+    \label{eq:softmax_curvature_domination}
+\end{equation}
+Since $|\1[j=i]-\pi_i|\le1$, it follows that
+$|D^2\pi_i(z)[v,v]|\le V$. Thus $H+\pi_i$ and $H-\pi_i$ have positive semidefinite Hessians and are convex. For the profiles $C_{i,\pm}=(H\pm\pi_i)/2-c_n$, their partial derivatives are
+\begin{equation}
+\begin{array}{c|cc}
+ & \partial_j C_{i,+} & \partial_j C_{i,-}\\ \hline
+ j=i & \pi_i-\pi_i^2/2 & \pi_i^2/2\\
+ j\ne i & \pi_j(1-\pi_i)/2 & \pi_j(1+\pi_i)/2.
+\end{array}
+    \label{eq:softmax_profile_gradients}
+\end{equation}
+Every entry lies in $[0,1/2]$; for the last entry, use $\pi_j\le1-\pi_i$. Proposition~\ref{prop:multivariate_dc_lift} with $\ell_j=1/2$ gives global convexity and monotonicity. At the origin, $F_{i,+}(0,0)=1/n$ and $F_{i,-}(0,0)=0$, proving non-negativity on the orthant. Subtraction gives exact recovery.
+\end{proof}
+
+For a fixed masked-softmax row, apply the theorem to its nonempty set of allowed coordinates and set the masked output pairs to $(0,0)$. A fully masked row requires an additional output convention and is outside this statement. Fixed positive temperatures and fixed additive score biases can be absorbed into the preceding affine map. Section~\ref{sec:transformer_dc} combines this exact softmax pair with convex product and normalization pairs to obtain a DC decomposition of the full Transformer computation.
+
+\subsection{The symmetric-tilt variant and curvature minimality}\label{sec:symmetric_curvature_variant}
+
+For comparison, the following alternative uses the same positive/negative curvature split but adds the common symmetric term $M(a+b)$. We retain it because its fixed-profile minimality statement is useful independently of the asymmetric lift~\eqref{eq:asymmetric_dc_pair}. The two constructions have the same exact difference but generally different individual streams; in particular, only the asymmetric normalization used above reproduces the literal ReLU pair $(\max\{a,b\},b)$.
+
+\begin{theoremenv}[DC--monotone splitting under integrable curvature, \LeanResult{thm:smooth_dc_split}]\label{thm:smooth_dc_split}
+Let $f\colon \RR \to \RR$ be differentiable with locally absolutely continuous derivative $f'$ and $f'' \in L^1(\RR)$. Then the limit $s_- \coloneqq \lim_{u\to-\infty} f'(u)$ exists and $f'$ is bounded. Write $P \coloneqq \max\{f'',0\}$ and $N \coloneqq \max\{-f'',0\}$, so that $f'' = P - N$ with $P, N \ge 0$, and define
+\begin{align}
+	C_1(x) &\coloneqq f(0) + \int_0^x \Bigl( s_- + \int_{-\infty}^t P(u)\,\diff u \Bigr) \diff t,
+	&
+	C_2(x) &\coloneqq \int_0^x \int_{-\infty}^t N(u)\,\diff u \,\diff t,
+	\label{eq:curvature_antiderivatives}
+\end{align}
+as well as $M \coloneqq \max\bigl\{ \sup_{x\in\RR} \abs{C_1'(x)},\, \sup_{x\in\RR} \abs{C_2'(x)} \bigr\} < \infty$. Then the functions
+\begin{equation}
+	g(a,b) \coloneqq C_1(a-b) + M(a+b),
+	\qquad
+	h(a,b) \coloneqq C_2(a-b) + M(a+b)
+	\label{eq:smooth_split_pair}
+\end{equation}
+are convex on $\RR^2$, non-decreasing in each argument, and satisfy
+\begin{equation}
+	f(a-b) = g(a,b) - h(a,b) \qquad \text{for all } (a,b) \in \RR^2.
+	\label{eq:smooth_splitting_identity}
+\end{equation}\end{theoremenv}
+
+\begin{proof}
+\emph{Well-definedness.}
+For $x \le y$ we have $\abs{f'(y) - f'(x)} \le \int_x^y \abs{f''(u)} \diff u$, which tends to $0$ as $x, y \to -\infty$ because $f'' \in L^1(\RR)$; by the Cauchy criterion the limit $s_-$ exists. Consequently $\abs{f'(x)} \le \abs{s_-} + \norm{f''}_{L^1(\RR)}$ for all $x$, so the boundedness of $f'$ is automatic and need not be assumed. Since $0 \le P, N \le \abs{f''}$, both $P$ and $N$ lie in $L^1(\RR)$, the inner integrals in \eqref{eq:curvature_antiderivatives} are well-defined, non-decreasing in $t$, and bounded by $\norm{P}_{L^1(\RR)}$ and $\norm{N}_{L^1(\RR)}$ respectively. Hence $C_1, C_2$ are well-defined with locally absolutely continuous derivatives
+\begin{equation*}
+	C_1'(x) = s_- + \int_{-\infty}^{x} P(u) \,\diff u,
+	\qquad
+	C_2'(x) = \int_{-\infty}^{x} N(u) \,\diff u,
+\end{equation*}
+and $\abs{C_1'} \le \abs{s_-} + \norm{P}_{L^1(\RR)}$, $\abs{C_2'} \le \norm{N}_{L^1(\RR)}$, so $M < \infty$.
+
+\emph{Exactness.}
+For almost every $x$,
+\begin{equation*}
+	C_1'(x) - C_2'(x) = s_- + \int_{-\infty}^{x} \bigl( P(u) - N(u) \bigr) \diff u = s_- + \int_{-\infty}^{x} f''(u) \,\diff u = f'(x),
+\end{equation*}
+and $C_1(0) - C_2(0) = f(0)$, so integrating from $0$ yields $C_1 - C_2 = f$ on all of $\RR$. The linear tilt cancels upon subtraction, and \eqref{eq:smooth_splitting_identity} follows by evaluating at $x = a - b$.
+
+\emph{Convexity.}
+$C_1'$ and $C_2'$ are non-decreasing, being (shifted) antiderivatives of the non-negative functions $P$ and $N$, so $C_1$ and $C_2$ are convex on $\RR$. Precomposition with the linear map $(a,b) \mapsto a - b$ preserves convexity, and so does adding the linear function $M(a+b)$; hence $g$ and $h$ are convex on $\RR^2$. (When $f''$ is continuous, this is also visible directly: the Hessian of $(a,b) \mapsto C_1(a-b)$ has eigenvalues $0$ and $2 C_1''(a-b) = 2P(a-b) \ge 0$.)
+
+\emph{Monotonicity.}
+By the choice of $M$,
+\begin{equation*}
+	\frac{\partial g}{\partial a}(a,b) = C_1'(a-b) + M \ge 0,
+	\qquad
+	\frac{\partial g}{\partial b}(a,b) = -C_1'(a-b) + M \ge 0,
+\end{equation*}
+and analogously for $h$ with $C_2'$ in place of $C_1'$. Hence $g$ and $h$ are non-decreasing in each argument.
+\end{proof}
+
+The curvature split is canonical. For the fixed profiles $C_1,C_2$ in~\eqref{eq:curvature_antiderivatives}, the coefficient $M$ is minimal among symmetric tilts $\lambda(a+b)$; this claim does not compare it with asymmetric corrections or other profile normalizations.
+
+\begin{proposition}[Minimality of the curvature split, \LeanResult{prop:curvature_minimality}]\label{prop:curvature_minimality}
+Let $f$ be as in Theorem~\ref{thm:smooth_dc_split} and suppose $f = c_1 - c_2$ for convex functions $c_1, c_2 \colon \RR \to \RR$ whose second distributional derivatives are locally integrable functions. Then $c_1'' \ge P$ and $c_2'' \ge N$ almost everywhere. In particular, $(C_1, C_2)$ is, up to a common affine summand, the unique pair of convex functions with $C_1 - C_2 = f$ of pointwise minimal curvature, and among all tilts of the form $(a,b) \mapsto \lambda(a+b)$, $\lambda \ge 0$, the constant $M$ in Theorem~\ref{thm:smooth_dc_split} is the smallest one rendering both components of \eqref{eq:smooth_split_pair} non-decreasing in each argument.\end{proposition}
+
+\begin{proof}
+From $c_1'' = f'' + c_2''$ and $c_2'' \ge 0$ we get $c_1'' \ge f''$, and convexity of $c_1$ gives $c_1'' \ge 0$; together $c_1'' \ge \max\{f'', 0\} = P$ almost everywhere, and symmetrically $c_2'' \ge N$. If equality holds a.e.\ in both bounds, then $c_1 - C_1$ and $c_2 - C_2$ are affine and, since $c_1 - c_2 = f = C_1 - C_2$, they coincide. For the tilt, non-decreasingness of $g$ in both arguments is equivalent to $\lambda \ge C_1'(x)$ and $\lambda \ge -C_1'(x)$ for all $x$, i.e.\ $\lambda \ge \sup_x \abs{C_1'(x)}$, and analogously for $h$; the smallest admissible $\lambda$ is exactly $M$.
+\end{proof}
+
+\begin{remark}[Bounded variation and the piecewise-linear case]\label{rem:bv_extension}
+The curvature construction extends to locally absolutely continuous $f$ whose weak derivative has a bounded-variation representative: its distributional second derivative is a finite signed Radon measure $\mu$. Replacing $|f''(u)|\,\diff u$ by $|\mu|$ in Theorem~\ref{thm:absolute_curvature_split}, or replacing $P(u)\,\diff u$ and $N(u)\,\diff u$ by the Jordan parts $\mu_+,\mu_-$, gives convex profiles with bounded slopes; the increment criterion~\eqref{eq:dc_profile_increments} replaces pointwise derivative conditions at kinks. For ReLU, $\mu=\delta_0$, $s_-=0$, and the canonical profiles are $p(z)=\max\{z,0\}$, $q=0$, $L=1$. Thus the asymmetric lift gives exactly $(\max\{a,b\},b)$, not merely a pair with the same difference. The symmetric variant instead gives $(\relu(a-b)+a+b,a+b)$. Leaky ReLU with slope $\alpha$ has curvature measure $(1-\alpha)\delta_0$; the standard ELU with unit negative-branch scale has curvature $e^z\indicator{z<0}\,\diff z$. Both fit the finite-measure construction. Piecewise-linear and smooth activations are therefore covered by the same curvature principle, with differentiability replaced by bounded variation where needed.
+\end{remark}
+
+\begin{remark}[Compatibility with valid decompositions]\label{rem:smooth_valid_decomposition}
+Both constructions fit Definition~\ref{def:decomposition}. For the canonical asymmetric pair, $F_+(0,0)=\max\{f(0),0\}$ and $F_-(0,0)=\max\{-f(0),0\}$ are non-negative; coordinatewise monotonicity then ensures non-negative values throughout $\RR^2_{\ge0}$. For the symmetric pair~\eqref{eq:smooth_split_pair}, the origin values are $g(0,0)=f(0)$ and $h(0,0)=0$, so the same argument applies whenever $f(0)\ge0$, as for every activation in Corollary~\ref{cor:modern_activations}. If $f(0)<0$, adding $|f(0)|$ to both symmetric components restores non-negativity without affecting their difference. Exactness is precisely the activation-level validity condition; Theorem~\ref{thm:general_dc_network} supplies network recovery, convexity, and monotonicity.
+\end{remark}
 
 \section{The Mixing Decomposition family}\label{sec:mixing_decomposition}
 
-The first family of pairwise activation functions targets \ac{relu} networks. It exploits the fact that \ac{relu} networks compute \ac{cpwl} functions \parencite{Arora2018}, which admit a \ac{dc} decomposition \parencite{Melzer1986_PLasDC,Kripfganz1987_PWAasDC,hiddenMono}, and organizes the decompositions into a one-parameter family interpolating between two arithmetic extremes.
+We now enlarge the ReLU pair into a family of pairwise activation functions for \ac{relu} networks. The family exploits the fact that \ac{relu} networks compute \ac{cpwl} functions \parencite{Arora2018}, which admit a \ac{dc} decomposition \parencite{Melzer1986_PLasDC,Kripfganz1987_PWAasDC,hiddenMono}, and organizes the decompositions into a one-parameter family interpolating between two arithmetic extremes.
 
 \begin{definition}[Mixing decomposition function, \LeanResult{def:fmix}]\label{def:fmix}
 For $\eta \in [0,1]$, the \emph{mixing decomposition function} is
@@ -154,112 +634,21 @@ Under the input convention~\eqref{eq:input_split_convention} with split componen
 are convex in $x$ at every hidden layer $l$ and neuron $i$; at the final layer, both streams are non-negative affine combinations of the previous streams and remain convex. Consequently $\actl{l}_i = a_{\mathrm{mix},i}^{(l,+,1)} - a_{\mathrm{mix},i}^{(l,-,1)}$ is a difference of convex functions, the standard \ac{dc} representation of the \ac{cpwl} function computed by the network \parencite{Arora2018,hiddenMono}.\end{theoremenv}
 
 \begin{proof}
-Induction on $l$. At $l = 0$, $a_{\mathrm{mix},k}^{(0,\pm,1)} = x_k^\pm$ is convex by assumption. At $l \ge 1$, each $\preact{l}{\pm}_i$ is a non-negative-coefficient combination of the layer-$(l-1)$ activations plus a constant, hence convex by the hypothesis; the maximum of two convex functions is convex, so both components remain convex.
+For $\eta=1$, the activation pair is $(\max\{z^+,z^-\},z^-)$, so Theorem~\ref{thm:general_dc_network} applies. Its final assertion gives convexity after any componentwise convex input split, and its identity output pair includes the final affine readout.
 \end{proof}
 
 \begin{remark}[On the $\eta = 0$ extreme]\label{rem:eta_zero_extreme}
 The dual \ac{dc} representation writes the output as $u(x) - v(x)$ with $v$ \emph{concave}, and $\fmix[0]$ places $a_{\mathrm{mix},i}^{(l,-,0)} = \min\bigl\{\preact{l}{+}_i, \preact{l}{-}_i\bigr\}$ in the role of $v$. This is concave only when both decomposed pre-activations are concave (or affine): the minimum of two concave functions is concave, but of two convex functions is in general neither. Under the input convention~\eqref{eq:input_split_convention}, the first pre-activations are convex in $x$, but later $\eta=0$ streams and pre-activations need not remain convex or concave. A canonical scalar example is $W^{(1)}=1$, $b^{(1)}=1$, giving the negative stream $v(x)=\min\{\max(x,0)+1,\max(-x,0)\}$. It satisfies $v(-2)=v(-1)=1$, $v(0)=v(1)=0$: the midpoint tests at $-1$ and $0$ respectively exclude convexity and concavity. By Theorem~\ref{thm:mixing_recovery}, $\fmix[0]$ still yields a valid arithmetic decomposition, and the network-level concave representation is recoverable with an unsplit affine input convention, at the cost of the $\pm$ structure.
 \end{remark}
 
-The mixing family thus interpolates between a convexity-carrying extreme at $\eta = 1$ and its arithmetic dual at $\eta = 0$; only the former inherits per-layer convexity. The next section develops this $\eta = 1$ endpoint into the central computational object of the thesis.
-
-\section{Difference-of-Convex (DC) splitting of ReLU Networks}\label{sec:dc_splitting_relu}
-
-The $\eta = 1$ endpoint underlies the stabilized split passes (Section~\ref{sec:stabilization_dc}), the \ac{cnn} generalization (Section~\ref{sec:cnn_decompositions}), and the attribution methods of Chapter~\ref{ch:saliency}. It recovers the classical \ac{dc} splitting of \ac{relu} networks from \ac{dc} regression and approximation theory \parencite{Zhang2018,Siahkamari2020_DCRegression,Awasthi2023DCNN}, and we derive it as a corollary of Theorem~\ref{thm:mixing_recovery}. Its algebraic core is the \emph{splitting identity}
-\begin{equation}
-	\relu(a - b) = \max\{a - b, 0\} = \max\{a, b\} - b
-	\qquad \text{for all } a, b \in \RR,
-	\label{eq:splitting_identity}
-\end{equation}
-which follows by adding and subtracting $b$ inside the maximum. It rewrites the \ac{relu} of a difference as a difference of two functions, each convex and non-decreasing in $(a, b)$---a Maxout unit \parencite{Goodfellow2013Maxout} and a coordinate projection.
+The mixing family thus interpolates between a convexity-carrying extreme at $\eta = 1$ and its arithmetic dual at $\eta = 0$; only the former inherits per-layer convexity. The $\eta=1$ endpoint is the maximum/identity DC split already constructed in Section~\ref{sec:dc_splitting_relu}.
 
 \begin{corollary}[DC split as the $\eta = 1$ mixing endpoint, \LeanResult{cor:dc_split_endpoint}]\label{cor:dc_split_endpoint}
-Set $\eta = 1$ in Definition~\ref{def:fmix} and drop the decomposition tag, writing $\act{l}{\pm} \coloneqq a_{\mathrm{mix}}^{(l,\pm,1)}$. The resulting \emph{\ac{dc} split} propagates, for hidden layers $l = 1, \dots, L-1$,
-\begin{equation}
-	\act{l}{+} = \max\bigl\{ \preact{l}{+},\, \preact{l}{-} \bigr\},
-	\qquad
-	\act{l}{-} = \preact{l}{-}
-	\label{eq:dc_split_activations}
-\end{equation}
-entrywise, and sets $\act{L}{\pm}=\preact{L}{\pm}$ at the final affine readout, with the decomposed pre-activations \eqref{eq:split_pos}--\eqref{eq:split_neg} induced by the weight split $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$ and the input split $x = x^+ - x^-$. It is a valid decomposition of the \ac{relu} network, and under the input convention of Theorem~\ref{thm:mixing_convex_extreme} its decomposed activations are convex functions of the input.\end{corollary}
+Set $\eta = 1$ in Definition~\ref{def:fmix} and drop the decomposition tag, writing $\act{l}{\pm} \coloneqq a_{\mathrm{mix}}^{(l,\pm,1)}$. The resulting \emph{\ac{dc} split} applies the update~\eqref{eq:dc_split_activations} entrywise at hidden layers $l = 1, \dots, L-1$, and sets $\act{L}{\pm}=\preact{L}{\pm}$ at the final affine readout, with the decomposed pre-activations \eqref{eq:split_pos}--\eqref{eq:split_neg} induced by the weight split $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$ and the input split $x = x^+ - x^-$. It is a valid decomposition of the \ac{relu} network, and under the input convention of Theorem~\ref{thm:mixing_convex_extreme} its decomposed activations are convex functions of the input.\end{corollary}
 
 \begin{proof}
-Validity is Theorem~\ref{thm:mixing_recovery} at $\eta = 1$, convexity Theorem~\ref{thm:mixing_convex_extreme}. The update~\eqref{eq:dc_split_activations} is~\eqref{eq:fmix_def} at $\eta = 1$, and neuron-level recovery is the splitting identity~\eqref{eq:splitting_identity} at $a = \preact{l}{+}_i$, $b = \preact{l}{-}_i$.
+At $\eta=1$, the pair~\eqref{eq:fmix_def} is exactly the maximum/identity pair~\eqref{eq:splitting_identity}. Its properties and network recovery follow from Proposition~\ref{prop:dc_profile_lift} and Theorem~\ref{thm:general_dc_network}; this identifies the already constructed DC split with the mixing endpoint.
 \end{proof}
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[width=.75\linewidth]{figures/decompositions/split_streams.pdf}
-	\caption{The monotone, convex split streams (top) versus a standard \ac{relu} layer (bottom). The negative weight part transitions positive input to negative pre-activation and vice versa, while the positive part maps positive to positive and negative to negative.}
-	\label{fig:splitstreams}
-\end{figure}
-
-\paragraph{The stream functions $g$ and $h$.}
-The \ac{dc} split replaces each layer by a \emph{split pair} of two monotone, non-negative \emph{split streams} (Figure~\ref{fig:splitstreams}). In analogy to the tail networks $f^{(l)} \colon \RR^{d^{(l)}} \to \RR$ restricting the original network to layers $l+1, \dots, L$, we denote the split streams restricted to those layers by
-\begin{equation}
-	g^{(l)} \colon \RR^{d^{(l)}} \times \RR^{d^{(l)}} \to \RR,
-	\qquad
-	h^{(l)} \colon \RR^{d^{(l)}} \times \RR^{d^{(l)}} \to \RR,
-	\label{eq:stream_functions}
-\end{equation}
-mapping an activation pair at layer $l$ to the $+$ and $-$ components of the decomposed output; we abbreviate $g \coloneqq g^{(0)}$, $h \coloneqq h^{(0)}$. On the output layer $g^{(L)}(x^+, x^-) = x^+$, $h^{(L)}(x^+, x^-) = x^-$, and for $0 \le l < L$,
-\begin{equation}
-	g^{(l)}(x^+, x^-) = g^{(l+1)}\bigl(\act{l+1}{+}, \act{l+1}{-}\bigr),
-	\qquad
-	h^{(l)}(x^+, x^-) = h^{(l+1)}\bigl(\act{l+1}{+}, \act{l+1}{-}\bigr),
-	\label{eq:stream_recursion}
-\end{equation}
-where the pair $\bigl(\act{l+1}{+}, \act{l+1}{-}\bigr)$ is computed from $(x^+, x^-)$ by \eqref{eq:split_pos}--\eqref{eq:split_neg} and \eqref{eq:dc_split_activations}. These stream functions---not the individual layer activations---are the central objects of the \ac{dc} sections of this chapter and of the saliency derivations of Chapter~\ref{ch:saliency}: the network is exhibited as $f = g - h$ with structured subnetworks $g$ and $h$. Concretely, the split forward pass for an \ac{mlp} initialises $\bigl(\act{0}{+}, \act{0}{-}\bigr) = (x^+, x^-)$ and, for $l = 1, \dots, L-1$, computes the pre-activation pair \eqref{eq:split_pos}--\eqref{eq:split_neg} followed by the entrywise update $\act{l}{+} = \max\{\preact{l}{+}, \preact{l}{-}\}$, $\act{l}{-} = \preact{l}{-}$ of \eqref{eq:dc_split_activations}. The final layer uses only the affine pair \eqref{eq:split_pos}--\eqref{eq:split_neg}, so the two heads may reconstruct a negative logit.
-
-The split streams are non-negative linear maps followed by entrywise Maxout gates and projections, i.e.\ monotone networks with convex, monotone activations; by the composition principles of Section~\ref{sec:convex_monotone_foundations} \parencite{Amos2017} this yields their two defining properties.
-
-\begin{proposition}[Monotonicity and convexity of the split streams, \LeanResult{prop:stream_properties}]\label{prop:stream_properties}
-For every $0 \le l \le L$, the stream functions $g^{(l)}$ and $h^{(l)}$ of~\eqref{eq:stream_functions} are convex and non-decreasing in each coordinate of the pair $(x^+, x^-) \in \RR^{d^{(l)}} \times \RR^{d^{(l)}}$.\end{proposition}
-
-\begin{proof}
-Downward induction on $l$. Base case: $g^{(L)}, h^{(L)}$ are coordinate projections, linear with non-negative coefficients. For the step, fix $l < L$ and assume the claim for $l+1$. The map $(x^+, x^-) \mapsto \bigl(\preact{l+1}{+}, \preact{l+1}{-}\bigr)$ of \eqref{eq:split_pos}--\allowbreak\eqref{eq:split_neg} is affine with non-negative coefficients, and the entrywise updates \eqref{eq:dc_split_activations} apply a maximum or a projection, preserving convexity and monotonicity. By~\eqref{eq:stream_recursion}, $g^{(l)}, h^{(l)}$ compose the convex, non-decreasing $g^{(l+1)}, h^{(l+1)}$ with such a map, hence are again convex and non-decreasing \parencite{Amos2017}.
-\end{proof}
-
-The correctness statement asserts that the difference of the two split-stream outputs equals the original tail network evaluated at the difference of their inputs---at \emph{every} layer, not only at the input.
-
-\begin{theoremenv}[Correctness of the split forward pass, \LeanResult{thm:split_correct}]\label{thm:split_correct}
-For every $0 \le l \le L$ and all $x^+, x^- \in \RR^{d^{(l)}}_{\ge 0}$,
-\begin{equation}
-	f^{(l)}\bigl( x^+ - x^- \bigr)
-	= \bigl( g^{(l)} - h^{(l)} \bigr)(x^+, x^-).
-	\label{eq:split_correctness}
-\end{equation}\end{theoremenv}
-
-\begin{proof}
-Downward induction on $l = L, \dots, 0$, absorbing biases into the weights via~\eqref{eq:canonical_weight_split}.
-
-\emph{Base case $l = L$.} $g^{(L)}(x^+, x^-) - h^{(L)}(x^+, x^-) = x^+ - x^- = f^{(L)}(x^+ - x^-)$, as $f^{(L)}$ is the identity.
-
-\emph{Inductive step.} Let $0 \le l < L$ and assume~\eqref{eq:split_correctness} at $l+1$. With $z^{\pm} \coloneqq \preact{l+1}{\pm}$ from \eqref{eq:split_pos}--\eqref{eq:split_neg}, Proposition~\ref{prop:validity_recovery} gives $z^+ - z^- = \Wl{l+1}(x^+ - x^-) + b^{(l+1)}$. Using the splitting identity~\eqref{eq:splitting_identity} entrywise,
-\begin{align*}
-	f^{(l)}\bigl( x^+ - x^- \bigr)
-	&= f^{(l+1)}\Bigl( \relu\bigl( \Wl{l+1} (x^+ - x^-) + b^{(l+1)} \bigr) \Bigr)
-	= f^{(l+1)}\bigl( \relu( z^+ - z^- ) \bigr) \\
-	&= f^{(l+1)}\bigl( \max\{z^+, z^-\} - z^- \bigr)
-	= f^{(l+1)}\bigl( \act{l+1}{+} - \act{l+1}{-} \bigr) \\
-	&= g^{(l+1)}\bigl( \act{l+1}{+}, \act{l+1}{-} \bigr) - h^{(l+1)}\bigl( \act{l+1}{+}, \act{l+1}{-} \bigr)
-	= \bigl( g^{(l)} - h^{(l)} \bigr)(x^+, x^-),
-\end{align*}
-where the penultimate equality is the hypothesis at the pair $\bigl(\act{l+1}{+}, \act{l+1}{-}\bigr)$ and the last is the recursion~\eqref{eq:stream_recursion}.
-\end{proof}
-
-\begin{remark}[Preservation of sub-threshold signals]\label{rem:subthreshold}
-The correctness theorem hides an information-theoretic asymmetry between the original and the split network. When a neuron is inactive, $\preactl{l}_i \le 0$, the original \ac{relu} outputs $\actl{l}_i = 0$ and discards the \emph{magnitude} of the losing pre-activation: downstream computation is oblivious to how strongly the neuron was suppressed. The split pair reads $\bigl(\act{l}{+}_i, \act{l}{-}_i\bigr) = \bigl(\preact{l}{-}_i, \preact{l}{-}_i\bigr)$: the difference is zero, as validity demands, but both components retain the accumulated magnitude $\preact{l}{-}_i$ of the cancelled mass and propagate it forward. The split streams thus carry strictly more information than the original activations---sub-threshold contributions survive the gate---which the attribution methods of Chapter~\ref{ch:saliency} exploit. The same effect drives the numerical growth of Section~\ref{sec:stabilization_dc}: without cancellation by subtraction, both streams accumulate the absolute mass $\preact{l}{+}_i + \preact{l}{-}_i$ instead of the signed residual.
-\end{remark}
-
-\begin{remark}[Flexibility of the input split]\label{rem:input_split_flexibility}
-Theorem~\ref{thm:split_correct} holds for \emph{any} non-negative representation $x = x^+ - x^-$: the entrywise split $x^\pm = \posneg{x}{\pm}$ or the symmetric split $x^\pm = \posneg{x}{\pm} + c$ with $c \ge 0$. This degree of freedom is exploited both for numerical stabilization and for the baseline choices of the attribution methods in Chapter~\ref{ch:saliency}. The half--half split $x^\pm = \pm x/2$ of Section~\ref{sec:stabilization_dc} is \emph{not} such a non-negative input split---its negative component is signed---but a chain-rule device for the backward pass, used only to differentiate the split streams along the unified input direction.
-\end{remark}
-
-% Smooth-activation DC splitting moved to Mathematical Foundations (tropical section).
-\begin{remark}[Beyond \ac{relu}: smooth activations]\label{rem:smooth_pointer}
-The difference-of-convex split is not special to \ac{relu}. Theorem~\ref{thm:smooth_dc_split} (Section~\ref{sec:tropical_polyhedra_foundations}) gives a \ac{dc}--monotone splitting $f(a-b) = g(a,b) - h(a,b)$ for every activation with integrable curvature --- GELU, Swish, tanh, sigmoid, softplus --- so the constructions of this chapter carry over to networks with smooth activations by replacing the splitting identity \eqref{eq:splitting_identity} with that theorem's curvature-based split.
-\end{remark}
 
 \section{The Stopping Decomposition}\label{sec:stopping_decomposition}
 
@@ -510,7 +899,15 @@ Theorem~\ref{thm:shift_forward} licenses \emph{re-centering}: whenever the commo
 \[
     c^{(l)} = -\min\bigl\{\act{l}{+}, \act{l}{-}\bigr\}
 \]
-(entrywise) makes at least one component of every pair zero. For a fixed shift, the head Jacobians at the shifted and unshifted split coordinates agree, since the Maxout branch comparisons are unchanged. If the shift is computed from the input, it must be detached when propagating these head sensitivities: differentiating through the shift adds the common term $W_{\mathrm{abs}}^{[l,\rightarrow]} Dc$ to both head derivatives. Their difference remains unchanged, but their individual derivatives need not. The original paper reports double-precision intermediate computations, re-centering triggered by magnitude thresholds, and optional caching of the original activations to correct the split activations on the fly. This correction targets the \textbf{forward invariant} $\act{l}{+} - \act{l}{-} = \actl{l}$; the exact real-arithmetic identity does not imply zero roundoff error in a floating-point implementation. The stabilized pass thus augments each layer of the split forward pass with the entrywise re-centering step $\act{l}{\pm} \leftarrow \act{l}{\pm} - \min\{\act{l}{+}, \act{l}{-}\}$ and, when enabled, the cache correction $\act{l}{+} \leftarrow \act{l}{-} + \actl{l}$.
+(entrywise) makes at least one component of every pair zero. For a fixed shift, the head Jacobians at the shifted and unshifted split coordinates agree, since the Maxout branch comparisons are unchanged. If the shift is computed from the input, it must be detached when propagating these head sensitivities: differentiating through the shift adds the common term $W_{\mathrm{abs}}^{[l,\rightarrow]} Dc$ to both head derivatives. Their difference remains unchanged, but their individual derivatives need not. The original paper reports double-precision intermediate computations; the released evaluation command requires an explicit precision setting. Its forward implementation offers several magnitude-reduction modes. A common shift preserves the pair difference by Theorem~\ref{thm:shift_forward}, whereas multiplying both streams by a common factor generally changes that difference. When original activations are cached, the implementation subsequently applies the symmetric correction
+\[
+    e^{(l)}=\actl{l}-\bigl(\act{l}{+}-\act{l}{-}\bigr),
+    \qquad
+    \act{l}{+}\leftarrow\act{l}{+}+\tfrac12 e^{(l)},
+    \qquad
+    \act{l}{-}\leftarrow\act{l}{-}-\tfrac12 e^{(l)}.
+\]
+This restores the \textbf{forward invariant} in exact arithmetic. The correction is detached in the default backward configuration; differentiating through it instead changes the stream sensitivities. The common-shift theorem does not by itself justify the scaling modes, the gradients of these input-dependent corrections, or convexity and monotonicity of the resulting stabilized streams. Floating-point reconstruction error must still be measured: an exact identity for the correction does not guarantee zero roundoff error.
 
 \subsection{Shifting the backward pass}\label{subsec:backward_stabilization}
 

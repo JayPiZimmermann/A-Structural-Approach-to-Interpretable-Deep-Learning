@@ -1,0 +1,82 @@
+{
+  "status": "compiled_and_independently_reviewed_ready_for_central_promotion",
+  "scope": "Actual finite pre-LayerNorm Transformer inference as a function of real token embeddings, with arbitrary finite block lists and head lists, fixed nonempty injective attention masks, signed projections, supported scalar activations, positional biases, optional final LayerNorm, and signed affine logits.",
+  "algorithm": "Transformer.compile constructs explicit scalar syntax; Expr.splitEval recursively applies closed-form pair primitives; Transformer.decompose uses this compiler and evaluator with unchanged model parameters.",
+  "headline_theorems": [
+    "HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition",
+    "HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition"
+  ],
+  "properties": {
+    "exactness": "All real doubled inputs, including inputs outside the nonnegative orthant.",
+    "expanded_heads": "Convex, coordinatewise monotone and nonnegative on the nonnegative doubled-input orthant.",
+    "raw_heads": "Globally convex and nonnegative after the positive/negative-parts input lift; exact reconstruction of every signed logit.",
+    "depth": "Any finite list of blocks, including zero; no fixed depth bound or assumed layer invariant."
+  },
+  "limits": [
+    "No raw-input monotonicity claim.",
+    "No floating-point stability or empirical accuracy guarantee.",
+    "The symbolic expression representation does not certify a shared-DAG size or runtime bound.",
+    "The explicit named Transformer model is pre-LayerNorm; no assertion that every possible Transformer variant has the same definition."
+  ],
+  "source_sha256": {
+    "formalization/HiddenMonotonicity/TransformerPairCalculus.lean": "eb2413aa4249d8779735da9eb18e94a6ce6f3703863b3efaf5601d17a2487469",
+    "formalization/HiddenMonotonicity/TransformerConvexInput.lean": "7ed5b6d305b71471e2ce835056695ceb726017df2676220148fd042b588b9bb6",
+    "formalization/HiddenMonotonicity/LayerNormDC.lean": "379b317e9fc222e7d8e142c0c5338399e84436ab25f7bc07a5d0b590f6ecc3de",
+    "formalization/HiddenMonotonicity/TransformerExpr.lean": "916647af7bc396ea203e6bf1669f7e6586d87bc33ff790fd075a225bff44aa04",
+    "formalization/HiddenMonotonicity/TransformerExprProperties.lean": "d50ef56c38a7fcea009c57455a7700eb6f473c1e999bdfe5afe6d50b0bae7064",
+    "formalization/HiddenMonotonicity/TransformerDefinition.lean": "5fa433193d02cfdb0369dcf76fa1eaffa36daf8cbd2b41dafa36a66f5ac2b1c3",
+    "formalization/HiddenMonotonicity/TransformerCorrectness.lean": "9f0b3e59f4e061bb7749aab6d79549d67c8e0b9c5caca2c9d4f5701a013ef445"
+  },
+  "reviews": {
+    "pair-calculus": {
+      "path": "reports/evidence/transformer-dc/pair-calculus/review.json",
+      "exists": true,
+      "sha256": "d918023eba25e719c7b443c43e0c4056bcbf1fee276fff6336ce0ef8460fa809"
+    },
+    "convex-input": {
+      "path": "reports/evidence/transformer-dc/convex-input/review.json",
+      "exists": true,
+      "sha256": "cc1281eee029d90e11dc42ed16e8277d3d37ebcaf0b0c28f46adb2a60bf13d9b"
+    },
+    "layernorm-assembly/review": {
+      "path": "reports/evidence/transformer-dc/layernorm-assembly/review/review.json",
+      "exists": true,
+      "sha256": "19075b2518ef7cab72829ed02034b649676371ff9cd668de2510dcf8d5e35144"
+    },
+    "expr-review": {
+      "path": "reports/evidence/transformer-dc/expr-review/review.json",
+      "exists": true,
+      "sha256": "5f9d5d4703391deec6d0a52cbf6e7e74629cec564aeab40adb12fba87bbd760c"
+    },
+    "definition": {
+      "path": "reports/evidence/transformer-dc/definition/review.json",
+      "exists": true,
+      "sha256": "08a7d94ac342fa3d98c7566663daff2047b72ab3b6cc93554512ba96a514933d"
+    },
+    "final-review": {
+      "path": "reports/evidence/transformer-dc/final-review/review.json",
+      "exists": true,
+      "sha256": "3638417ba3a4f42f9e9bd96c693c857f1ba70ad4e7f542f327d9e6d7be0eea9c"
+    },
+    "assembly-semantic": {
+      "path": "reports/evidence/transformer-dc/assembly-semantic/review.json",
+      "exists": true,
+      "sha256": "03754abcbec08607a4e7fd881948212973abd6c84d0d442ebd0418f173da9700"
+    }
+  },
+  "source_builds": {
+    "expr-build": {
+      "exit_code": 0,
+      "log": "reports/evidence/transformer-dc/architecture/expr-build.log"
+    },
+    "expr-properties-build": {
+      "exit_code": 0,
+      "log": "reports/evidence/transformer-dc/architecture/expr-properties-build.log"
+    },
+    "transformer-build": {
+      "exit_code": 0,
+      "log": "reports/evidence/transformer-dc/architecture/transformer-build.log"
+    }
+  },
+  "promotion": "No global root or verification-manifest edits by this owner. Central dc_lean_lead integrates reviewed contracts; root performs the committed clean gate."
+}

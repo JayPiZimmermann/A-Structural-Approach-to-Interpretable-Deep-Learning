@@ -1,0 +1,70 @@
+{
+  "reviewer": "/root/transformer_lean_architecture/expr_review",
+  "status": "passed",
+  "source": {
+    "source": "formalization/HiddenMonotonicity/TransformerExpr.lean",
+    "sha256": "916647af7bc396ea203e6bf1669f7e6586d87bc33ff790fd075a225bff44aa04"
+  },
+  "no_production_edits_by_reviewer": true,
+  "contract_authorship": "The two full-forall contracts were manually authored from the intended mathematics and source signature, before compiling the audit; they were not generated from Lean printed types.",
+  "semantic_review": {
+    "object": "Finite scalar expression syntax with genuine input, real constants, signed scaling, addition, products, finite sums, supported closed-form activations, coupled softmax, and epsilon LayerNorm.",
+    "algorithm": "splitEval is a concrete structural recursion using constPair, addPair, scalePair, polarized mulPair, verified scalar activation pairs, verified multivariate softmax heads, and the explicit population-variance LayerNorm pair.",
+    "exactness": "For every input index universe, every expression, and every arbitrary real input-stream pair, subtraction of splitEval equals ordinary eval on input differences. No positivity assumption is imposed on this algebraic identity.",
+    "convex_monotone_nonnegative": "For every convex domain and every family of convex, monotone, nonnegative input stream functions, splitEval produces two convex, monotone, nonnegative stream functions on that domain.",
+    "layernorm": "The constructor requires epsilon>0. Its ordinary operation uses the genuine population mean, variance, inverse square root and signed affine gain/bias; the split relies on the proved nonnegativity of represented variance.",
+    "softmax": "An output index in Fin d witnesses d>0, excluding the undefined all-masked softmax case. An empty finite sum is nevertheless supported.",
+    "nonvacuity": "A nonlinear expression combines a true two-coordinate softmax, negative scaling, two-coordinate LayerNorm and Gaussian GELU. It is checked on both constant inputs and nonconstant independent stream coordinates over a nonempty orthant.",
+    "boundaries": "Negative stream inputs remain covered by exactness; a checked counterexample prevents interpreting the result as global monotonicity outside the nonnegative domain.",
+    "scope_limits": [
+      "The expression theorem does not itself identify a complete Transformer architecture; a separately verified Transformer compiler is required.",
+      "Expression semantics do not certify shared-DAG size bounds, floating-point stability, or runtime.",
+      "The regularity theorem is compositional; raw signed-input monotonicity is not a conclusion."
+    ]
+  },
+  "exact_type_module_axiom_audit": {
+    "exit_code": 0,
+    "contracts": 2,
+    "imported_project_theorem_count": 835,
+    "allowed_axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "driver": "reports/evidence/transformer-dc/expr-review/Exact.lean",
+    "log": "reports/evidence/transformer-dc/expr-review/exact.log",
+    "contracts_file": "reports/evidence/transformer-dc/expr-review/contracts.json"
+  },
+  "boundary_consumer": {
+    "exit_code": 0,
+    "examples": 14,
+    "helper_theorems": 1,
+    "file": "reports/evidence/transformer-dc/expr-review/Boundary.lean",
+    "log": "reports/evidence/transformer-dc/expr-review/boundary.log",
+    "cases": [
+      "input identity",
+      "negative constant",
+      "negative scale",
+      "empty split sum",
+      "empty ordinary sum",
+      "signed nonorthant product inputs",
+      "two-coordinate softmax literal formula",
+      "singleton softmax",
+      "singleton LayerNorm",
+      "two-coordinate zero-variance LayerNorm",
+      "nested softmax/LayerNorm/GELU reconstruction",
+      "constant regularity witness",
+      "nonconstant orthant regularity witness",
+      "counterexample to global monotonicity"
+    ],
+    "development_note": "A direct deeply nested regularity specialization initially exhausted elaboration heartbeats. The final consumer first proves a generic expression result and supplies the input domain type explicitly, avoiding accidental inference of E=Nat. No production theorem or hypothesis was changed."
+  },
+  "evidence_sha256": {
+    "reports/evidence/transformer-dc/expr-review/contracts.json": "37f08e21dbead81bfb4a11703ccf4e2be06ec73975550dd62a85f256deb7ba1b",
+    "reports/evidence/transformer-dc/expr-review/Boundary.lean": "4184b6a29feb88bff0246d8b2db98f3e0cffead25c9ba6cf4d8d65f3b06c98e7",
+    "reports/evidence/transformer-dc/expr-review/Exact.lean": "43f095695f5ca44252e09416c6fdbee78ca9b95efc87b99c8d390851dc92fa57",
+    "reports/evidence/transformer-dc/expr-review/exact.log": "770cbe04f633ba937cc1f63541fbc6977c9936f4335e6542c35fac28c1fd1ff0",
+    "reports/evidence/transformer-dc/expr-review/boundary.log": "d5abfd9666dda82918b5325841d69d4970fa5fca869ce68c4de21f5f55b02b4b",
+    "reports/evidence/transformer-dc/expr-review/environment.json": "61ff39d908f69abcfa13dae232d547c571ca7f74a89809a0c2b2cbe15422dcf9"
+  }
+}

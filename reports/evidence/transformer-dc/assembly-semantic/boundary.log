@@ -1,0 +1,54 @@
+../reports/evidence/transformer-dc/assembly-semantic/Boundary.lean:61:49: error: unsolved goals
+x : Fin 2 → Fin 2 → ℝ
+q k : Fin 2
+⊢ ↑Finset.univ.card * (x q 0 * x k 0) = x q 0 * x k 0
+../reports/evidence/transformer-dc/assembly-semantic/Boundary.lean:63:42: warning: This simp argument is unused:
+  Fin.sum_univ_two
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [twoTokenHead, TransformerHead.logits, TransformerMask.full, firstFeature, TransformerAffine.eval]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+../reports/evidence/transformer-dc/assembly-semantic/Boundary.lean:68:81: error: unsolved goals
+x : Fin 2 → Fin 2 → ℝ
+q i : Fin 2
+⊢ ↑Finset.univ.card *
+      ∑ k,
+        HiddenMonotonicity.SoftmaxDC.softmax
+            ({ keyWidth := 1, keyWidth_pos := signedLogit._proof_1, valueWidth := 1,
+                  valueWidth_pos := signedLogit._proof_1,
+                  query := { weight := fun x j => if j = 0 then 1 else 0, bias := fun x => 0 },
+                  key := { weight := fun x j => if j = 0 then 1 else 0, bias := fun x => 0 },
+                  value := { weight := fun x j => if j = 0 then 1 else 0, bias := fun x => 0 },
+                  outputWeight := fun x x_1 => 1, scale := 1,
+                  mask :=
+                    { keyCount := fun x => 2, keyCount_pos := ⋯, keyAt := fun x k => k, keyAt_injective := ⋯ } }.logits
+              x q)
+            k *
+          x k 0 =
+    HiddenMonotonicity.SoftmaxDC.softmax (fun k => x q 0 * x k 0) 0 * x 0 0 +
+      HiddenMonotonicity.SoftmaxDC.softmax (fun k => x q 0 * x k 0) 1 * x 1 0
+../reports/evidence/transformer-dc/assembly-semantic/Boundary.lean:69:44: warning: This simp argument is unused:
+  TransformerHead.logits
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [twoTokenHead, TransformerHead.eval, TransformerMask.full, firstFeature, TransformerAffine.eval,
+    Fin.sum_univ_two]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+../reports/evidence/transformer-dc/assembly-semantic/Boundary.lean:70:42: warning: This simp argument is unused:
+  Fin.sum_univ_two
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [twoTokenHead, TransformerHead.eval, TransformerHead.logits, TransformerMask.full, firstFeature,
+    TransformerAffine.eval]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+'HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'HiddenMonotonicity.TransformerDC.Transformer.eval_syntax' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.TransformerDC.layerNormPair_exact' depends on axioms: [propext, Classical.choice, Quot.sound]

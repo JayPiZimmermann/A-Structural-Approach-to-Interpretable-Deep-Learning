@@ -1,0 +1,27 @@
+{
+  "def:prenorm_transformer": {
+    "status": "encoded_definition",
+    "lean": [
+      "HiddenMonotonicity.TransformerDC.Transformer.eval",
+      "HiddenMonotonicity.TransformerDC.TransformerHead.eval",
+      "HiddenMonotonicity.TransformerDC.TransformerBlock.eval",
+      "HiddenMonotonicity.TransformerDC.Transformer.eval_syntax"
+    ],
+    "scope": "The actual ordinary pre-LayerNorm forward definition has independent signed affine projections, coupled masked softmax, input-dependent population-variance LayerNorm, attention and feedforward residuals, a finite block list including zero depth, positional bias, optional final normalization, and an ungated signed affine readout. Positive token/residual dimensions, positive head query/key and value widths, positive normalization epsilons, and nonempty fixed allowed-key sets are encoded in the parameter structures. Activations may vary between blocks. The source scalar readout is one coordinate of the formal finite-output model. This definition does not itself assert the split-head properties."
+  },
+  "thm:transformer_dc": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition",
+      "HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition",
+      "HiddenMonotonicity.TransformerDC.Transformer.decompose_exact",
+      "HiddenMonotonicity.TransformerDC.Transformer.eval_syntax",
+      "HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks",
+      "HiddenMonotonicity.TransformerDC.Expr.decompose_regular",
+      "HiddenMonotonicity.TransformerDC.Expr.decompose_exact",
+      "HiddenMonotonicity.TransformerDC.Expr.splitEval_exact",
+      "HiddenMonotonicity.TransformerDC.Expr.splitEval_regular"
+    ],
+    "scope": "The actual finite pre-LayerNorm Transformer forward map is defined independently of its compiler: positive token and residual dimensions; a finite block list including the empty list; positive query/key and value widths; fixed nonempty allowed-key sets; arbitrary signed affine Q/K/V projections, head output projections, biases and real score scales; actual coupled softmax and population-variance epsilon LayerNorm; two residual additions; block-specific ReLU, exact Gaussian GELU, positive-parameter Swish, sigmoid or positive-parameter softplus; positional bias; optional final LayerNorm; and an ungated signed affine readout. The main contract proves nonnegative convex coordinatewise monotone output heads on the independent doubled-input orthant and exact recovery (in fact for all real stream pairs). The companion raw_dc_decomposition proves globally convex nonnegative heads after positive/negative raw-input splitting, without claiming raw-input monotonicity. Arbitrary finite depth is a list, not an assumed decomposition certificate. Structural recursion is a total real-arithmetic specification; no floating-point stability, runtime bound, attribution quality or general post-normalization architecture is asserted."
+  }
+}

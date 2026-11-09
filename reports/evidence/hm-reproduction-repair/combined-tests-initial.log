@@ -1,0 +1,833 @@
+............EEEEE                                                [100%]
+==================================== ERRORS ====================================
+_ ERROR at setup of ConfigurationTests.test_example_validates_without_results __
+
+name = 'difference_of_networks', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/usr/lib/python3.12/importlib/__init__.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """
+    Training system for MNIST and CIFAR10 with support for split models.
+    """
+    
+    from .model.models import create_model, MNISTCNN, MNISTCNNMaxout, MODEL_CONFIGS, get_model_info
+    from .model.split_model import SplitModel, SplitModelLoss, create_split_model, ModelDecomposer
+    from .model.positive_layers import (
+        PositiveTransform, PositiveLinear, PositiveConv2d, PositiveBatchNorm2d,
+        SupportFunctionMLP, replace_layers_with_positive
+    )
+    from .data_utils import DataLoaderConfig, get_dataloaders, get_transforms, get_dataset_info
+    from .trainer import Trainer, TrainingTracker
+    from .evaluation import (
+        ModelEvaluator, plot_confusion_matrix, plot_split_model_analysis,
+        save_results_to_csv
+    )
+>   from .analyse_weights import analyze_model, analyze_split_models, analyze_weight_distribution
+E   ModuleNotFoundError: No module named 'difference_of_networks.analyse_weights'
+
+difference_of_networks/__init__.py:17: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x7740ec825d00>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:245: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/python.py:677: in setup
+    init_mod = importtestmodule(self.path / "__init__.py", self.config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/hidden_monotonicity/difference_of_networks/__init__.py')
+config = <_pytest.config.Config object at 0x774307701700>
+
+    def importtestmodule(
+        path: Path,
+        config: Config,
+    ):
+        # We assume we are only called once per module.
+        importmode = config.getoption("--import-mode")
+        try:
+            mod = import_path(
+                path,
+                mode=importmode,
+                root=config.rootpath,
+                consider_namespace_packages=config.getini("consider_namespace_packages"),
+            )
+        except SyntaxError as e:
+            raise nodes.Collector.CollectError(
+                ExceptionInfo.from_current().getrepr(style="short")
+            ) from e
+        except ImportPathMismatchError as e:
+            raise nodes.Collector.CollectError(
+                "import file mismatch:\n"
+                "imported module {!r} has this __file__ attribute:\n"
+                "  {}\n"
+                "which is not the same as the test file we want to collect:\n"
+                "  {}\n"
+                "HINT: remove __pycache__ / .pyc files and/or use a "
+                "unique basename for your test file modules".format(*e.args)
+            ) from e
+        except ImportError as e:
+            exc_info = ExceptionInfo.from_current()
+            if config.get_verbosity() < 2:
+                exc_info.traceback = exc_info.traceback.filter(filter_traceback)
+            exc_repr = (
+                exc_info.getrepr(style="short")
+                if exc_info.traceback
+                else exc_info.exconly()
+            )
+            formatted_tb = str(exc_repr)
+>           raise nodes.Collector.CollectError(
+                f"ImportError while importing test module '{path}'.\n"
+                "Hint: make sure your test modules/packages have valid Python names.\n"
+                "Traceback:\n"
+                f"{formatted_tb}"
+            ) from e
+E           _pytest.nodes.Collector.CollectError: ImportError while importing test module '/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/hidden_monotonicity/difference_of_networks/__init__.py'.
+E           Hint: make sure your test modules/packages have valid Python names.
+E           Traceback:
+E           /usr/lib/python3.12/importlib/__init__.py:90: in import_module
+E               return _bootstrap._gcd_import(name[level:], package, level)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           difference_of_networks/__init__.py:17: in <module>
+E               from .analyse_weights import analyze_model, analyze_split_models, analyze_weight_distribution
+E           E   ModuleNotFoundError: No module named 'difference_of_networks.analyse_weights'
+
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/python.py:537: CollectError
+______ ERROR at setup of ConfigurationTests.test_invalid_seed_range_fails ______
+
+name = 'difference_of_networks', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/usr/lib/python3.12/importlib/__init__.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """
+    Training system for MNIST and CIFAR10 with support for split models.
+    """
+    
+    from .model.models import create_model, MNISTCNN, MNISTCNNMaxout, MODEL_CONFIGS, get_model_info
+    from .model.split_model import SplitModel, SplitModelLoss, create_split_model, ModelDecomposer
+    from .model.positive_layers import (
+        PositiveTransform, PositiveLinear, PositiveConv2d, PositiveBatchNorm2d,
+        SupportFunctionMLP, replace_layers_with_positive
+    )
+    from .data_utils import DataLoaderConfig, get_dataloaders, get_transforms, get_dataset_info
+    from .trainer import Trainer, TrainingTracker
+    from .evaluation import (
+        ModelEvaluator, plot_confusion_matrix, plot_split_model_analysis,
+        save_results_to_csv
+    )
+>   from .analyse_weights import analyze_model, analyze_split_models, analyze_weight_distribution
+E   ModuleNotFoundError: No module named 'difference_of_networks.analyse_weights'
+
+difference_of_networks/__init__.py:17: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x77421372a7a0>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:245: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:516: in setup
+    raise exc[0].with_traceback(exc[1])
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/python.py:677: in setup
+    init_mod = importtestmodule(self.path / "__init__.py", self.config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/hidden_monotonicity/difference_of_networks/__init__.py')
+config = <_pytest.config.Config object at 0x774307701700>
+
+    def importtestmodule(
+        path: Path,
+        config: Config,
+    ):
+        # We assume we are only called once per module.
+        importmode = config.getoption("--import-mode")
+        try:
+            mod = import_path(
+                path,
+                mode=importmode,
+                root=config.rootpath,
+                consider_namespace_packages=config.getini("consider_namespace_packages"),
+            )
+        except SyntaxError as e:
+            raise nodes.Collector.CollectError(
+                ExceptionInfo.from_current().getrepr(style="short")
+            ) from e
+        except ImportPathMismatchError as e:
+            raise nodes.Collector.CollectError(
+                "import file mismatch:\n"
+                "imported module {!r} has this __file__ attribute:\n"
+                "  {}\n"
+                "which is not the same as the test file we want to collect:\n"
+                "  {}\n"
+                "HINT: remove __pycache__ / .pyc files and/or use a "
+                "unique basename for your test file modules".format(*e.args)
+            ) from e
+        except ImportError as e:
+            exc_info = ExceptionInfo.from_current()
+            if config.get_verbosity() < 2:
+                exc_info.traceback = exc_info.traceback.filter(filter_traceback)
+            exc_repr = (
+                exc_info.getrepr(style="short")
+                if exc_info.traceback
+                else exc_info.exconly()
+            )
+            formatted_tb = str(exc_repr)
+>           raise nodes.Collector.CollectError(
+                f"ImportError while importing test module '{path}'.\n"
+                "Hint: make sure your test modules/packages have valid Python names.\n"
+                "Traceback:\n"
+                f"{formatted_tb}"
+            ) from e
+E           _pytest.nodes.Collector.CollectError: ImportError while importing test module '/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/hidden_monotonicity/difference_of_networks/__init__.py'.
+E           Hint: make sure your test modules/packages have valid Python names.
+E           Traceback:
+E           /usr/lib/python3.12/importlib/__init__.py:90: in import_module
+E               return _bootstrap._gcd_import(name[level:], package, level)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           difference_of_networks/__init__.py:17: in <module>
+E               from .analyse_weights import analyze_model, analyze_split_models, analyze_weight_distribution
+E           E   ModuleNotFoundError: No module named 'difference_of_networks.analyse_weights'
+
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/python.py:537: CollectError
+_ ERROR at setup of ConfigurationTests.test_malformed_and_incomplete_configs_fail _
+
+name = 'difference_of_networks', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/usr/lib/python3.12/importlib/__init__.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """
+    Training system for MNIST and CIFAR10 with support for split models.
+    """
+    
+    from .model.models import create_model, MNISTCNN, MNISTCNNMaxout, MODEL_CONFIGS, get_model_info
+    from .model.split_model import SplitModel, SplitModelLoss, create_split_model, ModelDecomposer
+    from .model.positive_layers import (
+        PositiveTransform, PositiveLinear, PositiveConv2d, PositiveBatchNorm2d,
+        SupportFunctionMLP, replace_layers_with_positive
+    )
+    from .data_utils import DataLoaderConfig, get_dataloaders, get_transforms, get_dataset_info
+    from .trainer import Trainer, TrainingTracker
+    from .evaluation import (
+        ModelEvaluator, plot_confusion_matrix, plot_split_model_analysis,
+        save_results_to_csv
+    )
+>   from .analyse_weights import analyze_model, analyze_split_models, analyze_weight_distribution
+E   ModuleNotFoundError: No module named 'difference_of_networks.analyse_weights'
+
+difference_of_networks/__init__.py:17: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x7740ec8e3060>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:245: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:516: in setup
+    raise exc[0].with_traceback(exc[1])
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/python.py:677: in setup
+    init_mod = importtestmodule(self.path / "__init__.py", self.config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/hidden_monotonicity/difference_of_networks/__init__.py')
+config = <_pytest.config.Config object at 0x774307701700>
+
+    def importtestmodule(
+        path: Path,
+        config: Config,
+    ):
+        # We assume we are only called once per module.
+        importmode = config.getoption("--import-mode")
+        try:
+            mod = import_path(
+                path,
+                mode=importmode,
+                root=config.rootpath,
+                consider_namespace_packages=config.getini("consider_namespace_packages"),
+            )
+        except SyntaxError as e:
+            raise nodes.Collector.CollectError(
+                ExceptionInfo.from_current().getrepr(style="short")
+            ) from e
+        except ImportPathMismatchError as e:
+            raise nodes.Collector.CollectError(
+                "import file mismatch:\n"
+                "imported module {!r} has this __file__ attribute:\n"
+                "  {}\n"
+                "which is not the same as the test file we want to collect:\n"
+                "  {}\n"
+                "HINT: remove __pycache__ / .pyc files and/or use a "
+                "unique basename for your test file modules".format(*e.args)
+            ) from e
+        except ImportError as e:
+            exc_info = ExceptionInfo.from_current()
+            if config.get_verbosity() < 2:
+                exc_info.traceback = exc_info.traceback.filter(filter_traceback)
+            exc_repr = (
+                exc_info.getrepr(style="short")
+                if exc_info.traceback
+                else exc_info.exconly()
+            )
+            formatted_tb = str(exc_repr)
+>           raise nodes.Collector.CollectError(
+                f"ImportError while importing test module '{path}'.\n"
+                "Hint: make sure your test modules/packages have valid Python names.\n"
+                "Traceback:\n"
+                f"{formatted_tb}"
+            ) from e
+E           _pytest.nodes.Collector.CollectError: ImportError while importing test module '/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/hidden_monotonicity/difference_of_networks/__init__.py'.
+E           Hint: make sure your test modules/packages have valid Python names.
+E           Traceback:
+E           /usr/lib/python3.12/importlib/__init__.py:90: in import_module
+E               return _bootstrap._gcd_import(name[level:], package, level)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           difference_of_networks/__init__.py:17: in <module>
+E               from .analyse_weights import analyze_model, analyze_split_models, analyze_weight_distribution
+E           E   ModuleNotFoundError: No module named 'difference_of_networks.analyse_weights'
+
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/python.py:537: CollectError
+_ ERROR at setup of ConfigurationTests.test_missing_or_empty_configs_fail_without_results _
+
+name = 'difference_of_networks', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/usr/lib/python3.12/importlib/__init__.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """
+    Training system for MNIST and CIFAR10 with support for split models.
+    """
+    
+    from .model.models import create_model, MNISTCNN, MNISTCNNMaxout, MODEL_CONFIGS, get_model_info
+    from .model.split_model import SplitModel, SplitModelLoss, create_split_model, ModelDecomposer
+    from .model.positive_layers import (
+        PositiveTransform, PositiveLinear, PositiveConv2d, PositiveBatchNorm2d,
+        SupportFunctionMLP, replace_layers_with_positive
+    )
+    from .data_utils import DataLoaderConfig, get_dataloaders, get_transforms, get_dataset_info
+    from .trainer import Trainer, TrainingTracker
+    from .evaluation import (
+        ModelEvaluator, plot_confusion_matrix, plot_split_model_analysis,
+        save_results_to_csv
+    )
+>   from .analyse_weights import analyze_model, analyze_split_models, analyze_weight_distribution
+E   ModuleNotFoundError: No module named 'difference_of_networks.analyse_weights'
+
+difference_of_networks/__init__.py:17: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x7740ebd27e20>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:245: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:516: in setup
+    raise exc[0].with_traceback(exc[1])
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/python.py:677: in setup
+    init_mod = importtestmodule(self.path / "__init__.py", self.config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/hidden_monotonicity/difference_of_networks/__init__.py')
+config = <_pytest.config.Config object at 0x774307701700>
+
+    def importtestmodule(
+        path: Path,
+        config: Config,
+    ):
+        # We assume we are only called once per module.
+        importmode = config.getoption("--import-mode")
+        try:
+            mod = import_path(
+                path,
+                mode=importmode,
+                root=config.rootpath,
+                consider_namespace_packages=config.getini("consider_namespace_packages"),
+            )
+        except SyntaxError as e:
+            raise nodes.Collector.CollectError(
+                ExceptionInfo.from_current().getrepr(style="short")
+            ) from e
+        except ImportPathMismatchError as e:
+            raise nodes.Collector.CollectError(
+                "import file mismatch:\n"
+                "imported module {!r} has this __file__ attribute:\n"
+                "  {}\n"
+                "which is not the same as the test file we want to collect:\n"
+                "  {}\n"
+                "HINT: remove __pycache__ / .pyc files and/or use a "
+                "unique basename for your test file modules".format(*e.args)
+            ) from e
+        except ImportError as e:
+            exc_info = ExceptionInfo.from_current()
+            if config.get_verbosity() < 2:
+                exc_info.traceback = exc_info.traceback.filter(filter_traceback)
+            exc_repr = (
+                exc_info.getrepr(style="short")
+                if exc_info.traceback
+                else exc_info.exconly()
+            )
+            formatted_tb = str(exc_repr)
+>           raise nodes.Collector.CollectError(
+                f"ImportError while importing test module '{path}'.\n"
+                "Hint: make sure your test modules/packages have valid Python names.\n"
+                "Traceback:\n"
+                f"{formatted_tb}"
+            ) from e
+E           _pytest.nodes.Collector.CollectError: ImportError while importing test module '/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/hidden_monotonicity/difference_of_networks/__init__.py'.
+E           Hint: make sure your test modules/packages have valid Python names.
+E           Traceback:
+E           /usr/lib/python3.12/importlib/__init__.py:90: in import_module
+E               return _bootstrap._gcd_import(name[level:], package, level)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           difference_of_networks/__init__.py:17: in <module>
+E               from .analyse_weights import analyze_model, analyze_split_models, analyze_weight_distribution
+E           E   ModuleNotFoundError: No module named 'difference_of_networks.analyse_weights'
+
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/python.py:537: CollectError
+_ ERROR at setup of TrainingIntegrationTests.test_synthetic_cpu_training_and_partial_failure_status _
+
+name = 'difference_of_networks', package = None
+
+    def import_module(name, package=None):
+        """Import a module.
+    
+        The 'package' argument is required when performing a relative import. It
+        specifies the package to use as the anchor point from which to resolve the
+        relative import to an absolute import.
+    
+        """
+        level = 0
+        if name.startswith('.'):
+            if not package:
+                raise TypeError("the 'package' argument is required to perform a "
+                                f"relative import for {name!r}")
+            for character in name:
+                if character != '.':
+                    break
+                level += 1
+>       return _bootstrap._gcd_import(name[level:], package, level)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+/usr/lib/python3.12/importlib/__init__.py:90: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    """
+    Training system for MNIST and CIFAR10 with support for split models.
+    """
+    
+    from .model.models import create_model, MNISTCNN, MNISTCNNMaxout, MODEL_CONFIGS, get_model_info
+    from .model.split_model import SplitModel, SplitModelLoss, create_split_model, ModelDecomposer
+    from .model.positive_layers import (
+        PositiveTransform, PositiveLinear, PositiveConv2d, PositiveBatchNorm2d,
+        SupportFunctionMLP, replace_layers_with_positive
+    )
+    from .data_utils import DataLoaderConfig, get_dataloaders, get_transforms, get_dataset_info
+    from .trainer import Trainer, TrainingTracker
+    from .evaluation import (
+        ModelEvaluator, plot_confusion_matrix, plot_split_model_analysis,
+        save_results_to_csv
+    )
+>   from .analyse_weights import analyze_model, analyze_split_models, analyze_weight_distribution
+E   ModuleNotFoundError: No module named 'difference_of_networks.analyse_weights'
+
+difference_of_networks/__init__.py:17: ModuleNotFoundError
+
+The above exception was the direct cause of the following exception:
+
+cls = <class '_pytest.runner.CallInfo'>
+func = <function call_and_report.<locals>.<lambda> at 0x7740ec8e3060>
+when = 'setup'
+reraise = (<class '_pytest.outcomes.Exit'>, <class 'KeyboardInterrupt'>)
+
+    @classmethod
+    def from_call(
+        cls,
+        func: Callable[[], TResult],
+        when: Literal["collect", "setup", "call", "teardown"],
+        reraise: type[BaseException] | tuple[type[BaseException], ...] | None = None,
+    ) -> CallInfo[TResult]:
+        """Call func, wrapping the result in a CallInfo.
+    
+        :param func:
+            The function to call. Called without arguments.
+        :type func: Callable[[], _pytest.runner.TResult]
+        :param when:
+            The phase in which the function is called.
+        :param reraise:
+            Exception or exceptions that shall propagate if raised by the
+            function, instead of being wrapped in the CallInfo.
+        """
+        excinfo = None
+        instant = timing.Instant()
+        try:
+>           result: TResult | None = func()
+                                     ^^^^^^
+
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:353: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:245: in <lambda>
+    lambda: runtest_hook(item=item, **kwds),
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/pluggy/_hooks.py:512: in __call__
+    return self._hookexec(self.name, self._hookimpls.copy(), kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/pluggy/_manager.py:120: in _hookexec
+    return self._inner_hookexec(hook_name, methods, kwargs, firstresult)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/logging.py:843: in pytest_runtest_setup
+    yield
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/capture.py:895: in pytest_runtest_setup
+    return (yield)
+            ^^^^^
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:165: in pytest_runtest_setup
+    item.session._setupstate.setup(item)
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:516: in setup
+    raise exc[0].with_traceback(exc[1])
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/runner.py:523: in setup
+    col.setup()
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/python.py:677: in setup
+    init_mod = importtestmodule(self.path / "__init__.py", self.config)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path = PosixPath('/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/hidden_monotonicity/difference_of_networks/__init__.py')
+config = <_pytest.config.Config object at 0x774307701700>
+
+    def importtestmodule(
+        path: Path,
+        config: Config,
+    ):
+        # We assume we are only called once per module.
+        importmode = config.getoption("--import-mode")
+        try:
+            mod = import_path(
+                path,
+                mode=importmode,
+                root=config.rootpath,
+                consider_namespace_packages=config.getini("consider_namespace_packages"),
+            )
+        except SyntaxError as e:
+            raise nodes.Collector.CollectError(
+                ExceptionInfo.from_current().getrepr(style="short")
+            ) from e
+        except ImportPathMismatchError as e:
+            raise nodes.Collector.CollectError(
+                "import file mismatch:\n"
+                "imported module {!r} has this __file__ attribute:\n"
+                "  {}\n"
+                "which is not the same as the test file we want to collect:\n"
+                "  {}\n"
+                "HINT: remove __pycache__ / .pyc files and/or use a "
+                "unique basename for your test file modules".format(*e.args)
+            ) from e
+        except ImportError as e:
+            exc_info = ExceptionInfo.from_current()
+            if config.get_verbosity() < 2:
+                exc_info.traceback = exc_info.traceback.filter(filter_traceback)
+            exc_repr = (
+                exc_info.getrepr(style="short")
+                if exc_info.traceback
+                else exc_info.exconly()
+            )
+            formatted_tb = str(exc_repr)
+>           raise nodes.Collector.CollectError(
+                f"ImportError while importing test module '{path}'.\n"
+                "Hint: make sure your test modules/packages have valid Python names.\n"
+                "Traceback:\n"
+                f"{formatted_tb}"
+            ) from e
+E           _pytest.nodes.Collector.CollectError: ImportError while importing test module '/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/hidden_monotonicity/difference_of_networks/__init__.py'.
+E           Hint: make sure your test modules/packages have valid Python names.
+E           Traceback:
+E           /usr/lib/python3.12/importlib/__init__.py:90: in import_module
+E               return _bootstrap._gcd_import(name[level:], package, level)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           difference_of_networks/__init__.py:17: in <module>
+E               from .analyse_weights import analyze_model, analyze_split_models, analyze_weight_distribution
+E           E   ModuleNotFoundError: No module named 'difference_of_networks.analyse_weights'
+
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/_pytest/python.py:537: CollectError
+=============================== warnings summary ===============================
+../../../dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py:180
+  /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/torch/cuda/__init__.py:180: UserWarning: CUDA initialization: The NVIDIA driver on your system is too old (found version 12050). Please update your GPU driver by downloading and installing a new version from the URL: http://www.nvidia.com/Download/index.aspx Alternatively, go to: https://pytorch.org to install a PyTorch version that has been compiled with your version of the CUDA driver. (Triggered internally at /pytorch/c10/cuda/CUDAFunctions.cpp:119.)
+    return torch._C._cuda_getDeviceCount() > 0
+
+tests/test_metric_semantics.py::test_pixel_flipping_auc_aggregation_and_direction
+tests/test_metric_semantics.py::test_pixel_flipping_auc_aggregation_and_direction
+  /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/lib/python3.12/site-packages/quantus/helpers/utils.py:1032: DeprecationWarning: `trapz` is deprecated. Use `trapezoid` instead, or one of the numerical integration functions in `scipy.integrate`.
+    return np.trapz(np.array(values), dx=dx, axis=axis)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR difference_of_networks/multi_seed/test_run_multi_seed.py::ConfigurationTests::test_example_validates_without_results
+ERROR difference_of_networks/multi_seed/test_run_multi_seed.py::ConfigurationTests::test_invalid_seed_range_fails
+ERROR difference_of_networks/multi_seed/test_run_multi_seed.py::ConfigurationTests::test_malformed_and_incomplete_configs_fail
+ERROR difference_of_networks/multi_seed/test_run_multi_seed.py::ConfigurationTests::test_missing_or_empty_configs_fail_without_results
+ERROR difference_of_networks/multi_seed/test_run_multi_seed.py::TrainingIntegrationTests::test_synthetic_cpu_training_and_partial_failure_status
+12 passed, 3 warnings, 5 errors, 8 subtests passed in 8.74s

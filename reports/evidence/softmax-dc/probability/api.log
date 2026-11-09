@@ -1,0 +1,12 @@
+Finset.single_le_sum.{u_1, u_5} {ι : Type u_1} {N : Type u_5} [AddCommMonoid N] [Preorder N] {f : ι → N} {s : Finset ι}
+  [AddLeftMono N] (hf : ∀ i ∈ s, 0 ≤ f i) {a : ι} (h : a ∈ s) : f a ≤ ∑ x ∈ s, f x
+Finset.sum_le_sum_of_subset_of_nonneg.{u_1, u_5} {ι : Type u_1} {N : Type u_5} [AddCommMonoid N] [Preorder N]
+  {f : ι → N} {s t : Finset ι} [AddLeftMono N] (h : s ⊆ t) (hf : ∀ i ∈ t, i ∉ s → 0 ≤ f i) : ∑ i ∈ s, f i ≤ ∑ i ∈ t, f i
+Finset.sum_pair.{u_1, u_4} {ι : Type u_1} {M : Type u_4} [AddCommMonoid M] {f : ι → M} [DecidableEq ι] {a b : ι}
+  (h : a ≠ b) : ∑ x ∈ {a, b}, f x = f a + f b
+Finset.sum_erase_add.{u_1, u_4} {ι : Type u_1} {M : Type u_4} [AddCommMonoid M] [DecidableEq ι] (s : Finset ι)
+  (f : ι → M) {a : ι} (h : a ∈ s) : ∑ x ∈ s.erase a, f x + f a = ∑ x ∈ s, f x
+Finset.sum_mul.{u_1, u_4} {ι : Type u_1} {R : Type u_4} [NonUnitalNonAssocSemiring R] (s : Finset ι) (f : ι → R)
+  (a : R) : (∑ i ∈ s, f i) * a = ∑ i ∈ s, f i * a
+Finset.mul_sum.{u_1, u_4} {ι : Type u_1} {R : Type u_4} [NonUnitalNonAssocSemiring R] (s : Finset ι) (f : ι → R)
+  (a : R) : a * ∑ i ∈ s, f i = ∑ i ∈ s, a * f i

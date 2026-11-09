@@ -1,0 +1,44 @@
+{
+  "targets": [
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.explicitSwish_lift",
+      "module": "HiddenMonotonicity.ExplicitSwish",
+      "expected_type": "∀ β : ℝ, 0 < β → ConvexOn ℝ Set.univ (explicitSwishFirst β) ∧ ConvexOn ℝ Set.univ (explicitSwishSecond β) ∧ Monotone (explicitSwishFirst β) ∧ Monotone (explicitSwishSecond β) ∧ ∀ z : ℝ × ℝ, explicitSwishFirst β z - explicitSwishSecond β z = (z.1 - z.2) * Real.sigmoid (β * (z.1 - z.2))",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-swish-elementary-lift",
+      "review_evidence": "reports/evidence/dc-generalization/swish/ExplicitSwishContracts.lean",
+      "scope": "For every positive scale, both elementary Swish branches are globally convex and coordinatewise nondecreasing, with exact recovery of the signed Swish activation. The positive profile is twice Softplus, not the canonical positive-curvature primitive."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.explicitSwish_closed",
+      "module": "HiddenMonotonicity.ExplicitSwish",
+      "expected_type": "∀ β : ℝ, ∀ z : ℝ × ℝ, explicitSwishFirst β z = 2 / β * Real.log (1 + Real.exp (β * (z.1 - z.2))) + 2 * z.2 ∧ explicitSwishSecond β z = 2 / β * Real.log (1 + Real.exp (β * (z.1 - z.2))) - (z.1 - z.2) * Real.sigmoid (β * (z.1 - z.2)) + 2 * z.2",
+      "open_namespaces": ["HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-swish-elementary-closed-form",
+      "review_evidence": "reports/evidence/dc-generalization/swish/ExplicitSwishContracts.lean",
+      "scope": "Elementary log-exp formulas for both actual two-stream functions, with no implicit turning-point constant. The formula identity is unconditional; convexity and monotonicity require positive scale in the separate lift contract."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.explicitSwishPair_nonnegative",
+      "module": "HiddenMonotonicity.ExplicitSwish",
+      "expected_type": "∀ β : ℝ, 0 < β → NonnegativePairActivation (explicitSwishPair β)",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-swish-elementary-nonnegative",
+      "review_evidence": "reports/evidence/dc-generalization/swish/ExplicitSwishContracts.lean",
+      "scope": "For every positive scale, the elementary Swish pair preserves nonnegativity on the nonnegative quadrant. Both branches have common origin value (2/β)log 2; zero normalization is not assumed."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.swish_curvature_turning_sign",
+      "module": "HiddenMonotonicity.SwishThreshold",
+      "expected_type": "∀ β : ℝ, 0 < β → ∀ x : ℝ, (0 < curvature (swish β) x ↔ |β * x| < swishTurningPoint) ∧ (curvature (swish β) x < 0 ↔ swishTurningPoint < |β * x|) ∧ (curvature (swish β) x = 0 ↔ |β * x| = swishTurningPoint)",
+      "open_namespaces": ["HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-swish-exact-curvature-regions",
+      "review_evidence": "reports/evidence/dc-generalization/swish-threshold/SwishThresholdContracts.lean",
+      "scope": "Optional canonical-split evidence: exact strict central and tail curvature signs, and both zero-curvature boundaries, for every positive scale. The positive turning point is uniquely specified by r(2σ(r)-1)=2 and lies in (2,4); the elementary lift does not depend on it."
+    }
+  ]
+}

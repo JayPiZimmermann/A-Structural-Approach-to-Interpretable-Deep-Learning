@@ -1,0 +1,71 @@
+{
+  "status": "pass_with_explicit_scope",
+  "reviewer": "independent definition audit agent",
+  "source": "formalization/HiddenMonotonicity/TransformerDefinition.lean",
+  "source_sha256": "5fa433193d02cfdb0369dcf76fa1eaffa36daf8cbd2b41dafa36a66f5ac2b1c3",
+  "semantic_review": [
+    "Forward semantics are defined independently of scalar Expr evaluation, then bridged by the compiler theorems.",
+    "Attention uses actual signed Q/K/V affine projections, scaled QK products, coupled row softmax over fixed nonempty injective supports, AV multiplication, and output projection.",
+    "The block has actual input-dependent positive-epsilon LayerNorm before attention and before the signed two-affine-layer feed-forward network, with two residual additions.",
+    "Each block can have its own finite head list, key/value dimensions, hidden width, and supported activation; blocks form an arbitrary finite list.",
+    "The whole network includes positional input bias, optional final LayerNorm, and an ungated signed affine logit readout.",
+    "No record field assumes reconstruction, convexity, monotonicity, or an entire Transformer property. Stored proof fields are genuine positive-dimension/epsilon and mask-validity conditions."
+  ],
+  "contracts": {
+    "path": "reports/evidence/transformer-dc/definition/contracts.json",
+    "count": 10,
+    "theorems": 6,
+    "definitions": 4,
+    "authorship": "Expected full-forall types were manually written from source statements and the intended mathematical interfaces, not copied from inferred Lean types.",
+    "checks": [
+      "type definitional equality",
+      "universe arity",
+      "defining module",
+      "per-target axioms"
+    ]
+  },
+  "imported_project_theorems_axiom_audited": 903,
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "exit_status": {
+    "build": 0,
+    "exact": 0,
+    "boundary": 0
+  },
+  "boundary_consumers": [
+    "A concrete injective causal mask has one key at query zero and two keys at query one.",
+    "A genuine singleton attention head with constant Value three and nonzero output weight evaluates to three.",
+    "A block with attention, both LayerNorm positions, GELU syntax, signed biases and residuals evaluates to x minus two.",
+    "The zero-depth network evaluates to 1 minus 3x; the two-block network evaluates to 13 minus 3x, including signed affine logits.",
+    "Compilation equality is consumed for a concrete two-block network.",
+    "Optional final LayerNorm with zero variance, positive epsilon, negative gain and bias seven produces the expected final logit minus twenty-six; its compiled equality is consumed."
+  ],
+  "scope_limits": [
+    "This module establishes the explicit pre-LayerNorm architecture and its compiler equivalence; the DC regularity/reconstruction theorems are in the separate expression/correctness modules.",
+    "Inputs are continuous real token embeddings, not discrete token indices.",
+    "Post-LayerNorm, adaptive masks, stochastic training-time dropout and positional transformations other than the defined bias are not separately modeled here.",
+    "The compiler produces symbolic expression trees; no arithmetic-DAG size, executable floating-point accuracy or numerical stability guarantee follows."
+  ],
+  "initial_boundary_failure": {
+    "log": "boundary-initial.log",
+    "exit": "boundary-initial.exit",
+    "reason": "Audit fixture elaboration: dependent Fin index coercions and simplification of a singleton dependent head list. Production source was unchanged; corrected consumer passed."
+  },
+  "artifacts_sha256": {
+    "contracts.json": "2f94ca873d66875ff0283451f090c2f58692b740db2eb5d919583012f4f7ee41",
+    "Exact.lean": "9541a303e6ef7a7016c12e83fc315fc01e99f413b78eebbe516b57dd3a6d4243",
+    "exact.log": "c12bef43fcb39fc9b43b8bf8f5db96c85ef9f9514c79f052c49a5e963773f399",
+    "exact.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "environment.json": "aaf7af35a0d4502dc58ae3ab2f5b015654168bd56d454bef4d6cd84956396e18",
+    "Boundary.lean": "35263cacf1f5cd5903118efa7f15dbb764caf34157cc475e90828240e46d7a12",
+    "boundary.log": "bcb09a7b9a6e43a5f5e34aa05144c64264cf764843b00221270a0df84f6bfd19",
+    "boundary.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "build.log": "2f1f370c291b99a75e90d34b12cc9c77327f84a6143aafca77dde41390c1f9f9",
+    "build.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "boundary-initial.log": "329c8cb5f77327933934392c38a7fe5b44c0d7f1cb60c72c154e9232a5add938",
+    "boundary-initial.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  }
+}

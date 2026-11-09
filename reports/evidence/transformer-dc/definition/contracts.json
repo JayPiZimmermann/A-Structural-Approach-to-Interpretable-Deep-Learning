@@ -1,0 +1,120 @@
+{
+  "public_root": "HiddenMonotonicity.TransformerDefinition",
+  "targets": [
+    {
+      "task": "transformer-definition-TransformerHead-eval_compile",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.TransformerHead.eval_compile",
+      "kind": "theorem",
+      "expected_type": "∀ {t d : ℕ} {ι : Type u} (h : TransformerHead t d) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d), (h.compile x q i).eval v = h.eval (fun a b => (x a b).eval v) q i",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u"
+      ]
+    },
+    {
+      "task": "transformer-definition-TransformerBlock-eval_compile",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.TransformerBlock.eval_compile",
+      "kind": "theorem",
+      "expected_type": "∀ {t d : ℕ} {ι : Type u} (b : TransformerBlock t d) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d), (b.compile x q i).eval v = b.eval (fun a c => (x a c).eval v) q i",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u"
+      ]
+    },
+    {
+      "task": "transformer-definition-eval_compileTransformerBlocks",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks",
+      "kind": "theorem",
+      "expected_type": "∀ {t d : ℕ} {ι : Type u} (bs : List (TransformerBlock t d)) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d), (compileTransformerBlocks bs x q i).eval v = evalTransformerBlocks bs (fun a c => (x a c).eval v) q i",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u"
+      ]
+    },
+    {
+      "task": "transformer-definition-eval_compileOptionalTransformerNorm",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.eval_compileOptionalTransformerNorm",
+      "kind": "theorem",
+      "expected_type": "∀ {t d : ℕ} {ι : Type u} (p : Option (TransformerNorm d)) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d), (compileOptionalTransformerNorm p x q i).eval v = evalOptionalTransformerNorm p (fun a c => (x a c).eval v) q i",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u"
+      ]
+    },
+    {
+      "task": "transformer-definition-Transformer-eval_compile",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.eval_compile",
+      "kind": "theorem",
+      "expected_type": "∀ {t d o : ℕ} {ι : Type u} (net : Transformer t d o) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (i : Fin o), (net.compile x i).eval v = net.eval (fun p => (x p.1 p.2).eval v) i",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u"
+      ]
+    },
+    {
+      "task": "transformer-definition-Transformer-eval_syntax",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.eval_syntax",
+      "kind": "theorem",
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o) (x : Fin t × Fin d → ℝ) (i : Fin o), (net.syntax i).eval x = net.eval x i",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ]
+    },
+    {
+      "task": "transformer-definition-TransformerHead-eval",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.TransformerHead.eval",
+      "kind": "definition",
+      "expected_type": "∀ {t d : ℕ} (h : TransformerHead t d), (Fin t → Fin d → ℝ) → Fin t → Fin d → ℝ",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ]
+    },
+    {
+      "task": "transformer-definition-TransformerBlock-eval",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.TransformerBlock.eval",
+      "kind": "definition",
+      "expected_type": "∀ {t d : ℕ} (b : TransformerBlock t d), (Fin t → Fin d → ℝ) → Fin t → Fin d → ℝ",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ]
+    },
+    {
+      "task": "transformer-definition-Transformer-eval",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.eval",
+      "kind": "definition",
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o), (Fin t × Fin d → ℝ) → Fin o → ℝ",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ]
+    },
+    {
+      "task": "transformer-definition-Transformer-syntax",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.syntax",
+      "kind": "definition",
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o), Fin o → Expr (Fin t × Fin d)",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ]
+    }
+  ]
+}

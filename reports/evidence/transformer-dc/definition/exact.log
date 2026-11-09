@@ -1,0 +1,68 @@
+@HiddenMonotonicity.TransformerDC.TransformerHead.eval_compile : ∀ {t d : ℕ} {ι : Type u_1}
+  (h : HiddenMonotonicity.TransformerDC.TransformerHead t d)
+  (x : Fin t → Fin d → HiddenMonotonicity.TransformerDC.Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d),
+  (h.compile x q i).eval v = h.eval (fun a b => (x a b).eval v) q i
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.TransformerBlock.eval_compile : ∀ {t d : ℕ} {ι : Type u_1}
+  (b : HiddenMonotonicity.TransformerDC.TransformerBlock t d)
+  (x : Fin t → Fin d → HiddenMonotonicity.TransformerDC.Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d),
+  (b.compile x q i).eval v = b.eval (fun a c => (x a c).eval v) q i
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks : ∀ {t d : ℕ} {ι : Type u_1}
+  (bs : List (HiddenMonotonicity.TransformerDC.TransformerBlock t d))
+  (x : Fin t → Fin d → HiddenMonotonicity.TransformerDC.Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d),
+  (HiddenMonotonicity.TransformerDC.compileTransformerBlocks bs x q i).eval v =
+    HiddenMonotonicity.TransformerDC.evalTransformerBlocks bs (fun a c => (x a c).eval v) q i
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.eval_compileOptionalTransformerNorm : ∀ {t d : ℕ} {ι : Type u_1}
+  (p : Option (HiddenMonotonicity.TransformerDC.TransformerNorm d))
+  (x : Fin t → Fin d → HiddenMonotonicity.TransformerDC.Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d),
+  (HiddenMonotonicity.TransformerDC.compileOptionalTransformerNorm p x q i).eval v =
+    HiddenMonotonicity.TransformerDC.evalOptionalTransformerNorm p (fun a b => (x a b).eval v) q i
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Transformer.eval_compile : ∀ {t d o : ℕ} {ι : Type u_1}
+  (net : HiddenMonotonicity.TransformerDC.Transformer t d o)
+  (x : Fin t → Fin d → HiddenMonotonicity.TransformerDC.Expr ι) (v : ι → ℝ) (i : Fin o),
+  (net.compile x i).eval v = net.eval (fun p => (x p.1 p.2).eval v) i
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Transformer.eval_syntax : ∀ {t d o : ℕ}
+  (net : HiddenMonotonicity.TransformerDC.Transformer t d o) (x : Fin t × Fin d → ℝ) (i : Fin o),
+  (net.syntax i).eval x = net.eval x i
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/transformer-dc/definition/Exact.lean:164:49: warning: Variable name `h` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _h
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@HiddenMonotonicity.TransformerDC.TransformerHead.eval : {t d : ℕ} →
+  HiddenMonotonicity.TransformerDC.TransformerHead t d → (Fin t → Fin d → ℝ) → Fin t → Fin d → ℝ
+'_ThesisExactChecks.target_6' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/transformer-dc/definition/Exact.lean:189:49: warning: Variable name `b` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _b
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@HiddenMonotonicity.TransformerDC.TransformerBlock.eval : {t d : ℕ} →
+  HiddenMonotonicity.TransformerDC.TransformerBlock t d → (Fin t → Fin d → ℝ) → Fin t → Fin d → ℝ
+'_ThesisExactChecks.target_7' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/transformer-dc/definition/Exact.lean:214:51: warning: Variable name `net` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _net
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@HiddenMonotonicity.TransformerDC.Transformer.eval : {t d o : ℕ} →
+  HiddenMonotonicity.TransformerDC.Transformer t d o → (Fin t × Fin d → ℝ) → Fin o → ℝ
+'_ThesisExactChecks.target_8' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/transformer-dc/definition/Exact.lean:239:51: warning: Variable name `net` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _net
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@HiddenMonotonicity.TransformerDC.Transformer.syntax : {t d o : ℕ} →
+  HiddenMonotonicity.TransformerDC.Transformer t d o → Fin o → HiddenMonotonicity.TransformerDC.Expr (Fin t × Fin d)
+'_ThesisExactChecks.target_9' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 903 project theorem declarations in the imported environment

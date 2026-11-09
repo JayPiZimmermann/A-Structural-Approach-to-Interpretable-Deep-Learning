@@ -1,0 +1,44 @@
+{
+  "targets": [
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.ClosedFormActivation.relu_pair",
+      "module": "HiddenMonotonicity.ClosedFormMonotoneDC",
+      "expected_type": "∀ x y : ℝ, ClosedFormActivation.relu.pair (x,y) = (max x y,y)",
+      "open_namespaces": ["HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-closed-relu-pair",
+      "review_evidence": "reports/evidence/dc-generalization/closed-form/Boundary.lean",
+      "scope": "The generic closed-form datatype specializes literally to max and identity for ReLU."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.closed_form_activation_properties",
+      "module": "HiddenMonotonicity.ClosedFormMonotoneDC",
+      "expected_type": "∀ a : ClosedFormActivation, ConvexPairActivation a.pair ∧ Monotone a.pair ∧ ValidPairActivation a.eval a.pair ∧ NonnegativePairActivation a.pair",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-closed-activation-properties",
+      "review_evidence": "reports/evidence/dc-generalization/closed-form/Boundary.lean",
+      "scope": "Actual explicit ReLU, Gaussian GELU, positive-scale Swish, sigmoid and positive-temperature Softplus formulas satisfy the whole scalar interface."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.closed_form_affine_network",
+      "module": "HiddenMonotonicity.ClosedFormMonotoneDC",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m), net.Nonnegative → ∀ (a : ClosedFormActivation) (wp wn : Matrix (Fin k) (Fin m) ℝ), (∀ i j, 0 ≤ wp i j) → (∀ i j, 0 ≤ wn i j) → ∀ bp bn : Vec k, Monotone (net.affineDecomposeWith a.pair wp wn bp bn) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.affineDecomposeWith a.pair wp wn bp bn x).1 i)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.affineDecomposeWith a.pair wp wn bp bn x).2 i)) ∧ ∀ x : PairVec n, (net.affineDecomposeWith a.pair wp wn bp bn x).1 - (net.affineDecomposeWith a.pair wp wn bp bn x).2 = affineLayer wp wn bp bn (net.forwardWith a.eval (x.1 - x.2))",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-closed-affine-network",
+      "review_evidence": "reports/evidence/dc-generalization/closed-form/Boundary.lean",
+      "scope": "The actual explicit branches yield convex monotone complete two-stream networks with an ungated signed affine output and exact same-parameter recovery."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.closed_form_affine_dc",
+      "module": "HiddenMonotonicity.ClosedFormMonotoneDC",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m), net.Nonnegative → ∀ (a : ClosedFormActivation) (wp wn : Matrix (Fin k) (Fin m) ℝ), (∀ i j, 0 ≤ wp i j) → (∀ i j, 0 ≤ wn i j) → ∀ bp bn : Vec k, Monotone (fun x : Vec n => net.affineDecomposeWith a.pair wp wn bp bn (x,0)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : Vec n => (net.affineDecomposeWith a.pair wp wn bp bn (x,0)).1 i)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : Vec n => (net.affineDecomposeWith a.pair wp wn bp bn (x,0)).2 i)) ∧ ∀ x : Vec n, (net.affineDecomposeWith a.pair wp wn bp bn (x,0)).1 - (net.affineDecomposeWith a.pair wp wn bp bn (x,0)).2 = affineLayer wp wn bp bn (net.forwardWith a.eval x)",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-closed-affine-dc",
+      "review_evidence": "reports/evidence/dc-generalization/closed-form/Boundary.lean",
+      "scope": "The affine input embedding produces ordinary-input convex monotone heads with exact recovery, without asserting their nonnegativity."
+    }
+  ]
+}

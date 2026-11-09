@@ -1,0 +1,46 @@
+{
+  "status": "diagnostic leaf verified; root integration and clean public gate remain with coordinating parent",
+  "source_sha256": {
+    "formalization/HiddenMonotonicity/ExplicitSoftplus.lean": "15dab291e2f130509674e1a0987a6838c030323f62c0e752acc7c63b11b1c0e6",
+    "reports/evidence/dc-generalization/softplus/Consumer.lean": "79a5563033f6aa5be132212e0d244a103c36a9d671e948e8383f401c0f71f262",
+    "reports/evidence/dc-generalization/softplus/contracts.json": "555310875f28badcb56c99c66b19ec8467971ce8f302ff6ee78354945638da09"
+  },
+  "commands": [
+    {
+      "command": "lake env lean HiddenMonotonicity/ExplicitSoftplus.lean",
+      "cwd": "formalization",
+      "exit_code": 0,
+      "log": "build.log"
+    },
+    {
+      "command": "lake build +HiddenMonotonicity.ExplicitSoftplus",
+      "cwd": "formalization",
+      "exit_code": 0,
+      "log": "lake-build.log"
+    },
+    {
+      "command": "lake env lean ../reports/evidence/dc-generalization/softplus/Consumer.lean",
+      "cwd": "formalization",
+      "exit_code": 0,
+      "log": "consumer.log"
+    }
+  ],
+  "exact_contract_checks": [
+    "HiddenMonotonicity.SmoothDC.softplus_explicit_split",
+    "HiddenMonotonicity.SmoothDC.explicitSoftplusFirst_logsumexp"
+  ],
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "consumer_boundaries": [
+    "temperature 1 at (0,0)",
+    "temperature 2 at (0,0)",
+    "temperature 2 quadrant preservation",
+    "recovery at both negative coordinates",
+    "coordinate monotonicity across signed coordinates"
+  ],
+  "frozen_files_changed": false,
+  "public_root_or_manifest_changed": false
+}

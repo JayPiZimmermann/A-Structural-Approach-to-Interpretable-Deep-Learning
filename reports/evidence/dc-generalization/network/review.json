@@ -1,0 +1,45 @@
+{
+  "reviewer": "/root/dc_lean_lead/network_composition/network_review",
+  "status": "passed_independent_semantic_review_and_consumer",
+  "scope": "Generic ConvexMonotoneNetwork leaf only; does not claim completed modern activation instances, ungated affine readout review, public root integration, or clean committed production verification.",
+  "independent_expected_claim": "For each finite width-varying Network with nonnegative split matrices, arbitrary real split biases, and every globally coordinatewise monotone scalar pair activation with two jointly convex components and the exact difference identity, the actual same-parameter complete split network has two jointly convex coordinatewise monotone output streams on all real PairVec inputs and recovers the actual forwardWith network at the difference of its input streams.",
+  "definitions_checked": {
+    "Network.Nonnegative": "Recursively constrains only both split matrices, not either bias; distinct from NonnegativeParameters.",
+    "Network.decomposeWith": "Actual finite network recursion, using preP/preN from the same matrices and biases at every neuron.",
+    "Network.forwardWith": "Actual same-parameter arbitrary-activation network, using affineLayer then scalar activation at every layer.",
+    "ConvexPairActivation": "Both component functions are ConvexOn real univ on the full product real vector space; not separate convexity.",
+    "Monotone": "Product/function orders encode coordinatewise monotonicity in both streams and every input coordinate.",
+    "ValidPairActivation": "Unrestricted scalar identity phi(p,q).1-phi(p,q).2=sigma(p-q).",
+    "PairVec": "Vec n times Vec n, with Vec n=Fin n to real; no positivity or nonzero-width restriction."
+  },
+  "proof_chain_checked": [
+    "Nonnegative matrices, arbitrary affine constants and monotone pair activation yield full recursive monotonicity.",
+    "Joint scalar Jensen inequalities plus monotonicity and convexity of the actual tail yield full network Jensen inequalities.",
+    "The ConvexOn wrapper uses unrestricted pairs and all convex-combination coefficients, including endpoints.",
+    "The final recovery conjunct uses the existing full Network.valid_decomposition_recovery bridge, not a newly defined toy model.",
+    "Convex input substitutions preserve only convexity, with no unsupported raw-input monotonicity claim."
+  ],
+  "independent_consumer": {
+    "path": "reports/evidence/dc-generalization/network/Independent.lean",
+    "exit_code": 0,
+    "log": "reports/evidence/dc-generalization/network/independent.log",
+    "checks": "Defines max/identity ReLU pair independently; proves monotonicity, joint convexity, scalar recovery; instantiates generic complete network result for every width and arbitrary biases; bridges forwardWith relu to existing net.eval.",
+    "axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  },
+  "findings": [],
+  "limitations": [
+    "The generic theorem gives sufficient hypotheses; it does not assert these are necessary for every possible network.",
+    "It does not assert nonnegative output streams for unrestricted signed inputs or arbitrary signed biases.",
+    "Activation formulas and signed final affine readout are separate integration leaves.",
+    "Production root/manifest and clean committed verification remain the parent integration responsibility."
+  ],
+  "content_sha256": {
+    "formalization/HiddenMonotonicity/ConvexMonotoneNetwork.lean": "82ea98ba43d3274afbc48882711a89be42038fbb78a5100bee17f7da1ad349a4",
+    "reports/evidence/dc-generalization/network/expected-types.json": "6fd7ea855f909b58c01eb0a3bbcc5712762209f2365f0a6b3e9b6cc4d353b3ea",
+    "reports/evidence/dc-generalization/network/Independent.lean": "2cfa176e858b140bc63035ba322d79e9a1bbe453de3496bbd3926886046487d6"
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "reviewer": "/root/softmax_lean/softmax_independent_audit",
+  "mathematical_verdict": "passed",
+  "formal_verdict": "passed: six independent exact full-forall contracts, 95 imported project theorem axiom audits, and 16 independent boundary consumers",
+  "scope": "Finite nonempty index type; real finite logits; scalar softmax coordinate; global convexity and coordinatewise monotonicity of both heads on the full expanded space; nonnegativity restricted to the nonnegative expanded orthant.",
+  "formula": "F_i^±(x,y) = [log(sum_j exp(x_j-y_j)) ± exp(x_i-y_i)/sum_j exp(x_j-y_j) + sum_j y_j]/2 - [log(d)-1/d]/2",
+  "independent_arguments": [
+    "For a scalar logit line, p is a probability vector, mu=sum_j p_j v_j and V=sum_j p_j(v_j-mu)^2. The second derivative of log-sum-exp is V; that of softmax_i is p_i((v_i-mu)^2-V).",
+    "For any nonnegative weights w_j, with V=sum_j p_j w_j, one has p_i w_i<=V and 0<=p_i<=1. Consequently -V<=p_i(w_i-V)<=V. Thus log-sum-exp plus or minus softmax_i is convex on every line.",
+    "The plus profile's diagonal gradient is p_i-p_i^2/2 and its off-diagonal gradient is p_j(1-p_i)/2. The minus profile's diagonal gradient is p_i^2/2 and its off-diagonal gradient is p_j(1+p_i)/2. All are in [0,1/2]; the last upper bound uses p_i+p_j<=1 for distinct coordinates.",
+    "The expanded lift has x-coordinate derivatives equal to the profile derivatives and y-coordinate derivatives equal to 1/2 minus those derivatives. This proves coordinatewise monotonicity globally.",
+    "The common affine term cancels exactly. At the origin F_i^+=1/d and F_i^-=0, yielding nonnegativity on the expanded nonnegative orthant by monotonicity."
+  ],
+  "boundary_cases": [
+    "The singleton case is nonvacuous: F^+(x,y)=x/2+1 and F^-(x,y)=x/2.",
+    "Negative expanded inputs are allowed for convexity, monotonicity and exactness; the theorem must not promise nonnegative outputs there.",
+    "An empty index type is excluded because the real-valued formula is not the intended probability softmax.",
+    "A fixed nonempty attention support can instantiate the index type. An entirely masked attention row requires a separately specified convention.",
+    "The theorem is a real-arithmetic identity and does not establish floating-point stability or practical efficiency."
+  ],
+  "source_review": "passed; actual exponential softmax, log-sum-exp, scalar line derivatives, global convexity and order lift agree with the stated mathematical construction",
+  "source_sha256": {
+    "formalization/HiddenMonotonicity/SoftmaxProbability.lean": "6b90eeb30ff4109557b239592adc1a94431babbfdb44e3e918fee1a5123c0a4a",
+    "formalization/HiddenMonotonicity/SoftmaxLineCalculus.lean": "c65224fff427d24c0c55cb8fead2a064fedcbe543c232f12619c44958ff250ac",
+    "formalization/HiddenMonotonicity/MultivariateMonotoneDCLift.lean": "29dbc4e402baa98c68388d2f8f4b0a0ed8ddff7f1434b9a4adfa23463bf1ca81",
+    "formalization/HiddenMonotonicity/ExplicitSoftmax.lean": "651c97af4b81f1f830d2fa0352c1143bf02ab299e387d77ac7c71f7e06189002"
+  },
+  "source_semantics_notes": [
+    "No derivative, convexity, monotonicity, or normalization hypotheses are assumed by the headline theorem.",
+    "The headline theorem quantifies over the complete product of real function spaces, not a bounded logits domain.",
+    "The nonnegative-stream conclusion explicitly requires coordinatewise nonnegative expanded input.",
+    "Closed-form, difference, and origin endpoints correctly omit the unused Nonempty instance; an explicit coordinate i already prevents empty application."
+  ],
+  "promotion_scope": "Diagnostic local proof evidence against the hashed source closure; parent clean committed public gate remains separate."
+}

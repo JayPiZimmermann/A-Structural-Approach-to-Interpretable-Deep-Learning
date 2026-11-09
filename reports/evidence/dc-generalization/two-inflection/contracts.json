@@ -1,0 +1,44 @@
+{
+  "targets": [
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.centralConvex_asymmetric_split",
+      "module": "HiddenMonotonicity.TwoInflectionDC",
+      "expected_type": "∀ (f d : ℝ → ℝ) (a b : ℝ), a < b → (∀ x, HasDerivAt f (d x) x) → AntitoneOn d (Set.Iic a) → MonotoneOn d (Set.Icc a b) → AntitoneOn d (Set.Ici b) → (∀ x, x ≤ a → d x ≤ 0) → (∀ x, b ≤ x → 0 ≤ d x) → ConvexOn ℝ Set.univ (asymmetricLift (centralConvexP f d a b) (d b - d a)) ∧ ConvexOn ℝ Set.univ (asymmetricLift (centralConvexQ f d a b) (d b - d a)) ∧ Monotone (asymmetricLift (centralConvexP f d a b) (d b - d a)) ∧ Monotone (asymmetricLift (centralConvexQ f d a b) (d b - d a)) ∧ ∀ z : ℝ × ℝ, asymmetricLift (centralConvexP f d a b) (d b - d a) z - asymmetricLift (centralConvexQ f d a b) (d b - d a) z = f (z.1 - z.2)",
+      "open_namespaces": ["HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-central-convex-asymmetric-split",
+      "review_evidence": "reports/evidence/dc-generalization/two-inflection/ExactContracts.lean",
+      "scope": "For the actual activation derivative with increasing central interval, decreasing tails, nonpositive left-tail values and nonnegative right-tail values, the closed piecewise profiles produce globally convex coordinatewise monotone streams with exact recovery on the whole real plane. No constructed-profile convexity or monotonicity is assumed."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.gaussianGelu_explicit_split",
+      "module": "HiddenMonotonicity.ExplicitGELU",
+      "expected_type": "ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (explicitGaussianGeluPair z).1) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (explicitGaussianGeluPair z).2) ∧ Monotone (fun z : ℝ × ℝ => (explicitGaussianGeluPair z).1) ∧ Monotone (fun z : ℝ × ℝ => (explicitGaussianGeluPair z).2) ∧ ValidPairActivation gaussianGelu explicitGaussianGeluPair ∧ NonnegativePairActivation explicitGaussianGeluPair",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-exact-gaussian-gelu-explicit-split",
+      "review_evidence": "reports/evidence/dc-generalization/gelu-analytic/ExplicitExactContracts.lean",
+      "scope": "The explicit root-free pair for exact Gaussian GELU has two globally convex and coordinatewise monotone branches, recovers GELU(x-y) for arbitrary real inputs, and preserves nonnegative input streams. It is an alternative to the canonical curvature split and maps the origin to (2φ(0),2φ(0))."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair_formula",
+      "module": "HiddenMonotonicity.ExplicitGELU",
+      "expected_type": "∀ x y : ℝ, explicitGaussianGeluPair (x, y) = (2 * (gaussianGelu (x - y) + standardGaussianDensity (x - y)) + 2 * y, gaussianGelu (x - y) + 2 * standardGaussianDensity (x - y) + 2 * y)",
+      "open_namespaces": ["HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-exact-gaussian-gelu-closed-form",
+      "review_evidence": "reports/evidence/dc-generalization/gelu-analytic/ExplicitExactContracts.lean",
+      "scope": "Exact closed expressions for both two-stream branches using the normalized Gaussian density and exact Gaussian GELU, on all real stream coordinates."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.gaussianGeluFirst_middle_bounds",
+      "module": "HiddenMonotonicity.GELUInflectionBounds",
+      "expected_type": "∀ {x : ℝ}, -Real.sqrt 2 ≤ x ∧ x ≤ Real.sqrt 2 → gaussianGeluFirst (-Real.sqrt 2) ≤ gaussianGeluFirst x ∧ gaussianGeluFirst x ≤ gaussianGeluFirst (Real.sqrt 2)",
+      "open_namespaces": ["HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-exact-gaussian-gelu-inflection-bounds",
+      "review_evidence": "reports/evidence/dc-generalization/gelu-analytic/ExactContracts.lean",
+      "scope": "Analytic endpoint bounds for the actual Gaussian GELU derivative throughout the closed central interval [-sqrt(2),sqrt(2)], including both inflection points."
+    }
+  ]
+}

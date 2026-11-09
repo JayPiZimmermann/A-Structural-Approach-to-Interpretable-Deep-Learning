@@ -47,12 +47,110 @@ Continuous linear maps carry the finite-dimensional derivatives without hiding
 matrix transposes or requiring all layer widths to be equal. They are ordinary
 linear functions with continuity recorded for mathlib's differentiation API.
 
+## Convex and monotone DC lifts
+
+`MonotoneDCLift` gives the generic scalar profile criterion: convex profiles with
+slopes in a bounded nonnegative interval yield convex, monotone two-input heads.
+`CurvatureMonotoneDCLift` constructs such profiles from integrable positive and
+negative curvature. The `ExplicitGELU`, `ExplicitSwish`, `ExplicitSigmoidSmooth`,
+`ExplicitSigmoidSoftplus`, and `ExplicitSoftplus` leaves prove actual closed forms.
+`HiddenMonotonicity.SmoothDC.closed_form_activation_properties` aggregates the selected
+ReLU/GELU/Swish/sigmoid/Softplus formulas; `closed_form_affine_network` and
+`closed_form_affine_dc` compose them through arbitrary finite MLPs and an ungated
+signed affine output. `ModernMonotoneDC` separately packages the integral-based
+activation construction. The ReLU pair is exactly `(max(x,y), y)`.
+
+The softmax construction is genuinely multivariate. For `H(z) = log(sum exp(z))`
+and component `s_i(z)`, `ExplicitSoftmax` verifies the heads
+
+```
+F_i±(x,y) = (H(x-y) + sum(y) ± s_i(x-y))/2 - (log(d)-1/d)/2.
+```
+
+`SoftmaxLineCalculus` differentiates the actual exp/log expressions;
+`SoftmaxProbability` proves the finite-probability curvature and derivative
+bounds; `MultivariateMonotoneDCLift` supplies the composition criterion.
+`SoftmaxDC.softmax_split_properties` concludes exactness, global convexity and
+coordinatewise monotonicity, plus nonnegativity on the doubled nonnegative orthant.
+Its index witnesses nonempty softmax support.
+
+## Actual Transformer and recursive splitting algorithm
+
+The namespace is `HiddenMonotonicity.TransformerDC`. The ordinary model and split
+algorithm are defined independently and connected by a compiler theorem:
+
+- `TransformerAffine` stores unrestricted signed weights and biases.
+- `TransformerMask` stores a fixed nonempty permitted-key set for each row,
+  represented by an injective index map. Causal and full masks fit this interface.
+- `TransformerHead` computes signed Q/K/V projections, scaled dot products,
+  actual row softmax, Value aggregation and an output projection. A finite list
+  of projected heads represents multihead attention without hiding its products.
+- `TransformerNorm` contains positive epsilon and unrestricted gain/bias. Its
+  evaluator computes the mean and variance from the current input, including at
+  inference time. It is not a frozen-statistic affine replacement for LayerNorm.
+- `TransformerBlock` is a pre-LayerNorm attention/residual/MLP/residual block.
+  `Transformer` stores an arbitrary finite list of blocks, positional bias,
+  optional final LayerNorm and a signed affine readout. Zero block depth is allowed.
+- `Expr.eval` evaluates the actual scalar operations. `Expr.splitEval` recursively
+  replaces constants, signed scaling, addition, products, activations, softmax and
+  LayerNorm with their explicit pairs. None of these constructors stores an
+  assumed convexity or correctness certificate.
+- `Transformer.syntax` compiles those same parameters into expressions, and
+  `Transformer.eval_syntax` proves equality with the ordinary forward model.
+  `Transformer.decompose` then runs the recursive pair evaluator on that syntax.
+
+The multiplication pair in `PolarizedProductDC` is
+
+```
+(A-B)(C-D) = ((A+C)^2 + (B+D)^2)/2 - ((A+D)^2 + (B+C)^2)/2.
+```
+
+`LayerNormDCLift` proves the reciprocal-square-root lift using its affine tangent
+extension below zero. `LayerNormDC` assembles the actual finite mean, centering,
+variance, reciprocal, multiplication, gain and bias. `HiddenMonotonicity.TransformerDC.Regular`
+records that both stream functions are convex and nonnegative and the pair is
+monotone on the stated convex domain. Primitive composition and structural
+induction prove `Expr.splitEval_exact` and `Expr.splitEval_regular`.
+
+The main endpoints in `TransformerCorrectness.lean` are:
+
+- `Transformer.dc_decomposition`: exact equality with every signed output logit
+  for the ordinary same-parameter model, convexity of each component, monotonicity
+  and nonnegativity on the nonnegative doubled-input orthant, for arbitrary depth.
+- `Transformer.raw_dc_decomposition`: the positive/negative raw-input lift gives
+  globally convex, nonnegative components whose difference is the model output.
+  It does not assert raw-input monotonicity.
+
+These sources compile. Completed leaf reviews include independent exact-type,
+axiom and boundary checks; the assembly review and final combined production gate
+are pending in this local revision; the last
+completed full gate is `0f3cfb0ea660556c14da510e665281f07acc471d`. Consult
+[the Lean handover](../HANDOVER_LEAN.md) for current integration status. Contracts
+and receipts are under `../reports/evidence/dc-generalization/`,
+`../reports/evidence/softmax-dc/` and `../reports/evidence/transformer-dc/`.
+
+The theorem is an exact real-arithmetic construction. It does not prove floating-
+point stability, attribution faithfulness, runtime or shared-DAG complexity of the
+expression compiler. The separate post-LayerNorm numerical diagnostic has severe
+cancellation in fifteen of twenty float64 cases. Fixed masks and positive epsilon
+are genuine hypotheses; fully masked rows and stochastic inference are not silently
+covered. The backward attention game and its conditional Value-routing semantics
+remain separate mathematical objects.
+
 ## Main modules
 
 | Module | Mathematical content |
 |---|---|
 | `HiddenMonotonicity/Network.lean` | Shared finite MLP, original and split evaluation, exact recovery and common-shift law |
 | `HiddenMonotonicity/Decomposition.lean` | Same network with generic scalar/pair activations; full-network validity and mixing recovery |
+| `HiddenMonotonicity/MonotoneDCLift.lean`, `CurvatureMonotoneDCLift.lean` | Nonsmooth profile criterion and absolute-curvature convex/monotone lifts |
+| `HiddenMonotonicity/ClosedFormMonotoneDC.lean`, `ModernMonotoneDC.lean` | Actual closed-form and integral activation pairs, complete MLPs and signed affine readouts |
+| `HiddenMonotonicity/ExplicitSoftmax.lean` and its calculus/probability leaves | Exact coupled softmax pair, global convexity and monotonicity |
+| `HiddenMonotonicity/PolarizedProductDC.lean` | Convex polarization product and nonnegative-stream composition |
+| `HiddenMonotonicity/LayerNormDCLift.lean`, `LayerNormDC.lean` | Reciprocal-root lift and actual finite input-dependent LayerNorm |
+| `HiddenMonotonicity/TransformerPairCalculus.lean`, `TransformerExpr.lean` | Explicit recursive pair algorithm and structural exactness/regularity invariants |
+| `HiddenMonotonicity/TransformerConvexInput.lean`, `TransformerExprProperties.lean` | Expanded-domain and globally convex raw-input corollaries |
+| `HiddenMonotonicity/TransformerDefinition.lean`, `TransformerCorrectness.lean` | Actual masked multihead Transformer, compiler bridge and arbitrary-depth DC theorem |
 | `HiddenMonotonicity/Convexity.lean` | Nonnegative split streams are monotone and Jensen convex |
 | `HiddenMonotonicity/ConvexInput.lean` | Arbitrary convex input lifts, mixing-one recovery, and convex actual affine heads |
 | `HiddenMonotonicity/Convolution.lean` | Indexed multi-channel kernel/stencil sums, exact sparse-matrix bridge, split properties and all four Jacobian blocks |

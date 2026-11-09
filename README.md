@@ -4,14 +4,17 @@ Master's thesis by Jakob Zimmermann: **From DC Decompositions to Two-Player Game
 This repository contains the thesis TeX, the two paper sources, a shared Lean
 formalization, and adapters for reproducing the thesis tables from the official code.
 
-The thesis brings together **Hidden Monotonicity**, a [CVPR 2026 Highlight](https://cvpr.thecvf.com/virtual/2026/poster/36564), and **Playing the Network Backward**, an [arXiv preprint (v2)](https://arxiv.org/abs/2605.06212v2). Jakob Paul Zimmermann is first author of both coauthored works. The thesis integrates their theoretical and empirical results and adds a shared exposition and partial Lean formalization.
+The thesis brings together **Hidden Monotonicity**, a [CVPR 2026 Highlight](https://cvpr.thecvf.com/virtual/2026/poster/36564), and **Playing the Network Backward**, an [arXiv preprint (v2)](https://arxiv.org/abs/2605.06212v2). Jakob Paul Zimmermann is first author of both coauthored works. The thesis integrates their theoretical and empirical results, extends the convex/monotone decomposition to smooth activations and finite Transformers, and adds a partial Lean formalization.
 
 ## Continue this checkpoint on another server
 
 Read [HANDOVER_TEX.md](HANDOVER_TEX.md) for the independent TeX task and
 [HANDOVER_LEAN.md](HANDOVER_LEAN.md) for the independent Astra proof task.
 They distinguish the clean verified root, frozen extensions awaiting integration,
-and unfinished drafts. All work was checkpointed at the user’s request.
+and unfinished drafts. The current repair and Transformer revision is local only;
+its final integrated proof gate and thesis build are pending. The last completed
+full gate is `0f3cfb0ea660556c14da510e665281f07acc471d`. Read the handovers and
+receipts before treating newer leaf builds as publication verification.
 
 ## Academic reviews
 
@@ -19,15 +22,18 @@ The [review overview and prioritized repair plan](reports/thesis-reviews/README.
 links twelve independent agent reviews of the thesis, with emphasis on experimental
 rigor, reproducibility, mathematical scope, and independent scientific contribution.
 The [assessment framework](reports/thesis-reviews/assessment-criteria.md) explains
-what an excellent master's thesis should demonstrate. The reviews identify
-remaining work; they do not imply that all recommended repairs have been applied.
+what an excellent master's thesis should demonstrate. The reviews remain historical
+snapshots. The [resolution audit](reports/thesis-reviews/resolution-audit.json)
+records 13 resolved findings and five partial areas: historical artifacts, AI
+identifiers, timing provenance, conflicting VGG values, and further numerical
+stability evidence.
 
 ## Contents
 
 - `tex/`: thesis sources and figures. Build from `tex/main.tex`.
 - `docs/thesis.pdf`: compiled thesis with commit-pinned links to the Lean theorems.
 - `arxive/hiddenMonotonicity/`: Hidden Monotonicity paper sources, with reported mathematical corrections.
-- `arxive/playingTheNetworkBackward/`: revised AISTATS paper, arXiv 2605.06212v2, with reported mathematical corrections and explicit routing-game tie conventions.
+- `arxive/playingTheNetworkBackward/`: preprint revised for AISTATS, arXiv 2605.06212v2, with reported mathematical corrections and explicit routing-game tie conventions.
 - `arxive/downloads/`: unchanged arXiv PDF/source download and checksums.
 - `formalization/`: Lean 4/mathlib proofs for both papers, sharing the same finite MLP and gate trace.
 - `code/`: pinned Git submodules of the official implementations.
@@ -51,13 +57,37 @@ silently advance them. Each upstream repository retains its own license.
 
 | Code | Official repository | Pinned revision |
 |---|---|---|
-| Hidden Monotonicity | [DC-Decomposition-for-Explanability](https://github.com/JayPiZimmermann/DC-Decomposition-for-Explanability) | `31be19b460358a69516452402d41bd650845a344` |
-| Playing the Network Backward | [Official repository](https://github.com/JayPiZimmermann/Playing_The_Network_Backward_Official_Repository) | `9cae01ce429c34b295aa06dd056895ddd4ef9ff7` |
+| Hidden Monotonicity | [DC-Decomposition-for-Explanability](https://github.com/JayPiZimmermann/DC-Decomposition-for-Explanability) | `43a8bce45ac1d61b28dfa5ddc7eaf32e8ad35f4f` |
+| Playing the Network Backward | [Official repository](https://github.com/JayPiZimmermann/Playing_The_Network_Backward_Official_Repository) | `7b5cd387f0a690b0d3451aa60bc8d897bd442a38` |
+
+These repair revisions are committed in the local official checkouts and have
+not been pushed. Until publication, a public clone retrieves the previous published
+snapshot and cannot fetch these new commits from the remotes.
 
 Thesis-specific table adapters live here. Changes to attribution algorithms should
 be developed in the relevant official repository and incorporated by updating the
 submodule pin. The Lean proofs verify mathematical models; they do not certify
 these Python implementations or the reported experiments.
+
+## Convex decompositions for activations and Transformers
+
+The thesis gives explicit convex, coordinatewise-monotone pairs for ReLU, GELU,
+Swish, sigmoid and Softplus, then extends the construction to coupled softmax,
+products and positive-epsilon LayerNorm. The Transformer definition includes
+actual masked multihead attention, residuals, input-dependent LayerNorm, an MLP,
+optional final normalization and signed affine logits at arbitrary finite depth.
+The algorithm and its main endpoints are in
+[TransformerCorrectness.lean](formalization/HiddenMonotonicity/TransformerCorrectness.lean).
+Their exactness and structural theorems compile; the final integrated verification
+status is tracked in the handovers.
+
+Monotonicity and convexity of the complete split hold on nonnegative doubled
+inputs. The positive/negative lift of raw inputs gives globally convex heads,
+without a raw-input monotonicity guarantee. Exactness does not imply numerical
+stability: the independent [float64 diagnostic](scripts/transformer_dc_demo.py)
+retains all twenty tested cases, including fifteen with final absolute error
+above `1e-8` and stream magnitudes up to `5.95e111`. See
+[its evidence](reports/evidence/transformer-dc/numeric-review.json).
 
 ## Check the Lean proofs
 
@@ -102,8 +132,11 @@ python3 scripts/generate_thesis_tables.py --python /path/to/environment/bin/pyth
 
 This invokes the official CPU table writer on its shipped summaries. It runs no
 model evaluations and downloads no datasets. All 13 available outputs were checked
-against the thesis after its presentation adapter. Measured values and row order
-are preserved; the adapter standardizes labels and colors, removes entirely
+against the thesis after its presentation adapter. Point estimates, configurations
+and row order are preserved. VOC uncertainty was recomputed with image-level
+cluster resampling, and full-pair Holm adjustment changes ten ImageNet comparison
+markers; the corresponding prose and archived-paper tables were updated together.
+The adapter itself standardizes labels and colors, removes entirely
 unmeasured metric columns, and makes non-applicable configurations explicit.
 The check includes the main/CI tables, validation selections, ablations, attention
 rule comparison, VOC transfer, and macros for numbers in the prose.
@@ -119,8 +152,13 @@ changes and update the thesis and provenance together.
 Six game-paper diagnostics require outputs absent from the public summaries.
 The Hidden Monotonicity ImageNet table inputs are also absent from its official
 code checkout. Their existing published TeX tables remain included; they are
-not described as recomputed experiments. `scripts/table_sources.json` identifies
-the sources and each missing input.
+not described as recomputed experiments. Six historical MNIST training
+configurations are also unavailable. Current CPU fixtures and a documented example
+do not recover those historical campaigns. The repaired HM runner uses a separate
+training-pool validation set and reserves the test set for final evaluation.
+`reports/evidence/hm-reproduction-repair/summary.json` records its 27 passing tests
+and 23 subtests; `scripts/table_sources.json` identifies table sources and missing
+inputs.
 
 ## Source-content and reference coverage
 

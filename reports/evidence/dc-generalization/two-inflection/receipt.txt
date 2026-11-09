@@ -1,0 +1,40 @@
+Status: Lean verified in the shared working tree; public integration belongs
+to the parent task. Existing reviewed leaves and manifests were not edited.
+
+Source: formalization/HiddenMonotonicity/TwoInflectionDC.lean
+
+For f'=d and a<b, the closed profile P is constant f(a)-d(a)*a on the
+left, f(z)-d(a)*z in the central interval, and the affine continuation
+with slope d(b)-d(a) on the right. Q=P-f. The proof glues values and first
+derivatives at both thresholds. With d decreasing on both tails and
+increasing centrally, P and Q are convex. When d<=0 on the left tail and
+d>=0 on the right tail, both profile derivatives belong to [0,d(b)-d(a)].
+The asymmetric lifts are therefore convex and coordinatewise monotone on
+the whole real plane, and their difference equals f(x-y).
+
+The hypotheses describe the actual source derivative, not the constructed
+functions' final convexity or monotonicity. When a<=0<=b, P(0)=f(0) and
+Q(0)=0; nonnegative-quadrant output preservation would additionally need
+f(0)>=0, which this generic theorem does not assume or silently claim.
+
+Verification commands run from formalization/:
+lake env lean HiddenMonotonicity/TwoInflectionDC.lean
+  build-05.log, build-05.exit=0
+lake build HiddenMonotonicity.TwoInflectionDC
+  build-module.log, build-module.exit=0
+lake env lean ../reports/evidence/dc-generalization/two-inflection/ExactContracts.lean
+  exact-contracts.log, exact-contracts.exit=0
+lake env lean ../reports/evidence/dc-generalization/two-inflection/BoundaryConsumers.lean
+  boundary.log, boundary.exit=0
+
+Fourteen handwritten full expected theorem types were checked. All nineteen
+declarations were audited with #print axioms; only propext, Classical.choice,
+and Quot.sound occur. The boundary consumers cover both thresholds and
+signed inputs, and instantiate the full theorem on exact Gaussian GELU
+using analytic slope bounds at +-sqrt(2), establishing nonlinear nonvacuity.
+
+Independent read-only semantic reviewer two_inflection_review found no
+defects, checked the recorded hashes and zero exit markers, and confirmed
+the normalization caveat above. Reviewed source hashes are in source.sha256.
+Early failed compiler iterations are preserved as diagnostic history.
+These receipts do not substitute for the final clean committed-closure gate.

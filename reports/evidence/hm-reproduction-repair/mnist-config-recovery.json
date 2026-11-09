@@ -1,0 +1,276 @@
+{
+  "recorded_at_utc": "2026-11-09T15:17:36.098301+00:00",
+  "repository": "https://github.com/JayPiZimmermann/DC-Decomposition-for-Explanability.git",
+  "base_revision": "31be19b460358a69516452402d41bd650845a344",
+  "working_branch": "thesis-local-reproducibility",
+  "local_changes_committed": false,
+  "recovery": {
+    "reachable_commits_searched": 204,
+    "shallow_repository": false,
+    "recovered_historical_configurations": [],
+    "historical_configurations_required": [
+      "config_1_cnn_maxout_input_convex.json",
+      "config_2_cnn_maxout_monotone.json",
+      "config_3_cnn_maxout_none.json",
+      "config_4_mlp_wide_maxout_none.json",
+      "config_5_mlp_wide_maxout_monotone.json",
+      "config_6_mlp_wide_maxout_input_convex.json"
+    ],
+    "initial_multi_seed_commit": "0e005ec69341944657be8d9735751576e5c47a51",
+    "initial_multi_seed_files": [
+      "README.md",
+      "add_median.py",
+      "generate_latex_table.py",
+      "model_accuracy_table.tex",
+      "run_multi_seed.py"
+    ],
+    "history_commands": [
+      "git rev-parse --is-shallow-repository",
+      "git rev-list --all --count",
+      "git ls-tree -r --name-only 0e005ec69341944657be8d9735751576e5c47a51 -- cdinns_icnns/multi_seed",
+      "git log --all --format='%H %s' -- ':(glob)**/config_[1-6]_*.json'",
+      "git rev-list --objects --all"
+    ],
+    "object_inventory_check": "Python path filtering found no config_[1-6]_*.json paths and no JSON files under current difference_of_networks/multi_seed or former cdinns_icnns/multi_seed.",
+    "local_filename_search_command": "rg --files --hidden --no-ignore /home/jzimmermann/code -g '!**/.git/**' -g '!**/.lake/**' -g '!**/.venv/**' -g '!**/venv/**' -g '!**/node_modules/**' -g '!**/__pycache__/**' | rg '(config_[1-6]_(cnn|mlp).*\\.json|multi_seed/.*config.*\\.json)$' | head -60",
+    "local_filename_matches": [],
+    "nearby_project_checked": "/home/jzimmermann/code/dc_decompose_neurips_submission",
+    "search_limit": "No claim of exhaustive content search inside ignored artifacts; ignored paths were included in the targeted filename search.",
+    "remaining_requirement": "Author-supplied original archived configuration files and per-seed result summaries are needed to recover the historical MNIST reproduction route."
+  },
+  "available_example": {
+    "source_revision": "31be19b460358a69516452402d41bd650845a344",
+    "source_path": "difference_of_networks/training_experiment.ipynb",
+    "source_config_cell_zero_based": 2,
+    "source_notebook_sha256": "9acf183ffa5e0f2768ba8f701b51b741e311409bb61df940e962b86522ac004c",
+    "example_path": "difference_of_networks/multi_seed/examples/notebook_mnist.json",
+    "exact_dictionary_match_to_source": true,
+    "copied_settings": {
+      "dataset": "mnist",
+      "heavy_augmentation": false,
+      "batch_size": 128,
+      "num_workers": 4,
+      "input_constant": 0.0,
+      "model_type": "mnist_cnn_multihead",
+      "use_pretrained": true,
+      "use_split_model": false,
+      "model_restriction": "input_convex",
+      "positive_transform": "relu",
+      "abs_init": true,
+      "dtype": "float32",
+      "init_weight_scale": 0.1,
+      "invert_negative_input": false,
+      "shift": 1.0,
+      "epochs": 50,
+      "learning_rate": 0.001,
+      "weight_decay": 0.0001,
+      "optimizer": "adam",
+      "scheduler": "cosine",
+      "scheduler_params": {},
+      "early_stopping_patience": 10,
+      "norm_weight": 0.01,
+      "norm_type": "l2",
+      "output_weight": 0.0,
+      "norm_type_output": "l1",
+      "l1_threshold": 0.0,
+      "ping_pong_training": false,
+      "ping_pong_epochs": 5,
+      "save_best_model": true,
+      "experiments_dir": "../experiments",
+      "device": "auto",
+      "create_plots": true,
+      "save_outputs": true,
+      "verbose_evaluation": true
+    },
+    "historical_table_reproduction_claim": false,
+    "execution_note": "The runner now honors abs_init; the notebook code previously omitted forwarding this field. Plot/output-analysis fields are retained as source settings but unused by the runner."
+  },
+  "validation": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-146-generic-x86_64-with-glibc2.39",
+    "packages": {
+      "torch": "2.11.0",
+      "torchvision": "0.26.0",
+      "numpy": "2.3.5",
+      "pandas": "3.0.2",
+      "scikit-learn": "1.8.0",
+      "matplotlib": "3.10.9",
+      "seaborn": "0.13.2"
+    },
+    "isolated_dependency_install_command": "/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python -m pip install --no-deps --target /tmp/hm-multi-seed-smoke-deps seaborn==0.13.2",
+    "working_directory": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/hidden_monotonicity",
+    "test_command": "PYTHONPATH=/tmp/hm-multi-seed-smoke-deps:/tmp/hm-validation-numpy235 /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python -m pytest difference_of_networks/multi_seed/test_run_multi_seed.py -q",
+    "test_exit_code": 0,
+    "test_count": 7,
+    "log": "reports/evidence/hm-reproduction-repair/mnist-protocol-tests.log",
+    "checks": [
+      "data-free configuration validation, absent/empty/malformed input errors, invalid seed ranges",
+      "validation fraction rejects empty-boundary, nonfinite and boolean values; validation seed rejects invalid integer ranges and booleans",
+      "disjoint train/validation index sets exactly partition the source training pool",
+      "validation indices are stable across model initialization seeds and private split generator leaves global torch RNG unchanged",
+      "validation dataset receives separate evaluation transform while training dataset retains its augmentation transform",
+      "actual notebook-model CPU optimization uses 18 synthetic training images and 2 held-out validation images",
+      "real Trainer.train and ModelEvaluator.evaluate_dataset wrappers establish fit-before-test call order and final use of distinct original 10-image test loader",
+      "finite trained model weights, effective default validation settings, exact sample counts, saved heldout indices and SHA256 digest",
+      "deliberately failed second initialization seed produces incomplete status and exit 1"
+    ],
+    "synthetic_run_overrides": {
+      "epochs": 1,
+      "batch_size": 20,
+      "num_workers": 0,
+      "device": "cpu"
+    },
+    "synthetic_inputs": {
+      "training_pool_shape": [
+        20,
+        1,
+        28,
+        28
+      ],
+      "training_pool_distribution": "torch.randn",
+      "training_pool_labels": "arange(20) % 10",
+      "test_shape": [
+        10,
+        1,
+        28,
+        28
+      ],
+      "test_distribution": "torch.randn + 10",
+      "test_labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "generator_seed": 123,
+      "training_seed": 42,
+      "simulated_failed_seed": 43,
+      "training_samples": 18,
+      "validation_samples": 2,
+      "test_samples": 10
+    },
+    "dataset_downloads": false,
+    "published_results_rerun": false,
+    "fresh_environment_install": false,
+    "independent_code_review": "Completed by separate sibling; no blocking findings in partition independence, transforms, leakage, metadata or test strength.",
+    "package_import": {
+      "succeeded": true,
+      "all_exports_present": 25,
+      "missing_exports": [],
+      "removed_unavailable_exports": [
+        "analyze_model",
+        "analyze_split_models",
+        "analyze_weight_distribution"
+      ]
+    },
+    "pytest": {
+      "command": "PYTHONPATH=/tmp/hm-multi-seed-smoke-deps:/tmp/hm-validation-numpy235 /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python -m pytest difference_of_networks/multi_seed/test_run_multi_seed.py -q",
+      "exit_code": 0,
+      "passed": 7,
+      "log": "reports/evidence/hm-reproduction-repair/mnist-protocol-tests.log"
+    }
+  },
+  "validated_file_sha256": {
+    "difference_of_networks/multi_seed/run_multi_seed.py": "898e78f704cfde8595c672be17dbb26ee9ed7bb8044f3ac5a65b4bdbcc61afd8",
+    "difference_of_networks/multi_seed/test_run_multi_seed.py": "260a9fefef3ed0604d02679e8bb273ec3a8db67148b391a6b0a30503eb7cf761",
+    "difference_of_networks/multi_seed/examples/notebook_mnist.json": "c20a812299973428bc7257506965e30dece2c7b6d4dc724129279b63e7aad62b",
+    "difference_of_networks/__init__.py": "90bac52d883d979c34abfb91247a516390dfea7ddb64876bf339d196e3a436cb"
+  },
+  "updated_at_utc": "2026-11-09T15:34:51.800686+00:00",
+  "validation_before_protocol_change": {
+    "python": "3.12.3",
+    "platform": "Linux-6.8.0-146-generic-x86_64-with-glibc2.39",
+    "packages": {
+      "torch": "2.11.0",
+      "torchvision": "0.26.0",
+      "numpy": "2.3.5",
+      "pandas": "3.0.2",
+      "scikit-learn": "1.8.0",
+      "matplotlib": "3.10.9",
+      "seaborn": "0.13.2"
+    },
+    "isolated_dependency_install_command": "/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python -m pip install --no-deps --target /tmp/hm-multi-seed-smoke-deps seaborn==0.13.2",
+    "working_directory": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/hidden_monotonicity",
+    "test_command": "PYTHONPATH=/tmp/hm-multi-seed-smoke-deps /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python -m unittest discover -s difference_of_networks/multi_seed -p 'test_run_multi_seed.py' -v",
+    "test_exit_code": 0,
+    "test_count": 5,
+    "log": "reports/evidence/hm-reproduction-repair/mnist-runner-tests.log",
+    "checks": [
+      "data-free example validation creates no output directory",
+      "missing and empty configuration directories exit 2 without results",
+      "malformed and incomplete JSON configurations exit 2",
+      "invalid seed range exits 2",
+      "actual notebook-model CPU construction, one optimisation and evaluation batch, finite saved model state, per-seed and aggregate summaries, and deliberately failed second seed yielding status incomplete and exit 1"
+    ],
+    "synthetic_run_overrides": {
+      "epochs": 1,
+      "batch_size": 10,
+      "num_workers": 0,
+      "device": "cpu"
+    },
+    "synthetic_inputs": {
+      "shape": [
+        10,
+        1,
+        28,
+        28
+      ],
+      "distribution": "torch.randn",
+      "generator_seed": 123,
+      "labels": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "training_seed": 42,
+      "simulated_failed_seed": 43
+    },
+    "dataset_downloads": false,
+    "published_results_rerun": false,
+    "fresh_environment_install": false,
+    "independent_code_review": "Completed; corrected inconsistent config filename stem handling before final test run.",
+    "package_import": {
+      "succeeded": true,
+      "all_exports_present": 25,
+      "missing_exports": [],
+      "removed_unavailable_exports": [
+        "analyze_model",
+        "analyze_split_models",
+        "analyze_weight_distribution"
+      ]
+    },
+    "pytest": {
+      "command": "PYTHONPATH=/tmp/hm-multi-seed-smoke-deps /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python -m pytest difference_of_networks/multi_seed/test_run_multi_seed.py -q",
+      "exit_code": 0,
+      "passed": 5,
+      "log": "reports/evidence/hm-reproduction-repair/mnist-runner-pytest.log"
+    }
+  },
+  "protocol_repair": {
+    "protocol_label": "training_pool_holdout",
+    "validation_fraction_default": 0.1,
+    "validation_seed_default": 42,
+    "size_rule": "floor(training_pool_size * validation_fraction)",
+    "partition_rng": "private torch.Generator with validation_seed, independent of model initialization seed",
+    "validation_preprocessing": "get_transforms with train=False, heavy_augmentation=False, original target_size and input_constant",
+    "test_access": "original test loader is evaluated only after Trainer.train completes; its sample count is recorded before fitting",
+    "model_evaluated": "final epoch model, without restoration of validation-best checkpoint",
+    "archived_partition": "validation_indices.json per run; config records count and SHA256; training indices are its complement",
+    "historical_protocol_recovered": false,
+    "published_figures_modified": false,
+    "notebook_example_file_modified": false
+  }
+}

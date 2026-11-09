@@ -1,15 +1,105 @@
 # Lean handover — resumed 9 November 2026
 
-The checkpoint has been resumed on the new server. The formalization remains
-**unfinished**. The Softplus Circuit and conditioned-trajectory batches are now
-integrated and cleanly verified. Six routing-history modules have subsequently
-passed independent review but remain outside the production import closure.
-This handover distinguishes those states and the broader remaining research.
+The current revision adds convex/monotone activation splitting and an actual
+arbitrary-depth Transformer DC algorithm. Those new sources compile and have
+separate independent reviews; final assembly integration and the complete clean
+gate are still pending. **The formalization as a whole remains unfinished.**
+The last completed full gate remains `0f3cfb0` until a newer passing receipt is
+recorded below. Six independently reviewed routing-history modules remain outside
+the production import closure; this new Transformer work does not promote them.
 
-The independent editorial task is documented in [HANDOVER_TEX.md](HANDOVER_TEX.md).
-Do not require that agent to solve the mathematical obligations below.
+The independent editorial and empirical state is in [HANDOVER_TEX.md](HANDOVER_TEX.md).
+Current changes and official-code repair commits are local only; the user asked
+for local execution first. Do not publish this revision under the earlier
+checkpoint's push authorization.
 
-## Bootstrap and current verified snapshot
+## New DC and Transformer work awaiting the final integrated gate
+
+The 15 activation leaves add the nonsmooth profile criterion, absolute-curvature
+lift, closed-form GELU/Swish/sigmoid/Softplus pairs, exact ReLU `(max(x,y), y)`,
+and complete network composition with an ungated affine readout. The 46 selected
+contracts and independent leaf/source reviews are indexed by
+`reports/dc-generalization-expected-types.json` and
+`reports/evidence/dc-generalization/README.md`. The integration receipt is
+`reports/evidence/dc-generalization/integration-receipt.json`.
+
+Four softmax leaves prove the actual exp/log formula, its difference identity,
+global convexity and coordinatewise monotonicity, and nonnegativity on expanded
+nonnegative inputs. The 24 reviewed contracts are in
+`reports/softmax-dc-expected-types.json`. Generic universe metadata was corrected
+and passed the enforcing exact driver; use the final explicit-universe contracts,
+not a stale copy. `PolarizedProductDC` proves the square-based multiplication pair
+and nonnegative-stream composition. `LayerNormDCLift` proves the actual tangent
+extension of the reciprocal square root, and `LayerNormDC` assembles the mean,
+centered variance, reciprocal, signed scale and bias into input-dependent
+LayerNorm. It is not frozen-statistic normalization.
+
+The actual Transformer development uses these source modules:
+
+- `TransformerPairCalculus`: reusable convex, monotone, nonnegative stream
+  composition, with signed affine operations and polarized products.
+- `TransformerExpr`: actual scalar operation syntax, ordinary evaluation, recursive
+  split evaluation, exactness and the structural invariant; no constructor stores
+  an assumed certificate for an entire operation.
+- `TransformerConvexInput` and `TransformerExprProperties`: expanded nonnegative
+  input and global convex raw-input pullbacks.
+- `TransformerDefinition`: actual finite pre-LayerNorm blocks, signed Q/K/V and
+  output projections, coupled masked softmax, Value products, residual additions,
+  supported activation MLPs, positional bias, optional final LayerNorm, and signed
+  affine output logits. Blocks form an arbitrary finite list, including zero
+  blocks. Masks have nonempty allowed support and injective key enumeration.
+- `TransformerCorrectness`: `Transformer.decompose`,
+  `Transformer.dc_decomposition`, and `Transformer.raw_dc_decomposition` connect
+  the splitting algorithm to the ordinary same-parameter forward computation.
+
+The full Transformer theorem has compiled; independent exact, axiom, source and
+boundary reviews and final integration must be read before claiming a passed
+production gate. The current primitive integration receipt,
+`reports/evidence/transformer-dc/integration/primitives-receipt.json`, records
+160 reachable modules, 454 selected contracts and 211 mappings at that intermediate
+stage. These are **not final gate counts** and exclude pending assembly promotion.
+The integration owner controls roots, coverage, inventory, exact contracts and
+source links; do not edit them concurrently with that owner.
+
+Preserve these scope distinctions:
+
+- The softmax pair is convex and monotone on the whole doubled real space. The
+  composed Transformer has those properties on the nonnegative doubled-input
+  orthant. Pulling back by `(x⁺,x⁻)` gives globally convex, nonnegative raw-input
+  heads, without raw-input monotonicity.
+- Normalization epsilon is strictly positive; masks are fixed and nonempty.
+  Standard LayerNorm remains input dependent in evaluation mode. Fixed-statistic
+  BatchNorm is an affine operation and belongs to the simpler existing case.
+- The expression compiler and actual architecture theorem do not establish a
+  shared-DAG size bound, runtime bound, numerical stability, full attention-game
+  equilibrium, or unconditioned Query/Key attribution identity.
+- The absolute-curvature theorem's displayed normalization is a mathematically
+  equivalent variant of the reviewed normalized integral construction. Its
+  coverage records the missing literal-formula bridge. Global necessity and
+  bounded-interval extensions are not silently covered by a sufficient-condition
+  kernel theorem.
+
+The runnable float64 diagnostic `scripts/transformer_dc_demo.py` independently
+compares a small post-LayerNorm Transformer with ordinary PyTorch. It is not the
+pre-LayerNorm architecture record's execution certificate. Its 20-case receipt
+retains severe cancellation: 15 cases exceed `1e-8` final error, and streams reach
+`5.95e111` at small epsilon. Read
+`reports/evidence/transformer-dc/numeric-review.json`; exact DC existence does not
+supply a practical stable Transformer implementation.
+
+The reviewed game-prose additions now explicitly handle signed affine logits and
+zero-mass cemetery completion. Local official-code fixes have 48 boundary tests,
+but they are separate from a full global Lean attention-game proof. Code pins are
+HM `43a8bce45ac1d61b28dfa5ddc7eaf32e8ad35f4f` and game
+`7b5cd387f0a690b0d3451aa60bc8d897bd442a38`; see the TeX handover for 27 HM tests,
+23 subtests, 33 statistical tests, 13 regenerated tables and historical limitations.
+
+The subsequent real-ViT implementation, stabilization and heatmap request is a
+separate active empirical task in a local HM worktree based on `43a8bce`.
+It does not change the thesis submodule pin or enlarge the present Lean theorem's
+numerical guarantees. No real-ViT execution result is claimed here yet.
+
+## Bootstrap and last completed verified snapshot
 
 ```sh
 git clone --recurse-submodules https://github.com/JayPiZimmermann/A-Structural-Approach-to-Interpretable-Deep-Learning.git
@@ -42,9 +132,10 @@ Evidence is in `reports/verification/current/` and archived under
 retained. Read the receipt's `source.commit`, exact counts and hashed files; do
 not infer a clean verification of later unimported files from a nearby log.
 The handover/artifact commit necessarily follows the verified source commit.
-The imported source closure and its bound configuration are unchanged.
+That historical snapshot remains immutable; the current working root and bound
+configuration have since changed and require the new gate described above.
 
-The regenerated TeX has **190 mapped links**, pinned to that verified commit.
+The previous published TeX has **190 mapped links**, pinned to that verified commit.
 It includes the two integrated batches and does not advertise the unimported
 routing extension. The source normalization from `e42fe47` to `0f3cfb0` changed
 only JSON order/encoding: all 190 mapping values were identical. The independent
@@ -117,7 +208,7 @@ instructions take precedence.
   canonical equilibrium with extended log payoffs. `RoutingBackward` separately
   provides alpha-beta path recovery; their missing explicit bridge is the WIP below.
 
-The 139-module root includes actual affine readouts, a.e. derivative
+The historical 139-module root already includes actual affine readouts, a.e. derivative
 results, exact modern-activation curvature constructions (including Gaussian
 GELU), weak/distributional regularity bridges, CPWL representation with depth
 bounds, indexed convolution, explicit split-DAG size bounds, general regularized
@@ -126,7 +217,7 @@ max-pool ties, layered softplus SPNE, zero-support survival conditioning, and
 local attention reference-KL optimization. Consult exact contracts and scopes;
 these summaries do not enlarge them.
 
-## Extensions integrated in the current verified root
+## Extensions already integrated in the last verified root
 
 ### 1. Softplus Circuit extension
 
@@ -214,12 +305,13 @@ The affine readout backbone outputs must be nonnegative, automatic for a nonempt
 activated backbone. A negative zero-depth input requires a separate fused
 readout. Residual/pooling routing DAGs remain outside this batch.
 
-The next bounded Lean task is to copy these six sources byte-for-byte into
+A separate queued Lean task, after the current DC/Transformer gate, is to copy
+these six sources byte-for-byte into
 production, add `RoutingPolicyPaths`, `RoutingHistorySteps`, and
 `RoutingReadoutHistory` to `Thesis.lean`, integrate the twenty reviewed contracts
 and exact mapping scopes, commit, and run a new clean gate. Do not repin TeX to
-this extension before that gate passes. The current publication snapshot remains
-`0f3cfb0`; no routing production promotion was performed in this checkpoint.
+this extension before that gate passes. This routing batch has not been promoted by the current DC/Transformer work.
+Its focused receipts must not be confused with either full production gate.
 
 ## Other outstanding mathematical work
 
@@ -285,14 +377,15 @@ certificate, and existing general-regularizer theorem scopes were not changed.
    receipt claiming its own artifact commit was the source snapshot.
 5. Give the TeX task the verified commit. Run the link generator/check against it,
    rebuild the public PDF, verify rendered links and bibliography, update the
-   public build record, commit artifacts, and push.
+   public build record, and commit artifacts locally. Keep the present revision
+   local until publication is authorized for it.
 
-The user explicitly authorized the public repository and pushes. Keep private
-registration metadata out. Both official code repositories remain pinned
+Earlier checkpoint publication was authorized; the current revision is local
+first and has not been pushed. Keep private registration metadata out. Both official code repositories remain pinned
 submodules. The Lean proofs certify their stated mathematical models; they do
 not certify the Python implementations or regenerate experimental evidence.
 
 Historical evidence may contain absolute old-machine paths. Use the committed
 source files, relative paths and pinned toolchain to rerun diagnostics on the new
-server. All active work was checkpointed; no unsaved result from an old agent is
-needed to continue.
+server. The current integration is still active; use completed receipts and frozen
+source hashes rather than assuming every nearby working file is verified.

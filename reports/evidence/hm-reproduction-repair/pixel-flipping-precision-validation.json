@@ -1,0 +1,36 @@
+{
+  "scope": "Standalone pixel-flipping input precision and CSV coordinates/baselines",
+  "test_module": "code/hidden_monotonicity/tests/test_pixel_flipping_precision.py",
+  "result": {
+    "tests": 3,
+    "status": "passed",
+    "elapsed_seconds_reported_by_unittest": 2.685
+  },
+  "environment": {
+    "python": "/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python",
+    "PYTHONPATH": "/tmp/hm-validation-numpy235:/tmp/hm-multi-seed-smoke-deps",
+    "device": "cpu"
+  },
+  "confirmed_regression": "A real float64 linear model failed in Quantus PixelFlipping because numpy inputs were converted to default float32 tensors before prediction.",
+  "coverage": [
+    "Real Quantus PixelFlipping executes with float32 and float64 models",
+    "Every perturbed input equals an independently constructed reference tensor, including information representable only in float64",
+    "Finite prediction curves equal direct reference-model predictions",
+    "Cached NPZ image and attribution files pass through the complete standalone CSV export path",
+    "Original model precision and global torch default precision remain unchanged",
+    "CSV drops use a separately evaluated original-image score; unavailable baseline values remain NaN",
+    "Curve return arrays and their sample counts remain post-perturbation samples",
+    "Coordinates use explicit feature count and step size, with a partial last step clipped to 100 percent",
+    "A writer fixture with 36 features and step size 5 starts at 13.88888888888889 percent, ends at 100 percent and rejects the incorrect seven-row curve",
+    "Unknown feature geometry remains NaN instead of inventing coordinates"
+  ],
+  "impact": {
+    "current_standalone_consumers": "Pixel-flipping curve aggregation and plotting",
+    "historical_data": "No historical cached curves, scores or published results were recomputed or relabeled",
+    "separate_scoring_path": "QuantusEvaluator score extraction and its CSV writer are handled by the separate metric validation task"
+  },
+  "limitations": [
+    "Synthetic CPU inputs and a small linear model validate the repaired path; they do not reproduce the published experiment",
+    "The nondivisible writer case is tested independently because the installed Quantus metric rejects nondivisible spatial step sizes before evaluation"
+  ]
+}

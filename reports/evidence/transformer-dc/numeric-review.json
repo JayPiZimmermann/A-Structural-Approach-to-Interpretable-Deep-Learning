@@ -1,0 +1,131 @@
+{
+  "status": "pass_with_explicit_numerical_limitations",
+  "source": "scripts/transformer_dc_demo.py",
+  "source_sha256": "2fa40e15087875644c45ab80129c761962f4b35d57334e1d582990a624a5cf4a",
+  "scope": "Independent read-only implementation review and CPU float64 rerun of the diagnostic prototype; not a formal proof or attribution benchmark.",
+  "inspected": [
+    "Signed affine maps split weights and biases, including negative LayerNorm gamma and final logits.",
+    "Matrix contractions apply the square-polarization identity with correct broadcast and sum dimensions.",
+    "Masked softmax uses the actual nonempty permitted support, including singleton causal rows, with zero outputs outside it.",
+    "LayerNorm uses centered population variance, positive epsilon, and the defined reciprocal-square-root tangent extension.",
+    "Exact Gaussian GELU is compared with torch GELU approximate=none.",
+    "Reference computation uses independent ordinary PyTorch operations and never feeds values back into either stream.",
+    "No stream recentering or variance clipping hides cancellation; error is measured against the direct-output scale."
+  ],
+  "concerns_resolved": [
+    "Primitive diagnostics now explicitly require all reference and stream samples to be finite.",
+    "The reciprocal-square-root branch remains finite before torch.where selection.",
+    "The report retains every sweep case, records the first inaccurate stage, and states what the exit code does and does not check."
+  ],
+  "independent_execution": {
+    "command": "/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python scripts/transformer_dc_demo.py --output /tmp/transformer-dc-final-independent-review.json",
+    "exit_code": 0,
+    "environment": {
+      "python": "3.12.3",
+      "torch": "2.11.0+cu130",
+      "device": "cpu",
+      "dtype": "torch.float64",
+      "threads": 1
+    },
+    "primitive_checks_passed": true,
+    "benign_transformer_fixture_passed": true,
+    "benign_final_absolute_error": 2.7755575615628914e-17,
+    "sweep_summary": {
+      "absolute_error_threshold": 1e-08,
+      "cases": 20,
+      "final_output_failures_at_threshold": 15,
+      "nonfinite_cases": 0
+    },
+    "maximum_stream_magnitude": 5.947998335378866e+111,
+    "zero_variance_cases": [
+      {
+        "epsilon": 1.0,
+        "stages": {
+          "zero_variance_layer_norm.centered": {
+            "max_absolute_error": 0.0,
+            "max_relative_error_scale_floor_1": 0.0,
+            "max_stream_magnitude": 0.0,
+            "stream_to_output_scale_floor_1": 0.0,
+            "min_stream_value": 0.0,
+            "min_recovered_value": 0.0,
+            "all_finite": true
+          },
+          "zero_variance_layer_norm.variance": {
+            "max_absolute_error": 0.0,
+            "max_relative_error_scale_floor_1": 0.0,
+            "max_stream_magnitude": 0.0,
+            "stream_to_output_scale_floor_1": 0.0,
+            "min_stream_value": 0.0,
+            "min_recovered_value": 0.0,
+            "all_finite": true
+          },
+          "zero_variance_layer_norm.inverse_sqrt": {
+            "max_absolute_error": 0.0,
+            "max_relative_error_scale_floor_1": 0.0,
+            "max_stream_magnitude": 1.0,
+            "stream_to_output_scale_floor_1": 1.0,
+            "min_stream_value": 0.0,
+            "min_recovered_value": 1.0,
+            "all_finite": true
+          },
+          "zero_variance_layer_norm": {
+            "max_absolute_error": 0.0,
+            "max_relative_error_scale_floor_1": 0.0,
+            "max_stream_magnitude": 1.25,
+            "stream_to_output_scale_floor_1": 1.25,
+            "min_stream_value": 0.25,
+            "min_recovered_value": -0.25,
+            "all_finite": true
+          }
+        }
+      },
+      {
+        "epsilon": 1e-05,
+        "stages": {
+          "zero_variance_layer_norm.centered": {
+            "max_absolute_error": 0.0,
+            "max_relative_error_scale_floor_1": 0.0,
+            "max_stream_magnitude": 0.0,
+            "stream_to_output_scale_floor_1": 0.0,
+            "min_stream_value": 0.0,
+            "min_recovered_value": 0.0,
+            "all_finite": true
+          },
+          "zero_variance_layer_norm.variance": {
+            "max_absolute_error": 0.0,
+            "max_relative_error_scale_floor_1": 0.0,
+            "max_stream_magnitude": 0.0,
+            "stream_to_output_scale_floor_1": 0.0,
+            "min_stream_value": 0.0,
+            "min_recovered_value": 0.0,
+            "all_finite": true
+          },
+          "zero_variance_layer_norm.inverse_sqrt": {
+            "max_absolute_error": 0.0,
+            "max_relative_error_scale_floor_1": 0.0,
+            "max_stream_magnitude": 316.2277660168379,
+            "stream_to_output_scale_floor_1": 1.0,
+            "min_stream_value": 0.0,
+            "min_recovered_value": 316.2277660168379,
+            "all_finite": true
+          },
+          "zero_variance_layer_norm": {
+            "max_absolute_error": 0.0,
+            "max_relative_error_scale_floor_1": 0.0,
+            "max_stream_magnitude": 75000.49999999999,
+            "stream_to_output_scale_floor_1": 75000.49999999999,
+            "min_stream_value": 24999.999999999996,
+            "min_recovered_value": -0.25,
+            "all_finite": true
+          }
+        }
+      }
+    ]
+  },
+  "limitations": [
+    "Finite sampled Jensen and isotonicity checks do not prove convexity or monotonicity.",
+    "Fifteen of twenty sweep cases exceed 1e-8 final absolute error; every tested epsilon=1e-5 case loses output accuracy.",
+    "The exact real-arithmetic construction is not a practical numerically stable Transformer implementation.",
+    "Zero-variance LayerNorm cases are retained as numerical diagnostics and are not part of the declared passing exit-code fixtures."
+  ]
+}

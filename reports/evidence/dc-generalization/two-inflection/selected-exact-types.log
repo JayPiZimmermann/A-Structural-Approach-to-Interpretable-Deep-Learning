@@ -1,0 +1,52 @@
+HiddenMonotonicity.SmoothDC.centralConvex_asymmetric_split : ∀ (f d : ℝ → ℝ) (a b : ℝ),
+  a < b →
+    (∀ (x : ℝ), HasDerivAt f (d x) x) →
+      AntitoneOn d (Set.Iic a) →
+        MonotoneOn d (Set.Icc a b) →
+          AntitoneOn d (Set.Ici b) →
+            (∀ x ≤ a, d x ≤ 0) →
+              (∀ (x : ℝ), b ≤ x → 0 ≤ d x) →
+                ConvexOn ℝ Set.univ
+                    (HiddenMonotonicity.SmoothDC.asymmetricLift (HiddenMonotonicity.SmoothDC.centralConvexP f d a b)
+                      (d b - d a)) ∧
+                  ConvexOn ℝ Set.univ
+                      (HiddenMonotonicity.SmoothDC.asymmetricLift (HiddenMonotonicity.SmoothDC.centralConvexQ f d a b)
+                        (d b - d a)) ∧
+                    Monotone
+                        (HiddenMonotonicity.SmoothDC.asymmetricLift (HiddenMonotonicity.SmoothDC.centralConvexP f d a b)
+                          (d b - d a)) ∧
+                      Monotone
+                          (HiddenMonotonicity.SmoothDC.asymmetricLift
+                            (HiddenMonotonicity.SmoothDC.centralConvexQ f d a b) (d b - d a)) ∧
+                        ∀ (z : ℝ × ℝ),
+                          HiddenMonotonicity.SmoothDC.asymmetricLift
+                                (HiddenMonotonicity.SmoothDC.centralConvexP f d a b) (d b - d a) z -
+                              HiddenMonotonicity.SmoothDC.asymmetricLift
+                                (HiddenMonotonicity.SmoothDC.centralConvexQ f d a b) (d b - d a) z =
+                            f (z.1 - z.2)
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.SmoothDC.gaussianGelu_explicit_split : (ConvexOn ℝ Set.univ fun z =>
+    (HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair z).1) ∧
+  (ConvexOn ℝ Set.univ fun z => (HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair z).2) ∧
+    (Monotone fun z => (HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair z).1) ∧
+      (Monotone fun z => (HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair z).2) ∧
+        HiddenMonotonicity.ValidPairActivation HiddenMonotonicity.SmoothDC.gaussianGelu
+            HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair ∧
+          HiddenMonotonicity.NonnegativePairActivation HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair_formula : ∀ (x y : ℝ),
+  HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair (x, y) =
+    (2 *
+          (HiddenMonotonicity.SmoothDC.gaussianGelu (x - y) +
+            HiddenMonotonicity.SmoothDC.standardGaussianDensity (x - y)) +
+        2 * y,
+      HiddenMonotonicity.SmoothDC.gaussianGelu (x - y) +
+          2 * HiddenMonotonicity.SmoothDC.standardGaussianDensity (x - y) +
+        2 * y)
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SmoothDC.gaussianGeluFirst_middle_bounds : ∀ {x : ℝ},
+  -√2 ≤ x ∧ x ≤ √2 →
+    HiddenMonotonicity.SmoothDC.gaussianGeluFirst (-√2) ≤ HiddenMonotonicity.SmoothDC.gaussianGeluFirst x ∧
+      HiddenMonotonicity.SmoothDC.gaussianGeluFirst x ≤ HiddenMonotonicity.SmoothDC.gaussianGeluFirst √2
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 406 project theorem declarations in the imported environment

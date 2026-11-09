@@ -1,0 +1,30 @@
+{
+  "public_root": "HiddenMonotonicity.TransformerConvexInput",
+  "targets": [
+    {
+      "task": "transformer-convex-monotone-vector-comp-on",
+      "module": "HiddenMonotonicity.TransformerConvexInput",
+      "declaration": "HiddenMonotonicity.TransformerDC.convex_monotone_vector_comp_on",
+      "expected_type": "∀ {E : Type u} {ι : Type v} [AddCommGroup E] [Module ℝ E] (s : Set E), Convex ℝ s → ∀ φ : ((ι → ℝ) × (ι → ℝ)) → ℝ, ConvexOn ℝ (Set.Ici (0 : (ι → ℝ) × (ι → ℝ))) φ → MonotoneOn φ (Set.Ici (0 : (ι → ℝ) × (ι → ℝ))) → ∀ p q : E → ι → ℝ, (∀ i, ConvexOn ℝ s (fun x => p x i)) → (∀ i, ConvexOn ℝ s (fun x => q x i)) → (∀ x ∈ s, 0 ≤ p x) → (∀ x ∈ s, 0 ≤ q x) → ConvexOn ℝ s (fun x => φ (p x, q x))",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u",
+        "v"
+      ]
+    },
+    {
+      "task": "transformer-convex-signed-input-lift",
+      "module": "HiddenMonotonicity.TransformerConvexInput",
+      "declaration": "HiddenMonotonicity.TransformerDC.convex_signed_input_lift",
+      "expected_type": "∀ {ι : Type u} (φ : ((ι → ℝ) × (ι → ℝ)) → ℝ), ConvexOn ℝ (Set.Ici (0 : (ι → ℝ) × (ι → ℝ))) φ → MonotoneOn φ (Set.Ici (0 : (ι → ℝ) × (ι → ℝ))) → ConvexOn ℝ Set.univ (fun x : ι → ℝ => φ ((fun i => max (x i) 0), (fun i => max (-x i) 0)))",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u"
+      ]
+    }
+  ]
+}

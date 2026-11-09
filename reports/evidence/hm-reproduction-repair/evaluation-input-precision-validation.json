@@ -1,0 +1,24 @@
+{
+  "scope": "Evaluation metadata recomputation, cached/dataset image loading and sensitivity callback input precision",
+  "test_module": "code/hidden_monotonicity/tests/test_evaluation_input_precision.py",
+  "result": {
+    "tests": 2,
+    "status": "passed",
+    "elapsed_seconds_reported_by_unittest": 0.642
+  },
+  "environment": {
+    "python": "/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python",
+    "PYTHONPATH": "/tmp/hm-validation-numpy235:/tmp/hm-multi-seed-smoke-deps",
+    "device": "cpu"
+  },
+  "coverage": [
+    "Actual float64 model prediction writes metadata with the expected class and confidence",
+    "Cached NPZ inputs and dataset fallback inputs retain an exactly checked float64-only input perturbation",
+    "The sensitivity callback passes float64 input to real autograd computation and returns the expected gradients",
+    "Parameterless models retain the input tensor dtype"
+  ],
+  "limitations": [
+    "Metric evaluation was mocked to inspect the input and invoke the actual callback; this test does not independently validate metric scores",
+    "Only synthetic CPU models and inputs were used; historical results were not recomputed"
+  ]
+}

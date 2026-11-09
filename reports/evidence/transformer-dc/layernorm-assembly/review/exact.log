@@ -1,0 +1,25 @@
+@HiddenMonotonicity.TransformerDC.layerVariance_nonnegative : ∀ {d : ℕ} (v : Fin d → ℝ),
+  0 ≤ HiddenMonotonicity.TransformerDC.layerVariance v
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.value_variancePair : ∀ {d : ℕ} (xs : Fin d → ℝ × ℝ),
+  HiddenMonotonicity.TransformerDC.value (HiddenMonotonicity.TransformerDC.variancePair xs) =
+    HiddenMonotonicity.TransformerDC.layerVariance fun i => HiddenMonotonicity.TransformerDC.value (xs i)
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.layerNormPair_exact : ∀ {d : ℕ} (ε : ℝ),
+  0 < ε →
+    ∀ (γ β : Fin d → ℝ) (xs : Fin d → ℝ × ℝ) (i : Fin d),
+      HiddenMonotonicity.TransformerDC.value (HiddenMonotonicity.TransformerDC.layerNormPair ε γ β xs i) =
+        HiddenMonotonicity.TransformerDC.layerNorm ε γ β (fun j => HiddenMonotonicity.TransformerDC.value (xs j)) i
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.layerNormPair_regular : ∀ {E : Type u_1} [inst : AddCommGroup E]
+  [inst_1 : _root_.Module ℝ E] [inst_2 : Preorder E] {d : ℕ} (s : Set E),
+  Convex ℝ s →
+    ∀ (ε : ℝ),
+      0 < ε →
+        ∀ (γ β : Fin d → ℝ) (f : Fin d → E → ℝ × ℝ),
+          (∀ (i : Fin d), HiddenMonotonicity.TransformerDC.Regular s (f i)) →
+            ∀ (i : Fin d),
+              HiddenMonotonicity.TransformerDC.Regular s fun x =>
+                HiddenMonotonicity.TransformerDC.layerNormPair ε γ β (fun j => f j x) i
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 114 project theorem declarations in the imported environment

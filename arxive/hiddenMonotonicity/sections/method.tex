@@ -58,8 +58,8 @@ Indeed, the gradient flow is determined only by the indices, where the maximum b
 \paragraph{Implementation details for forward pass stabilization}
 We keep activations in check by `re-centering' the pairs of
 activations in the two split-streams whenever their magnitudes explode using different strategies based on thresholds, scaling, or shifting.
-All intermediate computations use \texttt{torch.float64} for high numerical precision matrix multiplication.
-Furthermore, we optionally cache the activations of the original model to slightly correct the activations of the split model on the fly, ensuring the \textbf{forward invariant:} $a^{(l,+)} - a^{(l,-)} = a^{(l)}$.
+The reported implementation uses \texttt{torch.float64} for intermediate computations; the released evaluation command requires this precision to be selected explicitly.
+With original activations cached, the implementation computes $e=a^{(l)}-(a^{(l,+)}-a^{(l,-)})$ and applies the symmetric correction $a^{(l,+)}\leftarrow a^{(l,+)}+e/2$, $a^{(l,-)}\leftarrow a^{(l,-)}-e/2$. This restores the \textbf{forward invariant} $a^{(l,+)}-a^{(l,-)}=a^{(l)}$ in exact arithmetic. Scaling both streams alone changes their difference; the subsequent correction is therefore essential for those modes. By default the correction is detached during backpropagation. Neither the identity nor successful execution guarantees negligible floating-point error or preserves convexity of the individual corrected streams.
 
 \subsection{Numerically stabilizing the backward pass} \label{sec:backward}
 

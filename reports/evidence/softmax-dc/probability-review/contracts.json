@@ -1,0 +1,53 @@
+{
+  "public_root": "HiddenMonotonicity.SoftmaxProbability",
+  "targets": [
+    {
+      "task": "softmax-probability-second-directional-bound",
+      "module": "HiddenMonotonicity.SoftmaxProbability",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.probability_second_bounds",
+      "universes": ["u"],
+      "open_scopes": ["BigOperators"],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (p : ι → ℝ), (∀ j, 0 ≤ p j) → (∑ j, p j) = 1 → ∀ (w : ι → ℝ), (∀ j, 0 ≤ w j) → ∀ i, -(∑ j, p j * w j) ≤ p i * (w i - ∑ j, p j * w j) ∧ p i * (w i - ∑ j, p j * w j) ≤ ∑ j, p j * w j"
+    },
+    {
+      "task": "softmax-probability-positive-gradient-bound",
+      "module": "HiddenMonotonicity.SoftmaxProbability",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.plusCoeff_bounds",
+      "universes": ["u"],
+      "open_scopes": ["BigOperators"],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [DecidableEq ι] (p : ι → ℝ), (∀ j, 0 ≤ p j) → (∑ j, p j) = 1 → ∀ i j, 0 ≤ (p j + p i * ((if i = j then 1 else 0) - p j)) / 2 ∧ (p j + p i * ((if i = j then 1 else 0) - p j)) / 2 ≤ (1 : ℝ) / 2"
+    },
+    {
+      "task": "softmax-probability-negative-gradient-bound",
+      "module": "HiddenMonotonicity.SoftmaxProbability",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.minusCoeff_bounds",
+      "universes": ["u"],
+      "open_scopes": ["BigOperators"],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [DecidableEq ι] (p : ι → ℝ), (∀ j, 0 ≤ p j) → (∑ j, p j) = 1 → ∀ i j, 0 ≤ (p j - p i * ((if i = j then 1 else 0) - p j)) / 2 ∧ (p j - p i * ((if i = j then 1 else 0) - p j)) / 2 ≤ (1 : ℝ) / 2"
+    },
+    {
+      "task": "softmax-probability-positive-directional-identity",
+      "module": "HiddenMonotonicity.SoftmaxProbability",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.plusCoeff_sum",
+      "universes": ["u"],
+      "open_scopes": ["BigOperators"],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [DecidableEq ι] (p v : ι → ℝ) (i : ι), (∑ j, ((p j + p i * ((if i = j then 1 else 0) - p j)) / 2) * v j) = ((∑ j, p j * v j) + p i * (v i - ∑ j, p j * v j)) / 2"
+    },
+    {
+      "task": "softmax-probability-negative-directional-identity",
+      "module": "HiddenMonotonicity.SoftmaxProbability",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.minusCoeff_sum",
+      "universes": ["u"],
+      "open_scopes": ["BigOperators"],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [DecidableEq ι] (p v : ι → ℝ) (i : ι), (∑ j, ((p j - p i * ((if i = j then 1 else 0) - p j)) / 2) * v j) = ((∑ j, p j * v j) - p i * (v i - ∑ j, p j * v j)) / 2"
+    },
+    {
+      "task": "softmax-probability-coefficient-direction-bound",
+      "module": "HiddenMonotonicity.SoftmaxProbability",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.coeff_direction_bounds",
+      "universes": ["u"],
+      "open_scopes": ["BigOperators"],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (c v : ι → ℝ), (∀ j, 0 ≤ c j ∧ c j ≤ (1 : ℝ) / 2) → (∀ j, 0 ≤ v j) → 0 ≤ ∑ j, c j * v j ∧ (∑ j, c j * v j) ≤ (∑ j, v j) / 2"
+    }
+  ]
+}

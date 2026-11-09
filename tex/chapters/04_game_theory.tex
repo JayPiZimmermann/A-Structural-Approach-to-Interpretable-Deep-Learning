@@ -70,7 +70,9 @@ game modes.
 For the game derivations in this and the attention and trajectory chapters, $W^{(l)}_{ij}$ denotes the edge from predecessor $i$ to successor $j$. Thus the displayed adjacency matrices are the transposes of the output-by-input matrices used in the DC split recurrences; the edge weights and represented network are identical. Stopping streams are tagged by $\mathrm{stop}$ to distinguish them from the DC streams. Consider a ReLU network with layers $l = 1,\dots,L$, input $a^{(0)} = x$, pre-activations
 $z^{(l)}_j = \sum_i a^{(l-1)}_i W^{(l)}_{ij} + b^{(l)}_j$ and activations $a^{(l)}_j =
     \relu(z^{(l)}_j)$, where $W^{(l)}_{ij}$ connects neuron $i$ of layer $l{-}1$ to neuron $j$ of layer
-$l$. We explain a scalar output $f(x) = a^{(L)}_u$. We write $[u]^{+} = \max(u,0)$ and $[u]^{-} =
+$l$. The initial derivation explains a scalar activation output $f(x) = a^{(L)}_u$.
+Section~\ref{ptnb:app:affine-readout} extends it to an ungated, possibly negative
+affine output logit. We write $[u]^{+} = \max(u,0)$ and $[u]^{-} =
     \max(-u,0)$, so $u = [u]^+ - [u]^-$, and $W^{(l,\pm)} = [W^{(l)}]^{\pm}$ entrywise.
 
 \paragraph{Layer-wise relevance propagation.} \ac{lrp}~\parencite{Bach2015} explains $f(x)$ by redistributing it backward, layer by layer: starting
@@ -304,7 +306,7 @@ We reserve the word \emph{trajectory} for sequences of game states $\zeta = (\ze
         $l$, $L$ & layers; input $0$ ($a^{(0)} = x$), output $L$ & $W^{(l)}_{ij}$, $b^{(l)}_j$ & weight
         from $i$ (layer $l{-}1$) to $j$ (layer $l$); bias \\
         $z^{(l)}_j$, $a^{(l)}_j$ & $\sum_i a^{(l-1)}_i W^{(l)}_{ij} + b^{(l)}_j$; $\relu(z^{(l)}_j)$ &
-        $f(x) = a^{(L)}_u$ & scalar output (target logit $u$) \\
+        $f(x) = a^{(L)}_u$ & scalar activation output \\
         $[t]^\pm$, $x_k^\pm$ & $\max\{\pm t, 0\}$, so $t = [t]^+ - [t]^-$; $x_k^\pm = [x_k]^\pm$ &
         $W^{(l,\pm)}$, $b^{(l,\pm)}$ & $[W^{(l)}]^\pm$, $[b^{(l)}]^\pm$ (sign split) \\
         $z^{(l,\pm)}_j$, $a^{(l,\pm)}_{\mathrm{stop},j}$ & sign split of $z$; Stopping Decomposition &
@@ -366,8 +368,8 @@ trajectories.
 Throughout we consider a feedforward ReLU network of $L$ layers with input layer $0$, $a^{(0)} =
     x$, pre-activations $z_j^{(l)} = \sum_i a_i^{(l-1)} W_{ij}^{(l)} + b_j^{(l)}$, where $W_{ij}^{(l)}$
 connects neuron $i$ in layer $l-1$ to neuron $j$ in layer $l$, activations $a_j^{(l)} =
-    \relu(z_j^{(l)})$, and a \emph{single scalar output} $f(x) = a_u^{(L)}$ (for multi-class networks,
-fix the target logit $u$).
+    \relu(z_j^{(l)})$, and a \emph{single scalar activation output} $f(x) = a_u^{(L)}$.
+An ungated affine classifier head is treated separately in Section~\ref{ptnb:app:affine-readout}.
 
 \paragraph{Canonical sign split.}
 We use the element-wise positive/negative decomposition of the original network's weights and
@@ -1707,6 +1709,63 @@ is deterministic, retains player label $p$, and~\eqref{ptnb:eq:routing-edge-disc
 trajectory factor. Therefore $\Gamma_x(s_{x_{k^\star},p}) = \Gamma_x(s_{z,p}^{\max})$ and
 $\Gamma_x(s_{x_k,p}) = 0$ for $k \neq k^\star$, proving Item 3.
 \end{proof}
+
+\subsection{Signed affine output logits}\label{ptnb:app:affine-readout}
+
+The activation-output formulation above extends to the signed logits of a classifier by an
+\emph{ungated affine readout}. Let $h_j=a_j^{(L)}\geq0$ be the last hidden activations and
+\begin{align}\label{ptnb:eq:affine-readout}
+    f_u(x)=\sum_j c_{uj}h_j(x)+b_u.
+\end{align}
+There is no ReLU at this output: the sign of the logit introduces no stopping gate.
+
+\paragraph{Stopping Game.}
+Add a root with forced continuation, immediate bias payoff difference $b_u$, and structural
+discount $\gamma_u=\sum_j|c_{uj}|$. When $\gamma_u>0$, it moves to hidden neuron $j$ with
+probability $|c_{uj}|/\gamma_u$, retaining the player for $c_{uj}\geq0$ and switching players
+for $c_{uj}<0$. Its value is therefore $b_u+\sum_jc_{uj}h_j=f_u(x)$, even when this value is
+negative. If $\gamma_u=0$, the root pays $b_u$ and moves to the cemetery; the input derivative
+is zero. On the strict gate cells of Theorem~\ref{ptnb:thm:gradient}, let
+$\Gamma^{\mathrm{SG}}_{j,\pm}(i)$ denote the input-state occupations from a unit source at
+hidden neuron $j$ with initial player $+$. The added transition gives
+\begin{align}\label{ptnb:eq:affine-readout-gradient}
+    \partial_i f_u(x)=\sum_j c_{uj}
+    \bigl(\Gamma^{\mathrm{SG}}_{j,+}(i)-\Gamma^{\mathrm{SG}}_{j,-}(i)\bigr).
+\end{align}
+This is the chain rule with the same non-negative path occupations; at gate or pooling ties,
+the selected-backward convention remains in force.
+
+\paragraph{Routing Game.}
+For attribution, append an ungated source to the hidden Routing Game. This source continues
+unconditionally; its positive and negative branch masses, including the bias, are
+$\Sigma_u^\kappa=\sum_j[h_jc_{uj}]^\kappa+[b_u]^\kappa$.
+At $\tau=1$, the sign-oracle probabilities $1/2$, trajectory discounts $2\alpha$ and $2\beta$,
+and the branchwise Gibbs policies give the coefficients
+\begin{align}\label{ptnb:eq:affine-readout-routing}
+    q_j^+=\alpha\frac{[h_jc_{uj}]^+}{\Sigma_u^++\varepsilon},
+    \qquad q_j^-=\beta\frac{[h_jc_{uj}]^-}{\Sigma_u^-+\varepsilon}.
+\end{align}
+Bias and outside-option shares are absorbed. An empty branch is completed by a transition to
+the cemetery, and its ordinary-successor fractions are zero ($0/0\coloneqq0$).
+For unit-source hidden occupations $\Gamma^{\mathrm{RG}}_{j,\pm}(i)$, define
+\begin{align}\label{ptnb:eq:affine-readout-occupation}
+    \widehat\Gamma_\pm(i)=\sum_j\bigl(
+    q_j^+\Gamma^{\mathrm{RG}}_{j,\pm}(i)
+    +q_j^-\Gamma^{\mathrm{RG}}_{j,\mp}(i)\bigr).
+\end{align}
+Since $h_j=0$ implies $q_j^+=q_j^-=0$, the readout assigns nonzero incoming relevance only
+to positive hidden activations. Subtracting the two equations yields precisely the affine
+$\alpha\beta$ redistribution, followed by the hidden-layer recursion of Theorem~\ref{ptnb:thm:ab-recovery}. Thus, for any real
+initial relevance $r_u$,
+\begin{align}\label{ptnb:eq:affine-readout-relevance}
+    R_i=r_u\bigl(\widehat\Gamma_+(i)-\widehat\Gamma_-(i)\bigr).
+\end{align}
+The trajectory law and both occupations remain non-negative; a signed seed scales their
+\emph{difference}. No logarithm of the signed logit is taken: logarithms apply only to the
+non-negative branch masses. Classical output-seeded LRP chooses $r_u=f_u(x)$, whereas the
+released Routing-Game attribution routine uses $r_u=1$. These maps differ by the signed factor
+$f_u(x)$, including a sign reversal when the target logit is negative. The zero-logit case
+has zero output-seeded relevance, but can have nonzero unit-seeded relevance.
 
 \subsection{Temperature \texorpdfstring{$\tau$}{tau} as a Controlled Policy Deformation}\label{ptnb:app:routing-temp}
 

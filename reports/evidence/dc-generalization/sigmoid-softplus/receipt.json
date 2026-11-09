@@ -1,0 +1,43 @@
+{
+  "status": "Diagnostic leaf verified; public-root integration and clean production verification remain with coordinating parent.",
+  "source_sha256": {
+    "formalization/HiddenMonotonicity/ExplicitSigmoidSoftplus.lean": "5ebfc15c825869d4d000a860bbc091ec42bd4766b343937f6be6303a3955c34c",
+    "reports/evidence/dc-generalization/sigmoid-softplus/Boundary.lean": "25fb50fa3f25097294d031a215e400f31fed80ea36db093a3744ada49a61a8f7",
+    "reports/evidence/dc-generalization/sigmoid-softplus/contracts.json": "5485aedf19c82a613089d8179f756e1e138520170c39257856673530f5d83ab3"
+  },
+  "commands": [
+    {
+      "command": "lake build HiddenMonotonicity.ExplicitSigmoidSoftplus",
+      "cwd": "formalization",
+      "exit_code": 0,
+      "log": "build-final.log"
+    },
+    {
+      "command": "lake env lean ../reports/evidence/dc-generalization/sigmoid-softplus/Boundary.lean",
+      "cwd": "formalization",
+      "exit_code": 0,
+      "log": "boundary.log"
+    }
+  ],
+  "exact_contract_checks": [
+    "HiddenMonotonicity.SmoothDC.sigmoid_explicit_split",
+    "HiddenMonotonicity.SmoothDC.sigmoidExplicitPair_closed_form"
+  ],
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "audited_new_theorems": 14,
+  "boundary_consumers": [
+    "positive profile differentiability at inflection zero",
+    "negative profile differentiability at inflection zero",
+    "all real diagonal values",
+    "negative diagonal demonstrating quadrant scope",
+    "arbitrary nonnegative input pair",
+    "arbitrary signed recovery"
+  ],
+  "mathematical_scope": "Explicit canonical sigmoid profiles verified directly; no equality to pre-existing integral-defined C1/C2 is asserted.",
+  "frozen_files_changed": false,
+  "public_root_or_manifest_changed": false
+}

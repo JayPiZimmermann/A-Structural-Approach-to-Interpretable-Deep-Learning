@@ -1,0 +1,65 @@
+HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute : ∀ (f : ℝ → ℝ) (x : ℝ),
+  HiddenMonotonicity.SmoothDC.positiveCurvature f x =
+    (|HiddenMonotonicity.SmoothDC.curvature f x| + HiddenMonotonicity.SmoothDC.curvature f x) / 2
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute : ∀ (f : ℝ → ℝ) (x : ℝ),
+  HiddenMonotonicity.SmoothDC.negativeCurvature f x =
+    (|HiddenMonotonicity.SmoothDC.curvature f x| - HiddenMonotonicity.SmoothDC.curvature f x) / 2
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute : ∀ (f : ℝ → ℝ),
+  MeasureTheory.Integrable (HiddenMonotonicity.SmoothDC.curvature f) MeasureTheory.volume →
+    HiddenMonotonicity.SmoothDC.totalPositiveCurvature f + HiddenMonotonicity.SmoothDC.totalNegativeCurvature f =
+      ∫ (t : ℝ), |HiddenMonotonicity.SmoothDC.curvature f t|
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds : ∀ (f : ℝ → ℝ),
+  MeasureTheory.Integrable (HiddenMonotonicity.SmoothDC.curvature f) MeasureTheory.volume →
+    ∀ (x : ℝ),
+      (0 ≤ HiddenMonotonicity.SmoothDC.D1 f x + HiddenMonotonicity.SmoothDC.curvatureSlopeShift f ∧
+          HiddenMonotonicity.SmoothDC.D1 f x + HiddenMonotonicity.SmoothDC.curvatureSlopeShift f ≤
+            HiddenMonotonicity.SmoothDC.curvatureLiftWidth f) ∧
+        0 ≤ HiddenMonotonicity.SmoothDC.D2 f x + HiddenMonotonicity.SmoothDC.curvatureSlopeShift f ∧
+          HiddenMonotonicity.SmoothDC.D2 f x + HiddenMonotonicity.SmoothDC.curvatureSlopeShift f ≤
+            HiddenMonotonicity.SmoothDC.curvatureLiftWidth f
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.SmoothDC.curvature_profile_difference : ∀ (f : ℝ → ℝ),
+  Differentiable ℝ f →
+    (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv f) a b) →
+      MeasureTheory.Integrable (HiddenMonotonicity.SmoothDC.curvature f) MeasureTheory.volume →
+        ∀ (x : ℝ),
+          HiddenMonotonicity.SmoothDC.curvaturePositiveProfile f x -
+              HiddenMonotonicity.SmoothDC.curvatureNegativeProfile f x =
+            f x
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split : ∀ (f : ℝ → ℝ),
+  Differentiable ℝ f →
+    (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv f) a b) →
+      MeasureTheory.Integrable (HiddenMonotonicity.SmoothDC.curvature f) MeasureTheory.volume →
+        (ConvexOn ℝ Set.univ fun z => (HiddenMonotonicity.SmoothDC.curvatureLiftPair f z).1) ∧
+          (ConvexOn ℝ Set.univ fun z => (HiddenMonotonicity.SmoothDC.curvatureLiftPair f z).2) ∧
+            (Monotone fun z => (HiddenMonotonicity.SmoothDC.curvatureLiftPair f z).1) ∧
+              (Monotone fun z => (HiddenMonotonicity.SmoothDC.curvatureLiftPair f z).2) ∧
+                HiddenMonotonicity.ValidPairActivation f (HiddenMonotonicity.SmoothDC.curvatureLiftPair f)
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative : ∀ (f : ℝ → ℝ),
+  Differentiable ℝ f →
+    (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv f) a b) →
+      MeasureTheory.Integrable (HiddenMonotonicity.SmoothDC.curvature f) MeasureTheory.volume →
+        0 ≤ f 0 → HiddenMonotonicity.NonnegativePairActivation (HiddenMonotonicity.SmoothDC.curvatureLiftPair f)
+'_ThesisExactChecks.target_6' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split : ∀ (f : ℝ → ℝ),
+  Differentiable ℝ f →
+    (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv f) a b) →
+      MeasureTheory.Integrable (HiddenMonotonicity.SmoothDC.curvature f) MeasureTheory.volume →
+        (ConvexOn ℝ Set.univ fun z => (HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair f z).1) ∧
+          (ConvexOn ℝ Set.univ fun z => (HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair f z).2) ∧
+            (Monotone fun z => (HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair f z).1) ∧
+              (Monotone fun z => (HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair f z).2) ∧
+                HiddenMonotonicity.ValidPairActivation f (HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair f)
+'_ThesisExactChecks.target_7' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative : ∀ (f : ℝ → ℝ),
+  Differentiable ℝ f →
+    (∀ (a b : ℝ), AbsolutelyContinuousOnInterval (deriv f) a b) →
+      MeasureTheory.Integrable (HiddenMonotonicity.SmoothDC.curvature f) MeasureTheory.volume →
+        HiddenMonotonicity.NonnegativePairActivation (HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair f)
+'_ThesisExactChecks.target_8' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 322 project theorem declarations in the imported environment

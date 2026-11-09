@@ -1,0 +1,57 @@
+HiddenMonotonicity.TransformerDC.value_constPair : ∀ (c : ℝ),
+  HiddenMonotonicity.TransformerDC.value (HiddenMonotonicity.TransformerDC.constPair c) = c
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.TransformerDC.value_addPair : ∀ (p q : ℝ × ℝ),
+  HiddenMonotonicity.TransformerDC.value (HiddenMonotonicity.TransformerDC.addPair p q) =
+    HiddenMonotonicity.TransformerDC.value p + HiddenMonotonicity.TransformerDC.value q
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.TransformerDC.value_scalePair : ∀ (c : ℝ) (p : ℝ × ℝ),
+  HiddenMonotonicity.TransformerDC.value (HiddenMonotonicity.TransformerDC.scalePair c p) =
+    c * HiddenMonotonicity.TransformerDC.value p
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.TransformerDC.value_mulPair : ∀ (p q : ℝ × ℝ),
+  HiddenMonotonicity.TransformerDC.value (HiddenMonotonicity.TransformerDC.mulPair p q) =
+    HiddenMonotonicity.TransformerDC.value p * HiddenMonotonicity.TransformerDC.value q
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Regular.const : ∀ {E : Type u_1} [inst : AddCommGroup E] [inst_1 : _root_.Module ℝ E]
+  [inst_2 : Preorder E] {s : Set E},
+  Convex ℝ s →
+    ∀ (c : ℝ), HiddenMonotonicity.TransformerDC.Regular s fun x => HiddenMonotonicity.TransformerDC.constPair c
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Regular.scale : ∀ {E : Type u_1} [inst : AddCommGroup E] [inst_1 : _root_.Module ℝ E]
+  [inst_2 : Preorder E] {s : Set E} {f : E → ℝ × ℝ},
+  HiddenMonotonicity.TransformerDC.Regular s f →
+    ∀ (c : ℝ), HiddenMonotonicity.TransformerDC.Regular s fun x => HiddenMonotonicity.TransformerDC.scalePair c (f x)
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Regular.mul : ∀ {E : Type u_1} [inst : AddCommGroup E] [inst_1 : _root_.Module ℝ E]
+  [inst_2 : Preorder E] {s : Set E} {f g : E → ℝ × ℝ},
+  HiddenMonotonicity.TransformerDC.Regular s f →
+    HiddenMonotonicity.TransformerDC.Regular s g →
+      HiddenMonotonicity.TransformerDC.Regular s fun x => HiddenMonotonicity.TransformerDC.mulPair (f x) (g x)
+'_ThesisExactChecks.target_6' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Regular.finset_sum : ∀ {E : Type u_1} [inst : AddCommGroup E]
+  [inst_1 : _root_.Module ℝ E] [inst_2 : Preorder E] {s : Set E} {ι : Type u_2} (t : Finset ι) (f : ι → E → ℝ × ℝ),
+  Convex ℝ s →
+    (∀ i ∈ t, HiddenMonotonicity.TransformerDC.Regular s (f i)) →
+      HiddenMonotonicity.TransformerDC.Regular s fun x => ∑ i ∈ t, f i x
+'_ThesisExactChecks.target_7' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Regular.scalar_comp : ∀ {E : Type u_1} [inst : AddCommGroup E]
+  [inst_1 : _root_.Module ℝ E] [inst_2 : Preorder E] {s : Set E} {f : E → ℝ × ℝ},
+  HiddenMonotonicity.TransformerDC.Regular s f →
+    ∀ (φ : ℝ × ℝ → ℝ × ℝ),
+      (ConvexOn ℝ Set.univ fun z => (φ z).1) →
+        (ConvexOn ℝ Set.univ fun z => (φ z).2) →
+          Monotone φ → (∀ (z : ℝ × ℝ), 0 ≤ z → 0 ≤ φ z) → HiddenMonotonicity.TransformerDC.Regular s fun x => φ (f x)
+'_ThesisExactChecks.target_8' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Regular.vector_comp : ∀ {E : Type u_1} [inst : AddCommGroup E]
+  [inst_1 : _root_.Module ℝ E] [inst_2 : Preorder E] {s : Set E} {ι : Type u_2} (φ : (ι → ℝ) × (ι → ℝ) → ℝ × ℝ),
+  (ConvexOn ℝ Set.univ fun z => (φ z).1) →
+    (ConvexOn ℝ Set.univ fun z => (φ z).2) →
+      Monotone φ →
+        (∀ (z : (ι → ℝ) × (ι → ℝ)), 0 ≤ z → 0 ≤ φ z) →
+          Convex ℝ s →
+            ∀ (f : ι → E → ℝ × ℝ),
+              (∀ (i : ι), HiddenMonotonicity.TransformerDC.Regular s (f i)) →
+                HiddenMonotonicity.TransformerDC.Regular s fun x => φ (fun i => (f i x).1, fun i => (f i x).2)
+'_ThesisExactChecks.target_9' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 32 project theorem declarations in the imported environment

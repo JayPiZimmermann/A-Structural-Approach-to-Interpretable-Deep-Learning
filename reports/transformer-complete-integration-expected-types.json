@@ -1,0 +1,345 @@
+{
+  "authorship": "Aggregated independently authored exact contracts with frozen-source independent reviews.",
+  "targets": [
+    {
+      "task": "transformer-convex-monotone-vector-comp-on",
+      "module": "HiddenMonotonicity.TransformerConvexInput",
+      "declaration": "HiddenMonotonicity.TransformerDC.convex_monotone_vector_comp_on",
+      "expected_type": "∀ {E : Type u} {ι : Type v} [AddCommGroup E] [Module ℝ E] (s : Set E), Convex ℝ s → ∀ φ : ((ι → ℝ) × (ι → ℝ)) → ℝ, ConvexOn ℝ (Set.Ici (0 : (ι → ℝ) × (ι → ℝ))) φ → MonotoneOn φ (Set.Ici (0 : (ι → ℝ) × (ι → ℝ))) → ∀ p q : E → ι → ℝ, (∀ i, ConvexOn ℝ s (fun x => p x i)) → (∀ i, ConvexOn ℝ s (fun x => q x i)) → (∀ x ∈ s, 0 ≤ p x) → (∀ x ∈ s, 0 ≤ q x) → ConvexOn ℝ s (fun x => φ (p x, q x))",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u",
+        "v"
+      ],
+      "contract_source": "reports/evidence/transformer-dc/convex-input/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/convex-input/review.json",
+      "review_id": "transformer-dc/complete/transformer-convex-monotone-vector-comp-on",
+      "scope": "Convex substitution through nonnegative input coordinates into an orthant-convex monotone head, including the raw positive/negative input split. No raw-input monotonicity claim."
+    },
+    {
+      "task": "transformer-convex-signed-input-lift",
+      "module": "HiddenMonotonicity.TransformerConvexInput",
+      "declaration": "HiddenMonotonicity.TransformerDC.convex_signed_input_lift",
+      "expected_type": "∀ {ι : Type u} (φ : ((ι → ℝ) × (ι → ℝ)) → ℝ), ConvexOn ℝ (Set.Ici (0 : (ι → ℝ) × (ι → ℝ))) φ → MonotoneOn φ (Set.Ici (0 : (ι → ℝ) × (ι → ℝ))) → ConvexOn ℝ Set.univ (fun x : ι → ℝ => φ ((fun i => max (x i) 0), (fun i => max (-x i) 0)))",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u"
+      ],
+      "contract_source": "reports/evidence/transformer-dc/convex-input/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/convex-input/review.json",
+      "review_id": "transformer-dc/complete/transformer-convex-signed-input-lift",
+      "scope": "Convex substitution through nonnegative input coordinates into an orthant-convex monotone head, including the raw positive/negative input split. No raw-input monotonicity claim."
+    },
+    {
+      "task": "transformer-expression-split-exact",
+      "module": "HiddenMonotonicity.TransformerExpr",
+      "declaration": "HiddenMonotonicity.TransformerDC.Expr.splitEval_exact",
+      "universes": [
+        "u"
+      ],
+      "expected_type": "∀ {ι : Type u} (e : HiddenMonotonicity.TransformerDC.Expr ι) (x : ι → ℝ × ℝ), HiddenMonotonicity.TransformerDC.value (e.splitEval x) = e.eval (fun i => HiddenMonotonicity.TransformerDC.value (x i))",
+      "contract_source": "reports/evidence/transformer-dc/expr-review/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/expr-review/review.json",
+      "review_id": "transformer-dc/complete/transformer-expression-split-exact",
+      "scope": "Actual finite Transformer expression syntax and its recursive two-stream evaluator: exact signed-input recovery and compositional convexity, monotonicity, and nonnegative stream values. The full architecture is established by the separately verified compiler."
+    },
+    {
+      "task": "transformer-expression-split-regular",
+      "module": "HiddenMonotonicity.TransformerExpr",
+      "declaration": "HiddenMonotonicity.TransformerDC.Expr.splitEval_regular",
+      "universes": [
+        "u",
+        "v"
+      ],
+      "expected_type": "∀ {ι : Type u} {E : Type v} [AddCommGroup E] [Module ℝ E] [Preorder E] (e : HiddenMonotonicity.TransformerDC.Expr ι) (s : Set E), Convex ℝ s → ∀ (f : ι → E → ℝ × ℝ), (∀ i, HiddenMonotonicity.TransformerDC.Regular s (f i)) → HiddenMonotonicity.TransformerDC.Regular s (fun x => e.splitEval (fun i => f i x))",
+      "contract_source": "reports/evidence/transformer-dc/expr-review/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/expr-review/review.json",
+      "review_id": "transformer-dc/complete/transformer-expression-split-regular",
+      "scope": "Actual finite Transformer expression syntax and its recursive two-stream evaluator: exact signed-input recovery and compositional convexity, monotonicity, and nonnegative stream values. The full architecture is established by the separately verified compiler."
+    },
+    {
+      "task": "transformer-definition-TransformerHead-eval_compile",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.TransformerHead.eval_compile",
+      "kind": "theorem",
+      "expected_type": "∀ {t d : ℕ} {ι : Type u} (h : TransformerHead t d) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d), (h.compile x q i).eval v = h.eval (fun a b => (x a b).eval v) q i",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u"
+      ],
+      "contract_source": "reports/evidence/transformer-dc/definition/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/definition/review.json",
+      "review_id": "transformer-dc/complete/transformer-definition-TransformerHead-eval_compile",
+      "scope": "Actual fixed-mask pre-LayerNorm Transformer definitions and expression compiler, with arbitrary finite head/block lists, actual QK-softmax-AV attention, input-dependent LayerNorm, residual/feedforward operations, positional input bias, optional final normalization and an ungated signed affine readout. Definition and eval/compiler equality contracts include no structural DC conclusion."
+    },
+    {
+      "task": "transformer-definition-TransformerBlock-eval_compile",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.TransformerBlock.eval_compile",
+      "kind": "theorem",
+      "expected_type": "∀ {t d : ℕ} {ι : Type u} (b : TransformerBlock t d) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d), (b.compile x q i).eval v = b.eval (fun a c => (x a c).eval v) q i",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u"
+      ],
+      "contract_source": "reports/evidence/transformer-dc/definition/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/definition/review.json",
+      "review_id": "transformer-dc/complete/transformer-definition-TransformerBlock-eval_compile",
+      "scope": "Actual fixed-mask pre-LayerNorm Transformer definitions and expression compiler, with arbitrary finite head/block lists, actual QK-softmax-AV attention, input-dependent LayerNorm, residual/feedforward operations, positional input bias, optional final normalization and an ungated signed affine readout. Definition and eval/compiler equality contracts include no structural DC conclusion."
+    },
+    {
+      "task": "transformer-definition-eval_compileTransformerBlocks",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks",
+      "kind": "theorem",
+      "expected_type": "∀ {t d : ℕ} {ι : Type u} (bs : List (TransformerBlock t d)) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d), (compileTransformerBlocks bs x q i).eval v = evalTransformerBlocks bs (fun a c => (x a c).eval v) q i",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u"
+      ],
+      "contract_source": "reports/evidence/transformer-dc/definition/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/definition/review.json",
+      "review_id": "transformer-dc/complete/transformer-definition-eval_compileTransformerBlocks",
+      "scope": "Actual fixed-mask pre-LayerNorm Transformer definitions and expression compiler, with arbitrary finite head/block lists, actual QK-softmax-AV attention, input-dependent LayerNorm, residual/feedforward operations, positional input bias, optional final normalization and an ungated signed affine readout. Definition and eval/compiler equality contracts include no structural DC conclusion."
+    },
+    {
+      "task": "transformer-definition-eval_compileOptionalTransformerNorm",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.eval_compileOptionalTransformerNorm",
+      "kind": "theorem",
+      "expected_type": "∀ {t d : ℕ} {ι : Type u} (p : Option (TransformerNorm d)) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d), (compileOptionalTransformerNorm p x q i).eval v = evalOptionalTransformerNorm p (fun a c => (x a c).eval v) q i",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u"
+      ],
+      "contract_source": "reports/evidence/transformer-dc/definition/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/definition/review.json",
+      "review_id": "transformer-dc/complete/transformer-definition-eval_compileOptionalTransformerNorm",
+      "scope": "Actual fixed-mask pre-LayerNorm Transformer definitions and expression compiler, with arbitrary finite head/block lists, actual QK-softmax-AV attention, input-dependent LayerNorm, residual/feedforward operations, positional input bias, optional final normalization and an ungated signed affine readout. Definition and eval/compiler equality contracts include no structural DC conclusion."
+    },
+    {
+      "task": "transformer-definition-Transformer-eval_compile",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.eval_compile",
+      "kind": "theorem",
+      "expected_type": "∀ {t d o : ℕ} {ι : Type u} (net : Transformer t d o) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (i : Fin o), (net.compile x i).eval v = net.eval (fun p => (x p.1 p.2).eval v) i",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [
+        "u"
+      ],
+      "contract_source": "reports/evidence/transformer-dc/definition/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/definition/review.json",
+      "review_id": "transformer-dc/complete/transformer-definition-Transformer-eval_compile",
+      "scope": "Actual fixed-mask pre-LayerNorm Transformer definitions and expression compiler, with arbitrary finite head/block lists, actual QK-softmax-AV attention, input-dependent LayerNorm, residual/feedforward operations, positional input bias, optional final normalization and an ungated signed affine readout. Definition and eval/compiler equality contracts include no structural DC conclusion."
+    },
+    {
+      "task": "transformer-definition-Transformer-eval_syntax",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.eval_syntax",
+      "kind": "theorem",
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o) (x : Fin t × Fin d → ℝ) (i : Fin o), (net.syntax i).eval x = net.eval x i",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [],
+      "contract_source": "reports/evidence/transformer-dc/definition/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/definition/review.json",
+      "review_id": "transformer-dc/complete/transformer-definition-Transformer-eval_syntax",
+      "scope": "Actual fixed-mask pre-LayerNorm Transformer definitions and expression compiler, with arbitrary finite head/block lists, actual QK-softmax-AV attention, input-dependent LayerNorm, residual/feedforward operations, positional input bias, optional final normalization and an ungated signed affine readout. Definition and eval/compiler equality contracts include no structural DC conclusion."
+    },
+    {
+      "task": "transformer-definition-TransformerHead-eval",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.TransformerHead.eval",
+      "kind": "definition",
+      "expected_type": "∀ {t d : ℕ} (h : TransformerHead t d), (Fin t → Fin d → ℝ) → Fin t → Fin d → ℝ",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [],
+      "contract_source": "reports/evidence/transformer-dc/definition/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/definition/review.json",
+      "review_id": "transformer-dc/complete/transformer-definition-TransformerHead-eval",
+      "scope": "Actual fixed-mask pre-LayerNorm Transformer definitions and expression compiler, with arbitrary finite head/block lists, actual QK-softmax-AV attention, input-dependent LayerNorm, residual/feedforward operations, positional input bias, optional final normalization and an ungated signed affine readout. Definition and eval/compiler equality contracts include no structural DC conclusion."
+    },
+    {
+      "task": "transformer-definition-TransformerBlock-eval",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.TransformerBlock.eval",
+      "kind": "definition",
+      "expected_type": "∀ {t d : ℕ} (b : TransformerBlock t d), (Fin t → Fin d → ℝ) → Fin t → Fin d → ℝ",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [],
+      "contract_source": "reports/evidence/transformer-dc/definition/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/definition/review.json",
+      "review_id": "transformer-dc/complete/transformer-definition-TransformerBlock-eval",
+      "scope": "Actual fixed-mask pre-LayerNorm Transformer definitions and expression compiler, with arbitrary finite head/block lists, actual QK-softmax-AV attention, input-dependent LayerNorm, residual/feedforward operations, positional input bias, optional final normalization and an ungated signed affine readout. Definition and eval/compiler equality contracts include no structural DC conclusion."
+    },
+    {
+      "task": "transformer-definition-Transformer-eval",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.eval",
+      "kind": "definition",
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o), (Fin t × Fin d → ℝ) → Fin o → ℝ",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [],
+      "contract_source": "reports/evidence/transformer-dc/definition/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/definition/review.json",
+      "review_id": "transformer-dc/complete/transformer-definition-Transformer-eval",
+      "scope": "Actual fixed-mask pre-LayerNorm Transformer definitions and expression compiler, with arbitrary finite head/block lists, actual QK-softmax-AV attention, input-dependent LayerNorm, residual/feedforward operations, positional input bias, optional final normalization and an ungated signed affine readout. Definition and eval/compiler equality contracts include no structural DC conclusion."
+    },
+    {
+      "task": "transformer-definition-Transformer-syntax",
+      "module": "HiddenMonotonicity.TransformerDefinition",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.syntax",
+      "kind": "definition",
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o), Fin o → Expr (Fin t × Fin d)",
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "universes": [],
+      "contract_source": "reports/evidence/transformer-dc/definition/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/definition/review.json",
+      "review_id": "transformer-dc/complete/transformer-definition-Transformer-syntax",
+      "scope": "Actual fixed-mask pre-LayerNorm Transformer definitions and expression compiler, with arbitrary finite head/block lists, actual QK-softmax-AV attention, input-dependent LayerNorm, residual/feedforward operations, positional input bias, optional final normalization and an ungated signed affine readout. Definition and eval/compiler equality contracts include no structural DC conclusion."
+    },
+    {
+      "task": "transformer-final-Transformer-decompose_exact",
+      "module": "HiddenMonotonicity.TransformerCorrectness",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.decompose_exact",
+      "universes": [],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o) (x : DoubledInput (Fin t × Fin d)) (i : Fin o),\n  (net.decompose x i).1 - (net.decompose x i).2 = net.eval (x.1 - x.2) i",
+      "contract_source": "reports/evidence/transformer-dc/final-review/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/final-review/review.json",
+      "review_id": "transformer-dc/complete/transformer-final-Transformer-decompose_exact",
+      "scope": "Complete actual arbitrary-finite-depth pre-LayerNorm Transformer: recursively computed heads recover the same-parameter evaluator exactly, are convex/monotone/nonnegative on expanded nonnegative inputs, and become globally convex/nonnegative heads on raw signed embeddings. Fixed nonempty injective masks and positive normalization constants are model data. No raw-input monotonicity, DAG-size, floating-point stability, or runtime guarantee."
+    },
+    {
+      "task": "transformer-final-Transformer-decompose_regular",
+      "module": "HiddenMonotonicity.TransformerCorrectness",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.decompose_regular",
+      "universes": [],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o) (i : Fin o),\n  Regular (Set.Ici (0 : DoubledInput (Fin t × Fin d))) (fun x => net.decompose x i)",
+      "contract_source": "reports/evidence/transformer-dc/final-review/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/final-review/review.json",
+      "review_id": "transformer-dc/complete/transformer-final-Transformer-decompose_regular",
+      "scope": "Complete actual arbitrary-finite-depth pre-LayerNorm Transformer: recursively computed heads recover the same-parameter evaluator exactly, are convex/monotone/nonnegative on expanded nonnegative inputs, and become globally convex/nonnegative heads on raw signed embeddings. Fixed nonempty injective masks and positive normalization constants are model data. No raw-input monotonicity, DAG-size, floating-point stability, or runtime guarantee."
+    },
+    {
+      "task": "transformer-final-Transformer-dc_decomposition",
+      "module": "HiddenMonotonicity.TransformerCorrectness",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition",
+      "universes": [],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o),\n  MonotoneOn net.decompose (Set.Ici (0 : DoubledInput (Fin t × Fin d))) ∧\n  (∀ i, ConvexOn ℝ (Set.Ici (0 : DoubledInput (Fin t × Fin d))) (fun x => (net.decompose x i).1)) ∧\n  (∀ i, ConvexOn ℝ (Set.Ici (0 : DoubledInput (Fin t × Fin d))) (fun x => (net.decompose x i).2)) ∧\n  (∀ x, 0 ≤ x → 0 ≤ net.decompose x) ∧\n  ∀ x i, (net.decompose x i).1 - (net.decompose x i).2 = net.eval (x.1 - x.2) i",
+      "contract_source": "reports/evidence/transformer-dc/final-review/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/final-review/review.json",
+      "review_id": "transformer-dc/complete/transformer-final-Transformer-dc_decomposition",
+      "scope": "Complete actual arbitrary-finite-depth pre-LayerNorm Transformer: recursively computed heads recover the same-parameter evaluator exactly, are convex/monotone/nonnegative on expanded nonnegative inputs, and become globally convex/nonnegative heads on raw signed embeddings. Fixed nonempty injective masks and positive normalization constants are model data. No raw-input monotonicity, DAG-size, floating-point stability, or runtime guarantee."
+    },
+    {
+      "task": "transformer-final-Transformer-raw_dc_decomposition",
+      "module": "HiddenMonotonicity.TransformerCorrectness",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition",
+      "universes": [],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o),\n  (∀ i, ConvexOn ℝ Set.univ (fun x : Fin t × Fin d → ℝ => (net.rawDecompose x i).1)) ∧\n  (∀ i, ConvexOn ℝ Set.univ (fun x : Fin t × Fin d → ℝ => (net.rawDecompose x i).2)) ∧\n  (∀ x, 0 ≤ net.rawDecompose x) ∧\n  ∀ x i, (net.rawDecompose x i).1 - (net.rawDecompose x i).2 = net.eval x i",
+      "contract_source": "reports/evidence/transformer-dc/final-review/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/final-review/review.json",
+      "review_id": "transformer-dc/complete/transformer-final-Transformer-raw_dc_decomposition",
+      "scope": "Complete actual arbitrary-finite-depth pre-LayerNorm Transformer: recursively computed heads recover the same-parameter evaluator exactly, are convex/monotone/nonnegative on expanded nonnegative inputs, and become globally convex/nonnegative heads on raw signed embeddings. Fixed nonempty injective masks and positive normalization constants are model data. No raw-input monotonicity, DAG-size, floating-point stability, or runtime guarantee."
+    },
+    {
+      "task": "transformer-final-Expr-decompose_regular",
+      "module": "HiddenMonotonicity.TransformerExprProperties",
+      "declaration": "HiddenMonotonicity.TransformerDC.Expr.decompose_regular",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {ι : Type u} (e : Expr ι), Regular (Set.Ici (0 : DoubledInput ι)) e.decompose",
+      "contract_source": "reports/evidence/transformer-dc/final-review/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/final-review/review.json",
+      "review_id": "transformer-dc/complete/transformer-final-Expr-decompose_regular",
+      "scope": "Complete actual arbitrary-finite-depth pre-LayerNorm Transformer: recursively computed heads recover the same-parameter evaluator exactly, are convex/monotone/nonnegative on expanded nonnegative inputs, and become globally convex/nonnegative heads on raw signed embeddings. Fixed nonempty injective masks and positive normalization constants are model data. No raw-input monotonicity, DAG-size, floating-point stability, or runtime guarantee."
+    },
+    {
+      "task": "transformer-final-Expr-decompose_exact",
+      "module": "HiddenMonotonicity.TransformerExprProperties",
+      "declaration": "HiddenMonotonicity.TransformerDC.Expr.decompose_exact",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {ι : Type u} (e : Expr ι) (x : DoubledInput ι), value (e.decompose x) = e.eval (x.1 - x.2)",
+      "contract_source": "reports/evidence/transformer-dc/final-review/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/final-review/review.json",
+      "review_id": "transformer-dc/complete/transformer-final-Expr-decompose_exact",
+      "scope": "Complete actual arbitrary-finite-depth pre-LayerNorm Transformer: recursively computed heads recover the same-parameter evaluator exactly, are convex/monotone/nonnegative on expanded nonnegative inputs, and become globally convex/nonnegative heads on raw signed embeddings. Fixed nonempty injective masks and positive normalization constants are model data. No raw-input monotonicity, DAG-size, floating-point stability, or runtime guarantee."
+    },
+    {
+      "task": "transformer-final-Expr-rawDecompose_convex",
+      "module": "HiddenMonotonicity.TransformerExprProperties",
+      "declaration": "HiddenMonotonicity.TransformerDC.Expr.rawDecompose_convex",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {ι : Type u} (e : Expr ι),\n  ConvexOn ℝ Set.univ (fun x : ι → ℝ => (e.rawDecompose x).1) ∧\n  ConvexOn ℝ Set.univ (fun x : ι → ℝ => (e.rawDecompose x).2)",
+      "contract_source": "reports/evidence/transformer-dc/final-review/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/final-review/review.json",
+      "review_id": "transformer-dc/complete/transformer-final-Expr-rawDecompose_convex",
+      "scope": "Complete actual arbitrary-finite-depth pre-LayerNorm Transformer: recursively computed heads recover the same-parameter evaluator exactly, are convex/monotone/nonnegative on expanded nonnegative inputs, and become globally convex/nonnegative heads on raw signed embeddings. Fixed nonempty injective masks and positive normalization constants are model data. No raw-input monotonicity, DAG-size, floating-point stability, or runtime guarantee."
+    },
+    {
+      "task": "transformer-final-Expr-rawDecompose_exact",
+      "module": "HiddenMonotonicity.TransformerExprProperties",
+      "declaration": "HiddenMonotonicity.TransformerDC.Expr.rawDecompose_exact",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {ι : Type u} (e : Expr ι) (x : ι → ℝ), value (e.rawDecompose x) = e.eval x",
+      "contract_source": "reports/evidence/transformer-dc/final-review/contracts.json",
+      "review_evidence": "reports/evidence/transformer-dc/final-review/review.json",
+      "review_id": "transformer-dc/complete/transformer-final-Expr-rawDecompose_exact",
+      "scope": "Complete actual arbitrary-finite-depth pre-LayerNorm Transformer: recursively computed heads recover the same-parameter evaluator exactly, are convex/monotone/nonnegative on expanded nonnegative inputs, and become globally convex/nonnegative heads on raw signed embeddings. Fixed nonempty injective masks and positive normalization constants are model data. No raw-input monotonicity, DAG-size, floating-point stability, or runtime guarantee."
+    }
+  ]
+}

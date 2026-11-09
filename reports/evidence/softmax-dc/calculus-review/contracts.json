@@ -1,0 +1,54 @@
+{
+  "public_root": "HiddenMonotonicity.SoftmaxLineCalculus",
+  "targets": [
+    {
+      "task": "softmax-line-logsumexp-derivative",
+      "module": "HiddenMonotonicity.SoftmaxLineCalculus",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.logSumExp_line_derivative",
+      "universes": ["u"],
+      "open_namespaces": ["HiddenMonotonicity.SoftmaxDC"],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (a v : ι → ℝ) (t : ℝ), HasDerivAt (fun r => logSumExp (affineLine a v r)) (mean (affineLine a v t) v) t"
+    },
+    {
+      "task": "softmax-line-mean-derivative",
+      "module": "HiddenMonotonicity.SoftmaxLineCalculus",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.mean_line_derivative",
+      "universes": ["u"],
+      "open_namespaces": ["HiddenMonotonicity.SoftmaxDC"],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (a v : ι → ℝ) (t : ℝ), HasDerivAt (fun r => mean (affineLine a v r) v) (variance (affineLine a v t) v) t"
+    },
+    {
+      "task": "softmax-line-first-derivative",
+      "module": "HiddenMonotonicity.SoftmaxLineCalculus",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmax_line_derivative",
+      "universes": ["u"],
+      "open_namespaces": ["HiddenMonotonicity.SoftmaxDC"],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (a v : ι → ℝ) (t : ℝ) (i : ι), HasDerivAt (fun r => softmax (affineLine a v r) i) (softmax (affineLine a v t) i * (v i - mean (affineLine a v t) v)) t"
+    },
+    {
+      "task": "softmax-line-second-derivative",
+      "module": "HiddenMonotonicity.SoftmaxLineCalculus",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxFirst_line_derivative",
+      "universes": ["u"],
+      "open_namespaces": ["HiddenMonotonicity.SoftmaxDC"],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (a v : ι → ℝ) (t : ℝ) (i : ι), HasDerivAt (fun r => softmax (affineLine a v r) i * (v i - mean (affineLine a v r) v)) (softmax (affineLine a v t) i * ((v i - mean (affineLine a v t) v) ^ 2 - variance (affineLine a v t) v)) t"
+    },
+    {
+      "task": "softmax-probability-normalization",
+      "module": "HiddenMonotonicity.SoftmaxLineCalculus",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmax_sum_one",
+      "universes": ["u"],
+      "open_namespaces": ["HiddenMonotonicity.SoftmaxDC"],
+      "open_scopes": ["BigOperators"],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (z : ι → ℝ), (∑ j, softmax z j) = 1"
+    },
+    {
+      "task": "softmax-denominator-positive",
+      "module": "HiddenMonotonicity.SoftmaxLineCalculus",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.expSum_pos",
+      "universes": ["u"],
+      "open_namespaces": ["HiddenMonotonicity.SoftmaxDC"],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (z : ι → ℝ), 0 < expSum z"
+    }
+  ]
+}

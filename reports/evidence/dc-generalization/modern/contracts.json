@@ -1,0 +1,44 @@
+{
+  "targets": [
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.modern_curvature_pair",
+      "module": "HiddenMonotonicity.ModernMonotoneDC",
+      "expected_type": "∀ a : ModernActivation, ConvexPairActivation (curvatureLiftPair a.eval) ∧ Monotone (curvatureLiftPair a.eval) ∧ ValidPairActivation a.eval (curvatureLiftPair a.eval) ∧ NonnegativePairActivation (curvatureLiftPair a.eval)",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-modern-actual-pair",
+      "review_evidence": "reports/evidence/dc-generalization/modern/Boundary.lean",
+      "scope": "The actual six-case modern activation datatype needs no unproved regularity assumptions to instantiate the integral-curvature pair."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.modern_curvature_network",
+      "module": "HiddenMonotonicity.ModernMonotoneDC",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m), net.Nonnegative → ∀ a : ModernActivation, Monotone (net.decomposeWith (curvatureLiftPair a.eval)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.decomposeWith (curvatureLiftPair a.eval) x).1 i)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.decomposeWith (curvatureLiftPair a.eval) x).2 i)) ∧ ∀ x : PairVec n, (net.decomposeWith (curvatureLiftPair a.eval) x).1 - (net.decomposeWith (curvatureLiftPair a.eval) x).2 = net.forwardWith a.eval (x.1 - x.2)",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-modern-network",
+      "review_evidence": "reports/evidence/dc-generalization/modern/Boundary.lean",
+      "scope": "Both complete network streams are convex and monotone on the full pair-input space and recover the same-parameter original network. Split biases are arbitrary."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.modern_curvature_network_nonnegative",
+      "module": "HiddenMonotonicity.ModernMonotoneDC",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m), net.NonnegativeParameters → ∀ (a : ModernActivation) (x : PairVec n), (0 ≤ x.1 ∧ 0 ≤ x.2) → 0 ≤ (net.decomposeWith (curvatureLiftPair a.eval) x).1 ∧ 0 ≤ (net.decomposeWith (curvatureLiftPair a.eval) x).2",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-modern-network-nonnegative",
+      "review_evidence": "reports/evidence/dc-generalization/modern/Boundary.lean",
+      "scope": "Stream-value nonnegativity is conditional on nonnegative split biases and inputs, unlike global convexity and exact recovery."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.modern_curvature_affine_network",
+      "module": "HiddenMonotonicity.ModernMonotoneDC",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m), net.Nonnegative → ∀ (a : ModernActivation) (wp wn : Matrix (Fin k) (Fin m) ℝ), (∀ i j, 0 ≤ wp i j) → (∀ i j, 0 ≤ wn i j) → ∀ bp bn : Vec k, Monotone (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).1 i)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).2 i)) ∧ ∀ x : PairVec n, (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).1 - (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).2 = affineLayer wp wn bp bn (net.forwardWith a.eval (x.1 - x.2))",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-modern-affine-network",
+      "review_evidence": "reports/evidence/dc-generalization/modern/Boundary.lean",
+      "scope": "The same-parameter complete network includes an arbitrary signed affine readout without an additional activation."
+    }
+  ]
+}

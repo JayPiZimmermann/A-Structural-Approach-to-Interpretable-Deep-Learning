@@ -1,0 +1,76 @@
+{
+  "reviewer": "/root/dc_lean_lead/network_composition/affine_readout/readout_review",
+  "status": "passed_independent_semantic_review_with_recorded_consumer_validation",
+  "scope": "ConvexMonotoneReadout leaf, its hand-authored Expected.lean and Boundary.lean consumers, four expected-types.json specifications, and recorded Exact.lean imported-closure audit. Includes the generic signed affine readout, the original-input embedding x mapped to (x,0), and the positive/negative-part input embedding. This review does not claim completed modern activation instances, public root integration, or clean committed production verification.",
+  "independent_expected_claim": "For every finite same-parameter network whose split matrices are nonnegative, every valid scalar pair activation with two jointly convex coordinatewise nondecreasing components yields an actual ungated signed affine readout with jointly convex monotone heads on the full pair-input space and exact original-network recovery. Biases are arbitrary real vectors. Restriction to (x,0) preserves convexity and monotonicity on all signed original inputs. Restriction to (max(x,0),max(-x,0)) preserves convexity and recovery; it does not assert raw-input monotonicity.",
+  "definitions_checked": {
+    "Network.affineDecomposeWith": "Uses preP and preN of the actual net.decomposeWith output and adds arbitrary split biases, with no output activation or clipping.",
+    "affineLayer": "The recovered signed output is matrixCLM (wp-wn) applied to the actual forwardWith backbone output, plus bp-bn.",
+    "Network.Nonnegative": "Constrains only the split weight matrices recursively, not hidden or output biases.",
+    "ValidPairActivation": "Exact unrestricted scalar identity between the difference of pair outputs and the scalar activation of the input difference.",
+    "ConvexPairActivation": "Joint ConvexOn real univ for both scalar pair components, not merely separate convexity.",
+    "PairVec_and_Monotone": "All real two-stream vectors with product and coordinatewise orders; no input sign or positive-width restriction.",
+    "signedInput": "The concrete coordinatewise pair (max(x,0),max(-x,0)); both initial branches are nonnegative and convex and their difference is x."
+  },
+  "proof_chain_checked": [
+    "Exact signed affine recovery follows from preactivation_difference and the existing actual-network valid_decomposition_recovery theorem, and needs no positivity assumptions on matrices, biases, or target output.",
+    "Nonnegative readout matrices preserve the actual backbone pair order, and arbitrary additive biases preserve monotonicity.",
+    "Nonnegative finite matrix sums preserve coordinatewise convexity; adding arbitrary affine constants preserves convexity.",
+    "Activation-level readout theorems consume the generic network monotonicity and joint convexity results, rather than assuming those final conclusions as unexplained hypotheses.",
+    "The affine embedding x mapped to (x,0) preserves joint convexity and pair order and has difference x, giving the stated ordinary-input result globally.",
+    "Convex input branches compose with the jointly convex coordinatewise monotone readout heads through the standard Jensen-and-order argument; monotonicity of the input branches is not assumed.",
+    "The positive/negative input embedding has convex branches and exact difference x, yielding signed-input convex heads and recovery without a false raw-input monotonicity claim.",
+    "Expected.lean explicitly quantifies all widths, networks, activations, lifts, split matrices, biases, and inputs. The signed-input expected contract expands the concrete max formulas independently of the signedInput name.",
+    "Boundary.lean checks negative bias at zero backbone width, empty output width, a negative signed readout weight producing a negative output, and a counterexample to monotonicity of signedInput."
+  ],
+  "verified_recorded_validation": {
+    "source_build": {
+      "exit_code": 0,
+      "exit_file": "reports/evidence/dc-generalization/readout/build.exit",
+      "log": "reports/evidence/dc-generalization/readout/build.log"
+    },
+    "expected_consumer": {
+      "path": "reports/evidence/dc-generalization/readout/Expected.lean",
+      "exit_code": 0,
+      "exit_file": "reports/evidence/dc-generalization/readout/expected.exit",
+      "log": "reports/evidence/dc-generalization/readout/expected.log",
+      "reported_axioms": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ]
+    },
+    "boundary_consumer": {
+      "path": "reports/evidence/dc-generalization/readout/Boundary.lean",
+      "exit_code": 0,
+      "exit_file": "reports/evidence/dc-generalization/readout/boundary.exit",
+      "log": "reports/evidence/dc-generalization/readout/boundary.log"
+    },
+    "reviewer_action": "Read-only semantic review and verification of existing exit files and logs; the reviewer did not run these builds.",
+    "imported_closure_exact_audit": {
+      "path": "reports/evidence/dc-generalization/readout/Exact.lean",
+      "exit_code": 0,
+      "exit_file": "reports/evidence/dc-generalization/readout/exact.exit",
+      "log": "reports/evidence/dc-generalization/readout/exact.log",
+      "environment": "reports/evidence/dc-generalization/readout/environment.json",
+      "exact_contracts_matched": 4,
+      "imported_project_theorems_audited": 271,
+      "readout_theorems_audited": 14,
+      "axioms": ["Classical.choice", "Quot.sound", "propext"]
+    }
+  },
+  "findings": [],
+  "limitations": [
+    "These are sufficient local activation and matrix hypotheses; this leaf does not prove a necessary characterization of every possible DC network.",
+    "The arbitrary signed affine map is supplied as split matrices wp and wn and split biases bp and bn; this leaf does not construct a canonical positive/negative split of an unsplit matrix.",
+    "Only the initial signedInput branches are asserted nonnegative. Arbitrary biases need not preserve nonnegative hidden streams or output heads.",
+    "The positive/negative-part embedding is not monotone in the raw input; only its composed output-head convexity and recovery are asserted.",
+    "Concrete activation formulas, production roots and manifests, and clean committed integration remain separate validation responsibilities."
+  ],
+  "content_sha256": {
+    "formalization/HiddenMonotonicity/ConvexMonotoneReadout.lean": "05665ea5c838ca64d3fd6697421bf55568a12c879edc16e08d043e8284d843e6",
+    "reports/evidence/dc-generalization/readout/Expected.lean": "487becfedf8bed94d38e5a666e824745a3736d3f74f4893d8a634b2bf676fb8e",
+    "reports/evidence/dc-generalization/readout/Boundary.lean": "81e5b5c085ad6bd974dacd9dd9f79977b838b98c731b926a01281044c72fcf7c",
+    "reports/evidence/dc-generalization/readout/expected-types.json": "a5ca25dd272358e42d0e53edca372232ee086a07cac3f44e3831eb8971dbd940"
+  }
+}

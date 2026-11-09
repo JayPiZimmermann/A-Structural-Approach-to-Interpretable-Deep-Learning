@@ -3,12 +3,12 @@
 
 In this appendix, we empirically investigate two questions using a simple image classification task:
 \begin{enumerate}
-    \item[(A)] Are the faithful saliency maps observed in \cref{sec:experiments} a general property of monotone neural networks?
+    \item[(A)] Do directly trained constrained networks exhibit visually interpretable gradient patterns on present and missing features?
     \item[(B)] Can we directly train a \emph{difference-of-two monotone neural networks}, rather than obtaining such a decomposition by splitting a general architecture? 
 \end{enumerate}
 
 We introduced the two resulting architectures as DMs and DICs as well as their inverted-input variations DMINs and DICINs in \cref{subsec:dc_network_training_methods}. \citetapp{AppSankaranarayanan2021CDINN} proposed an architecture similar to DICs as Convex Difference Neural Network (\emph{CDiNN}) in the context of optimal control.
-Our experiments provide evidence that montone neural networks are inherently self-explanatory: ICNNs consistently focus on the most informative present and missing visual features in the image classification task. We remark that here we view ICNNs as monotone networks on an affine transformation of the input embodied by the first network layer. The gradients of the DICIN models clearly separate their concerns: The gradients of the $g$-model provide factual, while the gradients of the $h$-model provide counterfactual explanations.
+The displayed MNIST examples show class-dependent stream sensitivities on present strokes and candidate missing strokes. We view ICNNs as monotone networks on an affine transformation of the input embodied by the first network layer; the unconstrained first layer means that they need not be monotone in the original input coordinates. The observed patterns motivate a factual/counterfactual interpretation of the $g$- and $h$-stream gradients, but do not establish the effect of an intervention on the complete model.
 Moreover, all proposed network architectures achieve excellent test accuracy on MNIST.
 
 \subsection{Experimental Setup} \label{subsec:dic_experiment}
@@ -51,23 +51,25 @@ All the difference-of-two variants achieve strong, but unambiguously worse test 
 
 \input{appendix/figures/mnist_ic_saliency.tex}
 
-\cref{fig:mnist_ic_saliency} visualizes input gradients of the \texttt{cnn\_maxout} DIC model on representative test samples.
-The gradients are mostly positive on the strokes and negative on the background, indicating that adding white pixels in certain regions and deleting stroke pixels would decrease the predicted confidence.
-We observe that the hole of the ``0'', the gaps between the arches of ``3'' (distinguishing it from ``8'' and ``9''), the area between the belly of ``6'' and the arch of ``8'', and the vertical line and lower curve of ``7'' and ``8'' respectively, are all critical for classification.
-It is remarkable that the positive gradient aligns precisely with the digit’s strokes.
+\cref{fig:mnist_ic_saliency} visualizes input gradients of the \texttt{cnn\_maxout} IC model on representative test samples.
+The gradients are mostly positive on the strokes and negative on the background. At differentiable inputs, these signs indicate that sufficiently small feasible decreases in stroke intensity or increases in the indicated background intensities lower the corresponding class logit.
+Regions with marked local sensitivity include the hole of the ``0'', the gaps between the arches of ``3'', the area between the belly of ``6'' and the arch of ``8'', and the vertical line and lower curve of ``7'' and ``8'', respectively.
+In these examples, the positive gradient largely follows the digit's strokes.
 
-However, the gradients of the \texttt{cnn\_maxout} IC do not exhibit class-dependent directional variation, in contrast to those of the \texttt{cnn\_maxout} DIC model.
+The displayed gradients of the \texttt{cnn\_maxout} IC show less class-dependent directional variation than those of the inverted-input DIC model.
 \Cref{fig:mnist_split_ic_saliency_main} shows overlays of $g$- and $h$-network gradients (red and blue, respectively) for all classes on two test samples with correctly predicted ground-truth label ``3''.
-Since the $h$-model receives $1 - x$ as input, a high gradient value (bright blue pixel) indicates that adding a white pixel at that location would increase the corresponding class logit.
+For an inverted-input class logit $f(x)=g(x)-h(1-x)$, the complete gradient at differentiable inputs is
+\[
+\nabla f(x)=\nabla g(x)+(\nabla h)(1-x).
+\]
+The complement and subtraction cancel the two minus signs: a positive entry of $(\nabla h)(1-x)$ (bright blue pixel) indicates positive local sensitivity of the contribution $-h(1-x)$ to increasing the original input. It can be outweighed by a negative entry of $\nabla g(x)$, so neither stream alone guarantees an increase in the complete class logit. Even the complete gradient describes only local sensitivity; finite counterfactual claims require evaluating the model under the proposed intervention, and a logit increase need not change the predicted class.
 
 Class ``1'' shows no $g$-gradient activity above the threshold, while the $g$-gradient for the ground-truth class ``3'' is strongest and follows the digit strokes most accurately.
-For classes ``6'', ``8'', and ``9'', the $h$-gradients are dense between the arches of the ``3'', indicating that those missing pixels are discriminative for these classes.
+For classes ``6'', ``8'', and ``9'', the $h$-gradients are dense between the arches of the ``3'', at candidate missing-stroke locations that would close loops geometrically.
 In several cases, red gradients also align with the strokes of competing classes within the original digit structure.
 
 \subsection{Conclusion}
 
-Considering our results with small models on MNIST, we can answer both questions raised at the beginning of this appendix affirmatively.
-Concerning question (B), we observed strong performance of our proposed DM and DIC models, in case of the small MLP even outperforming all single-model variants.
-Concerning question (A), we even report better interpretability of the monotone and input-convex models in their single-model and difference-of-two setups compared to the DC decompositions of pretrained network architectures.
-Indeed, we were not able to rigorously prove the disentanglement of concerns to factual and counterfactual features in the split-pairs of the pretrained VGG16 and ResNet18 models.
-It is future work to translate our ideas from the proof of concept presented in this appendix to larger network architectures.
+Concerning question (B), the small MNIST models demonstrate that DM and DIC architectures can be trained directly to strong classification accuracy; for the MLP, the difference variants even outperform all single-model variants.
+Concerning question (A), the displayed examples show class-dependent stream sensitivities on present and candidate missing strokes. These qualitative observations do not establish faithful counterfactual explanations or a general separation of explanatory roles, either for the trained models or for the split-pairs of the pretrained VGG16 and ResNet18 models.
+Evaluating the proposed interpretation through interventions and testing it on larger architectures remain future work.

@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "public_root": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+  "targets": [
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ConvexOn ℝ univ (fun z => (curvatureLiftPair f z).1) ∧ ConvexOn ℝ univ (fun z => (curvatureLiftPair f z).2) ∧ Monotone (fun z => (curvatureLiftPair f z).1) ∧ Monotone (fun z => (curvatureLiftPair f z).2) ∧ ValidPairActivation f (curvatureLiftPair f)",
+      "open_namespaces": ["Set", "Filter", "MeasureTheory", "HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "open_scopes": [], "universes": [],
+      "review_id": "DC-GENERAL-curvature-monotone-split",
+      "review_evidence": "reports/evidence/dc-generalization/generic/curvature-review.md",
+      "scope": "Actual integrated positive/negative curvature profiles, with common linear slope shift and explicit total-curvature lift coefficient. Convexity and coordinatewise monotonicity hold on the entire real plane; exact difference recovers the original signed activation."
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ConvexOn ℝ univ (fun z => (normalizedCurvatureLiftPair f z).1) ∧ ConvexOn ℝ univ (fun z => (normalizedCurvatureLiftPair f z).2) ∧ Monotone (fun z => (normalizedCurvatureLiftPair f z).1) ∧ Monotone (fun z => (normalizedCurvatureLiftPair f z).2) ∧ ValidPairActivation f (normalizedCurvatureLiftPair f)",
+      "open_namespaces": ["Set", "Filter", "MeasureTheory", "HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "open_scopes": [], "universes": [],
+      "review_id": "DC-GENERAL-normalized-curvature-split",
+      "review_evidence": "reports/evidence/dc-generalization/generic/curvature-review.md",
+      "scope": "A common constant max(-f(0),0) preserves convexity, global coordinatewise monotonicity, and exact difference. No assumption on the sign of f(0)."
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), NonnegativePairActivation (normalizedCurvatureLiftPair f)",
+      "open_namespaces": ["Set", "Filter", "MeasureTheory", "HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "open_scopes": [], "universes": [],
+      "review_id": "DC-GENERAL-normalized-curvature-nonnegative",
+      "review_evidence": "reports/evidence/dc-generalization/generic/curvature-review.md",
+      "scope": "For every nonnegative pair of stream inputs, both normalized output streams are nonnegative. Input restriction appears through the existing predicate, with no f(0) sign assumption."
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute",
+      "expected_type": "∀ (f : ℝ → ℝ) (hq : Integrable (curvature f)), totalPositiveCurvature f + totalNegativeCurvature f = ∫ t, |curvature f t|",
+      "open_namespaces": ["Set", "Filter", "MeasureTheory", "HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "open_scopes": [], "universes": [],
+      "review_id": "DC-GENERAL-total-absolute-curvature",
+      "review_evidence": "reports/evidence/dc-generalization/generic/curvature-review.md",
+      "scope": "The actual positive and negative curvature integrals sum exactly to the integral of the absolute second derivative."
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds",
+      "expected_type": "∀ (f : ℝ → ℝ) (hq : Integrable (curvature f)) (x : ℝ), (0 ≤ D1 f x + curvatureSlopeShift f ∧ D1 f x + curvatureSlopeShift f ≤ curvatureLiftWidth f) ∧ (0 ≤ D2 f x + curvatureSlopeShift f ∧ D2 f x + curvatureSlopeShift f ≤ curvatureLiftWidth f)",
+      "open_namespaces": ["Set", "Filter", "MeasureTheory", "HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "open_scopes": [], "universes": [],
+      "review_id": "DC-GENERAL-explicit-curvature-slope-bounds",
+      "review_evidence": "reports/evidence/dc-generalization/generic/curvature-review.md",
+      "scope": "Both shifted profile derivatives lie between zero and the explicitly defined finite total-curvature coefficient, at every real input."
+    }
+  ]
+}

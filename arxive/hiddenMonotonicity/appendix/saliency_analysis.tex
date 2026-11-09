@@ -4,6 +4,11 @@
 
 This appendix provides comprehensive evaluation results for all XAI methods tested in the experimental setup described in \cref{subsec:eval_framework}.
 
+The explanations target the model's predicted class, including for misclassified images.
+Localization metrics compare these attributions with the annotated object mask. When the
+prediction differs from the annotated class, the explanation target and the mask therefore
+refer to different classes.
+
 \subsection{VGG16 Qualitative Saliency Map Comparison} \label{app:vgg_qualitative}
 
 Complementing \cref{fig:vgg_saliency_comparison_main}, we give more saliency examples in \cref{fig:vgg_saliency_comparison}. Again, we observe more focus on the whole classified objects by SplitCAM in layer 26 compared to LayerCAM in the same layer.
@@ -16,8 +21,15 @@ This aligns with the observed performance peaks of SplitGrad and SplitCAM in dee
 
 \subsection{Quantitative Analysis on VGG16} \label{app:vgg_split}
 
-\Cref{tab:xai_eval_comprehensive_vgg} presents detailed quantitative metrics analysis across all split configurations, baselines, and classical methods for VGG16. 
-We observe a slight boost in performance between SplitCAM with $\alpha = 0.4$ compared to $\alpha = 0.5$ and compared to the classical LayerCAM respectively, indicating that the LayerCAM formulas indeed yield more powerful explanations on the split-pair compared to the original model. This can be seen even more drastically in ablation studies \cref{app:ablation}.
+\Cref{tab:xai_eval_comprehensive_vgg} presents detailed quantitative metrics across all split configurations, baselines, and classical methods for VGG16. SplitCAM's best reported localization scores exceed those of the listed LayerCAM rows, and its reported Maximum Sensitivity values are lower, while LayerCAM at layer~14 has higher Pixel-Flipping score-drop AUC. Comparisons across the selected rows also vary the layer or absolute-value convention. The controlled $\alpha$ sweeps in \cref{app:ablation} expose the resulting trade-offs more directly; neither comparison establishes a uniform improvement across metrics.
+
+\paragraph{Unresolved table discrepancy.}
+For SplitCAM with scaling, $\alpha=0.4$, winner-takes-it-all pooling and layer configuration
+$(26,+,g)$ with absolute values, \cref{tab:xai_eval_comprehensive_vgg} reports
+PF$_{20}=1.590$ and MaxS$=0.456$, whereas the corresponding row of
+\cref{tab:alpha_comparison_by_method} reports $1.5849$ and $0.4573$. The released artifacts do not
+provide the underlying per-image results needed to resolve the discrepancy, so the reported
+values are retained without attributing the difference to a particular cause.
 
 \input{appendix/table_appendix_generated_vgg_full_eval_sorted}
 
@@ -49,27 +61,14 @@ Lower similarity values indicate stronger dependence on learned model parameters
 \input{appendix/randomization_sanity_check_table}
 
 \paragraph{Analysis}
-The results in \cref{tab:randomization_sanity_check} highlight that the backward-pass
-stabilization used in SplitCAM and SplitGrad effectively mitigates the gradient
-explosion issues caused by the non-negative split-stream weights. 
-In contrast, SplitLRP remains fairly insensitive to model randomization: across HOG and Spearman similarity metrics it shows values close to one (HOG~$\approx 0.99$,
-Spearman~$\approx 1.00$). The change of attribution maps when the final VGG16 layers are reinitialized is only measured by the SSIM metric (SSIM~$\approx 0.45$--$0.56$).
-By contrast, our SplitCAM and SplitGrad variants show substantially lower similarities than all of the considered baselines, 
-particularly in Spearman and SSIM, demonstrating their exceptionally strong dependence on the learned weights and the model's actual decision process.
-
-We attribute the insensitivity of SplitLRP to the last three VGG16 layer weights to the gradient explosion inherent to the split-stream due to its non-negative weight matrices. 
-Since we apply the $\epsilon$-LRP rule, which is closely related to the vanilla LRP rule and effectively reduces to a scaled version of $\text{Input}\times\text{Gradient}$ on the split-stream, the resulting SplitLRP attributions suffer from a diminishing-gradient effect. 
-This makes changes in the final-layer weights largely insignificant for the propagated relevance. Consequently, the deeper the considered split layer, the more stable the SplitLRP maps become under randomization. Indeed, the layer-26 SplitLRP configuration performs `best' (i.e., shows the lowest similarity to the original maps) across all three metrics and SplitLRP configurations, confirming its stronger sensitivity to the learned parameters compared to early-layer SplitLRP attribution maps. Here, the scaling in the backward pass of SplitGrad and SplitCAM described and analyzed in \cref{app:closed_formulas} proves powerful.
+In \cref{tab:randomization_sanity_check}, every reported SplitCAM and SplitGrad configuration has lower SSIM than every listed baseline, whereas the HOG and Spearman comparisons are mixed. These results show that the maps respond to the tested parameter randomization, but do not isolate the effect of stabilization on numerical gradient growth. SplitLRP retains high HOG and Spearman similarity (approximately $0.99$ and $1.00$), while SSIM decreases to $0.45$--$0.56$. Attenuation by the $\epsilon$-LRP rule is a possible explanation for this behavior, but the randomization comparison alone does not identify its cause.
 
 \subsection{Computational Efficiency Analysis} \label{app:timing}
 
-To assess the computational overhead of our split-based methods, we measure mean computation times across the custom 50 image validation subset of ImageNet-S for both ResNet18 and VGG16 architectures.
-The model splitting operation itself is performed once per model. However, we averaged the running time over 20 split procedures for each of the models. It requires only 0.033 seconds for ResNet18 and 0.030 seconds for VGG16, representing negligible overhead.
-\Cref{tab:timing_comparison} presents the mean saliency computation times, revealing that SplitCAM and SplitGrad achieve competitive performance (0.33--0.44 seconds per image) compared to classical CAM-based methods, while being significantly faster than perturbation-based approaches such as Feature Ablation and Occlusion.
-Notably, the shifting parameter $\alpha$ used in SplitCAM and SplitGrad does not affect runtime, as it only modifies the forward pass computations without introducing additional computational complexity. For comparability in this test we compute the attribution maps with respect to the first model layer for all methods.
+\Cref{tab:timing_comparison} reports mean attribution times across the custom 50-image validation subset of ImageNet-S for ResNet18 and VGG16. Model splitting is reported separately, averaged over 20 setup procedures: 0.033\,s for ResNet18 and 0.030\,s for VGG16. SplitCAM and SplitGrad take 0.33--0.44\,s per image, compared with 0.28--0.31\,s for the row labelled Guided Grad-CAM. SplitCAM takes approximately 14--29 times as long as the corresponding ordinary Grad-CAM and LayerCAM rows, while the split methods are much faster than the reported Feature Ablation and Occlusion configurations.
 
-We note that we manually implemented the split-pair forward and backward passes in PyTorch without using its hooking system. 
-Further, we build the split-pair as an independent module and duplicate all weight matrices when splitting into their positive and negative part. 
-As a result, our current implementation is not fully optimized; both running time and memory efficiency can be improved substantially. In principle, the split stream can operate directly on the original model weights, making weight duplication unnecessary. Moreover, the forward and backward computations for each layer can be parallelized, so the overall overhead relative to the standard forward and backward pass of the model is expected to be modest.
+The released evaluator initializes the split model once per method configuration and reuses it across images. Its per-image timer covers attribution generation and the helper's postprocessing, copying and cleanup; image and model loading, initial input transfer to the device, target prediction and model splitting occur outside that timer. The split helper computes maps for all spatial layer chunks with cached activations and gradients before selecting the configured output, so the timing includes this additional map computation. The shifting parameter $\alpha$ changes the backward propagation rule, but runtime variation with $\alpha$ was not separately measured.
+
+The available artifacts do not identify the hardware, numerical precision or exact configuration IDs of the historical timing run. In particular, the released VGG16 timing configuration named \texttt{guided\_grad\_cam} dispatches Guided LayerCAM, while the source table labels its row Guided Grad-CAM. The table retains the reported label and numbers; this mismatch limits identification of that measured baseline. The reported timings describe the source implementation and do not establish an upper bound on the overhead of other implementations.
 
 \input{appendix/table_timing_comparison}

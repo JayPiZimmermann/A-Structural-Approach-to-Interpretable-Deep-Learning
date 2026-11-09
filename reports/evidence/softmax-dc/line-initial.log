@@ -1,0 +1,76 @@
+HiddenMonotonicity/SoftmaxLineCalculus.lean:36:0: warning: automatically included section variable(s) unused in theorem `HiddenMonotonicity.SoftmaxDC.mean_eq_quotient`:
+  [Nonempty ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Nonempty ι] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+HiddenMonotonicity/SoftmaxLineCalculus.lean:40:0: warning: automatically included section variable(s) unused in theorem `HiddenMonotonicity.SoftmaxDC.secondMoment_eq_quotient`:
+  [Nonempty ι]
+consider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:
+  omit [Nonempty ι] in theorem ...
+
+Note: This linter can be disabled with `set_option linter.unusedSectionVars false`
+HiddenMonotonicity/SoftmaxLineCalculus.lean:62:49: error: unsolved goals
+case e'_8
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : Nonempty ι
+a v : ι → ℝ
+t : ℝ
+j : ι
+⊢ (fun t => Real.exp (affineLine a v t j)) = fun x => Real.exp (a j + x * v j)
+
+case e'_9
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : Nonempty ι
+a v : ι → ℝ
+t : ℝ
+j : ι
+⊢ Real.exp (affineLine a v t j) * v j = Real.exp (a j + id t * v j) * (1 * v j)
+HiddenMonotonicity/SoftmaxLineCalculus.lean:69:2: error: Type mismatch
+  HasDerivAt.sum fun j x => exp_affineLine_derivative a v t j
+has type
+  HasDerivAt (∑ i ∈ ?m.31, fun t => Real.exp (affineLine a v t i)) (∑ i ∈ ?m.31, Real.exp (affineLine a v t i) * v i) t
+but is expected to have type
+  HasDerivAt (fun t => expSum (affineLine a v t)) (∑ j, Real.exp (affineLine a v t j) * v j) t
+HiddenMonotonicity/SoftmaxLineCalculus.lean:83:2: error: unsolved goals
+case e'_9
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : Nonempty ι
+a v : ι → ℝ
+t : ℝ
+i : ι
+⊢ (v i - (∑ x, Real.exp (affineLine a v t x) * v x) / expSum (affineLine a v t)) / expSum (affineLine a v t) =
+    (expSum (affineLine a v t) * v i - ∑ x, Real.exp (affineLine a v t x) * v x) / expSum (affineLine a v t) ^ 2
+HiddenMonotonicity/SoftmaxLineCalculus.lean:93:4: error: Tactic `rfl` failed: The left-hand side
+  fun t => mean (affineLine a v t) v
+is not definitionally equal to the right-hand side
+  ∑ i, fun y => softmax (affineLine a v y) i * v i
+
+case e'_8
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : Nonempty ι
+a v : ι → ℝ
+t : ℝ
+h :
+  HasDerivAt (∑ i, fun y => softmax (affineLine a v y) i * v i)
+    (∑ i, softmax (affineLine a v t) i * (v i - mean (affineLine a v t) v) * v i) t
+⊢ (fun t => mean (affineLine a v t) v) = ∑ i, fun y => softmax (affineLine a v y) i * v i
+HiddenMonotonicity/SoftmaxLineCalculus.lean:96:6: error: invalid 'calc' step, left-hand side is
+  variance (affineLine a v t) v : ℝ
+but is expected to be
+  secondMoment (affineLine a v t) v - mean (affineLine a v t) v ^ 2 : ℝ
+HiddenMonotonicity/SoftmaxLineCalculus.lean:96:43: error: unsolved goals
+ι : Type u_1
+inst✝¹ : Fintype ι
+inst✝ : Nonempty ι
+a v : ι → ℝ
+t : ℝ
+h :
+  HasDerivAt (∑ i, fun y => softmax (affineLine a v y) i * v i)
+    (∑ i, softmax (affineLine a v t) i * (v i - mean (affineLine a v t) v) * v i) t
+⊢ secondMoment (affineLine a v t) v - mean (affineLine a v t) v ^ 2 =
+    ∑ i, softmax (affineLine a v t) i * (v i - mean (affineLine a v t) v) * v i

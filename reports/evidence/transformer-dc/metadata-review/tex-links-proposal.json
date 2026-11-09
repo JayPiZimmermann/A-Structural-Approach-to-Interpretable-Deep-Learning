@@ -1,0 +1,61 @@
+{
+  "prop:multivariate_dc_lift": {
+    "declaration": "HiddenMonotonicity.SoftmaxDC.multivariateLift_convex",
+    "display": "Lean components",
+    "scope": "The formal helper covers the uniform-coefficient lift P(x-y)+L*sum(y)-c: sufficient convexity, sufficient monotonicity from monotonicity of P and L*sum-P, exact difference, and nonnegative-orthant preservation under c<=P(0). The source proposition additionally allows an arbitrary coefficient vector and states converse convexity/derivative-bound equivalences; those general clauses are not formalized by this leaf. The specialized softmax result is independently proved without these missing general converses.",
+    "review_id": "transformer-dc/metadata-review/prop:multivariate_dc_lift"
+  },
+  "thm:softmax_dc_split": {
+    "declaration": "HiddenMonotonicity.SoftmaxDC.softmax_split_properties",
+    "display": "Lean variant",
+    "scope": "The literal normalized log-sum-exp plus/minus softmax heads for every finite nonempty index type and every output coordinate: global joint convexity and coordinatewise monotonicity on independent real stream vectors, exact recovery, and nonnegative values on the expanded nonnegative orthant. The normalizer is exactly (log(n)-1/n)/2, with origin values 1/n and 0. Singleton rows are included; empty rows are excluded. Actual softmax derivatives and curvature bounds are proved, not assumed. This is a row primitive, not a complete masked-attention or Transformer compilation theorem.",
+    "review_id": "transformer-dc/metadata-review/thm:softmax_dc_split"
+  },
+  "prop:convex_product_pair": {
+    "declaration": "HiddenMonotonicity.TransformerDC.productSplit_exact",
+    "display": "Lean variant",
+    "scope": "The literal polarized half-sums of squares have exact signed-product difference, globally convex nonnegative heads, and coordinatewise monotonicity on the nonnegative four-stream orthant. Composition with nonnegative convex input streams preserves convexity; composition with nonnegative monotone input streams preserves order. The square identity follows by using the same two input streams twice. No global product-head monotonicity or complete matrix/attention graph compiler is asserted by this primitive.",
+    "review_id": "transformer-dc/metadata-review/prop:convex_product_pair"
+  },
+  "prop:reciprocal_sqrt_pair": {
+    "declaration": "HiddenMonotonicity.SmoothDC.inverseSqrtPair_properties",
+    "display": "Lean variant",
+    "scope": "For every epsilon>0, the actual tangent extension and pair r(x-y)+M*x, M*x have globally convex coordinatewise monotone heads, nonnegative values on the input quadrant, and exact inverse-square-root recovery whenever the represented variance x-y is nonnegative. The coefficient is proved equal to 1/(2*epsilon^(3/2)); the joining derivative at zero is checked. This certifies only the scalar reciprocal-square-root normalization primitive, not centering, variance computation, learned scale/bias, or complete LayerNorm/Transformer composition.",
+    "review_id": "transformer-dc/metadata-review/prop:reciprocal_sqrt_pair"
+  },
+  "eq:softmax_dc_pair": {
+    "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula",
+    "display": "Lean components",
+    "scope": "The linked exact formula proves the positive head; the separately reviewed softmaxSplitSecond_formula proves the negative head with the same normalizer. Both formulas use the actual coupled softmax quotient and log-sum-exp.",
+    "equation": true,
+    "review_id": "transformer-dc/metadata-review/eq:softmax_dc_pair"
+  },
+  "eq:polarized_product_pair": {
+    "declaration": "HiddenMonotonicity.TransformerDC.productSplit_exact",
+    "display": "Lean",
+    "scope": "The actual productSplit definition consists of the displayed two half-sums of squares, and their difference is the product of the two represented signed scalars.",
+    "equation": true,
+    "review_id": "transformer-dc/metadata-review/eq:polarized_product_pair"
+  },
+  "eq:convex_square_pair": {
+    "declaration": "HiddenMonotonicity.TransformerDC.productSplit_exact",
+    "display": "Lean variant",
+    "scope": "Specializing the two operands of productSplit_exact to the same pair gives the displayed square identity; productSplit_convex, productSplit_nonnegative and productSplit_monotoneOn provide its structural properties on the orthant.",
+    "equation": true,
+    "review_id": "transformer-dc/metadata-review/eq:convex_square_pair"
+  },
+  "eq:reciprocal_sqrt_extension": {
+    "declaration": "HiddenMonotonicity.SmoothDC.inverseSqrtExtension_hasDerivAt",
+    "display": "Lean",
+    "scope": "The formal inverseSqrtExtension is the displayed tangent branch for t<=0 and inverse-power branch for t>0; this declaration proves the matching derivative at zero. inverseSqrtSlope_eq separately identifies the displayed coefficient.",
+    "equation": true,
+    "review_id": "transformer-dc/metadata-review/eq:reciprocal_sqrt_extension"
+  },
+  "eq:reciprocal_sqrt_pair": {
+    "declaration": "HiddenMonotonicity.SmoothDC.inverseSqrtPair_properties",
+    "display": "Lean",
+    "scope": "The actual inverseSqrtPair definition is exactly r(x-y)+M*x and M*x. Its global convexity and monotonicity, quadrant nonnegativity, and inverse-square-root recovery for nonnegative represented variance are proved.",
+    "equation": true,
+    "review_id": "transformer-dc/metadata-review/eq:reciprocal_sqrt_pair"
+  }
+}

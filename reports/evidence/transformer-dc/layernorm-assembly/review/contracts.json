@@ -1,0 +1,32 @@
+{
+  "public_root": "HiddenMonotonicity.LayerNormDC",
+  "targets": [
+    {
+      "task": "transformer-layernorm-assembly-variance-nonnegative",
+      "module": "HiddenMonotonicity.LayerNormDC",
+      "declaration": "HiddenMonotonicity.TransformerDC.layerVariance_nonnegative",
+      "expected_type": "\u2200 {d : \u2115} (v : Fin d \u2192 \u211d), 0 \u2264 HiddenMonotonicity.TransformerDC.layerVariance v"
+    },
+    {
+      "task": "transformer-layernorm-assembly-variance-exact",
+      "module": "HiddenMonotonicity.LayerNormDC",
+      "declaration": "HiddenMonotonicity.TransformerDC.value_variancePair",
+      "expected_type": "\u2200 {d : \u2115} (xs : Fin d \u2192 \u211d \u00d7 \u211d), HiddenMonotonicity.TransformerDC.value (HiddenMonotonicity.TransformerDC.variancePair xs) = HiddenMonotonicity.TransformerDC.layerVariance (fun i => HiddenMonotonicity.TransformerDC.value (xs i))"
+    },
+    {
+      "task": "transformer-layernorm-assembly-exact",
+      "module": "HiddenMonotonicity.LayerNormDC",
+      "declaration": "HiddenMonotonicity.TransformerDC.layerNormPair_exact",
+      "expected_type": "\u2200 {d : \u2115} (\u03b5 : \u211d), 0 < \u03b5 \u2192 \u2200 (\u03b3 \u03b2 : Fin d \u2192 \u211d) (xs : Fin d \u2192 \u211d \u00d7 \u211d) (i : Fin d), HiddenMonotonicity.TransformerDC.value (HiddenMonotonicity.TransformerDC.layerNormPair \u03b5 \u03b3 \u03b2 xs i) = HiddenMonotonicity.TransformerDC.layerNorm \u03b5 \u03b3 \u03b2 (fun j => HiddenMonotonicity.TransformerDC.value (xs j)) i"
+    },
+    {
+      "task": "transformer-layernorm-assembly-regular",
+      "module": "HiddenMonotonicity.LayerNormDC",
+      "declaration": "HiddenMonotonicity.TransformerDC.layerNormPair_regular",
+      "expected_type": "\u2200 {E : Type u} [AddCommGroup E] [Module \u211d E] [Preorder E] {d : \u2115} (s : Set E), Convex \u211d s \u2192 \u2200 \u03b5 : \u211d, 0 < \u03b5 \u2192 \u2200 (\u03b3 \u03b2 : Fin d \u2192 \u211d) (f : Fin d \u2192 E \u2192 \u211d \u00d7 \u211d), (\u2200 i, HiddenMonotonicity.TransformerDC.Regular s (f i)) \u2192 \u2200 i : Fin d, HiddenMonotonicity.TransformerDC.Regular s (fun x => HiddenMonotonicity.TransformerDC.layerNormPair \u03b5 \u03b3 \u03b2 (fun j => f j x) i)",
+      "universes": [
+        "u"
+      ]
+    }
+  ]
+}

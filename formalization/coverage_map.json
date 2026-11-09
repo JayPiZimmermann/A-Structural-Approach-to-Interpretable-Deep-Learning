@@ -26,10 +26,11 @@
   "prop:stream_properties": {
     "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.Network.monotone",
-      "HiddenMonotonicity.Network.convex"
+      "HiddenMonotonicity.SmoothDC.closed_form_affine_network",
+      "HiddenMonotonicity.SmoothDC.ClosedFormActivation.relu_pair",
+      "HiddenMonotonicity.Network.convex_monotone_decomposition"
     ],
-    "scope": "Both heads of arbitrary-width biased split networks, nonnegative split weights, Jensen form of convexity."
+    "scope": "Instantiate the generic actual-network construction at the literal ReLU max/identity pair. Both heads, including an ungated signed affine readout, are globally jointly convex and coordinatewise monotone in the independent doubled inputs. Split biases are unrestricted and widths may be zero; every tail is an admissible network and the terminal tail is identity."
   },
   "thm:mixing_convex_extreme": {
     "status": "formalized_variant",
@@ -37,7 +38,7 @@
       "HiddenMonotonicity.Network.mixing_one_convex_input",
       "HiddenMonotonicity.Network.affine_heads_convex_input"
     ],
-    "scope": "Arbitrary coordinatewise convex input lifts, actual nonnegative split network, arbitrary biases and varying widths. Both mixing-one streams and actual ungated nonnegative affine heads are convex. Recovery is net.eval(p−q); the source input-split identity specializes this to the original input."
+    "scope": "Arbitrary coordinatewise convex input lifts, actual nonnegative split network, arbitrary biases and varying widths. Both mixing-one streams and actual ungated nonnegative affine heads are convex. Recovery is net.eval(p\u2212q); the source input-split identity specializes this to the original input."
   },
   "thm:monotonicity_positive_gradients": {
     "status": "formalized_variant",
@@ -108,7 +109,7 @@
       "HiddenMonotonicity.actual_positive_pullback",
       "HiddenMonotonicity.actual_negative_pullback"
     ],
-    "scope": "Actual strict-branch Fréchet derivative, explicit four Jacobian blocks and genuine two-contribution positive/negative partial pullbacks; source masked-matrix notation is represented equivalently by branch-selected linear maps."
+    "scope": "Actual strict-branch Fr\u00e9chet derivative, explicit four Jacobian blocks and genuine two-contribution positive/negative partial pullbacks; source masked-matrix notation is represented equivalently by branch-selected linear maps."
   },
   "prop:sensitivity_mass": {
     "status": "formalized_variant",
@@ -543,9 +544,10 @@
   "cor:modern_activations": {
     "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.SmoothDC.modern_activations_complete"
+      "HiddenMonotonicity.SmoothDC.modern_activations_complete",
+      "HiddenMonotonicity.SmoothDC.modern_curvature_pair"
     ],
-    "scope": "All six literal activations: exact Gaussian GELU, positive-scale Swish, Mish, tanh, sigmoid, positive-temperature softplus. Actual integrable curvature, locally absolutely continuous derivatives, canonical nonnegative valid split pairs, and the stated sign/degenerate cases. No global routing-game interpretation of signed activations is asserted."
+    "scope": "All six literal activations: exact Gaussian GELU, positive-scale Swish, Mish, tanh, sigmoid, and positive-temperature Softplus. The existing complete theorem proves analytic regularity, actual curvature formulas/sign cases, symmetric-tilt validity, and nonnegative-quadrant preservation; the additional asymmetric integral-curvature pair theorem proves the corresponding convex, monotone, valid, nonnegative pair. No global routing-game interpretation of signed activations is asserted."
   },
   "prop:curvature_minimality": {
     "status": "formalized_variant",
@@ -658,5 +660,142 @@
       "Thesis.StoppingDAG.earliestWinner_spec"
     ],
     "scope": "The finite ordered pool selects the earliest maximal original operand, forwards both actual stopping streams and the exact selected predecessor kernel, and composes with the shared-DAG row. Smallest graph-index tie selection follows when original operand indices are sorted. No false identification with the generic binary right-tie primitive."
+  },
+  "prop:dc_profile_lift": {
+    "status": "partial",
+    "lean": [
+      "HiddenMonotonicity.SmoothDC.asymmetricLift_convex_iff",
+      "HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff_increments",
+      "HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff",
+      "HiddenMonotonicity.SmoothDC.asymmetric_split"
+    ],
+    "scope": "Exact global convexity iff, derivative-free increment iff, differentiable slope iff, and valid paired lift for arbitrary real profiles, including nonsmooth ReLU. The generic origin-normalization iff in the final sentence is not a selected Lean contract; nonnegative-quadrant preservation is separately proved for the constructed curvature and explicit activation pairs."
+  },
+  "thm:general_dc_network": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.Network.affine_convex_monotone_decomposition",
+      "HiddenMonotonicity.Network.convex_monotone_decomposition",
+      "HiddenMonotonicity.convex_monotone_pair_input",
+      "HiddenMonotonicity.Network.affine_signed_input_dc_decomposition",
+      "HiddenMonotonicity.Network.decomposition_nonnegative",
+      "HiddenMonotonicity.linear_chunk_properties"
+    ],
+    "scope": "Actual finite varying-width backbone with a shared scalar activation and genuine ungated signed affine readout: jointly convex monotone heads and exact recovery for all real pair inputs. Split-weight positivity suffices for these properties; nonnegative split biases and input streams additionally give nonnegative values through the separate network and affine-chunk results. Arbitrary convex input substitution is covered by the composition lemma, with the usual positive/negative split explicitly instantiated. Every suffix is an admissible network; no heterogeneous per-layer activation API is asserted."
+  },
+  "thm:absolute_curvature_split": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split",
+      "HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative",
+      "HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds",
+      "HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute",
+      "HiddenMonotonicity.SmoothDC.curvature_profile_difference"
+    ],
+    "scope": "Constructive global convex monotone exact pair from the actual positive and negative curvature integrals, under differentiability, locally absolutely continuous derivative, and integrable actual curvature; common normalization handles arbitrary f(0), with nonnegative values on the input quadrant. Lean uses C1/C2 plus the shared slope shift and constant offset. This is algebraically equivalent to the displayed D-based profiles, but no Lean equality bridge to that D formula, positive-infinity slope limit, displayed absolute-value coefficient formula, or coefficient-optimality claim is included."
+  },
+  "rem:global_curvature_necessity": {
+    "status": "not_formalized",
+    "lean": [],
+    "scope": "The global necessity argument for arbitrary finite convex coordinatewise monotone bivariate pairs is given analytically in the text. No Lean bounded-variation or curvature-measure necessity theorem is claimed; the formal profile iff only characterizes the specified affine-lift ansatz."
+  },
+  "cor:local_curvature_split": {
+    "status": "not_formalized",
+    "lean": [],
+    "scope": "The bounded-interval tangent-extension argument is proved in the manuscript. No Lean construction and gluing theorem for this extension has been integrated."
+  },
+  "cor:closed_form_dc_activations": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.SmoothDC.closed_form_activation_properties",
+      "HiddenMonotonicity.SmoothDC.gaussianGelu_explicit_split",
+      "HiddenMonotonicity.SmoothDC.explicitSwish_lift",
+      "HiddenMonotonicity.SmoothDC.explicitSwishPair_nonnegative",
+      "HiddenMonotonicity.SmoothDC.sigmoid_smooth_explicit_split",
+      "HiddenMonotonicity.SmoothDC.softplus_explicit_split"
+    ],
+    "scope": "The actual root-free table profiles for exact Gaussian GELU, positive-scale Swish, smooth sigmoid, and positive-temperature Softplus give globally convex coordinatewise monotone pairs, exact recovery, and nonnegative-quadrant preservation. The root-free formulas are distinct from the curvature-minimal profiles; no equality between these constructions is asserted."
+  },
+  "cor:smooth_dc_networks": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.SmoothDC.closed_form_affine_network",
+      "HiddenMonotonicity.SmoothDC.modern_curvature_affine_network",
+      "HiddenMonotonicity.Network.affine_signed_input_dc_decomposition",
+      "HiddenMonotonicity.SmoothDC.modern_curvature_network_nonnegative",
+      "HiddenMonotonicity.Network.decomposition_nonnegative",
+      "HiddenMonotonicity.linear_chunk_properties"
+    ],
+    "scope": "Complete same-parameter finite networks with a shared requested activation and ungated signed affine readout, using the actual root-free pairs or the integral-curvature pairs; the latter also cover Mish and tanh. Convexity and monotonicity hold on doubled inputs, while the standard signed input split preserves convexity and exact recovery. Nonnegative values use canonical nonnegative split biases and input streams, with the final affine chunk covered separately. No formal equality to every displayed canonical piecewise formula, and no heterogeneous per-layer activation interface, is claimed."
+  },
+  "prop:multivariate_dc_lift": {
+    "status": "partial",
+    "lean": [
+      "HiddenMonotonicity.SoftmaxDC.multivariateLift_convex",
+      "HiddenMonotonicity.SoftmaxDC.multivariateLift_monotone",
+      "HiddenMonotonicity.SoftmaxDC.multivariateLift_difference",
+      "HiddenMonotonicity.SoftmaxDC.multivariateLift_nonnegative",
+      "HiddenMonotonicity.SoftmaxDC.monotone_from_affine_line_deriv"
+    ],
+    "scope": "The formal helper covers the uniform-coefficient lift P(x-y)+L*sum(y)-c: sufficient convexity, sufficient monotonicity from monotonicity of P and L*sum-P, exact difference, and nonnegative-orthant preservation under c<=P(0). The source proposition additionally allows an arbitrary coefficient vector and states converse convexity/derivative-bound equivalences; those general clauses are not formalized by this leaf. The specialized softmax result is independently proved without these missing general converses."
+  },
+  "thm:softmax_dc_split": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.SoftmaxDC.softmax_split_properties",
+      "HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula",
+      "HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_formula",
+      "HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_zero",
+      "HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_zero",
+      "HiddenMonotonicity.SoftmaxDC.expSum_pos"
+    ],
+    "scope": "The literal normalized log-sum-exp plus/minus softmax heads for every finite nonempty index type and every output coordinate: global joint convexity and coordinatewise monotonicity on independent real stream vectors, exact recovery, and nonnegative values on the expanded nonnegative orthant. The normalizer is exactly (log(n)-1/n)/2, with origin values 1/n and 0. Singleton rows are included; empty rows are excluded. Actual softmax derivatives and curvature bounds are proved, not assumed. This is a row primitive, not a complete masked-attention or Transformer compilation theorem."
+  },
+  "prop:convex_product_pair": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.TransformerDC.productSplit_exact",
+      "HiddenMonotonicity.TransformerDC.productSplit_convex",
+      "HiddenMonotonicity.TransformerDC.productSplit_nonnegative",
+      "HiddenMonotonicity.TransformerDC.productSplit_monotoneOn",
+      "HiddenMonotonicity.TransformerDC.productSplit_convex_composition",
+      "HiddenMonotonicity.TransformerDC.productSplit_monotone_composition"
+    ],
+    "scope": "The literal polarized half-sums of squares have exact signed-product difference, globally convex nonnegative heads, and coordinatewise monotonicity on the nonnegative four-stream orthant. Composition with nonnegative convex input streams preserves convexity; composition with nonnegative monotone input streams preserves order. The square identity follows by using the same two input streams twice. No global product-head monotonicity or complete matrix/attention graph compiler is asserted by this primitive."
+  },
+  "prop:reciprocal_sqrt_pair": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.SmoothDC.inverseSqrtPair_properties",
+      "HiddenMonotonicity.SmoothDC.inverseSqrtSlope_eq",
+      "HiddenMonotonicity.SmoothDC.inverseSqrtExtension_hasDerivAt",
+      "HiddenMonotonicity.SmoothDC.inverseSqrtExtension_convex"
+    ],
+    "scope": "For every epsilon>0, the actual tangent extension and pair r(x-y)+M*x, M*x have globally convex coordinatewise monotone heads, nonnegative values on the input quadrant, and exact inverse-square-root recovery whenever the represented variance x-y is nonnegative. The coefficient is proved equal to 1/(2*epsilon^(3/2)); the joining derivative at zero is checked. This certifies only the scalar reciprocal-square-root normalization primitive, not centering, variance computation, learned scale/bias, or complete LayerNorm/Transformer composition."
+  },
+  "def:prenorm_transformer": {
+    "status": "encoded_definition",
+    "lean": [
+      "HiddenMonotonicity.TransformerDC.Transformer.eval",
+      "HiddenMonotonicity.TransformerDC.TransformerHead.eval",
+      "HiddenMonotonicity.TransformerDC.TransformerBlock.eval",
+      "HiddenMonotonicity.TransformerDC.Transformer.eval_syntax"
+    ],
+    "scope": "The actual ordinary pre-LayerNorm forward definition has independent signed affine projections, coupled masked softmax, input-dependent population-variance LayerNorm, attention and feedforward residuals, a finite block list including zero depth, positional bias, optional final normalization, and an ungated signed affine readout. Positive token/residual dimensions, positive head query/key and value widths, positive normalization epsilons, and nonempty fixed allowed-key sets are encoded in the parameter structures. Activations may vary between blocks. The source scalar readout is one coordinate of the formal finite-output model. This definition does not itself assert the split-head properties."
+  },
+  "thm:transformer_dc": {
+    "status": "formalized_variant",
+    "lean": [
+      "HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition",
+      "HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition",
+      "HiddenMonotonicity.TransformerDC.Transformer.decompose_exact",
+      "HiddenMonotonicity.TransformerDC.Transformer.eval_syntax",
+      "HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks",
+      "HiddenMonotonicity.TransformerDC.Expr.decompose_regular",
+      "HiddenMonotonicity.TransformerDC.Expr.decompose_exact",
+      "HiddenMonotonicity.TransformerDC.Expr.splitEval_exact",
+      "HiddenMonotonicity.TransformerDC.Expr.splitEval_regular"
+    ],
+    "scope": "The actual finite pre-LayerNorm Transformer forward map is defined independently of its compiler: positive token and residual dimensions; a finite block list including the empty list; positive query/key and value widths; fixed nonempty allowed-key sets; arbitrary signed affine Q/K/V projections, head output projections, biases and real score scales; actual coupled softmax and population-variance epsilon LayerNorm; two residual additions; block-specific ReLU, exact Gaussian GELU, positive-parameter Swish, sigmoid or positive-parameter softplus; positional bias; optional final LayerNorm; and an ungated signed affine readout. The main contract proves nonnegative convex coordinatewise monotone output heads on the independent doubled-input orthant and exact recovery (in fact for all real stream pairs). The companion raw_dc_decomposition proves globally convex nonnegative heads after positive/negative raw-input splitting, without claiming raw-input monotonicity. Arbitrary finite depth is a list, not an assumed decomposition certificate. Structural recursion is a total real-arithmetic specification; no floating-point stability, runtime bound, attribution quality or general post-normalization architecture is asserted."
   }
 }

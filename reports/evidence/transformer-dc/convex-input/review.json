@@ -1,0 +1,52 @@
+{
+  "status": "pass",
+  "reviewer": "/root/transformer_lean_architecture/pair_calculus/pair_review",
+  "scope": "Convexity of substitution through arbitrary convex nonnegative coordinates into a head convex and monotone on the nonnegative orthant; specialization to positive/negative parts of raw inputs. No raw-input monotonicity or output nonnegativity is asserted by these two theorems.",
+  "expected_contracts": 2,
+  "imported_project_theorem_axiom_audits": 34,
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "commands": [
+    {
+      "command": "lake build +HiddenMonotonicity.TransformerConvexInput",
+      "owner": "producer",
+      "exit_code": 0,
+      "log": "../pair-calculus/convex-input-build.log"
+    },
+    {
+      "command": "lake env lean ../reports/evidence/transformer-dc/convex-input/Exact.lean",
+      "exit_code": 0,
+      "log": "exact.log"
+    },
+    {
+      "command": "lake env lean ../reports/evidence/transformer-dc/convex-input/Boundary.lean",
+      "exit_code": 0,
+      "log": "boundary.log"
+    }
+  ],
+  "semantic_findings": [
+    "The incoming coordinate functions need convexity and nonnegativity, with no incoming monotonicity assumption.",
+    "Both points at which the outer monotonicity comparison is applied are proved to lie in the nonnegative orthant.",
+    "The ambient source domain is explicitly convex, ensuring the mixed input is in-domain.",
+    "The raw-input specialization uses max(x_i,0) and max(-x_i,0), both convex and nonnegative; no claim that both are monotone in x_i.",
+    "A documentation overstatement about output nonnegativity was corrected; theorem statements and proof terms were unchanged, and the final documented source rebuilt successfully."
+  ],
+  "boundary_checks": [
+    "A one-coordinate sum head gives the convex absolute-value raw-input pullback.",
+    "Negative-part input coordinate is explicitly shown not to be monotone on all real inputs."
+  ],
+  "contract_diagnostic": "The initial independently authored expected contract accidentally shared the E/ι universes. The checker rejected that universe arity, confirming the production theorem quantifies them independently. The corrected u/v contract passes; initial evidence retained in exact-universe-mismatch.log.",
+  "limitations": [
+    "This is local diagnostic review; the parent must integrate the module and run the final clean committed verification gate.",
+    "Nonnegativity of the resulting raw-input head additionally requires nonnegativity of the outer head on the orthant; that is supplied by the Transformer Regular theorem, not assumed here."
+  ],
+  "sha256": {
+    "formalization/HiddenMonotonicity/TransformerConvexInput.lean": "7ed5b6d305b71471e2ce835056695ceb726017df2676220148fd042b588b9bb6",
+    "reports/evidence/transformer-dc/convex-input/contracts.json": "28e730a151855acf5f81697b75fc73c251e6cf8da0d35a62bec6dc19472441ad",
+    "reports/evidence/transformer-dc/convex-input/Exact.lean": "929c8754a7d131543448fc2f59ab287c49ce91c5a112bee1e4771427ac5dbda6",
+    "reports/evidence/transformer-dc/convex-input/Boundary.lean": "e4bb1bb26eceb8971b7369dfec35965e0f1841fe46f8d8e50f0640e3a86a4a8a"
+  }
+}

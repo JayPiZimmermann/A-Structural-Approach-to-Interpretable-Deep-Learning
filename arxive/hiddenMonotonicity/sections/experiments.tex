@@ -6,9 +6,9 @@
 All models and experiments are implemented using PyTorch~\citep{Paszke2019PyTorch}.
 
 \paragraph{Model and Dataset}
-We employ a pretrained VGG16 model on the ImageNet \cite{Deng2009} classification task.
+We employ pretrained VGG16 and ResNet18 models on the ImageNet \cite{Deng2009} classification task.
 Because localization metrics require ground-truth object segmentation masks, we evaluate on ImageNet-S-50~\citep{Gao2022imagenets}, which provides pixel-level semantic segmentation annotations for 50 ImageNet classes, excluding unsegmentable classes (\eg \emph{bookshop}).
-The dataset is partitioned into a validation set (50 images, one randomly selected for each class) and a test set (the remaining 566 images) for final evaluation.
+The reported experiment uses a validation set of 50 images, one randomly selected for each class, and a test set of 566 images. The released loader selects from locally available image--mask pairs and does not check agreement between the annotation class and the official ILSVRC2012 label; the historical sample membership cannot be reconstructed from the reported counts alone. Attributions target the model's predicted class, including for misclassified images, while localization is evaluated against the annotated object mask.
 
 \paragraph{Baseline Methods}
 We compare our Split methods against a range of established attribution approaches. Gradient-based methods include Saliency~\citep{Simonyan2014}, Input~$\times$~Gradient~\citep{Shrikumar2017}, Integrated Gradients~\citep{Sundararajan2017} and GradientSHAP~\citep{LundbergLee2017}. CAM-based methods comprise Layer-CAM~\citep{Jiang2021LayerCAM} and Grad-CAM++~\citep{Chattopadhay2018}. Among propagation-based techniques, we evaluate DeepLift~\citep{Shrikumar2017} and standard LRP with $\gamma=0.25$~\citep{Bach2015}. Finally, perturbation-based baselines include Occlusion~\citep{ZeilerFergus2014} and Feature Ablation.
@@ -24,7 +24,7 @@ We evaluate explanations using the Quantus library \citep{Hedstrom2023}, which p
 We adopt Quantus recommended default settings with several modifications for computational efficiency and to match common XAI evaluation practices. Full configurations and seeds are included in the supplementary code.              
 
 Faithfulness metrics, such as \emph{Pixel Flipping} \citep{Bach2015} and \emph{Selectivity} \citep{Montavon2018}, assess whether explanations reflect the model's true decision process. Pixel Flipping measures the drop of           
-the respective class logit when pixels are ``removed'' in decreasing attribution order. We perturb 112 pixels per step and replace them with the image mean, following. We report the area under the curve (AUC) of this drop at $5\%$ and $20\%$, where a faster drop means higher area under the drop curve. Selectivity perturbs pixels smoothly instead of masking.
+the respective class logit when input features are replaced in decreasing attribution order. The Quantus evaluator broadcasts the spatial attribution over color channels and perturbs 112 scalar features of the flattened $C\times H\times W$ input per step, replacing them with the input mean. For $3\times224\times224$ RGB inputs, this feature space has dimension $150{,}528$. We report the area under the curve (AUC) of the score drop at $5\%$ and $20\%$, where a faster drop means higher area under the drop curve. Selectivity replaces non-overlapping $8\times8$ spatial patches with the input mean, in decreasing order of summed attribution.
 Here, by the Quantus standard implementation a smaller value indicates a faster drop.
 
 Localization metrics evaluate whether explanations highlight the correct spatial regions. \emph{Attribution Localization} \citep{Kohlbrenner2020} computes the ratio of attribution mass within the ground-truth segmentation          
@@ -42,7 +42,7 @@ except for Maximum Sensitivity.
 For each split based attribution method and the baselines $\gamma$-LRP, standard LayerCAM, standard GradCAM, Guided Backpropagation and Guided LayerCAM we evaluate all layer–formula combinations on the validation set across all Quantus metrics.
 This selection includes the layer-wise decision if to apply the absolute value to the attribution maps and layer-wise configurations for the split methods.
 We select the configuration that (i) have the best average rank in the two considered localization metrics as well as (ii) the best average rank across the Pixel Flipping metrics.
-All metrics are tuned on the custom validation subset of ImageNet-S and evaluated on the custom test subset to ensure robustness and prevent overfitting.
+Configurations are selected on the custom validation subset of ImageNet-S and evaluated on the custom test subset, keeping configuration selection separate from test measurement.
 
 \subsection{Results}
 
@@ -58,18 +58,16 @@ Overall, mid-layer SplitCAM offers an effective balance between interpretability
 
 \input{sections/table_main_generated_res}
 
-\Cref{tab:eval_vgg_main} and \cref{tab:eval_res_main} report a comprehensive comparison of attribution methods on VGG16 and ResNet18 across five key Quantus metrics: Selectivity, Attribution Localization, Pointing Game accuracy, Pixel Flipping (AUC@5 and AUC@20) and Maximum Sensitivity.
+\Cref{tab:eval_vgg_main} and \cref{tab:eval_res_main} compare selected attribution configurations on VGG16 and ResNet18 across five key Quantus metrics: Selectivity, Attribution Localization, Pointing Game accuracy, Pixel Flipping (AUC@5 and AUC@20) and Maximum Sensitivity.
 The \emph{Abs} column specifies whether absolute saliency values were used prior to evaluation in Quantus.
 A full table and explanation of both VGG16 and ResNet18 evaluation results with all selected layers and other parameter configurations is found in \cref{app:saliency}.
 
 Overall, the considered backpropagation-based attribution methods heavily depend on the selected network layer, also see \cref{app:ablation} for extensive ablation.
 
-On VGG, the Split methods demonstrate superior performance compared to all considered baseline methods across the Quantus metric categories.
-For example, SplitCAM achieves the highest Pointing Game score \textbf{0.938} with $\alpha = 0.4$ overshadowing the best baseline Guided Backprop in layer 5 with $0.887$ and LayerCAM in layer 2 with $0.855$.
-SplitCAM outperforms classical methods on Selectivity, with comparable Pixel Flipping performance as the most faithful baseline LayerCAM.
-SplitLRP slightly outperforms classical $\gamma$-LRP in localization while staying competitive in Faithfulness.
+On VGG16, the gains depend on the metric and configuration. In \cref{tab:eval_vgg_main}, SplitCAM reaches a Pointing Game score of $0.938$ versus $0.887$ for Guided Backprop, Attribution Localization of $0.651$ versus $0.632$ for Guided Backprop, and Selectivity of $2.727$ versus $2.792$ for LayerCAM. These SplitCAM values come from different layers.
+LayerCAM retains the highest Pixel Flipping score-drop AUCs, $0.317$ and $2.474$, compared with SplitCAM's $0.300$ and $2.404$ in the displayed configurations. SplitLRP has the lowest Maximum Sensitivity, $0.282$, compared with $0.375$ for Guided Backprop. Its Pointing Game score exceeds those of the displayed classical $\gamma$-LRP configurations, while its Attribution Localization and Pixel Flipping scores are lower.
 
-On ResNet18, the Split method slightly improve the Selectivity and Pointing Game metrics of the strongest baseline LayerCAM, while staying competitive with the other baselines across the considered metrics.
+On ResNet18, SplitCAM has the lowest reported Selectivity, $3.503$, compared with $3.517$ for the strongest baseline, Guided Backprop: a numerical difference of $0.014$. SplitCAM and SplitGrad reach a Pointing Game score of $0.972$, compared with LayerCAM's $0.971$. SplitCAM's Attribution Localization of $0.673$ exceeds LayerCAM's $0.664$, but the full comparison reports a higher value of $0.742$ for Guided Grad-CAM (\cref{tab:xai_eval_comprehensive_res}). The baselines also retain the best Pixel Flipping scores and Maximum Sensitivity, so the results support metric-specific gains.
 
 \subsubsection{Ablation studies.} \label{subsec:ablation}
 
@@ -77,5 +75,5 @@ On ResNet18, the Split method slightly improve the Selectivity and Pointing Game
 
 Table \ref{tab:alpha_ablation_main} presents the performance of two selected SplitGrad and SplitCAM configurations across different shifting parameters $\alpha$, evaluated on our custom ImageNet-S test split.
 As explained in \cref{sec:backward} the $\alpha$ value determines how much we stablize the backward pass, where $\alpha=0$ results in no stabilization and $\alpha = 0.5$ results in local sensitivities resembling scaled versions of the original network gradient.
-It is evident that performance for all considered metrics increases with $\alpha$ smaller than $0.5$ but diminishes for very small $\alpha$ values, except Maximum Sensitivity is best for $\alpha=0$. This demonstrates that both the splitting and the backward pass stabilization boost our explanations.
+Within this ablation, reducing $\alpha$ from $0.5$ to $0.4$ improves Pointing Game and Attribution Localization for both configurations, while SplitCAM's Pixel Flipping AUC@20 decreases from $1.607$ to $1.585$. SplitGrad reaches its highest AUC@20 at $\alpha = 0.4$ and its highest localization scores at $\alpha = 0.35$; SplitCAM's Pointing Game and Attribution Localization optima occur at $0.4$ and $0.35$, respectively. Maximum Sensitivity is lowest at $\alpha = 0$ for both configurations. The sweep therefore supports a metric-dependent choice of $\alpha$ and does not isolate the effect of numerical stabilization from the change in attribution rule.
 We provide further ablation studies in \cref{app:ablation}.

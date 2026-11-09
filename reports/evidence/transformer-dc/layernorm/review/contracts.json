@@ -1,0 +1,53 @@
+{
+  "public_root": "HiddenMonotonicity.LayerNormDCLift",
+  "targets": [
+    {
+      "task": "transformer-layernorm-extension-derivative",
+      "module": "HiddenMonotonicity.LayerNormDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.inverseSqrtExtension_hasDerivAt",
+      "expected_type": "∀ ε : ℝ, 0 < ε → ∀ z : ℝ, HasDerivAt (HiddenMonotonicity.SmoothDC.inverseSqrtExtension ε) (HiddenMonotonicity.SmoothDC.inverseSqrtExtensionDeriv ε z) z"
+    },
+    {
+      "task": "transformer-layernorm-extension-convex",
+      "module": "HiddenMonotonicity.LayerNormDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.inverseSqrtExtension_convex",
+      "expected_type": "∀ ε : ℝ, 0 < ε → ConvexOn ℝ Set.univ (HiddenMonotonicity.SmoothDC.inverseSqrtExtension ε)"
+    },
+    {
+      "task": "transformer-layernorm-pair-convex",
+      "module": "HiddenMonotonicity.LayerNormDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.inverseSqrtPair_convex",
+      "expected_type": "∀ ε : ℝ, 0 < ε → ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).1) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).2)"
+    },
+    {
+      "task": "transformer-layernorm-pair-monotone",
+      "module": "HiddenMonotonicity.LayerNormDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.inverseSqrtPair_monotone",
+      "expected_type": "∀ ε : ℝ, 0 < ε → Monotone (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε)"
+    },
+    {
+      "task": "transformer-layernorm-pair-nonnegative",
+      "module": "HiddenMonotonicity.LayerNormDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.inverseSqrtPair_nonneg",
+      "expected_type": "∀ ε : ℝ, 0 < ε → ∀ z : ℝ × ℝ, 0 ≤ z → 0 ≤ HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z"
+    },
+    {
+      "task": "transformer-layernorm-pair-recovery",
+      "module": "HiddenMonotonicity.LayerNormDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.inverseSqrtPair_difference",
+      "expected_type": "∀ ε : ℝ, 0 < ε → ∀ z : ℝ × ℝ, 0 ≤ z.1 - z.2 → (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).1 - (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).2 = (Real.sqrt (ε + (z.1 - z.2)))⁻¹"
+    },
+    {
+      "task": "transformer-layernorm-slope-denominator",
+      "module": "HiddenMonotonicity.LayerNormDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.inverseSqrtSlope_eq",
+      "expected_type": "∀ ε : ℝ, 0 < ε → HiddenMonotonicity.SmoothDC.inverseSqrtSlope ε = 1 / (2 * ε ^ (3 / 2 : ℝ))"
+    },
+    {
+      "task": "transformer-layernorm-pair-properties",
+      "module": "HiddenMonotonicity.LayerNormDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.inverseSqrtPair_properties",
+      "expected_type": "∀ ε : ℝ, 0 < ε → Monotone (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).1) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).2) ∧ (∀ z : ℝ × ℝ, 0 ≤ z → 0 ≤ HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z) ∧ (∀ z : ℝ × ℝ, 0 ≤ z.1 - z.2 → (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).1 - (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).2 = (Real.sqrt (ε + (z.1 - z.2)))⁻¹)"
+    }
+  ]
+}

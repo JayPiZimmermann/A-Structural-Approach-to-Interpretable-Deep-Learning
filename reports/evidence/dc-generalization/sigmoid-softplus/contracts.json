@@ -1,0 +1,24 @@
+{
+  "targets": [
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.sigmoid_explicit_split",
+      "module": "HiddenMonotonicity.ExplicitSigmoidSoftplus",
+      "expected_type": "ConvexOn ℝ Set.univ (fun z => (sigmoidExplicitPair z).1) ∧ ConvexOn ℝ Set.univ (fun z => (sigmoidExplicitPair z).2) ∧ Monotone sigmoidExplicitPair ∧ ValidPairActivation Real.sigmoid sigmoidExplicitPair ∧ NonnegativePairActivation sigmoidExplicitPair",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-sigmoid-explicit-split",
+      "review_evidence": "reports/evidence/dc-generalization/sigmoid-softplus/Boundary.lean",
+      "scope": "Both explicit sigmoid branches are globally convex and coordinatewise monotone, have exact difference recovery, and preserve nonnegativity on the nonnegative quadrant."
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.sigmoidExplicitPair_closed_form",
+      "module": "HiddenMonotonicity.ExplicitSigmoidSoftplus",
+      "expected_type": "∀ x y : ℝ, sigmoidExplicitPair (x, y) = (if x ≤ y then Real.sigmoid (x - y) + y / 4 else 1 / 2 + x / 4, if x ≤ y then y / 4 else 1 / 2 + x / 4 - Real.sigmoid (x - y))",
+      "open_namespaces": ["HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "dc-generalization-sigmoid-closed-form",
+      "review_evidence": "reports/evidence/dc-generalization/sigmoid-softplus/Boundary.lean",
+      "scope": "Closed piecewise formulas evaluated directly on both stream coordinates."
+    }
+  ]
+}

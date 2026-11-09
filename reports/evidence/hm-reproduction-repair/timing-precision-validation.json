@@ -1,0 +1,39 @@
+{
+  "scope": "Local CPU regression checks for timing and single/batched saliency precision",
+  "python": "/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python",
+  "working_directory": "code/hidden_monotonicity",
+  "command": "python -m unittest discover -s tests -p test_timing_precision.py -v",
+  "result": {
+    "tests": 4,
+    "status": "passed",
+    "elapsed_seconds_reported_by_unittest": 1.287
+  },
+  "environment": {
+    "python_version": "3.12.3",
+    "torch": "2.11.0",
+    "torchvision": "0.26.0",
+    "numpy": "2.4.4",
+    "quantus": "0.6.0",
+    "captum": "0.9.0",
+    "device": "cpu"
+  },
+  "confirmed_regression": "A real float64 convolutional model passed to compute_explanation with Saliency returned None after RuntimeError: Input type (float) and bias type (double) should be the same. Both the repository's numpy.float32 conversion and Quantus's torch.Tensor numpy conversion forced float32.",
+  "coverage": [
+    "CLI default float32 and explicit float64 reach model loading, actual HybridDecomposer execution, actual Quantus/Captum Saliency and saved timing metadata",
+    "Synthetic model constructors replace pretrained torchvision downloads, one actual split iteration per model slot replaces twenty, and one synthetic image replaces the ImageNet-S validation set",
+    "Both precision paths produce finite saliency and finite nonnegative timing CSV values",
+    "Batched Saliency runs on two synthetic images in each precision and returns finite nonzero maps in the requested dtype",
+    "Custom ImageNet and ImageNet-S paths are forwarded and recorded",
+    "Timing config default resolves to an existing repository directory",
+    "Unsupported dtype is rejected before dataset loading",
+    "Absolute CLI script invocation with --help succeeds from /tmp"
+  ],
+  "limitations": [
+    "No pretrained models or datasets were downloaded; these checks do not reproduce the historical ImageNet timing benchmark",
+    "Only CPU execution and the Saliency attribution method were exercised",
+    "Other agents' optional sparse import repairs were present for the decomposition checks",
+    "The installed CUDA runtime reported an old-driver warning; execution was explicitly constrained to CPU",
+    "NumPy 2.4.4 in this narrow check does not establish compatibility with other Quantus metrics; the broader validation environment is recorded separately"
+  ],
+  "review": "Independent read-only code review found no blocking defect in the dtype/data-path propagation, portable root, metadata or tensor-preserving saliency calls."
+}

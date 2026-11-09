@@ -1,0 +1,613 @@
+{
+  "authorship": "Aggregation only: expected statements were independently handwritten and checked in the referenced producer/reviewer files, never derived from inferred Lean types.",
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "targets": [
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.asymmetricLift_convex_iff",
+      "expected_type": "∀ (C : ℝ → ℝ) (L : ℝ), ConvexOn ℝ Set.univ (asymmetricLift C L) ↔ ConvexOn ℝ Set.univ C",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERIC-CONVEX-IFF",
+      "scope": "Global convexity is equivalent to convexity of the univariate profile, for the specified affine lift.",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff_increments",
+      "expected_type": "∀ (C : ℝ → ℝ) (L : ℝ), Monotone (asymmetricLift C L) ↔ ∀ a b : ℝ, a ≤ b → 0 ≤ C b - C a ∧ C b - C a ≤ L * (b - a)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERIC-INCREMENTS-IFF",
+      "scope": "Coordinatewise monotonicity is equivalent to all increasing secant increments lying between zero and width L times the increment; no differentiability requirement.",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff",
+      "expected_type": "∀ (C D : ℝ → ℝ) (hC : ∀ x : ℝ, HasDerivAt C (D x) x) (L : ℝ), Monotone (asymmetricLift C L) ↔ ∀ x : ℝ, 0 ≤ D x ∧ D x ≤ L",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERIC-DERIVATIVE-IFF",
+      "scope": "For an everywhere differentiable profile, the exact criterion for the specified affine lift is that its derivative lies in [0,L] everywhere.",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.asymmetric_split",
+      "expected_type": "∀ (P Q f : ℝ → ℝ) (L : ℝ) (hP : ConvexOn ℝ Set.univ P) (hQ : ConvexOn ℝ Set.univ Q) (hPd : ∀ a b : ℝ, a ≤ b → 0 ≤ P b - P a ∧ P b - P a ≤ L * (b - a)) (hQd : ∀ a b : ℝ, a ≤ b → 0 ≤ Q b - Q a ∧ Q b - Q a ≤ L * (b - a)) (hdiff : ∀ t : ℝ, P t - Q t = f t), ConvexOn ℝ Set.univ (asymmetricLift P L) ∧ ConvexOn ℝ Set.univ (asymmetricLift Q L) ∧ Monotone (asymmetricLift P L) ∧ Monotone (asymmetricLift Q L) ∧ ∀ z : ℝ × ℝ, asymmetricLift P L z - asymmetricLift Q L z = f (z.1 - z.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERIC-SPLIT",
+      "scope": "The genuine abstract profile hypotheses yield two globally convex and coordinatewise monotone streams with exact reconstruction on all of R².",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.asymmetricLift_common_shift",
+      "expected_type": "∀ (C : ℝ → ℝ) (L x y c : ℝ), asymmetricLift C L (x + c, y + c) = asymmetricLift C L (x, y) + L * c",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERIC-COMMON-SHIFT",
+      "scope": "A common signed shift of the input streams adds exactly L times that shift to each lifted stream.",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.asymmetricLift_relu",
+      "expected_type": "∀ z : ℝ × ℝ, asymmetricLift relu 1 z = max z.1 z.2 ∧ asymmetricLift (fun _ : ℝ => 0) 1 z = z.2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERIC-RELU-MAX-IDENTITY",
+      "scope": "Exact global specialization to max and the second-coordinate identity, including signed input streams.",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.relu_asymmetric_split",
+      "expected_type": "ConvexOn ℝ Set.univ (asymmetricLift relu 1) ∧ ConvexOn ℝ Set.univ (asymmetricLift (fun _ : ℝ => 0) 1) ∧ Monotone (asymmetricLift relu 1) ∧ Monotone (asymmetricLift (fun _ : ℝ => 0) 1) ∧ ∀ z : ℝ × ℝ, asymmetricLift relu 1 z - asymmetricLift (fun _ : ℝ => 0) 1 z = relu (z.1 - z.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERIC-RELU-SPLIT",
+      "scope": "ReLU itself satisfies the full generic split conclusion despite its nonsmooth point at zero.",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute",
+      "expected_type": "∀ (f : ℝ → ℝ) (x : ℝ), positiveCurvature f x = (|curvature f x| + curvature f x) / 2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC",
+        "MeasureTheory"
+      ],
+      "universes": [],
+      "review_id": "DC-CURVATURE-POSITIVE-ABSOLUTE",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/curvature/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/curvature/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute",
+      "expected_type": "∀ (f : ℝ → ℝ) (x : ℝ), negativeCurvature f x = (|curvature f x| - curvature f x) / 2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC",
+        "MeasureTheory"
+      ],
+      "universes": [],
+      "review_id": "DC-CURVATURE-NEGATIVE-ABSOLUTE",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/curvature/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/curvature/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute",
+      "expected_type": "∀ (f : ℝ → ℝ) (hq : Integrable (curvature f)), totalPositiveCurvature f + totalNegativeCurvature f = ∫ t, |curvature f t|",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC",
+        "MeasureTheory"
+      ],
+      "universes": [],
+      "review_id": "DC-CURVATURE-TOTAL-ABSOLUTE",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/curvature/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/curvature/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds",
+      "expected_type": "∀ (f : ℝ → ℝ) (hq : Integrable (curvature f)) (x : ℝ), (0 ≤ D1 f x + curvatureSlopeShift f ∧ D1 f x + curvatureSlopeShift f ≤ curvatureLiftWidth f) ∧ (0 ≤ D2 f x + curvatureSlopeShift f ∧ D2 f x + curvatureSlopeShift f ≤ curvatureLiftWidth f)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC",
+        "MeasureTheory"
+      ],
+      "universes": [],
+      "review_id": "DC-CURVATURE-EXPLICIT-SLOPE-BOUNDS",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/curvature/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/curvature/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvature_profile_difference",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)) (x : ℝ), curvaturePositiveProfile f x - curvatureNegativeProfile f x = f x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC",
+        "MeasureTheory"
+      ],
+      "universes": [],
+      "review_id": "DC-CURVATURE-ACTUAL-PROFILE-RECONSTRUCTION",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/curvature/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/curvature/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ConvexOn ℝ Set.univ (fun z => (curvatureLiftPair f z).1) ∧ ConvexOn ℝ Set.univ (fun z => (curvatureLiftPair f z).2) ∧ Monotone (fun z => (curvatureLiftPair f z).1) ∧ Monotone (fun z => (curvatureLiftPair f z).2) ∧ ∀ p q : ℝ, (curvatureLiftPair f (p, q)).1 - (curvatureLiftPair f (p, q)).2 = f (p - q)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC",
+        "MeasureTheory"
+      ],
+      "universes": [],
+      "review_id": "DC-CURVATURE-GLOBAL-SPLIT",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/curvature/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/curvature/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)) (hzero : 0 ≤ f 0), ∀ p q : ℝ, 0 ≤ p → 0 ≤ q → 0 ≤ (curvatureLiftPair f (p, q)).1 ∧ 0 ≤ (curvatureLiftPair f (p, q)).2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC",
+        "MeasureTheory"
+      ],
+      "universes": [],
+      "review_id": "DC-CURVATURE-NONNEGATIVE-ORTHANT",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/curvature/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/curvature/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ConvexOn ℝ Set.univ (fun z => (normalizedCurvatureLiftPair f z).1) ∧ ConvexOn ℝ Set.univ (fun z => (normalizedCurvatureLiftPair f z).2) ∧ Monotone (fun z => (normalizedCurvatureLiftPair f z).1) ∧ Monotone (fun z => (normalizedCurvatureLiftPair f z).2) ∧ ∀ p q : ℝ, (normalizedCurvatureLiftPair f (p, q)).1 - (normalizedCurvatureLiftPair f (p, q)).2 = f (p - q)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC",
+        "MeasureTheory"
+      ],
+      "universes": [],
+      "review_id": "DC-CURVATURE-NORMALIZED-GLOBAL-SPLIT",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/curvature/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/curvature/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ∀ p q : ℝ, 0 ≤ p → 0 ≤ q → 0 ≤ (normalizedCurvatureLiftPair f (p, q)).1 ∧ 0 ≤ (normalizedCurvatureLiftPair f (p, q)).2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC",
+        "MeasureTheory"
+      ],
+      "universes": [],
+      "review_id": "DC-CURVATURE-NORMALIZED-NONNEGATIVE-ORTHANT",
+      "contract_source": "reports/evidence/dc-generalization/generic-review/curvature/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/generic-review/curvature/receipt.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneNetwork",
+      "declaration": "HiddenMonotonicity.Network.convex_monotone_decomposition",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hw : net.Nonnegative) (σ : ℝ → ℝ) (φ : (ℝ × ℝ) → ℝ × ℝ) (hv : ValidPairActivation σ φ) (hm : Monotone φ) (hc : ConvexPairActivation φ), Monotone (net.decomposeWith φ) ∧ (∀ i, ConvexOn ℝ univ (fun x : PairVec n => (net.decomposeWith φ x).1 i)) ∧ (∀ i, ConvexOn ℝ univ (fun x : PairVec n => (net.decomposeWith φ x).2 i)) ∧ ∀ x : PairVec n, (net.decomposeWith φ x).1 - (net.decomposeWith φ x).2 = net.forwardWith σ (x.1 - x.2)",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERAL-NETWORK-complete-network",
+      "review_evidence": "reports/evidence/dc-generalization/network/review.json",
+      "scope": "Actual complete decomposeWith network: global coordinatewise monotonicity, joint coordinatewise convexity on PairVec, and exact forwardWith recovery. Only split weights are nonnegative; biases and input streams may be signed. No smoothness or input nonnegativity hypothesis.",
+      "contract_source": "reports/evidence/dc-generalization/network/expected-types.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneNetwork",
+      "declaration": "HiddenMonotonicity.Network.decomposeWith_convex_input",
+      "expected_type": "∀ {d n m : ℕ} (net : Network n m) (hw : net.Nonnegative) (φ : (ℝ × ℝ) → ℝ × ℝ) (hm : Monotone φ) (hc : ConvexPairActivation φ) (p q : Vec d → Vec n) (hp : ∀ i, ConvexOn ℝ univ (fun x => p x i)) (hq : ∀ i, ConvexOn ℝ univ (fun x => q x i)), (∀ i, ConvexOn ℝ univ (fun x => (net.decomposeWith φ (p x,q x)).1 i)) ∧ (∀ i, ConvexOn ℝ univ (fun x => (net.decomposeWith φ (p x,q x)).2 i))",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERAL-NETWORK-convex-inputs",
+      "review_evidence": "reports/evidence/dc-generalization/network/review.json",
+      "scope": "Arbitrary coordinatewise convex input streams into the actual complete split network. No affine-only input restriction; no assertion that a signed input lift is monotone in the original input.",
+      "contract_source": "reports/evidence/dc-generalization/network/expected-types.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneNetwork",
+      "declaration": "HiddenMonotonicity.convex_monotone_pair_input",
+      "expected_type": "∀ {d n : ℕ} (f : PairVec n → ℝ) (hm : Monotone f) (hf : ConvexOn ℝ univ f) (p q : Vec d → Vec n) (hp : ∀ i, ConvexOn ℝ univ (fun x => p x i)) (hq : ∀ i, ConvexOn ℝ univ (fun x => q x i)), ConvexOn ℝ univ (fun x => f (p x,q x))",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERAL-NETWORK-scalar-convex-composition",
+      "review_evidence": "reports/evidence/dc-generalization/network/review.json",
+      "scope": "Scalar monotone jointly convex maps of two input streams preserve convexity under coordinatewise convex stream substitution; this applies to actual signed affine readout heads.",
+      "contract_source": "reports/evidence/dc-generalization/network/expected-types.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneReadout",
+      "declaration": "HiddenMonotonicity.Network.affineDecomposeWith_recovery",
+      "expected_type": "∀ (n m k : ℕ) (backbone : Network n m)\n    (activation : ℝ → ℝ) (lift : (ℝ × ℝ) → ℝ × ℝ),\n    ValidPairActivation activation lift →\n    ∀ (positive negative : Matrix (Fin k) (Fin m) ℝ)\n      (positiveBias negativeBias : Vec k) (input : PairVec n),\n      (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).1 -\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).2 =\n        affineLayer positive negative positiveBias negativeBias\n          (backbone.forwardWith activation (input.1 - input.2))",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERAL-READOUT-signed-affine-recovery",
+      "review_evidence": "reports/evidence/dc-generalization/readout/review.json",
+      "scope": "Exact vector-valued ungated signed affine output recovery for all finite dimensions, arbitrary activation and valid pair lift, arbitrary split matrices and biases, and arbitrary pair inputs. No nonnegativity hypothesis is needed for recovery.",
+      "contract_source": "reports/evidence/dc-generalization/readout/expected-types.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneReadout",
+      "declaration": "HiddenMonotonicity.Network.affine_convex_monotone_decomposition",
+      "expected_type": "∀ (n m k : ℕ) (backbone : Network n m), backbone.Nonnegative →\n    ∀ (activation : ℝ → ℝ) (lift : (ℝ × ℝ) → ℝ × ℝ),\n    ValidPairActivation activation lift → Monotone lift →\n    (ConvexOn ℝ Set.univ (fun z => (lift z).1) ∧\n      ConvexOn ℝ Set.univ (fun z => (lift z).2)) →\n    ∀ (positive negative : Matrix (Fin k) (Fin m) ℝ),\n      (∀ i j, 0 ≤ positive i j) → (∀ i j, 0 ≤ negative i j) →\n    ∀ (positiveBias negativeBias : Vec k),\n      Monotone (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias) ∧\n      (∀ j, ConvexOn ℝ Set.univ (fun input : PairVec n =>\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).1 j)) ∧\n      (∀ j, ConvexOn ℝ Set.univ (fun input : PairVec n =>\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).2 j)) ∧\n      ∀ input : PairVec n,\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).1 -\n          (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).2 =\n          affineLayer positive negative positiveBias negativeBias\n            (backbone.forwardWith activation (input.1 - input.2))",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERAL-READOUT-joint-convex-monotone-affine-heads",
+      "review_evidence": "reports/evidence/dc-generalization/readout/review.json",
+      "scope": "Actual complete decomposeWith network followed by an ungated affine readout. Both heads are jointly convex and monotone on the full PairVec input space, with exact forwardWith recovery. Split weight matrices are nonnegative; biases and target output are unrestricted.",
+      "contract_source": "reports/evidence/dc-generalization/readout/expected-types.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneReadout",
+      "declaration": "HiddenMonotonicity.Network.affine_dc_decomposition",
+      "expected_type": "∀ (n m k : ℕ) (backbone : Network n m), backbone.Nonnegative →\n    ∀ (activation : ℝ → ℝ) (lift : (ℝ × ℝ) → ℝ × ℝ),\n    ValidPairActivation activation lift → Monotone lift →\n    (ConvexOn ℝ Set.univ (fun z => (lift z).1) ∧\n      ConvexOn ℝ Set.univ (fun z => (lift z).2)) →\n    ∀ (positive negative : Matrix (Fin k) (Fin m) ℝ),\n      (∀ i j, 0 ≤ positive i j) → (∀ i j, 0 ≤ negative i j) →\n    ∀ (positiveBias negativeBias : Vec k),\n      Monotone (fun input : Vec n =>\n        backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)) ∧\n      (∀ j, ConvexOn ℝ Set.univ (fun input : Vec n =>\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)).1 j)) ∧\n      (∀ j, ConvexOn ℝ Set.univ (fun input : Vec n =>\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)).2 j)) ∧\n      ∀ input : Vec n,\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)).1 -\n          (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)).2 =\n          affineLayer positive negative positiveBias negativeBias\n            (backbone.forwardWith activation input)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERAL-READOUT-ordinary-signed-input-dc",
+      "review_evidence": "reports/evidence/dc-generalization/readout/review.json",
+      "scope": "Restrict the actual pair network and ungated affine readout to x mapped to (x,0), giving two convex and monotone heads on every signed Vec input and exact original-network affine recovery. No nonnegative input assumption.",
+      "contract_source": "reports/evidence/dc-generalization/readout/expected-types.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneReadout",
+      "declaration": "HiddenMonotonicity.Network.affine_signed_input_dc_decomposition",
+      "expected_type": "∀ (n m k : ℕ) (backbone : Network n m), backbone.Nonnegative →\n    ∀ (activation : ℝ → ℝ) (lift : (ℝ × ℝ) → ℝ × ℝ),\n    ValidPairActivation activation lift → Monotone lift →\n    (ConvexOn ℝ Set.univ (fun z => (lift z).1) ∧\n      ConvexOn ℝ Set.univ (fun z => (lift z).2)) →\n    ∀ (positive negative : Matrix (Fin k) (Fin m) ℝ),\n      (∀ i j, 0 ≤ positive i j) → (∀ i j, 0 ≤ negative i j) →\n    ∀ (positiveBias negativeBias : Vec k),\n      (∀ j, ConvexOn ℝ Set.univ (fun input : Vec n =>\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias\n          ((fun i => max (input i) 0), (fun i => max (-input i) 0))).1 j)) ∧\n      (∀ j, ConvexOn ℝ Set.univ (fun input : Vec n =>\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias\n          ((fun i => max (input i) 0), (fun i => max (-input i) 0))).2 j)) ∧\n      ∀ input : Vec n,\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias\n          ((fun i => max (input i) 0), (fun i => max (-input i) 0))).1 -\n          (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias\n            ((fun i => max (input i) 0), (fun i => max (-input i) 0))).2 =\n          affineLayer positive negative positiveBias negativeBias\n            (backbone.forwardWith activation input)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERAL-READOUT-positive-negative-input-dc",
+      "review_evidence": "reports/evidence/dc-generalization/readout/review.json",
+      "scope": "Use the explicitly specified max(x,0), max(-x,0) input streams. Both output heads remain convex and their difference recovers the original signed network with ungated affine output. No raw-input monotonicity or output nonnegativity is asserted.",
+      "contract_source": "reports/evidence/dc-generalization/readout/expected-types.json"
+    },
+    {
+      "task": "dc-explicit-softplus-split",
+      "module": "HiddenMonotonicity.ExplicitSoftplus",
+      "declaration": "HiddenMonotonicity.SmoothDC.softplus_explicit_split",
+      "expected_type": "∀ θ : ℝ, 0 < θ → ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSoftplusPair θ z).1) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSoftplusPair θ z).2) ∧ Monotone (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSoftplusPair θ z).1) ∧ Monotone (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSoftplusPair θ z).2) ∧ HiddenMonotonicity.ValidPairActivation (Thesis.Regularization.softplus θ) (HiddenMonotonicity.SmoothDC.explicitSoftplusPair θ) ∧ HiddenMonotonicity.NonnegativePairActivation (HiddenMonotonicity.SmoothDC.explicitSoftplusPair θ)",
+      "contract_source": "reports/evidence/dc-generalization/softplus/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/softplus/receipt.json"
+    },
+    {
+      "task": "dc-explicit-softplus-logsumexp",
+      "module": "HiddenMonotonicity.ExplicitSoftplus",
+      "declaration": "HiddenMonotonicity.SmoothDC.explicitSoftplusFirst_logsumexp",
+      "expected_type": "∀ θ : ℝ, 0 < θ → ∀ x y : ℝ, HiddenMonotonicity.SmoothDC.explicitSoftplusFirst θ (x,y) = θ * Real.log (Real.exp (x / θ) + Real.exp (y / θ))",
+      "contract_source": "reports/evidence/dc-generalization/softplus/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/softplus/receipt.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.sigmoid_explicit_split",
+      "module": "HiddenMonotonicity.ExplicitSigmoidSoftplus",
+      "expected_type": "ConvexOn ℝ Set.univ (fun z => (sigmoidExplicitPair z).1) ∧ ConvexOn ℝ Set.univ (fun z => (sigmoidExplicitPair z).2) ∧ Monotone sigmoidExplicitPair ∧ ValidPairActivation Real.sigmoid sigmoidExplicitPair ∧ NonnegativePairActivation sigmoidExplicitPair",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-sigmoid-explicit-split",
+      "review_evidence": "reports/evidence/dc-generalization/sigmoid-softplus/Boundary.lean",
+      "scope": "Both explicit sigmoid branches are globally convex and coordinatewise monotone, have exact difference recovery, and preserve nonnegativity on the nonnegative quadrant.",
+      "contract_source": "reports/evidence/dc-generalization/sigmoid-softplus/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.sigmoidExplicitPair_closed_form",
+      "module": "HiddenMonotonicity.ExplicitSigmoidSoftplus",
+      "expected_type": "∀ x y : ℝ, sigmoidExplicitPair (x, y) = (if x ≤ y then Real.sigmoid (x - y) + y / 4 else 1 / 2 + x / 4, if x ≤ y then y / 4 else 1 / 2 + x / 4 - Real.sigmoid (x - y))",
+      "open_namespaces": [
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-sigmoid-closed-form",
+      "review_evidence": "reports/evidence/dc-generalization/sigmoid-softplus/Boundary.lean",
+      "scope": "Closed piecewise formulas evaluated directly on both stream coordinates.",
+      "contract_source": "reports/evidence/dc-generalization/sigmoid-softplus/contracts.json"
+    },
+    {
+      "task": "dc-smooth-sigmoid-explicit-split",
+      "module": "HiddenMonotonicity.ExplicitSigmoidSmooth",
+      "declaration": "HiddenMonotonicity.SmoothDC.sigmoid_smooth_explicit_split",
+      "expected_type": "ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair z).1) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair z).2) ∧ Monotone (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair z).1) ∧ Monotone (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair z).2) ∧ HiddenMonotonicity.ValidPairActivation Real.sigmoid HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair ∧ HiddenMonotonicity.NonnegativePairActivation HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair",
+      "contract_source": "reports/evidence/dc-generalization/sigmoid-smooth/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/sigmoid-smooth/receipt.json"
+    },
+    {
+      "task": "dc-smooth-sigmoid-explicit-formula",
+      "module": "HiddenMonotonicity.ExplicitSigmoidSmooth",
+      "declaration": "HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_logsumexp",
+      "expected_type": "∀ x y : ℝ, HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair (x,y) = ((Real.log (Real.exp x + Real.exp y) + Real.sigmoid (x-y)) / 2, (Real.log (Real.exp x + Real.exp y) - Real.sigmoid (x-y)) / 2)",
+      "contract_source": "reports/evidence/dc-generalization/sigmoid-smooth/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/sigmoid-smooth/receipt.json"
+    },
+    {
+      "task": "dc-smooth-sigmoid-regularity",
+      "module": "HiddenMonotonicity.ExplicitSigmoidSmooth",
+      "declaration": "HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_contDiff",
+      "expected_type": "ContDiff ℝ ⊤ HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair",
+      "contract_source": "reports/evidence/dc-generalization/sigmoid-smooth/contracts.json",
+      "review_evidence": "reports/evidence/dc-generalization/sigmoid-smooth/receipt.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.explicitSwish_lift",
+      "module": "HiddenMonotonicity.ExplicitSwish",
+      "expected_type": "∀ β : ℝ, 0 < β → ConvexOn ℝ Set.univ (explicitSwishFirst β) ∧ ConvexOn ℝ Set.univ (explicitSwishSecond β) ∧ Monotone (explicitSwishFirst β) ∧ Monotone (explicitSwishSecond β) ∧ ∀ z : ℝ × ℝ, explicitSwishFirst β z - explicitSwishSecond β z = (z.1 - z.2) * Real.sigmoid (β * (z.1 - z.2))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-swish-elementary-lift",
+      "review_evidence": "reports/evidence/dc-generalization/swish/ExplicitSwishContracts.lean",
+      "scope": "For every positive scale, both elementary Swish branches are globally convex and coordinatewise nondecreasing, with exact recovery of the signed Swish activation. The positive profile is twice Softplus, not the canonical positive-curvature primitive.",
+      "contract_source": "reports/evidence/dc-generalization/swish/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.explicitSwish_closed",
+      "module": "HiddenMonotonicity.ExplicitSwish",
+      "expected_type": "∀ β : ℝ, ∀ z : ℝ × ℝ, explicitSwishFirst β z = 2 / β * Real.log (1 + Real.exp (β * (z.1 - z.2))) + 2 * z.2 ∧ explicitSwishSecond β z = 2 / β * Real.log (1 + Real.exp (β * (z.1 - z.2))) - (z.1 - z.2) * Real.sigmoid (β * (z.1 - z.2)) + 2 * z.2",
+      "open_namespaces": [
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-swish-elementary-closed-form",
+      "review_evidence": "reports/evidence/dc-generalization/swish/ExplicitSwishContracts.lean",
+      "scope": "Elementary log-exp formulas for both actual two-stream functions, with no implicit turning-point constant. The formula identity is unconditional; convexity and monotonicity require positive scale in the separate lift contract.",
+      "contract_source": "reports/evidence/dc-generalization/swish/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.explicitSwishPair_nonnegative",
+      "module": "HiddenMonotonicity.ExplicitSwish",
+      "expected_type": "∀ β : ℝ, 0 < β → NonnegativePairActivation (explicitSwishPair β)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-swish-elementary-nonnegative",
+      "review_evidence": "reports/evidence/dc-generalization/swish/ExplicitSwishContracts.lean",
+      "scope": "For every positive scale, the elementary Swish pair preserves nonnegativity on the nonnegative quadrant. Both branches have common origin value (2/β)log 2; zero normalization is not assumed.",
+      "contract_source": "reports/evidence/dc-generalization/swish/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.swish_curvature_turning_sign",
+      "module": "HiddenMonotonicity.SwishThreshold",
+      "expected_type": "∀ β : ℝ, 0 < β → ∀ x : ℝ, (0 < curvature (swish β) x ↔ |β * x| < swishTurningPoint) ∧ (curvature (swish β) x < 0 ↔ swishTurningPoint < |β * x|) ∧ (curvature (swish β) x = 0 ↔ |β * x| = swishTurningPoint)",
+      "open_namespaces": [
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-swish-exact-curvature-regions",
+      "review_evidence": "reports/evidence/dc-generalization/swish-threshold/SwishThresholdContracts.lean",
+      "scope": "Optional canonical-split evidence: exact strict central and tail curvature signs, and both zero-curvature boundaries, for every positive scale. The positive turning point is uniquely specified by r(2σ(r)-1)=2 and lies in (2,4); the elementary lift does not depend on it.",
+      "contract_source": "reports/evidence/dc-generalization/swish/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.centralConvex_asymmetric_split",
+      "module": "HiddenMonotonicity.TwoInflectionDC",
+      "expected_type": "∀ (f d : ℝ → ℝ) (a b : ℝ), a < b → (∀ x, HasDerivAt f (d x) x) → AntitoneOn d (Set.Iic a) → MonotoneOn d (Set.Icc a b) → AntitoneOn d (Set.Ici b) → (∀ x, x ≤ a → d x ≤ 0) → (∀ x, b ≤ x → 0 ≤ d x) → ConvexOn ℝ Set.univ (asymmetricLift (centralConvexP f d a b) (d b - d a)) ∧ ConvexOn ℝ Set.univ (asymmetricLift (centralConvexQ f d a b) (d b - d a)) ∧ Monotone (asymmetricLift (centralConvexP f d a b) (d b - d a)) ∧ Monotone (asymmetricLift (centralConvexQ f d a b) (d b - d a)) ∧ ∀ z : ℝ × ℝ, asymmetricLift (centralConvexP f d a b) (d b - d a) z - asymmetricLift (centralConvexQ f d a b) (d b - d a) z = f (z.1 - z.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-central-convex-asymmetric-split",
+      "review_evidence": "reports/evidence/dc-generalization/two-inflection/ExactContracts.lean",
+      "scope": "For the actual activation derivative with increasing central interval, decreasing tails, nonpositive left-tail values and nonnegative right-tail values, the closed piecewise profiles produce globally convex coordinatewise monotone streams with exact recovery on the whole real plane. No constructed-profile convexity or monotonicity is assumed.",
+      "contract_source": "reports/evidence/dc-generalization/two-inflection/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.gaussianGelu_explicit_split",
+      "module": "HiddenMonotonicity.ExplicitGELU",
+      "expected_type": "ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (explicitGaussianGeluPair z).1) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (explicitGaussianGeluPair z).2) ∧ Monotone (fun z : ℝ × ℝ => (explicitGaussianGeluPair z).1) ∧ Monotone (fun z : ℝ × ℝ => (explicitGaussianGeluPair z).2) ∧ ValidPairActivation gaussianGelu explicitGaussianGeluPair ∧ NonnegativePairActivation explicitGaussianGeluPair",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-exact-gaussian-gelu-explicit-split",
+      "review_evidence": "reports/evidence/dc-generalization/gelu-analytic/ExplicitExactContracts.lean",
+      "scope": "The explicit root-free pair for exact Gaussian GELU has two globally convex and coordinatewise monotone branches, recovers GELU(x-y) for arbitrary real inputs, and preserves nonnegative input streams. It is an alternative to the canonical curvature split and maps the origin to (2φ(0),2φ(0)).",
+      "contract_source": "reports/evidence/dc-generalization/two-inflection/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair_formula",
+      "module": "HiddenMonotonicity.ExplicitGELU",
+      "expected_type": "∀ x y : ℝ, explicitGaussianGeluPair (x, y) = (2 * (gaussianGelu (x - y) + standardGaussianDensity (x - y)) + 2 * y, gaussianGelu (x - y) + 2 * standardGaussianDensity (x - y) + 2 * y)",
+      "open_namespaces": [
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-exact-gaussian-gelu-closed-form",
+      "review_evidence": "reports/evidence/dc-generalization/gelu-analytic/ExplicitExactContracts.lean",
+      "scope": "Exact closed expressions for both two-stream branches using the normalized Gaussian density and exact Gaussian GELU, on all real stream coordinates.",
+      "contract_source": "reports/evidence/dc-generalization/two-inflection/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.gaussianGeluFirst_middle_bounds",
+      "module": "HiddenMonotonicity.GELUInflectionBounds",
+      "expected_type": "∀ {x : ℝ}, -Real.sqrt 2 ≤ x ∧ x ≤ Real.sqrt 2 → gaussianGeluFirst (-Real.sqrt 2) ≤ gaussianGeluFirst x ∧ gaussianGeluFirst x ≤ gaussianGeluFirst (Real.sqrt 2)",
+      "open_namespaces": [
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-exact-gaussian-gelu-inflection-bounds",
+      "review_evidence": "reports/evidence/dc-generalization/gelu-analytic/ExactContracts.lean",
+      "scope": "Analytic endpoint bounds for the actual Gaussian GELU derivative throughout the closed central interval [-sqrt(2),sqrt(2)], including both inflection points.",
+      "contract_source": "reports/evidence/dc-generalization/two-inflection/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.modern_curvature_pair",
+      "module": "HiddenMonotonicity.ModernMonotoneDC",
+      "expected_type": "∀ a : ModernActivation, ConvexPairActivation (curvatureLiftPair a.eval) ∧ Monotone (curvatureLiftPair a.eval) ∧ ValidPairActivation a.eval (curvatureLiftPair a.eval) ∧ NonnegativePairActivation (curvatureLiftPair a.eval)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-modern-actual-pair",
+      "review_evidence": "reports/evidence/dc-generalization/modern/Boundary.lean",
+      "scope": "The actual six-case modern activation datatype needs no unproved regularity assumptions to instantiate the integral-curvature pair.",
+      "contract_source": "reports/evidence/dc-generalization/modern/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.modern_curvature_network",
+      "module": "HiddenMonotonicity.ModernMonotoneDC",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m), net.Nonnegative → ∀ a : ModernActivation, Monotone (net.decomposeWith (curvatureLiftPair a.eval)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.decomposeWith (curvatureLiftPair a.eval) x).1 i)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.decomposeWith (curvatureLiftPair a.eval) x).2 i)) ∧ ∀ x : PairVec n, (net.decomposeWith (curvatureLiftPair a.eval) x).1 - (net.decomposeWith (curvatureLiftPair a.eval) x).2 = net.forwardWith a.eval (x.1 - x.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-modern-network",
+      "review_evidence": "reports/evidence/dc-generalization/modern/Boundary.lean",
+      "scope": "Both complete network streams are convex and monotone on the full pair-input space and recover the same-parameter original network. Split biases are arbitrary.",
+      "contract_source": "reports/evidence/dc-generalization/modern/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.modern_curvature_network_nonnegative",
+      "module": "HiddenMonotonicity.ModernMonotoneDC",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m), net.NonnegativeParameters → ∀ (a : ModernActivation) (x : PairVec n), (0 ≤ x.1 ∧ 0 ≤ x.2) → 0 ≤ (net.decomposeWith (curvatureLiftPair a.eval) x).1 ∧ 0 ≤ (net.decomposeWith (curvatureLiftPair a.eval) x).2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-modern-network-nonnegative",
+      "review_evidence": "reports/evidence/dc-generalization/modern/Boundary.lean",
+      "scope": "Stream-value nonnegativity is conditional on nonnegative split biases and inputs, unlike global convexity and exact recovery.",
+      "contract_source": "reports/evidence/dc-generalization/modern/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.modern_curvature_affine_network",
+      "module": "HiddenMonotonicity.ModernMonotoneDC",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m), net.Nonnegative → ∀ (a : ModernActivation) (wp wn : Matrix (Fin k) (Fin m) ℝ), (∀ i j, 0 ≤ wp i j) → (∀ i j, 0 ≤ wn i j) → ∀ bp bn : Vec k, Monotone (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).1 i)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).2 i)) ∧ ∀ x : PairVec n, (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).1 - (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).2 = affineLayer wp wn bp bn (net.forwardWith a.eval (x.1 - x.2))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-modern-affine-network",
+      "review_evidence": "reports/evidence/dc-generalization/modern/Boundary.lean",
+      "scope": "The same-parameter complete network includes an arbitrary signed affine readout without an additional activation.",
+      "contract_source": "reports/evidence/dc-generalization/modern/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.ClosedFormActivation.relu_pair",
+      "module": "HiddenMonotonicity.ClosedFormMonotoneDC",
+      "expected_type": "∀ x y : ℝ, ClosedFormActivation.relu.pair (x,y) = (max x y,y)",
+      "open_namespaces": [
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-closed-relu-pair",
+      "review_evidence": "reports/evidence/dc-generalization/closed-form/Boundary.lean",
+      "scope": "The generic closed-form datatype specializes literally to max and identity for ReLU.",
+      "contract_source": "reports/evidence/dc-generalization/closed-form/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.closed_form_activation_properties",
+      "module": "HiddenMonotonicity.ClosedFormMonotoneDC",
+      "expected_type": "∀ a : ClosedFormActivation, ConvexPairActivation a.pair ∧ Monotone a.pair ∧ ValidPairActivation a.eval a.pair ∧ NonnegativePairActivation a.pair",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-closed-activation-properties",
+      "review_evidence": "reports/evidence/dc-generalization/closed-form/Boundary.lean",
+      "scope": "Actual explicit ReLU, Gaussian GELU, positive-scale Swish, sigmoid and positive-temperature Softplus formulas satisfy the whole scalar interface.",
+      "contract_source": "reports/evidence/dc-generalization/closed-form/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.closed_form_affine_network",
+      "module": "HiddenMonotonicity.ClosedFormMonotoneDC",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m), net.Nonnegative → ∀ (a : ClosedFormActivation) (wp wn : Matrix (Fin k) (Fin m) ℝ), (∀ i j, 0 ≤ wp i j) → (∀ i j, 0 ≤ wn i j) → ∀ bp bn : Vec k, Monotone (net.affineDecomposeWith a.pair wp wn bp bn) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.affineDecomposeWith a.pair wp wn bp bn x).1 i)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.affineDecomposeWith a.pair wp wn bp bn x).2 i)) ∧ ∀ x : PairVec n, (net.affineDecomposeWith a.pair wp wn bp bn x).1 - (net.affineDecomposeWith a.pair wp wn bp bn x).2 = affineLayer wp wn bp bn (net.forwardWith a.eval (x.1 - x.2))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-closed-affine-network",
+      "review_evidence": "reports/evidence/dc-generalization/closed-form/Boundary.lean",
+      "scope": "The actual explicit branches yield convex monotone complete two-stream networks with an ungated signed affine output and exact same-parameter recovery.",
+      "contract_source": "reports/evidence/dc-generalization/closed-form/contracts.json"
+    },
+    {
+      "declaration": "HiddenMonotonicity.SmoothDC.closed_form_affine_dc",
+      "module": "HiddenMonotonicity.ClosedFormMonotoneDC",
+      "expected_type": "∀ {n m k : ℕ} (net : Network n m), net.Nonnegative → ∀ (a : ClosedFormActivation) (wp wn : Matrix (Fin k) (Fin m) ℝ), (∀ i j, 0 ≤ wp i j) → (∀ i j, 0 ≤ wn i j) → ∀ bp bn : Vec k, Monotone (fun x : Vec n => net.affineDecomposeWith a.pair wp wn bp bn (x,0)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : Vec n => (net.affineDecomposeWith a.pair wp wn bp bn (x,0)).1 i)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : Vec n => (net.affineDecomposeWith a.pair wp wn bp bn (x,0)).2 i)) ∧ ∀ x : Vec n, (net.affineDecomposeWith a.pair wp wn bp bn (x,0)).1 - (net.affineDecomposeWith a.pair wp wn bp bn (x,0)).2 = affineLayer wp wn bp bn (net.forwardWith a.eval x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.SmoothDC"
+      ],
+      "universes": [],
+      "review_id": "dc-generalization-closed-affine-dc",
+      "review_evidence": "reports/evidence/dc-generalization/closed-form/Boundary.lean",
+      "scope": "The affine input embedding produces ordinary-input convex monotone heads with exact recovery, without asserting their nonnegativity.",
+      "contract_source": "reports/evidence/dc-generalization/closed-form/contracts.json"
+    }
+  ]
+}

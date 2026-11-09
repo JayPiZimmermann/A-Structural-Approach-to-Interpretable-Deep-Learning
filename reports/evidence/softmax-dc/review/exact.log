@@ -1,0 +1,35 @@
+@HiddenMonotonicity.SoftmaxDC.softmax_split_properties : ∀ {ι : Type u_1} [inst : Fintype ι] [Nonempty ι] (i : ι),
+  ConvexOn ℝ Set.univ (HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst i) ∧
+    ConvexOn ℝ Set.univ (HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond i) ∧
+      Monotone (HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst i) ∧
+        Monotone (HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond i) ∧
+          (∀ (z : (ι → ℝ) × (ι → ℝ)),
+              HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst i z - HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond i z =
+                HiddenMonotonicity.SoftmaxDC.softmax (z.1 - z.2) i) ∧
+            ∀ (z : (ι → ℝ) × (ι → ℝ)),
+              0 ≤ z →
+                0 ≤ HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst i z ∧
+                  0 ≤ HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond i z
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula : ∀ {ι : Type u_1} [inst : Fintype ι] (i : ι) (x y : ι → ℝ),
+  HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst i (x, y) =
+    (Real.log (∑ j, Real.exp (x j - y j)) + Real.exp (x i - y i) / ∑ j, Real.exp (x j - y j) + ∑ j, y j) / 2 -
+      (Real.log ↑(Fintype.card ι) - 1 / ↑(Fintype.card ι)) / 2
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_formula : ∀ {ι : Type u_1} [inst : Fintype ι] (i : ι) (x y : ι → ℝ),
+  HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond i (x, y) =
+    (Real.log (∑ j, Real.exp (x j - y j)) - Real.exp (x i - y i) / ∑ j, Real.exp (x j - y j) + ∑ j, y j) / 2 -
+      (Real.log ↑(Fintype.card ι) - 1 / ↑(Fintype.card ι)) / 2
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.softmaxSplit_difference : ∀ {ι : Type u_1} [inst : Fintype ι] (i : ι)
+  (z : (ι → ℝ) × (ι → ℝ)),
+  HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst i z - HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond i z =
+    HiddenMonotonicity.SoftmaxDC.softmax (z.1 - z.2) i
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_zero : ∀ {ι : Type u_1} [inst : Fintype ι] (i : ι),
+  HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst i 0 = 1 / ↑(Fintype.card ι)
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_zero : ∀ {ι : Type u_1} [inst : Fintype ι] (i : ι),
+  HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond i 0 = 0
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 95 project theorem declarations in the imported environment

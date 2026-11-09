@@ -1,0 +1,32 @@
+{
+  "status": "passed-read-only-source-correspondence-review",
+  "scope": "The actual finite-dimensional epsilon LayerNorm uses the arithmetic mean and population variance (division by d), preserves input-dependent statistics, and permits arbitrary signed learned gamma and beta. For epsilon>0, layerNormPair_exact proves recovery for every real input-stream pair; value_variancePair and layerVariance_nonnegative derive the inverse-square-root precondition. The companion layerNormPair_regular proves convexity, coordinatewise monotonicity, and nonnegative values on any convex domain where the incoming pairs have those properties. The source assumes d>=1; the formal d=0 coordinate conclusions are vacuous. This link covers the complete LayerNorm recipe and ordinary displayed formula, not the full Transformer theorem.",
+  "reviewed_contracts": [
+    "HiddenMonotonicity.TransformerDC.layerVariance_nonnegative",
+    "HiddenMonotonicity.TransformerDC.value_variancePair",
+    "HiddenMonotonicity.TransformerDC.layerNormPair_exact",
+    "HiddenMonotonicity.TransformerDC.layerNormPair_regular"
+  ],
+  "source_review_matches": {
+    "formalization/HiddenMonotonicity/LayerNormDC.lean": {
+      "reviewed_sha256": "379b317e9fc222e7d8e142c0c5338399e84436ab25f7bc07a5d0b590f6ecc3de",
+      "actual_sha256": "379b317e9fc222e7d8e142c0c5338399e84436ab25f7bc07a5d0b590f6ecc3de",
+      "matches": true
+    },
+    "formalization/HiddenMonotonicity/TransformerPairCalculus.lean": {
+      "reviewed_sha256": "eb2413aa4249d8779735da9eb18e94a6ce6f3703863b3efaf5601d17a2487469",
+      "actual_sha256": "eb2413aa4249d8779735da9eb18e94a6ce6f3703863b3efaf5601d17a2487469",
+      "matches": true
+    }
+  },
+  "review_receipts": [
+    "reports/evidence/transformer-dc/layernorm-assembly/review/review.json",
+    "reports/evidence/transformer-dc/pair-calculus/review.json"
+  ],
+  "secondary_source_reviewer": "/root/dc_lean_lead/aggregate_review/layernorm_scope_check",
+  "secondary_findings": "No substantive mismatch; exact signed gain/bias and population variance; regularity correctly conditional on incoming Regular pairs.",
+  "proposal": "layernorm-assembly-tex-links-proposal.json",
+  "coverage_map_note": "No coverage_map entry is proposed for this equation-only label; the four reviewed contracts are listed here and the equation receives an exact implementation link.",
+  "builds_or_gates_run": false,
+  "global_files_edited": false
+}

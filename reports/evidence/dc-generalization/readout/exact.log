@@ -1,0 +1,65 @@
+@HiddenMonotonicity.Network.affineDecomposeWith_recovery : ∀ {n m k : ℕ} (net : HiddenMonotonicity.Network n m)
+  (σ : ℝ → ℝ) (φ : ℝ × ℝ → ℝ × ℝ),
+  HiddenMonotonicity.ValidPairActivation σ φ →
+    ∀ (wp wn : Matrix (Fin k) (Fin m) ℝ) (bp bn : HiddenMonotonicity.Vec k) (x : HiddenMonotonicity.PairVec n),
+      (net.affineDecomposeWith φ wp wn bp bn x).1 - (net.affineDecomposeWith φ wp wn bp bn x).2 =
+        HiddenMonotonicity.affineLayer wp wn bp bn (net.forwardWith σ (x.1 - x.2))
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.Network.affine_convex_monotone_decomposition : ∀ {n m k : ℕ} (net : HiddenMonotonicity.Network n m),
+  net.Nonnegative →
+    ∀ (σ : ℝ → ℝ) (φ : ℝ × ℝ → ℝ × ℝ),
+      HiddenMonotonicity.ValidPairActivation σ φ →
+        Monotone φ →
+          HiddenMonotonicity.ConvexPairActivation φ →
+            ∀ (wp wn : Matrix (Fin k) (Fin m) ℝ),
+              (∀ (i : Fin k) (j : Fin m), 0 ≤ wp i j) →
+                (∀ (i : Fin k) (j : Fin m), 0 ≤ wn i j) →
+                  ∀ (bp bn : HiddenMonotonicity.Vec k),
+                    Monotone (net.affineDecomposeWith φ wp wn bp bn) ∧
+                      (∀ (i : Fin k), ConvexOn ℝ Set.univ fun x => (net.affineDecomposeWith φ wp wn bp bn x).1 i) ∧
+                        (∀ (i : Fin k), ConvexOn ℝ Set.univ fun x => (net.affineDecomposeWith φ wp wn bp bn x).2 i) ∧
+                          ∀ (x : HiddenMonotonicity.PairVec n),
+                            (net.affineDecomposeWith φ wp wn bp bn x).1 - (net.affineDecomposeWith φ wp wn bp bn x).2 =
+                              HiddenMonotonicity.affineLayer wp wn bp bn (net.forwardWith σ (x.1 - x.2))
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.Network.affine_dc_decomposition : ∀ {n m k : ℕ} (net : HiddenMonotonicity.Network n m),
+  net.Nonnegative →
+    ∀ (σ : ℝ → ℝ) (φ : ℝ × ℝ → ℝ × ℝ),
+      HiddenMonotonicity.ValidPairActivation σ φ →
+        Monotone φ →
+          HiddenMonotonicity.ConvexPairActivation φ →
+            ∀ (wp wn : Matrix (Fin k) (Fin m) ℝ),
+              (∀ (i : Fin k) (j : Fin m), 0 ≤ wp i j) →
+                (∀ (i : Fin k) (j : Fin m), 0 ≤ wn i j) →
+                  ∀ (bp bn : HiddenMonotonicity.Vec k),
+                    (Monotone fun x => net.affineDecomposeWith φ wp wn bp bn (x, 0)) ∧
+                      (∀ (i : Fin k), ConvexOn ℝ Set.univ fun x => (net.affineDecomposeWith φ wp wn bp bn (x, 0)).1 i) ∧
+                        (∀ (i : Fin k),
+                            ConvexOn ℝ Set.univ fun x => (net.affineDecomposeWith φ wp wn bp bn (x, 0)).2 i) ∧
+                          ∀ (x : HiddenMonotonicity.Vec n),
+                            (net.affineDecomposeWith φ wp wn bp bn (x, 0)).1 -
+                                (net.affineDecomposeWith φ wp wn bp bn (x, 0)).2 =
+                              HiddenMonotonicity.affineLayer wp wn bp bn (net.forwardWith σ x)
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.Network.affine_signed_input_dc_decomposition : ∀ {n m k : ℕ} (net : HiddenMonotonicity.Network n m),
+  net.Nonnegative →
+    ∀ (σ : ℝ → ℝ) (φ : ℝ × ℝ → ℝ × ℝ),
+      HiddenMonotonicity.ValidPairActivation σ φ →
+        Monotone φ →
+          HiddenMonotonicity.ConvexPairActivation φ →
+            ∀ (wp wn : Matrix (Fin k) (Fin m) ℝ),
+              (∀ (i : Fin k) (j : Fin m), 0 ≤ wp i j) →
+                (∀ (i : Fin k) (j : Fin m), 0 ≤ wn i j) →
+                  ∀ (bp bn : HiddenMonotonicity.Vec k),
+                    (∀ (i : Fin k),
+                        ConvexOn ℝ Set.univ fun x =>
+                          (net.affineDecomposeWith φ wp wn bp bn (HiddenMonotonicity.signedInput x)).1 i) ∧
+                      (∀ (i : Fin k),
+                          ConvexOn ℝ Set.univ fun x =>
+                            (net.affineDecomposeWith φ wp wn bp bn (HiddenMonotonicity.signedInput x)).2 i) ∧
+                        ∀ (x : HiddenMonotonicity.Vec n),
+                          (net.affineDecomposeWith φ wp wn bp bn (HiddenMonotonicity.signedInput x)).1 -
+                              (net.affineDecomposeWith φ wp wn bp bn (HiddenMonotonicity.signedInput x)).2 =
+                            HiddenMonotonicity.affineLayer wp wn bp bn (net.forwardWith σ x)
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 271 project theorem declarations in the imported environment

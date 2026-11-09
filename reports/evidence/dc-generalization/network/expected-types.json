@@ -1,0 +1,35 @@
+{
+  "public_root": "HiddenMonotonicity.ConvexMonotoneNetwork",
+  "targets": [
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneNetwork",
+      "declaration": "HiddenMonotonicity.Network.convex_monotone_decomposition",
+      "expected_type": "∀ {n m : ℕ} (net : Network n m) (hw : net.Nonnegative) (σ : ℝ → ℝ) (φ : (ℝ × ℝ) → ℝ × ℝ) (hv : ValidPairActivation σ φ) (hm : Monotone φ) (hc : ConvexPairActivation φ), Monotone (net.decomposeWith φ) ∧ (∀ i, ConvexOn ℝ univ (fun x : PairVec n => (net.decomposeWith φ x).1 i)) ∧ (∀ i, ConvexOn ℝ univ (fun x : PairVec n => (net.decomposeWith φ x).2 i)) ∧ ∀ x : PairVec n, (net.decomposeWith φ x).1 - (net.decomposeWith φ x).2 = net.forwardWith σ (x.1 - x.2)",
+      "open_namespaces": ["Set", "HiddenMonotonicity"],
+      "universes": [],
+      "review_id": "DC-GENERAL-NETWORK-complete-network",
+      "review_evidence": "reports/evidence/dc-generalization/network/review.json",
+      "scope": "Actual complete decomposeWith network: global coordinatewise monotonicity, joint coordinatewise convexity on PairVec, and exact forwardWith recovery. Only split weights are nonnegative; biases and input streams may be signed. No smoothness or input nonnegativity hypothesis."
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneNetwork",
+      "declaration": "HiddenMonotonicity.Network.decomposeWith_convex_input",
+      "expected_type": "∀ {d n m : ℕ} (net : Network n m) (hw : net.Nonnegative) (φ : (ℝ × ℝ) → ℝ × ℝ) (hm : Monotone φ) (hc : ConvexPairActivation φ) (p q : Vec d → Vec n) (hp : ∀ i, ConvexOn ℝ univ (fun x => p x i)) (hq : ∀ i, ConvexOn ℝ univ (fun x => q x i)), (∀ i, ConvexOn ℝ univ (fun x => (net.decomposeWith φ (p x,q x)).1 i)) ∧ (∀ i, ConvexOn ℝ univ (fun x => (net.decomposeWith φ (p x,q x)).2 i))",
+      "open_namespaces": ["Set", "HiddenMonotonicity"],
+      "universes": [],
+      "review_id": "DC-GENERAL-NETWORK-convex-inputs",
+      "review_evidence": "reports/evidence/dc-generalization/network/review.json",
+      "scope": "Arbitrary coordinatewise convex input streams into the actual complete split network. No affine-only input restriction; no assertion that a signed input lift is monotone in the original input."
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneNetwork",
+      "declaration": "HiddenMonotonicity.convex_monotone_pair_input",
+      "expected_type": "∀ {d n : ℕ} (f : PairVec n → ℝ) (hm : Monotone f) (hf : ConvexOn ℝ univ f) (p q : Vec d → Vec n) (hp : ∀ i, ConvexOn ℝ univ (fun x => p x i)) (hq : ∀ i, ConvexOn ℝ univ (fun x => q x i)), ConvexOn ℝ univ (fun x => f (p x,q x))",
+      "open_namespaces": ["Set", "HiddenMonotonicity"],
+      "universes": [],
+      "review_id": "DC-GENERAL-NETWORK-scalar-convex-composition",
+      "review_evidence": "reports/evidence/dc-generalization/network/review.json",
+      "scope": "Scalar monotone jointly convex maps of two input streams preserve convexity under coordinatewise convex stream substitution; this applies to actual signed affine readout heads."
+    }
+  ]
+}

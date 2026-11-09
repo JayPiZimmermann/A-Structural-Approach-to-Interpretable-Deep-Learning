@@ -337,7 +337,9 @@ game modes.
 Consider a ReLU network with layers $l = 1,\dots,L$, input $a^{(0)} = x$, pre-activations
 $z^{(l)}_j = \sum_i a^{(l-1)}_i W^{(l)}_{ij} + b^{(l)}_j$ and activations $a^{(l)}_j =
     \relu(z^{(l)}_j)$, where $W^{(l)}_{ij}$ connects neuron $i$ of layer $l{-}1$ to neuron $j$ of layer
-$l$. We explain a scalar output $f(x) = a^{(L)}_u$. We write $[u]^{+} = \max(u,0)$ and $[u]^{-} =
+$l$. The initial derivation explains a scalar activation output $f(x) = a^{(L)}_u$.
+Section~\ref{app:affine-readout} extends it to an ungated, possibly negative
+affine output logit. We write $[u]^{+} = \max(u,0)$ and $[u]^{-} =
     \max(-u,0)$, so $u = [u]^+ - [u]^-$, and $W^{(l,\pm)} = [W^{(l)}]^{\pm}$ entrywise.
 
 \paragraph{Layer-wise relevance propagation.} \ac{LRP}~\citep{Bach2015} explains $f(x)$ by redistributing it backward, layer by layer: starting
@@ -603,7 +605,7 @@ share some short trajectories: both may stop early at structurally dead neurons 
 the common cemetery state. Such short paths have a higher chance of coinciding across models than
 full trajectories reaching the input layer. Conditioning on survival removes this shared cemetery
 mass and gives the strict ceiling $\mathrm{H}_{\mathrm{surv}} \approx 1$. Trajectory- and map-level
-readouts are per-image orthogonal (Spearman $|\rho|\le \perImageCrossMax$ between $\mathrm{H}$ and
+readouts show weak observed per-image rank association (Spearman $|\rho|\le \perImageCrossMax$ between $\mathrm{H}$ and
 pixel-level Gradient or $\alpha\beta$-\ac{LRP} similarity): images with similar attribution maps
 need not have similar calculations. Per-game values, the conditioning, the floor mechanism and the
 per-image analysis are in Appendix~\ref{app:sanity-check}.
@@ -669,8 +671,9 @@ configurations in total). Stage~2 picks, for each method, the \emph{loc} configu
 best localization rank-sum over $\{\text{AL}, \text{PG}, \text{TK}\}$ and, independently, the
 \emph{faith} configuration with the best faithfulness rank-sum over $\{\text{PF}_5, \text{PF}_{20},
     \text{Sel}\}$, and evaluates both once on the test split, with 95\% percentile-bootstrap confidence
-intervals~\citep{Efron1993bootstrap} and Holm-corrected~\citep{Holm1979} paired tests against the
-best row of each metric (Appendix~\ref{app:stats}); for \ac{RG} / \ac{RG}+Eq we additionally show
+intervals~\citep{Efron1993bootstrap} and paired tests with Holm correction~\citep{Holm1979} over all
+eligible row pairs before reporting comparisons with the best row of each metric
+(Appendix~\ref{app:stats}); for \ac{RG} / \ac{RG}+Eq we additionally show
 the $\alpha\beta$-\ac{LRP} anchor $(\alpha,\beta,\varepsilon,\tau){=}(2,1,0.5,1)$ as a
 theorem-driven reference (Theorem~\ref{thm:lrp-recovery}). Localization is a natural target for
 modes designed to control routing focus, and object annotations provide external ground truth:
@@ -686,15 +689,15 @@ AttnLRP~\citep{achtibat2024attnlrp}, DAVE~\citep{Wrobel2024},
 \ac{TIBAV}~\citep{Chefer2021transformer} and \ac{GAE}~\citep{Chefer2021genatt}: the selected mode
 reaches AL \vitRGlocAL{} against \vitBestBaseAL{} for the best baseline (\vitBestBaseALname), and
 \ac{RG}+Eq \vitRGEqlocAL{}, both significantly ahead of every baseline row after Holm correction.
-\ac{RG}+Eq also has the highest TK (\vitRGEqlocTK{}, not significantly above \vitBestBaseTKname{}
-at \vitBestBaseTK{}). The pointing game is led by \vitBestBasePGname{} (\vitBestBasePG{}), whose
+\ac{RG}+Eq also has the highest observed TK (\vitRGEqlocTK{}), but the Holm-corrected tests do not detect a difference from \vitBestBaseTKname{}
+at \vitBestBaseTK{} or LRP-$\gamma$ at $0.816$. The pointing game is led by \vitBestBasePGname{} (\vitBestBasePG{}), whose
 maps are constant on superpixels: a hit needs only one pixel of the maximal region inside the mask.
 Scoring a single pixel drawn from that region instead, KernelSHAP falls below \ac{RG}+Eq, which is
 then not significantly below the best baseline (LRP-$\gamma$; Appendix~\ref{app:pg-granularity}).
-Faithfulness favors the \ac{LRP} rules: AttnLRP is best on PF$_5$ and PF$_{20}$ and LRP-$\gamma$ on
+Among the localization-selected rows, faithfulness favors the \ac{LRP} rules: AttnLRP is best on PF$_5$ and PF$_{20}$ and LRP-$\gamma$ on
 Sel (PF$_{20}$ \vitBestBasePFtwenty{} versus \vitRGlocPFtwenty{} for \ac{RG}), and the
 faithfulness-selected \ac{RG} row narrows but does not close the gap (PF$_{20}$
-\vitRGfaithPFtwenty{}). The two anchors are the most robust rows (MaxS \vitRGanchorMaxS{} and
+\vitRGfaithPFtwenty{}). Across both selection objectives, faithfulness-selected AttnLRP has the lowest PF$_5$, PF$_{20}$ and Selectivity, at $7.64$, $6.12$ and $4.441$, respectively. The two anchors are the most robust rows (MaxS \vitRGanchorMaxS{} and
 \vitRGEqanchorMaxS{} versus \vitBestBaseMaxS{} for \vitBestBaseMaxSname{}), whereas the
 localization-selected mode reaches MaxS \vitRGlocMaxS{}: sharper routing trades robustness and
 faithfulness for localization. \ac{ADF} adds modest overhead (\ac{RG}: \vitRGlocTime\,s vs.\
@@ -705,12 +708,13 @@ KernelSHAP (\vitSHAPTime\,s).
 \paragraph{Higher $\tau$ spreads attribution into context.}
 The localization-optimal modes are the sharpest ones: they place mass on the few patches that align
 with the segmentation mask. As $\tau$ increases, the same equilibrium spreads routing over more
-predecessors; the object remains in focus, but the heatmap also highlights environmental features
-the network used. These broader maps can be visually more informative, but on ViT-B/16 attribution
+predecessors; in the displayed examples, the object remains in focus while attribution extends
+into the surrounding context. This visual pattern does not by itself establish which contextual
+features the network relies on. On ViT-B/16 attribution
 localization worsens monotonically with $\tau$ around the localization-selected setting (AL $0.723$
 at $\tau{=}0.3$ down to $0.461$ at $\tau{=}1$), while the faithfulness side is non-monotonic. High
-$\tau$ is the clearest example of the gap between metric-optimal and perception-optimal
-explanations within the same game.
+$\tau$ illustrates how localization scores favor concentrated maps within the same game; no
+perceptual study was conducted to establish which maps users find more informative.
 
 \paragraph{Cross-dataset transfer (Pascal VOC).}
 A natural worry with validation-tuned modes is that the chosen $\tau$, $\lambda_{\mathrm{sm}}$ and
@@ -718,8 +722,9 @@ $\sigma^2$ are overfitted to the ImageNet-S 50-class subset. We test transfer on
 disjoint split of Pascal VOC 2012 trainval ($2{,}743$ test (image, foreground-class) samples with
 pixel-accurate segmentation masks): \ac{RG} and \ac{RG}+Eq use the \emph{same} mode parameters as
 Table~\ref{tab:eval-vit} without any VOC-side re-tuning, while every baseline gets a fresh
-per-method validation grid on the new pool. This tests whether the selected modes capture
-model-specific rather than dataset-specific structure: the localization lead carries over (AL
+per-method validation grid on the new pool. This tests the portability of the selected parameters
+across these datasets for the same pretrained model, without identifying whether the underlying
+structure is model-specific or dataset-specific. The localization lead carries over (AL
 \vocRGlocAL{} for \ac{RG} and \vocRGEqlocAL{} for \ac{RG}+Eq versus \vocBestBaseAL{} for
 \vocBestBaseALname{}, both significant against every baseline row), while TK and PG are led by
 \ac{TIBAV} and the perturbation methods, and faithfulness by the \ac{LRP} rules
@@ -727,10 +732,10 @@ model-specific rather than dataset-specific structure: the localization lead car
 
 \paragraph{VGG-16 and ResNet-50 (Appendix~\ref{app:results}).}
 On the CNNs, where \ac{LRP}-type rules are already strong, the localization-selected \ac{RG} rows
-also lead on AL, clearly on VGG-16 (\vggRGlocAL{} versus \vggBestBaseAL{} for \vggBestBaseALname{})
-and narrowly but significantly on ResNet-50 (\resRGlocAL{} versus \resBestBaseAL{} for
-\resBestBaseALname{}). Pixel flipping favors the \ac{LRP} rules (LRP-$\varepsilon$ on VGG-16,
-LRP-$\gamma$ on ResNet-50), while the \ac{CAM} methods and the perturbation methods lead TK and PG.
+also lead on AL within the localization-selected comparison, clearly on VGG-16 (\vggRGlocAL{} versus \vggBestBaseAL{} for \vggBestBaseALname{})
+and narrowly on ResNet-50 (\resRGlocAL{} versus \resBestBaseAL{} for
+\resBestBaseALname{}). The Holm-corrected paired comparison does not detect a difference between these ResNet-50 AL scores (adjusted $p=0.420$); the numerical lead therefore does not establish superiority. Across both selection objectives, the strongest VGG-16 baseline AL is $0.639$ for faithfulness-selected LRP-$\varepsilon$, still below \ac{RG}'s \vggRGlocAL{}.
+Pixel flipping favors LRP-$\varepsilon$ for VGG-16 PF$_5$ ($12.43$), LRP-$\gamma$ for VGG-16 PF$_{20}$ ($7.89$, compared with $8.17$ for LRP-$\varepsilon$), and LRP-$\gamma$ for both ResNet-50 metrics, while the \ac{CAM} methods and the perturbation methods lead TK and PG.
 On VGG-16 the risk-averse \ac{SG} mode is the most robust method (MaxS \vggSGlocMaxS{} versus
 \vggBestBaseMaxS{} for \vggBestBaseMaxSname{}).
 \section{Discussion \& Conclusion}\label{sec:discussion}
@@ -813,7 +818,7 @@ We reserve the word \emph{trajectory} for sequences of game states $\zeta = (\ze
         $l$, $L$ & layers; input $0$ ($a^{(0)} = x$), output $L$ & $W^{(l)}_{ij}$, $b^{(l)}_j$ & weight
         from $i$ (layer $l{-}1$) to $j$ (layer $l$); bias \\
         $z^{(l)}_j$, $a^{(l)}_j$ & $\sum_i a^{(l-1)}_i W^{(l)}_{ij} + b^{(l)}_j$; $\relu(z^{(l)}_j)$ &
-        $f(x) = a^{(L)}_u$ & scalar output (target logit $u$) \\
+        $f(x) = a^{(L)}_u$ & scalar activation output \\
         $[t]^\pm$, $x_k^\pm$ & $\max\{\pm t, 0\}$, so $t = [t]^+ - [t]^-$; $x_k^\pm = [x_k]^\pm$ &
         $W^{(l,\pm)}$, $b^{(l,\pm)}$ & $[W^{(l)}]^\pm$, $[b^{(l)}]^\pm$ (sign split) \\
         $z^{(l,\pm)}_j$, $a^{(l,\pm)}_{\mathrm{stop},j}$ & sign split of $z$; Stopping Decomposition &
@@ -875,8 +880,8 @@ trajectories.
 Throughout we consider a feedforward ReLU network of $L$ layers with input layer $0$, $a^{(0)} =
     x$, pre-activations $z_j^{(l)} = \sum_i a_i^{(l-1)} W_{ij}^{(l)} + b_j^{(l)}$, where $W_{ij}^{(l)}$
 connects neuron $i$ in layer $l-1$ to neuron $j$ in layer $l$, activations $a_j^{(l)} =
-    \relu(z_j^{(l)})$, and a \emph{single scalar output} $f(x) = a_u^{(L)}$ (for multi-class networks,
-fix the target logit $u$).
+    \relu(z_j^{(l)})$, and a \emph{single scalar activation output} $f(x) = a_u^{(L)}$.
+An ungated affine classifier head is treated separately in Section~\ref{app:affine-readout}.
 
 \paragraph{Canonical sign split.}
 We use the element-wise positive/negative decomposition of the original network's weights and
@@ -2221,6 +2226,63 @@ trajectory factor. Therefore $\Gamma_x(s_{x_{k^\star},p}) = \Gamma_x(s_{z,p}^{\m
 $\Gamma_x(s_{x_k,p}) = 0$ for $k \neq k^\star$, proving Item 3.
 \end{proof}
 
+\subsection{Signed affine output logits}\label{app:affine-readout}
+
+The activation-output formulation above extends to the signed logits of a classifier by an
+\emph{ungated affine readout}. Let $h_j=a_j^{(L)}\geq0$ be the last hidden activations and
+\begin{align}\label{eq:affine-readout}
+    f_u(x)=\sum_j c_{uj}h_j(x)+b_u.
+\end{align}
+There is no ReLU at this output: the sign of the logit introduces no stopping gate.
+
+\paragraph{Stopping Game.}
+Add a root with forced continuation, immediate bias payoff difference $b_u$, and structural
+discount $\gamma_u=\sum_j|c_{uj}|$. When $\gamma_u>0$, it moves to hidden neuron $j$ with
+probability $|c_{uj}|/\gamma_u$, retaining the player for $c_{uj}\geq0$ and switching players
+for $c_{uj}<0$. Its value is therefore $b_u+\sum_jc_{uj}h_j=f_u(x)$, even when this value is
+negative. If $\gamma_u=0$, the root pays $b_u$ and moves to the cemetery; the input derivative
+is zero. On the strict gate cells of Theorem~\ref{thm:gradient}, let
+$\Gamma^{\mathrm{SG}}_{j,\pm}(i)$ denote the input-state occupations from a unit source at
+hidden neuron $j$ with initial player $+$. The added transition gives
+\begin{align}\label{eq:affine-readout-gradient}
+    \partial_i f_u(x)=\sum_j c_{uj}
+    \bigl(\Gamma^{\mathrm{SG}}_{j,+}(i)-\Gamma^{\mathrm{SG}}_{j,-}(i)\bigr).
+\end{align}
+This is the chain rule with the same non-negative path occupations; at gate or pooling ties,
+the selected-backward convention remains in force.
+
+\paragraph{Routing Game.}
+For attribution, append an ungated source to the hidden Routing Game. This source continues
+unconditionally; its positive and negative branch masses, including the bias, are
+$\Sigma_u^\kappa=\sum_j[h_jc_{uj}]^\kappa+[b_u]^\kappa$.
+At $\tau=1$, the sign-oracle probabilities $1/2$, trajectory discounts $2\alpha$ and $2\beta$,
+and the branchwise Gibbs policies give the coefficients
+\begin{align}\label{eq:affine-readout-routing}
+    q_j^+=\alpha\frac{[h_jc_{uj}]^+}{\Sigma_u^++\varepsilon},
+    \qquad q_j^-=\beta\frac{[h_jc_{uj}]^-}{\Sigma_u^-+\varepsilon}.
+\end{align}
+Bias and outside-option shares are absorbed. An empty branch is completed by a transition to
+the cemetery, and its ordinary-successor fractions are zero ($0/0\coloneqq0$).
+For unit-source hidden occupations $\Gamma^{\mathrm{RG}}_{j,\pm}(i)$, define
+\begin{align}\label{eq:affine-readout-occupation}
+    \widehat\Gamma_\pm(i)=\sum_j\bigl(
+    q_j^+\Gamma^{\mathrm{RG}}_{j,\pm}(i)
+    +q_j^-\Gamma^{\mathrm{RG}}_{j,\mp}(i)\bigr).
+\end{align}
+Since $h_j=0$ implies $q_j^+=q_j^-=0$, the readout assigns nonzero incoming relevance only
+to positive hidden activations. Subtracting the two equations yields precisely the affine
+$\alpha\beta$ redistribution, followed by the hidden-layer recursion of Theorem~\ref{thm:ab-recovery}. Thus, for any real
+initial relevance $r_u$,
+\begin{align}\label{eq:affine-readout-relevance}
+    R_i=r_u\bigl(\widehat\Gamma_+(i)-\widehat\Gamma_-(i)\bigr).
+\end{align}
+The trajectory law and both occupations remain non-negative; a signed seed scales their
+\emph{difference}. No logarithm of the signed logit is taken: logarithms apply only to the
+non-negative branch masses. Classical output-seeded LRP chooses $r_u=f_u(x)$, whereas the
+released Routing-Game attribution routine uses $r_u=1$. These maps differ by the signed factor
+$f_u(x)$, including a sign reversal when the target logit is negative. The zero-logit case
+has zero output-seeded relevance, but can have nonzero unit-seeded relevance.
+
 \subsection{Temperature \texorpdfstring{$\tau$}{tau} as a Controlled Policy Deformation}\label{app:routing-temp}
 
 Theorem~\ref{thm:routing-forward}(i) establishes an SPNE for every $\tau > 0$ when the entropy
@@ -2333,6 +2395,23 @@ and every ViT result reported here apply the composite rule stated below, and th
 identity between the implementation and~\eqref{eq:attn-target-input} is checked by the tests of
 Appendix~\ref{app:code-tests}.}
 
+\paragraph{Zero-mass convention.}
+All ratios of non-negative contributions in this subsection use
+\begin{align}\label{eq:attn-zero-ratio}
+    \rho(u,D)\coloneqq
+    \begin{cases}u/D,&D>0,\\0,&D=0,\end{cases}
+    \qquad 0\leq u\leq D.
+\end{align}
+Thus every displayed fraction with a zero denominator is zero. A zero-mass routing state sends
+probability one to the cemetery and zero to its ordinary successors; a zero vector of ordinary
+successor probabilities is not itself a probability distribution. In particular, this convention
+applies both to $Z_{t,d}^\kappa$ and to the intermediate Value mass $\tilde v_{k,d}^\kappa$.
+A branch with $Z_{t,d}^\kappa=0$ has zero contribution $A_{t,k}\tilde v_{k,d}^\kappa$ for every
+key. If $\tilde v_{k,d}^\kappa=0$, every matching input and bias contribution is zero as well.
+The ideal formulas below use $\varepsilon=0$; the released implementation additionally supports
+positive stabilization, which replaces the composite denominator by $Z_{t,d}^\kappa+\varepsilon$
+and assigns the remaining share to the outside option.
+
 \emph{AV mixing $O \to v$.} Applied to $O_{t,d} = \sum_k A_{t,k}\,v_{k,d}$, the rule gives the
 relevance at the Value entry $v_{k,d}$ as the weighted difference of two per-stream contributions:
 \begin{align}\label{eq:attn-target-rule}
@@ -2357,8 +2436,9 @@ share is absorbed):
 \end{align}
 
 \emph{Aggregate.} Substituting~\eqref{eq:attn-target-rule} into~\eqref{eq:attn-target-input-via-V}
-and canceling $\tilde v_{k,d}^\kappa$ in numerator and denominator expresses $R^X_{k,e}$ directly
-in terms of $R^O_{t,d}$:
+and canceling $\tilde v_{k,d}^\kappa$ when it is positive expresses $R^X_{k,e}$ directly
+in terms of $R^O_{t,d}$. When it is zero, both forms vanish by the zero-mass convention;
+the same holds when $Z_{t,d}^\kappa=0$. Thus the identity holds in every case:
 \begin{align}\label{eq:attn-target-input}
     R^X_{k,e}
     \;=\; \sum_{t,d} \left(
@@ -2547,7 +2627,8 @@ with active-player value $V_p(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\
     \ell(Z_{t,d}^\kappa)$ and inactive-player value
 $V_{p'}(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}) = -\infty$ as in
 Definition~\ref{def:routing-recursion}. If $Z_{t,d}^\kappa = 0$, no key contributes mass on stream
-$\kappa$ and $V_p(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}) = -\infty$.
+$\kappa$ and $V_p(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}) = -\infty$. All key policies then have value $-\infty$;
+there is no unique maximizing key distribution. We use the cemetery completion stated above.
 \end{proposition}
 
 \begin{proof}
@@ -2572,7 +2653,9 @@ per-$(t,d,\kappa)$ policies used in the \ac{RG}'s backward walk through the atte
     \qquad
     \pi_{t,d,-}^\star(k) \;=\; \frac{A_{t,k}\, \tilde{v}_{k,d}^-}{Z_{t,d}^-},
 \end{align}
-with $Z_{t,d}^\kappa = \sum_m A_{t,m}\, \tilde{v}_{m,d}^\kappa$ from~\eqref{eq:attn-z-def}. The
+when $Z_{t,d}^\kappa>0$. When $Z_{t,d}^\kappa=0$, set all these key probabilities to zero
+and the cemetery probability to one. Here $Z_{t,d}^\kappa = \sum_m A_{t,m}\, \tilde{v}_{m,d}^\kappa$
+is defined in~\eqref{eq:attn-z-def}. The
 numerical specification $\bar\pi_t = A_{t,\cdot}$ does not require the oracle interpretation of
 \S\ref{app:attention-oracle}; it is enough that the cached softmax row is treated as a fixed input
 to~\eqref{eq:attn-value-routing}.
@@ -2623,8 +2706,8 @@ where the per-output-entry input difference is
     \Gamma_x\!\bigl(s_{t,d,-}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}\bigr),
 \end{align}
 with $\Gamma^{O}_{t,d} = R^{O}_{t,d}$ by inductive hypothesis from the surrounding recursion, for
-the seed $R^{(L)}_u = 1$ (for the seed $f(x)$ every relevance equals $f(x)$ times the corresponding
-$\Gamma$, as in Theorem~\ref{thm:ab-recovery}). The right-hand side is exactly the target
+the unit seed used by the implementation. Any real seed $r_u$ multiplies the occupation difference
+by $r_u$, including the signed affine-logit seed of Section~\ref{app:affine-readout}. The right-hand side is exactly the target
 rule~\eqref{eq:attn-target-input}, hence $\Gamma^{X}_{k,e} = R^{X}_{k,e}$. Aggregating over $e$ and
 the bias node at fixed $(k,d)$ collects the relevance routed through the Value entry $v_{k,d}$:
 \begin{align}\label{eq:attn-Gamma-V-corollary}
@@ -2669,7 +2752,8 @@ the Value projection's output.
             &=\; \alpha\, \frac{A_{t,k}\, [X_{k,e} W_{v,e,d}]^+}{Z_{t,d}^+}\,
             \Gamma_x\!\bigl(s_{t,d,r}^{(\mathrm{O},\mathrm{act})}\bigr),
         \end{align}
-        where the $\tilde{v}_{k,d}^+$ in numerator and denominator cancel.
+        where cancellation applies when $\tilde{v}_{k,d}^+>0$. If this mass or $Z_{t,d}^+$ is zero,
+the ordinary-successor contribution on both sides is zero by~\eqref{eq:attn-zero-ratio}.
     \item \emph{$\kappa = -$ branch (per $(t,d)$).} Sign-oracle takes $s_{t,d,p}^{(\mathrm{O},\mathrm{act})}
             \to s_{(t,d),p',-}^{(\mathrm{O},\mathrm{lin})}$ with probability $\tfrac12$, discount $2\beta$,
         turn switched to opponent $p'$; the rest of the path preserves $p'$, ending at
@@ -4204,23 +4288,23 @@ therefore be read against this architecture-specific asymptote rather than again
 close to the double-random baseline already indicate that the game-theoretic trajectory law has
 become fully decoupled from the pretrained one.
 
-\subsection{Per-Image Trajectory-vs-Map Independence}\label{sec:per-image-orthogonality}
+\subsection{Per-Image Association Between Trajectory and Map Diagnostics}\label{sec:per-image-orthogonality}
 
 Theorems~\ref{thm:rand-adf}--\ref{thm:rand-routing} and the double-random baseline of
 Table~\ref{tab:double-random-hellinger} bound the \emph{aggregate} behavior of the Hellinger
-trajectory distance and the pixel-level attribution-map similarity.  A sharper version of the
-argument of \S\ref{sec:lmp-randomization} is the claim that the two diagnostics disagree \emph{per
-image}: at fixed randomization depth, whether a given image's trajectory distribution is strongly
-displaced by the randomization need not predict whether its attribution map becomes more
-dissimilar.  Table~\ref{tab:per-image-corr} tests this directly.
+trajectory distance and the pixel-level attribution-map similarity.  A complementary question, motivated by the
+argument of \S\ref{sec:lmp-randomization}, is whether the two diagnostics agree \emph{per
+image}: at fixed randomization depth, does a larger displacement of an image's trajectory
+distribution correspond to a more dissimilar attribution map?  Table~\ref{tab:per-image-corr} tests this directly.
 
 \paragraph{Protocol.}
-For each architecture we pick a cascading step at which the Hellinger run and the
-attribution-sanity run have randomized the same part of the network, so per-image values are
-directly comparable: the layers down to \texttt{features.26} on VGG-16 and down to
+For each architecture we pick a cascading step at the same network depth in the Hellinger
+and attribution-sanity runs: the layers down to \texttt{features.26} on VGG-16 and down to
 \texttt{layer4.1.conv3} on ResNet-50 (identical sets of re-initialized layers), and the last
 encoder block on ViT-B/16, where the Hellinger cascade re-initializes the MLP and the output
 projection of the block and the attribution cascade additionally its $Q$, $K$ and $V$ projections.
+The interventions therefore match on the CNNs; on ViT-B/16, the comparison also reflects this
+difference in the randomized operators.
 The mean $\mathrm{H}$ / $\mathrm{H}_{\mathrm{surv}}$ at these steps can be read off
 Figure~\ref{fig:hellinger-sanity}.  For each of the $\perImageN$ ImageNet-S test images we then
 record four Hellinger scalars ($\mathrm{H}$ plain/surv for the Stopping and Routing Games) and four
@@ -4235,20 +4319,22 @@ Table~\ref{tab:per-image-corr} reports Spearman rank correlations across the $\p
     \setlength{\tabcolsep}{3.5pt}
     \input{tables/generated/per_image_corr_tabular}
     \caption{Per-image Spearman rank correlations across the $\perImageN$-image ImageNet-S test split
-    at the aligned cascading steps of the Hellinger and attribution-sanity pipelines.  Left block:
+    at the selected cascading steps of the Hellinger and attribution-sanity pipelines. The randomized
+    layers match on the CNNs; the ViT-B/16 attribution cascade additionally randomizes $Q$, $K$, and $V$.  Left block:
     within-Hellinger cross-correlations of the plain ($\mathrm{H}_{\cdot,\mathrm{pl}}$) and
     survival-conditioned ($\mathrm{H}_{\cdot,\mathrm{surv}}$) distances under the \ac{RG} and \ac{SG}
     kernels (self-entries shown as $-$; trivially $+1$).  Right block: Hellinger-vs-map
     cross-correlations.  The Hellinger-vs-map block is uniformly $|\rho| \leq \perImageCrossMax$:
-    per-image Hellinger and per-image attribution-map similarity rank images essentially
-    independently.}
+    per-image Hellinger and per-image attribution-map similarity have weak observed rank association.}
     \label{tab:per-image-corr}
 \end{table}
 
 \paragraph{Readings.}
 The Hellinger-vs-map cross-block in Table~\ref{tab:per-image-corr} is uniformly near zero ($|\rho|
     \leq \perImageCrossMax$ on all three architectures): per-image trajectory displacement and
-per-image attribution-map drift rank images essentially independently.
+per-image attribution-map drift have weak observed rank association. This does not establish
+statistical independence or exclude nonlinear dependence. For ViT-B/16, the unequal interventions
+also limit conclusions about the diagnostics alone.
 
 The within-Hellinger block shows that per-image $\mathrm{H}$ carries a stable ordering of the
 images. Where little trajectory mass reaches the cemetery, the plain and conditioned distances of
@@ -4266,8 +4352,8 @@ single attribution method agree well ($\rho = 0.65$--$0.82$, computed from the s
 joins), but Gradient and $\alpha\beta$-\ac{RG} similarities barely agree across images ($\rho$
 between $-0.10$ and $+0.30$ depending on architecture and similarity metric).  Together with the
 near-zero Hellinger-vs-map block, this tightens the conclusion of \S\ref{sec:lmp-randomization}:
-trajectory-space and pixel-level diagnostics look at orthogonal per-image structure, and within
-pixel-level diagnostics the choice of attribution method changes \emph{which} images a
+trajectory-space and pixel-level diagnostics yield weakly associated per-image rankings in these
+runs, and within pixel-level diagnostics the choice of attribution method changes \emph{which} images a
 randomization sanity check flags.
 \newpage
 \providecommand{\nValGrid}{\textcolor{red}{??}}%
@@ -4276,14 +4362,15 @@ randomization sanity check flags.
 
 \subsection{Data and splits}
 
-We evaluate on a \emph{custom} 50-class subset of ImageNet-S~\citep{gao2022luss}, sampled once at
-the start of the project and held fixed across all experiments. The subset has two partitions: a
-\textbf{custom validation split of 50 images} (one image per class, seed $42$) used only for
-configuration selection, and the \textbf{test split} of the remaining images, used for every
-reported test number. Images whose object mask lies entirely outside the $224{\times}224$ center
-crop are excluded after the split, because the mask-based metrics are undefined for them; this
-removes one test image and leaves \textbf{565 test images}. The Pascal VOC 2012 transfer split is
-described in Appendix~\ref{app:voc-cross-data}.
+We use the released ImageNet-S50 validation annotations~\citep{gao2022luss}, which contain $752$
+images from $50$ classes. We exclude $136$ images whose annotation class differs from the official
+ILSVRC2012 label, leaving $616$ eligible images. With seed $42$, one image per class forms the
+\textbf{50-image validation split}, used only for configuration selection; the remaining $566$
+form the test pool. Images whose object mask lies entirely outside the $224{\times}224$ center crop
+are excluded after the split, because the mask-based metrics are undefined for them. This removes
+one test image and leaves \textbf{565 test images}. The explanation target is the dataset class,
+including when the model misclassifies the image. The Pascal VOC 2012 transfer split is described
+in Appendix~\ref{app:voc-cross-data}.
 
 \paragraph{Backbone and dataset provenance.}
 All main-paper experiments use the pretrained torchvision checkpoints shipped with the library
@@ -4359,7 +4446,8 @@ applies the max-abs normalization (not min--max)
 \end{align}
 with the convention that the all-zero map remains zero. We denote the preprocessed attribution
 vector by $\bar{a}$. All metrics below use $\bar{a}$; faithfulness metrics use raw logits (no
-softmax) to avoid saturation effects, and the perturbation baseline is the channel-wise mean.
+softmax) to avoid saturation effects, and perturbations use the Quantus per-sample mean replacement
+baseline.
 
 \paragraph{Attribution localization (AL).} The inside-mass ratio of~\citet{Kohlbrenner2020}, who compute it with ground-truth bounding boxes;
 we use the ImageNet-S pixel masks:
@@ -4374,7 +4462,7 @@ uses \texttt{abs=true} and no normalization. Let $M(a) \coloneqq \{i \in \{1, \d
     \text{PG}(a, m) = \1\bigl\{M(a) \cap \{i : m_i = 1\} \neq \varnothing\bigr\}.
 \end{align}
 Ties are scored as a hit whenever at least one maximizer lies inside the object mask. PG is binary
-per image, so its test mean is a multiple of $1/565$.
+per image--class record, so its ImageNet-S test mean is a multiple of $1/565$.
 
 \paragraph{Top-$k$ intersection (TK).} Following~\citet{Theiner2022geolocation}, with $k = 1000$ and the permutation $\pi$ that sorts
 $\bar{a}$ in descending order:
@@ -4384,18 +4472,23 @@ $\bar{a}$ in descending order:
 
 \paragraph{Pixel-flipping AUC (PF$_5$, PF$_{20}$).} Pixel flipping~\citep{Bach2015, Samek2017evaluating} removes the most relevant features first
 and tracks the class score. The evaluator uses \texttt{pixel\_flipping\_abs} with
-\texttt{features\_in\_step = 1568} and \texttt{perturb\_baseline = mean}. For $T \coloneqq \lceil d
-    / 1568 \rceil$, define perturbed inputs $x^{(t)}$ by replacing features $\pi_{(t-1) \cdot 1568 +
-    1}, \dots, \pi_{\min\{t \cdot 1568, d\}}$ (and all earlier ones) with the per-sample mean baseline.
+\texttt{features\_in\_step = 1568} and \texttt{perturb\_baseline = mean}. Unlike the spatial
+localization metrics above, pixel flipping operates on $D \coloneqq CHW$ scalar input features.
+The spatial attribution is broadcast over the color channels; let $\widetilde\pi$ sort the
+flattened broadcast attribution in descending order. For $T \coloneqq \lceil D/1568 \rceil$, the
+input $x^{(t)}$ is obtained from $x^{(t-1)}$, starting at $x^{(0)}=x$, by replacing features
+$\widetilde\pi_{(t-1)\cdot1568+1},\dots,\widetilde\pi_{\min\{t\cdot1568,D\}}$ with the scalar mean
+of the current flattened input, as implemented by Quantus.
 The evaluator computes
 \begin{align}
     f_t \coloneqq F(x^{(t)})_y, \qquad t = 1, \dots, T,
 \end{align}
 and PF$_p$ is the trapezoidal area over the first $p\%$ of this flipping curve, i.e.\ over its
 first $K_p$ points with the abscissa rescaled to $[0,1]$: $\text{PF}_p =
-    \text{trapz}\bigl(\{(t-1)/(K_p-1), f_t\}_{t=1}^{K_p}\bigr)$, $K_p = \max(2, \lceil pT/100 \rceil)$;
-with $T = 96$ steps of 1568 features (the attribution is broadcast over the three color channels),
-$K_5 = 5$ and $K_{20} = 20$. Lower is better.
+    \text{trapz}\bigl(\{(t-1)/(K_p-1), f_t\}_{t=1}^{K_p}\bigr)$, $K_p = \max(2, \lceil pT/100 \rceil)$.
+For $C=3$ and $H=W=224$, $D=150{,}528$ and $T=96$ steps, giving $K_5=5$ and $K_{20}=20$.
+The curve contains only post-perturbation scores; the original input score is not an additional
+point. Lower is better.
 
 \paragraph{Selectivity (Sel).} Following~\citet{Montavon2018methods} and its Quantus implementation~\citep{hedstrom2023quantus},
 $\bar{a}$ is summed over square patches of $39{\times}39$ pixels (side
@@ -4499,20 +4592,36 @@ localization is not faithfulness, so both rows are reported and the trade-off st
 
 \subsection{Statistics}\label{app:stats}
 
-Every test metric is reported with a 95\% percentile bootstrap confidence interval over test
-images~\citep{Efron1993bootstrap} ($10{,}000$ resamples of the images; the same resampled image
-indices are used for all rows, so comparisons are paired). MaxS and AvgS are computed on the fixed
-200-image subset of Appendix~\ref{app:metrics}, and their intervals resample the images of that
-subset. For each metric, every row is tested against the best row for that metric: continuous
-metrics with a two-sided paired bootstrap test of the mean per-image difference (the bootstrap
-distribution of the mean difference is centered at zero, and $p$ is the fraction of centered
-resampled differences at least as large in absolute value as the observed one), and the binary PG
-with McNemar's test~\citep{McNemar1947} ($\chi^2$ statistic with continuity correction). The
-$p$-values are Holm-corrected~\citep{Holm1979} within each metric: over the rows shown in the main
-table, over all rows of a column in the appendix tables, and, for the statement that a row is
-significantly ahead of every baseline row, over its comparisons with the baseline rows. We call a
-difference significant at level $0.05$ after correction and describe all other differences as
-comparable.
+The test tables report 95\% percentile bootstrap confidence intervals~\citep{Efron1993bootstrap}
+using $B=10{,}000$ resamples and seed~$0$. On ImageNet-S, the sampling units are images, with the
+same resampled image indices used across method rows. MaxS and AvgS intervals resample the fixed
+200-image subset of Appendix~\ref{app:metrics}. Continuous metrics use a two-sided paired bootstrap
+test of the mean per-image difference: the bootstrap distribution is centered at zero, and $p$ is
+the fraction of centered resampled differences at least as large in absolute value as the observed
+difference. Binary PG uses McNemar's test~\citep{McNemar1947} with continuity correction.
+
+On Pascal VOC, the estimand remains the mean over image--class records, but the independent
+sampling units are the $G=2{,}293$ original test images. Each bootstrap replicate samples $G$
+images with replacement and retains every class record of each sampled image. Its mean is the sum
+over these records divided by their replicate-specific count. Thus, classes from the same image
+remain together, while images with more evaluated classes retain their contribution to the
+reported record-weighted mean. Paired comparisons use common finite records and common image
+draws. Every VOC metric, including binary PG, uses the corresponding two-sided, null-centered
+paired cluster-bootstrap test. For observed mean difference $\widehat\Delta$ and bootstrap
+differences $\Delta_b^*$, its finite-resample $p$-value is
+\begin{align}
+    p=\frac{1+\sum_{b=1}^{B}\1\{\lvert\Delta_b^*-\widehat\Delta\rvert
+        \geq\lvert\widehat\Delta\rvert\}}{B+1}.
+\end{align}
+
+For the main and full test tables, Holm correction~\citep{Holm1979} is applied to all unordered
+pairs of eligible rows within each metric and reported table, before extracting comparisons with
+the observed best row or declaring a row ahead of every baseline. The observed winner therefore
+does not determine the comparison family. A difference is called significant at adjusted
+$p<0.05$; otherwise, no difference was detected at this threshold. This does not establish
+practical equivalence. These intervals and tests condition on the fixed checkpoints, selected
+configurations and realized attribution evaluations; they do not quantify training or
+configuration-selection variability.
 
 \subsection{Compute resources}\label{app:compute-resources}
 
@@ -4676,7 +4785,7 @@ released code.
 \paragraph{Per-image disjoint val/test split.} The trainval pool is partitioned randomly with seed $42$ at the \emph{image} level (not the (image,
 class) level) into a $1{:}5$ val/test split: the trainval stems are shuffled deterministically and
 the first $1/6$ is assigned to val. All (image, class) samples for a given image stay in the same
-partition, so leakage between val tuning and test evaluation is structurally impossible. As on
+partition, preventing the same image from appearing in both tuning and test sets. As on
 ImageNet-S, samples whose object mask lies entirely outside the $224{\times}224$ center crop are
 excluded after the split (18 val and 105 test samples). The resulting partitions:
 \begin{center}
@@ -4711,13 +4820,16 @@ asymmetry: \ac{RG} and \ac{RG}+Eq do \emph{not} get a fresh grid search on VOC.
         without any VOC-side re-tuning.
 \end{itemize}
 To save compute, VOC is evaluated on localization and faithfulness only (no MaxS/AvgS and no
-runtime column). Any tuning advantage flows to the baselines, not to us. Wins, ties and losses are
-counted per metric with the tests of Appendix~\ref{app:stats}.
+runtime column). Baselines receive VOC-specific configuration selection, whereas the game rows
+remain fixed at their ImageNet-S settings. Significant wins, significant losses and comparisons
+without a detected difference are counted per metric with the tests of Appendix~\ref{app:stats};
+the last category does not establish equivalence.
 
 \appneedspace{8\baselineskip}
 \begin{center}
-    \captionof{table}{ViT-B/16 on the Pascal VOC 2012 test pool ($2{,}743$ samples): all rows with 95\%
-    bootstrap confidence intervals. \ac{RG} / \ac{RG}+Eq use the ImageNet-S-selected configurations
+    \captionof{table}{ViT-B/16 on the Pascal VOC 2012 test pool ($2{,}743$ image--class records from
+    $2{,}293$ images): all rows with 95\% confidence intervals from image-cluster bootstrap resampling.
+    Means are weighted over records. \ac{RG} / \ac{RG}+Eq use the ImageNet-S-selected configurations
     without re-tuning; baselines are selected on the VOC val pool. Metrics as in
     Table~\ref{tab:eval-vit}; configuration symbols and row labels: Appendix~\ref{app:config-symbols}.}
     \label{tab:eval-vit-voc}

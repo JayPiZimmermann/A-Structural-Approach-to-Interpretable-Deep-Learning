@@ -1,0 +1,24 @@
+{
+  "public_root": "HiddenMonotonicity.TransformerExpr",
+  "targets": [
+    {
+      "task": "transformer-expression-split-exact",
+      "module": "HiddenMonotonicity.TransformerExpr",
+      "declaration": "HiddenMonotonicity.TransformerDC.Expr.splitEval_exact",
+      "universes": [
+        "u"
+      ],
+      "expected_type": "∀ {ι : Type u} (e : HiddenMonotonicity.TransformerDC.Expr ι) (x : ι → ℝ × ℝ), HiddenMonotonicity.TransformerDC.value (e.splitEval x) = e.eval (fun i => HiddenMonotonicity.TransformerDC.value (x i))"
+    },
+    {
+      "task": "transformer-expression-split-regular",
+      "module": "HiddenMonotonicity.TransformerExpr",
+      "declaration": "HiddenMonotonicity.TransformerDC.Expr.splitEval_regular",
+      "universes": [
+        "u",
+        "v"
+      ],
+      "expected_type": "∀ {ι : Type u} {E : Type v} [AddCommGroup E] [Module ℝ E] [Preorder E] (e : HiddenMonotonicity.TransformerDC.Expr ι) (s : Set E), Convex ℝ s → ∀ (f : ι → E → ℝ × ℝ), (∀ i, HiddenMonotonicity.TransformerDC.Regular s (f i)) → HiddenMonotonicity.TransformerDC.Regular s (fun x => e.splitEval (fun i => f i x))"
+    }
+  ]
+}

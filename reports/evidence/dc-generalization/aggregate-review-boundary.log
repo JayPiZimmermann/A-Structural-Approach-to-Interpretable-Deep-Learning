@@ -1,0 +1,71 @@
+'DCGeneralizationReview.modern_gelu_valid' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DCGeneralizationReview.ungated_negative_readout' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DCGeneralizationReview.zero_width_readout' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DCGeneralizationReview.negative_part_not_monotone' depends on axioms: [propext, Classical.choice, Quot.sound]
+'DCGeneralizationReview.central_threshold_derivatives' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Network.convex_monotone_decomposition : ∀ {n m : ℕ} (net : Network n m),
+  net.Nonnegative →
+    ∀ (σ : ℝ → ℝ) (φ : ℝ × ℝ → ℝ × ℝ),
+      ValidPairActivation σ φ →
+        Monotone φ →
+          ConvexPairActivation φ →
+            Monotone (net.decomposeWith φ) ∧
+              (∀ (i : Fin m), ConvexOn ℝ univ fun x => (net.decomposeWith φ x).1 i) ∧
+                (∀ (i : Fin m), ConvexOn ℝ univ fun x => (net.decomposeWith φ x).2 i) ∧
+                  ∀ (x : PairVec n),
+                    (net.decomposeWith φ x).1 - (net.decomposeWith φ x).2 = net.forwardWith σ (x.1 - x.2)
+@Network.affine_signed_input_dc_decomposition : ∀ {n m k : ℕ} (net : Network n m),
+  net.Nonnegative →
+    ∀ (σ : ℝ → ℝ) (φ : ℝ × ℝ → ℝ × ℝ),
+      ValidPairActivation σ φ →
+        Monotone φ →
+          ConvexPairActivation φ →
+            ∀ (wp wn : Matrix (Fin k) (Fin m) ℝ),
+              (∀ (i : Fin k) (j : Fin m), 0 ≤ wp i j) →
+                (∀ (i : Fin k) (j : Fin m), 0 ≤ wn i j) →
+                  ∀ (bp bn : Vec k),
+                    (∀ (i : Fin k),
+                        ConvexOn ℝ univ fun x => (net.affineDecomposeWith φ wp wn bp bn (signedInput x)).1 i) ∧
+                      (∀ (i : Fin k),
+                          ConvexOn ℝ univ fun x => (net.affineDecomposeWith φ wp wn bp bn (signedInput x)).2 i) ∧
+                        ∀ (x : Vec n),
+                          (net.affineDecomposeWith φ wp wn bp bn (signedInput x)).1 -
+                              (net.affineDecomposeWith φ wp wn bp bn (signedInput x)).2 =
+                            affineLayer wp wn bp bn (net.forwardWith σ x)
+@modern_curvature_affine_network : ∀ {n m k : ℕ} (net : Network n m),
+  net.Nonnegative →
+    ∀ (a : ModernActivation) (wp wn : Matrix (Fin k) (Fin m) ℝ),
+      (∀ (i : Fin k) (j : Fin m), 0 ≤ wp i j) →
+        (∀ (i : Fin k) (j : Fin m), 0 ≤ wn i j) →
+          ∀ (bp bn : Vec k),
+            Monotone (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn) ∧
+              (∀ (i : Fin k),
+                  ConvexOn ℝ univ fun x => (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).1 i) ∧
+                (∀ (i : Fin k),
+                    ConvexOn ℝ univ fun x => (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).2 i) ∧
+                  ∀ (x : PairVec n),
+                    (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).1 -
+                        (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).2 =
+                      affineLayer wp wn bp bn (net.forwardWith a.eval (x.1 - x.2))
+centralConvex_asymmetric_split : ∀ (f d : ℝ → ℝ) (a b : ℝ),
+  a < b →
+    (∀ (x : ℝ), HasDerivAt f (d x) x) →
+      AntitoneOn d (Iic a) →
+        MonotoneOn d (Icc a b) →
+          AntitoneOn d (Ici b) →
+            (∀ x ≤ a, d x ≤ 0) →
+              (∀ (x : ℝ), b ≤ x → 0 ≤ d x) →
+                ConvexOn ℝ univ (asymmetricLift (centralConvexP f d a b) (d b - d a)) ∧
+                  ConvexOn ℝ univ (asymmetricLift (centralConvexQ f d a b) (d b - d a)) ∧
+                    Monotone (asymmetricLift (centralConvexP f d a b) (d b - d a)) ∧
+                      Monotone (asymmetricLift (centralConvexQ f d a b) (d b - d a)) ∧
+                        ∀ (z : ℝ × ℝ),
+                          asymmetricLift (centralConvexP f d a b) (d b - d a) z -
+                              asymmetricLift (centralConvexQ f d a b) (d b - d a) z =
+                            f (z.1 - z.2)
+'HiddenMonotonicity.Network.convex_monotone_decomposition' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.Network.affine_signed_input_dc_decomposition' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'HiddenMonotonicity.SmoothDC.modern_curvature_affine_network' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.SmoothDC.centralConvex_asymmetric_split' depends on axioms: [propext, Classical.choice, Quot.sound]

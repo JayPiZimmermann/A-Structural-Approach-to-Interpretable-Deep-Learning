@@ -1,0 +1,14 @@
+Independent statistical design and implementation review completed by delegated design_review agent.
+
+Reviewed properties:
+- The point estimand is the image-class record mean. Sampling images uniformly with replacement retains their complete class record clusters; each replicate uses its actual record count as denominator.
+- Comparisons use common finite paired records and the same image draws. Binary VOC PG follows the cluster-bootstrap path.
+- VOC p-values use null-centered bootstrap errors with a plus-one Monte Carlo correction. This remains asymptotic inference, not an exact finite-sample test.
+- Holm correction covers all unordered eligible row pairs within each metric/table before comparisons to its observed winner are reported.
+- ImageNet iid bootstrap draws, statistics, p-value convention, and PG McNemar tests are retained.
+- VOC caches without matching image-cluster metadata are not accepted by the table generator.
+- At least two informative image clusters are required for inference.
+
+One review edge case was addressed: if every sampled replicate has no usable records, return NaN inference rather than failing percentile computation or returning p=1. The regression test is included in the 33 passing tests.
+
+Complete VOC score support avoids that sparse-data edge case. No unresolved statistical implementation issue was identified. Uncertainty remains conditional on the released fixed checkpoint and selected configurations; no independent retraining was performed.

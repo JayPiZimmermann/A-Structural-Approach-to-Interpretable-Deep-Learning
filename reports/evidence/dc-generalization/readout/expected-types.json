@@ -1,0 +1,53 @@
+{
+  "public_root": "HiddenMonotonicity.ConvexMonotoneReadout",
+  "targets": [
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneReadout",
+      "declaration": "HiddenMonotonicity.Network.affineDecomposeWith_recovery",
+      "expected_type": "∀ (n m k : ℕ) (backbone : Network n m)\n    (activation : ℝ → ℝ) (lift : (ℝ × ℝ) → ℝ × ℝ),\n    ValidPairActivation activation lift →\n    ∀ (positive negative : Matrix (Fin k) (Fin m) ℝ)\n      (positiveBias negativeBias : Vec k) (input : PairVec n),\n      (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).1 -\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).2 =\n        affineLayer positive negative positiveBias negativeBias\n          (backbone.forwardWith activation (input.1 - input.2))",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERAL-READOUT-signed-affine-recovery",
+      "review_evidence": "reports/evidence/dc-generalization/readout/review.json",
+      "scope": "Exact vector-valued ungated signed affine output recovery for all finite dimensions, arbitrary activation and valid pair lift, arbitrary split matrices and biases, and arbitrary pair inputs. No nonnegativity hypothesis is needed for recovery."
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneReadout",
+      "declaration": "HiddenMonotonicity.Network.affine_convex_monotone_decomposition",
+      "expected_type": "∀ (n m k : ℕ) (backbone : Network n m), backbone.Nonnegative →\n    ∀ (activation : ℝ → ℝ) (lift : (ℝ × ℝ) → ℝ × ℝ),\n    ValidPairActivation activation lift → Monotone lift →\n    (ConvexOn ℝ Set.univ (fun z => (lift z).1) ∧\n      ConvexOn ℝ Set.univ (fun z => (lift z).2)) →\n    ∀ (positive negative : Matrix (Fin k) (Fin m) ℝ),\n      (∀ i j, 0 ≤ positive i j) → (∀ i j, 0 ≤ negative i j) →\n    ∀ (positiveBias negativeBias : Vec k),\n      Monotone (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias) ∧\n      (∀ j, ConvexOn ℝ Set.univ (fun input : PairVec n =>\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).1 j)) ∧\n      (∀ j, ConvexOn ℝ Set.univ (fun input : PairVec n =>\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).2 j)) ∧\n      ∀ input : PairVec n,\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).1 -\n          (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).2 =\n          affineLayer positive negative positiveBias negativeBias\n            (backbone.forwardWith activation (input.1 - input.2))",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERAL-READOUT-joint-convex-monotone-affine-heads",
+      "review_evidence": "reports/evidence/dc-generalization/readout/review.json",
+      "scope": "Actual complete decomposeWith network followed by an ungated affine readout. Both heads are jointly convex and monotone on the full PairVec input space, with exact forwardWith recovery. Split weight matrices are nonnegative; biases and target output are unrestricted."
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneReadout",
+      "declaration": "HiddenMonotonicity.Network.affine_dc_decomposition",
+      "expected_type": "∀ (n m k : ℕ) (backbone : Network n m), backbone.Nonnegative →\n    ∀ (activation : ℝ → ℝ) (lift : (ℝ × ℝ) → ℝ × ℝ),\n    ValidPairActivation activation lift → Monotone lift →\n    (ConvexOn ℝ Set.univ (fun z => (lift z).1) ∧\n      ConvexOn ℝ Set.univ (fun z => (lift z).2)) →\n    ∀ (positive negative : Matrix (Fin k) (Fin m) ℝ),\n      (∀ i j, 0 ≤ positive i j) → (∀ i j, 0 ≤ negative i j) →\n    ∀ (positiveBias negativeBias : Vec k),\n      Monotone (fun input : Vec n =>\n        backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)) ∧\n      (∀ j, ConvexOn ℝ Set.univ (fun input : Vec n =>\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)).1 j)) ∧\n      (∀ j, ConvexOn ℝ Set.univ (fun input : Vec n =>\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)).2 j)) ∧\n      ∀ input : Vec n,\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)).1 -\n          (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)).2 =\n          affineLayer positive negative positiveBias negativeBias\n            (backbone.forwardWith activation input)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERAL-READOUT-ordinary-signed-input-dc",
+      "review_evidence": "reports/evidence/dc-generalization/readout/review.json",
+      "scope": "Restrict the actual pair network and ungated affine readout to x mapped to (x,0), giving two convex and monotone heads on every signed Vec input and exact original-network affine recovery. No nonnegative input assumption."
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexMonotoneReadout",
+      "declaration": "HiddenMonotonicity.Network.affine_signed_input_dc_decomposition",
+      "expected_type": "∀ (n m k : ℕ) (backbone : Network n m), backbone.Nonnegative →\n    ∀ (activation : ℝ → ℝ) (lift : (ℝ × ℝ) → ℝ × ℝ),\n    ValidPairActivation activation lift → Monotone lift →\n    (ConvexOn ℝ Set.univ (fun z => (lift z).1) ∧\n      ConvexOn ℝ Set.univ (fun z => (lift z).2)) →\n    ∀ (positive negative : Matrix (Fin k) (Fin m) ℝ),\n      (∀ i j, 0 ≤ positive i j) → (∀ i j, 0 ≤ negative i j) →\n    ∀ (positiveBias negativeBias : Vec k),\n      (∀ j, ConvexOn ℝ Set.univ (fun input : Vec n =>\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias\n          ((fun i => max (input i) 0), (fun i => max (-input i) 0))).1 j)) ∧\n      (∀ j, ConvexOn ℝ Set.univ (fun input : Vec n =>\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias\n          ((fun i => max (input i) 0), (fun i => max (-input i) 0))).2 j)) ∧\n      ∀ input : Vec n,\n        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias\n          ((fun i => max (input i) 0), (fun i => max (-input i) 0))).1 -\n          (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias\n            ((fun i => max (input i) 0), (fun i => max (-input i) 0))).2 =\n          affineLayer positive negative positiveBias negativeBias\n            (backbone.forwardWith activation input)",
+      "open_namespaces": [
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "DC-GENERAL-READOUT-positive-negative-input-dc",
+      "review_evidence": "reports/evidence/dc-generalization/readout/review.json",
+      "scope": "Use the explicitly specified max(x,0), max(-x,0) input streams. Both output heads remain convex and their difference recovers the original signed network with ungated affine output. No raw-input monotonicity or output nonnegativity is asserted."
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+@HiddenMonotonicity.SoftmaxDC.convex_from_affine_lines : ∀ {ι : Type u_1} (f : (ι → ℝ) → ℝ),
+  (∀ (a v : ι → ℝ), ConvexOn ℝ Set.univ fun t => f fun j => a j + t * v j) → ConvexOn ℝ Set.univ f
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.monotone_from_affine_line_deriv : ∀ {ι : Type u_1} (f : (ι → ℝ) → ℝ)
+  (D : (ι → ℝ) → (ι → ℝ) → ℝ),
+  (∀ (a v : ι → ℝ) (t : ℝ), HasDerivAt (fun s => f fun j => a j + s * v j) (D (fun j => a j + t * v j) v) t) →
+    (∀ (z v : ι → ℝ), (∀ (j : ι), 0 ≤ v j) → 0 ≤ D z v) → Monotone f
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.multivariateLift_convex : ∀ {ι : Type u_1} [inst : Fintype ι] (P : (ι → ℝ) → ℝ) (L c : ℝ),
+  ConvexOn ℝ Set.univ P → ConvexOn ℝ Set.univ (HiddenMonotonicity.SoftmaxDC.multivariateLift P L c)
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.multivariateLift_monotone : ∀ {ι : Type u_1} [inst : Fintype ι] (P : (ι → ℝ) → ℝ)
+  (L c : ℝ),
+  Monotone P → (Monotone fun x => L * ∑ j, x j - P x) → Monotone (HiddenMonotonicity.SoftmaxDC.multivariateLift P L c)
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.multivariateLift_difference : ∀ {ι : Type u_1} [inst : Fintype ι] (P Q f : (ι → ℝ) → ℝ)
+  (L c : ℝ),
+  (∀ (x : ι → ℝ), P x - Q x = f x) →
+    ∀ (z : (ι → ℝ) × (ι → ℝ)),
+      HiddenMonotonicity.SoftmaxDC.multivariateLift P L c z - HiddenMonotonicity.SoftmaxDC.multivariateLift Q L c z =
+        f (z.1 - z.2)
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.multivariateLift_nonnegative : ∀ {ι : Type u_1} [inst : Fintype ι] (P : (ι → ℝ) → ℝ)
+  (L c : ℝ),
+  Monotone (HiddenMonotonicity.SoftmaxDC.multivariateLift P L c) →
+    c ≤ P 0 → ∀ (z : (ι → ℝ) × (ι → ℝ)), 0 ≤ z → 0 ≤ HiddenMonotonicity.SoftmaxDC.multivariateLift P L c z
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 7 project theorem declarations in the imported environment

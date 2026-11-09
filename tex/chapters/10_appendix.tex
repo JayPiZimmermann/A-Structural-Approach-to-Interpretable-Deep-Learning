@@ -1,14 +1,18 @@
 \appendix
 \chapter{Extended Experimental Results}\label{app:extended_results}
 
-% Data provenance: all numbers in this appendix are copied verbatim from the two papers
-% (hiddenMonotonicity and playingTheNetworkBackward) and restyled into thesis tables;
-% no experiment was re-run (see THESIS_PLAN.md §6).
-This appendix collects extended results for both experimental campaigns. The split-method sections retain the hidden-monotonicity evaluation; the game-method sections use the revised AISTATS protocol, confidence intervals, validation selections, ablations and cross-dataset results.
+This appendix collects extended results for both experimental campaigns. The split-method sections retain the hidden-monotonicity evaluation; the game-method sections use the revised game-paper protocol, confidence intervals, validation selections, ablations and cross-dataset results.
 
 \section{Full Evaluation Results for the Split Methods}\label{app:saliency}
 
 This section provides the comprehensive evaluation results for all interpretability methods tested in the split-method setup of Section~\ref{sec:experimental_setup}.
+
+The split-method campaign explains the model's predicted class, including for misclassified
+images. Its localization metrics compare that attribution with the annotated object mask; when
+the prediction differs from the annotated class, the explanation target and the mask therefore
+refer to different classes. The game-method campaign below instead explains the dataset target
+class. Both retain misclassified images, and their results should be read under these distinct
+target conventions.
 
 \subsection{VGG-16 Qualitative Saliency Map Comparison}\label{app:vgg_qualitative}
 
@@ -18,7 +22,7 @@ Complementing Figure~\ref{fig:vgg_saliency_comparison_main}, Figure~\ref{fig:vgg
 
 \subsection{Quantitative Analysis on VGG-16}\label{app:vgg_split}
 
-Table~\ref{tab:xai_eval_comprehensive_vgg} presents the detailed quantitative metrics across all split configurations, baselines, and classical methods for VGG-16. There is a consistent boost in performance for SplitCAM with $\alpha = 0.4$ compared to $\alpha = 0.5$ and compared to classical LayerCAM, respectively, indicating that the LayerCAM formulas indeed yield more powerful explanations on the split-pair than on the original model; this is even more pronounced in the ablation studies of Section~\ref{app:ablation}.
+Table~\ref{tab:xai_eval_comprehensive_vgg} presents the detailed quantitative metrics across all split configurations, baselines, and classical methods for VGG-16. SplitCAM's best reported localization scores exceed those of the listed LayerCAM rows, and its reported Maximum Sensitivity values are lower, while LayerCAM at layer~14 has higher Pixel-Flipping score-drop AUC. Comparisons across the selected rows also vary the layer or absolute-value convention. The controlled $\alpha$ sweeps in Section~\ref{app:ablation} expose the resulting trade-offs more directly; neither comparison establishes a uniform improvement across metrics.
 
 \input{tables/appendix/xai_eval_vgg_full}
 
@@ -34,11 +38,15 @@ The model-randomization sanity check~\parencite{Adebayo2018sanity} tests whether
 
 \input{tables/appendix/randomization_sanity_check}
 
-The results in Table~\ref{tab:randomization_sanity_check} highlight that the backward-pass stabilization used in SplitCAM and SplitGrad effectively mitigates the gradient-explosion issues caused by the non-negative split-stream weights: both method families show substantially lower similarities than all considered baselines, particularly in Spearman and SSIM, demonstrating exceptionally strong dependence on the learned weights. SplitLRP, in contrast, remains fairly insensitive (HOG $\approx 0.99$, Spearman $\approx 1.00$; only SSIM registers the change at $\approx 0.45$--$0.56$). This insensitivity is attributable to the diminishing-gradient effect of the $\epsilon$-\ac{lrp} rule on the non-negative split stream: changes in the final-layer weights become largely insignificant for the propagated relevance, and indeed the layer-26 SplitLRP configuration shows the lowest similarity across all three metrics among the SplitLRP configurations.
+In Table~\ref{tab:randomization_sanity_check}, every reported SplitCAM and SplitGrad configuration has lower SSIM than every listed baseline, whereas the HOG and Spearman comparisons are mixed. These results show that the maps respond to the tested parameter randomization, but do not isolate the effect of stabilization on numerical gradient growth. SplitLRP retains high HOG and Spearman similarity (approximately $0.99$ and $1.00$), while SSIM decreases to $0.45$--$0.56$. Attenuation by the $\epsilon$-\ac{lrp} rule is a possible explanation for this behavior, but the randomization comparison alone does not identify its cause.
 
 \subsection{Computational Efficiency}\label{app:p1_timing}
 
-Mean computation times across the custom 50-image validation subset of ImageNet-S are reported in Table~\ref{tab:timing_comparison} for both ResNet-18 and VGG-16. The model-splitting operation itself is performed once per model (averaged over 20 split procedures) and requires only 0.033\,s for ResNet-18 and 0.030\,s for VGG-16 --- negligible overhead. SplitCAM and SplitGrad achieve competitive per-image times (0.33--0.44\,s) compared to classical CAM-based methods while being orders of magnitude faster than the perturbation-based approaches Feature Ablation and Occlusion. The shifting parameter $\alpha$ does not affect runtime, as it only modifies the forward-pass computations. The measured implementation duplicates all weight matrices and does not use PyTorch hooks; since the split stream can in principle operate directly on the original model weights and both passes can be parallelized, the reported overhead is an upper bound.
+Table~\ref{tab:timing_comparison} reports mean attribution times across the custom 50-image validation subset of ImageNet-S for ResNet-18 and VGG-16. Model splitting is reported separately, averaged over 20 setup procedures: 0.033\,s for ResNet-18 and 0.030\,s for VGG-16. SplitCAM and SplitGrad take 0.33--0.44\,s per image, compared with 0.28--0.31\,s for the row labelled Guided Grad-CAM. SplitCAM takes approximately 14--29 times as long as the corresponding ordinary Grad-CAM and LayerCAM rows, while the split methods are much faster than the reported Feature Ablation and Occlusion configurations.
+
+The released evaluator initializes the split model once per method configuration and reuses it across images. Its per-image timer covers attribution generation and the helper's postprocessing, copying and cleanup; image and model loading, initial input transfer to the device, target prediction and model splitting occur outside that timer. The split helper computes maps for all spatial layer chunks with cached activations and gradients before selecting the configured output, so the timing includes this additional map computation. The shifting parameter $\alpha$ changes the backward propagation rule, but runtime variation with $\alpha$ was not separately measured.
+
+The available artifacts do not identify the hardware, numerical precision or exact configuration IDs of the historical timing run. In particular, the released VGG-16 timing configuration named \texttt{guided\_grad\_cam} dispatches Guided LayerCAM, while the source table labels its row Guided Grad-CAM. The table retains the reported label and numbers; this mismatch limits identification of that measured baseline. The reported timings describe the source implementation and do not establish an upper bound on the overhead of other implementations.
 
 \input{tables/appendix/timing_comparison}
 
@@ -50,7 +58,16 @@ This section presents the ablation studies examining the effect of the proposed 
 
 \subsection{Backward-Pass Stabilization}\label{app:backward_ablation}
 
-Table~\ref{tab:alpha_comparison_by_method} reports the full $\alpha$-ablation for SplitCAM and SplitGrad across the selected configurations, extending the main-text Table~\ref{tab:alpha_ablation_main}. Performance generally improves as $\alpha$ decreases below $0.5$, while all metrics except Maximum Sensitivity exhibit a sharp drop at $\alpha = 0.0$: the backward-pass stabilization plays a crucial role in both methods. The improvements in Pixel Flipping are modest, but the gains in the two localization metrics and the robustness metric are substantial. The table also compares max-pooling in convex mode versus the winner-takes-it-all mode: for $\alpha$ close to $0.5$ the differences are minimal (for $\alpha = 0.5$, split-pair gradients coincide with scaled original gradients, so the max-pooling choice has no influence on the gradients), whereas for $\alpha \in \{0.30, 0.35\}$ the winner-takes-it-all mode shows mostly stronger performance across all methods and metrics.
+Table~\ref{tab:alpha_comparison_by_method} reports the full $\alpha$-ablation for SplitCAM and SplitGrad across the selected configurations, extending the main-text Table~\ref{tab:alpha_ablation_main}. At layer~26, changing $\alpha$ from $0.5$ to $0.4$ improves both localization scores for each listed configuration, but the Pixel-Flipping score-drop AUC increases for SplitGrad and decreases for SplitCAM. The layer-14 configurations have smaller or adverse changes in some metrics. Low $\alpha$ often reduces Maximum Sensitivity while also reducing localization or Pixel-Flipping performance. Since $\alpha$ changes the backward attribution rule, these sweeps do not isolate numerical stabilization from the choice of explanation. The table also compares convex and winner-takes-it-all max-pooling: their differences are small near $\alpha=0.5$ and become more pronounced at lower values, with their ranking depending on the configuration and metric.
+
+\paragraph{Unresolved source-table discrepancy.}
+For SplitCAM with scaling, $\alpha=0.4$, winner-takes-it-all pooling and layer configuration
+$(26,+,g)$ with absolute values, Table~\ref{tab:xai_eval_comprehensive_vgg} reports
+PF$^{\mathrm{drop}}_{20}=1.590$ and MaxS$=0.456$, whereas the corresponding row of
+Table~\ref{tab:alpha_comparison_by_method} reports $1.5849$ and $0.4573$. These values are inherited
+from the source tables. The released artifacts do not provide the underlying per-image results
+needed to resolve the discrepancy, so the values are retained without attributing the difference
+to a particular cause.
 
 \input{tables/appendix/alpha_combined}
 
@@ -58,11 +75,32 @@ Table~\ref{tab:alpha_comparison_by_method} reports the full $\alpha$-ablation fo
 
 This subsection investigates the influence of the forward stabilization on SplitLRP for the framework-selected layer configurations, and on SplitCAM for manually selected layer configurations. As a baseline, a shifting mode is introduced that shifts the activations of positive neurons to half of the respective original activation and those of negative neurons to the negative half. A SplitCAM variant without any forward stabilization exhibits an activation explosion in late VGG-16 layers on the order of $10^{18}$, resulting in numerical errors on the order of $10^{9}$ despite per-layer correction; for SplitLRP, the absence of forward stabilization produced nearly entirely white saliency maps with only small, random, semantically meaningless artifacts, so no quantitative metrics were computed for that setting.
 
-Table~\ref{tab:alpha_comparison_none} summarizes all SplitCAM configurations \emph{without} forward-pass stabilization, and Table~\ref{tab:alpha_comparison_shift} the results \emph{with} the shifting-based stabilization; both mirror the configurations of Table~\ref{tab:alpha_comparison_by_method}. Table~\ref{tab:lrp_scale_shift_comparison} directly compares SplitLRP with shifting versus scaling stabilization: for both layer-7 configurations, replacing scaling with shifting leads to substantial performance drops across all metrics; for the later-layer configurations the picture is mixed --- shifting yields slightly higher Attribution Localization, but scaling achieves markedly better Pointing Game performance and significantly improved robustness. These findings highlight the clear advantage of using scaled split-pair activations, and not the original activations, for \ac{lrp} within the \ac{dc}-decomposition framework.
+Table~\ref{tab:alpha_comparison_none} summarizes all SplitCAM configurations \emph{without} forward-pass stabilization, and Table~\ref{tab:alpha_comparison_shift} the results \emph{with} the shifting-based stabilization; both mirror the configurations of Table~\ref{tab:alpha_comparison_by_method}. Table~\ref{tab:lrp_scale_shift_comparison} directly compares SplitLRP with shifting versus scaling stabilization. Scaling has better values for all reported metrics in the two layer-7 configurations. At the later layers, shifting gives higher Attribution Localization and Pixel-Flipping score-drop AUC, while scaling gives lower Maximum Sensitivity; the Pointing Game comparison changes direction between the two configurations. The evidence therefore supports a configuration-dependent trade-off between the two forward rules.
 
 \input{tables/appendix/lrp_scale_shift}
 \input{tables/appendix/alpha_none}
 \input{tables/appendix/alpha_shift}
+
+\subsection{Artifact Availability and Reproduction Scope}\label{app:hm_artifact_scope}
+
+The Hidden Monotonicity tables retain their published-source provenance. The
+available code checkout does not contain the original per-image evaluation
+outputs, the complete historical evaluation environment, or the six training
+configurations advertised for the MNIST multi-seed campaign. The runnable
+notebook-derived example is a separate example and does not reconstruct those
+missing settings. Consequently, exact reproduction of the historical tables
+cannot be established from the available artifacts alone.
+
+The current evaluation implementation has been exercised on deterministic CPU
+fixtures, including double-precision reconstruction, input derivatives, attribution,
+timing, and Pixel Flipping with an independently evaluated initial target score.
+Those checks establish the exercised implementation contracts; the original
+ImageNet campaign has not been rerun, so agreement with its published values is
+unverified. The historical training runner used the test loader during epoch
+validation. The current runner instead reserves a deterministic $10\%$ of the
+training pool for validation and evaluates the test set only after training,
+recording the partition indices and seed. This current protocol does not establish
+which checkpoint-selection procedure generated the historical MNIST figures.
 
 \FloatBarrier
 
@@ -70,14 +108,17 @@ Table~\ref{tab:alpha_comparison_none} summarizes all SplitCAM configurations \em
 
 \subsection{Data and splits}
 
-We evaluate on a \emph{custom} 50-class subset of ImageNet-S~\parencite{gao2022luss}, sampled once at
-the start of the project and held fixed across all experiments. The subset has two partitions: a
-\textbf{custom validation split of 50 images} (one image per class, seed $42$) used only for
-configuration selection, and the \textbf{test split} of the remaining images, used for every
-reported test number. Images whose object mask lies entirely outside the $224{\times}224$ center
-crop are excluded after the split, because the mask-based metrics are undefined for them; this
-removes one test image and leaves \textbf{565 test images}. The Pascal VOC 2012 transfer split is
-described in Section~\ref{ptnb:app:voc-cross-data}.
+The game-method campaign uses the released ImageNet-S50 validation annotations~\parencite{gao2022luss},
+which contain $752$ images from $50$ classes. We exclude $136$ images whose annotation class
+differs from the official ILSVRC2012 label, leaving $616$ eligible images. With seed $42$, one
+image per class forms the \textbf{50-image validation split}, used only for configuration
+selection; the remaining $566$ form the test pool. Images whose object mask lies entirely outside
+the $224{\times}224$ center crop are excluded after the split, because the mask-based metrics are
+undefined for them. This removes one test image and leaves \textbf{565 test images}. The
+explanation target is the dataset class, including when the model misclassifies the image. This
+population and target convention belong to the game-method protocol and need not coincide with
+the split-method campaign. The Pascal VOC 2012 transfer split is described in
+Section~\ref{ptnb:app:voc-cross-data}.
 
 \paragraph{Backbone and dataset provenance.}
 All game-based experiments use the pretrained torchvision checkpoints shipped with the library
@@ -153,7 +194,8 @@ applies the max-abs normalization (not min--max)
 \end{align}
 with the convention that the all-zero map remains zero. We denote the preprocessed attribution
 vector by $\bar{a}$. All metrics below use $\bar{a}$; faithfulness metrics use raw logits (no
-softmax) to avoid saturation effects, and the perturbation baseline is the channel-wise mean.
+softmax) to avoid saturation effects, and perturbations use the Quantus per-sample mean replacement
+baseline.
 
 \paragraph{Attribution localization (AL).} The inside-mass ratio of~\textcite{Kohlbrenner2020}, who compute it with ground-truth bounding boxes;
 we use the ImageNet-S pixel masks:
@@ -168,7 +210,7 @@ uses \texttt{abs=true} and no normalization. Let $M(a) \coloneqq \{i \in \{1, \d
     \text{PG}(a, m) = \1\bigl\{M(a) \cap \{i : m_i = 1\} \neq \varnothing\bigr\}.
 \end{align}
 Ties are scored as a hit whenever at least one maximizer lies inside the object mask. PG is binary
-per image, so its test mean is a multiple of $1/565$.
+per image--class record, so its ImageNet-S test mean is a multiple of $1/565$.
 
 \paragraph{Top-$k$ intersection (TK).} Following~\textcite{Theiner2021}, with $k = 1000$ and the permutation $\pi$ that sorts
 $\bar{a}$ in descending order:
@@ -178,18 +220,23 @@ $\bar{a}$ in descending order:
 
 \paragraph{Pixel-flipping AUC (PF$_5$, PF$_{20}$).} Pixel flipping~\parencite{Bach2015,Samek2017evaluating} removes the most relevant features first
 and tracks the class score. The evaluator uses \texttt{pixel\_flipping\_abs} with
-\texttt{features\_in\_step = 1568} and \texttt{perturb\_baseline = mean}. For $T \coloneqq \lceil d
-    / 1568 \rceil$, define perturbed inputs $x^{(t)}$ by replacing features $\pi_{(t-1) \cdot 1568 +
-    1}, \dots, \pi_{\min\{t \cdot 1568, d\}}$ (and all earlier ones) with the per-sample mean baseline.
+\texttt{features\_in\_step = 1568} and \texttt{perturb\_baseline = mean}. Unlike the spatial
+localization metrics above, pixel flipping operates on $D \coloneqq CHW$ scalar input features.
+The spatial attribution is broadcast over the color channels; let $\widetilde\pi$ sort the
+flattened broadcast attribution in descending order. For $T \coloneqq \lceil D/1568 \rceil$, the
+input $x^{(t)}$ is obtained from $x^{(t-1)}$, starting at $x^{(0)}=x$, by replacing features
+$\widetilde\pi_{(t-1)\cdot1568+1},\dots,\widetilde\pi_{\min\{t\cdot1568,D\}}$ with the scalar mean
+of the current flattened input, as implemented by Quantus.
 The evaluator computes
 \begin{align}
     f_t \coloneqq F(x^{(t)})_y, \qquad t = 1, \dots, T,
 \end{align}
 and PF$_p$ is the trapezoidal area over the first $p\%$ of this flipping curve, i.e.\ over its
 first $K_p$ points with the abscissa rescaled to $[0,1]$: $\text{PF}_p =
-    \text{trapz}\bigl(\{(t-1)/(K_p-1), f_t\}_{t=1}^{K_p}\bigr)$, $K_p = \max(2, \lceil pT/100 \rceil)$;
-with $T = 96$ steps of 1568 features (the attribution is broadcast over the three color channels),
-$K_5 = 5$ and $K_{20} = 20$. Lower is better.
+    \text{trapz}\bigl(\{(t-1)/(K_p-1), f_t\}_{t=1}^{K_p}\bigr)$, $K_p = \max(2, \lceil pT/100 \rceil)$.
+For $C=3$ and $H=W=224$, $D=150{,}528$ and $T=96$ steps, giving $K_5=5$ and $K_{20}=20$.
+The curve contains only post-perturbation scores; the original input score is not an additional
+point. Lower is better.
 
 \paragraph{Selectivity (Sel).} Following~\textcite{Montavon2018} and its Quantus implementation~\parencite{Hedstrom2023},
 $\bar{a}$ is summed over square patches of $39{\times}39$ pixels (side
@@ -293,20 +340,38 @@ localization is not faithfulness, so both rows are reported and the trade-off st
 
 \subsection{Statistics}\label{ptnb:app:stats}
 
-Every test metric is reported with a 95\% percentile bootstrap confidence interval over test
-images~\parencite{Efron1993bootstrap} ($10{,}000$ resamples of the images; the same resampled image
-indices are used for all rows, so comparisons are paired). MaxS and AvgS are computed on the fixed
-200-image subset of Section~\ref{ptnb:app:metrics}, and their intervals resample the images of that
-subset. For each metric, every row is tested against the best row for that metric: continuous
-metrics with a two-sided paired bootstrap test of the mean per-image difference (the bootstrap
-distribution of the mean difference is centered at zero, and $p$ is the fraction of centered
-resampled differences at least as large in absolute value as the observed one), and the binary PG
-with McNemar's test~\parencite{McNemar1947} ($\chi^2$ statistic with continuity correction). The
-$p$-values are Holm-corrected~\parencite{Holm1979} within each metric: over the rows shown in the main
-table, over all rows of a column in the appendix tables, and, for the statement that a row is
-significantly ahead of every baseline row, over its comparisons with the baseline rows. We call a
-difference significant at level $0.05$ after correction and describe all other differences as
-comparable.
+The game-method test tables report 95\% percentile bootstrap confidence
+intervals~\parencite{Efron1993bootstrap} using $B=10{,}000$ resamples and seed~$0$. On ImageNet-S,
+the sampling units are images, with the same resampled image indices used across method rows.
+MaxS and AvgS intervals resample the fixed 200-image subset of Section~\ref{ptnb:app:metrics}.
+Continuous metrics use a two-sided paired bootstrap test of the mean per-image difference: the
+bootstrap distribution is centered at zero, and $p$ is the fraction of centered resampled
+differences at least as large in absolute value as the observed difference. Binary PG uses
+McNemar's test~\parencite{McNemar1947} with continuity correction.
+
+On Pascal VOC, the estimand remains the mean over image--class records, but the independent
+sampling units are the $G=2{,}293$ original test images. Each bootstrap replicate samples $G$
+images with replacement and retains every class record of each sampled image. Its mean is the sum
+over these records divided by their replicate-specific count. Thus, classes from the same image
+remain together, while images with more evaluated classes retain their contribution to the
+reported record-weighted mean. Paired comparisons use common finite records and common image
+draws. Every VOC metric, including binary PG, uses the corresponding two-sided, null-centered
+paired cluster-bootstrap test. For observed mean difference $\widehat\Delta$ and bootstrap
+differences $\Delta_b^*$, its finite-resample $p$-value is
+\begin{align}
+    p=\frac{1+\sum_{b=1}^{B}\1\{\lvert\Delta_b^*-\widehat\Delta\rvert
+        \geq\lvert\widehat\Delta\rvert\}}{B+1}.
+\end{align}
+
+For the main and full test tables, Holm correction~\parencite{Holm1979} is applied to all unordered
+pairs of eligible rows within each metric and reported table, before extracting comparisons with
+the observed best row or declaring a row ahead of every baseline. The observed winner therefore
+does not determine the comparison family. A difference is called significant at adjusted
+$p<0.05$; otherwise, no difference was detected at this threshold. This does not establish
+practical equivalence. These intervals and tests condition on the fixed checkpoints, selected
+configurations and realized attribution evaluations; they do not quantify training or
+configuration-selection variability. The split-method tables report the source point estimates
+without corresponding confidence intervals.
 
 \subsection{Compute resources}\label{ptnb:app:compute-resources}
 
@@ -459,7 +524,7 @@ released code.
 \paragraph{Per-image disjoint val/test split.} The trainval pool is partitioned randomly with seed $42$ at the \emph{image} level (not the (image,
 class) level) into a $1{:}5$ val/test split: the trainval stems are shuffled deterministically and
 the first $1/6$ is assigned to val. All (image, class) samples for a given image stay in the same
-partition, so leakage between val tuning and test evaluation is structurally impossible. As on
+partition, preventing the same image from appearing in both tuning and test sets. As on
 ImageNet-S, samples whose object mask lies entirely outside the $224{\times}224$ center crop are
 excluded after the split (18 val and 105 test samples). The resulting partitions:
 \begin{center}
@@ -494,13 +559,16 @@ asymmetry: \ac{rg} and \ac{rg}+Eq do \emph{not} get a fresh grid search on VOC.
         without any VOC-side re-tuning.
 \end{itemize}
 To save compute, VOC is evaluated on localization and faithfulness only (no MaxS/AvgS and no
-runtime column). Any tuning advantage flows to the baselines, not to us. Wins, ties and losses are
-counted per metric with the tests of Section~\ref{ptnb:app:stats}.
+runtime column). Baselines receive VOC-specific configuration selection, whereas the game rows
+remain fixed at their ImageNet-S settings. Significant wins, significant losses and comparisons
+without a detected difference are counted per metric with the tests of
+Section~\ref{ptnb:app:stats}; the last category does not establish equivalence.
 
 \appneedspace{8\baselineskip}
 \begin{center}
-    \captionof{table}{ViT-B/16 on the Pascal VOC 2012 test pool ($2{,}743$ samples): all rows with 95\%
-    bootstrap confidence intervals. \ac{rg} / \ac{rg}+Eq use the ImageNet-S-selected configurations
+    \captionof{table}{ViT-B/16 on the Pascal VOC 2012 test pool ($2{,}743$ image--class records from
+    $2{,}293$ images): all rows with 95\% confidence intervals from image-cluster bootstrap resampling.
+    Means are weighted over records. \ac{rg} / \ac{rg}+Eq use the ImageNet-S-selected configurations
     without re-tuning; baselines are selected on the VOC val pool. Only localization and faithfulness metrics were evaluated; the unmeasured MaxS and AvgS columns are omitted. Metrics as in
     Table~\ref{ptnb:tab:eval-vit}; configuration symbols and row labels: Section~\ref{ptnb:app:config-symbols}.}
     \label{ptnb:tab:eval-vit-voc}
@@ -728,6 +796,35 @@ legible in print; the same display transform is used for every method.
 \end{figure}
 \par\medskip
 
+\section{Numerical Diagnostic of the Transformer DC Construction}\label{app:transformer_dc_numeric}
+
+The deterministic script \texttt{scripts/transformer\_dc\_demo.py} exercises the
+construction of Section~\ref{sec:transformer_dc} on a three-token, width-three
+Transformer with one causal attention head, two post-residual LayerNorms, a width-four exact
+Gaussian-GELU MLP, mean pooling, and two signed output logits. An independent
+ordinary PyTorch computation uses the same parameters. The diagnostic runs on
+CPU in float64, without recentering, clipping, or substitution of reference
+activations into the split computation.
+
+With random seed $23$, the sweep combines
+$\varepsilon\in\{1,10^{-2},10^{-5}\}$, weight scales
+$\{0.01,0.1,0.5\}$, and input scales $\{0.1,1\}$.
+Two additional cases add common input-stream offsets of $1$ and $10$ to the
+$\varepsilon=1$, weight-scale-$0.01$, input-scale-$0.1$ case.
+All twenty cases, including failures, are retained in
+\texttt{reports/evidence/transformer-dc/numeric.json}, together with the
+environment, source hash, per-stage reconstruction error, and stream magnitudes.
+The command is \texttt{python scripts/transformer\_dc\_demo.py --output RESULT.json}.
+
+The benign case reconstructs the logits within $2.78\times10^{-17}$, but fifteen
+of the twenty cases exceed a final maximum absolute error of $10^{-8}$.
+Every tested $\varepsilon=10^{-5}$ case loses output accuracy, with stream
+magnitudes reaching $5.95\times10^{111}$. Separate primitive checks and
+zero-variance LayerNorm cases pass. These finite checks diagnose the implementation;
+they do not prove convexity or numerical stability. The result demonstrates that
+the exact real-arithmetic construction can suffer catastrophic cancellation even
+in a small Transformer, so a stable practical implementation remains open.
+
 \section{Formal Verification and Mathematical Audit}\label{app:lean}
 
 The accompanying \href{https://github.com/JayPiZimmermann/A-Structural-Approach-to-Interpretable-Deep-Learning}{thesis repository}
@@ -751,6 +848,21 @@ Local preservation of the difference is the only algebraic requirement for a
 valid pair activation, and induction proves recovery of the complete network.
 The same definition supports the ReLU, mixing, and Softplus developments.
 A separate affine readout accounts for an ungated target logit.
+
+The Transformer development defines signed projections, actual masked
+Query--Key products, coupled softmax, attention--Value products, input-dependent
+LayerNorm, residual additions, and the feed-forward subnetwork. A finite list of
+blocks represents arbitrary depth, including zero blocks, with an optional final
+LayerNorm and a signed affine readout. Compilation to an explicit expression
+language is proved equal to the ordinary forward evaluator. A recursive
+two-stream evaluator then establishes Theorem~\ref{thm:transformer_dc}: exact
+reconstruction and convex, monotone, non-negative components on non-negative
+doubled inputs. The positive/negative raw-input lift gives globally convex
+components; raw-input monotonicity is not asserted. These proofs use the actual
+closed-form softmax and normalization constructions, with positive normalization
+$\varepsilon$ and nonempty allowed-key sets, rather than assuming their structural
+properties. They concern exact real arithmetic; the numerical diagnostic in
+Section~\ref{app:transformer_dc_numeric} records the limits of direct evaluation.
 
 A forward trace records the actual gate decisions. A sensitivity row is a linear
 function taking an input perturbation to the corresponding scalar output change;
@@ -804,7 +916,21 @@ axiom audit; the README documents the complete commands.
 
 \chapter{Publication Provenance and Tool Use}\label{app:publication_provenance}
 
-The results and experiments integrated in this thesis originate in two coauthored works: \emph{Hidden Monotonicity}, published at CVPR 2026 and selected as a Highlight~\parencite{hiddenMono}, and the \emph{Playing the Network Backward} preprint~\parencite{playingBackward2026}, in its revised version arXiv:2605.06212v2. The thesis author is first author of both works. The game paper is presented here as a preprint, without a claim of AISTATS acceptance. Their technical content is organized by the shared decomposition framework rather than reproduced as two separate papers. Original experimental settings and table values are retained; the thesis adds the common definitions, connections between the constructions, and Lean formalization.
+The results and experiments integrated in this thesis originate in two coauthored works: \emph{Hidden Monotonicity}, published at CVPR 2026 and selected as a Highlight~\parencite{hiddenMono}, and the \emph{Playing the Network Backward} preprint~\parencite{playingBackward2026}, in its revised version arXiv:2605.06212v2. The thesis author is first author of both works. The game paper is presented here as a preprint, without a claim of AISTATS acceptance. Their technical content is organized by the shared decomposition framework rather than reproduced as two separate papers. The model-evaluation outputs and reported point estimates are reused. VOC confidence intervals and paired comparisons are recomputed from those outputs by resampling whole images, as specified in Section~\ref{ptnb:app:stats}. The thesis adds common definitions, mathematical extensions and connections between the constructions, and Lean formalization.
+
+\section{Author's Contribution}\label{app:author_contribution}
+
+My principal contributions to \emph{Hidden Monotonicity} and \emph{Playing the
+Network Backward} were the development of the theory, the development and
+execution of the experiments, and the writing of all appendices and most of
+the paper text outside the introductions. The papers are collaborative works with the coauthors identified
+in Section~\ref{sec:motivation}; this account specifies my responsibilities
+within those collaborations.
+
+The thesis brings the two works into a common mathematical exposition, connects
+their decomposition constructions, and adds the accompanying Lean formalization.
+The tool-use disclosure below distinguishes the preparation of the original
+papers from the subsequent thesis integration, formalization, and revision.
 
 \section{Disclosure in the Revised Game Paper}
 The revised game paper contains the following AI-use statement, reproduced here as a statement about the preparation of that publication:
@@ -822,4 +948,16 @@ We take responsibility for the final content of this work, including text, claim
 produced with the aid of generative AI.
 \end{quote}
 
-The additional Lean development and the editing and integration of this thesis used AI coding assistance. Those subsequent activities are distinct from the preparation of the original paper described above. The formalization repository records source-level corrections, reviewed theorem types, proof-checking receipts, and the remaining coverage limits; successful Lean checking certifies the stated formal propositions and does not certify the empirical experiments.
+\section{AI Assistance in the Thesis Revision}
+The November 2026 thesis revision used OpenAI Codex, supplied by OpenAI, for
+mathematical exploration and proof development, Lean implementation and checking,
+code review and repair, statistical reaggregation, and drafting and editing the
+thesis. The mathematical assistance included developing and checking extensions
+of the convex, monotone stream construction. These activities are distinct from
+the preparation of the original paper described above; its historical statement
+about theorem and proof development does not describe this later thesis work.
+
+The formalization repository records reviewed theorem types, proof-checking
+receipts, and remaining coverage limits. Successful Lean checking certifies the
+stated formal propositions; source correspondence still requires mathematical
+review, and the kernel checks do not certify the empirical experiments.

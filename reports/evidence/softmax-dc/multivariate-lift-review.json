@@ -1,0 +1,60 @@
+{
+  "reviewer": "/root/softmax_lean/multivariate_lift/review_lift",
+  "source": "formalization/HiddenMonotonicity/MultivariateMonotoneDCLift.lean",
+  "source_sha256": "29dbc4e402baa98c68388d2f8f4b0a0ed8ddff7f1434b9a4adfa23463bf1ca81",
+  "status": "passed",
+  "scope": "Independent semantic review, handwritten boundary consumers, and repository-generated exact type enforcement for all six theorems. The enforcing driver checks defining module, explicit universe arity, elaborated type equality, approved axioms and imported project theorem environment. Development evidence only; not a clean committed promotion gate.",
+  "semantic_findings": [
+    "The lift is exactly P(x-y) + L sum(y) - c; both coordinates are independent full real vectors.",
+    "Convexity is inherited under the affine difference map with no hidden positivity restriction on L or c.",
+    "Monotonicity requires both P and L sum minus P to be monotone, a genuine upper-and-lower increment condition rather than the desired lifted conclusion as a hypothesis.",
+    "Nonnegativity is claimed only for nonnegative expanded inputs, with the explicit normalization c <= P(0).",
+    "The affine-line derivative helper assumes actual HasDerivAt facts on all real lines and nonnegative derivatives only in nonnegative directions; the conclusion is the ordinary product-order monotonicity of f.",
+    "The finite-index lift admits the empty index case, while line helpers correctly require no Fintype instance."
+  ],
+  "exact_contract_count": 6,
+  "boundary_consumers": [
+    "A constant-zero profile at L=c=0 on Fin 2 satisfies the monotonicity hypotheses and conclusion.",
+    "For Fin 0, the lift reduces to P(0)-c for all L and all expanded inputs."
+  ],
+  "command": "cd formalization && lake env lean ../reports/evidence/softmax-dc/multivariate-lift-enforcement/ExactTypes.lean",
+  "exit_code": 0,
+  "contracts": "reports/evidence/softmax-dc/multivariate-lift-contracts.json",
+  "axioms_per_declaration": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "blocking_findings": [],
+  "handwritten_driver": {
+    "path": "reports/evidence/softmax-dc/multivariate-lift-exact.lean",
+    "log": "reports/evidence/softmax-dc/multivariate-lift-exact.log",
+    "exit_code": 0,
+    "purpose": "Initial full-forall elaboration and boundary consumers; supplemented by enforcing repository driver."
+  },
+  "driver": "reports/evidence/softmax-dc/multivariate-lift-enforcement/ExactTypes.lean",
+  "log": "reports/evidence/softmax-dc/multivariate-lift-enforcement/exact-types-and-environment.log",
+  "environment": "reports/evidence/softmax-dc/multivariate-lift-enforcement/environment.json",
+  "environment_theorem_count": 7,
+  "generated_equation_theorems": [
+    "HiddenMonotonicity.SoftmaxDC.multivariateLift.eq_1"
+  ],
+  "enforced_checks": [
+    "actual defining module",
+    "universe arity = 1",
+    "independently elaborated expected types",
+    "Lean.Meta.isDefEq actual/expected type",
+    "approved target axioms",
+    "imported project theorem axiom environment"
+  ],
+  "generator": "formalization/scripts/verify.py:exact_driver",
+  "deterministic_regeneration": true,
+  "sha256": {
+    "formalization/HiddenMonotonicity/MultivariateMonotoneDCLift.lean": "29dbc4e402baa98c68388d2f8f4b0a0ed8ddff7f1434b9a4adfa23463bf1ca81",
+    "reports/evidence/softmax-dc/multivariate-lift-contracts.json": "84865e6cda94c4e28da799141f1cf52c2e10925fd18c620c60a26a59d397bd49",
+    "reports/evidence/softmax-dc/multivariate-lift-enforcement/ExactTypes.lean": "8b337751d2dda117476f233155422222fa3a6a01ae4525740ce837544c803f97",
+    "reports/evidence/softmax-dc/multivariate-lift-enforcement/exact-types-and-environment.log": "ab93bba6c4c3cda515739bf6064e2c75ae786ca007c501c1e918ec545dd05ca9",
+    "reports/evidence/softmax-dc/multivariate-lift-enforcement/environment.json": "4ac82e0051fd8836e0fb066fce8447635e7d2671a3f7b2852c888063285dccea",
+    "formalization/scripts/verify.py": "4c786bdf03f9440964d0825135644c9adbbf0006e059d72ee40a47aeccb35ba8"
+  }
+}

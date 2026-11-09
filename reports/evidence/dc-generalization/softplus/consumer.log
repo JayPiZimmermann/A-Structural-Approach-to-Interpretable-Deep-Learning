@@ -1,0 +1,12 @@
+softplus_explicit_split : ∀ (θ : ℝ),
+  0 < θ →
+    (ConvexOn ℝ Set.univ fun z => (explicitSoftplusPair θ z).1) ∧
+      (ConvexOn ℝ Set.univ fun z => (explicitSoftplusPair θ z).2) ∧
+        (Monotone fun z => (explicitSoftplusPair θ z).1) ∧
+          (Monotone fun z => (explicitSoftplusPair θ z).2) ∧
+            ValidPairActivation (Thesis.Regularization.softplus θ) (explicitSoftplusPair θ) ∧
+              NonnegativePairActivation (explicitSoftplusPair θ)
+explicitSoftplusFirst_logsumexp : ∀ (θ : ℝ),
+  0 < θ → ∀ (x y : ℝ), explicitSoftplusFirst θ (x, y) = θ * Real.log (Real.exp (x / θ) + Real.exp (y / θ))
+'HiddenMonotonicity.SmoothDC.softplus_explicit_split' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.SmoothDC.explicitSoftplusFirst_logsumexp' depends on axioms: [propext, Classical.choice, Quot.sound]

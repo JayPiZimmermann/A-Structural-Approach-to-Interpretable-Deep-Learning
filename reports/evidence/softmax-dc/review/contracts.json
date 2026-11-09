@@ -1,0 +1,95 @@
+{
+  "public_root": "HiddenMonotonicity.ExplicitSoftmax",
+  "targets": [
+    {
+      "module": "HiddenMonotonicity.ExplicitSoftmax",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "task": "softmax-explicit-convex-monotone-split",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmax_split_properties",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (i : ι),\nConvexOn ℝ Set.univ (softmaxSplitFirst i) ∧\nConvexOn ℝ Set.univ (softmaxSplitSecond i) ∧\nMonotone (softmaxSplitFirst i) ∧ Monotone (softmaxSplitSecond i) ∧\n(∀ z : (ι → ℝ) × (ι → ℝ), softmaxSplitFirst i z - softmaxSplitSecond i z = softmax (z.1-z.2) i) ∧\n(∀ z : (ι → ℝ) × (ι → ℝ), 0 ≤ z → 0 ≤ softmaxSplitFirst i z ∧ 0 ≤ softmaxSplitSecond i z)"
+    },
+    {
+      "module": "HiddenMonotonicity.ExplicitSoftmax",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "task": "softmax-explicit-first-formula",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (i : ι) (x y : ι → ℝ),\nsoftmaxSplitFirst i (x,y) =\n(Real.log (∑ j, Real.exp (x j-y j)) + Real.exp (x i-y i)/(∑ j, Real.exp (x j-y j)) + ∑ j, y j)/2 -\n(Real.log (Fintype.card ι)-1/Fintype.card ι)/2"
+    },
+    {
+      "module": "HiddenMonotonicity.ExplicitSoftmax",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "task": "softmax-explicit-second-formula",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_formula",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (i : ι) (x y : ι → ℝ),\nsoftmaxSplitSecond i (x,y) =\n(Real.log (∑ j, Real.exp (x j-y j)) - Real.exp (x i-y i)/(∑ j, Real.exp (x j-y j)) + ∑ j, y j)/2 -\n(Real.log (Fintype.card ι)-1/Fintype.card ι)/2"
+    },
+    {
+      "module": "HiddenMonotonicity.ExplicitSoftmax",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "task": "softmax-explicit-exact-difference",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxSplit_difference",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (i : ι) (z : (ι → ℝ) × (ι → ℝ)),\nsoftmaxSplitFirst i z-softmaxSplitSecond i z=softmax (z.1-z.2) i"
+    },
+    {
+      "module": "HiddenMonotonicity.ExplicitSoftmax",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "task": "softmax-explicit-first-origin",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_zero",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (i : ι), softmaxSplitFirst i 0=1/Fintype.card ι"
+    },
+    {
+      "module": "HiddenMonotonicity.ExplicitSoftmax",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "task": "softmax-explicit-second-origin",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_zero",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (i : ι), softmaxSplitSecond i 0=0"
+    }
+  ]
+}

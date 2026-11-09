@@ -1,0 +1,47 @@
+{
+  "public_root": "HiddenMonotonicity.PolarizedProductDC",
+  "targets": [
+    {
+      "task": "transformer-product-exact",
+      "module": "HiddenMonotonicity.PolarizedProductDC",
+      "declaration": "HiddenMonotonicity.TransformerDC.productSplit_exact",
+      "expected_type": "\u2200 z : HiddenMonotonicity.TransformerDC.FourStreams, (HiddenMonotonicity.TransformerDC.productSplit z).1 - (HiddenMonotonicity.TransformerDC.productSplit z).2 = (z.1.1 - z.1.2) * (z.2.1 - z.2.2)"
+    },
+    {
+      "task": "transformer-product-nonnegative",
+      "module": "HiddenMonotonicity.PolarizedProductDC",
+      "declaration": "HiddenMonotonicity.TransformerDC.productSplit_nonnegative",
+      "expected_type": "\u2200 z : HiddenMonotonicity.TransformerDC.FourStreams, 0 \u2264 HiddenMonotonicity.TransformerDC.productSplit z"
+    },
+    {
+      "task": "transformer-product-convex",
+      "module": "HiddenMonotonicity.PolarizedProductDC",
+      "declaration": "HiddenMonotonicity.TransformerDC.productSplit_convex",
+      "expected_type": "ConvexOn \u211d Set.univ (fun z : HiddenMonotonicity.TransformerDC.FourStreams => (HiddenMonotonicity.TransformerDC.productSplit z).1) \u2227 ConvexOn \u211d Set.univ (fun z : HiddenMonotonicity.TransformerDC.FourStreams => (HiddenMonotonicity.TransformerDC.productSplit z).2)"
+    },
+    {
+      "task": "transformer-product-monotone-orthant",
+      "module": "HiddenMonotonicity.PolarizedProductDC",
+      "declaration": "HiddenMonotonicity.TransformerDC.productSplit_monotoneOn",
+      "expected_type": "MonotoneOn HiddenMonotonicity.TransformerDC.productSplit (Set.Ici (0 : HiddenMonotonicity.TransformerDC.FourStreams))"
+    },
+    {
+      "task": "transformer-product-convex-composition",
+      "module": "HiddenMonotonicity.PolarizedProductDC",
+      "declaration": "HiddenMonotonicity.TransformerDC.productSplit_convex_composition",
+      "expected_type": "\u2200 {E : Type u} [AddCommGroup E] [Module \u211d E] (s : Set E) (A B C D : E \u2192 \u211d), ConvexOn \u211d s A \u2192 ConvexOn \u211d s B \u2192 ConvexOn \u211d s C \u2192 ConvexOn \u211d s D \u2192 (\u2200 x \u2208 s, 0 \u2264 A x) \u2192 (\u2200 x \u2208 s, 0 \u2264 B x) \u2192 (\u2200 x \u2208 s, 0 \u2264 C x) \u2192 (\u2200 x \u2208 s, 0 \u2264 D x) \u2192 ConvexOn \u211d s (fun x => (HiddenMonotonicity.TransformerDC.productSplit ((A x, B x), (C x, D x))).1) \u2227 ConvexOn \u211d s (fun x => (HiddenMonotonicity.TransformerDC.productSplit ((A x, B x), (C x, D x))).2)",
+      "universes": [
+        "u"
+      ]
+    },
+    {
+      "task": "transformer-product-monotone-composition",
+      "module": "HiddenMonotonicity.PolarizedProductDC",
+      "declaration": "HiddenMonotonicity.TransformerDC.productSplit_monotone_composition",
+      "expected_type": "\u2200 {E : Type u} [Preorder E] (s : Set E) (A B C D : E \u2192 \u211d), MonotoneOn A s \u2192 MonotoneOn B s \u2192 MonotoneOn C s \u2192 MonotoneOn D s \u2192 (\u2200 x \u2208 s, 0 \u2264 A x) \u2192 (\u2200 x \u2208 s, 0 \u2264 B x) \u2192 (\u2200 x \u2208 s, 0 \u2264 C x) \u2192 (\u2200 x \u2208 s, 0 \u2264 D x) \u2192 MonotoneOn (fun x => HiddenMonotonicity.TransformerDC.productSplit ((A x, B x), (C x, D x))) s",
+      "universes": [
+        "u"
+      ]
+    }
+  ]
+}

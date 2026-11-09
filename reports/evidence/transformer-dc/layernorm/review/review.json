@@ -1,0 +1,67 @@
+{
+  "status": "passed",
+  "reviewer": "/root/transformer_primitives_lean/layernorm_dc_lean/ln_semantic_review",
+  "source": "formalization/HiddenMonotonicity/LayerNormDCLift.lean",
+  "source_sha256": "59731756fe5056a59e202f5abb40e3a15c87cd5d6ff4c792dbe71ab5aa1c66fb",
+  "reviewed_scope": [
+    "For every real epsilon > 0, the tangent extension is globally differentiable and convex on the real line.",
+    "The pair has two jointly convex scalar coordinates on all of R^2 and is monotone in the product order on all of R^2.",
+    "Both output streams are nonnegative on the nonnegative input orthant.",
+    "The pair difference recovers the inverse square root of epsilon plus represented variance whenever the represented variance is nonnegative; independent streams may be signed.",
+    "The exact tilt agrees with 1/(2*epsilon^(3/2))."
+  ],
+  "definition_checks": [
+    "Left branch equals the tangent at represented variance zero, with matching value epsilon^(-1/2) and derivative -(1/2)*epsilon^(-3/2).",
+    "The derivative is constant on the negative branch and increases toward zero on the nonnegative branch.",
+    "The positive profile adds M*z and has derivative between zero and M; the generic asymmetric lift yields exactly r(x-y)+M*x.",
+    "The negative head is exactly M*x; its subtraction cancels the common tilt.",
+    "Real powers are only used with positive bases in the inverse-square-root recovery and derivative arguments."
+  ],
+  "boundary_checks": [
+    "At epsilon=1 and streams=(0,0), the pair is (1,0).",
+    "At epsilon=1 and streams=(0,1), the pair is (3/2,0), explicitly exercising the affine extension outside the recovery domain.",
+    "On the entire diagonal (a,a), including negative a, the difference is inverse sqrt(epsilon).",
+    "Global isotonicity accepts independent signed streams.",
+    "Recovery accepts any signed streams whose difference is nonnegative."
+  ],
+  "limits": [
+    "This module proves a normalization primitive, not a complete LayerNorm or Transformer graph-composition theorem.",
+    "Epsilon must be strictly positive; the zero-epsilon boundary is not included.",
+    "No floating-point stability or practical efficiency result is established. The tilt grows as epsilon^(-3/2)."
+  ],
+  "findings": [],
+  "contracts_file": "contracts.json",
+  "exact_driver": "ExactTypesAll.lean",
+  "boundary_driver": "Boundary.lean",
+  "exact_contract_count": 8,
+  "imported_project_theorem_audit_count": 66,
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "kernel_validation_mode": "diagnostic_targeted_frozen_source",
+  "commands": [
+    {
+      "command": "lake env lean ../reports/evidence/transformer-dc/layernorm/review/ExactTypesAll.lean",
+      "cwd": "formalization",
+      "exit_code": 0,
+      "log": "exact-all.log"
+    },
+    {
+      "command": "lake env lean ../reports/evidence/transformer-dc/layernorm/review/Boundary.lean",
+      "cwd": "formalization",
+      "exit_code": 0,
+      "log": "boundary.log"
+    }
+  ],
+  "superseded_run": "The initial six-contract ExactTypes.lean run was terminated after the final two contracts were added; only the eight-contract ExactTypesAll.lean run is acceptance evidence.",
+  "artifact_sha256": {
+    "contracts.json": "adc5b0c5a6f9121cc5c2c50004dd7404227b7511459716a6fd54b4522f23cf2e",
+    "ExactTypesAll.lean": "d6b8dfc94f8438e282bc000cc06882ba993c2c171d881a1d808559e9d56008ab",
+    "Boundary.lean": "44bb44e06cd4234cfb4fcc97510ab790ef0bc8bbe0fac489aa64e086a7c9178b",
+    "exact-all.log": "93fe96a8c077788be33efbd44be840d4c6a937a1b09acbf45bfcc22344a8275d",
+    "boundary.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "environment.json": "3159af291483328a17995d720dc9b36e6d5e0e2f672a94622d3379246c132062"
+  }
+}

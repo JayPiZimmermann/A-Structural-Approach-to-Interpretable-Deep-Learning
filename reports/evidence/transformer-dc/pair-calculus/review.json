@@ -1,0 +1,60 @@
+{
+  "status": "pass",
+  "reviewer": "/root/transformer_lean_architecture/pair_calculus/pair_review",
+  "review_kind": "independent mathematical/source semantics and manually authored exact declaration contracts",
+  "scope": "Pair arithmetic and preservation of convexity, coordinatewise monotonicity, and nonnegativity on a stated domain. This is a compositional library, not by itself an arbitrary-depth Transformer theorem.",
+  "expected_contracts": 10,
+  "imported_project_theorem_axiom_audits": 32,
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "commands": [
+    {
+      "command": "lake build +HiddenMonotonicity.TransformerPairCalculus",
+      "owner": "producer",
+      "exit_code": 0,
+      "log": "build.log"
+    },
+    {
+      "command": "lake env lean ../reports/evidence/transformer-dc/pair-calculus/Exact.lean",
+      "exit_code": 0,
+      "log": "exact.log"
+    },
+    {
+      "command": "lake env lean ../reports/evidence/transformer-dc/pair-calculus/Boundary.lean",
+      "exit_code": 0,
+      "log": "boundary.log"
+    }
+  ],
+  "semantic_findings": [
+    "Signed scaling swaps streams for negative coefficients and permits zero; exact arithmetic holds on all real pairs.",
+    "Regular explicitly requires both scalar projections convex, the pair monotone, and both streams nonnegative on the same domain; it does not assume a property of the represented signed function.",
+    "Multiplication composition consumes nonnegative incoming streams and uses the independently verified polarization primitive. Its isotonicity is not claimed globally outside the orthant.",
+    "Scalar and vector substitution use actual Jensen comparison followed by outer monotonicity and convexity; no conclusion is smuggled into a defining hypothesis.",
+    "Finite sums include the empty sum through an explicit convex-domain hypothesis."
+  ],
+  "boundary_checks": [
+    "Negative constant decomposition",
+    "Negative scaling swaps and rescales streams",
+    "Zero scaling",
+    "Addition need not produce canonical positive/negative parts",
+    "Signed product exactness",
+    "Zero represented factor may retain equal positive common mass",
+    "Nonvacuous constant Regular witness",
+    "Empty-domain boundary",
+    "Negative scale preserves Regular",
+    "Product global-monotonicity counterexample outside the nonnegative orthant"
+  ],
+  "limitations": [
+    "This local receipt is diagnostic: production root integration and clean committed gate remain parent responsibilities.",
+    "The raw signed-input lift requires separate convex-only substitution; it is covered by TransformerConvexInput rather than a false monotonicity assumption."
+  ],
+  "sha256": {
+    "formalization/HiddenMonotonicity/TransformerPairCalculus.lean": "eb2413aa4249d8779735da9eb18e94a6ce6f3703863b3efaf5601d17a2487469",
+    "reports/evidence/transformer-dc/pair-calculus/contracts.json": "f8c4a88d3cc4199a514e93924bad1d95c9e73900985d1ede5c7c44446679f6cd",
+    "reports/evidence/transformer-dc/pair-calculus/Exact.lean": "37fddcaa01358e6a57af2a6460934bb6bd4a699d5cb382d4432a9248ca849424",
+    "reports/evidence/transformer-dc/pair-calculus/Boundary.lean": "ff61d2a1a0a350d8fc2dcff61cab9ef242ac76d9b1872b971711c7be8b939d5b"
+  }
+}

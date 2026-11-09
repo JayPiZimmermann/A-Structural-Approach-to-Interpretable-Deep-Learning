@@ -1,0 +1,98 @@
+{
+  "status": "passed-read-only-source-correspondence-review",
+  "parent_confirmed_frozen_audits_passed": true,
+  "reviewed_contract_count": 36,
+  "assembly_module_count": 7,
+  "review_receipts": [
+    "reports/evidence/transformer-dc/pair-calculus/review.json",
+    "reports/evidence/transformer-dc/layernorm-assembly/review/review.json",
+    "reports/evidence/transformer-dc/definition/review.json",
+    "reports/evidence/transformer-dc/final-review/review.json",
+    "reports/evidence/transformer-dc/expr-review/review.json",
+    "reports/evidence/transformer-dc/convex-input/review.json"
+  ],
+  "contract_sources": [
+    "reports/evidence/transformer-dc/pair-calculus/contracts.json",
+    "reports/evidence/transformer-dc/layernorm-assembly/review/contracts.json",
+    "reports/evidence/transformer-dc/definition/contracts.json",
+    "reports/evidence/transformer-dc/final-review/contracts.json",
+    "reports/evidence/transformer-dc/expr-review/contracts.json",
+    "reports/evidence/transformer-dc/convex-input/contracts.json"
+  ],
+  "source_review_matches": {
+    "formalization/HiddenMonotonicity/TransformerExprProperties.lean": {
+      "reviewed_sha256": "d50ef56c38a7fcea009c57455a7700eb6f473c1e999bdfe5afe6d50b0bae7064",
+      "actual_sha256": "d50ef56c38a7fcea009c57455a7700eb6f473c1e999bdfe5afe6d50b0bae7064",
+      "matches": true
+    },
+    "formalization/HiddenMonotonicity/TransformerCorrectness.lean": {
+      "reviewed_sha256": "9f0b3e59f4e061bb7749aab6d79549d67c8e0b9c5caca2c9d4f5701a013ef445",
+      "actual_sha256": "9f0b3e59f4e061bb7749aab6d79549d67c8e0b9c5caca2c9d4f5701a013ef445",
+      "matches": true
+    },
+    "formalization/HiddenMonotonicity/TransformerExpr.lean": {
+      "reviewed_sha256": "916647af7bc396ea203e6bf1669f7e6586d87bc33ff790fd075a225bff44aa04",
+      "actual_sha256": "916647af7bc396ea203e6bf1669f7e6586d87bc33ff790fd075a225bff44aa04",
+      "matches": true
+    },
+    "formalization/HiddenMonotonicity/TransformerDefinition.lean": {
+      "reviewed_sha256": "5fa433193d02cfdb0369dcf76fa1eaffa36daf8cbd2b41dafa36a66f5ac2b1c3",
+      "actual_sha256": "5fa433193d02cfdb0369dcf76fa1eaffa36daf8cbd2b41dafa36a66f5ac2b1c3",
+      "matches": true
+    },
+    "formalization/HiddenMonotonicity/TransformerPairCalculus.lean": {
+      "reviewed_sha256": "eb2413aa4249d8779735da9eb18e94a6ce6f3703863b3efaf5601d17a2487469",
+      "actual_sha256": "eb2413aa4249d8779735da9eb18e94a6ce6f3703863b3efaf5601d17a2487469",
+      "matches": true
+    },
+    "formalization/HiddenMonotonicity/TransformerConvexInput.lean": {
+      "reviewed_sha256": "7ed5b6d305b71471e2ce835056695ceb726017df2676220148fd042b588b9bb6",
+      "actual_sha256": "7ed5b6d305b71471e2ce835056695ceb726017df2676220148fd042b588b9bb6",
+      "matches": true
+    },
+    "formalization/HiddenMonotonicity/LayerNormDC.lean": {
+      "reviewed_sha256": "379b317e9fc222e7d8e142c0c5338399e84436ab25f7bc07a5d0b590f6ecc3de",
+      "actual_sha256": "379b317e9fc222e7d8e142c0c5338399e84436ab25f7bc07a5d0b590f6ecc3de",
+      "matches": true
+    },
+    "formalization/HiddenMonotonicity/ExplicitSoftmax.lean": {
+      "reviewed_sha256": "651c97af4b81f1f830d2fa0352c1143bf02ab299e387d77ac7c71f7e06189002",
+      "actual_sha256": "651c97af4b81f1f830d2fa0352c1143bf02ab299e387d77ac7c71f7e06189002",
+      "matches": true
+    },
+    "formalization/HiddenMonotonicity/PolarizedProductDC.lean": {
+      "reviewed_sha256": "1b10dd6cb91b919d87174dca09cbea26b3ec7c8fa052da52d03b3e8406b99bd8",
+      "actual_sha256": "1b10dd6cb91b919d87174dca09cbea26b3ec7c8fa052da52d03b3e8406b99bd8",
+      "matches": true
+    }
+  },
+  "proposed_coverage_entries": 2,
+  "proposed_links": 5,
+  "optional_algorithm_links": 1,
+  "all_proposed_targets_have_reviewed_contracts": true,
+  "all_proposed_labels_exist": true,
+  "main_theorem_scope": "The actual finite pre-LayerNorm Transformer forward map is defined independently of its compiler: positive token and residual dimensions; a finite block list including the empty list; positive query/key and value widths; fixed nonempty allowed-key sets; arbitrary signed affine Q/K/V projections, head output projections, biases and real score scales; actual coupled softmax and population-variance epsilon LayerNorm; two residual additions; block-specific ReLU, exact Gaussian GELU, positive-parameter Swish, sigmoid or positive-parameter softplus; positional bias; optional final LayerNorm; and an ungated signed affine readout. The main contract proves nonnegative convex coordinatewise monotone output heads on the independent doubled-input orthant and exact recovery (in fact for all real stream pairs). The companion raw_dc_decomposition proves globally convex nonnegative heads after positive/negative raw-input splitting, without claiming raw-input monotonicity. Arbitrary finite depth is a list, not an assumed decomposition certificate. Structural recursion is a total real-arithmetic specification; no floating-point stability, runtime bound, attribution quality or general post-normalization architecture is asserted.",
+  "scope_limits": [
+    "The actual architecture is the explicitly defined finite pre-LayerNorm inference model on real token embeddings.",
+    "Global structural properties of compiled heads are asserted on the doubled-input nonnegative orthant; exact subtraction holds for all real stream pairs.",
+    "Raw signed-input heads are globally convex and nonnegative, without a monotonicity claim.",
+    "No floating-point accuracy, runtime, shared-DAG cost, pretrained implementation or attribution-quality theorem is asserted."
+  ],
+  "artifact_sha256": {
+    "reports/evidence/transformer-dc/pair-calculus/review.json": "d918023eba25e719c7b443c43e0c4056bcbf1fee276fff6336ce0ef8460fa809",
+    "reports/evidence/transformer-dc/layernorm-assembly/review/review.json": "19075b2518ef7cab72829ed02034b649676371ff9cd668de2510dcf8d5e35144",
+    "reports/evidence/transformer-dc/definition/review.json": "08a7d94ac342fa3d98c7566663daff2047b72ab3b6cc93554512ba96a514933d",
+    "reports/evidence/transformer-dc/final-review/review.json": "3638417ba3a4f42f9e9bd96c693c857f1ba70ad4e7f542f327d9e6d7be0eea9c",
+    "reports/evidence/transformer-dc/expr-review/review.json": "5f9d5d4703391deec6d0a52cbf6e7e74629cec564aeab40adb12fba87bbd760c",
+    "reports/evidence/transformer-dc/convex-input/review.json": "cc1281eee029d90e11dc42ed16e8277d3d37ebcaf0b0c28f46adb2a60bf13d9b",
+    "reports/evidence/transformer-dc/pair-calculus/contracts.json": "f8c4a88d3cc4199a514e93924bad1d95c9e73900985d1ede5c7c44446679f6cd",
+    "reports/evidence/transformer-dc/layernorm-assembly/review/contracts.json": "e01cef9c8e3eb0fbf35d27ff6e32b76a95e3b88d4f3517a590b7760736035ee9",
+    "reports/evidence/transformer-dc/definition/contracts.json": "2f94ca873d66875ff0283451f090c2f58692b740db2eb5d919583012f4f7ee41",
+    "reports/evidence/transformer-dc/final-review/contracts.json": "a0c9a8145c39c2ceffd2d8ace5031facfdac10a589b96970c83d3d5699863b34",
+    "reports/evidence/transformer-dc/expr-review/contracts.json": "37f08e21dbead81bfb4a11703ccf4e2be06ec73975550dd62a85f256deb7ba1b",
+    "reports/evidence/transformer-dc/convex-input/contracts.json": "28e730a151855acf5f81697b75fc73c251e6cf8da0d35a62bec6dc19472441ad"
+  },
+  "builds_or_gates_run_by_metadata_reviewer": false,
+  "global_files_edited_by_metadata_reviewer": false,
+  "integration_owner": "/root/dc_lean_lead"
+}

@@ -1,0 +1,79 @@
+{
+  "public_root": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+  "allowed_axioms": ["propext", "Classical.choice", "Quot.sound"],
+  "authorship": "Independently authored mathematical contracts. ValidPairActivation and NonnegativePairActivation are deliberately expanded in the headline expectations; no expected types were generated from Lean output.",
+  "targets": [
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute",
+      "expected_type": "∀ (f : ℝ → ℝ) (x : ℝ), positiveCurvature f x = (|curvature f x| + curvature f x) / 2",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC", "MeasureTheory"],
+      "universes": [],
+      "review_id": "DC-CURVATURE-POSITIVE-ABSOLUTE"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute",
+      "expected_type": "∀ (f : ℝ → ℝ) (x : ℝ), negativeCurvature f x = (|curvature f x| - curvature f x) / 2",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC", "MeasureTheory"],
+      "universes": [],
+      "review_id": "DC-CURVATURE-NEGATIVE-ABSOLUTE"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute",
+      "expected_type": "∀ (f : ℝ → ℝ) (hq : Integrable (curvature f)), totalPositiveCurvature f + totalNegativeCurvature f = ∫ t, |curvature f t|",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC", "MeasureTheory"],
+      "universes": [],
+      "review_id": "DC-CURVATURE-TOTAL-ABSOLUTE"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds",
+      "expected_type": "∀ (f : ℝ → ℝ) (hq : Integrable (curvature f)) (x : ℝ), (0 ≤ D1 f x + curvatureSlopeShift f ∧ D1 f x + curvatureSlopeShift f ≤ curvatureLiftWidth f) ∧ (0 ≤ D2 f x + curvatureSlopeShift f ∧ D2 f x + curvatureSlopeShift f ≤ curvatureLiftWidth f)",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC", "MeasureTheory"],
+      "universes": [],
+      "review_id": "DC-CURVATURE-EXPLICIT-SLOPE-BOUNDS"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvature_profile_difference",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)) (x : ℝ), curvaturePositiveProfile f x - curvatureNegativeProfile f x = f x",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC", "MeasureTheory"],
+      "universes": [],
+      "review_id": "DC-CURVATURE-ACTUAL-PROFILE-RECONSTRUCTION"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ConvexOn ℝ Set.univ (fun z => (curvatureLiftPair f z).1) ∧ ConvexOn ℝ Set.univ (fun z => (curvatureLiftPair f z).2) ∧ Monotone (fun z => (curvatureLiftPair f z).1) ∧ Monotone (fun z => (curvatureLiftPair f z).2) ∧ ∀ p q : ℝ, (curvatureLiftPair f (p, q)).1 - (curvatureLiftPair f (p, q)).2 = f (p - q)",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC", "MeasureTheory"],
+      "universes": [],
+      "review_id": "DC-CURVATURE-GLOBAL-SPLIT"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)) (hzero : 0 ≤ f 0), ∀ p q : ℝ, 0 ≤ p → 0 ≤ q → 0 ≤ (curvatureLiftPair f (p, q)).1 ∧ 0 ≤ (curvatureLiftPair f (p, q)).2",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC", "MeasureTheory"],
+      "universes": [],
+      "review_id": "DC-CURVATURE-NONNEGATIVE-ORTHANT"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ConvexOn ℝ Set.univ (fun z => (normalizedCurvatureLiftPair f z).1) ∧ ConvexOn ℝ Set.univ (fun z => (normalizedCurvatureLiftPair f z).2) ∧ Monotone (fun z => (normalizedCurvatureLiftPair f z).1) ∧ Monotone (fun z => (normalizedCurvatureLiftPair f z).2) ∧ ∀ p q : ℝ, (normalizedCurvatureLiftPair f (p, q)).1 - (normalizedCurvatureLiftPair f (p, q)).2 = f (p - q)",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC", "MeasureTheory"],
+      "universes": [],
+      "review_id": "DC-CURVATURE-NORMALIZED-GLOBAL-SPLIT"
+    },
+    {
+      "module": "HiddenMonotonicity.CurvatureMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative",
+      "expected_type": "∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ∀ p q : ℝ, 0 ≤ p → 0 ≤ q → 0 ≤ (normalizedCurvatureLiftPair f (p, q)).1 ∧ 0 ≤ (normalizedCurvatureLiftPair f (p, q)).2",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC", "MeasureTheory"],
+      "universes": [],
+      "review_id": "DC-CURVATURE-NORMALIZED-NONNEGATIVE-ORTHANT"
+    }
+  ]
+}

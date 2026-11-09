@@ -1,0 +1,50 @@
+HiddenMonotonicity.SmoothDC.modern_curvature_pair : ∀ (a : HiddenMonotonicity.SmoothDC.ModernActivation),
+  HiddenMonotonicity.ConvexPairActivation (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) ∧
+    Monotone (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) ∧
+      HiddenMonotonicity.ValidPairActivation a.eval (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) ∧
+        HiddenMonotonicity.NonnegativePairActivation (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval)
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SmoothDC.modern_curvature_network : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m),
+  net.Nonnegative →
+    ∀ (a : HiddenMonotonicity.SmoothDC.ModernActivation),
+      Monotone (net.decomposeWith (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval)) ∧
+        (∀ (i : Fin m),
+            ConvexOn ℝ Set.univ fun x =>
+              (net.decomposeWith (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) x).1 i) ∧
+          (∀ (i : Fin m),
+              ConvexOn ℝ Set.univ fun x =>
+                (net.decomposeWith (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) x).2 i) ∧
+            ∀ (x : HiddenMonotonicity.PairVec n),
+              (net.decomposeWith (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) x).1 -
+                  (net.decomposeWith (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) x).2 =
+                net.forwardWith a.eval (x.1 - x.2)
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SmoothDC.modern_curvature_network_nonnegative : ∀ {n m : ℕ} (net : HiddenMonotonicity.Network n m),
+  net.NonnegativeParameters →
+    ∀ (a : HiddenMonotonicity.SmoothDC.ModernActivation) (x : HiddenMonotonicity.PairVec n),
+      0 ≤ x.1 ∧ 0 ≤ x.2 →
+        0 ≤ (net.decomposeWith (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) x).1 ∧
+          0 ≤ (net.decomposeWith (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) x).2
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SmoothDC.modern_curvature_affine_network : ∀ {n m k : ℕ} (net : HiddenMonotonicity.Network n m),
+  net.Nonnegative →
+    ∀ (a : HiddenMonotonicity.SmoothDC.ModernActivation) (wp wn : Matrix (Fin k) (Fin m) ℝ),
+      (∀ (i : Fin k) (j : Fin m), 0 ≤ wp i j) →
+        (∀ (i : Fin k) (j : Fin m), 0 ≤ wn i j) →
+          ∀ (bp bn : HiddenMonotonicity.Vec k),
+            Monotone (net.affineDecomposeWith (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) wp wn bp bn) ∧
+              (∀ (i : Fin k),
+                  ConvexOn ℝ Set.univ fun x =>
+                    (net.affineDecomposeWith (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) wp wn bp bn x).1
+                      i) ∧
+                (∀ (i : Fin k),
+                    ConvexOn ℝ Set.univ fun x =>
+                      (net.affineDecomposeWith (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) wp wn bp bn x).2
+                        i) ∧
+                  ∀ (x : HiddenMonotonicity.PairVec n),
+                    (net.affineDecomposeWith (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) wp wn bp bn x).1 -
+                        (net.affineDecomposeWith (HiddenMonotonicity.SmoothDC.curvatureLiftPair a.eval) wp wn bp bn
+                            x).2 =
+                      HiddenMonotonicity.affineLayer wp wn bp bn (net.forwardWith a.eval (x.1 - x.2))
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 564 project theorem declarations in the imported environment

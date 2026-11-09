@@ -4,33 +4,140 @@ The user requested this checkpoint so the thesis can be continued on another
 server. This document is sufficient to start the TeX task independently. The
 mathematical continuation has a separate [Lean handover](HANDOVER_LEAN.md).
 
-## Continuation and academic reviews
+## Current local revision and verification boundary
 
-The 9 November continuation added thanks to Wojciech Samek for his Responsible
-AI lecture and made the publication basis explicit: **Hidden Monotonicity is a
-CVPR 2026 Highlight paper; Playing the Network Backward is an arXiv preprint
-(v2)**. The introduction and publication-provenance appendix identify both
-coauthored works and the thesis additions.
+The revision after checkpoint `afcbb42` is being completed **locally**. The user
+asked for changes and execution in the local thesis and official code checkouts
+first. No current repair commits have been pushed. Earlier publication approval
+does not authorize silently publishing this revision.
 
-The routing-law prose has been corrected to distinguish normalized routing from
-model-dependent signed discounted attribution. The regularizer/curvature remark
-now assumes local absolute continuity of the gate, with a positive second
-derivative of the regularizer as a sufficient condition. The corresponding
-source reviews are `reports/routing-law-precision-review.json` and
-`reports/regularizer-curvature-review.json`.
+The new source includes the generalized convex/monotone DC construction,
+closed-form activation and softmax splits, an explicit arbitrary-depth
+Transformer definition and splitting algorithm, and the requested review repairs.
+The latest complete thesis PDF and full Lean gate still belong to the previous
+checkpoint until the parent replaces this paragraph with a new passed receipt.
+Do not infer final PDF layout or integrated proof verification from successful
+leaf builds. The last completed full Lean gate is
+`0f3cfb0ea660556c14da510e665281f07acc471d` (139 modules, 370 exact contracts,
+3,048 theorem axiom audits); its published TeX has 190 mapped links.
 
-The rebuilt thesis has no overfull boxes or unresolved references/citations.
-All 13 summary-backed game tables matched in the fresh CPU reconstruction;
-`reports/evidence/tex-resumption/` records the commands and checks. This did not
-rerun model evaluations. The latest public PDF and proof-link revision are
-recorded in `reports/publication-build.json`.
+The two revised source papers already compile independently: Hidden Monotonicity
+has 38 pages and Playing the Network Backward has 83 pages. References and
+citations resolve, and comparison with `afcbb42` found no newly introduced
+layout warnings. Existing source-paper overfull boxes remain recorded in
+`reports/evidence/paper-builds/`; this does not certify the separate thesis build.
 
-The requested [twelve academic reviews and prioritized repair plan](reports/thesis-reviews/README.md)
-follow a sourced [master's-level assessment framework](reports/thesis-reviews/assessment-criteria.md).
-They identify remaining scientific and reproducibility repairs. These findings
-are review recommendations, not changes silently applied to the experiments or
-manuscript. Use the consolidated plan for the next revision; the current PDF is
-a reviewed checkpoint, not a claim that every identified issue has been fixed.
+## Mathematical and editorial changes
+
+Chapter 03 now starts the DC development with the generic convex, monotone
+profile criterion and network composition theorem. Its absolute-curvature
+construction covers smooth activations; explicit GELU, Swish, sigmoid and
+Softplus formulas recover ReLU exactly as `(max(x,y), y)`. The final classifier
+layer is an ungated signed affine readout. The earlier symmetric construction
+remains a separate variant, and the smooth section has moved from Chapter 02.
+
+The new softmax pair is globally convex and coordinatewise monotone on the
+expanded space. Chapter 07 combines it with square-polarization products and
+input-dependent positive-epsilon LayerNorm. It defines a finite pre-LayerNorm
+Transformer with fixed nonempty attention masks, arbitrary block-list depth,
+optional final normalization, and signed affine logits, then gives the recursive
+splitting algorithm. The whole Transformer heads are convex, monotone and
+nonnegative on **nonnegative doubled inputs**. Their positive/negative raw-input
+pullbacks are globally convex and nonnegative, but generally not monotone.
+LayerNorm still uses input statistics in evaluation mode; fixed-statistic
+BatchNorm is the affine case.
+
+Keep the numerical limitation prominent. The post-LayerNorm diagnostic in
+`scripts/transformer_dc_demo.py` is a separate instance of the same primitive
+construction, not the precise pre-LayerNorm record used by the formal assembly.
+Of 20 deterministic float64 cases, 15 exceed `1e-8` final absolute error; all
+six tested epsilon `1e-5` cases lose output accuracy and stream magnitudes reach
+`5.95e111`. A benign fixture is accurate to `2.78e-17`. All cases are retained in
+`reports/evidence/transformer-dc/numeric.json` and its independent review.
+Exact real-arithmetic decomposition does not establish a stable implementation.
+
+Both source papers and thesis now distinguish full-model score changes from
+individual-stream sensitivities, weak rank association from independence,
+non-rejection from equivalence, and localization from faithfulness. The game
+presentation explicitly bridges signed affine output logits and defines zero-mass
+routing by cemetery absorption. Unit-seeded released routing is distinguished
+from signed logit-seeded LRP. Runtime prose states the measured 14–29-fold cost
+relative to ordinary Grad-CAM/LayerCAM, actual timer/setup scope, and unresolved
+historical hardware, precision and Guided Grad-CAM/Guided LayerCAM label provenance.
+Dataset exclusion flow, explanation targets, scalar channel-feature Pixel
+Flipping and its baseline are aligned with the inspected implementations.
+
+Publication provenance remains explicit: **Hidden Monotonicity is a CVPR 2026
+Highlight; Playing the Network Backward is an arXiv preprint (v2)**. Thanks to
+Wojciech Samek for the Responsible AI lecture are retained. The introduction and
+provenance appendix now state the author's reported roles: developing theory,
+developing and conducting experiments, writing all appendices and most paper text
+outside the introductions. The original game-paper AI statement is historical;
+the separate thesis disclosure records Codex assistance with mathematical proof
+development, formalization, code, statistics and writing. Historical AI products
+and software/model versions still require factual author input; do not invent them
+or silently weaken the declaration's disclosure requirements.
+
+## Review repairs and empirical evidence
+
+The [twelve academic reviews](reports/thesis-reviews/README.md) and
+[master's-level assessment framework](reports/thesis-reviews/assessment-criteria.md)
+remain historical review snapshots. The current resolution audit is
+`reports/thesis-reviews/resolution-audit.json`: 13 specific findings are resolved
+at their stated scope, and five areas remain partial. Those are historical
+experimental artifacts, AI identifiers, historical timing provenance, conflicting
+VGG values, and stronger fixed-rule numerical-stability evidence. Do not rewrite
+the old reviews to suggest their findings never existed.
+
+The official repositories remain pinned submodules, with local committed repairs:
+
+- Hidden Monotonicity: `43a8bce45ac1d61b28dfa5ddc7eaf32e8ad35f4f` on
+  `thesis-local-reproducibility`. **27 tests and 23 subtests pass**. Repairs include
+  executable instructions/API examples, precision propagation and timing metadata,
+  independently measured Pixel Flipping initial scores, and deterministic 90/10
+  training-pool validation with test data used only after fitting. The default
+  validation seed is 42 and independent of model initialization. Final-epoch
+  evaluation is explicit; no best-checkpoint reload is implied. Evidence:
+  `reports/evidence/hm-reproduction-repair/summary.json`.
+- Playing the Network Backward:
+  `7b5cd387f0a690b0d3451aa60bc8d897bd442a38` on
+  `local/voc-image-cluster-inference`. **33 statistical tests** and **48 routing
+  boundary tests** pass. Zero-denominator linear, convolution and attention
+  routing is defined; positive-epsilon regression outputs are bit-for-bit
+  unchanged. Evidence: `reports/evidence/routing-boundaries/receipt.json` and
+  `reports/evidence/voc-cluster-repair/`.
+
+VOC uncertainty now resamples 2,293 original images, preserving all 2,743
+image–class records and method pairing. The record-weighted estimand is unchanged.
+The 10,000-resample CPU reaggregation leaves all 126 finite means, winners and
+120 VOC winner-comparison decisions unchanged. Interval widths change by a median
++1.47%; 94 intervals differ at displayed precision. Holm correction now uses the
+full eligible method-pair family before extracting winner comparisons; ten
+ImageNet comparisons become non-rejections, and the prose reflects that change.
+All ImageNet intervals and all point estimates remain unchanged.
+
+Strict regeneration and canonical checks pass for **all 13 supported outputs**.
+Adapted outputs are in thesis tables, and exact raw outputs are mirrored into the
+archived game source. See `reports/evidence/voc-cluster-repair/table_integration.json`
+and `reports/table-adapter-verification.json`. No pretrained-model reevaluation
+was needed for this reaggregation. Six game diagnostic outputs, historical HM
+per-image inputs/environment and six historical MNIST configurations remain
+unavailable. CPU fixtures and the notebook-derived example do not reproduce those
+historical campaigns. The duplicate VGG configuration values are retained with
+an explicit provenance limitation, not an invented cause.
+
+The earlier routing-law and regularizer-curvature corrections remain valid:
+`reports/routing-law-precision-review.json` and
+`reports/regularizer-curvature-review.json` record them.
+
+The user subsequently requested a real-ViT generic DC implementation,
+stabilization and heatmaps in the official HM code. That experiment is in
+progress in a separate local worktree,
+`/home/jzimmermann/code/hidden-monotonicity-transformer-dc`, based on `43a8bce`.
+The thesis submodule and its validated pin stay unchanged during that work.
+No real-ViT result or stable implementation is established by the mathematical
+theorem or the small synthetic diagnostic above; add results only after their
+own execution and review receipts exist.
 
 ## Start here
 
@@ -87,7 +194,7 @@ private workspace. `docs/thesis.pdf` is built from this public source tree.
 
 ## Source/content state
 
-`arxive/playingTheNetworkBackward/` contains the revised AISTATS source,
+`arxive/playingTheNetworkBackward/` contains the preprint source revised for AISTATS,
 arXiv **2605.06212v2**, not the superseded version. Unchanged downloaded inputs and
 checksums are in `arxive/downloads/`. `arxive/hiddenMonotonicity/` contains the
 other paper and already reported mathematical corrections. Do not replace the
@@ -99,7 +206,7 @@ and `reports/final-paper-content-review.json`. Fifteen identified omissions were
 restored before this checkpoint. Later source-wording restoration is recorded
 in `reports/terminology-source-wording-restoration.json`.
 
-The latest added section is `sec:nrm_comparison` in
+The trajectory comparison is `sec:nrm_comparison` in
 `tex/chapters/11_trajectory.tex`, comparing the trajectory view with **Normalized
 Relevance Measure as a Unifying Framework to Explain Neural Network Latent
 Structures**, Xiong, Schnake, Montavon, Müller, and Nakajima, arXiv **2606.00557v1**.
@@ -141,14 +248,17 @@ Preserve these specific intentions:
 
 ## Tables and terminology
 
-All measured values are retained. Entirely unmeasured MaxS/AvgS columns were
+All original point estimates are retained; uncertainty intervals and significance
+markers have the intentional changes documented above. Entirely unmeasured MaxS/AvgS columns were
 removed from the VOC table (formerly A.16); its source explicitly did not evaluate
 those metrics. Elsewhere `n/r` means not reported and `n/a` means not applicable.
 Do not invent numerical values to replace an unavailable result.
 
 The split tables use score-drop AUC **PF^drop_5 / PF^drop_20, higher is better**,
-112 pixels per step. The game tables use remaining-logit AUC **PF_5 / PF_20,
-lower is better**, 1,568 features per step. These are not interchangeable.
+112 scalar channel features per step. The game tables use remaining-logit AUC
+**PF_5 / PF_20, lower is better**, 1,568 scalar channel features per step.
+A 224×224 RGB input has 150,528 such features; these counts are not spatial
+pixels. The two metrics and target conventions are not interchangeable.
 The chapter defines metric/method abbreviations. Best values use the game paper's
 dark blue shading and bold type; light blue ablation comparison defaults are
 explicitly distinguished from statistical ties.
@@ -180,7 +290,7 @@ the table review alone.
 
 Theorem/lemma/definition headings contain numbered `Lean_1`, `Lean_2`, … links
 inside their heading brackets, following the style of arXiv 2610.01728v2.
-Equation numbers link directly to declarations. The published checkpoint has
+Equation numbers link directly to declarations. The previous published checkpoint has
 **190 mapped links** pinned to the clean verified source commit
 `0f3cfb0ea660556c14da510e665281f07acc471d`.
 
@@ -200,22 +310,20 @@ python3 scripts/generate_lean_links.py --revision VERIFIED_COMMIT --check
 
 1. Read the last typography/checkpoint reports and the public build receipt.
    Rebuild after any changes; check actual final log and rendered pages.
-2. Work through the prioritized repairs in `reports/thesis-reviews/README.md`.
-   The routing-law prose precision and regularizer-curvature assumption issues
-   were corrected in this continuation. The new reviews identify separate
-   remaining mathematical, experimental, statistical, and reproduction issues;
-   keep confirmed defects distinct from optional further research. Report any
-   additional mathematical correction before editing source papers.
+2. Use `reports/thesis-reviews/resolution-audit.json` to distinguish completed
+   repairs from the remaining factual and empirical limits. Read the original
+   reviews for their rationale, not as an up-to-date list of untouched defects.
+   Report any additional mathematical correction before editing source papers.
 3. Retain the recently restored original wording; review any new changes for
    accidental loss of hypotheses, citations, table values, or definitions.
 4. Check the public PDF has no unresolved `??`, citations/references, or private
    registration number. Verify all PDF Lean URIs use the new repository and the
    intended commit/lines. `pdftotext`, `pdfinfo`, `pdftoppm`, and `mutool show` are
    sufficient; no PyMuPDF dependency is required.
-5. Copy the public build to `docs/thesis.pdf`, update the build receipt, commit
-   reviewed changes and push. Public pushes were explicitly authorized. Coordinate
-   pushes or use separate worktrees so the TeX and Lean tasks do not change a
-   source commit while a clean proof gate is running.
+5. Copy the checked build to `docs/thesis.pdf`, update the build receipt, and
+   commit reviewed changes locally. Keep this revision local as requested; do not
+   push based on earlier checkpoint authorization. Coordinate source commits so
+   HEAD and bound files remain fixed while the clean proof gate runs.
 
 Do not claim that all mathematics is formalized. That remains the independent
 Lean task, whose pending work is listed in `HANDOVER_LEAN.md`.

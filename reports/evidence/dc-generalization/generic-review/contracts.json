@@ -1,0 +1,70 @@
+{
+  "public_root": "HiddenMonotonicity.MonotoneDCLift",
+  "allowed_axioms": ["propext", "Classical.choice", "Quot.sound"],
+  "authorship": "Independently written from the mathematical specification; expected propositions were not obtained from inferred or printed Lean types.",
+  "targets": [
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.asymmetricLift_convex_iff",
+      "expected_type": "∀ (C : ℝ → ℝ) (L : ℝ), ConvexOn ℝ Set.univ (asymmetricLift C L) ↔ ConvexOn ℝ Set.univ C",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "DC-GENERIC-CONVEX-IFF",
+      "scope": "Global convexity is equivalent to convexity of the univariate profile, for the specified affine lift."
+    },
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff_increments",
+      "expected_type": "∀ (C : ℝ → ℝ) (L : ℝ), Monotone (asymmetricLift C L) ↔ ∀ a b : ℝ, a ≤ b → 0 ≤ C b - C a ∧ C b - C a ≤ L * (b - a)",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "DC-GENERIC-INCREMENTS-IFF",
+      "scope": "Coordinatewise monotonicity is equivalent to all increasing secant increments lying between zero and width L times the increment; no differentiability requirement."
+    },
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff",
+      "expected_type": "∀ (C D : ℝ → ℝ) (hC : ∀ x : ℝ, HasDerivAt C (D x) x) (L : ℝ), Monotone (asymmetricLift C L) ↔ ∀ x : ℝ, 0 ≤ D x ∧ D x ≤ L",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "DC-GENERIC-DERIVATIVE-IFF",
+      "scope": "For an everywhere differentiable profile, the exact criterion for the specified affine lift is that its derivative lies in [0,L] everywhere."
+    },
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.asymmetric_split",
+      "expected_type": "∀ (P Q f : ℝ → ℝ) (L : ℝ) (hP : ConvexOn ℝ Set.univ P) (hQ : ConvexOn ℝ Set.univ Q) (hPd : ∀ a b : ℝ, a ≤ b → 0 ≤ P b - P a ∧ P b - P a ≤ L * (b - a)) (hQd : ∀ a b : ℝ, a ≤ b → 0 ≤ Q b - Q a ∧ Q b - Q a ≤ L * (b - a)) (hdiff : ∀ t : ℝ, P t - Q t = f t), ConvexOn ℝ Set.univ (asymmetricLift P L) ∧ ConvexOn ℝ Set.univ (asymmetricLift Q L) ∧ Monotone (asymmetricLift P L) ∧ Monotone (asymmetricLift Q L) ∧ ∀ z : ℝ × ℝ, asymmetricLift P L z - asymmetricLift Q L z = f (z.1 - z.2)",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "DC-GENERIC-SPLIT",
+      "scope": "The genuine abstract profile hypotheses yield two globally convex and coordinatewise monotone streams with exact reconstruction on all of R²."
+    },
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.asymmetricLift_common_shift",
+      "expected_type": "∀ (C : ℝ → ℝ) (L x y c : ℝ), asymmetricLift C L (x + c, y + c) = asymmetricLift C L (x, y) + L * c",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "DC-GENERIC-COMMON-SHIFT",
+      "scope": "A common signed shift of the input streams adds exactly L times that shift to each lifted stream."
+    },
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.asymmetricLift_relu",
+      "expected_type": "∀ z : ℝ × ℝ, asymmetricLift relu 1 z = max z.1 z.2 ∧ asymmetricLift (fun _ : ℝ => 0) 1 z = z.2",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "DC-GENERIC-RELU-MAX-IDENTITY",
+      "scope": "Exact global specialization to max and the second-coordinate identity, including signed input streams."
+    },
+    {
+      "module": "HiddenMonotonicity.MonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SmoothDC.relu_asymmetric_split",
+      "expected_type": "ConvexOn ℝ Set.univ (asymmetricLift relu 1) ∧ ConvexOn ℝ Set.univ (asymmetricLift (fun _ : ℝ => 0) 1) ∧ Monotone (asymmetricLift relu 1) ∧ Monotone (asymmetricLift (fun _ : ℝ => 0) 1) ∧ ∀ z : ℝ × ℝ, asymmetricLift relu 1 z - asymmetricLift (fun _ : ℝ => 0) 1 z = relu (z.1 - z.2)",
+      "open_namespaces": ["HiddenMonotonicity", "HiddenMonotonicity.SmoothDC"],
+      "universes": [],
+      "review_id": "DC-GENERIC-RELU-SPLIT",
+      "scope": "ReLU itself satisfies the full generic split conclusion despite its nonsmooth point at zero."
+    }
+  ]
+}

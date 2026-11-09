@@ -1,0 +1,49 @@
+{
+  "status": "diagnostic leaf verified; coordinated root integration and public gate pending",
+  "source_sha256": {
+    "formalization/HiddenMonotonicity/ExplicitSigmoidSmooth.lean": "98435c48c9041c92f2d5382faa6037fde51e685ba11151978adfba87cd20519d",
+    "reports/evidence/dc-generalization/sigmoid-smooth/Consumer.lean": "d62645e2216962783c54607204d79980ba6502c91847e2577f02a5dee667c9d2",
+    "reports/evidence/dc-generalization/sigmoid-smooth/contracts.json": "ada6b0307755f9df4a08236b242fc85c771e9f39fd0b4a8501a170ddc9a9ec3a"
+  },
+  "commands": [
+    {
+      "command": "lake env lean HiddenMonotonicity/ExplicitSigmoidSmooth.lean",
+      "cwd": "formalization",
+      "exit_code": 0,
+      "log": "build.log"
+    },
+    {
+      "command": "lake build +HiddenMonotonicity.ExplicitSigmoidSmooth",
+      "cwd": "formalization",
+      "exit_code": 0,
+      "log": "lake-build.log"
+    },
+    {
+      "command": "lake env lean ../reports/evidence/dc-generalization/sigmoid-smooth/Consumer.lean",
+      "cwd": "formalization",
+      "exit_code": 0,
+      "log": "consumer.log"
+    }
+  ],
+  "exact_contract_checks": [
+    "HiddenMonotonicity.SmoothDC.sigmoid_smooth_explicit_split",
+    "HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_logsumexp",
+    "HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_contDiff"
+  ],
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "consumer_boundaries": [
+    "exact origin normalization",
+    "first branch x derivative 3/8 at origin",
+    "first branch y derivative 1/8 at origin",
+    "second branch x derivative 1/8 at origin",
+    "second branch y derivative 3/8 at origin",
+    "signed-input exact recovery",
+    "signed-input monotonicity in both branches"
+  ],
+  "frozen_files_changed": false,
+  "public_root_or_manifest_changed": false
+}

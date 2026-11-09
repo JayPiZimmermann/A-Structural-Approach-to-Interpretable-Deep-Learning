@@ -1,0 +1,256 @@
+import HiddenMonotonicity.CurvatureMonotoneDCLift
+import Lean
+set_option autoImplicit false
+set_option maxHeartbeats 0
+open Lean Elab Command
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_0 : Prop := (∀ (f : ℝ → ℝ) (x : ℝ), positiveCurvature f x = (|curvature f x| + curvature f x) / 2)
+theorem _ThesisExactChecks.target_0 : _ThesisExpectedTypes.type_0 := by exact @HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute
+  let expected ← getConstInfo `_ThesisExactChecks.target_0
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_0) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute"
+#check @HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute
+#print axioms _ThesisExactChecks.target_0
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_1 : Prop := (∀ (f : ℝ → ℝ) (x : ℝ), negativeCurvature f x = (|curvature f x| - curvature f x) / 2)
+theorem _ThesisExactChecks.target_1 : _ThesisExpectedTypes.type_1 := by exact @HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute
+  let expected ← getConstInfo `_ThesisExactChecks.target_1
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_1) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute"
+#check @HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute
+#print axioms _ThesisExactChecks.target_1
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_2 : Prop := (∀ (f : ℝ → ℝ) (hq : Integrable (curvature f)), totalPositiveCurvature f + totalNegativeCurvature f = ∫ t, |curvature f t|)
+theorem _ThesisExactChecks.target_2 : _ThesisExpectedTypes.type_2 := by exact @HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute
+  let expected ← getConstInfo `_ThesisExactChecks.target_2
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_2) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute"
+#check @HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute
+#print axioms _ThesisExactChecks.target_2
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_3 : Prop := (∀ (f : ℝ → ℝ) (hq : Integrable (curvature f)) (x : ℝ), (0 ≤ D1 f x + curvatureSlopeShift f ∧ D1 f x + curvatureSlopeShift f ≤ curvatureLiftWidth f) ∧ (0 ≤ D2 f x + curvatureSlopeShift f ∧ D2 f x + curvatureSlopeShift f ≤ curvatureLiftWidth f))
+theorem _ThesisExactChecks.target_3 : _ThesisExpectedTypes.type_3 := by exact @HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds
+  let expected ← getConstInfo `_ThesisExactChecks.target_3
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_3) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds"
+#check @HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds
+#print axioms _ThesisExactChecks.target_3
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_4 : Prop := (∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)) (x : ℝ), curvaturePositiveProfile f x - curvatureNegativeProfile f x = f x)
+theorem _ThesisExactChecks.target_4 : _ThesisExpectedTypes.type_4 := by exact @HiddenMonotonicity.SmoothDC.curvature_profile_difference
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.curvature_profile_difference
+  let expected ← getConstInfo `_ThesisExactChecks.target_4
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.curvature_profile_difference"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.curvature_profile_difference | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.curvature_profile_difference"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_4) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.curvature_profile_difference: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.curvature_profile_difference"
+#check @HiddenMonotonicity.SmoothDC.curvature_profile_difference
+#print axioms _ThesisExactChecks.target_4
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_5 : Prop := (∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ConvexOn ℝ Set.univ (fun z => (curvatureLiftPair f z).1) ∧ ConvexOn ℝ Set.univ (fun z => (curvatureLiftPair f z).2) ∧ Monotone (fun z => (curvatureLiftPair f z).1) ∧ Monotone (fun z => (curvatureLiftPair f z).2) ∧ ∀ p q : ℝ, (curvatureLiftPair f (p, q)).1 - (curvatureLiftPair f (p, q)).2 = f (p - q))
+theorem _ThesisExactChecks.target_5 : _ThesisExpectedTypes.type_5 := by exact @HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split
+  let expected ← getConstInfo `_ThesisExactChecks.target_5
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_5) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split"
+#check @HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split
+#print axioms _ThesisExactChecks.target_5
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_6 : Prop := (∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)) (hzero : 0 ≤ f 0), ∀ p q : ℝ, 0 ≤ p → 0 ≤ q → 0 ≤ (curvatureLiftPair f (p, q)).1 ∧ 0 ≤ (curvatureLiftPair f (p, q)).2)
+theorem _ThesisExactChecks.target_6 : _ThesisExpectedTypes.type_6 := by exact @HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative
+  let expected ← getConstInfo `_ThesisExactChecks.target_6
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_6) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative"
+#check @HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative
+#print axioms _ThesisExactChecks.target_6
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_7 : Prop := (∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ConvexOn ℝ Set.univ (fun z => (normalizedCurvatureLiftPair f z).1) ∧ ConvexOn ℝ Set.univ (fun z => (normalizedCurvatureLiftPair f z).2) ∧ Monotone (fun z => (normalizedCurvatureLiftPair f z).1) ∧ Monotone (fun z => (normalizedCurvatureLiftPair f z).2) ∧ ∀ p q : ℝ, (normalizedCurvatureLiftPair f (p, q)).1 - (normalizedCurvatureLiftPair f (p, q)).2 = f (p - q))
+theorem _ThesisExactChecks.target_7 : _ThesisExpectedTypes.type_7 := by exact @HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split
+  let expected ← getConstInfo `_ThesisExactChecks.target_7
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_7) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split"
+#check @HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split
+#print axioms _ThesisExactChecks.target_7
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_8 : Prop := (∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ∀ p q : ℝ, 0 ≤ p → 0 ≤ q → 0 ≤ (normalizedCurvatureLiftPair f (p, q)).1 ∧ 0 ≤ (normalizedCurvatureLiftPair f (p, q)).2)
+theorem _ThesisExactChecks.target_8 : _ThesisExpectedTypes.type_8 := by exact @HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative
+  let expected ← getConstInfo `_ThesisExactChecks.target_8
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_8) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative"
+#check @HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative
+#print axioms _ThesisExactChecks.target_8
+
+set_option maxHeartbeats 0
+set_option pp.universes true
+set_option pp.fullNames true
+set_option pp.explicit true
+open Lean Elab Command
+run_cmd do
+  let env ← getEnv
+  let mut records : Array Json := #[]
+  for (name, info) in env.constants.toList do
+    let some index := env.getModuleIdxFor? name | continue
+    let modName := env.header.moduleNames[index.toNat]!
+    unless modName.toString.startsWith "HiddenMonotonicity" || modName.toString.startsWith "Thesis" do continue
+    let .thmInfo _ := info | continue
+    let axioms ← Lean.collectAxioms name
+    for axiomName in axioms do
+      unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+        throwError "Unapproved axiom {axiomName} in {name}"
+    let typeText ← liftTermElabM do return (← Lean.Meta.ppExpr info.type).pretty
+    records := records.push <| Json.mkObj [
+      ("declaration", toJson name.toString), ("module", toJson modName.toString),
+      ("type", toJson typeText), ("universes", toJson (info.levelParams.map Name.toString)),
+      ("axioms", toJson (axioms.map Name.toString))]
+  liftIO <| IO.FS.writeFile "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/evidence/dc-generalization/generic-review/curvature/environment.json" (Json.pretty (toJson records))
+  logInfo m!"Audited {records.size} project theorem declarations in the imported environment"
+

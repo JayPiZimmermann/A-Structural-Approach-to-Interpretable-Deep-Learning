@@ -1,0 +1,40 @@
+HiddenMonotonicity.TransformerDC.productSplit_exact : ∀ (z : HiddenMonotonicity.TransformerDC.FourStreams),
+  (HiddenMonotonicity.TransformerDC.productSplit z).1 - (HiddenMonotonicity.TransformerDC.productSplit z).2 =
+    (z.1.1 - z.1.2) * (z.2.1 - z.2.2)
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.TransformerDC.productSplit_nonnegative : ∀ (z : HiddenMonotonicity.TransformerDC.FourStreams),
+  0 ≤ HiddenMonotonicity.TransformerDC.productSplit z
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.TransformerDC.productSplit_convex : (ConvexOn ℝ Set.univ fun z =>
+    (HiddenMonotonicity.TransformerDC.productSplit z).1) ∧
+  ConvexOn ℝ Set.univ fun z => (HiddenMonotonicity.TransformerDC.productSplit z).2
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.TransformerDC.productSplit_monotoneOn : MonotoneOn HiddenMonotonicity.TransformerDC.productSplit
+  (Set.Ici 0)
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.productSplit_convex_composition : ∀ {E : Type u_1} [inst : AddCommGroup E]
+  [inst_1 : _root_.Module ℝ E] (s : Set E) (A B C D : E → ℝ),
+  ConvexOn ℝ s A →
+    ConvexOn ℝ s B →
+      ConvexOn ℝ s C →
+        ConvexOn ℝ s D →
+          (∀ x ∈ s, 0 ≤ A x) →
+            (∀ x ∈ s, 0 ≤ B x) →
+              (∀ x ∈ s, 0 ≤ C x) →
+                (∀ x ∈ s, 0 ≤ D x) →
+                  (ConvexOn ℝ s fun x => (HiddenMonotonicity.TransformerDC.productSplit ((A x, B x), C x, D x)).1) ∧
+                    ConvexOn ℝ s fun x => (HiddenMonotonicity.TransformerDC.productSplit ((A x, B x), C x, D x)).2
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.productSplit_monotone_composition : ∀ {E : Type u_1} [inst : Preorder E] (s : Set E)
+  (A B C D : E → ℝ),
+  MonotoneOn A s →
+    MonotoneOn B s →
+      MonotoneOn C s →
+        MonotoneOn D s →
+          (∀ x ∈ s, 0 ≤ A x) →
+            (∀ x ∈ s, 0 ≤ B x) →
+              (∀ x ∈ s, 0 ≤ C x) →
+                (∀ x ∈ s, 0 ≤ D x) →
+                  MonotoneOn (fun x => HiddenMonotonicity.TransformerDC.productSplit ((A x, B x), C x, D x)) s
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 9 project theorem declarations in the imported environment

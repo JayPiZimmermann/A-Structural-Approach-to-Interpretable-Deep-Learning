@@ -11,21 +11,16 @@ In this subsection, we present the full ablation study referenced in \cref{subse
 \Cref{tab:alpha_comparison_by_method} reports the $\alpha$--ablation results for SplitCAM 
 and SplitGrad across selected configurations.
 
-Overall, we observe that performance generally improves as $\alpha$ decreases below $0.5$, 
-while all metrics---except Maximum Sensitivity---exhibit a sharp performance drop at 
-$\alpha = 0.0$. This highlights that the stabilization mechanism in the backward pass plays 
-a crucial role in the effectiveness of both methods. While the improvements in the 
-Pixel~Flipping metric are modest, the gains observed in the two localization metrics and 
-the robustness metric are substantial.
+At layer~26, changing $\alpha$ from $0.5$ to $0.4$ improves both localization scores for each
+listed configuration, but the Pixel-Flipping score-drop AUC increases for SplitGrad and decreases
+for SplitCAM. The layer-14 configurations have smaller or adverse changes in some metrics. Low
+$\alpha$ often reduces Maximum Sensitivity while also reducing localization or Pixel-Flipping
+performance. Since $\alpha$ changes the backward attribution rule, these sweeps do not isolate
+numerical stabilization from the choice of explanation.
 
-The table further provides pairwise comparisons between configurations using max-pooling 
-in convex mode versus the ``winner-takes-it-all'' mode, see \cref{subsec:other_components}. For $\alpha$ values close to $0.5$, 
-the differences across the SplitCAM and SplitGrad variants are minimal, indicating that the 
-impact of max-pooling on SplitCAM's forward pass is minor in this regime. We emphasize that, 
-since split-pair gradients coincide with the scaled version of the original gradients for $\alpha = 0.5$, the choice 
-of max-pooling operation has no influence on the gradients in this case. The impact 
-becomes most apparent for $\alpha \in \{0.30, 0.35\}$, where the ``winner-takes-it-all'' mode 
-shows mostly stronger performance than the monotone mode across all methods and metrics.
+The table also compares convex and winner-takes-it-all max-pooling, see
+\cref{subsec:other_components}. Their differences are small near $\alpha=0.5$ and become more
+pronounced at lower values, with their ranking depending on the configuration and metric.
 
 \subsection{Forward Pass Stabilization Ablation}
 
@@ -42,10 +37,11 @@ For SplitLRP, the absence of the forward stabilization produced nearly entirely 
 \subsubsection{SplitLRP}
 
 \Cref{tab:lrp_scale_shift_comparison} directly compares SplitLRP using shifting versus scaling stabilization in the forward pass.
-For both layer-7 configurations, replacing scaling with shifting leads to substantial performance drops across all metrics.
-For the later-layer configurations, the picture is mixed: while shifting yields slightly higher Attribution Localization scores, the scaling variants achieve markedly better Pointing Game performance and significantly improved robustness (Maximum Sensitivity).
-
-These findings highlight the clear advantage of using scaled split-pair activations -- and not the original activations -- for LRP within the DC-decomposition framework.
+Scaling has better values for all reported metrics in the two layer-7 configurations. At the
+later layers, shifting gives higher Attribution Localization and Pixel-Flipping score-drop AUC,
+while scaling gives lower Maximum Sensitivity; the Pointing Game comparison changes direction
+between the two configurations. The evidence therefore supports a configuration-dependent
+trade-off between the two forward rules.
 
 \input{appendix/table_lrp_scale_shift_comparison}
 \input{appendix/table_alpha_none}

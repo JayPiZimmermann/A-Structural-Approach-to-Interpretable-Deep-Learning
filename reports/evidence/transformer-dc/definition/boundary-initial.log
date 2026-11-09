@@ -1,0 +1,115 @@
+../reports/evidence/transformer-dc/definition/Boundary.lean:17:27: error: Application type mismatch: The argument
+  h
+has type
+  (fun k => ⟨↑k, ⋯⟩) a = (fun k => ⟨↑k, ⋯⟩) b
+but is expected to have type
+  a = b
+in the application
+  congrArg Fin.val h
+../reports/evidence/transformer-dc/definition/Boundary.lean:21:33: error(lean.synthInstanceFailed): failed to synthesize instance of type class
+  OfNat (Fin ((causalMask 2).keyCount 0)) 0
+numerals are polymorphic in Lean, but the numeral `0` cannot be used in a context where the expected type is
+  Fin ((causalMask 2).keyCount 0)
+due to the absence of the instance above
+
+Hint: Type class instance resolution failures can be inspected with the `set_option trace.Meta.synthInstance true` command.
+../reports/evidence/transformer-dc/definition/Boundary.lean:64:57: error: unsolved goals
+x : Fin 1 → Fin 1 → ℝ
+⊢ ∑ x_1,
+      head.outputWeight 0 x_1 *
+        ∑ x_2,
+          (Real.exp
+                (∑ x_3,
+                  (head.query.weight x_3 0 * x 0 0 + head.query.bias x_3) *
+                    (head.key.weight x_3 0 * x (head.mask.keyAt 0 x_2) 0 + head.key.bias x_3)) /
+              ∑ x_3,
+                Real.exp
+                  (∑ x_4,
+                    (head.query.weight x_4 0 * x 0 0 + head.query.bias x_4) *
+                      (head.key.weight x_4 0 * x (head.mask.keyAt 0 x_3) 0 + head.key.bias x_4))) *
+            (head.value.weight x_1 0 * x (head.mask.keyAt 0 x_2) 0 + head.value.bias x_1) =
+    3
+Try this:
+  [apply] ring_nf
+  
+  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.
+    
+  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.
+../reports/evidence/transformer-dc/definition/Boundary.lean:70:36: error: unsolved goals
+case «0».«0»
+x : Fin 1 → Fin 1 → ℝ
+⊢ -1 + x 0 0 +
+          ∑ x_1,
+            ∑ x_2,
+              (block.heads.get x_1).outputWeight 0 x_2 *
+                ∑ x_3,
+                  (norm.eval x ((block.heads.get x_1).mask.keyAt ⟨0, ⋯⟩ x_3) 0 *
+                          Real.exp
+                            (∑ x_4,
+                              ((block.heads.get x_1).query.weight x_4 0 * norm.eval x 0 0 *
+                                        (block.heads.get x_1).key.weight x_4 0 *
+                                      norm.eval x ((block.heads.get x_1).mask.keyAt ⟨0, ⋯⟩ x_3) 0 +
+                                    (block.heads.get x_1).query.weight x_4 0 * norm.eval x 0 0 *
+                                      (block.heads.get x_1).key.bias x_4 +
+                                  (block.heads.get x_1).query.bias x_4 * (block.heads.get x_1).key.weight x_4 0 *
+                                    norm.eval x ((block.heads.get x_1).mask.keyAt ⟨0, ⋯⟩ x_3) 0 +
+                                (block.heads.get x_1).query.bias x_4 * (block.heads.get x_1).key.bias x_4)) *
+                        (∑ x_4,
+                            Real.exp
+                              (∑ x_5,
+                                (norm.eval x 0 0 * (block.heads.get x_1).query.weight x_5 0 *
+                                          (block.heads.get x_1).key.weight x_5 0 *
+                                        norm.eval x ((block.heads.get x_1).mask.keyAt ⟨0, ⋯⟩ x_4) 0 +
+                                      norm.eval x 0 0 * (block.heads.get x_1).query.weight x_5 0 *
+                                        (block.heads.get x_1).key.bias x_5 +
+                                    (block.heads.get x_1).query.bias x_5 * (block.heads.get x_1).key.weight x_5 0 *
+                                      norm.eval x ((block.heads.get x_1).mask.keyAt ⟨0, ⋯⟩ x_4) 0 +
+                                  (block.heads.get x_1).query.bias x_5 * (block.heads.get x_1).key.bias x_5)))⁻¹ *
+                      (block.heads.get x_1).value.weight x_2 0 +
+                    Real.exp
+                          (∑ x_4,
+                            ((block.heads.get x_1).query.weight x_4 0 * norm.eval x 0 0 *
+                                      (block.heads.get x_1).key.weight x_4 0 *
+                                    norm.eval x ((block.heads.get x_1).mask.keyAt ⟨0, ⋯⟩ x_3) 0 +
+                                  (block.heads.get x_1).query.weight x_4 0 * norm.eval x 0 0 *
+                                    (block.heads.get x_1).key.bias x_4 +
+                                (block.heads.get x_1).query.bias x_4 * (block.heads.get x_1).key.weight x_4 0 *
+                                  norm.eval x ((block.heads.get x_1).mask.keyAt ⟨0, ⋯⟩ x_3) 0 +
+                              (block.heads.get x_1).query.bias x_4 * (block.heads.get x_1).key.bias x_4)) *
+                        (∑ x_4,
+                            Real.exp
+                              (∑ x_5,
+                                (norm.eval x 0 0 * (block.heads.get x_1).query.weight x_5 0 *
+                                          (block.heads.get x_1).key.weight x_5 0 *
+                                        norm.eval x ((block.heads.get x_1).mask.keyAt ⟨0, ⋯⟩ x_4) 0 +
+                                      norm.eval x 0 0 * (block.heads.get x_1).query.weight x_5 0 *
+                                        (block.heads.get x_1).key.bias x_5 +
+                                    (block.heads.get x_1).query.bias x_5 * (block.heads.get x_1).key.weight x_5 0 *
+                                      norm.eval x ((block.heads.get x_1).mask.keyAt ⟨0, ⋯⟩ x_4) 0 +
+                                  (block.heads.get x_1).query.bias x_5 * (block.heads.get x_1).key.bias x_5)))⁻¹ *
+                      (block.heads.get x_1).value.bias x_2) +
+        ∑ x_1,
+          block.down.weight 0 x_1 *
+            HiddenMonotonicity.SmoothDC.ClosedFormActivation.gaussianGelu.eval
+              (block.up.weight x_1 0 *
+                  norm.eval
+                    ({ attentionNorm := norm,
+                          heads :=
+                            [{ keyWidth := 1, keyWidth_pos := head._proof_1, valueWidth := 1,
+                                valueWidth_pos := head._proof_1,
+                                query := { weight := fun x x_2 => 0, bias := fun x => 0 },
+                                key := { weight := fun x x_2 => 0, bias := fun x => 0 },
+                                value := { weight := fun x x_2 => 0, bias := fun x => 3 },
+                                outputWeight := fun x x_2 => 1, scale := 1,
+                                mask :=
+                                  { keyCount := fun x => 1, keyCount_pos := ⋯, keyAt := fun x k => k,
+                                    keyAt_injective := ⋯ } }],
+                          attentionBias := fun x => -1, feedForwardNorm := norm, hiddenWidth := 1,
+                          up := { weight := fun x x_2 => 0, bias := fun x => 0 },
+                          activation := HiddenMonotonicity.SmoothDC.ClosedFormActivation.gaussianGelu,
+                          down := { weight := fun x x_2 => 0, bias := fun x => -4 } }.attentionResidual
+                      x)
+                    0 0 +
+                block.up.bias x_1) +
+      block.down.bias 0 =
+    -2 + x 0 0

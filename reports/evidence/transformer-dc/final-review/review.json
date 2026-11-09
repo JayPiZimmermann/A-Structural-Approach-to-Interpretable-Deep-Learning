@@ -1,0 +1,57 @@
+{
+  "status": "pass_with_explicit_scope",
+  "reviewer": "/root/transformer_lean_architecture/transformer_final_review",
+  "source_commit_at_review": "afcbb42d0d680097391a6a52065f15125aa57c31",
+  "evidence_scope": "Independent diagnostic review of frozen working-tree sources; the clean committed publication gate is owned by the integrating root agent.",
+  "exact_contracts": 8,
+  "contract_authoring": "Full-forall expected propositions authored independently from intended mathematical statements and source definitions; no expected types copied from inferred Lean output. The repository exact driver separately checks type, universe arity, defining module and allowed axioms.",
+  "exact_exit_code": 0,
+  "imported_project_theorem_axiom_audits": 920,
+  "allowed_axioms_observed": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "boundary_consumers": 28,
+  "boundary_exit_code": 0,
+  "source_sha256": {
+    "formalization/HiddenMonotonicity/TransformerExprProperties.lean": "d50ef56c38a7fcea009c57455a7700eb6f473c1e999bdfe5afe6d50b0bae7064",
+    "formalization/HiddenMonotonicity/TransformerCorrectness.lean": "9f0b3e59f4e061bb7749aab6d79549d67c8e0b9c5caca2c9d4f5701a013ef445",
+    "formalization/HiddenMonotonicity/TransformerExpr.lean": "916647af7bc396ea203e6bf1669f7e6586d87bc33ff790fd075a225bff44aa04",
+    "formalization/HiddenMonotonicity/TransformerDefinition.lean": "5fa433193d02cfdb0369dcf76fa1eaffa36daf8cbd2b41dafa36a66f5ac2b1c3",
+    "formalization/HiddenMonotonicity/TransformerPairCalculus.lean": "eb2413aa4249d8779735da9eb18e94a6ce6f3703863b3efaf5601d17a2487469",
+    "formalization/HiddenMonotonicity/TransformerConvexInput.lean": "7ed5b6d305b71471e2ce835056695ceb726017df2676220148fd042b588b9bb6",
+    "formalization/HiddenMonotonicity/LayerNormDC.lean": "379b317e9fc222e7d8e142c0c5338399e84436ab25f7bc07a5d0b590f6ecc3de",
+    "formalization/HiddenMonotonicity/ExplicitSoftmax.lean": "651c97af4b81f1f830d2fa0352c1143bf02ab299e387d77ac7c71f7e06189002",
+    "formalization/HiddenMonotonicity/PolarizedProductDC.lean": "1b10dd6cb91b919d87174dca09cbea26b3ec7c8fa052da52d03b3e8406b99bd8"
+  },
+  "semantic_findings": [
+    "The Transformer record contains parameters and mathematical domain conditions, not a decomposition invariant or an assumed correct/convex/monotone implementation.",
+    "Ordinary forward evaluation explicitly computes signed Q/K/V affine maps, scaled coupled softmax over each nonempty injective key mask, attention-value products, output projections, two residual additions, population-variance epsilon LayerNorm and a supported scalar feed-forward activation.",
+    "Blocks are an arbitrary finite List, and the independently proved compiler bridge uses List induction. No numerical upper bound on depth or number of heads occurs in the final theorem.",
+    "The recursive Expr split evaluator contains the actual closed-form primitive formulas. Its structural induction uses proved primitive properties; it does not assume the Transformer claim as a premise.",
+    "Fixed positional bias, optional final LayerNorm and an unrestricted signed affine output logit are included with the original parameters.",
+    "The full doubled-input heads are convex, monotone and nonnegative on the nonnegative orthant. Subtraction reconstructs the original network even outside that orthant, but the structural properties are not enlarged to that domain.",
+    "The positive/negative raw-input embedding yields globally convex nonnegative heads and exact signed logits. No false raw-input monotonicity claim is made.",
+    "Concrete consumer models establish nonvacuity: negative QKV/output/FFN weights, biases and normalization gains; full and single-key masks; two heads; zero/one/two and arbitrary symbolic depths; optional final normalization; and an explicitly negative affine logit."
+  ],
+  "limits": [
+    "This is a precise pre-LayerNorm finite inference architecture acting on real token embeddings. It does not claim verification of every architecture named Transformer, tokenization, autoregressive sampling, or a pretrained implementation.",
+    "Masks are fixed and nonempty for each query. Fully masked softmax rows are excluded by the model conditions.",
+    "Every normalization epsilon is strictly positive; ordinary LayerNorm at epsilon zero is outside the theorem.",
+    "Heads may have arbitrary positive key/value widths. A constant real logit scale is a parameter; the usual reciprocal-square-root width scale is one permitted choice.",
+    "The expression compiler is not a verified shared-DAG compiler. No constant-factor memory/work bound, floating-point accuracy, numerical stability, or runtime theorem is proved.",
+    "The axiom audit count concerns imported project theorem constants, not 920 independent mathematical thesis theorems."
+  ],
+  "artifacts": {
+    "contracts.json": "a0c9a8145c39c2ceffd2d8ace5031facfdac10a589b96970c83d3d5699863b34",
+    "Exact.lean": "5490aa979c931b618968cc51001f90d2dfd2b54df3995674cebe49aeee2d3a35",
+    "exact.log": "72216a314bf5ec42fa3f77073d4c86af1d0602428e1e6cb0433f89fb57d28324",
+    "exact.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "environment.json": "47658a3d6f2b75e21749519604b9f7874b4c8bc93adf63e0e7abf187caeda43e",
+    "Boundary.lean": "bee1b68850fe056e34e293ed1d2863c355814accd1deda408454d8b8f742863b",
+    "boundary.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "boundary.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "write_checks.py": "a6932eb3e1cef1a2fab5d05eff77721f39ccdce6a3407788b4703cf350af9dba"
+  }
+}

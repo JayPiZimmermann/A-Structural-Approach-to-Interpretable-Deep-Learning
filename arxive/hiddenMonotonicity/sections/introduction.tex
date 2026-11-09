@@ -34,22 +34,20 @@ Intuitively, the distinct positive and negative split-streams of the \emph{split
 
 \paragraph{SplitCAM and SplitLRP}
 Concretely, we develop a LayerCAM-inspired saliency method on this representation \citep{Jiang2021LayerCAM} and furthermore adapt Layer-wise Relevance Propagation to operate on the split-pair~\citep{Bach2015}.
-Presenting state-of-the-art results for saliency maps with respect to VGG16 ~\citep{Simonyan2015} and ResNet18 \citep{Kaiming2016_resnet} models across selected metrics from Quantus~\citep{Hedstrom2023} across the desiderata \emph{faithfulness, robustness} and \emph{localization} we provide first evidence that the information flow through split networks yields more expressive explanations of model decisions
-than those derived from the original architecture.
+Evaluated on VGG16~\citep{Simonyan2015} and ResNet18~\citep{Kaiming2016_resnet} with Quantus~\citep{Hedstrom2023}, the split methods show configuration-dependent gains in localization and Selectivity, with trade-offs in Pixel Flipping and robustness. These results measure distinct properties of the attribution maps; localization gains alone do not establish greater faithfulness to the model's decision process.
 In some sense, the split-pair enforces a monotone, biologically plausible computational scheme:
 non-negative activations and weights allow neurons only to increase evidence for a class rather than inhibit it, mirroring biological neural processing~\citep{lee1999nmf,Dayan2001_TheoreticalNeuroscience}.
 
 \paragraph{Differences of networks}
-One may wonder if these experimental results for the split models are a consequence of our specific splitting technique or really inherently in the difference of two monotone or convex networks.  
-Therefore, while the previous section addressed the explainability of trained models, we also show that models directly trained as difference of convex and monotone models have remarkable properties in terms of explainability. 
+One may ask whether the observed gradient patterns of split models also arise in directly trained differences of constrained networks.
+We therefore complement the post hoc splitting study by training differences of convex or monotone networks directly.
 
 We train DIC-models (difference-of-convex) and DM-models (difference-of-monotone). 
-When the input to the $h$-stream is inverted, we observe a clear
-separation of roles: the $g$-stream highlights present features, while the $h$-stream responds to
-missing ones, yielding expressive and class-specific gradient explanations.
-We demonstrate this behavior on MNIST, see
-\cref{app:explaining_io_convex_nns}.
-Our experiments serve as a proof of concept to demonstrate the improvements achieved by our Split framework when applied to pretrained ReLU networks.
+When the input to the $h$-stream is inverted, the displayed MNIST examples show class-dependent
+stream sensitivities on present strokes and candidate missing-stroke locations, see
+\cref{app:explaining_io_convex_nns}. These qualitative patterns motivate a factual/counterfactual
+interpretation to be tested through interventions on the complete model; either stream alone
+does not determine the effect of an input change on the model's output.
 
 \paragraph{Related work on convexity / monotonicity} 
 DC-decompositions of neural networks have already appeared in various work. 
@@ -73,6 +71,6 @@ Our main contributions are as follows:
     \item \textbf{New attribution methods — SplitCAM, SplitLRP, and SplitGrad.}
     We adapt LayerCAM and LRP to operate on the split networks and introduce a new gradient-based method, leveraging the improved signal flow in the DC Decomposition.
     
-    \item \textbf{State-of-the-art explainability results.}
-    Across VGG16 and ResNet18 on ImageNet-S \citep{Gao2022imagenets}, our methods outperform widely used baselines on the Quantus benchmark suite, including metrics from the desiderata faithfulness, localization and robustness. We complement our results with a comprehensive ablation study demonstrating the superiority of SplitCAM over classical LayerCAM as well as SplitGrad over the gradients of the original model, and rigorously analyze the contribution of our stabilization technique.
+    \item \textbf{Attribution benchmarks and stabilization ablations.}
+    Across VGG16 and ResNet18 on ImageNet-S~\citep{Gao2022imagenets}, our methods show metric- and configuration-dependent gains on the Quantus benchmark suite. Guided Grad-CAM retains the highest reported Attribution Localization on ResNet18, and SplitCAM's Selectivity advantage over Guided Backprop is $0.014$. The ablations characterize how the choice of layer, split-stream rule, and stabilization parameter changes localization, perturbation scores, and robustness.
 \end{itemize}

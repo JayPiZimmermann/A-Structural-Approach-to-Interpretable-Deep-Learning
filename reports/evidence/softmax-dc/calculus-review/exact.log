@@ -1,0 +1,35 @@
+@HiddenMonotonicity.SoftmaxDC.logSumExp_line_derivative : ∀ {ι : Type u_1} [inst : Fintype ι] [Nonempty ι] (a v : ι → ℝ)
+  (t : ℝ),
+  HasDerivAt (fun t => HiddenMonotonicity.SoftmaxDC.logSumExp (HiddenMonotonicity.SoftmaxDC.affineLine a v t))
+    (HiddenMonotonicity.SoftmaxDC.mean (HiddenMonotonicity.SoftmaxDC.affineLine a v t) v) t
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.mean_line_derivative : ∀ {ι : Type u_1} [inst : Fintype ι] [Nonempty ι] (a v : ι → ℝ)
+  (t : ℝ),
+  HasDerivAt (fun t => HiddenMonotonicity.SoftmaxDC.mean (HiddenMonotonicity.SoftmaxDC.affineLine a v t) v)
+    (HiddenMonotonicity.SoftmaxDC.variance (HiddenMonotonicity.SoftmaxDC.affineLine a v t) v) t
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.softmax_line_derivative : ∀ {ι : Type u_1} [inst : Fintype ι] [Nonempty ι] (a v : ι → ℝ)
+  (t : ℝ) (i : ι),
+  HasDerivAt (fun t => HiddenMonotonicity.SoftmaxDC.softmax (HiddenMonotonicity.SoftmaxDC.affineLine a v t) i)
+    (HiddenMonotonicity.SoftmaxDC.softmax (HiddenMonotonicity.SoftmaxDC.affineLine a v t) i *
+      (v i - HiddenMonotonicity.SoftmaxDC.mean (HiddenMonotonicity.SoftmaxDC.affineLine a v t) v))
+    t
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.softmaxFirst_line_derivative : ∀ {ι : Type u_1} [inst : Fintype ι] [Nonempty ι]
+  (a v : ι → ℝ) (t : ℝ) (i : ι),
+  HasDerivAt
+    (fun t =>
+      HiddenMonotonicity.SoftmaxDC.softmax (HiddenMonotonicity.SoftmaxDC.affineLine a v t) i *
+        (v i - HiddenMonotonicity.SoftmaxDC.mean (HiddenMonotonicity.SoftmaxDC.affineLine a v t) v))
+    (HiddenMonotonicity.SoftmaxDC.softmax (HiddenMonotonicity.SoftmaxDC.affineLine a v t) i *
+      ((v i - HiddenMonotonicity.SoftmaxDC.mean (HiddenMonotonicity.SoftmaxDC.affineLine a v t) v) ^ 2 -
+        HiddenMonotonicity.SoftmaxDC.variance (HiddenMonotonicity.SoftmaxDC.affineLine a v t) v))
+    t
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.softmax_sum_one : ∀ {ι : Type u_1} [inst : Fintype ι] [Nonempty ι] (z : ι → ℝ),
+  ∑ j, HiddenMonotonicity.SoftmaxDC.softmax z j = 1
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.SoftmaxDC.expSum_pos : ∀ {ι : Type u_1} [inst : Fintype ι] [Nonempty ι] (z : ι → ℝ),
+  0 < HiddenMonotonicity.SoftmaxDC.expSum z
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 35 project theorem declarations in the imported environment

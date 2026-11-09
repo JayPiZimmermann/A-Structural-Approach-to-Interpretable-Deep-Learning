@@ -1,0 +1,41 @@
+Working directory for the reaggregations and summary:
+/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning
+
+Baseline source snapshot was copied from the original pinned official repository before editing:
+cp code/playing_backward/reproduce/bootstrap_ci.py reports/evidence/voc-cluster-repair/before/bootstrap_ci.py
+
+Executed original record-bootstrap reaggregation (before editing):
+PYTHONPATH=code/playing_backward /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python reports/evidence/voc-cluster-repair/before/bootstrap_ci.py --results code/playing_backward/results_summary/voc/test --n-boot 10000 --seed 0 --out-dir reports/evidence/voc-cluster-repair/before > reports/evidence/voc-cluster-repair/before/run.log 2>&1
+
+Executed image-cluster reaggregation:
+PYTHONPATH=code/playing_backward OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python -m reproduce.bootstrap_ci --results code/playing_backward/results_summary/voc/test --n-boot 10000 --seed 0 --out-dir reports/evidence/voc-cluster-repair/after > reports/evidence/voc-cluster-repair/after/run.log 2>&1
+
+Executed tests from code/playing_backward:
+/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python -m pytest tests/test_bootstrap_ci.py -q
+
+Executed summary from the thesis root:
+/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python reports/evidence/voc-cluster-repair/summarize.py
+
+These commands reaggregate stored per-record evaluation scores on CPU. They do not train models, recompute attribution maps, or perform fresh model evaluation. Source score SHA256 and environment versions are recorded in execution_receipt.json. The released score archive is unchanged. The before directory intentionally retains the original statistical method for comparison; the after directory contains the image-cluster results.
+
+Full strict table integration (after the official statistical source commit):
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python scripts/generate_thesis_tables.py --python /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python --output reports/evidence/voc-cluster-repair/tables-review --check > reports/evidence/voc-cluster-repair/tables-initial-check.log 2>&1
+This first check intentionally returned 1 after strict generation succeeded: five statistical tables differed from the original thesis tables.
+
+Executed structured comparison before integration:
+/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python reports/evidence/voc-cluster-repair/review_tables.py
+An independent delegated reviewer also confirmed unchanged row/configuration associations, point means, winning rows, and ImageNet intervals. The reviewed adapted outputs were then copied into the thesis generated directory.
+
+Executed final generator check with exact raw-output capture before the presentation adapter:
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python reports/evidence/voc-cluster-repair/generate_and_capture.py > reports/evidence/voc-cluster-repair/tables-final-check.log 2>&1
+The harness runs scripts/generate_thesis_tables.py with --check, using the same Python interpreter and output directory tables-final-check. It preserves each raw writer output under tables-raw immediately before the unchanged presentation adapter runs.
+
+After the separate empty-routing implementation and final reproduction-documentation commits, the manifest was updated to the final clean official checkout and the full check repeated:
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python scripts/generate_thesis_tables.py --python /home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python --output reports/evidence/voc-cluster-repair/tables-pinned-check --check > reports/evidence/voc-cluster-repair/tables-pinned-check.log 2>&1
+
+Executed full raw/adapted verification and archived-paper mirroring after the final pinned check:
+/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python reports/evidence/voc-cluster-repair/integrate_tables.py
+All 13 raw output hashes match the clean pinned generation; all 13 archived-paper files equal those raw outputs, and all 13 thesis files equal the presentation-adapted outputs.
+
+Executed targeted p-value reproduction for the ten changed ImageNet markers:
+/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python reports/evidence/voc-cluster-repair/compute_imagenet_marker_pvalues.py

@@ -1,0 +1,18 @@
+HiddenMonotonicity.SmoothDC.explicitSwish_lift : ∀ (β : ℝ),
+  0 < β →
+    ConvexOn ℝ Set.univ (HiddenMonotonicity.SmoothDC.explicitSwishFirst β) ∧
+      ConvexOn ℝ Set.univ (HiddenMonotonicity.SmoothDC.explicitSwishSecond β) ∧
+        Monotone (HiddenMonotonicity.SmoothDC.explicitSwishFirst β) ∧
+          Monotone (HiddenMonotonicity.SmoothDC.explicitSwishSecond β) ∧
+            ∀ (z : ℝ × ℝ),
+              HiddenMonotonicity.SmoothDC.explicitSwishFirst β z - HiddenMonotonicity.SmoothDC.explicitSwishSecond β z =
+                HiddenMonotonicity.SmoothDC.swish β (z.1 - z.2)
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.SmoothDC.explicitSwish_closed : ∀ (β : ℝ) (z : ℝ × ℝ),
+  HiddenMonotonicity.SmoothDC.explicitSwishFirst β z = 2 / β * Real.log (1 + Real.exp (β * (z.1 - z.2))) + 2 * z.2 ∧
+    HiddenMonotonicity.SmoothDC.explicitSwishSecond β z =
+      2 / β * Real.log (1 + Real.exp (β * (z.1 - z.2))) - (z.1 - z.2) * (β * (z.1 - z.2)).sigmoid + 2 * z.2
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+HiddenMonotonicity.SmoothDC.explicitSwishPair_nonnegative : ∀ (β : ℝ),
+  0 < β → HiddenMonotonicity.NonnegativePairActivation (HiddenMonotonicity.SmoothDC.explicitSwishPair β)
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]

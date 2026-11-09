@@ -1,0 +1,339 @@
+{
+  "public_root": "HiddenMonotonicity.ExplicitSoftmax",
+  "note": "Aggregated independently authored exact contracts; see per-leaf review receipts. This file does not replace the clean committed promotion gate.",
+  "targets": [
+    {
+      "task": "dc-multivariate-line-convexity",
+      "module": "HiddenMonotonicity.MultivariateMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.convex_from_affine_lines",
+      "expected_type": "∀ {ι : Type u} (f : (ι → ℝ) → ℝ), (∀ a v : ι → ℝ, ConvexOn ℝ Set.univ (fun t : ℝ => f (fun j => a j + t * v j))) → ConvexOn ℝ Set.univ f",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "contract_source": "reports/evidence/softmax-dc/multivariate-lift-contracts.json"
+    },
+    {
+      "task": "dc-multivariate-line-monotonicity",
+      "module": "HiddenMonotonicity.MultivariateMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.monotone_from_affine_line_deriv",
+      "expected_type": "∀ {ι : Type u} (f : (ι → ℝ) → ℝ) (D : (ι → ℝ) → (ι → ℝ) → ℝ), (∀ (a v : ι → ℝ) (t : ℝ), HasDerivAt (fun s : ℝ => f (fun j => a j + s * v j)) (D (fun j => a j + t * v j) v) t) → (∀ z v : ι → ℝ, (∀ j, 0 ≤ v j) → 0 ≤ D z v) → Monotone f",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "contract_source": "reports/evidence/softmax-dc/multivariate-lift-contracts.json"
+    },
+    {
+      "task": "dc-multivariate-lift-convexity",
+      "module": "HiddenMonotonicity.MultivariateMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.multivariateLift_convex",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (P : (ι → ℝ) → ℝ) (L c : ℝ), ConvexOn ℝ Set.univ P → ConvexOn ℝ Set.univ (HiddenMonotonicity.SoftmaxDC.multivariateLift P L c)",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "contract_source": "reports/evidence/softmax-dc/multivariate-lift-contracts.json"
+    },
+    {
+      "task": "dc-multivariate-lift-monotonicity",
+      "module": "HiddenMonotonicity.MultivariateMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.multivariateLift_monotone",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (P : (ι → ℝ) → ℝ) (L c : ℝ), Monotone P → Monotone (fun x : ι → ℝ => L * (∑ j, x j) - P x) → Monotone (HiddenMonotonicity.SoftmaxDC.multivariateLift P L c)",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "contract_source": "reports/evidence/softmax-dc/multivariate-lift-contracts.json"
+    },
+    {
+      "task": "dc-multivariate-lift-exactness",
+      "module": "HiddenMonotonicity.MultivariateMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.multivariateLift_difference",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (P Q f : (ι → ℝ) → ℝ) (L c : ℝ), (∀ x, P x - Q x = f x) → ∀ z : (ι → ℝ) × (ι → ℝ), HiddenMonotonicity.SoftmaxDC.multivariateLift P L c z - HiddenMonotonicity.SoftmaxDC.multivariateLift Q L c z = f (z.1 - z.2)",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "contract_source": "reports/evidence/softmax-dc/multivariate-lift-contracts.json"
+    },
+    {
+      "task": "dc-multivariate-lift-quadrant-nonnegativity",
+      "module": "HiddenMonotonicity.MultivariateMonotoneDCLift",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.multivariateLift_nonnegative",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (P : (ι → ℝ) → ℝ) (L c : ℝ), Monotone (HiddenMonotonicity.SoftmaxDC.multivariateLift P L c) → c ≤ P 0 → ∀ z : (ι → ℝ) × (ι → ℝ), 0 ≤ z → 0 ≤ HiddenMonotonicity.SoftmaxDC.multivariateLift P L c z",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "contract_source": "reports/evidence/softmax-dc/multivariate-lift-contracts.json"
+    },
+    {
+      "task": "softmax-probability-second-directional-bound",
+      "module": "HiddenMonotonicity.SoftmaxProbability",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.probability_second_bounds",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (p : ι → ℝ), (∀ j, 0 ≤ p j) → (∑ j, p j) = 1 → ∀ (w : ι → ℝ), (∀ j, 0 ≤ w j) → ∀ i, -(∑ j, p j * w j) ≤ p i * (w i - ∑ j, p j * w j) ∧ p i * (w i - ∑ j, p j * w j) ≤ ∑ j, p j * w j",
+      "contract_source": "reports/evidence/softmax-dc/probability-review/contracts.json"
+    },
+    {
+      "task": "softmax-probability-positive-gradient-bound",
+      "module": "HiddenMonotonicity.SoftmaxProbability",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.plusCoeff_bounds",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [DecidableEq ι] (p : ι → ℝ), (∀ j, 0 ≤ p j) → (∑ j, p j) = 1 → ∀ i j, 0 ≤ (p j + p i * ((if i = j then 1 else 0) - p j)) / 2 ∧ (p j + p i * ((if i = j then 1 else 0) - p j)) / 2 ≤ (1 : ℝ) / 2",
+      "contract_source": "reports/evidence/softmax-dc/probability-review/contracts.json"
+    },
+    {
+      "task": "softmax-probability-negative-gradient-bound",
+      "module": "HiddenMonotonicity.SoftmaxProbability",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.minusCoeff_bounds",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [DecidableEq ι] (p : ι → ℝ), (∀ j, 0 ≤ p j) → (∑ j, p j) = 1 → ∀ i j, 0 ≤ (p j - p i * ((if i = j then 1 else 0) - p j)) / 2 ∧ (p j - p i * ((if i = j then 1 else 0) - p j)) / 2 ≤ (1 : ℝ) / 2",
+      "contract_source": "reports/evidence/softmax-dc/probability-review/contracts.json"
+    },
+    {
+      "task": "softmax-probability-positive-directional-identity",
+      "module": "HiddenMonotonicity.SoftmaxProbability",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.plusCoeff_sum",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [DecidableEq ι] (p v : ι → ℝ) (i : ι), (∑ j, ((p j + p i * ((if i = j then 1 else 0) - p j)) / 2) * v j) = ((∑ j, p j * v j) + p i * (v i - ∑ j, p j * v j)) / 2",
+      "contract_source": "reports/evidence/softmax-dc/probability-review/contracts.json"
+    },
+    {
+      "task": "softmax-probability-negative-directional-identity",
+      "module": "HiddenMonotonicity.SoftmaxProbability",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.minusCoeff_sum",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [DecidableEq ι] (p v : ι → ℝ) (i : ι), (∑ j, ((p j - p i * ((if i = j then 1 else 0) - p j)) / 2) * v j) = ((∑ j, p j * v j) - p i * (v i - ∑ j, p j * v j)) / 2",
+      "contract_source": "reports/evidence/softmax-dc/probability-review/contracts.json"
+    },
+    {
+      "task": "softmax-probability-coefficient-direction-bound",
+      "module": "HiddenMonotonicity.SoftmaxProbability",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.coeff_direction_bounds",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (c v : ι → ℝ), (∀ j, 0 ≤ c j ∧ c j ≤ (1 : ℝ) / 2) → (∀ j, 0 ≤ v j) → 0 ≤ ∑ j, c j * v j ∧ (∑ j, c j * v j) ≤ (∑ j, v j) / 2",
+      "contract_source": "reports/evidence/softmax-dc/probability-review/contracts.json"
+    },
+    {
+      "task": "softmax-line-logsumexp-derivative",
+      "module": "HiddenMonotonicity.SoftmaxLineCalculus",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.logSumExp_line_derivative",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (a v : ι → ℝ) (t : ℝ), HasDerivAt (fun r => logSumExp (affineLine a v r)) (mean (affineLine a v t) v) t",
+      "contract_source": "reports/evidence/softmax-dc/calculus-review/contracts.json"
+    },
+    {
+      "task": "softmax-line-mean-derivative",
+      "module": "HiddenMonotonicity.SoftmaxLineCalculus",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.mean_line_derivative",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (a v : ι → ℝ) (t : ℝ), HasDerivAt (fun r => mean (affineLine a v r) v) (variance (affineLine a v t) v) t",
+      "contract_source": "reports/evidence/softmax-dc/calculus-review/contracts.json"
+    },
+    {
+      "task": "softmax-line-first-derivative",
+      "module": "HiddenMonotonicity.SoftmaxLineCalculus",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmax_line_derivative",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (a v : ι → ℝ) (t : ℝ) (i : ι), HasDerivAt (fun r => softmax (affineLine a v r) i) (softmax (affineLine a v t) i * (v i - mean (affineLine a v t) v)) t",
+      "contract_source": "reports/evidence/softmax-dc/calculus-review/contracts.json"
+    },
+    {
+      "task": "softmax-line-second-derivative",
+      "module": "HiddenMonotonicity.SoftmaxLineCalculus",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxFirst_line_derivative",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (a v : ι → ℝ) (t : ℝ) (i : ι), HasDerivAt (fun r => softmax (affineLine a v r) i * (v i - mean (affineLine a v r) v)) (softmax (affineLine a v t) i * ((v i - mean (affineLine a v t) v) ^ 2 - variance (affineLine a v t) v)) t",
+      "contract_source": "reports/evidence/softmax-dc/calculus-review/contracts.json"
+    },
+    {
+      "task": "softmax-probability-normalization",
+      "module": "HiddenMonotonicity.SoftmaxLineCalculus",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmax_sum_one",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (z : ι → ℝ), (∑ j, softmax z j) = 1",
+      "contract_source": "reports/evidence/softmax-dc/calculus-review/contracts.json"
+    },
+    {
+      "task": "softmax-denominator-positive",
+      "module": "HiddenMonotonicity.SoftmaxLineCalculus",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.expSum_pos",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (z : ι → ℝ), 0 < expSum z",
+      "contract_source": "reports/evidence/softmax-dc/calculus-review/contracts.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ExplicitSoftmax",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "task": "softmax-explicit-convex-monotone-split",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmax_split_properties",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] [Nonempty ι] (i : ι),\nConvexOn ℝ Set.univ (softmaxSplitFirst i) ∧\nConvexOn ℝ Set.univ (softmaxSplitSecond i) ∧\nMonotone (softmaxSplitFirst i) ∧ Monotone (softmaxSplitSecond i) ∧\n(∀ z : (ι → ℝ) × (ι → ℝ), softmaxSplitFirst i z - softmaxSplitSecond i z = softmax (z.1-z.2) i) ∧\n(∀ z : (ι → ℝ) × (ι → ℝ), 0 ≤ z → 0 ≤ softmaxSplitFirst i z ∧ 0 ≤ softmaxSplitSecond i z)",
+      "contract_source": "reports/evidence/softmax-dc/review/contracts.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ExplicitSoftmax",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "task": "softmax-explicit-first-formula",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (i : ι) (x y : ι → ℝ),\nsoftmaxSplitFirst i (x,y) =\n(Real.log (∑ j, Real.exp (x j-y j)) + Real.exp (x i-y i)/(∑ j, Real.exp (x j-y j)) + ∑ j, y j)/2 -\n(Real.log (Fintype.card ι)-1/Fintype.card ι)/2",
+      "contract_source": "reports/evidence/softmax-dc/review/contracts.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ExplicitSoftmax",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "task": "softmax-explicit-second-formula",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_formula",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (i : ι) (x y : ι → ℝ),\nsoftmaxSplitSecond i (x,y) =\n(Real.log (∑ j, Real.exp (x j-y j)) - Real.exp (x i-y i)/(∑ j, Real.exp (x j-y j)) + ∑ j, y j)/2 -\n(Real.log (Fintype.card ι)-1/Fintype.card ι)/2",
+      "contract_source": "reports/evidence/softmax-dc/review/contracts.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ExplicitSoftmax",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "task": "softmax-explicit-exact-difference",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxSplit_difference",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (i : ι) (z : (ι → ℝ) × (ι → ℝ)),\nsoftmaxSplitFirst i z-softmaxSplitSecond i z=softmax (z.1-z.2) i",
+      "contract_source": "reports/evidence/softmax-dc/review/contracts.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ExplicitSoftmax",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "task": "softmax-explicit-first-origin",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_zero",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (i : ι), softmaxSplitFirst i 0=1/Fintype.card ι",
+      "contract_source": "reports/evidence/softmax-dc/review/contracts.json"
+    },
+    {
+      "module": "HiddenMonotonicity.ExplicitSoftmax",
+      "universes": [
+        "u"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.SoftmaxDC"
+      ],
+      "task": "softmax-explicit-second-origin",
+      "declaration": "HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_zero",
+      "expected_type": "∀ {ι : Type u} [Fintype ι] (i : ι), softmaxSplitSecond i 0=0",
+      "contract_source": "reports/evidence/softmax-dc/review/contracts.json"
+    }
+  ]
+}

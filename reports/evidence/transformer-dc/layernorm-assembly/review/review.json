@@ -1,0 +1,54 @@
+{
+  "reviewer": "/root/transformer_primitives_lean/product_review",
+  "status": "passed",
+  "source": "formalization/HiddenMonotonicity/LayerNormDC.lean",
+  "sha256": "379b317e9fc222e7d8e142c0c5338399e84436ab25f7bc07a5d0b590f6ecc3de",
+  "semantics": {
+    "mean": "Arithmetic mean over Fin d with real division by d.",
+    "variance": "Population variance, dividing summed squared centered values by d; no sample-variance correction.",
+    "normalization": "Centered coordinate multiplied by inverse square root of epsilon plus represented variance.",
+    "affine_readout": "Coordinatewise arbitrary real gamma gain and beta bias. Negative gain swaps and nonnegatively scales streams.",
+    "pair_algorithm": "Explicit mean, centering, square via polarization, average variance, inverse-square-root lift, multiplication, signed scaling, and bias.",
+    "exactness": "All real input-stream pairs; epsilon strictly positive. No sign restrictions on gamma or beta.",
+    "regularity": "Each incoming pair must have convex component functions, coordinatewise monotonicity, and nonnegative streams on the stated convex domain. Conclusions assert these same actual properties.",
+    "inverse_sqrt_precondition": "Only the represented variance must be nonnegative; derived from exact variance and the sum of squares.",
+    "empty_dimension": "Definitions totalize d=0 using real division by zero. Output-coordinate conclusions are vacuous because Fin 0 is empty; nonempty standard LayerNorm cases are covered.",
+    "scope_limit": "This module covers actual finite-dimensional epsilon LayerNorm, not by itself the entire Transformer."
+  },
+  "boundary_consumer": {
+    "file": "reports/evidence/transformer-dc/layernorm-assembly/review/Boundary.lean",
+    "exit_code": 0,
+    "cases": [
+      "d=1 mean and zero variance",
+      "d=1 signed gain and nonzero bias",
+      "d=2 positive variance with signed gain and nonzero bias",
+      "d=2 constant represented input with different stream representations",
+      "positive epsilon guarantees nonzero denominator",
+      "nonvacuous Regular instance",
+      "unfolded regularity conclusions"
+    ]
+  },
+  "contracts": "reports/evidence/transformer-dc/layernorm-assembly/review/contracts.json",
+  "contract_count": 4,
+  "no_production_edits_by_reviewer": true,
+  "exact_type_module_axiom_audit": {
+    "exit_code": 0,
+    "contracts": 4,
+    "imported_project_theorem_count": 114,
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "driver": "reports/evidence/transformer-dc/layernorm-assembly/review/Exact.lean",
+    "log": "reports/evidence/transformer-dc/layernorm-assembly/review/exact.log"
+  },
+  "evidence_sha256": {
+    "reports/evidence/transformer-dc/layernorm-assembly/review/contracts.json": "e01cef9c8e3eb0fbf35d27ff6e32b76a95e3b88d4f3517a590b7760736035ee9",
+    "reports/evidence/transformer-dc/layernorm-assembly/review/Boundary.lean": "259ee1b1193fd1ed9dd04d127bd8f660768971cb41300c73e051af8f69279d5f",
+    "reports/evidence/transformer-dc/layernorm-assembly/review/Exact.lean": "1a84f4c27871c02f6019565d626bf47cb54f123f6dfb32bb9d7f31914c2b4a30",
+    "reports/evidence/transformer-dc/layernorm-assembly/review/exact.log": "b8dc843d96dd06e54239519583f119d8180365e4205f55b9b9763c34294846ef",
+    "reports/evidence/transformer-dc/layernorm-assembly/review/boundary.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "reports/evidence/transformer-dc/layernorm-assembly/review/environment.json": "a51e731ad24885fe1896409400a3be61d79b13cb6d922e5ee0486ad2b8f8a591"
+  }
+}

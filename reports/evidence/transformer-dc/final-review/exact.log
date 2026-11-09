@@ -1,0 +1,41 @@
+@HiddenMonotonicity.TransformerDC.Transformer.decompose_exact : ∀ {t d o : ℕ}
+  (net : HiddenMonotonicity.TransformerDC.Transformer t d o)
+  (x : HiddenMonotonicity.TransformerDC.DoubledInput (Fin t × Fin d)) (i : Fin o),
+  (net.decompose x i).1 - (net.decompose x i).2 = net.eval (x.1 - x.2) i
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Transformer.decompose_regular : ∀ {t d o : ℕ}
+  (net : HiddenMonotonicity.TransformerDC.Transformer t d o) (i : Fin o),
+  HiddenMonotonicity.TransformerDC.Regular (Set.Ici 0) fun x => net.decompose x i
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition : ∀ {t d o : ℕ}
+  (net : HiddenMonotonicity.TransformerDC.Transformer t d o),
+  MonotoneOn net.decompose (Set.Ici 0) ∧
+    (∀ (i : Fin o), ConvexOn ℝ (Set.Ici 0) fun x => (net.decompose x i).1) ∧
+      (∀ (i : Fin o), ConvexOn ℝ (Set.Ici 0) fun x => (net.decompose x i).2) ∧
+        (∀ (x : HiddenMonotonicity.TransformerDC.DoubledInput (Fin t × Fin d)), 0 ≤ x → 0 ≤ net.decompose x) ∧
+          ∀ (x : HiddenMonotonicity.TransformerDC.DoubledInput (Fin t × Fin d)) (i : Fin o),
+            (net.decompose x i).1 - (net.decompose x i).2 = net.eval (x.1 - x.2) i
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition : ∀ {t d o : ℕ}
+  (net : HiddenMonotonicity.TransformerDC.Transformer t d o),
+  (∀ (i : Fin o), ConvexOn ℝ Set.univ fun x => (net.rawDecompose x i).1) ∧
+    (∀ (i : Fin o), ConvexOn ℝ Set.univ fun x => (net.rawDecompose x i).2) ∧
+      (∀ (x : Fin t × Fin d → ℝ), 0 ≤ net.rawDecompose x) ∧
+        ∀ (x : Fin t × Fin d → ℝ) (i : Fin o), (net.rawDecompose x i).1 - (net.rawDecompose x i).2 = net.eval x i
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Expr.decompose_regular : ∀ {ι : Type u_1}
+  (e : HiddenMonotonicity.TransformerDC.Expr ι), HiddenMonotonicity.TransformerDC.Regular (Set.Ici 0) e.decompose
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Expr.decompose_exact : ∀ {ι : Type u_1} (e : HiddenMonotonicity.TransformerDC.Expr ι)
+  (x : HiddenMonotonicity.TransformerDC.DoubledInput ι),
+  HiddenMonotonicity.TransformerDC.value (e.decompose x) = e.eval (x.1 - x.2)
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Expr.rawDecompose_convex : ∀ {ι : Type u_1}
+  (e : HiddenMonotonicity.TransformerDC.Expr ι),
+  (ConvexOn ℝ Set.univ fun x => (e.rawDecompose x).1) ∧ ConvexOn ℝ Set.univ fun x => (e.rawDecompose x).2
+'_ThesisExactChecks.target_6' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.TransformerDC.Expr.rawDecompose_exact : ∀ {ι : Type u_1}
+  (e : HiddenMonotonicity.TransformerDC.Expr ι) (x : ι → ℝ),
+  HiddenMonotonicity.TransformerDC.value (e.rawDecompose x) = e.eval x
+'_ThesisExactChecks.target_7' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 920 project theorem declarations in the imported environment

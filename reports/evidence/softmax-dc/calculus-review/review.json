@@ -1,0 +1,38 @@
+{
+  "reviewer": "/root/softmax_lean/softmax_line_calculus/softmax_calculus_review",
+  "semantic_review": "passed",
+  "scope": "Actual finite-dimensional softmax and log-sum-exp first/second derivatives along arbitrary affine lines; not a proof of global convexity or monotonicity of the final two-stream split.",
+  "findings": [
+    "expSum is the finite sum of ordinary real exponentials; softmax uses its genuine quotient.",
+    "Finite nonempty index assumptions imply strict positivity of expSum and exclude undefined empty softmax.",
+    "affineLine is a+t*v on every real t with arbitrary signed intercept and direction.",
+    "mean and variance use the same softmax weights and a genuine centered second moment.",
+    "Derivative of log-sum-exp equals mean, derivative of mean equals variance, and the first/second softmax derivatives include the normalization terms.",
+    "No derivative, differentiability, covariance, convexity, or positivity conclusion is smuggled in as a hypothesis."
+  ],
+  "exact_contracts": 6,
+  "boundary_validation": {
+    "exit_code": 0,
+    "cases": [
+      "singleton softmax exactly one at arbitrary real logit",
+      "symmetric binary softmax at zero: first derivative 1/2",
+      "symmetric binary log-sum-exp at zero: first derivative0",
+      "symmetric binary log-sum-exp at zero: second derivative1",
+      "symmetric binary softmax at zero: second derivative0"
+    ]
+  },
+  "audit_status": "passed",
+  "source_sha256": "c65224fff427d24c0c55cb8fead2a064fedcbe543c232f12619c44958ff250ac",
+  "exact_exit_code": 0,
+  "imported_project_theorems_audited": 35,
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "artifact_sha256": {
+    "contracts.json": "2c460168a0f8d8474ea6cd5be93ab6e93a8356acccd103c7ea2636f0557b0a9e",
+    "ExactChecks.lean": "754f4f54749beb5d7c3bcab53d088f39fae83cfb25a466dc46a5abedf206427d",
+    "BoundaryChecks.lean": "96a5460c6e191c685b6db9f0b01ab6d673be9c58433270551b2804097ff65222"
+  }
+}

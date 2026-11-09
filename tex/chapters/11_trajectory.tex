@@ -89,7 +89,7 @@ share some short trajectories: both may stop early at structurally dead neurons 
 the common cemetery state. Such short paths have a higher chance of coinciding across models than
 full trajectories reaching the input layer. Conditioning on survival removes this shared cemetery
 mass and gives the strict ceiling $\mathrm{H}_{\mathrm{surv}} \approx 1$. Trajectory- and map-level
-readouts are per-image orthogonal (Spearman $|\rho|\le \perImageCrossMax$ between $\mathrm{H}$ and
+readouts show weak observed per-image rank association (Spearman $|\rho|\le \perImageCrossMax$ between $\mathrm{H}$ and
 pixel-level Gradient or $\alpha\beta$-\ac{lrp} similarity): images with similar attribution maps
 need not have similar calculations. Per-game values, the conditioning, the floor mechanism and the
 per-image analysis are in Section~\ref{ptnb:app:sanity-check}.
@@ -1112,23 +1112,23 @@ therefore be read against this architecture-specific asymptote rather than again
 close to the double-random baseline already indicate that the game-theoretic trajectory law has
 become fully decoupled from the pretrained one.
 
-\subsection{Per-Image Trajectory-vs-Map Independence}\label{ptnb:sec:per-image-orthogonality}
+\subsection{Per-Image Association Between Trajectory and Map Diagnostics}\label{ptnb:sec:per-image-orthogonality}
 
 Theorems~\ref{ptnb:thm:rand-adf}--\ref{ptnb:thm:rand-routing} and the double-random baseline of
 Table~\ref{ptnb:tab:double-random-hellinger} bound the \emph{aggregate} behavior of the Hellinger
-trajectory distance and the pixel-level attribution-map similarity.  A sharper version of the
-argument of \S\ref{ptnb:sec:lmp-randomization} is the claim that the two diagnostics disagree \emph{per
-image}: at fixed randomization depth, whether a given image's trajectory distribution is strongly
-displaced by the randomization need not predict whether its attribution map becomes more
-dissimilar.  Table~\ref{ptnb:tab:per-image-corr} tests this directly.
+trajectory distance and the pixel-level attribution-map similarity.  A complementary question, motivated by the
+argument of \S\ref{ptnb:sec:lmp-randomization}, is whether the two diagnostics agree \emph{per
+image}: at fixed randomization depth, does a larger displacement of an image's trajectory
+distribution correspond to a more dissimilar attribution map?  Table~\ref{ptnb:tab:per-image-corr} tests this directly.
 
 \paragraph{Protocol.}
-For each architecture we pick a cascading step at which the Hellinger run and the
-attribution-sanity run have randomized the same part of the network, so per-image values are
-directly comparable: the layers down to \texttt{features.26} on VGG-16 and down to
+For each architecture we pick a cascading step at the same network depth in the Hellinger
+and attribution-sanity runs: the layers down to \texttt{features.26} on VGG-16 and down to
 \texttt{layer4.1.conv3} on ResNet-50 (identical sets of re-initialized layers), and the last
 encoder block on ViT-B/16, where the Hellinger cascade re-initializes the MLP and the output
 projection of the block and the attribution cascade additionally its $Q$, $K$ and $V$ projections.
+The interventions therefore match on the CNNs; on ViT-B/16, the comparison also reflects this
+difference in the randomized operators.
 The mean $\mathrm{H}$ / $\mathrm{H}_{\mathrm{surv}}$ at these steps can be read off
 Figure~\ref{ptnb:fig:hellinger-sanity}.  For each of the $\perImageN$ ImageNet-S test images we then
 record four Hellinger scalars ($\mathrm{H}$ plain/surv for the Stopping and Routing Games) and four
@@ -1143,20 +1143,22 @@ Table~\ref{ptnb:tab:per-image-corr} reports Spearman rank correlations across th
     \setlength{\tabcolsep}{3.5pt}
     \input{tables/ptnb_v2/generated/per_image_corr_tabular}
     \caption{Per-image Spearman rank correlations across the $\perImageN$-image ImageNet-S test split
-    at the aligned cascading steps of the Hellinger and attribution-sanity pipelines.  Left block:
+    at the selected cascading steps of the Hellinger and attribution-sanity pipelines. The randomized
+    layers match on the CNNs; the ViT-B/16 attribution cascade additionally randomizes $Q$, $K$, and $V$.  Left block:
     within-Hellinger cross-correlations of the plain ($\mathrm{H}_{\cdot,\mathrm{pl}}$) and
     survival-conditioned ($\mathrm{H}_{\cdot,\mathrm{surv}}$) distances under the \ac{rg} and \ac{sg}
     kernels (self-entries shown as $-$; trivially $+1$).  Right block: Hellinger-vs-map
     cross-correlations.  The Hellinger-vs-map block is uniformly $|\rho| \leq \perImageCrossMax$:
-    per-image Hellinger and per-image attribution-map similarity rank images essentially
-    independently.}
+    per-image Hellinger and per-image attribution-map similarity have weak observed rank association.}
     \label{ptnb:tab:per-image-corr}
 \end{table}
 
 \paragraph{Readings.}
 The Hellinger-vs-map cross-block in Table~\ref{ptnb:tab:per-image-corr} is uniformly near zero ($|\rho|
     \leq \perImageCrossMax$ on all three architectures): per-image trajectory displacement and
-per-image attribution-map drift rank images essentially independently.
+per-image attribution-map drift have weak observed rank association. This does not establish
+statistical independence or exclude nonlinear dependence. For ViT-B/16, the unequal interventions
+also limit conclusions about the diagnostics alone.
 
 The within-Hellinger block shows that per-image $\mathrm{H}$ carries a stable ordering of the
 images. Where little trajectory mass reaches the cemetery, the plain and conditioned distances of
@@ -1174,8 +1176,8 @@ single attribution method agree well ($\rho = 0.65$--$0.82$, computed from the s
 joins), but Gradient and $\alpha\beta$-\ac{rg} similarities barely agree across images ($\rho$
 between $-0.10$ and $+0.30$ depending on architecture and similarity metric).  Together with the
 near-zero Hellinger-vs-map block, this tightens the conclusion of \S\ref{ptnb:sec:lmp-randomization}:
-trajectory-space and pixel-level diagnostics look at orthogonal per-image structure, and within
-pixel-level diagnostics the choice of attribution method changes \emph{which} images a
+trajectory-space and pixel-level diagnostics yield weakly associated per-image rankings in these
+runs, and within pixel-level diagnostics the choice of attribution method changes \emph{which} images a
 randomization sanity check flags.
 \par\medskip
 \providecommand{\nValGrid}{\textcolor{red}{??}}%

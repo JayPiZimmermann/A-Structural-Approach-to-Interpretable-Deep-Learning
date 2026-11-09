@@ -1,0 +1,93 @@
+{
+  "public_root": "HiddenMonotonicity.TransformerCorrectness",
+  "targets": [
+    {
+      "task": "transformer-final-Transformer-decompose_exact",
+      "module": "HiddenMonotonicity.TransformerCorrectness",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.decompose_exact",
+      "universes": [],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o) (x : DoubledInput (Fin t × Fin d)) (i : Fin o),\n  (net.decompose x i).1 - (net.decompose x i).2 = net.eval (x.1 - x.2) i"
+    },
+    {
+      "task": "transformer-final-Transformer-decompose_regular",
+      "module": "HiddenMonotonicity.TransformerCorrectness",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.decompose_regular",
+      "universes": [],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o) (i : Fin o),\n  Regular (Set.Ici (0 : DoubledInput (Fin t × Fin d))) (fun x => net.decompose x i)"
+    },
+    {
+      "task": "transformer-final-Transformer-dc_decomposition",
+      "module": "HiddenMonotonicity.TransformerCorrectness",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition",
+      "universes": [],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o),\n  MonotoneOn net.decompose (Set.Ici (0 : DoubledInput (Fin t × Fin d))) ∧\n  (∀ i, ConvexOn ℝ (Set.Ici (0 : DoubledInput (Fin t × Fin d))) (fun x => (net.decompose x i).1)) ∧\n  (∀ i, ConvexOn ℝ (Set.Ici (0 : DoubledInput (Fin t × Fin d))) (fun x => (net.decompose x i).2)) ∧\n  (∀ x, 0 ≤ x → 0 ≤ net.decompose x) ∧\n  ∀ x i, (net.decompose x i).1 - (net.decompose x i).2 = net.eval (x.1 - x.2) i"
+    },
+    {
+      "task": "transformer-final-Transformer-raw_dc_decomposition",
+      "module": "HiddenMonotonicity.TransformerCorrectness",
+      "declaration": "HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition",
+      "universes": [],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {t d o : ℕ} (net : Transformer t d o),\n  (∀ i, ConvexOn ℝ Set.univ (fun x : Fin t × Fin d → ℝ => (net.rawDecompose x i).1)) ∧\n  (∀ i, ConvexOn ℝ Set.univ (fun x : Fin t × Fin d → ℝ => (net.rawDecompose x i).2)) ∧\n  (∀ x, 0 ≤ net.rawDecompose x) ∧\n  ∀ x i, (net.rawDecompose x i).1 - (net.rawDecompose x i).2 = net.eval x i"
+    },
+    {
+      "task": "transformer-final-Expr-decompose_regular",
+      "module": "HiddenMonotonicity.TransformerExprProperties",
+      "declaration": "HiddenMonotonicity.TransformerDC.Expr.decompose_regular",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {ι : Type u} (e : Expr ι), Regular (Set.Ici (0 : DoubledInput ι)) e.decompose"
+    },
+    {
+      "task": "transformer-final-Expr-decompose_exact",
+      "module": "HiddenMonotonicity.TransformerExprProperties",
+      "declaration": "HiddenMonotonicity.TransformerDC.Expr.decompose_exact",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {ι : Type u} (e : Expr ι) (x : DoubledInput ι), value (e.decompose x) = e.eval (x.1 - x.2)"
+    },
+    {
+      "task": "transformer-final-Expr-rawDecompose_convex",
+      "module": "HiddenMonotonicity.TransformerExprProperties",
+      "declaration": "HiddenMonotonicity.TransformerDC.Expr.rawDecompose_convex",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {ι : Type u} (e : Expr ι),\n  ConvexOn ℝ Set.univ (fun x : ι → ℝ => (e.rawDecompose x).1) ∧\n  ConvexOn ℝ Set.univ (fun x : ι → ℝ => (e.rawDecompose x).2)"
+    },
+    {
+      "task": "transformer-final-Expr-rawDecompose_exact",
+      "module": "HiddenMonotonicity.TransformerExprProperties",
+      "declaration": "HiddenMonotonicity.TransformerDC.Expr.rawDecompose_exact",
+      "universes": [
+        "u"
+      ],
+      "open_namespaces": [
+        "HiddenMonotonicity.TransformerDC"
+      ],
+      "expected_type": "∀ {ι : Type u} (e : Expr ι) (x : ι → ℝ), value (e.rawDecompose x) = e.eval x"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+exists_swishTurningPoint : ∃ r, 2 < r ∧ r < 4 ∧ swishTurningFunction r = 2
+swishTurningPoint_spec : 2 < swishTurningPoint ∧ swishTurningPoint < 4 ∧ swishTurningFunction swishTurningPoint = 2
+swishTurningPoint_unique : ∀ (r : ℝ), 0 ≤ r → swishTurningFunction r = 2 → r = swishTurningPoint
+swish_curvature_turning_sign : ∀ (β : ℝ),
+  0 < β →
+    ∀ (x : ℝ),
+      (0 < curvature (swish β) x ↔ |β * x| < swishTurningPoint) ∧
+        (curvature (swish β) x < 0 ↔ swishTurningPoint < |β * x|) ∧
+          (curvature (swish β) x = 0 ↔ |β * x| = swishTurningPoint)
+swishFirst_at_turningPoint : ∀ (β : ℝ), β ≠ 0 → swishFirst β (swishTurningPoint / β) = (2 + swishTurningPoint) / 4
+swishFirst_at_neg_turningPoint : ∀ (β : ℝ), β ≠ 0 → swishFirst β (-swishTurningPoint / β) = (2 - swishTurningPoint) / 4
+'HiddenMonotonicity.SmoothDC.exists_swishTurningPoint' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.SmoothDC.swishTurningPoint_spec' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.SmoothDC.swishTurningPoint_unique' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.SmoothDC.swish_curvature_turning_sign' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.SmoothDC.swishFirst_at_turningPoint' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.SmoothDC.swishFirst_at_neg_turningPoint' depends on axioms: [propext, Classical.choice, Quot.sound]

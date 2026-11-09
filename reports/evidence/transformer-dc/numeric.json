@@ -1,0 +1,3953 @@
+{
+  "scope": "Unstabilized arithmetic demonstration, not an attribution benchmark or formal proof.",
+  "architecture": "3 tokens, width3, 1 causal attention head, two post-residual LayerNorms, exact Gaussian GELU MLP width4, mean pooling, signed affine 2-logit head",
+  "reference": "Independent ordinary PyTorch operations with identical frozen parameters and population-variance LayerNorm.",
+  "stream_policy": "No stream recentering, clipping, or reference-score substitution. Negative numerically recovered variances use the stated tangent extension.",
+  "environment": {
+    "python": "3.12.3",
+    "torch": "2.11.0+cu130",
+    "device": "cpu",
+    "dtype": "torch.float64",
+    "threads": 1
+  },
+  "command": [
+    "scripts/transformer_dc_demo.py",
+    "--output",
+    "reports/evidence/transformer-dc/numeric.json"
+  ],
+  "source_sha256": "2fa40e15087875644c45ab80129c761962f4b35d57334e1d582990a624a5cf4a",
+  "primitive_checks": {
+    "passed": true,
+    "diagnostics": {
+      "product": {
+        "samples": 32,
+        "all_finite": true,
+        "max_identity_error": 3.0531133177191805e-16,
+        "max_positive_jensen_violation": 0.0,
+        "max_positive_monotonicity_violation": 0.0,
+        "minimum_stream_value": 0.2929152144299888
+      },
+      "softmax_1": {
+        "samples": 32,
+        "all_finite": true,
+        "max_identity_error": 1.1102230246251565e-16,
+        "max_positive_jensen_violation": 2.220446049250313e-16,
+        "max_positive_monotonicity_violation": 0.0,
+        "minimum_stream_value": 0.004983189283929157
+      },
+      "softmax_2": {
+        "samples": 32,
+        "all_finite": true,
+        "max_identity_error": 1.1102230246251565e-16,
+        "max_positive_jensen_violation": 0.0,
+        "max_positive_monotonicity_violation": 0.0,
+        "minimum_stream_value": 0.10656460856626343
+      },
+      "softmax_4": {
+        "samples": 32,
+        "all_finite": true,
+        "max_identity_error": 2.220446049250313e-16,
+        "max_positive_jensen_violation": 0.0,
+        "max_positive_monotonicity_violation": 0.0,
+        "minimum_stream_value": 0.5931608060058225
+      },
+      "gelu": {
+        "samples": 32,
+        "all_finite": true,
+        "max_identity_error": 4.0939474033052647e-16,
+        "max_positive_jensen_violation": 0.0,
+        "max_positive_monotonicity_violation": 0.0,
+        "minimum_stream_value": 0.9089142979171368
+      },
+      "inverse_sqrt_extension": {
+        "samples": 32,
+        "all_finite": true,
+        "max_identity_error": 8.881784197001252e-16,
+        "max_positive_jensen_violation": 7.771561172376096e-16,
+        "max_positive_monotonicity_violation": 0.0,
+        "minimum_stream_value": 0.06550443267469719
+      }
+    },
+    "domain_errors_rejected": {
+      "empty_softmax_support": true,
+      "zero_epsilon": true,
+      "negative_epsilon": true,
+      "negative_input_offset": true
+    },
+    "scope": "Finite numerical samples; these checks do not prove convexity or monotonicity."
+  },
+  "zero_variance_checks": [
+    {
+      "epsilon": 1.0,
+      "stages": {
+        "zero_variance_layer_norm.centered": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.0,
+          "stream_to_output_scale_floor_1": 0.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "zero_variance_layer_norm.variance": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.0,
+          "stream_to_output_scale_floor_1": 0.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "zero_variance_layer_norm.inverse_sqrt": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 1.0,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 1.0,
+          "all_finite": true
+        },
+        "zero_variance_layer_norm": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 1.25,
+          "stream_to_output_scale_floor_1": 1.25,
+          "min_stream_value": 0.25,
+          "min_recovered_value": -0.25,
+          "all_finite": true
+        }
+      }
+    },
+    {
+      "epsilon": 1e-05,
+      "stages": {
+        "zero_variance_layer_norm.centered": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.0,
+          "stream_to_output_scale_floor_1": 0.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "zero_variance_layer_norm.variance": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.0,
+          "stream_to_output_scale_floor_1": 0.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "zero_variance_layer_norm.inverse_sqrt": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 316.2277660168379,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 316.2277660168379,
+          "all_finite": true
+        },
+        "zero_variance_layer_norm": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 75000.49999999999,
+          "stream_to_output_scale_floor_1": 75000.49999999999,
+          "min_stream_value": 24999.999999999996,
+          "min_recovered_value": -0.25,
+          "all_finite": true
+        }
+      }
+    }
+  ],
+  "benign_transformer_fixture_passed": true,
+  "sweep_summary": {
+    "absolute_error_threshold": 1e-08,
+    "cases": 20,
+    "final_output_failures_at_threshold": 15,
+    "nonfinite_cases": 0
+  },
+  "cases": [
+    {
+      "epsilon": 1.0,
+      "weight_scale": 0.01,
+      "input_scale": 0.1,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.15186862412432273,
+          "stream_to_output_scale_floor_1": 0.15186862412432273,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.09360816331612418,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.734723475976807e-18,
+          "max_relative_error_scale_floor_1": 1.734723475976807e-18,
+          "max_stream_magnitude": 0.01034751488422231,
+          "stream_to_output_scale_floor_1": 0.01034751488422231,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.00928180328126206,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 3.469446951953614e-18,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-18,
+          "max_stream_magnitude": 0.018852819514294367,
+          "stream_to_output_scale_floor_1": 0.018852819514294367,
+          "min_stream_value": 0.00031390484292803786,
+          "min_recovered_value": -0.018011500748354142,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 8.673617379884035e-19,
+          "max_relative_error_scale_floor_1": 8.673617379884035e-19,
+          "max_stream_magnitude": 0.0066340908605293045,
+          "stream_to_output_scale_floor_1": 0.0066340908605293045,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.0066340908605293045,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 6.776263578034403e-20,
+          "max_relative_error_scale_floor_1": 6.776263578034403e-20,
+          "max_stream_magnitude": 0.0003506064664258414,
+          "stream_to_output_scale_floor_1": 0.0003506064664258414,
+          "min_stream_value": 0.0002108823120816724,
+          "min_recovered_value": -0.00013665992553751167,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 1.0001054411560408,
+          "stream_to_output_scale_floor_1": 1.0001054411560408,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 1.1275702593849246e-16,
+          "max_relative_error_scale_floor_1": 1.1275702593849246e-16,
+          "max_stream_magnitude": 0.506695257949444,
+          "stream_to_output_scale_floor_1": 0.506695257949444,
+          "min_stream_value": 0.16738765280496765,
+          "min_recovered_value": -0.005672636808806059,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.1549584166133043,
+          "stream_to_output_scale_floor_1": 0.1549584166133043,
+          "min_stream_value": 0.004062948355761605,
+          "min_recovered_value": -0.0895766765234689,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.12189453441520039,
+          "stream_to_output_scale_floor_1": 0.12189453441520039,
+          "min_stream_value": 0.014168689571678814,
+          "min_recovered_value": -0.08091711348175017,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 2.6020852139652106e-18,
+          "max_relative_error_scale_floor_1": 2.6020852139652106e-18,
+          "max_stream_magnitude": 0.019957281224312697,
+          "stream_to_output_scale_floor_1": 0.019957281224312697,
+          "min_stream_value": 0.013161476205438019,
+          "min_recovered_value": 0.000252284674928065,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 1.1102230246251565e-16,
+          "max_stream_magnitude": 1.0073779539020413,
+          "stream_to_output_scale_floor_1": 1.0073779539020413,
+          "min_stream_value": 0.006706880440183042,
+          "min_recovered_value": 0.997399313289885,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 2.0426368929626904e-16,
+          "max_relative_error_scale_floor_1": 2.0426368929626904e-16,
+          "max_stream_magnitude": 0.6080047144776887,
+          "stream_to_output_scale_floor_1": 0.6080047144776887,
+          "min_stream_value": 0.2770259119390897,
+          "min_recovered_value": -0.07600786044692831,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 1.1752751549742868e-16,
+          "max_relative_error_scale_floor_1": 1.1752751549742868e-16,
+          "max_stream_magnitude": 0.8579477053187297,
+          "stream_to_output_scale_floor_1": 0.8579477053187297,
+          "min_stream_value": 0.8136039463391734,
+          "min_recovered_value": -0.006352157183603935,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 2.5153490401663703e-16,
+          "max_relative_error_scale_floor_1": 2.5153490401663703e-16,
+          "max_stream_magnitude": 0.6311775775531802,
+          "stream_to_output_scale_floor_1": 0.6311775775531802,
+          "min_stream_value": 0.32289252064636775,
+          "min_recovered_value": -0.06758839361247826,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 1.0842021724855044e-16,
+          "max_relative_error_scale_floor_1": 1.0842021724855044e-16,
+          "max_stream_magnitude": 0.6753338008754648,
+          "stream_to_output_scale_floor_1": 0.6753338008754648,
+          "min_stream_value": 0.5577243497651199,
+          "min_recovered_value": -0.019091861068025517,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 2.5066754227864863e-16,
+          "max_relative_error_scale_floor_1": 2.5066754227864863e-16,
+          "max_stream_magnitude": 1.5546431098560562,
+          "stream_to_output_scale_floor_1": 1.5546431098560562,
+          "min_stream_value": 1.521823331602472,
+          "min_recovered_value": 0.0001305244568141628,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-16,
+          "max_stream_magnitude": 1.7769798393343572,
+          "stream_to_output_scale_floor_1": 1.7769798393343572,
+          "min_stream_value": 0.7609769280296431,
+          "min_recovered_value": 0.9996582844063291,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 1.932481952238163e-15,
+          "max_relative_error_scale_floor_1": 1.932481952238163e-15,
+          "max_stream_magnitude": 4.2702108564063375,
+          "stream_to_output_scale_floor_1": 4.2702108564063375,
+          "min_stream_value": 2.165809657633658,
+          "min_recovered_value": -0.026649415298405366,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.32041814833241844,
+          "stream_to_output_scale_floor_1": 0.32041814833241844,
+          "min_stream_value": 0.10435463764102568,
+          "min_recovered_value": -0.10003792814243967,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.10003792814243967,
+        0.2003908285436713
+      ],
+      "recovered_logits": [
+        -0.10003792814243967,
+        0.20039082854367132
+      ],
+      "first_stage_exceeding_absolute_error_threshold": null
+    },
+    {
+      "epsilon": 1.0,
+      "weight_scale": 0.01,
+      "input_scale": 1.0,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 1.5186862412432272,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.9360816331612417,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.734723475976807e-18,
+          "max_relative_error_scale_floor_1": 1.734723475976807e-18,
+          "max_stream_magnitude": 0.02969838126664203,
+          "stream_to_output_scale_floor_1": 0.02969838126664203,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.0027345031757572188,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 3.469446951953614e-18,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-18,
+          "max_stream_magnitude": 0.029385497364468657,
+          "stream_to_output_scale_floor_1": 0.029385497364468657,
+          "min_stream_value": 0.0027275052752307413,
+          "min_recovered_value": -0.020972309705066406,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 2.6020852139652106e-18,
+          "max_relative_error_scale_floor_1": 2.6020852139652106e-18,
+          "max_stream_magnitude": 0.01927176778939656,
+          "stream_to_output_scale_floor_1": 0.01927176778939656,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.015073903476604603,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 3.1848438816761693e-19,
+          "max_relative_error_scale_floor_1": 3.1848438816761693e-19,
+          "max_stream_magnitude": 0.0014213910757515898,
+          "stream_to_output_scale_floor_1": 0.0014213910757515898,
+          "min_stream_value": 0.0010293910356226747,
+          "min_recovered_value": -0.0003472226970465549,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 1.0005493071933564,
+          "stream_to_output_scale_floor_1": 1.0005493071933564,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.0383000842727483e-16,
+          "max_relative_error_scale_floor_1": 2.0383000842727483e-16,
+          "max_stream_magnitude": 0.5169691117287425,
+          "stream_to_output_scale_floor_1": 0.5169691117287425,
+          "min_stream_value": 0.17135017865097202,
+          "min_recovered_value": -0.014435230360267726,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 3.706037079848497e-17,
+          "max_stream_magnitude": 1.5219963777889276,
+          "stream_to_output_scale_floor_1": 1.0161156607944226,
+          "min_stream_value": 0.0042756620132335605,
+          "min_recovered_value": -0.9320355573662006,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.0169210359411938e-16,
+          "max_stream_magnitude": 1.1848569706413434,
+          "stream_to_output_scale_floor_1": 1.0762535525125396,
+          "min_stream_value": 0.014322070879203917,
+          "min_recovered_value": -0.895975349569769,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 3.3306690738754696e-16,
+          "max_relative_error_scale_floor_1": 3.3306690738754696e-16,
+          "max_stream_magnitude": 1.731473461759764,
+          "stream_to_output_scale_floor_1": 1.731473461759764,
+          "min_stream_value": 0.7009185082044024,
+          "min_recovered_value": 0.06778148272669282,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-16,
+          "max_stream_magnitude": 1.6359731370719937,
+          "stream_to_output_scale_floor_1": 1.6359731370719937,
+          "min_stream_value": 0.4630552450396537,
+          "min_recovered_value": 0.7702364061921116,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 6.661338147750939e-16,
+          "max_relative_error_scale_floor_1": 6.661338147750939e-16,
+          "max_stream_magnitude": 3.628998623325886,
+          "stream_to_output_scale_floor_1": 3.628998623325886,
+          "min_stream_value": 0.9532139194791275,
+          "min_recovered_value": -0.6854140203161712,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 1.0061396160665481e-16,
+          "max_relative_error_scale_floor_1": 1.0061396160665481e-16,
+          "max_stream_magnitude": 1.0635989055095432,
+          "stream_to_output_scale_floor_1": 1.0635989055095432,
+          "min_stream_value": 0.8332128511450803,
+          "min_recovered_value": -0.0062110859656254735,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 7.771561172376096e-16,
+          "max_relative_error_scale_floor_1": 7.771561172376096e-16,
+          "max_stream_magnitude": 3.6552905580958464,
+          "stream_to_output_scale_floor_1": 3.6552905580958464,
+          "min_stream_value": 1.0009138255618026,
+          "min_recovered_value": -0.6770472862822396,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 8.881784197001252e-16,
+          "max_relative_error_scale_floor_1": 8.881784197001252e-16,
+          "max_stream_magnitude": 3.833359851699632,
+          "stream_to_output_scale_floor_1": 3.833359851699632,
+          "min_stream_value": 1.846004949708127,
+          "min_recovered_value": -0.21287014878942,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 3.885780586188048e-15,
+          "max_relative_error_scale_floor_1": 3.885780586188048e-15,
+          "max_stream_magnitude": 49.21600567267825,
+          "stream_to_output_scale_floor_1": 49.21600567267825,
+          "min_stream_value": 19.026350796700925,
+          "min_recovered_value": 0.005190099559978734,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 2.220446049250313e-15,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-15,
+          "max_stream_magnitude": 25.573527464352868,
+          "stream_to_output_scale_floor_1": 25.573527464352868,
+          "min_stream_value": 9.530615999560315,
+          "min_recovered_value": 0.9655246280137426,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 5.685729664861583e-14,
+          "max_relative_error_scale_floor_1": 5.685729664861583e-14,
+          "max_stream_magnitude": 907.9569065791281,
+          "stream_to_output_scale_floor_1": 907.9569065791281,
+          "min_stream_value": 86.4973428276306,
+          "min_recovered_value": -0.18489496290976604,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 2.6367796834847468e-15,
+          "max_relative_error_scale_floor_1": 2.6367796834847468e-15,
+          "max_stream_magnitude": 12.183276380431812,
+          "stream_to_output_scale_floor_1": 12.183276380431812,
+          "min_stream_value": 10.365340725650805,
+          "min_recovered_value": -0.09843918051773848,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.09843918051774111,
+        0.20264882441230322
+      ],
+      "recovered_logits": [
+        -0.09843918051773848,
+        0.20264882441230192
+      ],
+      "first_stage_exceeding_absolute_error_threshold": null
+    },
+    {
+      "epsilon": 1.0,
+      "weight_scale": 0.1,
+      "input_scale": 0.1,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.15186862412432273,
+          "stream_to_output_scale_floor_1": 0.15186862412432273,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.09360816331612418,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.1034751488422231,
+          "stream_to_output_scale_floor_1": 0.1034751488422231,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.0928180328126206,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.18852819514294367,
+          "stream_to_output_scale_floor_1": 0.18852819514294367,
+          "min_stream_value": 0.003139048429280379,
+          "min_recovered_value": -0.18011500748354142,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 3.469446951953614e-18,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-18,
+          "max_stream_magnitude": 0.06634090860529306,
+          "stream_to_output_scale_floor_1": 0.06634090860529306,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.06634090860529306,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 6.938893903907228e-18,
+          "max_relative_error_scale_floor_1": 6.938893903907228e-18,
+          "max_stream_magnitude": 0.03506064664258414,
+          "stream_to_output_scale_floor_1": 0.03506064664258414,
+          "min_stream_value": 0.021088231208167243,
+          "min_recovered_value": -0.013665992553751161,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 1.1102230246251565e-16,
+          "max_stream_magnitude": 1.0105441156040835,
+          "stream_to_output_scale_floor_1": 1.0105441156040835,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.0122792321330962e-16,
+          "max_relative_error_scale_floor_1": 2.0122792321330962e-16,
+          "max_stream_magnitude": 0.5832223938073947,
+          "stream_to_output_scale_floor_1": 0.5832223938073947,
+          "min_stream_value": 0.2231536490196216,
+          "min_recovered_value": -0.056717020636036314,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 3.469446951953614e-17,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-17,
+          "max_stream_magnitude": 0.3108487608688883,
+          "stream_to_output_scale_floor_1": 0.3108487608688883,
+          "min_stream_value": 0.055212887752515045,
+          "min_recovered_value": -0.2434461127195407,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 4.163336342344337e-17,
+          "max_relative_error_scale_floor_1": 4.163336342344337e-17,
+          "max_stream_magnitude": 0.2951511311248821,
+          "stream_to_output_scale_floor_1": 0.2951511311248821,
+          "min_stream_value": 0.12283783488953633,
+          "min_recovered_value": -0.13615930293726447,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 1.9949319973733282e-17,
+          "max_relative_error_scale_floor_1": 1.9949319973733282e-17,
+          "max_stream_magnitude": 0.21218301409169724,
+          "stream_to_output_scale_floor_1": 0.21218301409169724,
+          "min_stream_value": 0.12273780662480517,
+          "min_recovered_value": 0.0022378468680678137,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 1.1102230246251565e-16,
+          "max_stream_magnitude": 1.1036263588285464,
+          "stream_to_output_scale_floor_1": 1.1036263588285464,
+          "min_stream_value": 0.06248782674643649,
+          "min_recovered_value": 0.9952626800933356,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 2.0816681711721685e-16,
+          "max_relative_error_scale_floor_1": 2.0816681711721685e-16,
+          "max_stream_magnitude": 0.9776339750669263,
+          "stream_to_output_scale_floor_1": 0.9776339750669263,
+          "min_stream_value": 0.3992244930554952,
+          "min_recovered_value": -0.1086983388709033,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 1.5265566588595902e-16,
+          "max_relative_error_scale_floor_1": 1.5265566588595902e-16,
+          "max_stream_magnitude": 1.7006346198648548,
+          "stream_to_output_scale_floor_1": 1.7006346198648548,
+          "min_stream_value": 0.9861197438121174,
+          "min_recovered_value": -0.07622017949287918,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 2.7755575615628914e-16,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-16,
+          "max_stream_magnitude": 1.425059884384928,
+          "stream_to_output_scale_floor_1": 1.425059884384928,
+          "min_stream_value": 0.9580801274831667,
+          "min_recovered_value": 0.0014326481801227864,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 3.469446951953614e-16,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-16,
+          "max_stream_magnitude": 1.682626457815053,
+          "stream_to_output_scale_floor_1": 1.682626457815053,
+          "min_stream_value": 1.3745370743991219,
+          "min_recovered_value": -0.11921211999256909,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 1.1336417915508434e-15,
+          "max_relative_error_scale_floor_1": 1.1336417915508434e-15,
+          "max_stream_magnitude": 10.246147395113429,
+          "stream_to_output_scale_floor_1": 10.246147395113429,
+          "min_stream_value": 8.20157227368504,
+          "min_recovered_value": 0.003050879943543805,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 7.771561172376096e-16,
+          "max_relative_error_scale_floor_1": 7.771561172376096e-16,
+          "max_stream_magnitude": 6.120710022136088,
+          "stream_to_output_scale_floor_1": 6.120710022136088,
+          "min_stream_value": 4.102311576814292,
+          "min_recovered_value": 0.996073730681089,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 6.085409953726639e-15,
+          "max_relative_error_scale_floor_1": 6.085409953726639e-15,
+          "max_stream_magnitude": 57.398639885705485,
+          "stream_to_output_scale_floor_1": 57.398639885705485,
+          "min_stream_value": 21.821113936248054,
+          "min_recovered_value": -0.24283232132648536,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 2.914335439641036e-15,
+          "max_relative_error_scale_floor_1": 2.914335439641036e-15,
+          "max_stream_magnitude": 13.509078786533433,
+          "stream_to_output_scale_floor_1": 13.509078786533433,
+          "min_stream_value": 11.618442372404777,
+          "min_recovered_value": -0.12224643989336492,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.12224643989336667,
+        0.2132157286148975
+      ],
+      "recovered_logits": [
+        -0.12224643989336492,
+        0.21321572861489457
+      ],
+      "first_stage_exceeding_absolute_error_threshold": null
+    },
+    {
+      "epsilon": 1.0,
+      "weight_scale": 0.1,
+      "input_scale": 1.0,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 1.5186862412432272,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.9360816331612417,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.2969838126664203,
+          "stream_to_output_scale_floor_1": 0.2969838126664203,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.02734503175757219,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.2938549736446866,
+          "stream_to_output_scale_floor_1": 0.2938549736446866,
+          "min_stream_value": 0.027275052752307412,
+          "min_recovered_value": -0.20972309705066408,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.19271767789396563,
+          "stream_to_output_scale_floor_1": 0.19271767789396563,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.15073903476604603,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.14213910757515896,
+          "stream_to_output_scale_floor_1": 0.14213910757515896,
+          "min_stream_value": 0.10293910356226747,
+          "min_recovered_value": -0.034722269704655445,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 1.1102230246251565e-16,
+          "max_stream_magnitude": 1.0549307193356467,
+          "stream_to_output_scale_floor_1": 1.0549307193356467,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.914335439641036e-16,
+          "max_relative_error_scale_floor_1": 2.914335439641036e-16,
+          "max_stream_magnitude": 0.7713159474132314,
+          "stream_to_output_scale_floor_1": 0.7713159474132314,
+          "min_stream_value": 0.4743957747982243,
+          "min_recovered_value": -0.1443832794356148,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 1.6885977017886138e-16,
+          "max_stream_magnitude": 1.6497295119122863,
+          "stream_to_output_scale_floor_1": 1.254581016876533,
+          "min_stream_value": 0.10029558015709866,
+          "min_recovered_value": -0.9004185212578235,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-16,
+          "max_stream_magnitude": 1.3385636878401703,
+          "stream_to_output_scale_floor_1": 1.3385636878401703,
+          "min_stream_value": 0.23800547955691165,
+          "min_recovered_value": -0.8069390186124902,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-16,
+          "max_stream_magnitude": 2.586879305922317,
+          "stream_to_output_scale_floor_1": 2.586879305922317,
+          "min_stream_value": 1.5401196565760173,
+          "min_recovered_value": 0.027219215473309077,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 1.1102230246251565e-16,
+          "max_stream_magnitude": 2.103050872433762,
+          "stream_to_output_scale_floor_1": 2.103050872433762,
+          "min_stream_value": 0.8555211001451984,
+          "min_recovered_value": 0.8096112194726037,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 7.632783294297951e-16,
+          "max_relative_error_scale_floor_1": 7.632783294297951e-16,
+          "max_stream_magnitude": 6.12759952362612,
+          "stream_to_output_scale_floor_1": 6.12759952362612,
+          "min_stream_value": 1.9461136044299825,
+          "min_recovered_value": -0.6063187531671961,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 4.926614671774132e-16,
+          "max_relative_error_scale_floor_1": 4.926614671774132e-16,
+          "max_stream_magnitude": 5.396990336951638,
+          "stream_to_output_scale_floor_1": 5.396990336951638,
+          "min_stream_value": 1.3864729500066955,
+          "min_recovered_value": -0.05613697340817714,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 1.3322676295501878e-15,
+          "max_relative_error_scale_floor_1": 1.3322676295501878e-15,
+          "max_stream_magnitude": 7.055918029787875,
+          "stream_to_output_scale_floor_1": 7.055918029787875,
+          "min_stream_value": 2.949239118190606,
+          "min_recovered_value": -0.5371072734541578,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 1.27675647831893e-15,
+          "max_relative_error_scale_floor_1": 1.27675647831893e-15,
+          "max_stream_magnitude": 7.944871000829691,
+          "stream_to_output_scale_floor_1": 7.944871000829691,
+          "min_stream_value": 4.763615415465342,
+          "min_recovered_value": -0.14874337050574038,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 5.630912403020716e-14,
+          "max_relative_error_scale_floor_1": 5.630912403020716e-14,
+          "max_stream_magnitude": 224.42281898942392,
+          "stream_to_output_scale_floor_1": 224.42281898942392,
+          "min_stream_value": 105.6016022402706,
+          "min_recovered_value": 0.011447420320976676,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 2.8199664825478976e-14,
+          "max_relative_error_scale_floor_1": 2.8199664825478976e-14,
+          "max_stream_magnitude": 113.19072947548017,
+          "stream_to_output_scale_floor_1": 113.19072947548017,
+          "min_stream_value": 52.80777943229297,
+          "min_recovered_value": 0.97931998076821,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 2.653752217973704e-12,
+          "max_relative_error_scale_floor_1": 2.653752217973704e-12,
+          "max_stream_magnitude": 15922.337209665347,
+          "stream_to_output_scale_floor_1": 15922.337209665347,
+          "min_stream_value": 2029.0642774565076,
+          "min_recovered_value": -0.2300921080986882,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 1.6919798895287386e-13,
+          "max_relative_error_scale_floor_1": 1.6919798895287386e-13,
+          "max_stream_magnitude": 2270.463211327836,
+          "stream_to_output_scale_floor_1": 2270.463211327836,
+          "min_stream_value": 1974.5978486710828,
+          "min_recovered_value": -0.10492981883135144,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.10492981883150776,
+        0.2377143003312212
+      ],
+      "recovered_logits": [
+        -0.10492981883135144,
+        0.2377143003313904
+      ],
+      "first_stage_exceeding_absolute_error_threshold": null
+    },
+    {
+      "epsilon": 1.0,
+      "weight_scale": 0.5,
+      "input_scale": 0.1,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.15186862412432273,
+          "stream_to_output_scale_floor_1": 0.15186862412432273,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.09360816331612418,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 0.5173757442111155,
+          "stream_to_output_scale_floor_1": 0.5173757442111155,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.46409016406310305,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 0.9426409757147183,
+          "stream_to_output_scale_floor_1": 0.9426409757147183,
+          "min_stream_value": 0.015695242146401892,
+          "min_recovered_value": -0.9005750374177071,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.33170454302646524,
+          "stream_to_output_scale_floor_1": 0.33170454302646524,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.33170454302646524,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 1.6653345369377348e-16,
+          "max_relative_error_scale_floor_1": 1.6653345369377348e-16,
+          "max_stream_magnitude": 0.8765161660646034,
+          "stream_to_output_scale_floor_1": 0.8765161660646034,
+          "min_stream_value": 0.5272057802041811,
+          "min_recovered_value": -0.341649813843779,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-16,
+          "max_stream_magnitude": 1.4374866847052576,
+          "stream_to_output_scale_floor_1": 1.4374866847052576,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.914335439641036e-16,
+          "max_relative_error_scale_floor_1": 2.914335439641036e-16,
+          "max_stream_magnitude": 6.5906319958551585,
+          "stream_to_output_scale_floor_1": 6.5906319958551585,
+          "min_stream_value": 0.8936692735826246,
+          "min_recovered_value": -0.2832701180785211,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 6.661338147750939e-16,
+          "max_relative_error_scale_floor_1": 5.57569196483554e-16,
+          "max_stream_magnitude": 7.349714232525765,
+          "stream_to_output_scale_floor_1": 6.151878448621807,
+          "min_stream_value": 0.4740596169958738,
+          "min_recovered_value": -1.1947105739991182,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 8.881784197001252e-16,
+          "max_relative_error_scale_floor_1": 8.881784197001252e-16,
+          "max_stream_magnitude": 7.81458314335215,
+          "stream_to_output_scale_floor_1": 7.81458314335215,
+          "min_stream_value": 1.1529826262330527,
+          "min_recovered_value": -0.8443189860064662,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 4.385380947269368e-15,
+          "max_relative_error_scale_floor_1": 4.385380947269368e-15,
+          "max_stream_magnitude": 196.56707575499954,
+          "stream_to_output_scale_floor_1": 196.56707575499954,
+          "min_stream_value": 10.683965280350465,
+          "min_recovered_value": 0.30568187748846753,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 1.3322676295501878e-15,
+          "max_relative_error_scale_floor_1": 1.3322676295501878e-15,
+          "max_stream_magnitude": 99.15868548908395,
+          "stream_to_output_scale_floor_1": 99.15868548908395,
+          "min_stream_value": 5.509994203518292,
+          "min_recovered_value": 0.8550306105519923,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 9.234835118832052e-13,
+          "max_relative_error_scale_floor_1": 9.234835118832052e-13,
+          "max_stream_magnitude": 10959.815895766273,
+          "stream_to_output_scale_floor_1": 10959.815895766273,
+          "min_stream_value": 29.53944142186262,
+          "min_recovered_value": -0.5380026264871844,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 1.947886296704837e-12,
+          "max_relative_error_scale_floor_1": 1.947886296704837e-12,
+          "max_stream_magnitude": 39476.32667337501,
+          "stream_to_output_scale_floor_1": 39476.32667337501,
+          "min_stream_value": 34.8410398614922,
+          "min_recovered_value": -0.1635850918326014,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 6.3795635441010745e-12,
+          "max_relative_error_scale_floor_1": 6.3795635441010745e-12,
+          "max_stream_magnitude": 40892.55281880044,
+          "stream_to_output_scale_floor_1": 40892.55281880044,
+          "min_stream_value": 151.70927657128993,
+          "min_recovered_value": 0.492824969238427,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 1.1780687536599999e-11,
+          "max_relative_error_scale_floor_1": 1.1780687536599999e-11,
+          "max_stream_magnitude": 49978.71992367397,
+          "stream_to_output_scale_floor_1": 49978.71992367397,
+          "min_stream_value": 239.68834047345902,
+          "min_recovered_value": -0.10451677376295265,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 6.625727717764207e-07,
+          "max_relative_error_scale_floor_1": 6.625727717764207e-07,
+          "max_stream_magnitude": 9407213080.392199,
+          "stream_to_output_scale_floor_1": 9407213080.392199,
+          "min_stream_value": 254450.1791497171,
+          "min_recovered_value": 0.008417129516601562,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 7.2992923927373e-09,
+          "max_relative_error_scale_floor_1": 7.2992923927373e-09,
+          "max_stream_magnitude": 4703606541.191917,
+          "stream_to_output_scale_floor_1": 4703606541.191917,
+          "min_stream_value": 127225.09432763589,
+          "min_recovered_value": 0.9945200327783823,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 0.9089787853495462,
+          "max_relative_error_scale_floor_1": 0.9089787853495462,
+          "max_stream_magnitude": 2.4336782104835637e+19,
+          "stream_to_output_scale_floor_1": 2.4336782104835637e+19,
+          "min_stream_value": 9751125249.967728,
+          "min_recovered_value": -0.9296875,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 0.6166420515403745,
+          "max_relative_error_scale_floor_1": 0.6166420515403745,
+          "max_stream_magnitude": 1.1522055111677733e+19,
+          "stream_to_output_scale_floor_1": 1.1522055111677733e+19,
+          "min_stream_value": 1.0035491856488225e+19,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.5815368224599504,
+        0.6166420515403745
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm2.variance"
+    },
+    {
+      "epsilon": 1.0,
+      "weight_scale": 0.5,
+      "input_scale": 1.0,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 1.5186862412432272,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.9360816331612417,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 7.476656822856451e-17,
+          "max_stream_magnitude": 1.4849190633321012,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.13672515878786085,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.1175026313042733e-16,
+          "max_stream_magnitude": 1.469274868223433,
+          "stream_to_output_scale_floor_1": 1.401156943499162,
+          "min_stream_value": 0.13637526376153705,
+          "min_recovered_value": -1.0486154852533205,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 0.9635883894698282,
+          "stream_to_output_scale_floor_1": 0.9635883894698282,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.7536951738302302,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 9.992007221626409e-16,
+          "max_relative_error_scale_floor_1": 9.992007221626409e-16,
+          "max_stream_magnitude": 3.553477689378974,
+          "stream_to_output_scale_floor_1": 3.553477689378974,
+          "min_stream_value": 2.573477589056687,
+          "min_recovered_value": -0.8680567426163877,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 5.551115123125783e-16,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-16,
+          "max_stream_magnitude": 5.0832482325957455,
+          "stream_to_output_scale_floor_1": 5.0832482325957455,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.463307335887066e-14,
+          "max_relative_error_scale_floor_1": 2.463307335887066e-14,
+          "max_stream_magnitude": 86.57863993985487,
+          "stream_to_output_scale_floor_1": 86.57863993985487,
+          "min_stream_value": 4.655899811305816,
+          "min_recovered_value": -0.7256451673930471,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 3.83026943495679e-14,
+          "max_relative_error_scale_floor_1": 3.542668386054872e-14,
+          "max_stream_magnitude": 99.67194347749069,
+          "stream_to_output_scale_floor_1": 92.18793850682147,
+          "min_stream_value": 2.3850295852519263,
+          "min_recovered_value": -1.0811820406431494,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 2.0816681711721685e-14,
+          "max_relative_error_scale_floor_1": 2.0816681711721685e-14,
+          "max_stream_magnitude": 102.44030497093466,
+          "stream_to_output_scale_floor_1": 102.44030497093466,
+          "min_stream_value": 6.683189681807313,
+          "min_recovered_value": -0.4271741693883939,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 6.004086117172847e-13,
+          "max_relative_error_scale_floor_1": 6.004086117172847e-13,
+          "max_stream_magnitude": 34493.77191127415,
+          "stream_to_output_scale_floor_1": 34493.77191127415,
+          "min_stream_value": 242.26418378679918,
+          "min_recovered_value": 0.001256144565957129,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 1.2188028364334969e-12,
+          "max_relative_error_scale_floor_1": 1.2188028364334969e-12,
+          "max_stream_magnitude": 17247.82865984135,
+          "stream_to_output_scale_floor_1": 17247.82865984135,
+          "min_stream_value": 121.13271996568257,
+          "min_recovered_value": 0.9427042042771063,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 4.9217224296072004e-08,
+          "max_relative_error_scale_floor_1": 4.9217224296072004e-08,
+          "max_stream_magnitude": 300200750.1035641,
+          "stream_to_output_scale_floor_1": 300200750.1035641,
+          "min_stream_value": 8462.632871127505,
+          "min_recovered_value": -0.6903167734853923,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 3.43321676088415e-08,
+          "max_relative_error_scale_floor_1": 3.43321676088415e-08,
+          "max_stream_magnitude": 1069171719.5089955,
+          "stream_to_output_scale_floor_1": 1069171719.5089955,
+          "min_stream_value": 10019.707708652293,
+          "min_recovered_value": -0.16863935867149848,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 1.4084186417129274e-07,
+          "max_relative_error_scale_floor_1": 1.4084186417129274e-07,
+          "max_stream_magnitude": 1110414336.8883734,
+          "stream_to_output_scale_floor_1": 1110414336.8883734,
+          "min_stream_value": 43492.61661533006,
+          "min_recovered_value": -0.170884370803833,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 1.842430238097048e-07,
+          "max_relative_error_scale_floor_1": 1.842430238097048e-07,
+          "max_stream_magnitude": 1354392920.727457,
+          "stream_to_output_scale_floor_1": 1354392920.727457,
+          "min_stream_value": 69016.719311501,
+          "min_recovered_value": -0.19996404647827148,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 0.03252716847541334,
+          "max_relative_error_scale_floor_1": 0.03252716847541334,
+          "max_stream_magnitude": 6.89804889269908e+18,
+          "stream_to_output_scale_floor_1": 6.89804889269908e+18,
+          "min_stream_value": 21164253483.545635,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 0.9888647053950587,
+          "max_relative_error_scale_floor_1": 0.9888647053950587,
+          "max_stream_magnitude": 3.44902444634954e+18,
+          "stream_to_output_scale_floor_1": 3.44902444634954e+18,
+          "min_stream_value": 10582126741.782701,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 0.9134793310077818,
+          "max_relative_error_scale_floor_1": 0.9134793310077818,
+          "max_stream_magnitude": 1.3085346604119948e+37,
+          "stream_to_output_scale_floor_1": 1.3085346604119948e+37,
+          "min_stream_value": 6.718978463158014e+19,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 0.7869662061700053,
+          "max_relative_error_scale_floor_1": 0.7869662061700053,
+          "max_stream_magnitude": 6.195118627204795e+36,
+          "stream_to_output_scale_floor_1": 6.195118627204795e+36,
+          "min_stream_value": 5.395826892997444e+36,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.4716832203231419,
+        0.7869662061700053
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm1"
+    },
+    {
+      "epsilon": 0.01,
+      "weight_scale": 0.01,
+      "input_scale": 0.1,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.15186862412432273,
+          "stream_to_output_scale_floor_1": 0.15186862412432273,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.09360816331612418,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.734723475976807e-18,
+          "max_relative_error_scale_floor_1": 1.734723475976807e-18,
+          "max_stream_magnitude": 0.01034751488422231,
+          "stream_to_output_scale_floor_1": 0.01034751488422231,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.00928180328126206,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 3.469446951953614e-18,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-18,
+          "max_stream_magnitude": 0.018852819514294367,
+          "stream_to_output_scale_floor_1": 0.018852819514294367,
+          "min_stream_value": 0.00031390484292803786,
+          "min_recovered_value": -0.018011500748354142,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 8.673617379884035e-19,
+          "max_relative_error_scale_floor_1": 8.673617379884035e-19,
+          "max_stream_magnitude": 0.0066340908605293045,
+          "stream_to_output_scale_floor_1": 0.0066340908605293045,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.0066340908605293045,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 6.776263578034403e-20,
+          "max_relative_error_scale_floor_1": 6.776263578034403e-20,
+          "max_stream_magnitude": 0.0003506064664258414,
+          "stream_to_output_scale_floor_1": 0.0003506064664258414,
+          "min_stream_value": 0.0002108823120816724,
+          "min_recovered_value": -0.00013665992553751167,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 1.0001054411560408,
+          "stream_to_output_scale_floor_1": 1.0001054411560408,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 1.1275702593849246e-16,
+          "max_relative_error_scale_floor_1": 1.1275702593849246e-16,
+          "max_stream_magnitude": 0.506695257949444,
+          "stream_to_output_scale_floor_1": 0.506695257949444,
+          "min_stream_value": 0.16738765280496765,
+          "min_recovered_value": -0.005672636808806059,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.1549584166133043,
+          "stream_to_output_scale_floor_1": 0.1549584166133043,
+          "min_stream_value": 0.004062948355761605,
+          "min_recovered_value": -0.0895766765234689,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.12189453441520039,
+          "stream_to_output_scale_floor_1": 0.12189453441520039,
+          "min_stream_value": 0.014168689571678814,
+          "min_recovered_value": -0.08091711348175017,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 2.6020852139652106e-18,
+          "max_relative_error_scale_floor_1": 2.6020852139652106e-18,
+          "max_stream_magnitude": 0.019957281224312697,
+          "stream_to_output_scale_floor_1": 0.019957281224312697,
+          "min_stream_value": 0.013161476205438019,
+          "min_recovered_value": 0.000252284674928065,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 3.552713678800501e-15,
+          "max_relative_error_scale_floor_1": 3.5972492978379493e-16,
+          "max_stream_magnitude": 18.083918805218566,
+          "stream_to_output_scale_floor_1": 1.8310612704988525,
+          "min_stream_value": 6.706880440183042,
+          "min_recovered_value": 8.105278193062217,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 5.147271497918382e-14,
+          "max_relative_error_scale_floor_1": 5.147271497918382e-14,
+          "max_stream_magnitude": 215.16622314413834,
+          "stream_to_output_scale_floor_1": 215.16622314413834,
+          "min_stream_value": 80.66400197113842,
+          "min_recovered_value": -0.6511569023759876,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 3.3670982668709826e-15,
+          "max_relative_error_scale_floor_1": 3.3670982668709826e-15,
+          "max_stream_magnitude": 16.115000855737286,
+          "stream_to_output_scale_floor_1": 16.115000855737286,
+          "min_stream_value": 2.7616632311445546,
+          "min_recovered_value": -0.005841361343829732,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 4.406891518371481e-14,
+          "max_relative_error_scale_floor_1": 4.406891518371481e-14,
+          "max_stream_magnitude": 215.42064770151802,
+          "stream_to_output_scale_floor_1": 215.42064770151802,
+          "min_stream_value": 80.90412705408293,
+          "min_recovered_value": -0.642785831329661,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 5.823119764158946e-14,
+          "max_relative_error_scale_floor_1": 5.823119764158946e-14,
+          "max_stream_magnitude": 233.30946025966347,
+          "stream_to_output_scale_floor_1": 233.30946025966347,
+          "min_stream_value": 148.16323911856955,
+          "min_recovered_value": -0.21845015883815222,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 1.7182116840430695e-11,
+          "max_relative_error_scale_floor_1": 1.7182116840430695e-11,
+          "max_stream_magnitude": 186330.0199547625,
+          "stream_to_output_scale_floor_1": 186330.0199547625,
+          "min_stream_value": 104916.79451296713,
+          "min_recovered_value": 0.003554857787094079,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 4.5501558076921356e-09,
+          "max_relative_error_scale_floor_1": 5.297533976063655e-10,
+          "max_stream_magnitude": 93165013.57505904,
+          "stream_to_output_scale_floor_1": 10846767.575737933,
+          "min_stream_value": 52458399.03391246,
+          "min_recovered_value": 3.597677782177925,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 1.4155372308519485,
+          "max_relative_error_scale_floor_1": 1.4155372308519485,
+          "max_stream_magnitude": 9547735513257626.0,
+          "stream_to_output_scale_floor_1": 9547735513257626.0,
+          "min_stream_value": 1651139775265558.8,
+          "min_recovered_value": -2.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 0.007558830590059434,
+          "max_relative_error_scale_floor_1": 0.007558830590059434,
+          "max_stream_magnitude": 155732237625848.0,
+          "stream_to_output_scale_floor_1": 155732237625848.0,
+          "min_stream_value": 135639719888788.89,
+          "min_recovered_value": -0.09375,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.09262279323051638,
+        0.21119116940994057
+      ],
+      "recovered_logits": [
+        -0.09375,
+        0.21875
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm2"
+    },
+    {
+      "epsilon": 0.01,
+      "weight_scale": 0.01,
+      "input_scale": 1.0,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 1.5186862412432272,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.9360816331612417,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.734723475976807e-18,
+          "max_relative_error_scale_floor_1": 1.734723475976807e-18,
+          "max_stream_magnitude": 0.02969838126664203,
+          "stream_to_output_scale_floor_1": 0.02969838126664203,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.0027345031757572188,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 3.469446951953614e-18,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-18,
+          "max_stream_magnitude": 0.029385497364468657,
+          "stream_to_output_scale_floor_1": 0.029385497364468657,
+          "min_stream_value": 0.0027275052752307413,
+          "min_recovered_value": -0.020972309705066406,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 2.6020852139652106e-18,
+          "max_relative_error_scale_floor_1": 2.6020852139652106e-18,
+          "max_stream_magnitude": 0.01927176778939656,
+          "stream_to_output_scale_floor_1": 0.01927176778939656,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.015073903476604603,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 3.1848438816761693e-19,
+          "max_relative_error_scale_floor_1": 3.1848438816761693e-19,
+          "max_stream_magnitude": 0.0014213910757515898,
+          "stream_to_output_scale_floor_1": 0.0014213910757515898,
+          "min_stream_value": 0.0010293910356226747,
+          "min_recovered_value": -0.0003472226970465549,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 1.0005493071933564,
+          "stream_to_output_scale_floor_1": 1.0005493071933564,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.0383000842727483e-16,
+          "max_relative_error_scale_floor_1": 2.0383000842727483e-16,
+          "max_stream_magnitude": 0.5169691117287425,
+          "stream_to_output_scale_floor_1": 0.5169691117287425,
+          "min_stream_value": 0.17135017865097202,
+          "min_recovered_value": -0.014435230360267726,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 3.706037079848497e-17,
+          "max_stream_magnitude": 1.5219963777889276,
+          "stream_to_output_scale_floor_1": 1.0161156607944226,
+          "min_stream_value": 0.0042756620132335605,
+          "min_recovered_value": -0.9320355573662006,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.0169210359411938e-16,
+          "max_stream_magnitude": 1.1848569706413434,
+          "stream_to_output_scale_floor_1": 1.0762535525125396,
+          "min_stream_value": 0.014322070879203917,
+          "min_recovered_value": -0.895975349569769,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 3.3306690738754696e-16,
+          "max_relative_error_scale_floor_1": 3.3306690738754696e-16,
+          "max_stream_magnitude": 1.731473461759764,
+          "stream_to_output_scale_floor_1": 1.731473461759764,
+          "min_stream_value": 0.7009185082044024,
+          "min_recovered_value": 0.06778148272669282,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 3.197442310920451e-14,
+          "max_relative_error_scale_floor_1": 8.917452946423757e-15,
+          "max_stream_magnitude": 866.9357424450506,
+          "stream_to_output_scale_floor_1": 241.78258555042368,
+          "min_stream_value": 463.0552450396537,
+          "min_recovered_value": 1.1990115651685755,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 1.2242329372469385e-10,
+          "max_relative_error_scale_floor_1": 1.1445857976390206e-10,
+          "max_stream_magnitude": 751340.8172977909,
+          "stream_to_output_scale_floor_1": 702459.4768700307,
+          "min_stream_value": 108277.93316929882,
+          "min_recovered_value": -1.0695859933039173,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 4.0188703059884645e-12,
+          "max_relative_error_scale_floor_1": 4.0188703059884645e-12,
+          "max_stream_magnitude": 53475.96469932508,
+          "stream_to_output_scale_floor_1": 53475.96469932508,
+          "min_stream_value": 2624.45926930696,
+          "min_recovered_value": -0.009939355140886619,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 4.0897396580419354e-11,
+          "max_relative_error_scale_floor_1": 3.853685164121509e-11,
+          "max_stream_magnitude": 752151.2267036223,
+          "stream_to_output_scale_floor_1": 708738.0287945512,
+          "min_stream_value": 108539.630173705,
+          "min_recovered_value": -1.0612542239250615,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 1.1044976044871646e-10,
+          "max_relative_error_scale_floor_1": 1.1044976044871646e-10,
+          "max_stream_magnitude": 815040.8725077652,
+          "stream_to_output_scale_floor_1": 815040.8725077652,
+          "min_stream_value": 198783.47962963092,
+          "min_recovered_value": -0.3661907988716848,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 0.0005172069937311452,
+          "max_relative_error_scale_floor_1": 0.0005172069937311452,
+          "max_stream_magnitude": 2275065114529.7505,
+          "stream_to_output_scale_floor_1": 2275065114529.7505,
+          "min_stream_value": 188884871363.09717,
+          "min_recovered_value": 0.069183349609375,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 0.048831474088707694,
+          "max_relative_error_scale_floor_1": 0.013737265630667024,
+          "max_stream_magnitude": 1137532557264877.5,
+          "stream_to_output_scale_floor_1": 320010550455474.1,
+          "min_stream_value": 94442435681583.17,
+          "min_recovered_value": 2.25,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 1099511627776.254,
+          "max_relative_error_scale_floor_1": 764163823173.7604,
+          "max_stream_magnitude": 1.4233783526043104e+30,
+          "stream_to_output_scale_floor_1": 9.892521518382886e+29,
+          "min_stream_value": 5.351624217010507e+27,
+          "min_recovered_value": -1099511627776.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 0.21928048403671396,
+          "max_relative_error_scale_floor_1": 0.21928048403671396,
+          "max_stream_magnitude": 1.3726845114944827e+28,
+          "stream_to_output_scale_floor_1": 1.3726845114944827e+28,
+          "min_stream_value": 1.1955813033010455e+28,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.08744689228864386,
+        0.21928048403671396
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm2.variance"
+    },
+    {
+      "epsilon": 0.01,
+      "weight_scale": 0.1,
+      "input_scale": 0.1,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.15186862412432273,
+          "stream_to_output_scale_floor_1": 0.15186862412432273,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.09360816331612418,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.1034751488422231,
+          "stream_to_output_scale_floor_1": 0.1034751488422231,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.0928180328126206,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.18852819514294367,
+          "stream_to_output_scale_floor_1": 0.18852819514294367,
+          "min_stream_value": 0.003139048429280379,
+          "min_recovered_value": -0.18011500748354142,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 3.469446951953614e-18,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-18,
+          "max_stream_magnitude": 0.06634090860529306,
+          "stream_to_output_scale_floor_1": 0.06634090860529306,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.06634090860529306,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 6.938893903907228e-18,
+          "max_relative_error_scale_floor_1": 6.938893903907228e-18,
+          "max_stream_magnitude": 0.03506064664258414,
+          "stream_to_output_scale_floor_1": 0.03506064664258414,
+          "min_stream_value": 0.021088231208167243,
+          "min_recovered_value": -0.013665992553751161,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 1.1102230246251565e-16,
+          "max_stream_magnitude": 1.0105441156040835,
+          "stream_to_output_scale_floor_1": 1.0105441156040835,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.0122792321330962e-16,
+          "max_relative_error_scale_floor_1": 2.0122792321330962e-16,
+          "max_stream_magnitude": 0.5832223938073947,
+          "stream_to_output_scale_floor_1": 0.5832223938073947,
+          "min_stream_value": 0.2231536490196216,
+          "min_recovered_value": -0.056717020636036314,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 3.469446951953614e-17,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-17,
+          "max_stream_magnitude": 0.3108487608688883,
+          "stream_to_output_scale_floor_1": 0.3108487608688883,
+          "min_stream_value": 0.055212887752515045,
+          "min_recovered_value": -0.2434461127195407,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 4.163336342344337e-17,
+          "max_relative_error_scale_floor_1": 4.163336342344337e-17,
+          "max_stream_magnitude": 0.2951511311248821,
+          "stream_to_output_scale_floor_1": 0.2951511311248821,
+          "min_stream_value": 0.12283783488953633,
+          "min_recovered_value": -0.13615930293726447,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 1.9949319973733282e-17,
+          "max_relative_error_scale_floor_1": 1.9949319973733282e-17,
+          "max_stream_magnitude": 0.21218301409169724,
+          "stream_to_output_scale_floor_1": 0.21218301409169724,
+          "min_stream_value": 0.12273780662480517,
+          "min_recovered_value": 0.0022378468680678137,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 1.2434497875801753e-14,
+          "max_relative_error_scale_floor_1": 1.3755638683197587e-15,
+          "max_stream_magnitude": 114.27050166313,
+          "stream_to_output_scale_floor_1": 12.641151647021328,
+          "min_stream_value": 62.48782674643649,
+          "min_recovered_value": 7.153377019539917,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 1.7522649997658846e-12,
+          "max_relative_error_scale_floor_1": 1.7522649997658846e-12,
+          "max_stream_magnitude": 12202.565414042663,
+          "stream_to_output_scale_floor_1": 12202.565414042663,
+          "min_stream_value": 2266.0067468004804,
+          "min_recovered_value": 0.038647052903797885,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 3.04117408339577e-13,
+          "max_relative_error_scale_floor_1": 3.04117408339577e-13,
+          "max_stream_magnitude": 8687.203191654713,
+          "stream_to_output_scale_floor_1": 8687.203191654713,
+          "min_stream_value": 549.9603919052062,
+          "min_recovered_value": -0.1390980727992428,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 3.074540622094446e-12,
+          "max_relative_error_scale_floor_1": 3.074540622094446e-12,
+          "max_stream_magnitude": 13519.265096385967,
+          "stream_to_output_scale_floor_1": 13519.265096385967,
+          "min_stream_value": 2814.234726910749,
+          "min_recovered_value": 0.1576343827778146,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 2.172595436888969e-12,
+          "max_relative_error_scale_floor_1": 2.172595436888969e-12,
+          "max_stream_magnitude": 14894.319924654901,
+          "stream_to_output_scale_floor_1": 14894.319924654901,
+          "min_stream_value": 4796.649710196776,
+          "min_recovered_value": -0.40660318665959494,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 1.223228351318606e-07,
+          "max_relative_error_scale_floor_1": 1.223228351318606e-07,
+          "max_stream_magnitude": 769995031.8648294,
+          "stream_to_output_scale_floor_1": 769995031.8648294,
+          "min_stream_value": 106238087.03524275,
+          "min_recovered_value": 0.013983011245727539,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 7.566963498906176e-06,
+          "max_relative_error_scale_floor_1": 1.1718549253446287e-06,
+          "max_stream_magnitude": 384997515937.2385,
+          "stream_to_output_scale_floor_1": 59622493931.907646,
+          "min_stream_value": 53119043524.612885,
+          "min_recovered_value": 3.2842254638671875,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 33554430.982507337,
+          "max_relative_error_scale_floor_1": 30024117.818654034,
+          "max_stream_magnitude": 1.6304540764405497e+23,
+          "stream_to_output_scale_floor_1": 1.4589115015681852e+23,
+          "min_stream_value": 1.6929799769423253e+21,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 2097151.9975357065,
+          "max_relative_error_scale_floor_1": 2097151.9975357065,
+          "max_stream_magnitude": 1.6452925937539971e+22,
+          "stream_to_output_scale_floor_1": 1.6452925937539971e+22,
+          "min_stream_value": 1.4330175992942322e+22,
+          "min_recovered_value": -2097152.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.26243522381423506,
+        -0.002464293544216123
+      ],
+      "recovered_logits": [
+        -2097152.0,
+        -2097152.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm2.variance"
+    },
+    {
+      "epsilon": 0.01,
+      "weight_scale": 0.1,
+      "input_scale": 1.0,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 1.5186862412432272,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.9360816331612417,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.2969838126664203,
+          "stream_to_output_scale_floor_1": 0.2969838126664203,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.02734503175757219,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.2938549736446866,
+          "stream_to_output_scale_floor_1": 0.2938549736446866,
+          "min_stream_value": 0.027275052752307412,
+          "min_recovered_value": -0.20972309705066408,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.19271767789396563,
+          "stream_to_output_scale_floor_1": 0.19271767789396563,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.15073903476604603,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.14213910757515896,
+          "stream_to_output_scale_floor_1": 0.14213910757515896,
+          "min_stream_value": 0.10293910356226747,
+          "min_recovered_value": -0.034722269704655445,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 1.1102230246251565e-16,
+          "max_stream_magnitude": 1.0549307193356467,
+          "stream_to_output_scale_floor_1": 1.0549307193356467,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.914335439641036e-16,
+          "max_relative_error_scale_floor_1": 2.914335439641036e-16,
+          "max_stream_magnitude": 0.7713159474132314,
+          "stream_to_output_scale_floor_1": 0.7713159474132314,
+          "min_stream_value": 0.4743957747982243,
+          "min_recovered_value": -0.1443832794356148,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 1.6885977017886138e-16,
+          "max_stream_magnitude": 1.6497295119122863,
+          "stream_to_output_scale_floor_1": 1.254581016876533,
+          "min_stream_value": 0.10029558015709866,
+          "min_recovered_value": -0.9004185212578235,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-16,
+          "max_stream_magnitude": 1.3385636878401703,
+          "stream_to_output_scale_floor_1": 1.3385636878401703,
+          "min_stream_value": 0.23800547955691165,
+          "min_recovered_value": -0.8069390186124902,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-16,
+          "max_stream_magnitude": 2.586879305922317,
+          "stream_to_output_scale_floor_1": 2.586879305922317,
+          "min_stream_value": 1.5401196565760173,
+          "min_recovered_value": 0.027219215473309077,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 5.639932965095795e-14,
+          "max_relative_error_scale_floor_1": 1.0880717868039785e-14,
+          "max_stream_magnitude": 1294.806030663201,
+          "stream_to_output_scale_floor_1": 249.79763413275722,
+          "min_stream_value": 855.5211001451985,
+          "min_recovered_value": 1.3663777020424277,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 2.943167931590551e-10,
+          "max_relative_error_scale_floor_1": 2.788159236807063e-10,
+          "max_stream_magnitude": 1676415.8168876634,
+          "stream_to_output_scale_floor_1": 1588123.5298927724,
+          "min_stream_value": 368779.39911338466,
+          "min_recovered_value": -1.055595352081582,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 8.76901919133477e-11,
+          "max_relative_error_scale_floor_1": 8.76901919133477e-11,
+          "max_stream_magnitude": 1193137.9194358988,
+          "stream_to_output_scale_floor_1": 1193137.9194358988,
+          "min_stream_value": 89358.04426954895,
+          "min_recovered_value": -0.08573090741992928,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 1.9209411838971846e-10,
+          "max_relative_error_scale_floor_1": 1.9209411838971846e-10,
+          "max_stream_magnitude": 1857231.321242209,
+          "stream_to_output_scale_floor_1": 1857231.321242209,
+          "min_stream_value": 457899.6177954533,
+          "min_recovered_value": -0.9866364784538746,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 3.0373648041148726e-10,
+          "max_relative_error_scale_floor_1": 3.0373648041148726e-10,
+          "max_stream_magnitude": 2045885.648220052,
+          "stream_to_output_scale_floor_1": 2045885.648220052,
+          "min_stream_value": 780228.7263862379,
+          "min_recovered_value": -0.3510239697061479,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 0.0012820442046650726,
+          "max_relative_error_scale_floor_1": 0.0012820442046650726,
+          "max_stream_magnitude": 14526490519543.24,
+          "stream_to_output_scale_floor_1": 14526490519543.24,
+          "min_stream_value": 2810534754990.27,
+          "min_recovered_value": 0.11669921875,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 0.4823653000139627,
+          "max_relative_error_scale_floor_1": 0.17180339759015434,
+          "max_stream_magnitude": 7263245259771623.0,
+          "stream_to_output_scale_floor_1": 2586940256944741.5,
+          "min_stream_value": 1405267377495193.2,
+          "min_recovered_value": 2.75,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 1.1539690616062148,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 5.803020490411679e+31,
+          "stream_to_output_scale_floor_1": 5.028748762409997e+31,
+          "min_stream_value": 1.184865842667049e+30,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 0.39335243688950106,
+          "max_relative_error_scale_floor_1": 0.39335243688950106,
+          "max_stream_magnitude": 5.920663135079672e+30,
+          "stream_to_output_scale_floor_1": 5.920663135079672e+30,
+          "min_stream_value": 5.156781538840034e+30,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.0034038204914930426,
+        0.39335243688950106
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm2.variance"
+    },
+    {
+      "epsilon": 0.01,
+      "weight_scale": 0.5,
+      "input_scale": 0.1,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.15186862412432273,
+          "stream_to_output_scale_floor_1": 0.15186862412432273,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.09360816331612418,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 0.5173757442111155,
+          "stream_to_output_scale_floor_1": 0.5173757442111155,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.46409016406310305,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 0.9426409757147183,
+          "stream_to_output_scale_floor_1": 0.9426409757147183,
+          "min_stream_value": 0.015695242146401892,
+          "min_recovered_value": -0.9005750374177071,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.33170454302646524,
+          "stream_to_output_scale_floor_1": 0.33170454302646524,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.33170454302646524,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 1.6653345369377348e-16,
+          "max_relative_error_scale_floor_1": 1.6653345369377348e-16,
+          "max_stream_magnitude": 0.8765161660646034,
+          "stream_to_output_scale_floor_1": 0.8765161660646034,
+          "min_stream_value": 0.5272057802041811,
+          "min_recovered_value": -0.341649813843779,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-16,
+          "max_stream_magnitude": 1.4374866847052576,
+          "stream_to_output_scale_floor_1": 1.4374866847052576,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.914335439641036e-16,
+          "max_relative_error_scale_floor_1": 2.914335439641036e-16,
+          "max_stream_magnitude": 6.5906319958551585,
+          "stream_to_output_scale_floor_1": 6.5906319958551585,
+          "min_stream_value": 0.8936692735826246,
+          "min_recovered_value": -0.2832701180785211,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 6.661338147750939e-16,
+          "max_relative_error_scale_floor_1": 5.57569196483554e-16,
+          "max_stream_magnitude": 7.349714232525765,
+          "stream_to_output_scale_floor_1": 6.151878448621807,
+          "min_stream_value": 0.4740596169958738,
+          "min_recovered_value": -1.1947105739991182,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 8.881784197001252e-16,
+          "max_relative_error_scale_floor_1": 8.881784197001252e-16,
+          "max_stream_magnitude": 7.81458314335215,
+          "stream_to_output_scale_floor_1": 7.81458314335215,
+          "min_stream_value": 1.1529826262330527,
+          "min_recovered_value": -0.8443189860064662,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 4.385380947269368e-15,
+          "max_relative_error_scale_floor_1": 4.385380947269368e-15,
+          "max_stream_magnitude": 196.56707575499954,
+          "stream_to_output_scale_floor_1": 196.56707575499954,
+          "min_stream_value": 10.683965280350465,
+          "min_recovered_value": 0.30568187748846753,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 6.007860875456572e-12,
+          "max_relative_error_scale_floor_1": 3.3755511442879232e-12,
+          "max_stream_magnitude": 98285.31769377826,
+          "stream_to_output_scale_floor_1": 55222.170334082904,
+          "min_stream_value": 5509.994203518292,
+          "min_recovered_value": 1.6268351453982177,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 1.4049560190798616e-06,
+          "max_relative_error_scale_floor_1": 1.1507514078354903e-06,
+          "max_stream_magnitude": 9661001258.371092,
+          "stream_to_output_scale_floor_1": 7912995601.422477,
+          "min_stream_value": 15194192.443455001,
+          "min_recovered_value": -0.42556923627853394,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 2.2319860013761406e-06,
+          "max_relative_error_scale_floor_1": 2.2319860013761406e-06,
+          "max_stream_magnitude": 34375425908.92966,
+          "stream_to_output_scale_floor_1": 34375425908.92966,
+          "min_stream_value": 18408555.491062704,
+          "min_recovered_value": -0.16960904002189636,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 7.882383990187591e-06,
+          "max_relative_error_scale_floor_1": 7.591144421149417e-06,
+          "max_stream_magnitude": 35708954101.68407,
+          "stream_to_output_scale_floor_1": 34389574023.73751,
+          "min_stream_value": 79276839.42375231,
+          "min_recovered_value": 0.6609578132629395,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 5.228256780620555e-06,
+          "max_relative_error_scale_floor_1": 5.228256780620555e-06,
+          "max_stream_magnitude": 43547171885.04827,
+          "stream_to_output_scale_floor_1": 43547171885.04827,
+          "min_stream_value": 125954202.10000828,
+          "min_recovered_value": -0.22574782371520996,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 2048.0264839190386,
+          "max_relative_error_scale_floor_1": 2048.0264839190386,
+          "max_stream_magnitude": 7.130169109532772e+21,
+          "stream_to_output_scale_floor_1": 7.130169109532772e+21,
+          "min_stream_value": 7.053547372218607e+16,
+          "min_recovered_value": -2048.0,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 1048570.7646073573,
+          "max_relative_error_scale_floor_1": 185115.8300673933,
+          "max_stream_magnitude": 3.565084554766386e+24,
+          "stream_to_output_scale_floor_1": 6.293839280014123e+23,
+          "min_stream_value": 3.5267736861093036e+19,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 1.5670560667669498,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 1.398081067089754e+49,
+          "stream_to_output_scale_floor_1": 8.92170418620813e+48,
+          "min_stream_value": 7.462879579877018e+38,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 0.8745806410183352,
+          "max_relative_error_scale_floor_1": 0.8745806410183352,
+          "max_stream_magnitude": 6.619082506796755e+48,
+          "stream_to_output_scale_floor_1": 6.619082506796755e+48,
+          "min_stream_value": 5.765091121788728e+48,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.8745806410183352,
+        0.23618710118325115
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm1"
+    },
+    {
+      "epsilon": 0.01,
+      "weight_scale": 0.5,
+      "input_scale": 1.0,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 1.5186862412432272,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.9360816331612417,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 7.476656822856451e-17,
+          "max_stream_magnitude": 1.4849190633321012,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.13672515878786085,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.1175026313042733e-16,
+          "max_stream_magnitude": 1.469274868223433,
+          "stream_to_output_scale_floor_1": 1.401156943499162,
+          "min_stream_value": 0.13637526376153705,
+          "min_recovered_value": -1.0486154852533205,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 0.9635883894698282,
+          "stream_to_output_scale_floor_1": 0.9635883894698282,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.7536951738302302,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 9.992007221626409e-16,
+          "max_relative_error_scale_floor_1": 9.992007221626409e-16,
+          "max_stream_magnitude": 3.553477689378974,
+          "stream_to_output_scale_floor_1": 3.553477689378974,
+          "min_stream_value": 2.573477589056687,
+          "min_recovered_value": -0.8680567426163877,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 5.551115123125783e-16,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-16,
+          "max_stream_magnitude": 5.0832482325957455,
+          "stream_to_output_scale_floor_1": 5.0832482325957455,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.463307335887066e-14,
+          "max_relative_error_scale_floor_1": 2.463307335887066e-14,
+          "max_stream_magnitude": 86.57863993985487,
+          "stream_to_output_scale_floor_1": 86.57863993985487,
+          "min_stream_value": 4.655899811305816,
+          "min_recovered_value": -0.7256451673930471,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 3.83026943495679e-14,
+          "max_relative_error_scale_floor_1": 3.542668386054872e-14,
+          "max_stream_magnitude": 99.67194347749069,
+          "stream_to_output_scale_floor_1": 92.18793850682147,
+          "min_stream_value": 2.3850295852519263,
+          "min_recovered_value": -1.0811820406431494,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 2.0816681711721685e-14,
+          "max_relative_error_scale_floor_1": 2.0816681711721685e-14,
+          "max_stream_magnitude": 102.44030497093466,
+          "stream_to_output_scale_floor_1": 102.44030497093466,
+          "min_stream_value": 6.683189681807313,
+          "min_recovered_value": -0.4271741693883939,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 6.004086117172847e-13,
+          "max_relative_error_scale_floor_1": 6.004086117172847e-13,
+          "max_stream_magnitude": 34493.77191127415,
+          "stream_to_output_scale_floor_1": 34493.77191127415,
+          "min_stream_value": 242.26418378679918,
+          "min_recovered_value": 0.001256144565957129,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 6.588347645219983e-10,
+          "max_relative_error_scale_floor_1": 6.989906049707567e-11,
+          "max_stream_magnitude": 17246888.674773432,
+          "stream_to_output_scale_floor_1": 1829808.2915205131,
+          "min_stream_value": 121132.71996568257,
+          "min_recovered_value": 2.719136357307434,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 0.04103933511625868,
+          "max_relative_error_scale_floor_1": 0.02794533145743997,
+          "max_stream_magnitude": 297457845178645.44,
+          "stream_to_output_scale_floor_1": 202550992957970.62,
+          "min_stream_value": 7338164137.089188,
+          "min_recovered_value": -0.9375,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 0.09296182211556292,
+          "max_relative_error_scale_floor_1": 0.09296182211556292,
+          "max_stream_magnitude": 1058391044661308.6,
+          "stream_to_output_scale_floor_1": 1058391044661308.6,
+          "min_stream_value": 8891190071.02722,
+          "min_recovered_value": -0.1875,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 0.14733728472494856,
+          "max_relative_error_scale_floor_1": 0.10799899258980326,
+          "max_stream_magnitude": 1099452370004444.2,
+          "stream_to_output_scale_floor_1": 805904279983282.9,
+          "min_stream_value": 38288655863.11378,
+          "min_recovered_value": -1.125,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 0.13235874964379313,
+          "max_relative_error_scale_floor_1": 0.13235874964379313,
+          "max_stream_magnitude": 1340782407845307.8,
+          "stream_to_output_scale_floor_1": 1340782407845307.8,
+          "min_stream_value": 60833059277.056595,
+          "min_recovered_value": -0.421875,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 2251799813685248.0,
+          "max_relative_error_scale_floor_1": 2251799813685248.0,
+          "max_stream_magnitude": 6.759208241892377e+30,
+          "stream_to_output_scale_floor_1": 6.759208241892377e+30,
+          "min_stream_value": 1.6453690742940405e+22,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 4.379478440728097,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 3.379604120946188e+33,
+          "stream_to_output_scale_floor_1": 7.716910053755903e+32,
+          "min_stream_value": 8.226845371470203e+24,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 1.6697762396314022,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 1.2563896415748102e+67,
+          "stream_to_output_scale_floor_1": 7.524299434588638e+66,
+          "min_stream_value": 4.0608590859649066e+49,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 1.4471656788617369,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 5.9482435166233184e+66,
+          "stream_to_output_scale_floor_1": 4.110271272672724e+66,
+          "min_stream_value": 5.180803510563553e+66,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.06721499776675857,
+        1.4471656788617369
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm1"
+    },
+    {
+      "epsilon": 1e-05,
+      "weight_scale": 0.01,
+      "input_scale": 0.1,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.15186862412432273,
+          "stream_to_output_scale_floor_1": 0.15186862412432273,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.09360816331612418,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.734723475976807e-18,
+          "max_relative_error_scale_floor_1": 1.734723475976807e-18,
+          "max_stream_magnitude": 0.01034751488422231,
+          "stream_to_output_scale_floor_1": 0.01034751488422231,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.00928180328126206,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 3.469446951953614e-18,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-18,
+          "max_stream_magnitude": 0.018852819514294367,
+          "stream_to_output_scale_floor_1": 0.018852819514294367,
+          "min_stream_value": 0.00031390484292803786,
+          "min_recovered_value": -0.018011500748354142,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 8.673617379884035e-19,
+          "max_relative_error_scale_floor_1": 8.673617379884035e-19,
+          "max_stream_magnitude": 0.0066340908605293045,
+          "stream_to_output_scale_floor_1": 0.0066340908605293045,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.0066340908605293045,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 6.776263578034403e-20,
+          "max_relative_error_scale_floor_1": 6.776263578034403e-20,
+          "max_stream_magnitude": 0.0003506064664258414,
+          "stream_to_output_scale_floor_1": 0.0003506064664258414,
+          "min_stream_value": 0.0002108823120816724,
+          "min_recovered_value": -0.00013665992553751167,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 1.0001054411560408,
+          "stream_to_output_scale_floor_1": 1.0001054411560408,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 1.1275702593849246e-16,
+          "max_relative_error_scale_floor_1": 1.1275702593849246e-16,
+          "max_stream_magnitude": 0.506695257949444,
+          "stream_to_output_scale_floor_1": 0.506695257949444,
+          "min_stream_value": 0.16738765280496765,
+          "min_recovered_value": -0.005672636808806059,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.1549584166133043,
+          "stream_to_output_scale_floor_1": 0.1549584166133043,
+          "min_stream_value": 0.004062948355761605,
+          "min_recovered_value": -0.0895766765234689,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.12189453441520039,
+          "stream_to_output_scale_floor_1": 0.12189453441520039,
+          "min_stream_value": 0.014168689571678814,
+          "min_recovered_value": -0.08091711348175017,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 2.6020852139652106e-18,
+          "max_relative_error_scale_floor_1": 2.6020852139652106e-18,
+          "max_stream_magnitude": 0.019957281224312697,
+          "stream_to_output_scale_floor_1": 0.019957281224312697,
+          "min_stream_value": 0.013161476205438019,
+          "min_recovered_value": 0.000252284674928065,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 1.7395862528246653e-11,
+          "max_relative_error_scale_floor_1": 2.8172956513310603e-13,
+          "max_stream_magnitude": 315566.1482487961,
+          "stream_to_output_scale_floor_1": 5110.658558752324,
+          "min_stream_value": 212090.18185411097,
+          "min_recovered_value": 13.82538208673941,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 1.1365350186975931e-05,
+          "max_relative_error_scale_floor_1": 1.0202186660808206e-05,
+          "max_stream_magnitude": 99577665670.40674,
+          "stream_to_output_scale_floor_1": 89386593083.7063,
+          "min_stream_value": 22497684491.78329,
+          "min_recovered_value": -1.114013671875,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 4.009832796202789e-07,
+          "max_relative_error_scale_floor_1": 4.009832796202789e-07,
+          "max_stream_magnitude": 7086181464.670044,
+          "stream_to_output_scale_floor_1": 7086181464.670044,
+          "min_stream_value": 545193999.6201668,
+          "min_recovered_value": -0.010676145553588867,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 1.180200380845875e-05,
+          "max_relative_error_scale_floor_1": 1.0673965970858746e-05,
+          "max_stream_magnitude": 99685056570.10187,
+          "stream_to_output_scale_floor_1": 90157139321.52605,
+          "min_stream_value": 22552059878.933193,
+          "min_recovered_value": -1.105682373046875,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 2.1907707655310915e-05,
+          "max_relative_error_scale_floor_1": 2.1907707655310915e-05,
+          "max_stream_magnitude": 108012194008.2387,
+          "stream_to_output_scale_floor_1": 108012194008.2387,
+          "min_stream_value": 41309331395.83077,
+          "min_recovered_value": -0.3994140625,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 0.19990914113461664,
+          "max_relative_error_scale_floor_1": 0.19990914113461664,
+          "max_stream_magnitude": 3.995329251510297e+22,
+          "stream_to_output_scale_floor_1": 3.995329251510297e+22,
+          "min_stream_value": 8.157634835308824e+21,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 2.8635141877382884,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 6.317170218534131e+29,
+          "stream_to_output_scale_floor_1": 2.2060900712783514e+29,
+          "min_stream_value": 1.2898353199754225e+29,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 1.2650877662854345,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 4.389730352692802e+59,
+          "stream_to_output_scale_floor_1": 3.4699018279039878e+59,
+          "min_stream_value": 9.982050915936603e+57,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 0.2177324936868099,
+          "max_relative_error_scale_floor_1": 0.2177324936868099,
+          "max_stream_magnitude": 4.809405256931362e+57,
+          "stream_to_output_scale_floor_1": 4.809405256931362e+57,
+          "min_stream_value": 4.1888977089117865e+57,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.0885878063852311,
+        0.2177324936868099
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm1"
+    },
+    {
+      "epsilon": 1e-05,
+      "weight_scale": 0.01,
+      "input_scale": 1.0,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 1.5186862412432272,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.9360816331612417,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.734723475976807e-18,
+          "max_relative_error_scale_floor_1": 1.734723475976807e-18,
+          "max_stream_magnitude": 0.02969838126664203,
+          "stream_to_output_scale_floor_1": 0.02969838126664203,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.0027345031757572188,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 3.469446951953614e-18,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-18,
+          "max_stream_magnitude": 0.029385497364468657,
+          "stream_to_output_scale_floor_1": 0.029385497364468657,
+          "min_stream_value": 0.0027275052752307413,
+          "min_recovered_value": -0.020972309705066406,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 2.6020852139652106e-18,
+          "max_relative_error_scale_floor_1": 2.6020852139652106e-18,
+          "max_stream_magnitude": 0.01927176778939656,
+          "stream_to_output_scale_floor_1": 0.01927176778939656,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.015073903476604603,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 3.1848438816761693e-19,
+          "max_relative_error_scale_floor_1": 3.1848438816761693e-19,
+          "max_stream_magnitude": 0.0014213910757515898,
+          "stream_to_output_scale_floor_1": 0.0014213910757515898,
+          "min_stream_value": 0.0010293910356226747,
+          "min_recovered_value": -0.0003472226970465549,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 1.0005493071933564,
+          "stream_to_output_scale_floor_1": 1.0005493071933564,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.0383000842727483e-16,
+          "max_relative_error_scale_floor_1": 2.0383000842727483e-16,
+          "max_stream_magnitude": 0.5169691117287425,
+          "stream_to_output_scale_floor_1": 0.5169691117287425,
+          "min_stream_value": 0.17135017865097202,
+          "min_recovered_value": -0.014435230360267726,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 3.706037079848497e-17,
+          "max_stream_magnitude": 1.5219963777889276,
+          "stream_to_output_scale_floor_1": 1.0161156607944226,
+          "min_stream_value": 0.0042756620132335605,
+          "min_recovered_value": -0.9320355573662006,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.0169210359411938e-16,
+          "max_stream_magnitude": 1.1848569706413434,
+          "stream_to_output_scale_floor_1": 1.0762535525125396,
+          "min_stream_value": 0.014322070879203917,
+          "min_recovered_value": -0.895975349569769,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 3.3306690738754696e-16,
+          "max_relative_error_scale_floor_1": 3.3306690738754696e-16,
+          "max_stream_magnitude": 1.731473461759764,
+          "stream_to_output_scale_floor_1": 1.731473461759764,
+          "min_stream_value": 0.7009185082044024,
+          "min_recovered_value": 0.06778148272669282,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 9.659255617577855e-10,
+          "max_relative_error_scale_floor_1": 2.514960831112132e-10,
+          "max_stream_magnitude": 27377000.44420203,
+          "stream_to_output_scale_floor_1": 7128094.184111966,
+          "min_stream_value": 14643092.568126913,
+          "min_recovered_value": 1.207715481519699,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 0.05594349807158716,
+          "max_relative_error_scale_floor_1": 0.051925286424645556,
+          "max_stream_magnitude": 749500145571520.1,
+          "stream_to_output_scale_floor_1": 695666361161648.2,
+          "min_stream_value": 107210115488425.78,
+          "min_recovered_value": -1.125,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 0.001969115228931305,
+          "max_relative_error_scale_floor_1": 0.001969115228931305,
+          "max_stream_magnitude": 53336195127836.69,
+          "stream_to_output_scale_floor_1": 53336195127836.69,
+          "min_stream_value": 2598059067748.0327,
+          "min_recovered_value": -0.009765625,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 0.06620892887255186,
+          "max_relative_error_scale_floor_1": 0.06193229101768286,
+          "max_stream_magnitude": 750308454258213.5,
+          "stream_to_output_scale_floor_1": 701843729138046.4,
+          "min_stream_value": 107469235120886.28,
+          "min_recovered_value": -1.125,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 0.0569908681235774,
+          "max_relative_error_scale_floor_1": 0.0569908681235774,
+          "max_stream_magnitude": 812985048134259.4,
+          "stream_to_output_scale_floor_1": 812985048134259.4,
+          "min_stream_value": 196854850447357.3,
+          "min_recovered_value": -0.40625,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 35184372088832.164,
+          "max_relative_error_scale_floor_1": 35184372088832.164,
+          "max_stream_magnitude": 2.2634562658603633e+30,
+          "stream_to_output_scale_floor_1": 2.2634562658603633e+30,
+          "min_stream_value": 1.852508353719786e+29,
+          "min_recovered_value": -35184372088832.0,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 5.902958103587057e+20,
+          "max_relative_error_scale_floor_1": 1.6621992884438018e+20,
+          "max_stream_magnitude": 3.5788385921491828e+37,
+          "stream_to_output_scale_floor_1": 1.0077562565979776e+37,
+          "min_stream_value": 2.9290728911216907e+36,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 1.5392859908802765,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 1.408889423552198e+75,
+          "stream_to_output_scale_floor_1": 9.152876280946932e+74,
+          "min_stream_value": 5.147680800902387e+72,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 0.22033918334318817,
+          "max_relative_error_scale_floor_1": 0.22033918334318817,
+          "max_stream_magnitude": 1.3582771781992822e+73,
+          "stream_to_output_scale_floor_1": 1.3582771781992822e+73,
+          "min_stream_value": 1.1830327984164175e+73,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.08676593265863146,
+        0.22033918334318817
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm1"
+    },
+    {
+      "epsilon": 1e-05,
+      "weight_scale": 0.1,
+      "input_scale": 0.1,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.15186862412432273,
+          "stream_to_output_scale_floor_1": 0.15186862412432273,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.09360816331612418,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.1034751488422231,
+          "stream_to_output_scale_floor_1": 0.1034751488422231,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.0928180328126206,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.18852819514294367,
+          "stream_to_output_scale_floor_1": 0.18852819514294367,
+          "min_stream_value": 0.003139048429280379,
+          "min_recovered_value": -0.18011500748354142,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 3.469446951953614e-18,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-18,
+          "max_stream_magnitude": 0.06634090860529306,
+          "stream_to_output_scale_floor_1": 0.06634090860529306,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.06634090860529306,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 6.938893903907228e-18,
+          "max_relative_error_scale_floor_1": 6.938893903907228e-18,
+          "max_stream_magnitude": 0.03506064664258414,
+          "stream_to_output_scale_floor_1": 0.03506064664258414,
+          "min_stream_value": 0.021088231208167243,
+          "min_recovered_value": -0.013665992553751161,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 1.1102230246251565e-16,
+          "max_stream_magnitude": 1.0105441156040835,
+          "stream_to_output_scale_floor_1": 1.0105441156040835,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.0122792321330962e-16,
+          "max_relative_error_scale_floor_1": 2.0122792321330962e-16,
+          "max_stream_magnitude": 0.5832223938073947,
+          "stream_to_output_scale_floor_1": 0.5832223938073947,
+          "min_stream_value": 0.2231536490196216,
+          "min_recovered_value": -0.056717020636036314,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 3.469446951953614e-17,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-17,
+          "max_stream_magnitude": 0.3108487608688883,
+          "stream_to_output_scale_floor_1": 0.3108487608688883,
+          "min_stream_value": 0.055212887752515045,
+          "min_recovered_value": -0.2434461127195407,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 4.163336342344337e-17,
+          "max_relative_error_scale_floor_1": 4.163336342344337e-17,
+          "max_stream_magnitude": 0.2951511311248821,
+          "stream_to_output_scale_floor_1": 0.2951511311248821,
+          "min_stream_value": 0.12283783488953633,
+          "min_recovered_value": -0.13615930293726447,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 1.9949319973733282e-17,
+          "max_relative_error_scale_floor_1": 1.9949319973733282e-17,
+          "max_stream_magnitude": 0.21218301409169724,
+          "stream_to_output_scale_floor_1": 0.21218301409169724,
+          "min_stream_value": 0.12273780662480517,
+          "min_recovered_value": 0.0022378468680678137,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 2.205773341756867e-10,
+          "max_relative_error_scale_floor_1": 1.0457894220884237e-11,
+          "max_stream_magnitude": 3354922.22771504,
+          "stream_to_output_scale_floor_1": 159061.77263341186,
+          "min_stream_value": 1976038.5855272822,
+          "min_recovered_value": 10.23160773748532,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 0.0014111570876271795,
+          "max_relative_error_scale_floor_1": 0.001289842117882184,
+          "max_stream_magnitude": 11255456902796.174,
+          "stream_to_output_scale_floor_1": 10287842860673.625,
+          "min_stream_value": 1952385402308.7344,
+          "min_recovered_value": 0.11279296875,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 0.00048685437859927183,
+          "max_relative_error_scale_floor_1": 0.00048685437859927183,
+          "max_stream_magnitude": 8009648193741.602,
+          "stream_to_output_scale_floor_1": 8009648193741.602,
+          "min_stream_value": 473128172107.56586,
+          "min_recovered_value": -0.15673828125,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 0.0014458035460873653,
+          "max_relative_error_scale_floor_1": 0.001311898318910484,
+          "max_stream_magnitude": 12469317059075.676,
+          "stream_to_output_scale_floor_1": 11314452874342.797,
+          "min_stream_value": 2424263818840.2427,
+          "min_recovered_value": 0.2353515625,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 0.0017638914340209477,
+          "max_relative_error_scale_floor_1": 0.0017638914340209477,
+          "max_stream_magnitude": 13735018915203.145,
+          "stream_to_output_scale_floor_1": 13735018915203.145,
+          "min_stream_value": 4131112453772.6387,
+          "min_recovered_value": -0.548828125,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 0.15208024466886202,
+          "max_relative_error_scale_floor_1": 0.15208024466886202,
+          "max_stream_magnitude": 6.546843281932671e+26,
+          "stream_to_output_scale_floor_1": 6.546843281932671e+26,
+          "min_stream_value": 7.879465947569922e+25,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 3.414724379006743,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 1.0351468127539559e+34,
+          "stream_to_output_scale_floor_1": 3.031421274050393e+33,
+          "min_stream_value": 1.2458529570028916e+33,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 1.4128145275307307,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 1.178681816350141e+68,
+          "stream_to_output_scale_floor_1": 8.342792301337678e+67,
+          "min_stream_value": 9.312897542837093e+65,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 0.29954871773364455,
+          "max_relative_error_scale_floor_1": 0.29954871773364455,
+          "max_stream_magnitude": 1.1796251398343855e+67,
+          "stream_to_output_scale_floor_1": 1.1796251398343855e+67,
+          "min_stream_value": 1.027430374786053e+67,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.29954871773364455,
+        -0.0647481922177241
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm1"
+    },
+    {
+      "epsilon": 1e-05,
+      "weight_scale": 0.1,
+      "input_scale": 1.0,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 1.5186862412432272,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.9360816331612417,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.2969838126664203,
+          "stream_to_output_scale_floor_1": 0.2969838126664203,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.02734503175757219,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.2938549736446866,
+          "stream_to_output_scale_floor_1": 0.2938549736446866,
+          "min_stream_value": 0.027275052752307412,
+          "min_recovered_value": -0.20972309705066408,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.19271767789396563,
+          "stream_to_output_scale_floor_1": 0.19271767789396563,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.15073903476604603,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 2.7755575615628914e-17,
+          "max_relative_error_scale_floor_1": 2.7755575615628914e-17,
+          "max_stream_magnitude": 0.14213910757515896,
+          "stream_to_output_scale_floor_1": 0.14213910757515896,
+          "min_stream_value": 0.10293910356226747,
+          "min_recovered_value": -0.034722269704655445,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 1.1102230246251565e-16,
+          "max_stream_magnitude": 1.0549307193356467,
+          "stream_to_output_scale_floor_1": 1.0549307193356467,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.914335439641036e-16,
+          "max_relative_error_scale_floor_1": 2.914335439641036e-16,
+          "max_stream_magnitude": 0.7713159474132314,
+          "stream_to_output_scale_floor_1": 0.7713159474132314,
+          "min_stream_value": 0.4743957747982243,
+          "min_recovered_value": -0.1443832794356148,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 1.6885977017886138e-16,
+          "max_stream_magnitude": 1.6497295119122863,
+          "stream_to_output_scale_floor_1": 1.254581016876533,
+          "min_stream_value": 0.10029558015709866,
+          "min_recovered_value": -0.9004185212578235,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-16,
+          "max_stream_magnitude": 1.3385636878401703,
+          "stream_to_output_scale_floor_1": 1.3385636878401703,
+          "min_stream_value": 0.23800547955691165,
+          "min_recovered_value": -0.8069390186124902,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-16,
+          "max_stream_magnitude": 2.586879305922317,
+          "stream_to_output_scale_floor_1": 2.586879305922317,
+          "min_stream_value": 1.5401196565760173,
+          "min_recovered_value": 0.027219215473309077,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 1.8391805856055043e-09,
+          "max_relative_error_scale_floor_1": 3.0348828970544164e-10,
+          "max_stream_magnitude": 40902154.572651185,
+          "stream_to_output_scale_floor_1": 6749377.974993543,
+          "min_stream_value": 27053952.627918355,
+          "min_recovered_value": 1.3793010637164116,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 0.18397628448931003,
+          "max_relative_error_scale_floor_1": 0.17258179326824286,
+          "max_stream_magnitude": 1672986244744084.5,
+          "stream_to_output_scale_floor_1": 1569370568780097.5,
+          "min_stream_value": 365958277201747.1,
+          "min_recovered_value": -1.25,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 0.09253648563243039,
+          "max_relative_error_scale_floor_1": 0.09253648563243039,
+          "max_stream_magnitude": 1190536403223392.0,
+          "stream_to_output_scale_floor_1": 1190536403223392.0,
+          "min_stream_value": 88683909718632.56,
+          "min_recovered_value": -0.09375,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 0.25278449350509546,
+          "max_relative_error_scale_floor_1": 0.25278449350509546,
+          "max_stream_magnitude": 1853411735267098.2,
+          "stream_to_output_scale_floor_1": 1853411735267098.2,
+          "min_stream_value": 454407929566705.7,
+          "min_recovered_value": -1.25,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 0.24911833303563957,
+          "max_relative_error_scale_floor_1": 0.24911833303563957,
+          "max_stream_magnitude": 2041542853740335.0,
+          "stream_to_output_scale_floor_1": 2041542853740335.0,
+          "min_stream_value": 774342388668262.2,
+          "min_recovered_value": -0.5,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 0.1537206528998717,
+          "max_relative_error_scale_floor_1": 0.1537206528998717,
+          "max_stream_magnitude": 1.446406686556374e+31,
+          "stream_to_output_scale_floor_1": 1.446406686556374e+31,
+          "min_stream_value": 2.7683998315648485e+30,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 2.7077062129900797,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 2.286969776207694e+38,
+          "stream_to_output_scale_floor_1": 8.446151821183832e+37,
+          "min_stream_value": 4.3772244708857115e+37,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 1.2185300640243266,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 5.7532538330162176e+76,
+          "stream_to_output_scale_floor_1": 4.721470567591478e+76,
+          "min_stream_value": 1.1496056441112418e+75,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 0.40128329147394876,
+          "max_relative_error_scale_floor_1": 0.40128329147394876,
+          "max_stream_magnitude": 5.8638906844027685e+75,
+          "stream_to_output_scale_floor_1": 5.8638906844027685e+75,
+          "min_stream_value": 5.107333847111998e+75,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        0.0017892844475155406,
+        0.40128329147394876
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm1"
+    },
+    {
+      "epsilon": 1e-05,
+      "weight_scale": 0.5,
+      "input_scale": 0.1,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 0.15186862412432273,
+          "stream_to_output_scale_floor_1": 0.15186862412432273,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.09360816331612418,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 0.5173757442111155,
+          "stream_to_output_scale_floor_1": 0.5173757442111155,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.46409016406310305,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 0.9426409757147183,
+          "stream_to_output_scale_floor_1": 0.9426409757147183,
+          "min_stream_value": 0.015695242146401892,
+          "min_recovered_value": -0.9005750374177071,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 1.3877787807814457e-17,
+          "max_relative_error_scale_floor_1": 1.3877787807814457e-17,
+          "max_stream_magnitude": 0.33170454302646524,
+          "stream_to_output_scale_floor_1": 0.33170454302646524,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.33170454302646524,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 1.6653345369377348e-16,
+          "max_relative_error_scale_floor_1": 1.6653345369377348e-16,
+          "max_stream_magnitude": 0.8765161660646034,
+          "stream_to_output_scale_floor_1": 0.8765161660646034,
+          "min_stream_value": 0.5272057802041811,
+          "min_recovered_value": -0.341649813843779,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-16,
+          "max_stream_magnitude": 1.4374866847052576,
+          "stream_to_output_scale_floor_1": 1.4374866847052576,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.914335439641036e-16,
+          "max_relative_error_scale_floor_1": 2.914335439641036e-16,
+          "max_stream_magnitude": 6.5906319958551585,
+          "stream_to_output_scale_floor_1": 6.5906319958551585,
+          "min_stream_value": 0.8936692735826246,
+          "min_recovered_value": -0.2832701180785211,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 6.661338147750939e-16,
+          "max_relative_error_scale_floor_1": 5.57569196483554e-16,
+          "max_stream_magnitude": 7.349714232525765,
+          "stream_to_output_scale_floor_1": 6.151878448621807,
+          "min_stream_value": 0.4740596169958738,
+          "min_recovered_value": -1.1947105739991182,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 8.881784197001252e-16,
+          "max_relative_error_scale_floor_1": 8.881784197001252e-16,
+          "max_stream_magnitude": 7.81458314335215,
+          "stream_to_output_scale_floor_1": 7.81458314335215,
+          "min_stream_value": 1.1529826262330527,
+          "min_recovered_value": -0.8443189860064662,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 4.385380947269368e-15,
+          "max_relative_error_scale_floor_1": 4.385380947269368e-15,
+          "max_stream_magnitude": 196.56707575499954,
+          "stream_to_output_scale_floor_1": 196.56707575499954,
+          "min_stream_value": 10.683965280350465,
+          "min_recovered_value": 0.30568187748846753,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 1.4917917035006667e-07,
+          "max_relative_error_scale_floor_1": 8.248028200615978e-08,
+          "max_stream_magnitude": 3107998363.731967,
+          "stream_to_output_scale_floor_1": 1718393934.7145004,
+          "min_stream_value": 174241315.77443153,
+          "min_recovered_value": 1.6487776041030884,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 2046.8950817075176,
+          "max_relative_error_scale_floor_1": 1653.8463986672948,
+          "max_stream_magnitude": 9.659653860415873e+18,
+          "stream_to_output_scale_floor_1": 7.804788771144346e+18,
+          "min_stream_value": 1.5180018511700988e+16,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 0.9298719707261186,
+          "max_relative_error_scale_floor_1": 0.9298719707261186,
+          "max_stream_magnitude": 3.437018551492057e+19,
+          "stream_to_output_scale_floor_1": 3.437018551492057e+19,
+          "min_stream_value": 1.839312670392811e+16,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 4094.9910878100764,
+          "max_relative_error_scale_floor_1": 3911.4895502504246,
+          "max_stream_magnitude": 3.570361845054843e+19,
+          "stream_to_output_scale_floor_1": 3.4103695827609952e+19,
+          "min_stream_value": 7.920673041698397e+16,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 8191.882804776594,
+          "max_relative_error_scale_floor_1": 8191.882804776594,
+          "max_stream_magnitude": 4.354056274422863e+19,
+          "stream_to_output_scale_floor_1": 4.354056274422863e+19,
+          "min_stream_value": 1.258439055920805e+17,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 0.027196111023622543,
+          "max_relative_error_scale_floor_1": 0.027196111023622543,
+          "max_stream_magnitude": 7.127992568448685e+39,
+          "stream_to_output_scale_floor_1": 7.127992568448685e+39,
+          "min_stream_value": 7.041232763838631e+34,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 6.753447307153576,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 1.1270345830525749e+47,
+          "stream_to_output_scale_floor_1": 1.6688285727183592e+46,
+          "min_stream_value": 1.1133166534566277e+42,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 1.7041552095797312,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 1.3972276465361407e+94,
+          "stream_to_output_scale_floor_1": 8.198945956810571e+93,
+          "min_stream_value": 7.436843825183189e+83,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 0.9353973506450882,
+          "max_relative_error_scale_floor_1": 0.9353973506450882,
+          "max_stream_magnitude": 6.615042052546549e+93,
+          "stream_to_output_scale_floor_1": 6.615042052546549e+93,
+          "min_stream_value": 5.761571965334345e+93,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.9353973506450882,
+        0.15775773483217095
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm1.inverse_sqrt"
+    },
+    {
+      "epsilon": 1e-05,
+      "weight_scale": 0.5,
+      "input_scale": 1.0,
+      "common_input_offset": 0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 0.0,
+          "max_relative_error_scale_floor_1": 0.0,
+          "max_stream_magnitude": 1.5186862412432272,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.9360816331612417,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 7.476656822856451e-17,
+          "max_stream_magnitude": 1.4849190633321012,
+          "stream_to_output_scale_floor_1": 1.0,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.13672515878786085,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.1175026313042733e-16,
+          "max_stream_magnitude": 1.469274868223433,
+          "stream_to_output_scale_floor_1": 1.401156943499162,
+          "min_stream_value": 0.13637526376153705,
+          "min_recovered_value": -1.0486154852533205,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 5.551115123125783e-17,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-17,
+          "max_stream_magnitude": 0.9635883894698282,
+          "stream_to_output_scale_floor_1": 0.9635883894698282,
+          "min_stream_value": 0.0,
+          "min_recovered_value": -0.7536951738302302,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 9.992007221626409e-16,
+          "max_relative_error_scale_floor_1": 9.992007221626409e-16,
+          "max_stream_magnitude": 3.553477689378974,
+          "stream_to_output_scale_floor_1": 3.553477689378974,
+          "min_stream_value": 2.573477589056687,
+          "min_recovered_value": -0.8680567426163877,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 5.551115123125783e-16,
+          "max_relative_error_scale_floor_1": 5.551115123125783e-16,
+          "max_stream_magnitude": 5.0832482325957455,
+          "stream_to_output_scale_floor_1": 5.0832482325957455,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.463307335887066e-14,
+          "max_relative_error_scale_floor_1": 2.463307335887066e-14,
+          "max_stream_magnitude": 86.57863993985487,
+          "stream_to_output_scale_floor_1": 86.57863993985487,
+          "min_stream_value": 4.655899811305816,
+          "min_recovered_value": -0.7256451673930471,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 3.83026943495679e-14,
+          "max_relative_error_scale_floor_1": 3.542668386054872e-14,
+          "max_stream_magnitude": 99.67194347749069,
+          "stream_to_output_scale_floor_1": 92.18793850682147,
+          "min_stream_value": 2.3850295852519263,
+          "min_recovered_value": -1.0811820406431494,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 2.0816681711721685e-14,
+          "max_relative_error_scale_floor_1": 2.0816681711721685e-14,
+          "max_stream_magnitude": 102.44030497093466,
+          "stream_to_output_scale_floor_1": 102.44030497093466,
+          "min_stream_value": 6.683189681807313,
+          "min_recovered_value": -0.4271741693883939,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 6.004086117172847e-13,
+          "max_relative_error_scale_floor_1": 6.004086117172847e-13,
+          "max_stream_magnitude": 34493.77191127415,
+          "stream_to_output_scale_floor_1": 34493.77191127415,
+          "min_stream_value": 242.26418378679918,
+          "min_recovered_value": 0.001256144565957129,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 1.2990930132961154e-05,
+          "max_relative_error_scale_floor_1": 4.6225529523763826e-07,
+          "max_stream_magnitude": 545394421652.6543,
+          "stream_to_output_scale_floor_1": 19406728911.76133,
+          "min_stream_value": 3830552942.6291013,
+          "min_recovered_value": 2.82550048828125,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 524286.98648742045,
+          "max_relative_error_scale_floor_1": 337471.8773586159,
+          "max_stream_magnitude": 2.9745507525440453e+23,
+          "stream_to_output_scale_floor_1": 1.9146521897956898e+23,
+          "min_stream_value": 7.336568009389103e+18,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 1048576.1211799283,
+          "max_relative_error_scale_floor_1": 1023525.6387708195,
+          "max_stream_magnitude": 1.0583801720740094e+24,
+          "stream_to_output_scale_floor_1": 1.0330954708995679e+24,
+          "min_stream_value": 8.889476990012273e+18,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 2097151.286472051,
+          "max_relative_error_scale_floor_1": 1464582.5619183555,
+          "max_stream_magnitude": 1.0994413116074565e+24,
+          "stream_to_output_scale_floor_1": 7.678142169427057e+23,
+          "min_stream_value": 3.82809523355135e+19,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 4194304.586424919,
+          "max_relative_error_scale_floor_1": 4194304.586424919,
+          "max_stream_magnitude": 1.3407686807615896e+24,
+          "stream_to_output_scale_floor_1": 1.3407686807615896e+24,
+          "min_stream_value": 6.082089902523271e+19,
+          "min_recovered_value": -4194304.0,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 0.18928248577564566,
+          "max_relative_error_scale_floor_1": 0.18928248577564566,
+          "max_stream_magnitude": 6.759068936243995e+48,
+          "stream_to_output_scale_floor_1": 6.759068936243995e+48,
+          "min_stream_value": 1.6447125089319241e+40,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 3.6109164525854927,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 1.0687026350311217e+56,
+          "stream_to_output_scale_floor_1": 2.959643760979039e+55,
+          "min_stream_value": 2.6005188121974544e+47,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 1.8093404803144204,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 1.2563378543347093e+112,
+          "stream_to_output_scale_floor_1": 6.943623204165463e+111,
+          "min_stream_value": 4.057618855555715e+94,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 1.4930022986857236,
+          "max_relative_error_scale_floor_1": 1.0,
+          "max_stream_magnitude": 5.947998335378866e+111,
+          "stream_to_output_scale_floor_1": 3.983917734497017e+111,
+          "min_stream_value": 5.18058996250547e+111,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.03898296599905329,
+        1.4930022986857236
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm1.inverse_sqrt"
+    },
+    {
+      "epsilon": 1.0,
+      "weight_scale": 0.01,
+      "input_scale": 0.1,
+      "common_input_offset": 1.0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 1.0408340855860843e-16,
+          "max_relative_error_scale_floor_1": 1.0408340855860843e-16,
+          "max_stream_magnitude": 1.1518686241243228,
+          "stream_to_output_scale_floor_1": 1.1518686241243228,
+          "min_stream_value": 1.0,
+          "min_recovered_value": -0.0936081633161241,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 3.469446951953614e-18,
+          "max_relative_error_scale_floor_1": 3.469446951953614e-18,
+          "max_stream_magnitude": 0.038789285178625454,
+          "stream_to_output_scale_floor_1": 0.038789285178625454,
+          "min_stream_value": 0.012629893026379378,
+          "min_recovered_value": -0.009281803281262064,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 6.938893903907228e-18,
+          "max_relative_error_scale_floor_1": 6.938893903907228e-18,
+          "max_stream_magnitude": 0.054091278566522814,
+          "stream_to_output_scale_floor_1": 0.054091278566522814,
+          "min_stream_value": 0.010248212037773097,
+          "min_recovered_value": -0.01801150074835415,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 4.119968255444917e-18,
+          "max_relative_error_scale_floor_1": 4.119968255444917e-18,
+          "max_stream_magnitude": 0.03424279898461255,
+          "stream_to_output_scale_floor_1": 0.03424279898461255,
+          "min_stream_value": 0.01148728428309652,
+          "min_recovered_value": -0.006634090860529303,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 1.9786689647860456e-18,
+          "max_relative_error_scale_floor_1": 1.9786689647860456e-18,
+          "max_stream_magnitude": 0.006182850711033121,
+          "stream_to_output_scale_floor_1": 0.006182850711033121,
+          "min_stream_value": 0.0060176406733516725,
+          "min_recovered_value": -0.000136659925537512,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 1.1102230246251565e-16,
+          "max_stream_magnitude": 1.0030088203366758,
+          "stream_to_output_scale_floor_1": 1.0030088203366758,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 1.2880321809127793e-16,
+          "max_relative_error_scale_floor_1": 1.2880321809127793e-16,
+          "max_stream_magnitude": 0.5403007110861227,
+          "stream_to_output_scale_floor_1": 0.5403007110861227,
+          "min_stream_value": 0.18903603097255706,
+          "min_recovered_value": -0.005672636808806086,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 2.220446049250313e-16,
+          "max_relative_error_scale_floor_1": 2.220446049250313e-16,
+          "max_stream_magnitude": 1.1556871597207485,
+          "stream_to_output_scale_floor_1": 1.1556871597207485,
+          "min_stream_value": 1.0049325885599485,
+          "min_recovered_value": -0.08957667652346868,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 3.3306690738754696e-16,
+          "max_relative_error_scale_floor_1": 3.3306690738754696e-16,
+          "max_stream_magnitude": 1.4560791399331405,
+          "stream_to_output_scale_floor_1": 1.4560791399331405,
+          "min_stream_value": 1.3481859440987196,
+          "min_recovered_value": -0.08091711348175012,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 1.2568071583451967e-15,
+          "max_relative_error_scale_floor_1": 1.2568071583451967e-15,
+          "max_stream_magnitude": 7.777382141413365,
+          "stream_to_output_scale_floor_1": 7.777382141413365,
+          "min_stream_value": 7.743141799289357,
+          "min_recovered_value": 0.00025228467492866,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 7.771561172376096e-16,
+          "max_relative_error_scale_floor_1": 7.771561172376096e-16,
+          "max_stream_magnitude": 4.886090383996568,
+          "stream_to_output_scale_floor_1": 4.886090383996568,
+          "min_stream_value": 3.871697041982143,
+          "min_recovered_value": 0.9973993132898857,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 4.718447854656915e-15,
+          "max_relative_error_scale_floor_1": 4.718447854656915e-15,
+          "max_stream_magnitude": 33.653274536367384,
+          "stream_to_output_scale_floor_1": 33.653274536367384,
+          "min_stream_value": 16.738465696060103,
+          "min_recovered_value": -0.07600786044692853,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 2.992397996059992e-16,
+          "max_relative_error_scale_floor_1": 2.992397996059992e-16,
+          "max_stream_magnitude": 3.214708403511353,
+          "stream_to_output_scale_floor_1": 3.214708403511353,
+          "min_stream_value": 1.2122528588221813,
+          "min_recovered_value": -0.006352157183603602,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 5.02549390990481e-15,
+          "max_relative_error_scale_floor_1": 5.02549390990481e-15,
+          "max_stream_magnitude": 33.71215426610415,
+          "stream_to_output_scale_floor_1": 33.71215426610415,
+          "min_stream_value": 16.824143525943615,
+          "min_recovered_value": -0.06758839361248192,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 5.852957007945747e-15,
+          "max_relative_error_scale_floor_1": 5.852957007945747e-15,
+          "max_stream_magnitude": 36.56466561962735,
+          "stream_to_output_scale_floor_1": 36.56466561962735,
+          "min_stream_value": 30.771186403111617,
+          "min_recovered_value": -0.019091861068019966,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 1.1433362936963398e-12,
+          "max_relative_error_scale_floor_1": 1.1433362936963398e-12,
+          "max_stream_magnitude": 4583.127148510586,
+          "stream_to_output_scale_floor_1": 4583.127148510586,
+          "min_stream_value": 4522.847512445802,
+          "min_recovered_value": 0.00013052445592620643,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 5.764277943853813e-13,
+          "max_relative_error_scale_floor_1": 5.764277943853813e-13,
+          "max_stream_magnitude": 2292.5632325397,
+          "stream_to_output_scale_floor_1": 2292.5632325397,
+          "min_stream_value": 2261.423821485129,
+          "min_recovered_value": 0.9996582844069053,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 7.856284008761483e-10,
+          "max_relative_error_scale_floor_1": 7.856284008761483e-10,
+          "max_stream_magnitude": 5950651.670712092,
+          "stream_to_output_scale_floor_1": 5950651.670712092,
+          "min_stream_value": 3153883.5874171467,
+          "min_recovered_value": -0.026649415493011475,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 5.508504763440669e-11,
+          "max_relative_error_scale_floor_1": 5.508504763440669e-11,
+          "max_stream_magnitude": 166519.5415109721,
+          "stream_to_output_scale_floor_1": 166519.5415109721,
+          "min_stream_value": 144995.7568870931,
+          "min_recovered_value": -0.10003792814677581,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.10003792814243967,
+        0.2003908285436713
+      ],
+      "recovered_logits": [
+        -0.10003792814677581,
+        0.20039082859875634
+      ],
+      "first_stage_exceeding_absolute_error_threshold": null
+    },
+    {
+      "epsilon": 1.0,
+      "weight_scale": 0.01,
+      "input_scale": 0.1,
+      "common_input_offset": 10.0,
+      "seed": 23,
+      "stages": {
+        "input": {
+          "max_absolute_error": 8.847089727481716e-16,
+          "max_relative_error_scale_floor_1": 8.847089727481716e-16,
+          "max_stream_magnitude": 10.151868624124322,
+          "stream_to_output_scale_floor_1": 10.151868624124322,
+          "min_stream_value": 10.0,
+          "min_recovered_value": -0.09360816331612476,
+          "all_finite": true
+        },
+        "query": {
+          "max_absolute_error": 6.938893903907228e-17,
+          "max_relative_error_scale_floor_1": 6.938893903907228e-17,
+          "max_stream_magnitude": 0.29476521782825366,
+          "stream_to_output_scale_floor_1": 0.29476521782825366,
+          "min_stream_value": 0.12332032944261126,
+          "min_recovered_value": -0.009281803281261991,
+          "all_finite": true
+        },
+        "key": {
+          "max_absolute_error": 3.122502256758253e-17,
+          "max_relative_error_scale_floor_1": 3.122502256758253e-17,
+          "max_stream_magnitude": 0.3712374100365788,
+          "stream_to_output_scale_floor_1": 0.3712374100365788,
+          "min_stream_value": 0.09965697679137864,
+          "min_recovered_value": -0.018011500748354115,
+          "all_finite": true
+        },
+        "value": {
+          "max_absolute_error": 6.418476861114186e-17,
+          "max_relative_error_scale_floor_1": 6.418476861114186e-17,
+          "max_stream_magnitude": 0.29136362108201097,
+          "stream_to_output_scale_floor_1": 0.29136362108201097,
+          "min_stream_value": 0.11487284283096522,
+          "min_recovered_value": -0.00663409086052924,
+          "all_finite": true
+        },
+        "attention_logits": {
+          "max_absolute_error": 1.6105823272272168e-16,
+          "max_relative_error_scale_floor_1": 1.6105823272272168e-16,
+          "max_stream_magnitude": 0.434799736197128,
+          "stream_to_output_scale_floor_1": 0.434799736197128,
+          "min_stream_value": 0.43431740933335383,
+          "min_recovered_value": -0.00013665992553751893,
+          "all_finite": true
+        },
+        "attention_probability": {
+          "max_absolute_error": 1.1102230246251565e-16,
+          "max_relative_error_scale_floor_1": 1.1102230246251565e-16,
+          "max_stream_magnitude": 1.217158704666677,
+          "stream_to_output_scale_floor_1": 1.217158704666677,
+          "min_stream_value": 0.0,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "attention_values": {
+          "max_absolute_error": 2.677979366039196e-16,
+          "max_relative_error_scale_floor_1": 2.677979366039196e-16,
+          "max_stream_magnitude": 3.775989866642349,
+          "stream_to_output_scale_floor_1": 3.775989866642349,
+          "min_stream_value": 0.9702476928767356,
+          "min_recovered_value": -0.005672636808806253,
+          "all_finite": true
+        },
+        "attention_residual": {
+          "max_absolute_error": 1.915134717478395e-15,
+          "max_relative_error_scale_floor_1": 1.915134717478395e-15,
+          "max_stream_magnitude": 10.218450208919597,
+          "stream_to_output_scale_floor_1": 10.218450208919597,
+          "min_stream_value": 10.014499557733135,
+          "min_recovered_value": -0.08957667652346935,
+          "all_finite": true
+        },
+        "norm1.centered": {
+          "max_absolute_error": 3.219646771412954e-15,
+          "max_relative_error_scale_floor_1": 3.219646771412954e-15,
+          "max_stream_magnitude": 13.530860521726073,
+          "stream_to_output_scale_floor_1": 13.530860521726073,
+          "min_stream_value": 13.380513377465375,
+          "min_recovered_value": -0.08091711348175146,
+          "all_finite": true
+        },
+        "norm1.variance": {
+          "max_absolute_error": 9.833453495922129e-14,
+          "max_relative_error_scale_floor_1": 9.833453495922129e-14,
+          "max_stream_magnitude": 725.3065587855008,
+          "stream_to_output_scale_floor_1": 725.3065587855008,
+          "min_stream_value": 719.1872418410886,
+          "min_recovered_value": 0.0002522846748433949,
+          "all_finite": true
+        },
+        "norm1.inverse_sqrt": {
+          "max_absolute_error": 4.696243394164412e-14,
+          "max_relative_error_scale_floor_1": 4.696243394164412e-14,
+          "max_stream_magnitude": 363.6506787060403,
+          "stream_to_output_scale_floor_1": 363.6506787060403,
+          "min_stream_value": 359.5945511876566,
+          "min_recovered_value": 0.9973993132899182,
+          "all_finite": true
+        },
+        "norm1": {
+          "max_absolute_error": 1.3467740811456963e-11,
+          "max_relative_error_scale_floor_1": 1.3467740811456963e-11,
+          "max_stream_magnitude": 141829.07656511635,
+          "stream_to_output_scale_floor_1": 141829.07656511635,
+          "min_stream_value": 69752.41464721625,
+          "min_recovered_value": -0.07600786045077257,
+          "all_finite": true
+        },
+        "gelu": {
+          "max_absolute_error": 1.0611034620411353e-12,
+          "max_relative_error_scale_floor_1": 1.0611034620411353e-12,
+          "max_stream_magnitude": 10094.482596497519,
+          "stream_to_output_scale_floor_1": 10094.482596497519,
+          "min_stream_value": 1691.1354307956965,
+          "min_recovered_value": -0.006352157184664975,
+          "all_finite": true
+        },
+        "mlp_residual": {
+          "max_absolute_error": 2.378276742209806e-11,
+          "max_relative_error_scale_floor_1": 2.378276742209806e-11,
+          "max_stream_magnitude": 141982.0673741278,
+          "stream_to_output_scale_floor_1": 141982.0673741278,
+          "min_stream_value": 69921.04637415204,
+          "min_recovered_value": -0.06758839360554703,
+          "all_finite": true
+        },
+        "norm2.centered": {
+          "max_absolute_error": 3.782826135667605e-11,
+          "max_relative_error_scale_floor_1": 3.782826135667605e-11,
+          "max_stream_magnitude": 153850.62355648214,
+          "stream_to_output_scale_floor_1": 153850.62355648214,
+          "min_stream_value": 128076.43430915818,
+          "min_recovered_value": -0.01909186103148386,
+          "all_finite": true
+        },
+        "norm2.variance": {
+          "max_absolute_error": 2.206343381100365e-05,
+          "max_relative_error_scale_floor_1": 2.206343381100365e-05,
+          "max_stream_magnitude": 81063508274.31389,
+          "stream_to_output_scale_floor_1": 81063508274.31389,
+          "min_stream_value": 78416261527.46631,
+          "min_recovered_value": 0.0001373291015625,
+          "all_finite": true
+        },
+        "norm2.inverse_sqrt": {
+          "max_absolute_error": 1.103810494829105e-05,
+          "max_relative_error_scale_floor_1": 1.103810494829105e-05,
+          "max_stream_magnitude": 40531754138.15661,
+          "stream_to_output_scale_floor_1": 40531754138.15661,
+          "min_stream_value": 39208130763.73322,
+          "min_recovered_value": 0.999664306640625,
+          "all_finite": true
+        },
+        "norm2": {
+          "max_absolute_error": 262143.9947250939,
+          "max_relative_error_scale_floor_1": 262143.9947250939,
+          "max_stream_magnitude": 1.807118066934723e+21,
+          "stream_to_output_scale_floor_1": 1.807118066934723e+21,
+          "min_stream_value": 9.223725367904811e+20,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        },
+        "signed_logits": {
+          "max_absolute_error": 0.2003908285436713,
+          "max_relative_error_scale_floor_1": 0.2003908285436713,
+          "max_stream_magnitude": 4.9483146934163325e+19,
+          "stream_to_output_scale_floor_1": 4.9483146934163325e+19,
+          "min_stream_value": 4.309884825261278e+19,
+          "min_recovered_value": 0.0,
+          "all_finite": true
+        }
+      },
+      "reference_logits": [
+        -0.10003792814243967,
+        0.2003908285436713
+      ],
+      "recovered_logits": [
+        0.0,
+        0.0
+      ],
+      "first_stage_exceeding_absolute_error_threshold": "norm2.variance"
+    }
+  ],
+  "interpretation": "Exact real-arithmetic identities do not control floating-point cancellation. All sweep cases are retained, including failures and nonfinite values; a zero exit status checks only the declared primitive and benign fixtures."
+}

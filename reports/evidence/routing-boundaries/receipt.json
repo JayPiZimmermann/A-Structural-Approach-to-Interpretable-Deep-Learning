@@ -1,0 +1,28 @@
+{
+  "local_commit": "ed1b441364e12777b590d1463d3c6982f05c3468",
+  "repository": "code/playing_backward",
+  "command": "/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python -m pytest tests/test_attention_ab_recovery.py tests/test_hellinger_merged_attention.py tests/test_routing_game_lrp_match.py -q",
+  "working_directory": "code/playing_backward",
+  "result": {
+    "passed": 48,
+    "duration_seconds": 5.98
+  },
+  "cases": [
+    "zero and one-sign streams",
+    "signed cancellation",
+    "positive and negative incoming relevance",
+    "epsilon zero and positive",
+    "attention with signed affine readout",
+    "masked attention reference",
+    "bit-for-bit positive-epsilon compatibility"
+  ],
+  "baseline_reproduction": "Committed prior merged-attention method executed in memory yields nonfinite outputs for mixed empty streams and all-zero streams at epsilon=0. Restoring prior raw division in linear and convolution routing yields nonfinite zero-layer outputs.",
+  "convention": "Exact zero denominators assign zero ordinary-successor relevance; their trajectory probability is absorbed at the cemetery. Positive denominators retain the prior division arithmetic.",
+  "source_files": [
+    "bwgame/xai/methods/routing_game.py",
+    "tests/test_attention_ab_recovery.py",
+    "tests/test_routing_game_lrp_match.py"
+  ],
+  "independent_review": "Parent inspected guarded division and independent explicit composite-sum reference tests. Affine-readout prose independently checked against AffineOutputBackward, RoutingSupport, ReLUNetGame, and StoppingDAG contracts.",
+  "published": false
+}

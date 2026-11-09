@@ -1,0 +1,17 @@
+sigmoid_smooth_explicit_split : (ConvexOn ℝ Set.univ fun z => (explicitSigmoidSmoothPair z).1) ∧
+  (ConvexOn ℝ Set.univ fun z => (explicitSigmoidSmoothPair z).2) ∧
+    (Monotone fun z => (explicitSigmoidSmoothPair z).1) ∧
+      (Monotone fun z => (explicitSigmoidSmoothPair z).2) ∧
+        ValidPairActivation Real.sigmoid explicitSigmoidSmoothPair ∧ NonnegativePairActivation explicitSigmoidSmoothPair
+explicitSigmoidSmoothPair_logsumexp : ∀ (x y : ℝ),
+  explicitSigmoidSmoothPair (x, y) =
+    ((Real.log (Real.exp x + Real.exp y) + (x - y).sigmoid) / 2,
+      (Real.log (Real.exp x + Real.exp y) - (x - y).sigmoid) / 2)
+explicitSigmoidSmoothPair_contDiff : ContDiff ℝ ⊤ explicitSigmoidSmoothPair
+'HiddenMonotonicity.SmoothDC.sigmoid_smooth_explicit_split' depends on axioms: [propext, Classical.choice, Quot.sound]
+'HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_logsumexp' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_contDiff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
