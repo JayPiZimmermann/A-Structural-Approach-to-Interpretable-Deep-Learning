@@ -22,14 +22,46 @@ Evidence is in `reports/verification/commit-1f886dd/` and
 `reports/verification/current/`. The 216 generated source links are checked and
 pinned to that commit. The previous `0f3cfb0` gate remains archived.
 
-The final thesis build is copied to `docs/thesis.pdf`: **223 pages**, no overfull
-boxes or undefined references/citations, and all terminology checks pass. Six new
-mathematics/provenance pages were visually checked. All 216 Lean URI occurrences
-(135 unique expected targets) are present and pinned to the verified source commit.
-The reference audit retains all 74 HM and 72 game-paper source keys. The build
-receipt is `reports/publication-build.json`, with evidence under
-`reports/evidence/tex-transformer-final/`. PDF SHA-256:
-`8a676556a25d55c88888dded2b005d7421150c0e3b2e0f529742e2cd8e1887d7`.
+The main thesis is **139 total PDF pages**, within the hard 150-page cap; its
+separate technical supplement is **85 pages**. This compact presentation retains
+the substantive mathematical and empirical improvements: detailed proofs and
+full supporting experiments have moved to the supplement. The page-budget audit
+preserves all 50 full captions and gives 48 entries shorter list titles.
+
+There are 157 Lean annotations in the main PDF and 59 in the supplement:
+216 combined occurrences covering 135 unique targets. All 80 main-to-supplement
+and 72 supplement-to-main links resolve. All 176 files bound by the proof receipt
+still match the verified source hashes. Both final logs have no overfull boxes
+or unresolved references/citations, and both PDFs are copied to `docs/`.
+`reports/evidence/page-budget/publication-checks.json` records the passed guard;
+`reports/evidence/page-budget/final-editorial-audit.json` records the editorial
+checks. The Lean source gate is unchanged by this editorial reorganization.
+
+The strengthened retention checks compare against the pre-compression commit
+`91d4d27`: all 804 original content blocks are accounted for, and all 314 displayed
+formulas are preserved exactly. Independent mathematical and empirical reviews
+found no lost substantive information. Their crosswalks are
+`reports/evidence/page-budget/{text,math,evidence}-retention.json`.
+
+Build both `tex/main.tex` and `tex/supplement.tex`. Detailed game, attention and
+trajectory proofs and full experimental material live under `tex/supplement/`.
+The main document retains the central definitions, results, evidence and narrative.
+The original 74 HM and 72 game-paper reference keys are preserved across the
+**main thesis and supplement together**; they need not all appear in the main
+bibliography. Proof links are likewise distributed across both documents.
+The source-reference checker and badge synchronizer now inspect both source roots.
+Deliver `docs/thesis.pdf` and `docs/thesis-supplement.pdf` together so their relative
+cross-document links can resolve.
+After copying both compiled PDFs, run from the repository root:
+
+```sh
+python3 reports/evidence/page-budget/verify_publication.py
+```
+
+This checks the 150-page cap, both final logs, PDF/source equality, combined Lean
+URIs, cross-document destinations and the unchanged proof-bound source hashes.
+The final result belongs in `reports/publication-build.json` and the page-budget
+evidence directory.
 
 The two revised source papers already compile independently: Hidden Monotonicity
 has 38 pages and Playing the Network Backward has 83 pages. References and
@@ -140,14 +172,47 @@ The earlier routing-law and regularizer-curvature corrections remain valid:
 `reports/routing-law-precision-review.json` and
 `reports/regularizer-curvature-review.json` record them.
 
-The user subsequently requested a real-ViT generic DC implementation,
-stabilization and heatmaps in the official HM code. That experiment is in
-progress in a separate local worktree,
-`/home/jzimmermann/code/hidden-monotonicity-transformer-dc`, based on `43a8bce`.
-The thesis submodule and its validated pin stay unchanged during that work.
-No real-ViT result or stable implementation is established by the mathematical
-theorem or the small synthetic diagnostic above; add results only after their
-own execution and review receipts exist.
+## Completed real-ViT implementation campaign
+
+The official HM worktree `/home/jzimmermann/code/hidden-monotonicity-transformer-dc` contains the completed experiment on
+branch `research/transformer-dc-stabilization`. Its execution commit is
+`aa2d8c2d46744d7fee8ada2ac66be4d4534dd888`; final analysis/rendering is at
+`5dd534989463b3e690b900f6a2ca3021213cf79f`. The final artifact commit is
+`4c02ba66c681437b03a6bd76fad1cae24f45da4e`; the worktree is clean. These are
+local commits. The thesis submodule remains pinned to the separately validated
+repair commit `43a8bce`. The committed
+`reports/vit_dc_comparison/README.md` gives reproduction commands; read its
+`campaign_receipt.json` and `reports/vit_dc_baselines/final_campaign_audit.json`
+for the execution and independent review.
+
+The campaign evaluated torchvision ViT-B/16 IMAGENET1K_V1 on six fixed paper
+qualitative images, at alpha 0, 0.25, 0.4 and 0.5: **24 split cases and 36 freshly
+computed baseline maps**. Five images are from validation and one from test;
+this is not a new benchmark. The maximum absolute reconstruction errors are
+`5.329e-15` for logits, `1.353e-15` for separately computed stream-head gradient
+reconstruction, and `6.523e-16` for intermediate gradients. There is no activation
+assimilation, gradient assimilation or reference-score substitution.
+
+The stable calculation uses canonical forward recentering and shifted/capped
+algorithmic stream sensitivities. It does **not** preserve the original convex
+heads' individual derivatives. At alpha 0.4, SplitCAM differs from the ordinary
+activation-times-gradient control by only **0.0040–0.279% relative L2**;
+SplitGrad differs from the ordinary mean-layer-gradient control by 0.014–0.478%.
+Half-shift controls match to roundoff. Accurate reconstruction is established;
+improved attribution quality is not. Alpha 0 still uses the adaptive gain cap
+and must not be presented as the raw unshifted DC gradient. Naive local DC pairs
+remain ill-conditioned, with a recorded local identity error as large as 32,771.
+
+The final receipt verifies the persisted arrays and rendered artifacts. Direct
+local review links:
+
+- [Red fox in snow detail](/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_dc_comparison/comparison/red_fox_snow_detail.png).
+- [Six-image method comparison](/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_dc_comparison/comparison/method_comparison.pdf).
+- [Machine-readable numerical summary](/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_dc_comparison/comparison/summary.json).
+
+Keep the original synthetic instability diagnostic and this stabilized campaign
+separate. Neither the empirical checks nor the close agreement with gradient
+controls enlarge the Lean theorem or establish faithfulness.
 
 ## Start here
 
@@ -168,12 +233,15 @@ TeX Live installation is the least complicated option. Build from `tex/`:
 cd tex
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 makeindex main.nlo -s nomencl.ist -o main.nls
+latexmk -pdf -interaction=nonstopmode -halt-on-error supplement.tex
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+latexmk -pdf -interaction=nonstopmode -halt-on-error supplement.tex
 ```
 
 The public cover deliberately has an empty `\mymatriculationnumber` in
 `tex/preamble/meta.tex`. Do not replace it with metadata or a PDF from the old
-private workspace. `docs/thesis.pdf` is built from this public source tree.
+private workspace. `docs/thesis.pdf` and `docs/thesis-supplement.pdf` are built from this public
+source tree. Rebuild both after moving labels or changing cross-document references.
 
 ## User requirements that remain binding
 
@@ -181,10 +249,13 @@ private workspace. `docs/thesis.pdf` is built from this public source tree.
   motivation is interpretability moving from post hoc analysis toward improving
   and controlling models. Preserve original paper formulations wherever possible;
   do not paraphrase sentences merely to restate them. Avoid duplicate material.
+- Keep the main document at or below 150 PDF pages; use the separate technical
+  supplement for detailed proofs and full experimental material. Do not meet the
+  cap by silently deleting scientific content.
 - Preserve every source-paper reference, experiment, figure, table, and substantive
-  point. Source corrections and a common notation are intentional exceptions to
-  verbatim preservation. The reference checker currently finds all 74 Hidden
-  Monotonicity and all 72 revised game-paper source keys.
+  point across the main document and supplement. Source corrections and a common notation are intentional exceptions to
+  verbatim preservation. The reference checker assesses the combined source roots and preserves all 74
+  Hidden Monotonicity and all 72 revised game-paper source keys.
 - Use **interpretability** in authored prose in place of XAI/explainability.
   Retain official publication/method titles, quotations, URLs, and code identifiers.
 - Use one spelling/name per object. The spelling policy is executable in
@@ -300,9 +371,10 @@ the table review alone.
 
 Theorem/lemma/definition headings contain numbered `Lean_1`, `Lean_2`, … links
 inside their heading brackets, following the style of arXiv 2610.01728v2.
-Equation numbers link directly to declarations. The current local revision has
-**216 mapped links**, generated and checked against the clean verified source
-commit `1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`. These new commit URLs will be
+Equation numbers link directly to declarations. The verified source has
+**216 mappings**, now distributed across the main document and technical
+supplement; PDF occurrence counts must be checked for their combined outputs.
+The links target the clean verified source commit `1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`. These new commit URLs will be
 publicly resolvable only after the local source commit is published.
 
 `formalization/tex_links.json` records declaration and scope; the manual review
@@ -327,11 +399,12 @@ python3 scripts/generate_lean_links.py --revision VERIFIED_COMMIT --check
    Report any additional mathematical correction before editing source papers.
 3. Retain the recently restored original wording; review any new changes for
    accidental loss of hypotheses, citations, table values, or definitions.
-4. Check the public PDF has no unresolved `??`, citations/references, or private
-   registration number. Verify all PDF Lean URIs use the new repository and the
+4. Check both PDFs have no unresolved `??`, citations/references, or private
+   registration number, and the main PDF stays within the 150-page cap. Verify all PDF Lean URIs use the new repository and the
    intended commit/lines. `pdftotext`, `pdfinfo`, `pdftoppm`, and `mutool show` are
    sufficient; no PyMuPDF dependency is required.
-5. Copy the checked build to `docs/thesis.pdf`, update the build receipt, and
+5. Copy the checked builds to `docs/thesis.pdf` and `docs/thesis-supplement.pdf`,
+   update the combined build receipt, and
    commit reviewed changes locally. Keep this revision local as requested; do not
    push based on earlier checkpoint authorization. Coordinate source commits so
    HEAD and bound files remain fixed while the clean proof gate runs.

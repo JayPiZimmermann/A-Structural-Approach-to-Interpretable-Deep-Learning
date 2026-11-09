@@ -8,7 +8,8 @@ claims = []
 coverage = json.loads((root / "formalization/coverage_map.json").read_text())
 for group, directory in [('hidden_monotonicity', 'arxive/hiddenMonotonicity'),
                          ('playing_backward', 'arxive/playingTheNetworkBackward'),
-                         ('thesis', 'tex/chapters')]:
+                         ('thesis', 'tex/chapters'),
+                         ('thesis', 'tex/supplement')]:
     for path in sorted((root / directory).rglob('*.tex')):
         text = path.read_text()
         for match in re.finditer(r'\\begin\{(theorem(?:env)?|lemma(?:env)?|proposition(?:env)?|corollary(?:env)?|claim|observation|remark|definition(?:env)?)\}(.*?)(?=\\end\{\1\})', text, re.S):

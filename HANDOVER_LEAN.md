@@ -92,10 +92,34 @@ HM `43a8bce45ac1d61b28dfa5ddc7eaf32e8ad35f4f` and game
 `7b5cd387f0a690b0d3451aa60bc8d897bd442a38`; see the TeX handover for 27 HM tests,
 23 subtests, 33 statistical tests, 13 regenerated tables and historical limitations.
 
-The subsequent real-ViT implementation, stabilization and heatmap request is a
-separate active empirical task in a local HM worktree based on `43a8bce`.
-It does not change the thesis submodule pin or enlarge the present Lean theorem's
-numerical guarantees. No real-ViT execution result is claimed here yet.
+The real-ViT campaign is complete in the separate official HM worktree
+`/home/jzimmermann/code/hidden-monotonicity-transformer-dc`, branch
+`research/transformer-dc-stabilization`: execution commit `aa2d8c2`, final
+analysis/rendering `5dd5349`, final artifact commit `4c02ba6` (clean worktree).
+The committed `reports/vit_dc_comparison/README.md` gives reproduction commands.
+The 24 split cases and 36 baseline maps have maximum
+absolute reconstruction errors `5.329e-15` (logits), `1.353e-15` (separate-head
+gradient reconstruction), and `6.523e-16` (intermediate gradients). Its canonical
+forward recentering and shifted/capped backward are algorithmic quantities,
+not the unchanged derivatives of the original convex heads. At alpha 0.4 the
+SplitCAM maps differ from ordinary activation-times-gradient controls by only
+0.0040–0.279% relative L2; attribution-quality improvement is not established.
+The six fixed qualitative images are not a benchmark. Read the campaign receipt
+and direct artifact links in the TeX handover. The thesis submodule pin and
+verified Lean source are unchanged.
+
+The compact main thesis is 139 PDF pages, within its 150-page cap, and the
+technical supplement is 85 pages. Supporting proofs and detailed experiments
+moved to the supplement; substantive improvements remain. Source/reference
+validation covers both roots. Their 157 and 59 Lean annotations give 216 combined
+occurrences and 135 unique targets, all pinned to the same verified proof source.
+All 152 cross-document links resolve, and all 176 proof-bound source hashes are
+unchanged. After copying both PDFs, run
+`python3 reports/evidence/page-budget/verify_publication.py` from the repository
+root; the passed `reports/evidence/page-budget/publication-checks.json` and
+`final-editorial-audit.json` record the checked two-document layout. Both final
+logs have no overfull boxes or unresolved references/citations. The combined
+publication receipt supersedes the earlier 223-page artifact.
 
 ## Bootstrap and last completed verified snapshot
 
@@ -133,8 +157,8 @@ counts and hashed files; a nearby build log is not a substitute for this receipt
 The later handover/artifact commit is intentionally separate from the verified
 source commit. It must not alter the imported source closure or bound configuration.
 
-The current local TeX has **216 mapped links**, generated and checked against
-that verified commit. Their source URLs require publication of the local source
+The current main-plus-supplement TeX uses **216 source mappings**, generated
+and checked against that verified commit. Their source URLs require publication of the local source
 commit before they can resolve on GitHub. The six-module routing-history batch
 below remains outside the import closure and is not advertised by those links.
 
@@ -374,7 +398,8 @@ certificate, and existing general-regularizer theorem scopes were not changed.
    commits can precede an artifact commit; do not attempt a self-referential
    receipt claiming its own artifact commit was the source snapshot.
 5. Give the TeX task the verified commit. Run the link generator/check against it,
-   rebuild the public PDF, verify rendered links and bibliography, update the
+   rebuild both main and supplement PDFs, enforce the main 150-page cap, verify
+   their combined proof links, cross-document references and bibliography, update the
    public build record, and commit artifacts locally. Keep the present revision
    local until publication is authorized for it.
 

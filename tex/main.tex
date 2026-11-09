@@ -41,6 +41,7 @@
 % PREAMBLE
 %------------------------------
 \input{preamble/packages}
+\usepackage{xr-hyper}
 \input{preamble/meta}
 \input{preamble/commands}
 \input{preamble/paper_v2}
@@ -50,6 +51,10 @@
 \input{preamble/code_languages}
 \addbibresource{bibliography/references.bib}
 \KOMAoptions{DIV=last}
+\setcounter{tocdepth}{1}
+\IfFileExists{supplement.aux}{%
+    \externaldocument[][nocite]{supplement}[thesis-supplement.pdf]%
+}{}
 %------------------------------
 % BEGIN DOCUMENT
 %------------------------------
@@ -62,23 +67,23 @@
 	\pagenumbering{gobble}
 	\pagestyle{empty}
 	\input{frontmatter/cover}
-	\cleardoublepage
+	\clearpage
 	\input{frontmatter/declaration}
-	\cleardoublepage
+	\clearpage
 \end{spacing}
 %------------------------------
 % PREMATTER
 %------------------------------
 \input{frontmatter/acknowledgements}
-\cleardoublepage
+\clearpage
 \input{frontmatter/abstract}
-\cleardoublepage
+\clearpage
 %------------------------------
 % LISTS
 %------------------------------
 \begin{spacing}{1}
 	\tableofcontents
-	\cleardoublepage
+	\clearpage
 	\pagestyle{scrheadings}
 	\pagenumbering{roman}
 \hypersetup{pageanchor=true}
@@ -86,16 +91,16 @@
 	\listoftables
 	\include{frontmatter/nomenclature_list}
 	\printnomenclature
-	\cleardoublepage
+	\clearpage
 	\input{frontmatter/abbreviations_list}
-	\cleardoublepage
+	\clearpage
 \end{spacing}
 %------------------------------
 % MAIN CONTENT
 %------------------------------
 \pagenumbering{arabic}
 \input{chapters/00_text}
-\cleardoublepage
+\clearpage
 %------------------------------
 % REFERENCES
 %------------------------------

@@ -1,0 +1,81 @@
+\PassOptionsToPackage{hyphens}{url}
+\begin{filecontents*}[overwrite]{\jobname.xmpdata}
+ \Title{\mytitle: Technical Supplement}
+ \Author{\autor}
+ \Keywords{\englishkeywords; \germankeywords}
+ \Subject{Technical supplement to a master's thesis}
+ \Language{English}
+ \Copyright{CC BY 4.0}
+ \CopyrightURL{https://creativecommons.org/licenses/by/4.0/}
+ \pdfxEnableCommands{\def\utext#1{#1,}}
+\end{filecontents*}
+\documentclass[
+    appendixprefix=true,
+    BCOR=5mm,
+    bibliography=totoc,
+    DIV=17,
+    draft=false,
+    fontsize=11pt,
+    headinclude=true,
+    headings=optiontohead,
+    listof=chaptergapsmall,
+    listof=totoc,
+    numbers=noenddot,
+    open=any,
+    paper=a4,
+    parskip=half-,
+    twoside,
+]{scrreprt}
+\input{preamble/packages}
+\usepackage{xr-hyper}
+\input{preamble/meta}
+\input{preamble/commands}
+\input{preamble/paper_v2}
+\input{preamble/lean_links}
+\input{preamble/nomenclature}
+\input{preamble/abbreviations_def}
+\input{preamble/code_languages}
+\addbibresource{bibliography/references.bib}
+\KOMAoptions{DIV=last}
+\setcounter{tocdepth}{1}
+\renewcommand*{\thechapter}{S.\arabic{chapter}}
+\renewcommand*{\theHchapter}{supplement.\arabic{chapter}}
+\DeclareTOCStyleEntry[numwidth=3.5em]{chapter}{chapter}
+\DeclareTOCStyleEntry[numwidth=3.5em]{tocline}{figure}
+\DeclareTOCStyleEntry[numwidth=3.5em]{tocline}{table}
+\IfFileExists{main.aux}{%
+    \externaldocument[][nocite]{main}[thesis.pdf]%
+}{}
+
+\begin{document}
+\hypersetup{pageanchor=false}
+\begin{titlepage}
+\centering
+\vspace*{3cm}
+{\LARGE\bfseries \mytitle\par}
+\vspace{1cm}
+{\Large Technical Supplement\par}
+\vspace{1.5cm}
+{\large \autor\par}
+\vfill
+{\large \myuniversity\par}
+\vspace{1cm}
+\end{titlepage}
+\pagenumbering{roman}
+\hypersetup{pageanchor=true}
+\pagestyle{scrheadings}
+\begin{spacing}{1}
+\tableofcontents
+\clearpage
+\listoffigures
+\listoftables
+\end{spacing}
+\clearpage
+\pagenumbering{arabic}
+\input{supplement/games}
+\input{supplement/attention}
+\input{supplement/trajectory}
+\input{supplement/experiments}
+\clearpage
+\printbibliography[category=inbib,resetnumbers]
+\end{document}

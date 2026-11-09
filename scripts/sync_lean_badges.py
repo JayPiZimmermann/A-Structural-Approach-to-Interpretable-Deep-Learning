@@ -22,7 +22,9 @@ def main():
     previous=json.loads(config.read_text()) if config.exists() else {}
     links={k:v for k,v in previous.items() if v.get('equation')}
     changed=[]
-    for path in sorted((ROOT/'tex/chapters').glob('*.tex')):
+    paths = [path for directory in ['tex/chapters', 'tex/supplement']
+             for path in (ROOT/directory).rglob('*.tex')]
+    for path in sorted(paths):
         original=path.read_text()
         def annotate(match):
             env,body=match.group(1),match.group(2)
@@ -59,6 +61,8 @@ def main():
         if result!=original:
             changed.append(str(path.relative_to(ROOT)))
             if not args.check:path.write_text(result)
+    links = {**{key: links[key] for key in previous if key in links},
+             **{key: value for key, value in links.items() if key not in previous}}
     result=json.dumps(links,indent=2)+'\n'
     if not config.exists() or config.read_text()!=result:
         changed.append(str(config.relative_to(ROOT)))

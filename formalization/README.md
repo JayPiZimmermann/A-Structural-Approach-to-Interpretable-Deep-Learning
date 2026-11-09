@@ -140,6 +140,15 @@ are genuine hypotheses; fully masked rows and stochastic inference are not silen
 covered. The backward attention game and its conditional Value-routing semantics
 remain separate mathematical objects.
 
+A later, separate real-ViT implementation campaign uses canonical recentering and
+shifted/capped algorithmic backward signals. Across 24 cases it reconstructs logits
+and gradient differences to approximately `1e-15`, but it does not compute the
+unchanged individual convex-head derivatives. SplitCAM at alpha 0.4 is within
+0.0040–0.279% relative L2 of the ordinary activation-times-gradient control. This
+empirical result is not a kernel certificate for the stabilization and establishes
+no attribution-quality advantage. See the root README for the exact campaign
+commit, receipt and heatmaps.
+
 ## Main modules
 
 | Module | Mathematical content |
@@ -249,7 +258,17 @@ the development symlink is not needed.
 
 ## Source links
 
-`tex_links.json` maps source labels to declarations. The root script
+`tex_links.json` maps source labels in both the main thesis and technical
+supplement to declarations. The main PDF has 139 pages, within its 150-page cap,
+and the supplement has 85 pages. Their 157 and 59 Lean annotations cover all 135
+unique source targets across 216 occurrences. The complete source-reference
+inventory is distributed across both roots; supporting proofs moved without
+changing the verified Lean source. The publication guard
+`python3 reports/evidence/page-budget/verify_publication.py`, run from the
+repository root after copying both PDFs, checks both documents and every bound
+proof-source hash. The passed result is recorded in
+`../reports/evidence/page-budget/publication-checks.json`; the accompanying
+`final-editorial-audit.json` covers editorial checks. The root script
 `scripts/generate_lean_links.py` locates each declaration in a committed source
 snapshot, checks its exact file contents, and generates permanent GitHub links
 with real line numbers. `lean_links.json` records the commit and file hashes.

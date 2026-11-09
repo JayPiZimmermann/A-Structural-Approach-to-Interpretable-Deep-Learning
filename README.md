@@ -1,7 +1,8 @@
 # A Structural Approach to Interpretable Deep Learning
 
 Master's thesis by Jakob Zimmermann: **From DC Decompositions to Two-Player Games**.
-This repository contains the thesis TeX, the two paper sources, a shared Lean
+This repository contains the thesis and technical-supplement TeX, the two paper
+sources, a shared Lean
 formalization, and adapters for reproducing the thesis tables from the official code.
 
 The thesis brings together **Hidden Monotonicity**, a [CVPR 2026 Highlight](https://cvpr.thecvf.com/virtual/2026/poster/36564), and **Playing the Network Backward**, an [arXiv preprint (v2)](https://arxiv.org/abs/2605.06212v2). Jakob Paul Zimmermann is first author of both coauthored works. The thesis integrates their theoretical and empirical results, extends the convex/monotone decomposition to smooth activations and finite Transformers, and adds a partial Lean formalization.
@@ -15,10 +16,16 @@ and unfinished drafts. The current repair and Transformer revision is local only
 Its complete clean proof gate passed at
 `1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`: 167 modules, 490 reviewed exact
 contracts and 3,640 imported theorem axiom audits, with all 168 commands successful.
-The 216 source links are pinned to that revision. The checked 223-page thesis PDF
-has no overfull boxes or unresolved references/citations; its build record is
-[publication-build.json](reports/publication-build.json). See the handovers for
-the separate ongoing ViT implementation task.
+The 216 proof-source mappings are pinned to that revision and distributed between
+the **139-page main thesis** and **85-page technical supplement**. The main document
+stays within its hard 150-page cap. Detailed proofs and full supporting experiments
+moved to the supplement while the substantive improvements remain. See the
+handovers and [publication receipt](reports/publication-build.json) for validation
+and experiment details.
+
+Independent mathematical, empirical and [text-retention audits](reports/evidence/page-budget/text-retention.json)
+account for all 804 original content blocks and preserve all 314 displayed formulas.
+No lost substantive information was found across the main thesis and supplement.
 
 ## Academic reviews
 
@@ -34,8 +41,9 @@ stability evidence.
 
 ## Contents
 
-- `tex/`: thesis sources and figures. Build from `tex/main.tex`.
-- `docs/thesis.pdf`: compiled thesis with commit-pinned links to the Lean theorems.
+- `tex/`: main thesis (`main.tex`), technical supplement (`supplement.tex`), and figures.
+- `docs/thesis.pdf`: main thesis, at most 150 PDF pages.
+- `docs/thesis-supplement.pdf`: companion proofs and detailed experiments. Keep both PDFs together for cross-document links.
 - `arxive/hiddenMonotonicity/`: Hidden Monotonicity paper sources, with reported mathematical corrections.
 - `arxive/playingTheNetworkBackward/`: preprint revised for AISTATS, arXiv 2605.06212v2, with reported mathematical corrections and explicit routing-game tie conventions.
 - `arxive/downloads/`: unchanged arXiv PDF/source download and checksums.
@@ -94,6 +102,34 @@ retains all twenty tested cases, including fifteen with final absolute error
 above `1e-8` and stream magnitudes up to `5.95e111`. See
 [its evidence](reports/evidence/transformer-dc/numeric-review.json).
 
+## Real-ViT diagnostic campaign
+
+A separate local branch, `research/transformer-dc-stabilization`, in
+`/home/jzimmermann/code/hidden-monotonicity-transformer-dc` contains the completed ViT-B/16 campaign. Model execution is pinned
+to `aa2d8c2d46744d7fee8ada2ac66be4d4534dd888`; final analysis/rendering is at
+`5dd534989463b3e690b900f6a2ca3021213cf79f`. The final artifact commit is
+`4c02ba66c681437b03a6bd76fad1cae24f45da4e`; its clean worktree includes
+reproduction commands in `reports/vit_dc_comparison/README.md`. This branch is
+separate from the thesis's validated HM submodule pin.
+
+Six fixed qualitative images at four alpha values give 24 split cases and 36
+fresh baseline maps. Maximum absolute errors are `5.329e-15` for logits,
+`1.353e-15` for separate-head gradient reconstruction and `6.523e-16` for
+intermediate gradients. The stabilized backward produces shifted/capped
+algorithmic signals, not unchanged convex-head derivatives. At alpha 0.4,
+SplitCAM is only 0.0040–0.279% away from the ordinary activation-times-gradient
+control in relative L2. These results establish accurate reconstruction on the
+six examples, not improved attribution quality or benchmark performance.
+
+- [Red fox in snow detail](/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_dc_comparison/comparison/red_fox_snow_detail.png).
+- [Six-image method comparison](/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_dc_comparison/comparison/method_comparison.pdf).
+- [Machine-readable numerical summary](/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_dc_comparison/comparison/summary.json).
+
+The worktree's `reports/vit_dc_comparison/campaign_receipt.json` records the
+executed source, checkpoint, arrays, figures and independent audit. Results and
+commits remain local; the raw unstabilized diagnostic above remains a separate
+numerical limitation.
+
 ## Check the Lean proofs
 
 Install Lean's `elan` toolchain manager, then:
@@ -112,7 +148,7 @@ definitions, theorem coverage, and assumptions.
 
 The verification workflow follows the six downloaded formalization/exposition skills from the [planar-features repository](https://anonymous.4open.science/r/Removing-spurious-minima-for-planar-features-by-skip-connections-35F8/README.md). `skills/upstream-planar-features/provenance.json` records their source URLs and checksums. Independent adversarial reviews, executable counterexamples and repair evidence are retained under `reports/`.
 
-## Build the thesis
+## Build the thesis and technical supplement
 
 With TeX Live, `latexmk`, and Biber installed:
 
@@ -120,10 +156,24 @@ With TeX Live, `latexmk`, and Biber installed:
 cd tex
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 makeindex main.nlo -s nomencl.ist -o main.nls
+latexmk -pdf -interaction=nonstopmode -halt-on-error supplement.tex
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
+latexmk -pdf -interaction=nonstopmode -halt-on-error supplement.tex
 ```
 
-The public cover omits the student registration number. It can be set privately
+Build both roots so their external labels resolve, and copy both PDFs together
+as `docs/thesis.pdf` and `docs/thesis-supplement.pdf`. Then run from the repository
+root:
+
+```sh
+python3 reports/evidence/page-budget/verify_publication.py
+```
+
+The guard checks the main 150-page cap, final logs, both PDF copies, combined
+proof links, cross-document destinations and the unchanged verified proof source. The
+current [publication checks](reports/evidence/page-budget/publication-checks.json)
+and [editorial audit](reports/evidence/page-budget/final-editorial-audit.json)
+record the validated two-document layout. The public cover omits the student registration number. It can be set privately
 in `tex/preamble/meta.tex`.
 
 ## Reproduce the thesis tables
@@ -179,8 +229,8 @@ python3 scripts/check_paper_references.py --check
 ```
 
 This follows the active TeX input trees, verifies explicit citation aliases, and
-checks that every source reference is cited in the thesis and present in its
-bibliography. The current report has no missing references (74 source keys from
+checks that every source reference is cited across the main thesis and technical
+supplement and present in their bibliographies. The current report has no missing references (74 source keys from
 Hidden Monotonicity, including appendix aliases, and 72 from the revised game paper).
 Publication and named-method titles retain their official wording.
 
@@ -192,7 +242,7 @@ from arXiv; it is not redistributed here.
 
 ## Stable links from TeX to Lean
 
-Thesis statements use numbered `Lean_1`, `Lean_2`, … references inside their
+Statements in the main thesis and supplement use numbered `Lean_1`, `Lean_2`, … references inside their
 heading brackets, via `\LeanResult{source-label}`; selected equation numbers
 link directly to their declarations too. The design follows the TeX commands in arXiv:2610.01728v2, with links
 pinned to a commit instead of the moving default branch.
