@@ -1,0 +1,52 @@
+{
+  "status": "passed_with_explicit_scope",
+  "audit_type": "Independent mathematical derivation and finite numerical diagnostics",
+  "not_a_claim_of": [
+    "a Lean certificate for these stabilization rules",
+    "a floating-point error bound",
+    "a real ViT experiment",
+    "global convexity or monotonicity of recentered numerical stream values",
+    "preservation of the gradients of the original unstabilized convex components"
+  ],
+  "local_identity": {
+    "assumption": "Fplus(p,n)-Fminus(p,n)=f(p-n), with differentiability or explicitly matched selected backward conventions.",
+    "jacobian": "P=[[A,B],[C,D]], J=Df(p-n): A-C=J and B-D=-J, equivalently [I,-I]P=J[I,-I].",
+    "consequence": "Any equal correction to the two output Jacobian rows leaves the signed derivative identity unchanged. Composition preserves the original network derivative when local residuals and backward conventions match."
+  },
+  "forward_recentring": {
+    "formula": "C=(Fplus+Fminus)/2, d=f(p-n). Subtract C-|d|/2 from both outputs to obtain dplus,dminus as numerical values.",
+    "stable_evaluation": "Evaluate d through the local ordinary primitive, not by subtracting two enormous streams. The separately evaluated full original model remains a validation reference, not a source of substituted activations or gradients.",
+    "detached_proxy": "Cproxy=lambda*(C-stopgrad(C))+stopgrad(|d|/2); outputs Cproxy+d/2,Cproxy-d/2.",
+    "scope": "Detached correction changes the interpretation of the individual stream sensitivities. They are algorithmic frozen-reference quantities, not gradients of globally convex recentered functions."
+  },
+  "backward_shift": {
+    "alpha_operator": "R_alpha(splus,sminus)=(splus-alpha*(splus+sminus),sminus-alpha*(splus+sminus)).",
+    "lambda": "lambda=1-2*alpha",
+    "common_and_difference": "R_alpha scales the cotangent sum by lambda and preserves its difference.",
+    "proxy_pullback": "The detached common-derivative proxy gives P_transpose R_alpha: an output-adjoint shift before the local pullback.",
+    "formal_mlp_schedule": "The formal recurrence is s_l=R_alpha_l P_l_transpose s_(l+1), with output source R_alpha_L. The before-pull form is equivalent after moving each shift to the preceding logical block's output boundary and applying the final input-boundary shift. The input-boundary shift does not change unified=(splus-sminus)/2.",
+    "grouping_requirement": "To match the MLP theorem, count one shift per logical affine-ReLU block boundary. Inserting extra shifts at affine, reshape, transpose, or layout nodes defines a different attribution algorithm.",
+    "half_shift_control": "alpha=1/2 everywhere yields positive and negative unified head sensitivities equal to plus/minus one half of the original gradient.",
+    "seed_independence": "Separate head passes must use the same shifts fixed from forward data or parameters. Seed-dependent shift choices can break gradient reconstruction, as the explicit two-by-two counterexample demonstrates."
+  },
+  "numerical_basis_recommendation": {
+    "difference_path": "The antisymmetric cotangent evolves by the ordinary primitive VJP. Propagating it explicitly avoids recovering a small model gradient by subtracting enormous head sensitivities.",
+    "common_path": "The common contribution uses the actual paired primitive VJP evaluated at recentered stream states, with the declared shift schedule.",
+    "adaptive_joint_variant": "Jointly damping the average of two source-head cotangents preserves their difference by construction, but is a separate algorithm from formal shiftPair unless equivalence is proved. It must not be silently substituted for the MLP shift schedule."
+  },
+  "boundary_findings": [
+    "Initial differentiable positive/negative clamping can give a difference derivative of two or zero at a zero input. A balanced straight-through lift p=x/2+stopgrad(|x|/2), n=-x/2+stopgrad(|x|/2) preserves the unit derivative.",
+    "At a ReLU tie, torch.maximum(p,n)-n and torch.relu(p-n) may select different derivatives. An explicit inactive-at-tie gate matches the native ReLU convention tested here.",
+    "A fixed common input shift changes the individual product-head gradients, so the ReLU MLP head-Jacobian shift-equivariance argument does not extend unchanged to products."
+  ],
+  "evidence": {
+    "test_program": "test.py",
+    "results": "results.json",
+    "run_log": "run.log",
+    "checks_passed": 106,
+    "mlp_cases": 17,
+    "depths": [0, 1, 2, 3, 4],
+    "command": "/home/jzimmermann/code/dc_decompose_neurips_submission/.venv/bin/python reports/evidence/transformer-dc/stabilization-review/test.py",
+    "exit_code": 0
+  }
+}

@@ -14,12 +14,22 @@ does not authorize silently publishing this revision.
 The new source includes the generalized convex/monotone DC construction,
 closed-form activation and softmax splits, an explicit arbitrary-depth
 Transformer definition and splitting algorithm, and the requested review repairs.
-The latest complete thesis PDF and full Lean gate still belong to the previous
-checkpoint until the parent replaces this paragraph with a new passed receipt.
-Do not infer final PDF layout or integrated proof verification from successful
-leaf builds. The last completed full Lean gate is
-`0f3cfb0ea660556c14da510e665281f07acc471d` (139 modules, 370 exact contracts,
-3,048 theorem axiom audits); its published TeX has 190 mapped links.
+The complete clean Lean gate passed at source commit
+`1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`: **167 modules, 490 independently
+reviewed exact contracts and 3,640 imported project theorem axiom audits**.
+All 168 commands exited zero and the bound source snapshot remained fixed.
+Evidence is in `reports/verification/commit-1f886dd/` and
+`reports/verification/current/`. The 216 generated source links are checked and
+pinned to that commit. The previous `0f3cfb0` gate remains archived.
+
+The final thesis build is copied to `docs/thesis.pdf`: **223 pages**, no overfull
+boxes or undefined references/citations, and all terminology checks pass. Six new
+mathematics/provenance pages were visually checked. All 216 Lean URI occurrences
+(135 unique expected targets) are present and pinned to the verified source commit.
+The reference audit retains all 74 HM and 72 game-paper source keys. The build
+receipt is `reports/publication-build.json`, with evidence under
+`reports/evidence/tex-transformer-final/`. PDF SHA-256:
+`8a676556a25d55c88888dded2b005d7421150c0e3b2e0f529742e2cd8e1887d7`.
 
 The two revised source papers already compile independently: Hidden Monotonicity
 has 38 pages and Playing the Network Backward has 83 pages. References and
@@ -290,9 +300,10 @@ the table review alone.
 
 Theorem/lemma/definition headings contain numbered `Lean_1`, `Lean_2`, … links
 inside their heading brackets, following the style of arXiv 2610.01728v2.
-Equation numbers link directly to declarations. The previous published checkpoint has
-**190 mapped links** pinned to the clean verified source commit
-`0f3cfb0ea660556c14da510e665281f07acc471d`.
+Equation numbers link directly to declarations. The current local revision has
+**216 mapped links**, generated and checked against the clean verified source
+commit `1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`. These new commit URLs will be
+publicly resolvable only after the local source commit is published.
 
 `formalization/tex_links.json` records declaration and scope; the manual review
 is `reports/lean-link-coverage-review.json`. `scripts/sync_lean_badges.py` retains

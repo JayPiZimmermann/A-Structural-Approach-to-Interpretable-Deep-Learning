@@ -42,7 +42,7 @@ In Table~\ref{tab:randomization_sanity_check}, every reported SplitCAM and Split
 
 \subsection{Computational Efficiency}\label{app:p1_timing}
 
-Table~\ref{tab:timing_comparison} reports mean attribution times across the custom 50-image validation subset of ImageNet-S for ResNet-18 and VGG-16. Model splitting is reported separately, averaged over 20 setup procedures: 0.033\,s for ResNet-18 and 0.030\,s for VGG-16. SplitCAM and SplitGrad take 0.33--0.44\,s per image, compared with 0.28--0.31\,s for the row labelled Guided Grad-CAM. SplitCAM takes approximately 14--29 times as long as the corresponding ordinary Grad-CAM and LayerCAM rows, while the split methods are much faster than the reported Feature Ablation and Occlusion configurations.
+Table~\ref{tab:timing_comparison} reports mean attribution times across the custom 50-image validation subset of ImageNet-S for ResNet-18 and VGG-16. Model splitting is reported separately, averaged over 20 setup procedures: 0.033\,s for ResNet-18 and 0.030\,s for VGG-16. SplitCAM and SplitGrad take 0.33--0.44\,s per image, compared with 0.28--0.31\,s for the row labeled Guided Grad-CAM. SplitCAM takes approximately 14--29 times as long as the corresponding ordinary Grad-CAM and LayerCAM rows, while the split methods are much faster than the reported Feature Ablation and Occlusion configurations.
 
 The released evaluator initializes the split model once per method configuration and reuses it across images. Its per-image timer covers attribution generation and the helper's postprocessing, copying and cleanup; image and model loading, initial input transfer to the device, target prediction and model splitting occur outside that timer. The split helper computes maps for all spatial layer chunks with cached activations and gradients before selecting the configured output, so the timing includes this additional map computation. The shifting parameter $\alpha$ changes the backward propagation rule, but runtime variation with $\alpha$ was not separately measured.
 
@@ -814,7 +814,13 @@ $\varepsilon=1$, weight-scale-$0.01$, input-scale-$0.1$ case.
 All twenty cases, including failures, are retained in
 \texttt{reports/evidence/transformer-dc/numeric.json}, together with the
 environment, source hash, per-stage reconstruction error, and stream magnitudes.
-The command is \texttt{python scripts/transformer\_dc\_demo.py --output RESULT.json}.
+The command is:
+\begin{quote}\small
+\begin{verbatim}
+python scripts/transformer_dc_demo.py \
+    --output RESULT.json
+\end{verbatim}
+\end{quote}
 
 The benign case reconstructs the logits within $2.78\times10^{-17}$, but fifteen
 of the twenty cases exceed a final maximum absolute error of $10^{-8}$.
@@ -851,7 +857,7 @@ A separate affine readout accounts for an ungated target logit.
 
 The Transformer development defines signed projections, actual masked
 Query--Key products, coupled softmax, attention--Value products, input-dependent
-LayerNorm, residual additions, and the feed-forward subnetwork. A finite list of
+LayerNorm, residual additions, and the feedforward subnetwork. A finite list of
 blocks represents arbitrary depth, including zero blocks, with an optional final
 LayerNorm and a signed affine readout. Compilation to an explicit expression
 language is proved equal to the ordinary forward evaluator. A recursive

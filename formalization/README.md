@@ -121,12 +121,15 @@ The main endpoints in `TransformerCorrectness.lean` are:
   globally convex, nonnegative components whose difference is the model output.
   It does not assert raw-input monotonicity.
 
-These sources compile. Completed leaf reviews include independent exact-type,
-axiom and boundary checks; the assembly review and final combined production gate
-are pending in this local revision; the last
-completed full gate is `0f3cfb0ea660556c14da510e665281f07acc471d`. Consult
-[the Lean handover](../HANDOVER_LEAN.md) for current integration status. Contracts
-and receipts are under `../reports/evidence/dc-generalization/`,
+These sources passed independent exact-type, axiom, source and boundary reviews
+and the complete clean production gate at
+`1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`. The gate checked 167 modules,
+490 selected contracts and 3,640 imported project theorem constants; all 168
+commands exited zero and the bound source snapshot remained unchanged. Read
+[the receipt](../reports/verification/commit-1f886dd/receipt.json) and
+[the Lean handover](../HANDOVER_LEAN.md) for the verified source and remaining
+coverage limits. The 216 generated source links are pinned to that local commit.
+Contracts and review evidence are under `../reports/evidence/dc-generalization/`,
 `../reports/evidence/softmax-dc/` and `../reports/evidence/transformer-dc/`.
 
 The theorem is an exact real-arithmetic construction. It does not prove floating-

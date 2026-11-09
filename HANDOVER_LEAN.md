@@ -1,19 +1,18 @@
 # Lean handover — resumed 9 November 2026
 
 The current revision adds convex/monotone activation splitting and an actual
-arbitrary-depth Transformer DC algorithm. Those new sources compile and have
-separate independent reviews; final assembly integration and the complete clean
-gate are still pending. **The formalization as a whole remains unfinished.**
-The last completed full gate remains `0f3cfb0` until a newer passing receipt is
-recorded below. Six independently reviewed routing-history modules remain outside
-the production import closure; this new Transformer work does not promote them.
+arbitrary-depth Transformer DC algorithm. The new sources, independent reviews,
+and complete clean gate passed at source commit
+`1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`. **The formalization as a whole
+remains unfinished.** Six independently reviewed routing-history modules remain
+outside the production import closure; the Transformer work does not promote them.
 
 The independent editorial and empirical state is in [HANDOVER_TEX.md](HANDOVER_TEX.md).
 Current changes and official-code repair commits are local only; the user asked
 for local execution first. Do not publish this revision under the earlier
 checkpoint's push authorization.
 
-## New DC and Transformer work awaiting the final integrated gate
+## DC and Transformer work included in the verified gate
 
 The 15 activation leaves add the nonsmooth profile criterion, absolute-curvature
 lift, closed-form GELU/Swish/sigmoid/Softplus pairs, exact ReLU `(max(x,y), y)`,
@@ -52,14 +51,13 @@ The actual Transformer development uses these source modules:
   `Transformer.dc_decomposition`, and `Transformer.raw_dc_decomposition` connect
   the splitting algorithm to the ordinary same-parameter forward computation.
 
-The full Transformer theorem has compiled; independent exact, axiom, source and
-boundary reviews and final integration must be read before claiming a passed
-production gate. The current primitive integration receipt,
-`reports/evidence/transformer-dc/integration/primitives-receipt.json`, records
-160 reachable modules, 454 selected contracts and 211 mappings at that intermediate
-stage. These are **not final gate counts** and exclude pending assembly promotion.
-The integration owner controls roots, coverage, inventory, exact contracts and
-source links; do not edit them concurrently with that owner.
+The full Transformer theorem passed independent exact, axiom, source and
+boundary reviews and the integrated production gate. Final integration is recorded
+in `reports/evidence/transformer-dc/integration/final-metadata-receipt.json`;
+its earlier primitive receipt is an intermediate historical snapshot, not the
+final count. The complete root contains 167 modules, 490 selected contracts and
+216 source mappings. Keep the frozen reviewed source hashes and exact mapping
+scopes when extending this development.
 
 Preserve these scope distinctions:
 
@@ -117,35 +115,35 @@ Build sequentially on a 16 GB machine. Independent agents may run targeted
 diagnostics into separate directories; do not run competing full builds or let
 them write the same production artifacts.
 
-The last complete clean gate passed at source commit
-**`0f3cfb0ea660556c14da510e665281f07acc471d`**:
+The complete clean gate passed at source commit
+**`1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`**:
 
-- **139 modules** in the `All` import closure.
-- **370 independently reviewed exact declaration contracts**, including newly
-  reviewed definition contracts, with module and universe-arity checks.
-- **3,048 imported project theorem constants** axiom-audited, including generated
-  and secondary results. This is not a count of 3,048 source-paper theorems.
+- **167 modules** in the `All` import closure.
+- **490 independently reviewed exact declaration contracts**, including definition
+  contracts and explicit module/universe-arity checks.
+- **3,640 imported project theorem constants** axiom-audited, including generated
+  and secondary results. This is not a count of 3,640 source-paper theorems.
+- All **168 commands exited zero**; the source/configuration snapshot remained
+  unchanged throughout the gate.
 - Allowed axioms only: `propext`, `Classical.choice`, `Quot.sound`.
 
 Evidence is in `reports/verification/current/` and archived under
-`reports/verification/commit-0f3cfb0/`. Earlier verified snapshots are also
-retained. Read the receipt's `source.commit`, exact counts and hashed files; do
-not infer a clean verification of later unimported files from a nearby log.
-The handover/artifact commit necessarily follows the verified source commit.
-That historical snapshot remains immutable; the current working root and bound
-configuration have since changed and require the new gate described above.
+`reports/verification/commit-1f886dd/`. Read the receipt's `source.commit`, exact
+counts and hashed files; a nearby build log is not a substitute for this receipt.
+The later handover/artifact commit is intentionally separate from the verified
+source commit. It must not alter the imported source closure or bound configuration.
 
-The previous published TeX has **190 mapped links**, pinned to that verified commit.
-It includes the two integrated batches and does not advertise the unimported
-routing extension. The source normalization from `e42fe47` to `0f3cfb0` changed
-only JSON order/encoding: all 190 mapping values were identical. The independent
-promotion review, `reports/lean-frozen-promotion-review.json`, records the final
-source hashes and this normalization. All 140 clean-gate commands exited zero;
-the source/configuration snapshot was unchanged throughout the run.
+The current local TeX has **216 mapped links**, generated and checked against
+that verified commit. Their source URLs require publication of the local source
+commit before they can resolve on GitHub. The six-module routing-history batch
+below remains outside the import closure and is not advertised by those links.
 
-The previous `current` receipt and every referenced artifact/log were confirmed
-identical to the `commit-7c3c9c2` archive before refreshing `current`. Unreferenced
-older logs may remain there; the receipt's command list and hashes are authoritative.
+The previous full gate, `0f3cfb0ea660556c14da510e665281f07acc471d`, is retained in
+`reports/verification/commit-0f3cfb0/`: 139 modules, 370 contracts, 3,048 axiom audits,
+140 successful commands and 190 mappings. Its earlier Softplus Circuit and
+conditioned-trajectory promotion remains part of the current verified root.
+Unreferenced older logs may remain in `current`; the current receipt's command
+list and hashes are authoritative.
 
 ## User requirements and proof discipline
 
@@ -217,7 +215,7 @@ max-pool ties, layered softplus SPNE, zero-support survival conditioning, and
 local attention reference-KL optimization. Consult exact contracts and scopes;
 these summaries do not enlarge them.
 
-## Extensions already integrated in the last verified root
+## Earlier extensions retained in the verified root
 
 ### 1. Softplus Circuit extension
 

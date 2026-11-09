@@ -11,10 +11,14 @@ The thesis brings together **Hidden Monotonicity**, a [CVPR 2026 Highlight](http
 Read [HANDOVER_TEX.md](HANDOVER_TEX.md) for the independent TeX task and
 [HANDOVER_LEAN.md](HANDOVER_LEAN.md) for the independent Astra proof task.
 They distinguish the clean verified root, frozen extensions awaiting integration,
-and unfinished drafts. The current repair and Transformer revision is local only;
-its final integrated proof gate and thesis build are pending. The last completed
-full gate is `0f3cfb0ea660556c14da510e665281f07acc471d`. Read the handovers and
-receipts before treating newer leaf builds as publication verification.
+and unfinished drafts. The current repair and Transformer revision is local only.
+Its complete clean proof gate passed at
+`1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`: 167 modules, 490 reviewed exact
+contracts and 3,640 imported theorem axiom audits, with all 168 commands successful.
+The 216 source links are pinned to that revision. The checked 223-page thesis PDF
+has no overfull boxes or unresolved references/citations; its build record is
+[publication-build.json](reports/publication-build.json). See the handovers for
+the separate ongoing ViT implementation task.
 
 ## Academic reviews
 
@@ -78,8 +82,9 @@ actual masked multihead attention, residuals, input-dependent LayerNorm, an MLP,
 optional final normalization and signed affine logits at arbitrary finite depth.
 The algorithm and its main endpoints are in
 [TransformerCorrectness.lean](formalization/HiddenMonotonicity/TransformerCorrectness.lean).
-Their exactness and structural theorems compile; the final integrated verification
-status is tracked in the handovers.
+Their exactness and structural theorems passed the integrated verification gate;
+[the receipt](reports/verification/commit-1f886dd/receipt.json) binds the checked
+source commit and complete imported proof closure.
 
 Monotonicity and convexity of the complete split hold on nonnegative doubled
 inputs. The positive/negative lift of raw inputs gives globally convex heads,

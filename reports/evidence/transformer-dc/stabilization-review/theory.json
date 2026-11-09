@@ -1,0 +1,41 @@
+{
+  "status": "independently_reviewed_analytic_results",
+  "scope": "Stabilized DC-derived forward and backward algorithms, plus an alternative direct LayerNorm DC pair. This is not a new Lean verification receipt.",
+  "paired_operation": {
+    "identity": "G_plus(p,n)-G_minus(p,n)=f(p-n)",
+    "common_component": "C=(G_plus+G_minus)/2",
+    "forward_gauge": "The exact common shift C-|f|/2 gives (f_plus,f_minus). Evaluate f by the local ordinary primitive, not by subtracting large G values. An independent original model is reserved for validation.",
+    "stable_initial_lift": "p=x/2+detach(|x|)/2; n=-x/2+detach(|x|)/2. Forward values are canonical and the VJP is (u_plus-u_minus)/2, including x=0.",
+    "backward_rule": "For fixed forward-dependent lambda=1-2alpha, VJP_G_shift(u_plus,u_minus)=lambda*(u_plus+u_minus)*DC + (u_plus-u_minus)*D[f(p-n)]/2.",
+    "matrix_identity": "If Delta=[I,-I] and P=DG, Delta P=Df Delta. With R_alpha=[[1-alpha,-alpha],[-alpha,1-alpha]], Delta R_alpha=Delta, so Delta(R_alpha P)=Df Delta.",
+    "depth_proof": "The identity composes by multiplication of the local Jacobians. Thus subtracting the two fixed linear head VJPs recovers the ordinary gradient at arbitrary finite depth, with the selected derivative convention at nonsmooth points.",
+    "alpha_half_control": "lambda=0 gives plus/minus one half of the ordinary gradient after the balanced input lift.",
+    "adaptive_requirement": "Any damping factor used in separately evaluated head gradients must depend only on forward data/parameters, never on the backward seed. Joint two-source common/difference propagation permits separately documented adaptive common-mode normalization.",
+    "mlp_compatibility": "The paper recurrence is s_l=R_l P_l^T s_(l+1), with terminal R_L. The output-adjoint implementation P_l^T R_(l+1) gives the same chain up to input R_0, which cancels in the balanced readout. Match logical affine-ReLU boundaries; shifting both affine and ReLU separately changes the schedule.",
+    "scope_limit": "Canonical recentered forward heads are generally not the original globally convex heads. Detached/custom backward signals need not be derivatives of those displayed forward functions. Exact residual-gradient recovery does not establish individual-head accuracy, attribution faithfulness, or numerical stability."
+  },
+  "direct_layernorm": {
+    "assumptions": "d>=1; epsilon>0; fixed real gamma,beta allowed after the normalized core.",
+    "definitions": "u=z-mean(z); h=sqrt(epsilon+mean(u^2)); f_i=u_i/h; A=3sqrt(d)/(2sqrt(epsilon)); K=5/(4sqrt(epsilon)).",
+    "formula": "F_i_plus/minus(p,n) = [A(h(p-n)-sqrt(epsilon)) +/- f_i(p-n)]/2 + K sum_j(p_j+n_j).",
+    "properties": "Exact residual f_i; both heads globally convex and coordinatewise nondecreasing; both nonnegative on the nonnegative orthant and zero at the origin.",
+    "curvature_lemma": "For phi(t)=sqrt(epsilon+||t||^2) and unit e, g_e(t)=<e,t>/phi(t), |D^2 g_e[w,w]| <= 3/(2sqrt(epsilon)) D^2 phi[w,w]. Pull back by t=Cz/sqrt(d), multiply by sqrt(d).",
+    "polynomial_certificate": "After epsilon normalization, ||w||=1, r=||t||, R=r^2 and v=||w_perp||^2, the desired squared inequality reduces to 9(R-1)^2+2R(R-5)^2 v+3R^2(3R^2+10R+19)v^2 >=0.",
+    "gradient_bounds": "partial_j h=u_j/(d h), so |partial_j h|<=1/sqrt(d). Df=C/h-u u^T/(d h^3), so its operator norm<=1/sqrt(epsilon). Hence every coordinate partial of F_plus/minus is nonnegative with this K.",
+    "stable_common_value": "h-sqrt(epsilon) = variance/(h+sqrt(epsilon)) avoids cancellation near zero variance.",
+    "common_vjp": "For Cnorm=A(h-sqrt(epsilon))/2+K sum(p+n), C_pj=A*u_j/(2d h)+K and C_nj=-A*u_j/(2d h)+K. They are shared across output indices. With gamma,beta, C_i=abs(gamma_i)*Cnorm+abs(beta_i)/2; the common VJP weights the sum of output cotangents by abs(gamma_i).",
+    "boundary_cases": "For d=1 or zero variance the formulas are defined; for d=1 the normalized residual is zero and both heads are K(p+n).",
+    "conditioning_limit": "The epsilon exponent improves from -3/2 to -1/2, but the common row sum contains 2dK, approximately 607157 for d=768 and epsilon=1e-5. No floating-point stability or practical attribution-quality claim follows.",
+    "lean_status": "Analytical alternative only; existing full Transformer Lean proof uses the separately verified variance/product/inverse-square-root construction."
+  },
+  "independent_reviews": [
+    {
+      "agent": "/root/vit_stabilization_theory/shifted_pair_audit",
+      "result": "General quotient-Jacobian invariant, balanced zero-input lift, fixed-seed linearity, and MLP shift schedule confirmed."
+    },
+    {
+      "agent": "/root/vit_stabilization_theory/direct_layernorm_audit",
+      "result": "All direct-LayerNorm constants, Hessian certificate, coordinate bounds, and d=1/zero-variance boundaries confirmed."
+    }
+  ]
+}

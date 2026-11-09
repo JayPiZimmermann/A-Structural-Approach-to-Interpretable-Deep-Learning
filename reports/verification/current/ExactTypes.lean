@@ -10612,6 +10612,3122 @@ run_cmd do
 #check @Thesis.ConditionedSurvival.trajectory_bc_monotone
 #print axioms _ThesisExactChecks.target_369
 
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_370 : Prop := (∀ (C : ℝ → ℝ) (L : ℝ), ConvexOn ℝ Set.univ (asymmetricLift C L) ↔ ConvexOn ℝ Set.univ C)
+theorem _ThesisExactChecks.target_370 : _ThesisExpectedTypes.type_370 := by exact @HiddenMonotonicity.SmoothDC.asymmetricLift_convex_iff
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.asymmetricLift_convex_iff
+  let expected ← getConstInfo `_ThesisExactChecks.target_370
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_convex_iff"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.asymmetricLift_convex_iff | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_convex_iff"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_370) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.asymmetricLift_convex_iff: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_convex_iff"
+#check @HiddenMonotonicity.SmoothDC.asymmetricLift_convex_iff
+#print axioms _ThesisExactChecks.target_370
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_371 : Prop := (∀ (C : ℝ → ℝ) (L : ℝ), Monotone (asymmetricLift C L) ↔ ∀ a b : ℝ, a ≤ b → 0 ≤ C b - C a ∧ C b - C a ≤ L * (b - a))
+theorem _ThesisExactChecks.target_371 : _ThesisExpectedTypes.type_371 := by exact @HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff_increments
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff_increments
+  let expected ← getConstInfo `_ThesisExactChecks.target_371
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff_increments"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff_increments | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff_increments"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_371) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff_increments: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff_increments"
+#check @HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff_increments
+#print axioms _ThesisExactChecks.target_371
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_372 : Prop := (∀ (C D : ℝ → ℝ) (hC : ∀ x : ℝ, HasDerivAt C (D x) x) (L : ℝ), Monotone (asymmetricLift C L) ↔ ∀ x : ℝ, 0 ≤ D x ∧ D x ≤ L)
+theorem _ThesisExactChecks.target_372 : _ThesisExpectedTypes.type_372 := by exact @HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff
+  let expected ← getConstInfo `_ThesisExactChecks.target_372
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_372) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff"
+#check @HiddenMonotonicity.SmoothDC.asymmetricLift_monotone_iff
+#print axioms _ThesisExactChecks.target_372
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_373 : Prop := (∀ (P Q f : ℝ → ℝ) (L : ℝ) (hP : ConvexOn ℝ Set.univ P) (hQ : ConvexOn ℝ Set.univ Q) (hPd : ∀ a b : ℝ, a ≤ b → 0 ≤ P b - P a ∧ P b - P a ≤ L * (b - a)) (hQd : ∀ a b : ℝ, a ≤ b → 0 ≤ Q b - Q a ∧ Q b - Q a ≤ L * (b - a)) (hdiff : ∀ t : ℝ, P t - Q t = f t), ConvexOn ℝ Set.univ (asymmetricLift P L) ∧ ConvexOn ℝ Set.univ (asymmetricLift Q L) ∧ Monotone (asymmetricLift P L) ∧ Monotone (asymmetricLift Q L) ∧ ∀ z : ℝ × ℝ, asymmetricLift P L z - asymmetricLift Q L z = f (z.1 - z.2))
+theorem _ThesisExactChecks.target_373 : _ThesisExpectedTypes.type_373 := by exact @HiddenMonotonicity.SmoothDC.asymmetric_split
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.asymmetric_split
+  let expected ← getConstInfo `_ThesisExactChecks.target_373
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.asymmetric_split"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.asymmetric_split | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.asymmetric_split"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_373) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.asymmetric_split: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.asymmetric_split"
+#check @HiddenMonotonicity.SmoothDC.asymmetric_split
+#print axioms _ThesisExactChecks.target_373
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_374 : Prop := (∀ (C : ℝ → ℝ) (L x y c : ℝ), asymmetricLift C L (x + c, y + c) = asymmetricLift C L (x, y) + L * c)
+theorem _ThesisExactChecks.target_374 : _ThesisExpectedTypes.type_374 := by exact @HiddenMonotonicity.SmoothDC.asymmetricLift_common_shift
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.asymmetricLift_common_shift
+  let expected ← getConstInfo `_ThesisExactChecks.target_374
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_common_shift"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.asymmetricLift_common_shift | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_common_shift"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_374) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.asymmetricLift_common_shift: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_common_shift"
+#check @HiddenMonotonicity.SmoothDC.asymmetricLift_common_shift
+#print axioms _ThesisExactChecks.target_374
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_375 : Prop := (∀ z : ℝ × ℝ, asymmetricLift relu 1 z = max z.1 z.2 ∧ asymmetricLift (fun _ : ℝ => 0) 1 z = z.2)
+theorem _ThesisExactChecks.target_375 : _ThesisExpectedTypes.type_375 := by exact @HiddenMonotonicity.SmoothDC.asymmetricLift_relu
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.asymmetricLift_relu
+  let expected ← getConstInfo `_ThesisExactChecks.target_375
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_relu"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.asymmetricLift_relu | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_relu"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_375) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.asymmetricLift_relu: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.asymmetricLift_relu"
+#check @HiddenMonotonicity.SmoothDC.asymmetricLift_relu
+#print axioms _ThesisExactChecks.target_375
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_376 : Prop := (ConvexOn ℝ Set.univ (asymmetricLift relu 1) ∧ ConvexOn ℝ Set.univ (asymmetricLift (fun _ : ℝ => 0) 1) ∧ Monotone (asymmetricLift relu 1) ∧ Monotone (asymmetricLift (fun _ : ℝ => 0) 1) ∧ ∀ z : ℝ × ℝ, asymmetricLift relu 1 z - asymmetricLift (fun _ : ℝ => 0) 1 z = relu (z.1 - z.2))
+theorem _ThesisExactChecks.target_376 : _ThesisExpectedTypes.type_376 := by exact @HiddenMonotonicity.SmoothDC.relu_asymmetric_split
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.relu_asymmetric_split
+  let expected ← getConstInfo `_ThesisExactChecks.target_376
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.relu_asymmetric_split"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.relu_asymmetric_split | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.relu_asymmetric_split"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_376) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.relu_asymmetric_split: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.relu_asymmetric_split"
+#check @HiddenMonotonicity.SmoothDC.relu_asymmetric_split
+#print axioms _ThesisExactChecks.target_376
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_377 : Prop := (∀ (f : ℝ → ℝ) (x : ℝ), positiveCurvature f x = (|curvature f x| + curvature f x) / 2)
+theorem _ThesisExactChecks.target_377 : _ThesisExpectedTypes.type_377 := by exact @HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute
+  let expected ← getConstInfo `_ThesisExactChecks.target_377
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_377) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute"
+#check @HiddenMonotonicity.SmoothDC.positiveCurvature_eq_absolute
+#print axioms _ThesisExactChecks.target_377
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_378 : Prop := (∀ (f : ℝ → ℝ) (x : ℝ), negativeCurvature f x = (|curvature f x| - curvature f x) / 2)
+theorem _ThesisExactChecks.target_378 : _ThesisExpectedTypes.type_378 := by exact @HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute
+  let expected ← getConstInfo `_ThesisExactChecks.target_378
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_378) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute"
+#check @HiddenMonotonicity.SmoothDC.negativeCurvature_eq_absolute
+#print axioms _ThesisExactChecks.target_378
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_379 : Prop := (∀ (f : ℝ → ℝ) (hq : Integrable (curvature f)), totalPositiveCurvature f + totalNegativeCurvature f = ∫ t, |curvature f t|)
+theorem _ThesisExactChecks.target_379 : _ThesisExpectedTypes.type_379 := by exact @HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute
+  let expected ← getConstInfo `_ThesisExactChecks.target_379
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_379) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute"
+#check @HiddenMonotonicity.SmoothDC.total_curvature_eq_absolute
+#print axioms _ThesisExactChecks.target_379
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_380 : Prop := (∀ (f : ℝ → ℝ) (hq : Integrable (curvature f)) (x : ℝ), (0 ≤ D1 f x + curvatureSlopeShift f ∧ D1 f x + curvatureSlopeShift f ≤ curvatureLiftWidth f) ∧ (0 ≤ D2 f x + curvatureSlopeShift f ∧ D2 f x + curvatureSlopeShift f ≤ curvatureLiftWidth f))
+theorem _ThesisExactChecks.target_380 : _ThesisExpectedTypes.type_380 := by exact @HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds
+  let expected ← getConstInfo `_ThesisExactChecks.target_380
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_380) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds"
+#check @HiddenMonotonicity.SmoothDC.curvature_profile_slope_bounds
+#print axioms _ThesisExactChecks.target_380
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_381 : Prop := (∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)) (x : ℝ), curvaturePositiveProfile f x - curvatureNegativeProfile f x = f x)
+theorem _ThesisExactChecks.target_381 : _ThesisExpectedTypes.type_381 := by exact @HiddenMonotonicity.SmoothDC.curvature_profile_difference
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.curvature_profile_difference
+  let expected ← getConstInfo `_ThesisExactChecks.target_381
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.curvature_profile_difference"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.curvature_profile_difference | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.curvature_profile_difference"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_381) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.curvature_profile_difference: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.curvature_profile_difference"
+#check @HiddenMonotonicity.SmoothDC.curvature_profile_difference
+#print axioms _ThesisExactChecks.target_381
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_382 : Prop := (∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ConvexOn ℝ Set.univ (fun z => (curvatureLiftPair f z).1) ∧ ConvexOn ℝ Set.univ (fun z => (curvatureLiftPair f z).2) ∧ Monotone (fun z => (curvatureLiftPair f z).1) ∧ Monotone (fun z => (curvatureLiftPair f z).2) ∧ ∀ p q : ℝ, (curvatureLiftPair f (p, q)).1 - (curvatureLiftPair f (p, q)).2 = f (p - q))
+theorem _ThesisExactChecks.target_382 : _ThesisExpectedTypes.type_382 := by exact @HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split
+  let expected ← getConstInfo `_ThesisExactChecks.target_382
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_382) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split"
+#check @HiddenMonotonicity.SmoothDC.curvature_monotone_dc_split
+#print axioms _ThesisExactChecks.target_382
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_383 : Prop := (∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)) (hzero : 0 ≤ f 0), ∀ p q : ℝ, 0 ≤ p → 0 ≤ q → 0 ≤ (curvatureLiftPair f (p, q)).1 ∧ 0 ≤ (curvatureLiftPair f (p, q)).2)
+theorem _ThesisExactChecks.target_383 : _ThesisExpectedTypes.type_383 := by exact @HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative
+  let expected ← getConstInfo `_ThesisExactChecks.target_383
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_383) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative"
+#check @HiddenMonotonicity.SmoothDC.curvatureLiftPair_nonnegative
+#print axioms _ThesisExactChecks.target_383
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_384 : Prop := (∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ConvexOn ℝ Set.univ (fun z => (normalizedCurvatureLiftPair f z).1) ∧ ConvexOn ℝ Set.univ (fun z => (normalizedCurvatureLiftPair f z).2) ∧ Monotone (fun z => (normalizedCurvatureLiftPair f z).1) ∧ Monotone (fun z => (normalizedCurvatureLiftPair f z).2) ∧ ∀ p q : ℝ, (normalizedCurvatureLiftPair f (p, q)).1 - (normalizedCurvatureLiftPair f (p, q)).2 = f (p - q))
+theorem _ThesisExactChecks.target_384 : _ThesisExpectedTypes.type_384 := by exact @HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split
+  let expected ← getConstInfo `_ThesisExactChecks.target_384
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_384) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split"
+#check @HiddenMonotonicity.SmoothDC.normalized_curvature_monotone_dc_split
+#print axioms _ThesisExactChecks.target_384
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC MeasureTheory
+def _ThesisExpectedTypes.type_385 : Prop := (∀ (f : ℝ → ℝ) (hf : Differentiable ℝ f) (hAC : ∀ a b : ℝ, AbsolutelyContinuousOnInterval (deriv f) a b) (hq : Integrable (curvature f)), ∀ p q : ℝ, 0 ≤ p → 0 ≤ q → 0 ≤ (normalizedCurvatureLiftPair f (p, q)).1 ∧ 0 ≤ (normalizedCurvatureLiftPair f (p, q)).2)
+theorem _ThesisExactChecks.target_385 : _ThesisExpectedTypes.type_385 := by exact @HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative
+  let expected ← getConstInfo `_ThesisExactChecks.target_385
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.CurvatureMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_385) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative"
+#check @HiddenMonotonicity.SmoothDC.normalizedCurvatureLiftPair_nonnegative
+#print axioms _ThesisExactChecks.target_385
+
+section
+open Set HiddenMonotonicity
+def _ThesisExpectedTypes.type_386 : Prop := (∀ {n m : ℕ} (net : Network n m) (hw : net.Nonnegative) (σ : ℝ → ℝ) (φ : (ℝ × ℝ) → ℝ × ℝ) (hv : ValidPairActivation σ φ) (hm : Monotone φ) (hc : ConvexPairActivation φ), Monotone (net.decomposeWith φ) ∧ (∀ i, ConvexOn ℝ univ (fun x : PairVec n => (net.decomposeWith φ x).1 i)) ∧ (∀ i, ConvexOn ℝ univ (fun x : PairVec n => (net.decomposeWith φ x).2 i)) ∧ ∀ x : PairVec n, (net.decomposeWith φ x).1 - (net.decomposeWith φ x).2 = net.forwardWith σ (x.1 - x.2))
+theorem _ThesisExactChecks.target_386 : _ThesisExpectedTypes.type_386 := by exact @HiddenMonotonicity.Network.convex_monotone_decomposition
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Network.convex_monotone_decomposition
+  let expected ← getConstInfo `_ThesisExactChecks.target_386
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Network.convex_monotone_decomposition"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Network.convex_monotone_decomposition | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ConvexMonotoneNetwork do
+    throwError "Defining module mismatch: HiddenMonotonicity.Network.convex_monotone_decomposition"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_386) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Network.convex_monotone_decomposition: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Network.convex_monotone_decomposition"
+#check @HiddenMonotonicity.Network.convex_monotone_decomposition
+#print axioms _ThesisExactChecks.target_386
+
+section
+open Set HiddenMonotonicity
+def _ThesisExpectedTypes.type_387 : Prop := (∀ {d n m : ℕ} (net : Network n m) (hw : net.Nonnegative) (φ : (ℝ × ℝ) → ℝ × ℝ) (hm : Monotone φ) (hc : ConvexPairActivation φ) (p q : Vec d → Vec n) (hp : ∀ i, ConvexOn ℝ univ (fun x => p x i)) (hq : ∀ i, ConvexOn ℝ univ (fun x => q x i)), (∀ i, ConvexOn ℝ univ (fun x => (net.decomposeWith φ (p x,q x)).1 i)) ∧ (∀ i, ConvexOn ℝ univ (fun x => (net.decomposeWith φ (p x,q x)).2 i)))
+theorem _ThesisExactChecks.target_387 : _ThesisExpectedTypes.type_387 := by exact @HiddenMonotonicity.Network.decomposeWith_convex_input
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Network.decomposeWith_convex_input
+  let expected ← getConstInfo `_ThesisExactChecks.target_387
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Network.decomposeWith_convex_input"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Network.decomposeWith_convex_input | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ConvexMonotoneNetwork do
+    throwError "Defining module mismatch: HiddenMonotonicity.Network.decomposeWith_convex_input"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_387) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Network.decomposeWith_convex_input: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Network.decomposeWith_convex_input"
+#check @HiddenMonotonicity.Network.decomposeWith_convex_input
+#print axioms _ThesisExactChecks.target_387
+
+section
+open Set HiddenMonotonicity
+def _ThesisExpectedTypes.type_388 : Prop := (∀ {d n : ℕ} (f : PairVec n → ℝ) (hm : Monotone f) (hf : ConvexOn ℝ univ f) (p q : Vec d → Vec n) (hp : ∀ i, ConvexOn ℝ univ (fun x => p x i)) (hq : ∀ i, ConvexOn ℝ univ (fun x => q x i)), ConvexOn ℝ univ (fun x => f (p x,q x)))
+theorem _ThesisExactChecks.target_388 : _ThesisExpectedTypes.type_388 := by exact @HiddenMonotonicity.convex_monotone_pair_input
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.convex_monotone_pair_input
+  let expected ← getConstInfo `_ThesisExactChecks.target_388
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.convex_monotone_pair_input"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.convex_monotone_pair_input | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ConvexMonotoneNetwork do
+    throwError "Defining module mismatch: HiddenMonotonicity.convex_monotone_pair_input"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_388) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.convex_monotone_pair_input: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.convex_monotone_pair_input"
+#check @HiddenMonotonicity.convex_monotone_pair_input
+#print axioms _ThesisExactChecks.target_388
+
+section
+open HiddenMonotonicity
+def _ThesisExpectedTypes.type_389 : Prop := (∀ (n m k : ℕ) (backbone : Network n m)
+    (activation : ℝ → ℝ) (lift : (ℝ × ℝ) → ℝ × ℝ),
+    ValidPairActivation activation lift →
+    ∀ (positive negative : Matrix (Fin k) (Fin m) ℝ)
+      (positiveBias negativeBias : Vec k) (input : PairVec n),
+      (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).1 -
+        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).2 =
+        affineLayer positive negative positiveBias negativeBias
+          (backbone.forwardWith activation (input.1 - input.2)))
+theorem _ThesisExactChecks.target_389 : _ThesisExpectedTypes.type_389 := by exact @HiddenMonotonicity.Network.affineDecomposeWith_recovery
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Network.affineDecomposeWith_recovery
+  let expected ← getConstInfo `_ThesisExactChecks.target_389
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Network.affineDecomposeWith_recovery"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Network.affineDecomposeWith_recovery | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ConvexMonotoneReadout do
+    throwError "Defining module mismatch: HiddenMonotonicity.Network.affineDecomposeWith_recovery"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_389) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Network.affineDecomposeWith_recovery: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Network.affineDecomposeWith_recovery"
+#check @HiddenMonotonicity.Network.affineDecomposeWith_recovery
+#print axioms _ThesisExactChecks.target_389
+
+section
+open HiddenMonotonicity
+def _ThesisExpectedTypes.type_390 : Prop := (∀ (n m k : ℕ) (backbone : Network n m), backbone.Nonnegative →
+    ∀ (activation : ℝ → ℝ) (lift : (ℝ × ℝ) → ℝ × ℝ),
+    ValidPairActivation activation lift → Monotone lift →
+    (ConvexOn ℝ Set.univ (fun z => (lift z).1) ∧
+      ConvexOn ℝ Set.univ (fun z => (lift z).2)) →
+    ∀ (positive negative : Matrix (Fin k) (Fin m) ℝ),
+      (∀ i j, 0 ≤ positive i j) → (∀ i j, 0 ≤ negative i j) →
+    ∀ (positiveBias negativeBias : Vec k),
+      Monotone (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias) ∧
+      (∀ j, ConvexOn ℝ Set.univ (fun input : PairVec n =>
+        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).1 j)) ∧
+      (∀ j, ConvexOn ℝ Set.univ (fun input : PairVec n =>
+        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).2 j)) ∧
+      ∀ input : PairVec n,
+        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).1 -
+          (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias input).2 =
+          affineLayer positive negative positiveBias negativeBias
+            (backbone.forwardWith activation (input.1 - input.2)))
+theorem _ThesisExactChecks.target_390 : _ThesisExpectedTypes.type_390 := by exact @HiddenMonotonicity.Network.affine_convex_monotone_decomposition
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Network.affine_convex_monotone_decomposition
+  let expected ← getConstInfo `_ThesisExactChecks.target_390
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Network.affine_convex_monotone_decomposition"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Network.affine_convex_monotone_decomposition | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ConvexMonotoneReadout do
+    throwError "Defining module mismatch: HiddenMonotonicity.Network.affine_convex_monotone_decomposition"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_390) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Network.affine_convex_monotone_decomposition: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Network.affine_convex_monotone_decomposition"
+#check @HiddenMonotonicity.Network.affine_convex_monotone_decomposition
+#print axioms _ThesisExactChecks.target_390
+
+section
+open HiddenMonotonicity
+def _ThesisExpectedTypes.type_391 : Prop := (∀ (n m k : ℕ) (backbone : Network n m), backbone.Nonnegative →
+    ∀ (activation : ℝ → ℝ) (lift : (ℝ × ℝ) → ℝ × ℝ),
+    ValidPairActivation activation lift → Monotone lift →
+    (ConvexOn ℝ Set.univ (fun z => (lift z).1) ∧
+      ConvexOn ℝ Set.univ (fun z => (lift z).2)) →
+    ∀ (positive negative : Matrix (Fin k) (Fin m) ℝ),
+      (∀ i j, 0 ≤ positive i j) → (∀ i j, 0 ≤ negative i j) →
+    ∀ (positiveBias negativeBias : Vec k),
+      Monotone (fun input : Vec n =>
+        backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)) ∧
+      (∀ j, ConvexOn ℝ Set.univ (fun input : Vec n =>
+        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)).1 j)) ∧
+      (∀ j, ConvexOn ℝ Set.univ (fun input : Vec n =>
+        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)).2 j)) ∧
+      ∀ input : Vec n,
+        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)).1 -
+          (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias (input,0)).2 =
+          affineLayer positive negative positiveBias negativeBias
+            (backbone.forwardWith activation input))
+theorem _ThesisExactChecks.target_391 : _ThesisExpectedTypes.type_391 := by exact @HiddenMonotonicity.Network.affine_dc_decomposition
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Network.affine_dc_decomposition
+  let expected ← getConstInfo `_ThesisExactChecks.target_391
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Network.affine_dc_decomposition"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Network.affine_dc_decomposition | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ConvexMonotoneReadout do
+    throwError "Defining module mismatch: HiddenMonotonicity.Network.affine_dc_decomposition"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_391) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Network.affine_dc_decomposition: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Network.affine_dc_decomposition"
+#check @HiddenMonotonicity.Network.affine_dc_decomposition
+#print axioms _ThesisExactChecks.target_391
+
+section
+open HiddenMonotonicity
+def _ThesisExpectedTypes.type_392 : Prop := (∀ (n m k : ℕ) (backbone : Network n m), backbone.Nonnegative →
+    ∀ (activation : ℝ → ℝ) (lift : (ℝ × ℝ) → ℝ × ℝ),
+    ValidPairActivation activation lift → Monotone lift →
+    (ConvexOn ℝ Set.univ (fun z => (lift z).1) ∧
+      ConvexOn ℝ Set.univ (fun z => (lift z).2)) →
+    ∀ (positive negative : Matrix (Fin k) (Fin m) ℝ),
+      (∀ i j, 0 ≤ positive i j) → (∀ i j, 0 ≤ negative i j) →
+    ∀ (positiveBias negativeBias : Vec k),
+      (∀ j, ConvexOn ℝ Set.univ (fun input : Vec n =>
+        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias
+          ((fun i => max (input i) 0), (fun i => max (-input i) 0))).1 j)) ∧
+      (∀ j, ConvexOn ℝ Set.univ (fun input : Vec n =>
+        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias
+          ((fun i => max (input i) 0), (fun i => max (-input i) 0))).2 j)) ∧
+      ∀ input : Vec n,
+        (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias
+          ((fun i => max (input i) 0), (fun i => max (-input i) 0))).1 -
+          (backbone.affineDecomposeWith lift positive negative positiveBias negativeBias
+            ((fun i => max (input i) 0), (fun i => max (-input i) 0))).2 =
+          affineLayer positive negative positiveBias negativeBias
+            (backbone.forwardWith activation input))
+theorem _ThesisExactChecks.target_392 : _ThesisExpectedTypes.type_392 := by exact @HiddenMonotonicity.Network.affine_signed_input_dc_decomposition
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Network.affine_signed_input_dc_decomposition
+  let expected ← getConstInfo `_ThesisExactChecks.target_392
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Network.affine_signed_input_dc_decomposition"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Network.affine_signed_input_dc_decomposition | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ConvexMonotoneReadout do
+    throwError "Defining module mismatch: HiddenMonotonicity.Network.affine_signed_input_dc_decomposition"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_392) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Network.affine_signed_input_dc_decomposition: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Network.affine_signed_input_dc_decomposition"
+#check @HiddenMonotonicity.Network.affine_signed_input_dc_decomposition
+#print axioms _ThesisExactChecks.target_392
+
+section
+def _ThesisExpectedTypes.type_393 : Prop := (∀ θ : ℝ, 0 < θ → ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSoftplusPair θ z).1) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSoftplusPair θ z).2) ∧ Monotone (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSoftplusPair θ z).1) ∧ Monotone (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSoftplusPair θ z).2) ∧ HiddenMonotonicity.ValidPairActivation (Thesis.Regularization.softplus θ) (HiddenMonotonicity.SmoothDC.explicitSoftplusPair θ) ∧ HiddenMonotonicity.NonnegativePairActivation (HiddenMonotonicity.SmoothDC.explicitSoftplusPair θ))
+theorem _ThesisExactChecks.target_393 : _ThesisExpectedTypes.type_393 := by exact @HiddenMonotonicity.SmoothDC.softplus_explicit_split
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.softplus_explicit_split
+  let expected ← getConstInfo `_ThesisExactChecks.target_393
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.softplus_explicit_split"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.softplus_explicit_split | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSoftplus do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.softplus_explicit_split"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_393) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.softplus_explicit_split: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.softplus_explicit_split"
+#check @HiddenMonotonicity.SmoothDC.softplus_explicit_split
+#print axioms _ThesisExactChecks.target_393
+
+section
+def _ThesisExpectedTypes.type_394 : Prop := (∀ θ : ℝ, 0 < θ → ∀ x y : ℝ, HiddenMonotonicity.SmoothDC.explicitSoftplusFirst θ (x,y) = θ * Real.log (Real.exp (x / θ) + Real.exp (y / θ)))
+theorem _ThesisExactChecks.target_394 : _ThesisExpectedTypes.type_394 := by exact @HiddenMonotonicity.SmoothDC.explicitSoftplusFirst_logsumexp
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.explicitSoftplusFirst_logsumexp
+  let expected ← getConstInfo `_ThesisExactChecks.target_394
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.explicitSoftplusFirst_logsumexp"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.explicitSoftplusFirst_logsumexp | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSoftplus do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.explicitSoftplusFirst_logsumexp"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_394) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.explicitSoftplusFirst_logsumexp: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.explicitSoftplusFirst_logsumexp"
+#check @HiddenMonotonicity.SmoothDC.explicitSoftplusFirst_logsumexp
+#print axioms _ThesisExactChecks.target_394
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_395 : Prop := (ConvexOn ℝ Set.univ (fun z => (sigmoidExplicitPair z).1) ∧ ConvexOn ℝ Set.univ (fun z => (sigmoidExplicitPair z).2) ∧ Monotone sigmoidExplicitPair ∧ ValidPairActivation Real.sigmoid sigmoidExplicitPair ∧ NonnegativePairActivation sigmoidExplicitPair)
+theorem _ThesisExactChecks.target_395 : _ThesisExpectedTypes.type_395 := by exact @HiddenMonotonicity.SmoothDC.sigmoid_explicit_split
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.sigmoid_explicit_split
+  let expected ← getConstInfo `_ThesisExactChecks.target_395
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.sigmoid_explicit_split"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.sigmoid_explicit_split | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSigmoidSoftplus do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.sigmoid_explicit_split"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_395) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.sigmoid_explicit_split: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.sigmoid_explicit_split"
+#check @HiddenMonotonicity.SmoothDC.sigmoid_explicit_split
+#print axioms _ThesisExactChecks.target_395
+
+section
+open HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_396 : Prop := (∀ x y : ℝ, sigmoidExplicitPair (x, y) = (if x ≤ y then Real.sigmoid (x - y) + y / 4 else 1 / 2 + x / 4, if x ≤ y then y / 4 else 1 / 2 + x / 4 - Real.sigmoid (x - y)))
+theorem _ThesisExactChecks.target_396 : _ThesisExpectedTypes.type_396 := by exact @HiddenMonotonicity.SmoothDC.sigmoidExplicitPair_closed_form
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.sigmoidExplicitPair_closed_form
+  let expected ← getConstInfo `_ThesisExactChecks.target_396
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.sigmoidExplicitPair_closed_form"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.sigmoidExplicitPair_closed_form | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSigmoidSoftplus do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.sigmoidExplicitPair_closed_form"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_396) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.sigmoidExplicitPair_closed_form: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.sigmoidExplicitPair_closed_form"
+#check @HiddenMonotonicity.SmoothDC.sigmoidExplicitPair_closed_form
+#print axioms _ThesisExactChecks.target_396
+
+section
+def _ThesisExpectedTypes.type_397 : Prop := (ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair z).1) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair z).2) ∧ Monotone (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair z).1) ∧ Monotone (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair z).2) ∧ HiddenMonotonicity.ValidPairActivation Real.sigmoid HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair ∧ HiddenMonotonicity.NonnegativePairActivation HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair)
+theorem _ThesisExactChecks.target_397 : _ThesisExpectedTypes.type_397 := by exact @HiddenMonotonicity.SmoothDC.sigmoid_smooth_explicit_split
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.sigmoid_smooth_explicit_split
+  let expected ← getConstInfo `_ThesisExactChecks.target_397
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.sigmoid_smooth_explicit_split"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.sigmoid_smooth_explicit_split | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSigmoidSmooth do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.sigmoid_smooth_explicit_split"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_397) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.sigmoid_smooth_explicit_split: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.sigmoid_smooth_explicit_split"
+#check @HiddenMonotonicity.SmoothDC.sigmoid_smooth_explicit_split
+#print axioms _ThesisExactChecks.target_397
+
+section
+def _ThesisExpectedTypes.type_398 : Prop := (∀ x y : ℝ, HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair (x,y) = ((Real.log (Real.exp x + Real.exp y) + Real.sigmoid (x-y)) / 2, (Real.log (Real.exp x + Real.exp y) - Real.sigmoid (x-y)) / 2))
+theorem _ThesisExactChecks.target_398 : _ThesisExpectedTypes.type_398 := by exact @HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_logsumexp
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_logsumexp
+  let expected ← getConstInfo `_ThesisExactChecks.target_398
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_logsumexp"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_logsumexp | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSigmoidSmooth do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_logsumexp"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_398) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_logsumexp: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_logsumexp"
+#check @HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_logsumexp
+#print axioms _ThesisExactChecks.target_398
+
+section
+def _ThesisExpectedTypes.type_399 : Prop := (ContDiff ℝ ⊤ HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair)
+theorem _ThesisExactChecks.target_399 : _ThesisExpectedTypes.type_399 := by exact @HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_contDiff
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_contDiff
+  let expected ← getConstInfo `_ThesisExactChecks.target_399
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_contDiff"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_contDiff | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSigmoidSmooth do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_contDiff"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_399) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_contDiff: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_contDiff"
+#check @HiddenMonotonicity.SmoothDC.explicitSigmoidSmoothPair_contDiff
+#print axioms _ThesisExactChecks.target_399
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_400 : Prop := (∀ β : ℝ, 0 < β → ConvexOn ℝ Set.univ (explicitSwishFirst β) ∧ ConvexOn ℝ Set.univ (explicitSwishSecond β) ∧ Monotone (explicitSwishFirst β) ∧ Monotone (explicitSwishSecond β) ∧ ∀ z : ℝ × ℝ, explicitSwishFirst β z - explicitSwishSecond β z = (z.1 - z.2) * Real.sigmoid (β * (z.1 - z.2)))
+theorem _ThesisExactChecks.target_400 : _ThesisExpectedTypes.type_400 := by exact @HiddenMonotonicity.SmoothDC.explicitSwish_lift
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.explicitSwish_lift
+  let expected ← getConstInfo `_ThesisExactChecks.target_400
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.explicitSwish_lift"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.explicitSwish_lift | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSwish do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.explicitSwish_lift"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_400) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.explicitSwish_lift: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.explicitSwish_lift"
+#check @HiddenMonotonicity.SmoothDC.explicitSwish_lift
+#print axioms _ThesisExactChecks.target_400
+
+section
+open HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_401 : Prop := (∀ β : ℝ, ∀ z : ℝ × ℝ, explicitSwishFirst β z = 2 / β * Real.log (1 + Real.exp (β * (z.1 - z.2))) + 2 * z.2 ∧ explicitSwishSecond β z = 2 / β * Real.log (1 + Real.exp (β * (z.1 - z.2))) - (z.1 - z.2) * Real.sigmoid (β * (z.1 - z.2)) + 2 * z.2)
+theorem _ThesisExactChecks.target_401 : _ThesisExpectedTypes.type_401 := by exact @HiddenMonotonicity.SmoothDC.explicitSwish_closed
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.explicitSwish_closed
+  let expected ← getConstInfo `_ThesisExactChecks.target_401
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.explicitSwish_closed"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.explicitSwish_closed | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSwish do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.explicitSwish_closed"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_401) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.explicitSwish_closed: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.explicitSwish_closed"
+#check @HiddenMonotonicity.SmoothDC.explicitSwish_closed
+#print axioms _ThesisExactChecks.target_401
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_402 : Prop := (∀ β : ℝ, 0 < β → NonnegativePairActivation (explicitSwishPair β))
+theorem _ThesisExactChecks.target_402 : _ThesisExpectedTypes.type_402 := by exact @HiddenMonotonicity.SmoothDC.explicitSwishPair_nonnegative
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.explicitSwishPair_nonnegative
+  let expected ← getConstInfo `_ThesisExactChecks.target_402
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.explicitSwishPair_nonnegative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.explicitSwishPair_nonnegative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSwish do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.explicitSwishPair_nonnegative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_402) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.explicitSwishPair_nonnegative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.explicitSwishPair_nonnegative"
+#check @HiddenMonotonicity.SmoothDC.explicitSwishPair_nonnegative
+#print axioms _ThesisExactChecks.target_402
+
+section
+open HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_403 : Prop := (∀ β : ℝ, 0 < β → ∀ x : ℝ, (0 < curvature (swish β) x ↔ |β * x| < swishTurningPoint) ∧ (curvature (swish β) x < 0 ↔ swishTurningPoint < |β * x|) ∧ (curvature (swish β) x = 0 ↔ |β * x| = swishTurningPoint))
+theorem _ThesisExactChecks.target_403 : _ThesisExpectedTypes.type_403 := by exact @HiddenMonotonicity.SmoothDC.swish_curvature_turning_sign
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.swish_curvature_turning_sign
+  let expected ← getConstInfo `_ThesisExactChecks.target_403
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.swish_curvature_turning_sign"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.swish_curvature_turning_sign | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SwishThreshold do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.swish_curvature_turning_sign"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_403) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.swish_curvature_turning_sign: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.swish_curvature_turning_sign"
+#check @HiddenMonotonicity.SmoothDC.swish_curvature_turning_sign
+#print axioms _ThesisExactChecks.target_403
+
+section
+open HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_404 : Prop := (∀ (f d : ℝ → ℝ) (a b : ℝ), a < b → (∀ x, HasDerivAt f (d x) x) → AntitoneOn d (Set.Iic a) → MonotoneOn d (Set.Icc a b) → AntitoneOn d (Set.Ici b) → (∀ x, x ≤ a → d x ≤ 0) → (∀ x, b ≤ x → 0 ≤ d x) → ConvexOn ℝ Set.univ (asymmetricLift (centralConvexP f d a b) (d b - d a)) ∧ ConvexOn ℝ Set.univ (asymmetricLift (centralConvexQ f d a b) (d b - d a)) ∧ Monotone (asymmetricLift (centralConvexP f d a b) (d b - d a)) ∧ Monotone (asymmetricLift (centralConvexQ f d a b) (d b - d a)) ∧ ∀ z : ℝ × ℝ, asymmetricLift (centralConvexP f d a b) (d b - d a) z - asymmetricLift (centralConvexQ f d a b) (d b - d a) z = f (z.1 - z.2))
+theorem _ThesisExactChecks.target_404 : _ThesisExpectedTypes.type_404 := by exact @HiddenMonotonicity.SmoothDC.centralConvex_asymmetric_split
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.centralConvex_asymmetric_split
+  let expected ← getConstInfo `_ThesisExactChecks.target_404
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.centralConvex_asymmetric_split"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.centralConvex_asymmetric_split | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TwoInflectionDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.centralConvex_asymmetric_split"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_404) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.centralConvex_asymmetric_split: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.centralConvex_asymmetric_split"
+#check @HiddenMonotonicity.SmoothDC.centralConvex_asymmetric_split
+#print axioms _ThesisExactChecks.target_404
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_405 : Prop := (ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (explicitGaussianGeluPair z).1) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (explicitGaussianGeluPair z).2) ∧ Monotone (fun z : ℝ × ℝ => (explicitGaussianGeluPair z).1) ∧ Monotone (fun z : ℝ × ℝ => (explicitGaussianGeluPair z).2) ∧ ValidPairActivation gaussianGelu explicitGaussianGeluPair ∧ NonnegativePairActivation explicitGaussianGeluPair)
+theorem _ThesisExactChecks.target_405 : _ThesisExpectedTypes.type_405 := by exact @HiddenMonotonicity.SmoothDC.gaussianGelu_explicit_split
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.gaussianGelu_explicit_split
+  let expected ← getConstInfo `_ThesisExactChecks.target_405
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.gaussianGelu_explicit_split"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.gaussianGelu_explicit_split | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitGELU do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.gaussianGelu_explicit_split"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_405) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.gaussianGelu_explicit_split: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.gaussianGelu_explicit_split"
+#check @HiddenMonotonicity.SmoothDC.gaussianGelu_explicit_split
+#print axioms _ThesisExactChecks.target_405
+
+section
+open HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_406 : Prop := (∀ x y : ℝ, explicitGaussianGeluPair (x, y) = (2 * (gaussianGelu (x - y) + standardGaussianDensity (x - y)) + 2 * y, gaussianGelu (x - y) + 2 * standardGaussianDensity (x - y) + 2 * y))
+theorem _ThesisExactChecks.target_406 : _ThesisExpectedTypes.type_406 := by exact @HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair_formula
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair_formula
+  let expected ← getConstInfo `_ThesisExactChecks.target_406
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair_formula"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair_formula | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitGELU do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair_formula"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_406) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair_formula: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair_formula"
+#check @HiddenMonotonicity.SmoothDC.explicitGaussianGeluPair_formula
+#print axioms _ThesisExactChecks.target_406
+
+section
+open HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_407 : Prop := (∀ {x : ℝ}, -Real.sqrt 2 ≤ x ∧ x ≤ Real.sqrt 2 → gaussianGeluFirst (-Real.sqrt 2) ≤ gaussianGeluFirst x ∧ gaussianGeluFirst x ≤ gaussianGeluFirst (Real.sqrt 2))
+theorem _ThesisExactChecks.target_407 : _ThesisExpectedTypes.type_407 := by exact @HiddenMonotonicity.SmoothDC.gaussianGeluFirst_middle_bounds
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.gaussianGeluFirst_middle_bounds
+  let expected ← getConstInfo `_ThesisExactChecks.target_407
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.gaussianGeluFirst_middle_bounds"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.gaussianGeluFirst_middle_bounds | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.GELUInflectionBounds do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.gaussianGeluFirst_middle_bounds"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_407) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.gaussianGeluFirst_middle_bounds: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.gaussianGeluFirst_middle_bounds"
+#check @HiddenMonotonicity.SmoothDC.gaussianGeluFirst_middle_bounds
+#print axioms _ThesisExactChecks.target_407
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_408 : Prop := (∀ a : ModernActivation, ConvexPairActivation (curvatureLiftPair a.eval) ∧ Monotone (curvatureLiftPair a.eval) ∧ ValidPairActivation a.eval (curvatureLiftPair a.eval) ∧ NonnegativePairActivation (curvatureLiftPair a.eval))
+theorem _ThesisExactChecks.target_408 : _ThesisExpectedTypes.type_408 := by exact @HiddenMonotonicity.SmoothDC.modern_curvature_pair
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.modern_curvature_pair
+  let expected ← getConstInfo `_ThesisExactChecks.target_408
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.modern_curvature_pair"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.modern_curvature_pair | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ModernMonotoneDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.modern_curvature_pair"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_408) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.modern_curvature_pair: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.modern_curvature_pair"
+#check @HiddenMonotonicity.SmoothDC.modern_curvature_pair
+#print axioms _ThesisExactChecks.target_408
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_409 : Prop := (∀ {n m : ℕ} (net : Network n m), net.Nonnegative → ∀ a : ModernActivation, Monotone (net.decomposeWith (curvatureLiftPair a.eval)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.decomposeWith (curvatureLiftPair a.eval) x).1 i)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.decomposeWith (curvatureLiftPair a.eval) x).2 i)) ∧ ∀ x : PairVec n, (net.decomposeWith (curvatureLiftPair a.eval) x).1 - (net.decomposeWith (curvatureLiftPair a.eval) x).2 = net.forwardWith a.eval (x.1 - x.2))
+theorem _ThesisExactChecks.target_409 : _ThesisExpectedTypes.type_409 := by exact @HiddenMonotonicity.SmoothDC.modern_curvature_network
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.modern_curvature_network
+  let expected ← getConstInfo `_ThesisExactChecks.target_409
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.modern_curvature_network"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.modern_curvature_network | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ModernMonotoneDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.modern_curvature_network"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_409) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.modern_curvature_network: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.modern_curvature_network"
+#check @HiddenMonotonicity.SmoothDC.modern_curvature_network
+#print axioms _ThesisExactChecks.target_409
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_410 : Prop := (∀ {n m : ℕ} (net : Network n m), net.NonnegativeParameters → ∀ (a : ModernActivation) (x : PairVec n), (0 ≤ x.1 ∧ 0 ≤ x.2) → 0 ≤ (net.decomposeWith (curvatureLiftPair a.eval) x).1 ∧ 0 ≤ (net.decomposeWith (curvatureLiftPair a.eval) x).2)
+theorem _ThesisExactChecks.target_410 : _ThesisExpectedTypes.type_410 := by exact @HiddenMonotonicity.SmoothDC.modern_curvature_network_nonnegative
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.modern_curvature_network_nonnegative
+  let expected ← getConstInfo `_ThesisExactChecks.target_410
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.modern_curvature_network_nonnegative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.modern_curvature_network_nonnegative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ModernMonotoneDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.modern_curvature_network_nonnegative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_410) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.modern_curvature_network_nonnegative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.modern_curvature_network_nonnegative"
+#check @HiddenMonotonicity.SmoothDC.modern_curvature_network_nonnegative
+#print axioms _ThesisExactChecks.target_410
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_411 : Prop := (∀ {n m k : ℕ} (net : Network n m), net.Nonnegative → ∀ (a : ModernActivation) (wp wn : Matrix (Fin k) (Fin m) ℝ), (∀ i j, 0 ≤ wp i j) → (∀ i j, 0 ≤ wn i j) → ∀ bp bn : Vec k, Monotone (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).1 i)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).2 i)) ∧ ∀ x : PairVec n, (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).1 - (net.affineDecomposeWith (curvatureLiftPair a.eval) wp wn bp bn x).2 = affineLayer wp wn bp bn (net.forwardWith a.eval (x.1 - x.2)))
+theorem _ThesisExactChecks.target_411 : _ThesisExpectedTypes.type_411 := by exact @HiddenMonotonicity.SmoothDC.modern_curvature_affine_network
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.modern_curvature_affine_network
+  let expected ← getConstInfo `_ThesisExactChecks.target_411
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.modern_curvature_affine_network"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.modern_curvature_affine_network | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ModernMonotoneDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.modern_curvature_affine_network"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_411) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.modern_curvature_affine_network: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.modern_curvature_affine_network"
+#check @HiddenMonotonicity.SmoothDC.modern_curvature_affine_network
+#print axioms _ThesisExactChecks.target_411
+
+section
+open HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_412 : Prop := (∀ x y : ℝ, ClosedFormActivation.relu.pair (x,y) = (max x y,y))
+theorem _ThesisExactChecks.target_412 : _ThesisExpectedTypes.type_412 := by exact @HiddenMonotonicity.SmoothDC.ClosedFormActivation.relu_pair
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.ClosedFormActivation.relu_pair
+  let expected ← getConstInfo `_ThesisExactChecks.target_412
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.ClosedFormActivation.relu_pair"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.ClosedFormActivation.relu_pair | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ClosedFormMonotoneDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.ClosedFormActivation.relu_pair"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_412) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.ClosedFormActivation.relu_pair: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.ClosedFormActivation.relu_pair"
+#check @HiddenMonotonicity.SmoothDC.ClosedFormActivation.relu_pair
+#print axioms _ThesisExactChecks.target_412
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_413 : Prop := (∀ a : ClosedFormActivation, ConvexPairActivation a.pair ∧ Monotone a.pair ∧ ValidPairActivation a.eval a.pair ∧ NonnegativePairActivation a.pair)
+theorem _ThesisExactChecks.target_413 : _ThesisExpectedTypes.type_413 := by exact @HiddenMonotonicity.SmoothDC.closed_form_activation_properties
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.closed_form_activation_properties
+  let expected ← getConstInfo `_ThesisExactChecks.target_413
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.closed_form_activation_properties"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.closed_form_activation_properties | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ClosedFormMonotoneDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.closed_form_activation_properties"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_413) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.closed_form_activation_properties: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.closed_form_activation_properties"
+#check @HiddenMonotonicity.SmoothDC.closed_form_activation_properties
+#print axioms _ThesisExactChecks.target_413
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_414 : Prop := (∀ {n m k : ℕ} (net : Network n m), net.Nonnegative → ∀ (a : ClosedFormActivation) (wp wn : Matrix (Fin k) (Fin m) ℝ), (∀ i j, 0 ≤ wp i j) → (∀ i j, 0 ≤ wn i j) → ∀ bp bn : Vec k, Monotone (net.affineDecomposeWith a.pair wp wn bp bn) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.affineDecomposeWith a.pair wp wn bp bn x).1 i)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : PairVec n => (net.affineDecomposeWith a.pair wp wn bp bn x).2 i)) ∧ ∀ x : PairVec n, (net.affineDecomposeWith a.pair wp wn bp bn x).1 - (net.affineDecomposeWith a.pair wp wn bp bn x).2 = affineLayer wp wn bp bn (net.forwardWith a.eval (x.1 - x.2)))
+theorem _ThesisExactChecks.target_414 : _ThesisExpectedTypes.type_414 := by exact @HiddenMonotonicity.SmoothDC.closed_form_affine_network
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.closed_form_affine_network
+  let expected ← getConstInfo `_ThesisExactChecks.target_414
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.closed_form_affine_network"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.closed_form_affine_network | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ClosedFormMonotoneDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.closed_form_affine_network"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_414) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.closed_form_affine_network: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.closed_form_affine_network"
+#check @HiddenMonotonicity.SmoothDC.closed_form_affine_network
+#print axioms _ThesisExactChecks.target_414
+
+section
+open HiddenMonotonicity HiddenMonotonicity.SmoothDC
+def _ThesisExpectedTypes.type_415 : Prop := (∀ {n m k : ℕ} (net : Network n m), net.Nonnegative → ∀ (a : ClosedFormActivation) (wp wn : Matrix (Fin k) (Fin m) ℝ), (∀ i j, 0 ≤ wp i j) → (∀ i j, 0 ≤ wn i j) → ∀ bp bn : Vec k, Monotone (fun x : Vec n => net.affineDecomposeWith a.pair wp wn bp bn (x,0)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : Vec n => (net.affineDecomposeWith a.pair wp wn bp bn (x,0)).1 i)) ∧ (∀ i, ConvexOn ℝ Set.univ (fun x : Vec n => (net.affineDecomposeWith a.pair wp wn bp bn (x,0)).2 i)) ∧ ∀ x : Vec n, (net.affineDecomposeWith a.pair wp wn bp bn (x,0)).1 - (net.affineDecomposeWith a.pair wp wn bp bn (x,0)).2 = affineLayer wp wn bp bn (net.forwardWith a.eval x))
+theorem _ThesisExactChecks.target_415 : _ThesisExpectedTypes.type_415 := by exact @HiddenMonotonicity.SmoothDC.closed_form_affine_dc
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.closed_form_affine_dc
+  let expected ← getConstInfo `_ThesisExactChecks.target_415
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.closed_form_affine_dc"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.closed_form_affine_dc | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ClosedFormMonotoneDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.closed_form_affine_dc"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_415) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.closed_form_affine_dc: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.closed_form_affine_dc"
+#check @HiddenMonotonicity.SmoothDC.closed_form_affine_dc
+#print axioms _ThesisExactChecks.target_415
+
+section
+universe u
+open scoped BigOperators
+def _ThesisExpectedTypes.type_416 : Prop := (∀ {ι : Type u} (f : (ι → ℝ) → ℝ), (∀ a v : ι → ℝ, ConvexOn ℝ Set.univ (fun t : ℝ => f (fun j => a j + t * v j))) → ConvexOn ℝ Set.univ f)
+theorem _ThesisExactChecks.target_416 : _ThesisExpectedTypes.type_416.{u} := by exact @HiddenMonotonicity.SoftmaxDC.convex_from_affine_lines.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.convex_from_affine_lines
+  let expected ← getConstInfo `_ThesisExactChecks.target_416
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.convex_from_affine_lines"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.convex_from_affine_lines | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MultivariateMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.convex_from_affine_lines"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_416) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.convex_from_affine_lines: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.convex_from_affine_lines"
+#check @HiddenMonotonicity.SoftmaxDC.convex_from_affine_lines
+#print axioms _ThesisExactChecks.target_416
+
+section
+universe u
+open scoped BigOperators
+def _ThesisExpectedTypes.type_417 : Prop := (∀ {ι : Type u} (f : (ι → ℝ) → ℝ) (D : (ι → ℝ) → (ι → ℝ) → ℝ), (∀ (a v : ι → ℝ) (t : ℝ), HasDerivAt (fun s : ℝ => f (fun j => a j + s * v j)) (D (fun j => a j + t * v j) v) t) → (∀ z v : ι → ℝ, (∀ j, 0 ≤ v j) → 0 ≤ D z v) → Monotone f)
+theorem _ThesisExactChecks.target_417 : _ThesisExpectedTypes.type_417.{u} := by exact @HiddenMonotonicity.SoftmaxDC.monotone_from_affine_line_deriv.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.monotone_from_affine_line_deriv
+  let expected ← getConstInfo `_ThesisExactChecks.target_417
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.monotone_from_affine_line_deriv"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.monotone_from_affine_line_deriv | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MultivariateMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.monotone_from_affine_line_deriv"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_417) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.monotone_from_affine_line_deriv: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.monotone_from_affine_line_deriv"
+#check @HiddenMonotonicity.SoftmaxDC.monotone_from_affine_line_deriv
+#print axioms _ThesisExactChecks.target_417
+
+section
+universe u
+open scoped BigOperators
+def _ThesisExpectedTypes.type_418 : Prop := (∀ {ι : Type u} [Fintype ι] (P : (ι → ℝ) → ℝ) (L c : ℝ), ConvexOn ℝ Set.univ P → ConvexOn ℝ Set.univ (HiddenMonotonicity.SoftmaxDC.multivariateLift P L c))
+theorem _ThesisExactChecks.target_418 : _ThesisExpectedTypes.type_418.{u} := by exact @HiddenMonotonicity.SoftmaxDC.multivariateLift_convex.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.multivariateLift_convex
+  let expected ← getConstInfo `_ThesisExactChecks.target_418
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.multivariateLift_convex"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.multivariateLift_convex | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MultivariateMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.multivariateLift_convex"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_418) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.multivariateLift_convex: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.multivariateLift_convex"
+#check @HiddenMonotonicity.SoftmaxDC.multivariateLift_convex
+#print axioms _ThesisExactChecks.target_418
+
+section
+universe u
+open scoped BigOperators
+def _ThesisExpectedTypes.type_419 : Prop := (∀ {ι : Type u} [Fintype ι] (P : (ι → ℝ) → ℝ) (L c : ℝ), Monotone P → Monotone (fun x : ι → ℝ => L * (∑ j, x j) - P x) → Monotone (HiddenMonotonicity.SoftmaxDC.multivariateLift P L c))
+theorem _ThesisExactChecks.target_419 : _ThesisExpectedTypes.type_419.{u} := by exact @HiddenMonotonicity.SoftmaxDC.multivariateLift_monotone.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.multivariateLift_monotone
+  let expected ← getConstInfo `_ThesisExactChecks.target_419
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.multivariateLift_monotone"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.multivariateLift_monotone | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MultivariateMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.multivariateLift_monotone"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_419) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.multivariateLift_monotone: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.multivariateLift_monotone"
+#check @HiddenMonotonicity.SoftmaxDC.multivariateLift_monotone
+#print axioms _ThesisExactChecks.target_419
+
+section
+universe u
+open scoped BigOperators
+def _ThesisExpectedTypes.type_420 : Prop := (∀ {ι : Type u} [Fintype ι] (P Q f : (ι → ℝ) → ℝ) (L c : ℝ), (∀ x, P x - Q x = f x) → ∀ z : (ι → ℝ) × (ι → ℝ), HiddenMonotonicity.SoftmaxDC.multivariateLift P L c z - HiddenMonotonicity.SoftmaxDC.multivariateLift Q L c z = f (z.1 - z.2))
+theorem _ThesisExactChecks.target_420 : _ThesisExpectedTypes.type_420.{u} := by exact @HiddenMonotonicity.SoftmaxDC.multivariateLift_difference.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.multivariateLift_difference
+  let expected ← getConstInfo `_ThesisExactChecks.target_420
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.multivariateLift_difference"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.multivariateLift_difference | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MultivariateMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.multivariateLift_difference"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_420) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.multivariateLift_difference: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.multivariateLift_difference"
+#check @HiddenMonotonicity.SoftmaxDC.multivariateLift_difference
+#print axioms _ThesisExactChecks.target_420
+
+section
+universe u
+open scoped BigOperators
+def _ThesisExpectedTypes.type_421 : Prop := (∀ {ι : Type u} [Fintype ι] (P : (ι → ℝ) → ℝ) (L c : ℝ), Monotone (HiddenMonotonicity.SoftmaxDC.multivariateLift P L c) → c ≤ P 0 → ∀ z : (ι → ℝ) × (ι → ℝ), 0 ≤ z → 0 ≤ HiddenMonotonicity.SoftmaxDC.multivariateLift P L c z)
+theorem _ThesisExactChecks.target_421 : _ThesisExpectedTypes.type_421.{u} := by exact @HiddenMonotonicity.SoftmaxDC.multivariateLift_nonnegative.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.multivariateLift_nonnegative
+  let expected ← getConstInfo `_ThesisExactChecks.target_421
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.multivariateLift_nonnegative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.multivariateLift_nonnegative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MultivariateMonotoneDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.multivariateLift_nonnegative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_421) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.multivariateLift_nonnegative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.multivariateLift_nonnegative"
+#check @HiddenMonotonicity.SoftmaxDC.multivariateLift_nonnegative
+#print axioms _ThesisExactChecks.target_421
+
+section
+universe u
+open scoped BigOperators
+def _ThesisExpectedTypes.type_422 : Prop := (∀ {ι : Type u} [Fintype ι] (p : ι → ℝ), (∀ j, 0 ≤ p j) → (∑ j, p j) = 1 → ∀ (w : ι → ℝ), (∀ j, 0 ≤ w j) → ∀ i, -(∑ j, p j * w j) ≤ p i * (w i - ∑ j, p j * w j) ∧ p i * (w i - ∑ j, p j * w j) ≤ ∑ j, p j * w j)
+theorem _ThesisExactChecks.target_422 : _ThesisExpectedTypes.type_422.{u} := by exact @HiddenMonotonicity.SoftmaxDC.probability_second_bounds.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.probability_second_bounds
+  let expected ← getConstInfo `_ThesisExactChecks.target_422
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.probability_second_bounds"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.probability_second_bounds | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SoftmaxProbability do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.probability_second_bounds"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_422) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.probability_second_bounds: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.probability_second_bounds"
+#check @HiddenMonotonicity.SoftmaxDC.probability_second_bounds
+#print axioms _ThesisExactChecks.target_422
+
+section
+universe u
+open scoped BigOperators
+def _ThesisExpectedTypes.type_423 : Prop := (∀ {ι : Type u} [Fintype ι] [DecidableEq ι] (p : ι → ℝ), (∀ j, 0 ≤ p j) → (∑ j, p j) = 1 → ∀ i j, 0 ≤ (p j + p i * ((if i = j then 1 else 0) - p j)) / 2 ∧ (p j + p i * ((if i = j then 1 else 0) - p j)) / 2 ≤ (1 : ℝ) / 2)
+theorem _ThesisExactChecks.target_423 : _ThesisExpectedTypes.type_423.{u} := by exact @HiddenMonotonicity.SoftmaxDC.plusCoeff_bounds.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.plusCoeff_bounds
+  let expected ← getConstInfo `_ThesisExactChecks.target_423
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.plusCoeff_bounds"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.plusCoeff_bounds | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SoftmaxProbability do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.plusCoeff_bounds"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_423) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.plusCoeff_bounds: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.plusCoeff_bounds"
+#check @HiddenMonotonicity.SoftmaxDC.plusCoeff_bounds
+#print axioms _ThesisExactChecks.target_423
+
+section
+universe u
+open scoped BigOperators
+def _ThesisExpectedTypes.type_424 : Prop := (∀ {ι : Type u} [Fintype ι] [DecidableEq ι] (p : ι → ℝ), (∀ j, 0 ≤ p j) → (∑ j, p j) = 1 → ∀ i j, 0 ≤ (p j - p i * ((if i = j then 1 else 0) - p j)) / 2 ∧ (p j - p i * ((if i = j then 1 else 0) - p j)) / 2 ≤ (1 : ℝ) / 2)
+theorem _ThesisExactChecks.target_424 : _ThesisExpectedTypes.type_424.{u} := by exact @HiddenMonotonicity.SoftmaxDC.minusCoeff_bounds.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.minusCoeff_bounds
+  let expected ← getConstInfo `_ThesisExactChecks.target_424
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.minusCoeff_bounds"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.minusCoeff_bounds | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SoftmaxProbability do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.minusCoeff_bounds"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_424) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.minusCoeff_bounds: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.minusCoeff_bounds"
+#check @HiddenMonotonicity.SoftmaxDC.minusCoeff_bounds
+#print axioms _ThesisExactChecks.target_424
+
+section
+universe u
+open scoped BigOperators
+def _ThesisExpectedTypes.type_425 : Prop := (∀ {ι : Type u} [Fintype ι] [DecidableEq ι] (p v : ι → ℝ) (i : ι), (∑ j, ((p j + p i * ((if i = j then 1 else 0) - p j)) / 2) * v j) = ((∑ j, p j * v j) + p i * (v i - ∑ j, p j * v j)) / 2)
+theorem _ThesisExactChecks.target_425 : _ThesisExpectedTypes.type_425.{u} := by exact @HiddenMonotonicity.SoftmaxDC.plusCoeff_sum.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.plusCoeff_sum
+  let expected ← getConstInfo `_ThesisExactChecks.target_425
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.plusCoeff_sum"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.plusCoeff_sum | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SoftmaxProbability do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.plusCoeff_sum"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_425) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.plusCoeff_sum: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.plusCoeff_sum"
+#check @HiddenMonotonicity.SoftmaxDC.plusCoeff_sum
+#print axioms _ThesisExactChecks.target_425
+
+section
+universe u
+open scoped BigOperators
+def _ThesisExpectedTypes.type_426 : Prop := (∀ {ι : Type u} [Fintype ι] [DecidableEq ι] (p v : ι → ℝ) (i : ι), (∑ j, ((p j - p i * ((if i = j then 1 else 0) - p j)) / 2) * v j) = ((∑ j, p j * v j) - p i * (v i - ∑ j, p j * v j)) / 2)
+theorem _ThesisExactChecks.target_426 : _ThesisExpectedTypes.type_426.{u} := by exact @HiddenMonotonicity.SoftmaxDC.minusCoeff_sum.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.minusCoeff_sum
+  let expected ← getConstInfo `_ThesisExactChecks.target_426
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.minusCoeff_sum"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.minusCoeff_sum | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SoftmaxProbability do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.minusCoeff_sum"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_426) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.minusCoeff_sum: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.minusCoeff_sum"
+#check @HiddenMonotonicity.SoftmaxDC.minusCoeff_sum
+#print axioms _ThesisExactChecks.target_426
+
+section
+universe u
+open scoped BigOperators
+def _ThesisExpectedTypes.type_427 : Prop := (∀ {ι : Type u} [Fintype ι] (c v : ι → ℝ), (∀ j, 0 ≤ c j ∧ c j ≤ (1 : ℝ) / 2) → (∀ j, 0 ≤ v j) → 0 ≤ ∑ j, c j * v j ∧ (∑ j, c j * v j) ≤ (∑ j, v j) / 2)
+theorem _ThesisExactChecks.target_427 : _ThesisExpectedTypes.type_427.{u} := by exact @HiddenMonotonicity.SoftmaxDC.coeff_direction_bounds.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.coeff_direction_bounds
+  let expected ← getConstInfo `_ThesisExactChecks.target_427
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.coeff_direction_bounds"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.coeff_direction_bounds | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SoftmaxProbability do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.coeff_direction_bounds"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_427) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.coeff_direction_bounds: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.coeff_direction_bounds"
+#check @HiddenMonotonicity.SoftmaxDC.coeff_direction_bounds
+#print axioms _ThesisExactChecks.target_427
+
+section
+universe u
+open HiddenMonotonicity.SoftmaxDC
+def _ThesisExpectedTypes.type_428 : Prop := (∀ {ι : Type u} [Fintype ι] [Nonempty ι] (a v : ι → ℝ) (t : ℝ), HasDerivAt (fun r => logSumExp (affineLine a v r)) (mean (affineLine a v t) v) t)
+theorem _ThesisExactChecks.target_428 : _ThesisExpectedTypes.type_428.{u} := by exact @HiddenMonotonicity.SoftmaxDC.logSumExp_line_derivative.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.logSumExp_line_derivative
+  let expected ← getConstInfo `_ThesisExactChecks.target_428
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.logSumExp_line_derivative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.logSumExp_line_derivative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SoftmaxLineCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.logSumExp_line_derivative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_428) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.logSumExp_line_derivative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.logSumExp_line_derivative"
+#check @HiddenMonotonicity.SoftmaxDC.logSumExp_line_derivative
+#print axioms _ThesisExactChecks.target_428
+
+section
+universe u
+open HiddenMonotonicity.SoftmaxDC
+def _ThesisExpectedTypes.type_429 : Prop := (∀ {ι : Type u} [Fintype ι] [Nonempty ι] (a v : ι → ℝ) (t : ℝ), HasDerivAt (fun r => mean (affineLine a v r) v) (variance (affineLine a v t) v) t)
+theorem _ThesisExactChecks.target_429 : _ThesisExpectedTypes.type_429.{u} := by exact @HiddenMonotonicity.SoftmaxDC.mean_line_derivative.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.mean_line_derivative
+  let expected ← getConstInfo `_ThesisExactChecks.target_429
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.mean_line_derivative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.mean_line_derivative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SoftmaxLineCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.mean_line_derivative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_429) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.mean_line_derivative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.mean_line_derivative"
+#check @HiddenMonotonicity.SoftmaxDC.mean_line_derivative
+#print axioms _ThesisExactChecks.target_429
+
+section
+universe u
+open HiddenMonotonicity.SoftmaxDC
+def _ThesisExpectedTypes.type_430 : Prop := (∀ {ι : Type u} [Fintype ι] [Nonempty ι] (a v : ι → ℝ) (t : ℝ) (i : ι), HasDerivAt (fun r => softmax (affineLine a v r) i) (softmax (affineLine a v t) i * (v i - mean (affineLine a v t) v)) t)
+theorem _ThesisExactChecks.target_430 : _ThesisExpectedTypes.type_430.{u} := by exact @HiddenMonotonicity.SoftmaxDC.softmax_line_derivative.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.softmax_line_derivative
+  let expected ← getConstInfo `_ThesisExactChecks.target_430
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.softmax_line_derivative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.softmax_line_derivative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SoftmaxLineCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.softmax_line_derivative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_430) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.softmax_line_derivative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.softmax_line_derivative"
+#check @HiddenMonotonicity.SoftmaxDC.softmax_line_derivative
+#print axioms _ThesisExactChecks.target_430
+
+section
+universe u
+open HiddenMonotonicity.SoftmaxDC
+def _ThesisExpectedTypes.type_431 : Prop := (∀ {ι : Type u} [Fintype ι] [Nonempty ι] (a v : ι → ℝ) (t : ℝ) (i : ι), HasDerivAt (fun r => softmax (affineLine a v r) i * (v i - mean (affineLine a v r) v)) (softmax (affineLine a v t) i * ((v i - mean (affineLine a v t) v) ^ 2 - variance (affineLine a v t) v)) t)
+theorem _ThesisExactChecks.target_431 : _ThesisExpectedTypes.type_431.{u} := by exact @HiddenMonotonicity.SoftmaxDC.softmaxFirst_line_derivative.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.softmaxFirst_line_derivative
+  let expected ← getConstInfo `_ThesisExactChecks.target_431
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.softmaxFirst_line_derivative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.softmaxFirst_line_derivative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SoftmaxLineCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.softmaxFirst_line_derivative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_431) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.softmaxFirst_line_derivative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.softmaxFirst_line_derivative"
+#check @HiddenMonotonicity.SoftmaxDC.softmaxFirst_line_derivative
+#print axioms _ThesisExactChecks.target_431
+
+section
+universe u
+open HiddenMonotonicity.SoftmaxDC
+open scoped BigOperators
+def _ThesisExpectedTypes.type_432 : Prop := (∀ {ι : Type u} [Fintype ι] [Nonempty ι] (z : ι → ℝ), (∑ j, softmax z j) = 1)
+theorem _ThesisExactChecks.target_432 : _ThesisExpectedTypes.type_432.{u} := by exact @HiddenMonotonicity.SoftmaxDC.softmax_sum_one.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.softmax_sum_one
+  let expected ← getConstInfo `_ThesisExactChecks.target_432
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.softmax_sum_one"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.softmax_sum_one | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SoftmaxLineCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.softmax_sum_one"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_432) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.softmax_sum_one: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.softmax_sum_one"
+#check @HiddenMonotonicity.SoftmaxDC.softmax_sum_one
+#print axioms _ThesisExactChecks.target_432
+
+section
+universe u
+open HiddenMonotonicity.SoftmaxDC
+def _ThesisExpectedTypes.type_433 : Prop := (∀ {ι : Type u} [Fintype ι] [Nonempty ι] (z : ι → ℝ), 0 < expSum z)
+theorem _ThesisExactChecks.target_433 : _ThesisExpectedTypes.type_433.{u} := by exact @HiddenMonotonicity.SoftmaxDC.expSum_pos.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.expSum_pos
+  let expected ← getConstInfo `_ThesisExactChecks.target_433
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.expSum_pos"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.expSum_pos | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SoftmaxLineCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.expSum_pos"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_433) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.expSum_pos: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.expSum_pos"
+#check @HiddenMonotonicity.SoftmaxDC.expSum_pos
+#print axioms _ThesisExactChecks.target_433
+
+section
+universe u
+open HiddenMonotonicity.SoftmaxDC
+open scoped BigOperators
+def _ThesisExpectedTypes.type_434 : Prop := (∀ {ι : Type u} [Fintype ι] [Nonempty ι] (i : ι),
+ConvexOn ℝ Set.univ (softmaxSplitFirst i) ∧
+ConvexOn ℝ Set.univ (softmaxSplitSecond i) ∧
+Monotone (softmaxSplitFirst i) ∧ Monotone (softmaxSplitSecond i) ∧
+(∀ z : (ι → ℝ) × (ι → ℝ), softmaxSplitFirst i z - softmaxSplitSecond i z = softmax (z.1-z.2) i) ∧
+(∀ z : (ι → ℝ) × (ι → ℝ), 0 ≤ z → 0 ≤ softmaxSplitFirst i z ∧ 0 ≤ softmaxSplitSecond i z))
+theorem _ThesisExactChecks.target_434 : _ThesisExpectedTypes.type_434.{u} := by exact @HiddenMonotonicity.SoftmaxDC.softmax_split_properties.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.softmax_split_properties
+  let expected ← getConstInfo `_ThesisExactChecks.target_434
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.softmax_split_properties"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.softmax_split_properties | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSoftmax do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.softmax_split_properties"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_434) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.softmax_split_properties: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.softmax_split_properties"
+#check @HiddenMonotonicity.SoftmaxDC.softmax_split_properties
+#print axioms _ThesisExactChecks.target_434
+
+section
+universe u
+open HiddenMonotonicity.SoftmaxDC
+open scoped BigOperators
+def _ThesisExpectedTypes.type_435 : Prop := (∀ {ι : Type u} [Fintype ι] (i : ι) (x y : ι → ℝ),
+softmaxSplitFirst i (x,y) =
+(Real.log (∑ j, Real.exp (x j-y j)) + Real.exp (x i-y i)/(∑ j, Real.exp (x j-y j)) + ∑ j, y j)/2 -
+(Real.log (Fintype.card ι)-1/Fintype.card ι)/2)
+theorem _ThesisExactChecks.target_435 : _ThesisExpectedTypes.type_435.{u} := by exact @HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula
+  let expected ← getConstInfo `_ThesisExactChecks.target_435
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSoftmax do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_435) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula"
+#check @HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_formula
+#print axioms _ThesisExactChecks.target_435
+
+section
+universe u
+open HiddenMonotonicity.SoftmaxDC
+open scoped BigOperators
+def _ThesisExpectedTypes.type_436 : Prop := (∀ {ι : Type u} [Fintype ι] (i : ι) (x y : ι → ℝ),
+softmaxSplitSecond i (x,y) =
+(Real.log (∑ j, Real.exp (x j-y j)) - Real.exp (x i-y i)/(∑ j, Real.exp (x j-y j)) + ∑ j, y j)/2 -
+(Real.log (Fintype.card ι)-1/Fintype.card ι)/2)
+theorem _ThesisExactChecks.target_436 : _ThesisExpectedTypes.type_436.{u} := by exact @HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_formula.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_formula
+  let expected ← getConstInfo `_ThesisExactChecks.target_436
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_formula"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_formula | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSoftmax do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_formula"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_436) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_formula: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_formula"
+#check @HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_formula
+#print axioms _ThesisExactChecks.target_436
+
+section
+universe u
+open HiddenMonotonicity.SoftmaxDC
+open scoped BigOperators
+def _ThesisExpectedTypes.type_437 : Prop := (∀ {ι : Type u} [Fintype ι] (i : ι) (z : (ι → ℝ) × (ι → ℝ)),
+softmaxSplitFirst i z-softmaxSplitSecond i z=softmax (z.1-z.2) i)
+theorem _ThesisExactChecks.target_437 : _ThesisExpectedTypes.type_437.{u} := by exact @HiddenMonotonicity.SoftmaxDC.softmaxSplit_difference.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.softmaxSplit_difference
+  let expected ← getConstInfo `_ThesisExactChecks.target_437
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplit_difference"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.softmaxSplit_difference | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSoftmax do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplit_difference"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_437) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.softmaxSplit_difference: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplit_difference"
+#check @HiddenMonotonicity.SoftmaxDC.softmaxSplit_difference
+#print axioms _ThesisExactChecks.target_437
+
+section
+universe u
+open HiddenMonotonicity.SoftmaxDC
+open scoped BigOperators
+def _ThesisExpectedTypes.type_438 : Prop := (∀ {ι : Type u} [Fintype ι] (i : ι), softmaxSplitFirst i 0=1/Fintype.card ι)
+theorem _ThesisExactChecks.target_438 : _ThesisExpectedTypes.type_438.{u} := by exact @HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_zero.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_zero
+  let expected ← getConstInfo `_ThesisExactChecks.target_438
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_zero"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_zero | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSoftmax do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_zero"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_438) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_zero: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_zero"
+#check @HiddenMonotonicity.SoftmaxDC.softmaxSplitFirst_zero
+#print axioms _ThesisExactChecks.target_438
+
+section
+universe u
+open HiddenMonotonicity.SoftmaxDC
+open scoped BigOperators
+def _ThesisExpectedTypes.type_439 : Prop := (∀ {ι : Type u} [Fintype ι] (i : ι), softmaxSplitSecond i 0=0)
+theorem _ThesisExactChecks.target_439 : _ThesisExpectedTypes.type_439.{u} := by exact @HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_zero.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_zero
+  let expected ← getConstInfo `_ThesisExactChecks.target_439
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_zero"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_zero | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ExplicitSoftmax do
+    throwError "Defining module mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_zero"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_439) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_zero: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_zero"
+#check @HiddenMonotonicity.SoftmaxDC.softmaxSplitSecond_zero
+#print axioms _ThesisExactChecks.target_439
+
+section
+def _ThesisExpectedTypes.type_440 : Prop := (∀ z : HiddenMonotonicity.TransformerDC.FourStreams, (HiddenMonotonicity.TransformerDC.productSplit z).1 - (HiddenMonotonicity.TransformerDC.productSplit z).2 = (z.1.1 - z.1.2) * (z.2.1 - z.2.2))
+theorem _ThesisExactChecks.target_440 : _ThesisExpectedTypes.type_440 := by exact @HiddenMonotonicity.TransformerDC.productSplit_exact
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.productSplit_exact
+  let expected ← getConstInfo `_ThesisExactChecks.target_440
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.productSplit_exact"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.productSplit_exact | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.PolarizedProductDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.productSplit_exact"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_440) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.productSplit_exact: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.productSplit_exact"
+#check @HiddenMonotonicity.TransformerDC.productSplit_exact
+#print axioms _ThesisExactChecks.target_440
+
+section
+def _ThesisExpectedTypes.type_441 : Prop := (∀ z : HiddenMonotonicity.TransformerDC.FourStreams, 0 ≤ HiddenMonotonicity.TransformerDC.productSplit z)
+theorem _ThesisExactChecks.target_441 : _ThesisExpectedTypes.type_441 := by exact @HiddenMonotonicity.TransformerDC.productSplit_nonnegative
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.productSplit_nonnegative
+  let expected ← getConstInfo `_ThesisExactChecks.target_441
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.productSplit_nonnegative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.productSplit_nonnegative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.PolarizedProductDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.productSplit_nonnegative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_441) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.productSplit_nonnegative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.productSplit_nonnegative"
+#check @HiddenMonotonicity.TransformerDC.productSplit_nonnegative
+#print axioms _ThesisExactChecks.target_441
+
+section
+def _ThesisExpectedTypes.type_442 : Prop := (ConvexOn ℝ Set.univ (fun z : HiddenMonotonicity.TransformerDC.FourStreams => (HiddenMonotonicity.TransformerDC.productSplit z).1) ∧ ConvexOn ℝ Set.univ (fun z : HiddenMonotonicity.TransformerDC.FourStreams => (HiddenMonotonicity.TransformerDC.productSplit z).2))
+theorem _ThesisExactChecks.target_442 : _ThesisExpectedTypes.type_442 := by exact @HiddenMonotonicity.TransformerDC.productSplit_convex
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.productSplit_convex
+  let expected ← getConstInfo `_ThesisExactChecks.target_442
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.productSplit_convex"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.productSplit_convex | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.PolarizedProductDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.productSplit_convex"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_442) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.productSplit_convex: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.productSplit_convex"
+#check @HiddenMonotonicity.TransformerDC.productSplit_convex
+#print axioms _ThesisExactChecks.target_442
+
+section
+def _ThesisExpectedTypes.type_443 : Prop := (MonotoneOn HiddenMonotonicity.TransformerDC.productSplit (Set.Ici (0 : HiddenMonotonicity.TransformerDC.FourStreams)))
+theorem _ThesisExactChecks.target_443 : _ThesisExpectedTypes.type_443 := by exact @HiddenMonotonicity.TransformerDC.productSplit_monotoneOn
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.productSplit_monotoneOn
+  let expected ← getConstInfo `_ThesisExactChecks.target_443
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.productSplit_monotoneOn"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.productSplit_monotoneOn | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.PolarizedProductDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.productSplit_monotoneOn"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_443) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.productSplit_monotoneOn: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.productSplit_monotoneOn"
+#check @HiddenMonotonicity.TransformerDC.productSplit_monotoneOn
+#print axioms _ThesisExactChecks.target_443
+
+section
+universe u
+def _ThesisExpectedTypes.type_444 : Prop := (∀ {E : Type u} [AddCommGroup E] [Module ℝ E] (s : Set E) (A B C D : E → ℝ), ConvexOn ℝ s A → ConvexOn ℝ s B → ConvexOn ℝ s C → ConvexOn ℝ s D → (∀ x ∈ s, 0 ≤ A x) → (∀ x ∈ s, 0 ≤ B x) → (∀ x ∈ s, 0 ≤ C x) → (∀ x ∈ s, 0 ≤ D x) → ConvexOn ℝ s (fun x => (HiddenMonotonicity.TransformerDC.productSplit ((A x, B x), (C x, D x))).1) ∧ ConvexOn ℝ s (fun x => (HiddenMonotonicity.TransformerDC.productSplit ((A x, B x), (C x, D x))).2))
+theorem _ThesisExactChecks.target_444 : _ThesisExpectedTypes.type_444.{u} := by exact @HiddenMonotonicity.TransformerDC.productSplit_convex_composition.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.productSplit_convex_composition
+  let expected ← getConstInfo `_ThesisExactChecks.target_444
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.productSplit_convex_composition"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.productSplit_convex_composition | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.PolarizedProductDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.productSplit_convex_composition"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_444) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.productSplit_convex_composition: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.productSplit_convex_composition"
+#check @HiddenMonotonicity.TransformerDC.productSplit_convex_composition
+#print axioms _ThesisExactChecks.target_444
+
+section
+universe u
+def _ThesisExpectedTypes.type_445 : Prop := (∀ {E : Type u} [Preorder E] (s : Set E) (A B C D : E → ℝ), MonotoneOn A s → MonotoneOn B s → MonotoneOn C s → MonotoneOn D s → (∀ x ∈ s, 0 ≤ A x) → (∀ x ∈ s, 0 ≤ B x) → (∀ x ∈ s, 0 ≤ C x) → (∀ x ∈ s, 0 ≤ D x) → MonotoneOn (fun x => HiddenMonotonicity.TransformerDC.productSplit ((A x, B x), (C x, D x))) s)
+theorem _ThesisExactChecks.target_445 : _ThesisExpectedTypes.type_445.{u} := by exact @HiddenMonotonicity.TransformerDC.productSplit_monotone_composition.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.productSplit_monotone_composition
+  let expected ← getConstInfo `_ThesisExactChecks.target_445
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.productSplit_monotone_composition"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.productSplit_monotone_composition | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.PolarizedProductDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.productSplit_monotone_composition"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_445) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.productSplit_monotone_composition: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.productSplit_monotone_composition"
+#check @HiddenMonotonicity.TransformerDC.productSplit_monotone_composition
+#print axioms _ThesisExactChecks.target_445
+
+section
+def _ThesisExpectedTypes.type_446 : Prop := (∀ ε : ℝ, 0 < ε → ∀ z : ℝ, HasDerivAt (HiddenMonotonicity.SmoothDC.inverseSqrtExtension ε) (HiddenMonotonicity.SmoothDC.inverseSqrtExtensionDeriv ε z) z)
+theorem _ThesisExactChecks.target_446 : _ThesisExpectedTypes.type_446 := by exact @HiddenMonotonicity.SmoothDC.inverseSqrtExtension_hasDerivAt
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.inverseSqrtExtension_hasDerivAt
+  let expected ← getConstInfo `_ThesisExactChecks.target_446
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtExtension_hasDerivAt"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.inverseSqrtExtension_hasDerivAt | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.LayerNormDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtExtension_hasDerivAt"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_446) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.inverseSqrtExtension_hasDerivAt: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtExtension_hasDerivAt"
+#check @HiddenMonotonicity.SmoothDC.inverseSqrtExtension_hasDerivAt
+#print axioms _ThesisExactChecks.target_446
+
+section
+def _ThesisExpectedTypes.type_447 : Prop := (∀ ε : ℝ, 0 < ε → ConvexOn ℝ Set.univ (HiddenMonotonicity.SmoothDC.inverseSqrtExtension ε))
+theorem _ThesisExactChecks.target_447 : _ThesisExpectedTypes.type_447 := by exact @HiddenMonotonicity.SmoothDC.inverseSqrtExtension_convex
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.inverseSqrtExtension_convex
+  let expected ← getConstInfo `_ThesisExactChecks.target_447
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtExtension_convex"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.inverseSqrtExtension_convex | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.LayerNormDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtExtension_convex"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_447) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.inverseSqrtExtension_convex: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtExtension_convex"
+#check @HiddenMonotonicity.SmoothDC.inverseSqrtExtension_convex
+#print axioms _ThesisExactChecks.target_447
+
+section
+def _ThesisExpectedTypes.type_448 : Prop := (∀ ε : ℝ, 0 < ε → ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).1) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).2))
+theorem _ThesisExactChecks.target_448 : _ThesisExpectedTypes.type_448 := by exact @HiddenMonotonicity.SmoothDC.inverseSqrtPair_convex
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.inverseSqrtPair_convex
+  let expected ← getConstInfo `_ThesisExactChecks.target_448
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_convex"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.inverseSqrtPair_convex | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.LayerNormDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_convex"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_448) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.inverseSqrtPair_convex: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_convex"
+#check @HiddenMonotonicity.SmoothDC.inverseSqrtPair_convex
+#print axioms _ThesisExactChecks.target_448
+
+section
+def _ThesisExpectedTypes.type_449 : Prop := (∀ ε : ℝ, 0 < ε → Monotone (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε))
+theorem _ThesisExactChecks.target_449 : _ThesisExpectedTypes.type_449 := by exact @HiddenMonotonicity.SmoothDC.inverseSqrtPair_monotone
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.inverseSqrtPair_monotone
+  let expected ← getConstInfo `_ThesisExactChecks.target_449
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_monotone"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.inverseSqrtPair_monotone | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.LayerNormDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_monotone"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_449) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.inverseSqrtPair_monotone: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_monotone"
+#check @HiddenMonotonicity.SmoothDC.inverseSqrtPair_monotone
+#print axioms _ThesisExactChecks.target_449
+
+section
+def _ThesisExpectedTypes.type_450 : Prop := (∀ ε : ℝ, 0 < ε → ∀ z : ℝ × ℝ, 0 ≤ z → 0 ≤ HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z)
+theorem _ThesisExactChecks.target_450 : _ThesisExpectedTypes.type_450 := by exact @HiddenMonotonicity.SmoothDC.inverseSqrtPair_nonneg
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.inverseSqrtPair_nonneg
+  let expected ← getConstInfo `_ThesisExactChecks.target_450
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_nonneg"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.inverseSqrtPair_nonneg | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.LayerNormDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_nonneg"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_450) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.inverseSqrtPair_nonneg: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_nonneg"
+#check @HiddenMonotonicity.SmoothDC.inverseSqrtPair_nonneg
+#print axioms _ThesisExactChecks.target_450
+
+section
+def _ThesisExpectedTypes.type_451 : Prop := (∀ ε : ℝ, 0 < ε → ∀ z : ℝ × ℝ, 0 ≤ z.1 - z.2 → (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).1 - (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).2 = (Real.sqrt (ε + (z.1 - z.2)))⁻¹)
+theorem _ThesisExactChecks.target_451 : _ThesisExpectedTypes.type_451 := by exact @HiddenMonotonicity.SmoothDC.inverseSqrtPair_difference
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.inverseSqrtPair_difference
+  let expected ← getConstInfo `_ThesisExactChecks.target_451
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_difference"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.inverseSqrtPair_difference | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.LayerNormDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_difference"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_451) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.inverseSqrtPair_difference: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_difference"
+#check @HiddenMonotonicity.SmoothDC.inverseSqrtPair_difference
+#print axioms _ThesisExactChecks.target_451
+
+section
+def _ThesisExpectedTypes.type_452 : Prop := (∀ ε : ℝ, 0 < ε → HiddenMonotonicity.SmoothDC.inverseSqrtSlope ε = 1 / (2 * ε ^ (3 / 2 : ℝ)))
+theorem _ThesisExactChecks.target_452 : _ThesisExpectedTypes.type_452 := by exact @HiddenMonotonicity.SmoothDC.inverseSqrtSlope_eq
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.inverseSqrtSlope_eq
+  let expected ← getConstInfo `_ThesisExactChecks.target_452
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtSlope_eq"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.inverseSqrtSlope_eq | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.LayerNormDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtSlope_eq"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_452) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.inverseSqrtSlope_eq: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtSlope_eq"
+#check @HiddenMonotonicity.SmoothDC.inverseSqrtSlope_eq
+#print axioms _ThesisExactChecks.target_452
+
+section
+def _ThesisExpectedTypes.type_453 : Prop := (∀ ε : ℝ, 0 < ε → Monotone (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).1) ∧ ConvexOn ℝ Set.univ (fun z : ℝ × ℝ => (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).2) ∧ (∀ z : ℝ × ℝ, 0 ≤ z → 0 ≤ HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z) ∧ (∀ z : ℝ × ℝ, 0 ≤ z.1 - z.2 → (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).1 - (HiddenMonotonicity.SmoothDC.inverseSqrtPair ε z).2 = (Real.sqrt (ε + (z.1 - z.2)))⁻¹))
+theorem _ThesisExactChecks.target_453 : _ThesisExpectedTypes.type_453 := by exact @HiddenMonotonicity.SmoothDC.inverseSqrtPair_properties
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.SmoothDC.inverseSqrtPair_properties
+  let expected ← getConstInfo `_ThesisExactChecks.target_453
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_properties"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.SmoothDC.inverseSqrtPair_properties | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.LayerNormDCLift do
+    throwError "Defining module mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_properties"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_453) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.SmoothDC.inverseSqrtPair_properties: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.SmoothDC.inverseSqrtPair_properties"
+#check @HiddenMonotonicity.SmoothDC.inverseSqrtPair_properties
+#print axioms _ThesisExactChecks.target_453
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_454 : Prop := (∀ c : ℝ, value (constPair c) = c)
+theorem _ThesisExactChecks.target_454 : _ThesisExpectedTypes.type_454 := by exact @HiddenMonotonicity.TransformerDC.value_constPair
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.value_constPair
+  let expected ← getConstInfo `_ThesisExactChecks.target_454
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.value_constPair"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.value_constPair | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerPairCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.value_constPair"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_454) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.value_constPair: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.value_constPair"
+#check @HiddenMonotonicity.TransformerDC.value_constPair
+#print axioms _ThesisExactChecks.target_454
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_455 : Prop := (∀ p q : ℝ × ℝ, value (addPair p q) = value p + value q)
+theorem _ThesisExactChecks.target_455 : _ThesisExpectedTypes.type_455 := by exact @HiddenMonotonicity.TransformerDC.value_addPair
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.value_addPair
+  let expected ← getConstInfo `_ThesisExactChecks.target_455
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.value_addPair"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.value_addPair | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerPairCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.value_addPair"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_455) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.value_addPair: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.value_addPair"
+#check @HiddenMonotonicity.TransformerDC.value_addPair
+#print axioms _ThesisExactChecks.target_455
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_456 : Prop := (∀ (c : ℝ) (p : ℝ × ℝ), value (scalePair c p) = c * value p)
+theorem _ThesisExactChecks.target_456 : _ThesisExpectedTypes.type_456 := by exact @HiddenMonotonicity.TransformerDC.value_scalePair
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.value_scalePair
+  let expected ← getConstInfo `_ThesisExactChecks.target_456
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.value_scalePair"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.value_scalePair | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerPairCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.value_scalePair"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_456) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.value_scalePair: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.value_scalePair"
+#check @HiddenMonotonicity.TransformerDC.value_scalePair
+#print axioms _ThesisExactChecks.target_456
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_457 : Prop := (∀ p q : ℝ × ℝ, value (mulPair p q) = value p * value q)
+theorem _ThesisExactChecks.target_457 : _ThesisExpectedTypes.type_457 := by exact @HiddenMonotonicity.TransformerDC.value_mulPair
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.value_mulPair
+  let expected ← getConstInfo `_ThesisExactChecks.target_457
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.value_mulPair"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.value_mulPair | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerPairCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.value_mulPair"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_457) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.value_mulPair: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.value_mulPair"
+#check @HiddenMonotonicity.TransformerDC.value_mulPair
+#print axioms _ThesisExactChecks.target_457
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_458 : Prop := (∀ {E : Type u} [AddCommGroup E] [Module ℝ E] [Preorder E] {s : Set E}, Convex ℝ s → ∀ c : ℝ, Regular s (fun _ : E => constPair c))
+theorem _ThesisExactChecks.target_458 : _ThesisExpectedTypes.type_458.{u} := by exact @HiddenMonotonicity.TransformerDC.Regular.const.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Regular.const
+  let expected ← getConstInfo `_ThesisExactChecks.target_458
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Regular.const"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Regular.const | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerPairCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Regular.const"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_458) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Regular.const: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Regular.const"
+#check @HiddenMonotonicity.TransformerDC.Regular.const
+#print axioms _ThesisExactChecks.target_458
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_459 : Prop := (∀ {E : Type u} [AddCommGroup E] [Module ℝ E] [Preorder E] {s : Set E}, ∀ {f : E → ℝ × ℝ}, Regular s f → ∀ c : ℝ, Regular s (fun x => scalePair c (f x)))
+theorem _ThesisExactChecks.target_459 : _ThesisExpectedTypes.type_459.{u} := by exact @HiddenMonotonicity.TransformerDC.Regular.scale.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Regular.scale
+  let expected ← getConstInfo `_ThesisExactChecks.target_459
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Regular.scale"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Regular.scale | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerPairCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Regular.scale"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_459) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Regular.scale: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Regular.scale"
+#check @HiddenMonotonicity.TransformerDC.Regular.scale
+#print axioms _ThesisExactChecks.target_459
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_460 : Prop := (∀ {E : Type u} [AddCommGroup E] [Module ℝ E] [Preorder E] {s : Set E}, ∀ {f g : E → ℝ × ℝ}, Regular s f → Regular s g → Regular s (fun x => mulPair (f x) (g x)))
+theorem _ThesisExactChecks.target_460 : _ThesisExpectedTypes.type_460.{u} := by exact @HiddenMonotonicity.TransformerDC.Regular.mul.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Regular.mul
+  let expected ← getConstInfo `_ThesisExactChecks.target_460
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Regular.mul"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Regular.mul | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerPairCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Regular.mul"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_460) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Regular.mul: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Regular.mul"
+#check @HiddenMonotonicity.TransformerDC.Regular.mul
+#print axioms _ThesisExactChecks.target_460
+
+section
+universe u v
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_461 : Prop := (∀ {E : Type u} [AddCommGroup E] [Module ℝ E] [Preorder E] {s : Set E}, ∀ {ι : Type v} (t : Finset ι) (f : ι → E → ℝ × ℝ), Convex ℝ s → (∀ i ∈ t, Regular s (f i)) → Regular s (fun x => ∑ i ∈ t, f i x))
+theorem _ThesisExactChecks.target_461 : _ThesisExpectedTypes.type_461.{u, v} := by exact @HiddenMonotonicity.TransformerDC.Regular.finset_sum.{u, v}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Regular.finset_sum
+  let expected ← getConstInfo `_ThesisExactChecks.target_461
+  unless target.levelParams.length == 2 && expected.levelParams.length == 2 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Regular.finset_sum"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Regular.finset_sum | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerPairCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Regular.finset_sum"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_461) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Regular.finset_sum: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Regular.finset_sum"
+#check @HiddenMonotonicity.TransformerDC.Regular.finset_sum
+#print axioms _ThesisExactChecks.target_461
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_462 : Prop := (∀ {E : Type u} [AddCommGroup E] [Module ℝ E] [Preorder E] {s : Set E}, ∀ {f : E → ℝ × ℝ}, Regular s f → ∀ φ : (ℝ × ℝ) → ℝ × ℝ, ConvexOn ℝ Set.univ (fun z => (φ z).1) → ConvexOn ℝ Set.univ (fun z => (φ z).2) → Monotone φ → (∀ z, 0 ≤ z → 0 ≤ φ z) → Regular s (fun x => φ (f x)))
+theorem _ThesisExactChecks.target_462 : _ThesisExpectedTypes.type_462.{u} := by exact @HiddenMonotonicity.TransformerDC.Regular.scalar_comp.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Regular.scalar_comp
+  let expected ← getConstInfo `_ThesisExactChecks.target_462
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Regular.scalar_comp"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Regular.scalar_comp | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerPairCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Regular.scalar_comp"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_462) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Regular.scalar_comp: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Regular.scalar_comp"
+#check @HiddenMonotonicity.TransformerDC.Regular.scalar_comp
+#print axioms _ThesisExactChecks.target_462
+
+section
+universe u v
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_463 : Prop := (∀ {E : Type u} [AddCommGroup E] [Module ℝ E] [Preorder E] {s : Set E}, ∀ {ι : Type v} (φ : ((ι → ℝ) × (ι → ℝ)) → ℝ × ℝ), ConvexOn ℝ Set.univ (fun z => (φ z).1) → ConvexOn ℝ Set.univ (fun z => (φ z).2) → Monotone φ → (∀ z, 0 ≤ z → 0 ≤ φ z) → Convex ℝ s → ∀ f : ι → E → ℝ × ℝ, (∀ i, Regular s (f i)) → Regular s (fun x => φ ((fun i => (f i x).1), (fun i => (f i x).2))))
+theorem _ThesisExactChecks.target_463 : _ThesisExpectedTypes.type_463.{u, v} := by exact @HiddenMonotonicity.TransformerDC.Regular.vector_comp.{u, v}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Regular.vector_comp
+  let expected ← getConstInfo `_ThesisExactChecks.target_463
+  unless target.levelParams.length == 2 && expected.levelParams.length == 2 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Regular.vector_comp"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Regular.vector_comp | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerPairCalculus do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Regular.vector_comp"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_463) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Regular.vector_comp: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Regular.vector_comp"
+#check @HiddenMonotonicity.TransformerDC.Regular.vector_comp
+#print axioms _ThesisExactChecks.target_463
+
+section
+def _ThesisExpectedTypes.type_464 : Prop := (∀ {d : ℕ} (v : Fin d → ℝ), 0 ≤ HiddenMonotonicity.TransformerDC.layerVariance v)
+theorem _ThesisExactChecks.target_464 : _ThesisExpectedTypes.type_464 := by exact @HiddenMonotonicity.TransformerDC.layerVariance_nonnegative
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.layerVariance_nonnegative
+  let expected ← getConstInfo `_ThesisExactChecks.target_464
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.layerVariance_nonnegative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.layerVariance_nonnegative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.LayerNormDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.layerVariance_nonnegative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_464) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.layerVariance_nonnegative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.layerVariance_nonnegative"
+#check @HiddenMonotonicity.TransformerDC.layerVariance_nonnegative
+#print axioms _ThesisExactChecks.target_464
+
+section
+def _ThesisExpectedTypes.type_465 : Prop := (∀ {d : ℕ} (xs : Fin d → ℝ × ℝ), HiddenMonotonicity.TransformerDC.value (HiddenMonotonicity.TransformerDC.variancePair xs) = HiddenMonotonicity.TransformerDC.layerVariance (fun i => HiddenMonotonicity.TransformerDC.value (xs i)))
+theorem _ThesisExactChecks.target_465 : _ThesisExpectedTypes.type_465 := by exact @HiddenMonotonicity.TransformerDC.value_variancePair
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.value_variancePair
+  let expected ← getConstInfo `_ThesisExactChecks.target_465
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.value_variancePair"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.value_variancePair | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.LayerNormDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.value_variancePair"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_465) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.value_variancePair: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.value_variancePair"
+#check @HiddenMonotonicity.TransformerDC.value_variancePair
+#print axioms _ThesisExactChecks.target_465
+
+section
+def _ThesisExpectedTypes.type_466 : Prop := (∀ {d : ℕ} (ε : ℝ), 0 < ε → ∀ (γ β : Fin d → ℝ) (xs : Fin d → ℝ × ℝ) (i : Fin d), HiddenMonotonicity.TransformerDC.value (HiddenMonotonicity.TransformerDC.layerNormPair ε γ β xs i) = HiddenMonotonicity.TransformerDC.layerNorm ε γ β (fun j => HiddenMonotonicity.TransformerDC.value (xs j)) i)
+theorem _ThesisExactChecks.target_466 : _ThesisExpectedTypes.type_466 := by exact @HiddenMonotonicity.TransformerDC.layerNormPair_exact
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.layerNormPair_exact
+  let expected ← getConstInfo `_ThesisExactChecks.target_466
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.layerNormPair_exact"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.layerNormPair_exact | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.LayerNormDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.layerNormPair_exact"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_466) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.layerNormPair_exact: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.layerNormPair_exact"
+#check @HiddenMonotonicity.TransformerDC.layerNormPair_exact
+#print axioms _ThesisExactChecks.target_466
+
+section
+universe u
+def _ThesisExpectedTypes.type_467 : Prop := (∀ {E : Type u} [AddCommGroup E] [Module ℝ E] [Preorder E] {d : ℕ} (s : Set E), Convex ℝ s → ∀ ε : ℝ, 0 < ε → ∀ (γ β : Fin d → ℝ) (f : Fin d → E → ℝ × ℝ), (∀ i, HiddenMonotonicity.TransformerDC.Regular s (f i)) → ∀ i : Fin d, HiddenMonotonicity.TransformerDC.Regular s (fun x => HiddenMonotonicity.TransformerDC.layerNormPair ε γ β (fun j => f j x) i))
+theorem _ThesisExactChecks.target_467 : _ThesisExpectedTypes.type_467.{u} := by exact @HiddenMonotonicity.TransformerDC.layerNormPair_regular.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.layerNormPair_regular
+  let expected ← getConstInfo `_ThesisExactChecks.target_467
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.layerNormPair_regular"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.layerNormPair_regular | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.LayerNormDC do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.layerNormPair_regular"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_467) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.layerNormPair_regular: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.layerNormPair_regular"
+#check @HiddenMonotonicity.TransformerDC.layerNormPair_regular
+#print axioms _ThesisExactChecks.target_467
+
+section
+universe u v
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_468 : Prop := (∀ {E : Type u} {ι : Type v} [AddCommGroup E] [Module ℝ E] (s : Set E), Convex ℝ s → ∀ φ : ((ι → ℝ) × (ι → ℝ)) → ℝ, ConvexOn ℝ (Set.Ici (0 : (ι → ℝ) × (ι → ℝ))) φ → MonotoneOn φ (Set.Ici (0 : (ι → ℝ) × (ι → ℝ))) → ∀ p q : E → ι → ℝ, (∀ i, ConvexOn ℝ s (fun x => p x i)) → (∀ i, ConvexOn ℝ s (fun x => q x i)) → (∀ x ∈ s, 0 ≤ p x) → (∀ x ∈ s, 0 ≤ q x) → ConvexOn ℝ s (fun x => φ (p x, q x)))
+theorem _ThesisExactChecks.target_468 : _ThesisExpectedTypes.type_468.{u, v} := by exact @HiddenMonotonicity.TransformerDC.convex_monotone_vector_comp_on.{u, v}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.convex_monotone_vector_comp_on
+  let expected ← getConstInfo `_ThesisExactChecks.target_468
+  unless target.levelParams.length == 2 && expected.levelParams.length == 2 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.convex_monotone_vector_comp_on"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.convex_monotone_vector_comp_on | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerConvexInput do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.convex_monotone_vector_comp_on"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_468) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.convex_monotone_vector_comp_on: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.convex_monotone_vector_comp_on"
+#check @HiddenMonotonicity.TransformerDC.convex_monotone_vector_comp_on
+#print axioms _ThesisExactChecks.target_468
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_469 : Prop := (∀ {ι : Type u} (φ : ((ι → ℝ) × (ι → ℝ)) → ℝ), ConvexOn ℝ (Set.Ici (0 : (ι → ℝ) × (ι → ℝ))) φ → MonotoneOn φ (Set.Ici (0 : (ι → ℝ) × (ι → ℝ))) → ConvexOn ℝ Set.univ (fun x : ι → ℝ => φ ((fun i => max (x i) 0), (fun i => max (-x i) 0))))
+theorem _ThesisExactChecks.target_469 : _ThesisExpectedTypes.type_469.{u} := by exact @HiddenMonotonicity.TransformerDC.convex_signed_input_lift.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.convex_signed_input_lift
+  let expected ← getConstInfo `_ThesisExactChecks.target_469
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.convex_signed_input_lift"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.convex_signed_input_lift | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerConvexInput do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.convex_signed_input_lift"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_469) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.convex_signed_input_lift: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.convex_signed_input_lift"
+#check @HiddenMonotonicity.TransformerDC.convex_signed_input_lift
+#print axioms _ThesisExactChecks.target_469
+
+section
+universe u
+def _ThesisExpectedTypes.type_470 : Prop := (∀ {ι : Type u} (e : HiddenMonotonicity.TransformerDC.Expr ι) (x : ι → ℝ × ℝ), HiddenMonotonicity.TransformerDC.value (e.splitEval x) = e.eval (fun i => HiddenMonotonicity.TransformerDC.value (x i)))
+theorem _ThesisExactChecks.target_470 : _ThesisExpectedTypes.type_470.{u} := by exact @HiddenMonotonicity.TransformerDC.Expr.splitEval_exact.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Expr.splitEval_exact
+  let expected ← getConstInfo `_ThesisExactChecks.target_470
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Expr.splitEval_exact"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Expr.splitEval_exact | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerExpr do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Expr.splitEval_exact"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_470) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Expr.splitEval_exact: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Expr.splitEval_exact"
+#check @HiddenMonotonicity.TransformerDC.Expr.splitEval_exact
+#print axioms _ThesisExactChecks.target_470
+
+section
+universe u v
+def _ThesisExpectedTypes.type_471 : Prop := (∀ {ι : Type u} {E : Type v} [AddCommGroup E] [Module ℝ E] [Preorder E] (e : HiddenMonotonicity.TransformerDC.Expr ι) (s : Set E), Convex ℝ s → ∀ (f : ι → E → ℝ × ℝ), (∀ i, HiddenMonotonicity.TransformerDC.Regular s (f i)) → HiddenMonotonicity.TransformerDC.Regular s (fun x => e.splitEval (fun i => f i x)))
+theorem _ThesisExactChecks.target_471 : _ThesisExpectedTypes.type_471.{u, v} := by exact @HiddenMonotonicity.TransformerDC.Expr.splitEval_regular.{u, v}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Expr.splitEval_regular
+  let expected ← getConstInfo `_ThesisExactChecks.target_471
+  unless target.levelParams.length == 2 && expected.levelParams.length == 2 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Expr.splitEval_regular"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Expr.splitEval_regular | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerExpr do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Expr.splitEval_regular"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_471) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Expr.splitEval_regular: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Expr.splitEval_regular"
+#check @HiddenMonotonicity.TransformerDC.Expr.splitEval_regular
+#print axioms _ThesisExactChecks.target_471
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_472 : Prop := (∀ {t d : ℕ} {ι : Type u} (h : TransformerHead t d) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d), (h.compile x q i).eval v = h.eval (fun a b => (x a b).eval v) q i)
+theorem _ThesisExactChecks.target_472 : _ThesisExpectedTypes.type_472.{u} := by exact @HiddenMonotonicity.TransformerDC.TransformerHead.eval_compile.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.TransformerHead.eval_compile
+  let expected ← getConstInfo `_ThesisExactChecks.target_472
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.TransformerHead.eval_compile"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.TransformerHead.eval_compile | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerDefinition do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.TransformerHead.eval_compile"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_472) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.TransformerHead.eval_compile: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.TransformerHead.eval_compile"
+#check @HiddenMonotonicity.TransformerDC.TransformerHead.eval_compile
+#print axioms _ThesisExactChecks.target_472
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_473 : Prop := (∀ {t d : ℕ} {ι : Type u} (b : TransformerBlock t d) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d), (b.compile x q i).eval v = b.eval (fun a c => (x a c).eval v) q i)
+theorem _ThesisExactChecks.target_473 : _ThesisExpectedTypes.type_473.{u} := by exact @HiddenMonotonicity.TransformerDC.TransformerBlock.eval_compile.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.TransformerBlock.eval_compile
+  let expected ← getConstInfo `_ThesisExactChecks.target_473
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.TransformerBlock.eval_compile"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.TransformerBlock.eval_compile | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerDefinition do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.TransformerBlock.eval_compile"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_473) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.TransformerBlock.eval_compile: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.TransformerBlock.eval_compile"
+#check @HiddenMonotonicity.TransformerDC.TransformerBlock.eval_compile
+#print axioms _ThesisExactChecks.target_473
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_474 : Prop := (∀ {t d : ℕ} {ι : Type u} (bs : List (TransformerBlock t d)) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d), (compileTransformerBlocks bs x q i).eval v = evalTransformerBlocks bs (fun a c => (x a c).eval v) q i)
+theorem _ThesisExactChecks.target_474 : _ThesisExpectedTypes.type_474.{u} := by exact @HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks
+  let expected ← getConstInfo `_ThesisExactChecks.target_474
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerDefinition do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_474) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks"
+#check @HiddenMonotonicity.TransformerDC.eval_compileTransformerBlocks
+#print axioms _ThesisExactChecks.target_474
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_475 : Prop := (∀ {t d : ℕ} {ι : Type u} (p : Option (TransformerNorm d)) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (q : Fin t) (i : Fin d), (compileOptionalTransformerNorm p x q i).eval v = evalOptionalTransformerNorm p (fun a c => (x a c).eval v) q i)
+theorem _ThesisExactChecks.target_475 : _ThesisExpectedTypes.type_475.{u} := by exact @HiddenMonotonicity.TransformerDC.eval_compileOptionalTransformerNorm.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.eval_compileOptionalTransformerNorm
+  let expected ← getConstInfo `_ThesisExactChecks.target_475
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.eval_compileOptionalTransformerNorm"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.eval_compileOptionalTransformerNorm | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerDefinition do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.eval_compileOptionalTransformerNorm"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_475) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.eval_compileOptionalTransformerNorm: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.eval_compileOptionalTransformerNorm"
+#check @HiddenMonotonicity.TransformerDC.eval_compileOptionalTransformerNorm
+#print axioms _ThesisExactChecks.target_475
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_476 : Prop := (∀ {t d o : ℕ} {ι : Type u} (net : Transformer t d o) (x : Fin t → Fin d → Expr ι) (v : ι → ℝ) (i : Fin o), (net.compile x i).eval v = net.eval (fun p => (x p.1 p.2).eval v) i)
+theorem _ThesisExactChecks.target_476 : _ThesisExpectedTypes.type_476.{u} := by exact @HiddenMonotonicity.TransformerDC.Transformer.eval_compile.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Transformer.eval_compile
+  let expected ← getConstInfo `_ThesisExactChecks.target_476
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Transformer.eval_compile"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Transformer.eval_compile | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerDefinition do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Transformer.eval_compile"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_476) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Transformer.eval_compile: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Transformer.eval_compile"
+#check @HiddenMonotonicity.TransformerDC.Transformer.eval_compile
+#print axioms _ThesisExactChecks.target_476
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_477 : Prop := (∀ {t d o : ℕ} (net : Transformer t d o) (x : Fin t × Fin d → ℝ) (i : Fin o), (net.syntax i).eval x = net.eval x i)
+theorem _ThesisExactChecks.target_477 : _ThesisExpectedTypes.type_477 := by exact @HiddenMonotonicity.TransformerDC.Transformer.eval_syntax
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Transformer.eval_syntax
+  let expected ← getConstInfo `_ThesisExactChecks.target_477
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Transformer.eval_syntax"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Transformer.eval_syntax | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerDefinition do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Transformer.eval_syntax"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_477) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Transformer.eval_syntax: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Transformer.eval_syntax"
+#check @HiddenMonotonicity.TransformerDC.Transformer.eval_syntax
+#print axioms _ThesisExactChecks.target_477
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_478 := (∀ {t d : ℕ} (h : TransformerHead t d), (Fin t → Fin d → ℝ) → Fin t → Fin d → ℝ)
+noncomputable def _ThesisExactChecks.target_478 : _ThesisExpectedTypes.type_478 := by exact @HiddenMonotonicity.TransformerDC.TransformerHead.eval
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.TransformerHead.eval
+  let expected ← getConstInfo `_ThesisExactChecks.target_478
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.TransformerHead.eval"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.TransformerHead.eval | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerDefinition do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.TransformerHead.eval"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_478) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.TransformerHead.eval: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.TransformerHead.eval"
+#check @HiddenMonotonicity.TransformerDC.TransformerHead.eval
+#print axioms _ThesisExactChecks.target_478
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_479 := (∀ {t d : ℕ} (b : TransformerBlock t d), (Fin t → Fin d → ℝ) → Fin t → Fin d → ℝ)
+noncomputable def _ThesisExactChecks.target_479 : _ThesisExpectedTypes.type_479 := by exact @HiddenMonotonicity.TransformerDC.TransformerBlock.eval
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.TransformerBlock.eval
+  let expected ← getConstInfo `_ThesisExactChecks.target_479
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.TransformerBlock.eval"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.TransformerBlock.eval | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerDefinition do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.TransformerBlock.eval"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_479) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.TransformerBlock.eval: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.TransformerBlock.eval"
+#check @HiddenMonotonicity.TransformerDC.TransformerBlock.eval
+#print axioms _ThesisExactChecks.target_479
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_480 := (∀ {t d o : ℕ} (net : Transformer t d o), (Fin t × Fin d → ℝ) → Fin o → ℝ)
+noncomputable def _ThesisExactChecks.target_480 : _ThesisExpectedTypes.type_480 := by exact @HiddenMonotonicity.TransformerDC.Transformer.eval
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Transformer.eval
+  let expected ← getConstInfo `_ThesisExactChecks.target_480
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Transformer.eval"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Transformer.eval | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerDefinition do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Transformer.eval"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_480) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Transformer.eval: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Transformer.eval"
+#check @HiddenMonotonicity.TransformerDC.Transformer.eval
+#print axioms _ThesisExactChecks.target_480
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_481 := (∀ {t d o : ℕ} (net : Transformer t d o), Fin o → Expr (Fin t × Fin d))
+noncomputable def _ThesisExactChecks.target_481 : _ThesisExpectedTypes.type_481 := by exact @HiddenMonotonicity.TransformerDC.Transformer.syntax
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Transformer.syntax
+  let expected ← getConstInfo `_ThesisExactChecks.target_481
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Transformer.syntax"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Transformer.syntax | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerDefinition do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Transformer.syntax"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_481) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Transformer.syntax: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Transformer.syntax"
+#check @HiddenMonotonicity.TransformerDC.Transformer.syntax
+#print axioms _ThesisExactChecks.target_481
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_482 : Prop := (∀ {t d o : ℕ} (net : Transformer t d o) (x : DoubledInput (Fin t × Fin d)) (i : Fin o),
+  (net.decompose x i).1 - (net.decompose x i).2 = net.eval (x.1 - x.2) i)
+theorem _ThesisExactChecks.target_482 : _ThesisExpectedTypes.type_482 := by exact @HiddenMonotonicity.TransformerDC.Transformer.decompose_exact
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Transformer.decompose_exact
+  let expected ← getConstInfo `_ThesisExactChecks.target_482
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Transformer.decompose_exact"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Transformer.decompose_exact | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerCorrectness do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Transformer.decompose_exact"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_482) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Transformer.decompose_exact: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Transformer.decompose_exact"
+#check @HiddenMonotonicity.TransformerDC.Transformer.decompose_exact
+#print axioms _ThesisExactChecks.target_482
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_483 : Prop := (∀ {t d o : ℕ} (net : Transformer t d o) (i : Fin o),
+  Regular (Set.Ici (0 : DoubledInput (Fin t × Fin d))) (fun x => net.decompose x i))
+theorem _ThesisExactChecks.target_483 : _ThesisExpectedTypes.type_483 := by exact @HiddenMonotonicity.TransformerDC.Transformer.decompose_regular
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Transformer.decompose_regular
+  let expected ← getConstInfo `_ThesisExactChecks.target_483
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Transformer.decompose_regular"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Transformer.decompose_regular | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerCorrectness do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Transformer.decompose_regular"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_483) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Transformer.decompose_regular: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Transformer.decompose_regular"
+#check @HiddenMonotonicity.TransformerDC.Transformer.decompose_regular
+#print axioms _ThesisExactChecks.target_483
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_484 : Prop := (∀ {t d o : ℕ} (net : Transformer t d o),
+  MonotoneOn net.decompose (Set.Ici (0 : DoubledInput (Fin t × Fin d))) ∧
+  (∀ i, ConvexOn ℝ (Set.Ici (0 : DoubledInput (Fin t × Fin d))) (fun x => (net.decompose x i).1)) ∧
+  (∀ i, ConvexOn ℝ (Set.Ici (0 : DoubledInput (Fin t × Fin d))) (fun x => (net.decompose x i).2)) ∧
+  (∀ x, 0 ≤ x → 0 ≤ net.decompose x) ∧
+  ∀ x i, (net.decompose x i).1 - (net.decompose x i).2 = net.eval (x.1 - x.2) i)
+theorem _ThesisExactChecks.target_484 : _ThesisExpectedTypes.type_484 := by exact @HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition
+  let expected ← getConstInfo `_ThesisExactChecks.target_484
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerCorrectness do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_484) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition"
+#check @HiddenMonotonicity.TransformerDC.Transformer.dc_decomposition
+#print axioms _ThesisExactChecks.target_484
+
+section
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_485 : Prop := (∀ {t d o : ℕ} (net : Transformer t d o),
+  (∀ i, ConvexOn ℝ Set.univ (fun x : Fin t × Fin d → ℝ => (net.rawDecompose x i).1)) ∧
+  (∀ i, ConvexOn ℝ Set.univ (fun x : Fin t × Fin d → ℝ => (net.rawDecompose x i).2)) ∧
+  (∀ x, 0 ≤ net.rawDecompose x) ∧
+  ∀ x i, (net.rawDecompose x i).1 - (net.rawDecompose x i).2 = net.eval x i)
+theorem _ThesisExactChecks.target_485 : _ThesisExpectedTypes.type_485 := by exact @HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition
+  let expected ← getConstInfo `_ThesisExactChecks.target_485
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerCorrectness do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_485) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition"
+#check @HiddenMonotonicity.TransformerDC.Transformer.raw_dc_decomposition
+#print axioms _ThesisExactChecks.target_485
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_486 : Prop := (∀ {ι : Type u} (e : Expr ι), Regular (Set.Ici (0 : DoubledInput ι)) e.decompose)
+theorem _ThesisExactChecks.target_486 : _ThesisExpectedTypes.type_486.{u} := by exact @HiddenMonotonicity.TransformerDC.Expr.decompose_regular.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Expr.decompose_regular
+  let expected ← getConstInfo `_ThesisExactChecks.target_486
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Expr.decompose_regular"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Expr.decompose_regular | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerExprProperties do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Expr.decompose_regular"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_486) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Expr.decompose_regular: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Expr.decompose_regular"
+#check @HiddenMonotonicity.TransformerDC.Expr.decompose_regular
+#print axioms _ThesisExactChecks.target_486
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_487 : Prop := (∀ {ι : Type u} (e : Expr ι) (x : DoubledInput ι), value (e.decompose x) = e.eval (x.1 - x.2))
+theorem _ThesisExactChecks.target_487 : _ThesisExpectedTypes.type_487.{u} := by exact @HiddenMonotonicity.TransformerDC.Expr.decompose_exact.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Expr.decompose_exact
+  let expected ← getConstInfo `_ThesisExactChecks.target_487
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Expr.decompose_exact"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Expr.decompose_exact | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerExprProperties do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Expr.decompose_exact"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_487) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Expr.decompose_exact: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Expr.decompose_exact"
+#check @HiddenMonotonicity.TransformerDC.Expr.decompose_exact
+#print axioms _ThesisExactChecks.target_487
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_488 : Prop := (∀ {ι : Type u} (e : Expr ι),
+  ConvexOn ℝ Set.univ (fun x : ι → ℝ => (e.rawDecompose x).1) ∧
+  ConvexOn ℝ Set.univ (fun x : ι → ℝ => (e.rawDecompose x).2))
+theorem _ThesisExactChecks.target_488 : _ThesisExpectedTypes.type_488.{u} := by exact @HiddenMonotonicity.TransformerDC.Expr.rawDecompose_convex.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Expr.rawDecompose_convex
+  let expected ← getConstInfo `_ThesisExactChecks.target_488
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Expr.rawDecompose_convex"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Expr.rawDecompose_convex | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerExprProperties do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Expr.rawDecompose_convex"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_488) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Expr.rawDecompose_convex: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Expr.rawDecompose_convex"
+#check @HiddenMonotonicity.TransformerDC.Expr.rawDecompose_convex
+#print axioms _ThesisExactChecks.target_488
+
+section
+universe u
+open HiddenMonotonicity.TransformerDC
+def _ThesisExpectedTypes.type_489 : Prop := (∀ {ι : Type u} (e : Expr ι) (x : ι → ℝ), value (e.rawDecompose x) = e.eval x)
+theorem _ThesisExactChecks.target_489 : _ThesisExpectedTypes.type_489.{u} := by exact @HiddenMonotonicity.TransformerDC.Expr.rawDecompose_exact.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.TransformerDC.Expr.rawDecompose_exact
+  let expected ← getConstInfo `_ThesisExactChecks.target_489
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.TransformerDC.Expr.rawDecompose_exact"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.TransformerDC.Expr.rawDecompose_exact | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.TransformerExprProperties do
+    throwError "Defining module mismatch: HiddenMonotonicity.TransformerDC.Expr.rawDecompose_exact"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_489) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.TransformerDC.Expr.rawDecompose_exact: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.TransformerDC.Expr.rawDecompose_exact"
+#check @HiddenMonotonicity.TransformerDC.Expr.rawDecompose_exact
+#print axioms _ThesisExactChecks.target_489
+
 set_option maxHeartbeats 0
 set_option pp.universes true
 set_option pp.fullNames true
@@ -10634,6 +13750,6 @@ run_cmd do
       ("declaration", toJson name.toString), ("module", toJson modName.toString),
       ("type", toJson typeText), ("universes", toJson (info.levelParams.map Name.toString)),
       ("axioms", toJson (axioms.map Name.toString))]
-  liftIO <| IO.FS.writeFile "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/verification/commit-0f3cfb0/environment.json" (Json.pretty (toJson records))
+  liftIO <| IO.FS.writeFile "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/verification/commit-1f886dd/environment.json" (Json.pretty (toJson records))
   logInfo m!"Audited {records.size} project theorem declarations in the imported environment"
 
