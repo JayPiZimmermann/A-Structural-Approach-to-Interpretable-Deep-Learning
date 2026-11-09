@@ -6098,6 +6098,436 @@
       "review_id": "attack_hidden/lean-link-coverage",
       "review_evidence": "reports/evidence/lean-link-review/ExactTypes.lean",
       "scope": "Definition: actual expected sum of cumulative-discount-weighted graph-node visits, including starting visit."
+    },
+    {
+      "module": "Thesis.SoftplusCircuitModel",
+      "declaration": "Thesis.SoftplusCircuit.graphWith_relu",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (x : Vec d),\n graphWith relu c plan x = c.eval x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-graphWith_relu",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Exact shared-Circuit syntax and hard-interpretation alignment; activation annotations do not smooth hard pools.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitModel",
+      "declaration": "Thesis.SoftplusCircuit.graphSplit_recovery",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8) (x : PairVec d),\n (graphSplit \u03b8 c plan x).1 - (graphSplit \u03b8 c plan x).2 = graphSoft \u03b8 c plan (x.1-x.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-graphSplit_recovery",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "PTNB softplus forward recovery for all retained DAG nodes, affine/addition/activation/ordered finite pools.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitEquilibrium",
+      "declaration": "Thesis.SoftplusCircuit.graph_saddle",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8)\n (x : Vec d) (plus minus : Strategy c plan),\n signedValue \u03b8 c plan plus (canonicalStrategy \u03b8 c plan x) (x,-x) \u2264\n   (graphSoft \u03b8 c plan x,-graphSoft \u03b8 c plan x) \u2227\n signedValue \u03b8 c plan (canonicalStrategy \u03b8 c plan x) (canonicalStrategy \u03b8 c plan x) (x,-x) =\n   (graphSoft \u03b8 c plan x,-graphSoft \u03b8 c plan x) \u2227\n (graphSoft \u03b8 c plan x,-graphSoft \u03b8 c plan x) \u2264\n   signedValue \u03b8 c plan (canonicalStrategy \u03b8 c plan x) minus (x,-x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-graph_saddle",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Arbitrary complete randomized activation and pooling deviations, every retained state, both signed coordinates.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitEquilibrium",
+      "declaration": "Thesis.SoftplusCircuit.canonical_spne",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8) (x : Vec d),\n SubgamePerfect \u03b8 c plan (canonicalStrategy \u03b8 c plan x) (canonicalStrategy \u03b8 c plan x) (x,-x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-canonical_spne",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Source SPNE existence on shared DAG; local optimality is evaluated at actual predecessor profile payoffs.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitPlayers",
+      "declaration": "Thesis.SoftplusCircuit.playerValue_advantage",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d)\n (plus minus : Strategy c plan) (v : Thesis.SoftplusGame.PlayerValues d),\n Thesis.SoftplusGame.advantage (playerValue \u03b8 c plan plus minus v) =\n signedValue \u03b8 c plan plus minus (Thesis.SoftplusGame.advantage v)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-playerValue_advantage",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "All-profile bridge from two actual player payoffs to the signed saddle game; entropy belongs only to the controlling player.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitPlayers",
+      "declaration": "Thesis.SoftplusCircuit.playerValue_canonical",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8) (x : PairVec d),\n playerValue \u03b8 c plan (canonicalStrategy \u03b8 c plan (x.1-x.2))\n   (canonicalStrategy \u03b8 c plan (x.1-x.2)) (Thesis.SoftplusGame.pairValues x) =\n Thesis.SoftplusGame.pairValues (graphSplit \u03b8 c plan x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-playerValue_canonical",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "PTNB softplus-forward: all four player/owner values equal actual stopping decomposition on shared Circuit.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitUniqueness",
+      "declaration": "Thesis.SoftplusCircuit.subgamePerfect_iff",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8)\n (hc : NoPools c plan) (x : Vec d) (plus minus : Strategy c plan),\n SubgamePerfect \u03b8 c plan plus minus (x,-x) \u2194\n plus=canonicalStrategy \u03b8 c plan x \u2227 minus=canonicalStrategy \u03b8 c plan x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-subgamePerfect_iff",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Source uniqueness only for graphs without hard maxpool, including zero fan-in and signed affine output nodes.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitUniqueness",
+      "declaration": "Thesis.SoftplusCircuit.softplus_forward_spne",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8) (x : PairVec d),\n SubgamePerfect \u03b8 c plan (canonicalStrategy \u03b8 c plan (x.1-x.2))\n   (canonicalStrategy \u03b8 c plan (x.1-x.2)) (x.1-x.2,-(x.1-x.2)) \u2227\n playerValue \u03b8 c plan (canonicalStrategy \u03b8 c plan (x.1-x.2))\n   (canonicalStrategy \u03b8 c plan (x.1-x.2)) (Thesis.SoftplusGame.pairValues x) =\n   Thesis.SoftplusGame.pairValues (graphSplit \u03b8 c plan x) \u2227\n (graphSplit \u03b8 c plan x).1-(graphSplit \u03b8 c plan x).2=graphSoft \u03b8 c plan (x.1-x.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-softplus_forward_spne",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Joint full forward/SPNE source bundle; no pool uniqueness assumed.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitRows",
+      "declaration": "Thesis.SoftplusCircuit.nodeProbability_normalized",
+      "expected_type": "\u2200 {n : \u2115} {e : SignedExpr (Fin n)} (\u03b8 : \u211d) (spec : NodeSpec e) (x : Vec n),\n (\u2211 target : Option (Fin n \u00d7 Bool), nodeProbability \u03b8 spec x target) = 1",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-nodeProbability_normalized",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Normalized local stopping transition including soft continuation, source-ordered pools, and zero-row cemetery absorption.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitRows",
+      "declaration": "Thesis.SoftplusCircuit.node_discount_recovery",
+      "expected_type": "\u2200 {n : \u2115} {e : SignedExpr (Fin n)} (\u03b8 : \u211d) (spec : NodeSpec e) (x : Vec n)\n (i : Fin n) (b : Bool), nodeDiscount spec x * nodeProbability \u03b8 spec x (some (i,b)) =\n if b then (selectedWeights \u03b8 spec x).2 i else (selectedWeights \u03b8 spec x).1 i",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-node_discount_recovery",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Structural discount is not sigmoid-scaled; sigmoid belongs to probability. No nonzero fan-in hypothesis.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitTransition",
+      "declaration": "Thesis.SoftplusCircuit.nodePlayer_transition",
+      "expected_type": "\u2200 {n : \u2115} {e : SignedExpr (Fin n)} (\u03b8 : \u211d) (spec : NodeSpec e) (x : Vec n)\n (v : Thesis.SoftplusGame.PlayerValues n) (player turn : Bool),\n nodePlayer \u03b8 spec (canonicalNode \u03b8 spec x) (canonicalNode \u03b8 spec x) v player turn =\n nodeReward \u03b8 spec x player turn +\n \u2211 i : Fin n, \u2211 b : Bool, nodeDiscount spec x * nodeProbability \u03b8 spec x (some (i,b)) *\n v player (Bool.xor turn b) i",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-nodePlayer_transition",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Canonical stochastic Bellman law for every player: true split bias, controller-only entropy, ungated affine readout.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitDerivative",
+      "declaration": "Thesis.SoftplusCircuit.graphSoft_hasFDerivAt",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8)\n (x : Vec d) (hx : Regular \u03b8 c plan x),\n HasFDerivAt (graphSoft \u03b8 c plan)\n (matrixCLM ((graphKernel \u03b8 c plan x).1-(graphKernel \u03b8 c plan x).2)) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-graphSoft_hasFDerivAt",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Actual end-to-end ordinary derivative; regularity requires only unique hard-pool winners, not strict soft activation gates.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitPaths",
+      "declaration": "Thesis.SoftplusCircuit.pathProbability_normalized",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d) (x : Vec d) (j : Fin n),\n (\u2211 path : Thesis.StoppingDAG.DAGPaths c, pathProbability \u03b8 c plan x j path) = 1",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-pathProbability_normalized",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Complete finite law on the original graph, not just successful input-reaching trajectories.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitOccupation",
+      "declaration": "Thesis.SoftplusCircuit.occupation_eq_kernel",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d) (x : Vec d)\n (j : Fin n) (turn : Bool) (i : Fin d) (channel : Bool),\n occupation c plan \u03b8 x j turn i channel =\n if Bool.xor channel turn then (graphKernel \u03b8 c plan x).2 j i else (graphKernel \u03b8 c plan x).1 j i",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-occupation_eq_kernel",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Exact selected occupation identity at every point, including source-ordered ties; not a tied-point classical derivative claim.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitOccupation",
+      "declaration": "Thesis.SoftplusCircuit.graph_derivative_occupation",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8)\n (x : Vec d) (hx : Regular \u03b8 c plan x) (j : Fin n) (i : Fin d),\n (fderiv \u211d (graphSoft \u03b8 c plan) x (Pi.single i 1)) j =\n occupation c plan \u03b8 x j false i false - occupation c plan \u03b8 x j false i true",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-graph_derivative_occupation",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "PTNB softplus-gradient at ordinary inputs; actual derivative equals difference of canonical discounted occupations.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitCuts",
+      "declaration": "Thesis.SoftplusCircuit.graft_soft",
+      "expected_type": "\u2200 {d m n : \u2115} (pre : Circuit d m) (prePlan : Plan pre)\n (suffix : Circuit m n) (suffixPlan : Plan suffix) (\u03b8 : \u211d) (x : Vec d),\n graphSoft \u03b8 (Thesis.StoppingDAG.graft pre suffix) (graftPlan pre prePlan suffix suffixPlan) x =\n graphSoft \u03b8 suffix suffixPlan (graphSoft \u03b8 pre prePlan x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-graft_soft",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Literal prefix/suffix composition on the same shared graph, retaining existing node indices.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitVisits",
+      "declaration": "Thesis.SoftplusCircuit.fullOccupation_graft_last",
+      "expected_type": "\u2200 {d m n : \u2115} (pre : Circuit d (m+1)) (prePlan : Plan pre)\n (suffix : Circuit (m+1) n) (suffixPlan : Plan suffix) (\u03b8 : \u211d) (x : Vec d)\n (j : Fin n) (turn channel : Bool),\n fullOccupation (Thesis.StoppingDAG.graft pre suffix) (graftPlan pre prePlan suffix suffixPlan)\n   \u03b8 x j turn m channel =\n occupation suffix suffixPlan \u03b8 (graphSoft \u03b8 pre prePlan x) j turn (Fin.last m) channel",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-fullOccupation_graft_last",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Full original-graph visits equal cut terminal occupation at every intermediate node; no derivative assumption.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitVisits",
+      "declaration": "Thesis.SoftplusCircuit.intermediate_derivative_fullOccupation",
+      "expected_type": "\u2200 {d m n : \u2115} (pre : Circuit d (m+1)) (prePlan : Plan pre)\n (suffix : Circuit (m+1) n) (suffixPlan : Plan suffix) (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8) (x : Vec d)\n (hx : Regular \u03b8 (Thesis.StoppingDAG.graft pre suffix) (graftPlan pre prePlan suffix suffixPlan) x)\n (j : Fin n) (q : Bool),\n (fderiv \u211d (graphSoft \u03b8 suffix suffixPlan) (graphSoft \u03b8 pre prePlan x) (Pi.single (Fin.last m) 1)) j =\n (if q then (-1 : \u211d) else 1) *\n (fullOccupation (Thesis.StoppingDAG.graft pre suffix) (graftPlan pre prePlan suffix suffixPlan) \u03b8 x j q m false -\n  fullOccupation (Thesis.StoppingDAG.graft pre suffix) (graftPlan pre prePlan suffix suffixPlan) \u03b8 x j q m true)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-intermediate_derivative_fullOccupation",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "PTNB softplus-gradient for arbitrary intermediate node, using full original-graph discounted visits and genuine prefix evaluation.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitPayoff",
+      "declaration": "Thesis.SoftplusCircuit.expectedPayoff_eq_playerValue",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d) (x : Vec d)\n (v : Thesis.SoftplusGame.PlayerValues d) (player : Bool) (j : Fin n) (turn : Bool),\n expectedPayoff c plan \u03b8 x v player j turn =\n playerValue \u03b8 c plan (canonicalStrategy \u03b8 c plan x) (canonicalStrategy \u03b8 c plan x) v player turn j",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-expectedPayoff_eq_playerValue",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Finite normalized trajectory interpreter recovers canonical player expected values; immediate path rewards are conditional source rewards.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.SoftplusCircuitPayoff",
+      "declaration": "Thesis.SoftplusCircuit.expectedPayoff_eq_split",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (plan : Plan c) (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8)\n (x : PairVec d) (player turn : Bool) (j : Fin n),\n expectedPayoff c plan \u03b8 (x.1-x.2) (Thesis.SoftplusGame.pairValues x) player j turn =\n if player=turn then (graphSplit \u03b8 c plan x).1 j else (graphSplit \u03b8 c plan x).2 j",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.SoftplusCircuit"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "softplus-circuit-expectedPayoff_eq_split",
+      "review_evidence": "reports/softplus-circuit-repairs.md",
+      "scope": "Source decomposition equals actual expected player payoff under complete canonical graph law, including affine biases and zero fan-in.",
+      "independent_review_evidence": "reports/adversarial-softplus-circuit-review.json"
+    },
+    {
+      "module": "Thesis.ConditionedTrajectory",
+      "declaration": "Thesis.ConditionedSurvival.timeMass_factorization",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N i : \u2115) (hi : i \u2264 N)\n(K : \u2115 \u2192 S \u2192 S \u2192 \u211d) (s t : S),\ntimeMass N i K s t = prefixMass i K s t * survival N K i t",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival",
+        "Thesis.Randomization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-COMPOSED-timeMass_factorization",
+      "review_evidence": "reports/conditioned-trajectory-repairs.md",
+      "scope": "Actual full-length path marginal factorization into the original time-i prefix occupation and backward future survival. Both marginals are independent literal sums on Games.Paths, using endpoint and stateAt. No representation or factorization hypothesis is assumed.",
+      "independent_review_evidence": "reports/adversarial-conditioned-trajectory-review.json"
+    },
+    {
+      "module": "Thesis.ConditionedTrajectory",
+      "declaration": "Thesis.ConditionedSurvival.conditioned_time_marginal",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N i : \u2115) (hi : i \u2264 N)\n(K : \u2115 \u2192 S \u2192 S \u2192 \u211d) (hK : \u2200 j s t, 0 \u2264 K j s t)\n(s : S) (hs : 0 < survival N K 0 s) (t : S),\ntimeMass N i (kernel K (survival N K)) s t =\nprefixMass i K s t * survival N K i t / survival N K 0 s",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival",
+        "Thesis.Randomization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-COMPOSED-conditioned_time_marginal",
+      "review_evidence": "reports/conditioned-trajectory-repairs.md",
+      "scope": "The source conditioned-alpha formula is proved for the actual time-i marginal of the full conditioned N-path distribution, including zero-potential states; only the initial survival mass must be positive.",
+      "independent_review_evidence": "reports/adversarial-conditioned-trajectory-review.json"
+    },
+    {
+      "module": "Thesis.ConditionedTrajectory",
+      "declaration": "Thesis.ConditionedSurvival.conditioned_geometric_kernel",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (A B : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hA : \u2200 i s t, 0 \u2264 A i s t) (hB : \u2200 i s t, 0 \u2264 B i s t)\n(i : \u2115) (s t : S),\nReal.sqrt (kernel A (survival N A) i s t * kernel B (survival N B) i s t) =\nReal.sqrt (A i s t * B i s t) *\nReal.sqrt (survival N A (i+1) t * survival N B (i+1) t) /\nReal.sqrt (survival N A i s * survival N B i s)",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival",
+        "Thesis.Randomization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-COMPOSED-conditioned_geometric_kernel",
+      "review_evidence": "reports/conditioned-trajectory-repairs.md",
+      "scope": "Geometric-mean identity for the actual guarded conditioned kernels. At positive-potential states this is ordinary division; at zero denominator Lean's totalized quotient agrees with the explicit zero-row convention, whose unreachable support was proved separately.",
+      "independent_review_evidence": "reports/adversarial-conditioned-trajectory-review.json"
+    },
+    {
+      "module": "Thesis.ConditionedTrajectory",
+      "declaration": "Thesis.ConditionedSurvival.conditioned_survival_statistics",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (A B : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hA : \u2200 i s t, 0 \u2264 A i s t) (hB : \u2200 i s t, 0 \u2264 B i s t)\n(hArow : \u2200 i s, \u2211 t, A i s t \u2264 1) (hBrow : \u2200 i s, \u2211 t, B i s t \u2264 1)\n(s : S) (hsA : 0 < survival N A 0 s) (hsB : 0 < survival N B 0 s),\n(survival N A 0 s \u2264 1 \u2227 survival N B 0 s \u2264 1) \u2227\n(\u2200 i \u2264 N, \u2200 t,\ntimeMass N i (kernel A (survival N A)) s t =\nprefixMass i A s t * survival N A i t / survival N A 0 s \u2227\ntimeMass N i (kernel B (survival N B)) s t =\nprefixMass i B s t * survival N B i t / survival N B 0 s) \u2227\n(\u2200 i u v,\nReal.sqrt (kernel A (survival N A) i u v * kernel B (survival N B) i u v) =\nReal.sqrt (A i u v * B i u v) *\nReal.sqrt (survival N A (i+1) v * survival N B (i+1) v) /\nReal.sqrt (survival N A i u * survival N B i u)) \u2227\n(overlap (pathLaw N (kernel A (survival N A)) s)\n(pathLaw N (kernel B (survival N B)) s) =\n\u2211 path : Paths S N, pathLaw N (fun i u v => Real.sqrt\n(kernel A (survival N A) i u v * kernel B (survival N B) i u v)) s path) \u2227\n(overlap (pathLaw N (kernel A (survival N A)) s)\n(pathLaw N (kernel B (survival N B)) s) =\nbackwardDP N (fun i u v => Real.sqrt\n(kernel A (survival N A) i u v * kernel B (survival N B) i u v)) (fun _ => 1) s) \u2227\n(overlap (pathLaw N (kernel A (survival N A)) s)\n(pathLaw N (kernel B (survival N B)) s) =\nordinaryOverlap N A B s / Real.sqrt (survival N A 0 s * survival N B 0 s)) \u2227\n((1/2 : \u211d) * (\u2211 path : Paths S N,\n(Real.sqrt (pathLaw N (kernel A (survival N A)) s path) -\nReal.sqrt (pathLaw N (kernel B (survival N B)) s path))^2) =\n1 - ordinaryOverlap N A B s / Real.sqrt (survival N A 0 s * survival N B 0 s))",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival",
+        "Thesis.Randomization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-COMPOSED-conditioned_survival_statistics",
+      "review_evidence": "reports/conditioned-trajectory-repairs.md",
+      "scope": "The remaining source conditioned-survival clauses are assembled: actual full-law layer marginals, conditioned geometric edges, overlap as a sum of actual geometric path products and as backwardDP, overlap normalized by computed initial survival masses, and the actual finite square-root Hellinger sum. Together with conditioned_survival in the frozen prerequisite this covers the requested ordinary-state survival, conditioning, pruning, marginal and comparison clauses. No strict positivity at intermediate states.",
+      "independent_review_evidence": "reports/adversarial-conditioned-trajectory-review.json"
+    },
+    {
+      "module": "Thesis.ConditionedTrajectory",
+      "declaration": "Thesis.ConditionedSurvival.trajectory_bc_monotone",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (A B : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hA : \u2200 i s t, 0 \u2264 A i s t) (hB : \u2200 i s t, 0 \u2264 B i s t)\n(hArow : \u2200 i s, \u2211 t, A i s t = 1) (hBrow : \u2200 i s, \u2211 t, B i s t = 1) (s : S),\noverlap (pathLaw 0 A s) (pathLaw 0 B s) = 1 \u2227\n(\u2200 n, 0 \u2264 overlap (pathLaw n A s) (pathLaw n B s) \u2227\noverlap (pathLaw n A s) (pathLaw n B s) \u2264 1) \u2227\nAntitone (fun n => overlap (pathLaw n A s) (pathLaw n B s)) \u2227\nMonotone (fun n => (1/2 : \u211d) * \u2211 path : Paths S n,\n(Real.sqrt (pathLaw n A s path) - Real.sqrt (pathLaw n B s path))^2) \u2227\n(\u2200 n, (1/2 : \u211d) * (\u2211 path : Paths S n,\n(Real.sqrt (pathLaw n A s path) - Real.sqrt (pathLaw n B s path))^2) =\n1 - overlap (pathLaw n A s) (pathLaw n B s)) \u2227\n(\u2200 n, overlap (pathLaw n A s) (pathLaw n B s) =\nbackwardDP n (fun i u v => Real.sqrt (A i u v * B i u v)) (fun _ => 1) s)",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival",
+        "Thesis.Randomization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-COMPOSED-trajectory_bc_monotone",
+      "review_evidence": "reports/conditioned-trajectory-repairs.md",
+      "scope": "Full source bc-monotone on actual row-stochastic Markov prefix path laws: overlap starts at one, stays in [0,1], is antitone at all depths, actual squared Hellinger is monotone, and every depth has the exact square-root sum and geometric-kernel DP identities. The common finite state space may include a cemetery; this is not an ordinary-only assertion about absorbing paths.",
+      "independent_review_evidence": "reports/adversarial-conditioned-trajectory-review.json"
     }
   ]
 }

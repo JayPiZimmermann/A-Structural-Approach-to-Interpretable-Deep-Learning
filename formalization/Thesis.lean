@@ -45,3 +45,7 @@ import Thesis.SoftplusLimits
 import Thesis.SoftplusTransitionPayoff
 import Thesis.ConditionedSurvival
 import Thesis.AttentionReference
+import Thesis.SoftplusCircuitUniqueness
+import Thesis.SoftplusCircuitVisits
+import Thesis.SoftplusCircuitPayoff
+import Thesis.ConditionedTrajectory

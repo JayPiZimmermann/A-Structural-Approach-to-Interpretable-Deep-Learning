@@ -37,7 +37,7 @@
       "HiddenMonotonicity.Network.mixing_one_convex_input",
       "HiddenMonotonicity.Network.affine_heads_convex_input"
     ],
-    "scope": "Arbitrary coordinatewise convex input lifts, actual nonnegative split network, arbitrary biases and varying widths. Both mixing-one streams and actual ungated nonnegative affine heads are convex. Recovery is net.eval(p\u2212q); the source input-split identity specializes this to the original input."
+    "scope": "Arbitrary coordinatewise convex input lifts, actual nonnegative split network, arbitrary biases and varying widths. Both mixing-one streams and actual ungated nonnegative affine heads are convex. Recovery is net.eval(p−q); the source input-split identity specializes this to the original input."
   },
   "thm:monotonicity_positive_gradients": {
     "status": "formalized_variant",
@@ -108,7 +108,7 @@
       "HiddenMonotonicity.actual_positive_pullback",
       "HiddenMonotonicity.actual_negative_pullback"
     ],
-    "scope": "Actual strict-branch Fr\u00e9chet derivative, explicit four Jacobian blocks and genuine two-contribution positive/negative partial pullbacks; source masked-matrix notation is represented equivalently by branch-selected linear maps."
+    "scope": "Actual strict-branch Fréchet derivative, explicit four Jacobian blocks and genuine two-contribution positive/negative partial pullbacks; source masked-matrix notation is represented equivalently by branch-selected linear maps."
   },
   "prop:sensitivity_mass": {
     "status": "formalized_variant",
@@ -176,12 +176,13 @@
     "scope": "Full finite-path overlap equals geometric-kernel DP; implementation-level backward code is not verified."
   },
   "lem:bc-monotone": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
+      "Thesis.ConditionedSurvival.trajectory_bc_monotone",
       "Thesis.Games.geometric_kernel_substochastic",
       "Thesis.Games.overlap_mass_decreases"
     ],
-    "scope": "Substochastic geometric kernel and one-step weighted-overlap mass contraction; source multi-layer formulation is obtained by iteration but not separately packaged."
+    "scope": "Complete prefix Bhattacharyya overlap is antitone and squared Hellinger distance monotone for a fixed pair of nonnegative row-stochastic kernel sequences on a common finite state space, with initial overlap one, normalized prefix laws, all-depth bounds and geometric-kernel DP identity. Does not assert monotonicity across separately survival-conditioned horizons."
   },
   "thm:per-pixel": {
     "status": "formalized_variant",
@@ -193,16 +194,19 @@
     "scope": "Exact nonnegative finite trajectory disagreement, terminal-fibre attribution, total equals squared Hellinger. Model-specific pixel-index encoding not required."
   },
   "thm:conditioned-survival": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
       "Thesis.ConditionedSurvival.conditioned_survival",
+      "Thesis.ConditionedSurvival.conditioned_survival_statistics",
+      "Thesis.ConditionedSurvival.conditioned_time_marginal",
+      "Thesis.ConditionedSurvival.conditioned_geometric_kernel",
       "Thesis.ConditionedSurvival.weighted_path_identity",
       "Thesis.ConditionedSurvival.path_zero_at_zero_potential",
       "Thesis.Games.survival_overlap",
       "Thesis.Games.overlap_eq_one_iff",
       "Thesis.Games.overlap_eq_zero_iff"
     ],
-    "scope": "Actual survival backward recursion, terminal boundary, normalization, zero-potential rows and denominator-free telescoping on actual finite paths; positive initial survival alone ensures every visited state has positive support. Source layer-marginal and BC/Hellinger compositions remain separately checked components, not a single assembled source theorem."
+    "scope": "Actual backward survival recursion, support pruning, normalized conditional path quotient, full-law time marginals, geometric edge identity, and assembled path-product/DP/Bhattacharyya/Hellinger formulas. Only initial survival must be positive for each model; intermediate dead states are retained and pruned. Common finite ordinary-state substochastic-kernel model; explicit cemetery completion and varying-layer state embeddings remain outside this batch."
   },
   "thm:deriv-occ": {
     "status": "formalized_variant",
@@ -264,22 +268,29 @@
     "scope": "The source lemma is the Gaussian/probit variational identity and smoothed-ReLU expectation. Binary-entropy/softplus lemmas do not prove it; the former unrelated link was removed after adversarial link review."
   },
   "thm:softplus-forward": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
+      "Thesis.SoftplusCircuit.softplus_forward_spne",
+      "Thesis.SoftplusCircuit.subgamePerfect_iff",
+      "Thesis.SoftplusCircuit.expectedPayoff_eq_split",
+      "Thesis.SoftplusCircuit.pathProbability_normalized",
       "Thesis.SoftplusGame.softplus_forward_spne",
       "Thesis.SoftplusGame.subgamePerfect_iff",
       "Thesis.SoftplusGame.playerStep_transition"
     ],
-    "scope": "Full varying-width layered Network: arbitrary normalized mixed profiles, actual active-player entropy and two player payoffs, unique subgame-perfect Gibbs policies, saddle against all deviations, exact softplus forward recovery, zero fan-in absorption, and actual ungated signed affine readout. Additive/residual/max-pool DAG extension remains separate."
+    "scope": "Annotated shared Circuit with affine, soft activation, residual/addition and nonempty ordered hard-pool nodes: actual arbitrary-profile saddle/SPNE, player-specific decomposition values, canonical normalized trajectories and expected payoffs. Uniqueness requires NoPools. The separately checked varying-width layered Network includes zero fan-in and ungated signed affine readouts. No universal Network-to-Circuit compiler or finer sampled reward-history equivalence is asserted."
   },
   "thm:softplus-gradient": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
+      "Thesis.SoftplusCircuit.intermediate_derivative_fullOccupation",
+      "Thesis.SoftplusCircuit.graph_derivative_occupation",
+      "Thesis.SoftplusCircuit.occupation_eq_kernel",
       "Thesis.SoftplusGame.spne_affine_gradient_profile",
       "Thesis.SoftplusGame.spne_intermediate_gradient",
       "Thesis.SoftplusGame.spne_gradient"
     ],
-    "scope": "Actual layered Network equilibrium profile probabilities and discounted occupations, all actual prefix/suffix intermediate cuts, true Softplus derivatives, arbitrary varying widths and ungated affine readout. Zero fan-in included. Hard residual/max-pool DAG extension remains separate."
+    "scope": "Actual ordinary input and intermediate derivatives equal canonical discounted occupation differences on the original grafted annotated Circuit, at positive temperature and Regular inputs (unique winning operands at hard pools). Selected occupation identities also hold at ties; no almost-everywhere hard-pool derivative result is claimed. Separate layered Network results retain arbitrary varying widths, zero fan-in and ungated signed affine readout. No universal Network-to-Circuit compiler equivalence is asserted."
   },
   "thm:freg_validity": {
     "status": "formalized_variant",
