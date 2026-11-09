@@ -1,20 +1,22 @@
 % Source: hiddenMonotonicity (Paper 1), appendix/table_appendix_generated_res_full_eval_sorted.tex — numbers verbatim.
 % Note: the paper's appendix caption said "ResNet50"; the evaluated model is the ResNet18 of the
 % main results (cf. tab:eval_res_main and the paper's main text), so the caption is corrected here.
-\begin{longtable}{p{4cm}cc cccccc}
-    \caption{Comprehensive interpretability evaluation results (ResNet-18; representative configurations, best per method). Abbreviations as in Table~\ref{tab:eval_res_main}. For each method configuration the best metric values across the considered layer configurations are highlighted in bold.}
+\begingroup
+\fontsize{8.5}{10}\selectfont
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.05}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{3.6cm}cc cccccc@{}}
+    \caption{Comprehensive interpretability evaluation results (ResNet-18; representative configurations, best per method). Abbreviations as in Table~\ref{tab:eval_res_main}. For each method configuration the best metric values across the considered layer configurations are highlighted in bold with dark blue shading. PF$^{\mathrm{drop}}$ is score-drop AUC; n/r denotes a result not reported in the paper, and n/a an inapplicable entry.}
     \label{tab:xai_eval_comprehensive_res} \\
     \toprule
-    \textbf{Method} & \textbf{Layer} & \textbf{Abs} & \textbf{Select.} & \textbf{Attr. Loc.} & \textbf{Point.} & \textbf{Pixel Fl.} & \textbf{Pixel Fl.} & \textbf{Max Sens.} \\
-     & & & \textbf{$\downarrow$} & \textbf{$\uparrow$} & \textbf{$\uparrow$} & \textbf{AUC@5 $\uparrow$} & \textbf{AUC@20 $\uparrow$} & \textbf{$\downarrow$} \\
+    Method & Layer & Abs & Sel$\downarrow$ & AL$\uparrow$ & PG$\uparrow$ & PF$^{\mathrm{drop}}_5$$\uparrow$ & PF$^{\mathrm{drop}}_{20}$$\uparrow$ & MaxS$\downarrow$ \\
     \midrule
     \endfirsthead
 
     \multicolumn{9}{c}%
     {{\tablename\ \thetable{} -- continued from previous page}} \\
     \toprule
-    \textbf{Method} & \textbf{Layer} & \textbf{Abs} & \textbf{Select.} & \textbf{Attr. Loc.} & \textbf{Point.} & \textbf{Pixel Fl.} & \textbf{Pixel Fl.} & \textbf{Max Sens.} \\
-     & & & \textbf{$\downarrow$} & \textbf{$\uparrow$} & \textbf{$\uparrow$} & \textbf{AUC@5 $\uparrow$} & \textbf{AUC@20 $\uparrow$} & \textbf{$\downarrow$} \\
+    Method & Layer & Abs & Sel$\downarrow$ & AL$\uparrow$ & PG$\uparrow$ & PF$^{\mathrm{drop}}_5$$\uparrow$ & PF$^{\mathrm{drop}}_{20}$$\uparrow$ & MaxS$\downarrow$ \\
     \midrule
     \endhead
 
@@ -28,56 +30,57 @@
 
     \multicolumn{9}{c}{\textit{SplitCAM Methods}} \\
     \midrule
-    SplitCAM (sc, $\alpha\ 0.3$, wta) & (1.0.2, g) & n & \textbf{3.503} & 0.487 & 0.747 & \textbf{0.168} & \textbf{1.395} & 1.277 \\
-    SplitCAM (sc, $\alpha\ 0.3$, wta) & (4.1.2, g) & n & 5.654 & \textbf{0.673} & \textbf{0.972} & 0.081 & 0.880 & \textbf{0.233} \\
+    SplitCAM (sc, $\alpha\ 0.3$, wta) & (1.0.2, g) & n & \cellbest{\textbf{3.503}} & 0.487 & 0.747 & \cellbest{\textbf{0.168}} & \cellbest{\textbf{1.395}} & 1.277 \\
+    SplitCAM (sc, $\alpha\ 0.3$, wta) & (4.1.2, g) & n & 5.654 & \cellbest{\textbf{0.673}} & \cellbest{\textbf{0.972}} & 0.081 & 0.880 & \cellbest{\textbf{0.233}} \\
     \cmidrule(lr){1-9}
-    SplitCAM (sc, $\alpha\ 0.5$, wta) & (2.0.1, g) & n & \textbf{3.682} & -1.370 & 0.887 & \textbf{0.158} & \textbf{1.447} & 1.078 \\
-    SplitCAM (sc, $\alpha\ 0.5$, wta) & (4.1.1, +, g) & y & 6.526 & \textbf{0.611} & \textbf{0.956} & 0.066 & 0.737 & \textbf{0.187} \\
+    SplitCAM (sc, $\alpha\ 0.5$, wta) & (2.0.1, g) & n & \cellbest{\textbf{3.682}} & -1.370 & 0.887 & \cellbest{\textbf{0.158}} & \cellbest{\textbf{1.447}} & 1.078 \\
+    SplitCAM (sc, $\alpha\ 0.5$, wta) & (4.1.1, +, g) & y & 6.526 & \cellbest{\textbf{0.611}} & \cellbest{\textbf{0.956}} & 0.066 & 0.737 & \cellbest{\textbf{0.187}} \\
     \midrule
     \multicolumn{9}{c}{\textit{SplitGrad Methods}} \\
     \midrule
-    SplitGrad ($\alpha\ 0.3$, wta) & (1.0.2, g) & y & \textbf{4.449} & 0.513 & 0.777 & \textbf{0.149} & \textbf{1.266} & 0.813 \\
-    SplitGrad ($\alpha\ 0.3$, wta) & (4.1.2, g) & y & 5.663 & \textbf{0.649} & \textbf{0.972} & 0.082 & 0.882 & \textbf{0.219} \\
+    SplitGrad ($\alpha\ 0.3$, wta) & (1.0.2, g) & y & \cellbest{\textbf{4.449}} & 0.513 & 0.777 & \cellbest{\textbf{0.149}} & \cellbest{\textbf{1.266}} & 0.813 \\
+    SplitGrad ($\alpha\ 0.3$, wta) & (4.1.2, g) & y & 5.663 & \cellbest{\textbf{0.649}} & \cellbest{\textbf{0.972}} & 0.082 & 0.882 & \cellbest{\textbf{0.219}} \\
     \cmidrule(lr){1-9}
-    SplitGrad ($\alpha\ 0.5$, wta) & (3.1.1, g) & y & \textbf{3.588} & 0.559 & 0.880 & \textbf{0.130} & \textbf{1.366} & 0.859 \\
-    SplitGrad ($\alpha\ 0.5$, wta) & (4.1.2, g) & y & 5.690 & \textbf{0.654} & \textbf{0.972} & 0.083 & 0.886 & \textbf{0.230} \\
+    SplitGrad ($\alpha\ 0.5$, wta) & (3.1.1, g) & y & \cellbest{\textbf{3.588}} & 0.559 & 0.880 & \cellbest{\textbf{0.130}} & \cellbest{\textbf{1.366}} & 0.859 \\
+    SplitGrad ($\alpha\ 0.5$, wta) & (4.1.2, g) & y & 5.690 & \cellbest{\textbf{0.654}} & \cellbest{\textbf{0.972}} & 0.083 & 0.886 & \cellbest{\textbf{0.230}} \\
     \midrule
     \multicolumn{9}{c}{\textit{SplitLRP Methods}} \\
     \midrule
-    SplitLRP (sc, wta) & (conv1, pos) & y & \textbf{6.313} & \textbf{0.506} & \textbf{0.587} & \textbf{0.056} & \textbf{0.697} & 0.755 \\
-    SplitLRP (sc, wta) & (1.0.2, pos) & y & 6.785 & 0.483 & 0.567 & 0.050 & 0.686 & \textbf{0.696} \\
+    SplitLRP (sc, wta) & (conv1, pos) & y & \cellbest{\textbf{6.313}} & \cellbest{\textbf{0.506}} & \cellbest{\textbf{0.587}} & \cellbest{\textbf{0.056}} & \cellbest{\textbf{0.697}} & 0.755 \\
+    SplitLRP (sc, wta) & (1.0.2, pos) & y & 6.785 & 0.483 & 0.567 & 0.050 & 0.686 & \cellbest{\textbf{0.696}} \\
     \midrule
     \multicolumn{9}{c}{\textit{Classical Methods (No Layer Optimization)}} \\
     \midrule
     Deconvolution & conv1 & y & 5.474 & 0.478 & 0.666 & 0.151 & 1.177 & 0.618 \\
-    Gradient SHAP & conv1 & y & 5.269 & 0.527 & 0.779 & 0.166 & 1.227 & 1.074 \\
-    GradCAM++ & 4.1.2 & n & 6.054 & 0.556 & 0.945 & 0.077 & 0.838 & 0.140 \\
-    Integrated Gradients & conv1 & y & 5.265 & 0.528 & 0.777 & 0.167 & 1.226 & 0.994 \\
+    GradientSHAP & conv1 & y & 5.269 & 0.527 & 0.779 & 0.166 & 1.227 & 1.074 \\
+    GCAM++ & 4.1.2 & n & 6.054 & 0.556 & 0.945 & 0.077 & 0.838 & 0.140 \\
+    IntGrad & conv1 & y & 5.265 & 0.528 & 0.777 & 0.167 & 1.226 & 0.994 \\
     Feature Ablation & conv1 & n & 4.655 & 0.136 & 0.684 & 0.188 & 1.388 & 1.077 \\
     Occlusion & conv1 & n & 5.300 & 0.179 & 0.726 & 0.130 & 1.030 & 0.785 \\
     Deconvolution & conv1 & n & 3.934 & 0.484 & 0.666 & 0.147 & 1.203 & 0.751 \\
     \midrule
     \multicolumn{9}{c}{\textit{Classical Methods (Layer Optimization)}} \\
     \midrule
-    GradCAM & 2.0.1 & y & \textbf{4.003} & 0.450 & 0.678 & 0.052 & \textbf{1.024} & 0.738 \\
-    GradCAM & 4.1.2 & n & 6.070 & \textbf{0.554} & \textbf{0.945} & \textbf{0.076} & 0.829 & \textbf{0.131} \\
+    GCAM & 2.0.1 & y & \cellbest{\textbf{4.003}} & 0.450 & 0.678 & 0.052 & \cellbest{\textbf{1.024}} & 0.738 \\
+    GCAM & 4.1.2 & n & 6.070 & \cellbest{\textbf{0.554}} & \cellbest{\textbf{0.945}} & \cellbest{\textbf{0.076}} & 0.829 & \cellbest{\textbf{0.131}} \\
     \cmidrule(lr){1-9}
-    Guided GradCAM & 4.0.2 & n & 4.929 & \textbf{0.742} & 0.866 & 0.119 & 1.008 & 0.687 \\
-    Guided GradCAM & 4.1.2 & n & \textbf{3.843} & 0.717 & \textbf{0.883} & \textbf{0.129} & \textbf{1.096} & \textbf{0.612} \\
+    Guided GCAM & 4.0.2 & n & 4.929 & \cellbest{\textbf{0.742}} & 0.866 & 0.119 & 1.008 & 0.687 \\
+    Guided GCAM & 4.1.2 & n & \cellbest{\textbf{3.843}} & 0.717 & \cellbest{\textbf{0.883}} & \cellbest{\textbf{0.129}} & \cellbest{\textbf{1.096}} & \cellbest{\textbf{0.612}} \\
     \cmidrule(lr){1-9}
-    LayerCAM & 2.0.2 & n & \textbf{3.690} & 0.549 & 0.865 & \textbf{0.144} & \textbf{1.428} & 0.913 \\
-    LayerCAM & 4.1.1 & n & 5.661 & \textbf{0.664} & \textbf{0.971} & 0.083 & 0.890 & \textbf{0.227} \\
+    LCAM & 2.0.2 & n & \cellbest{\textbf{3.690}} & 0.549 & 0.865 & \cellbest{\textbf{0.144}} & \cellbest{\textbf{1.428}} & 0.913 \\
+    LCAM & 4.1.1 & n & 5.661 & \cellbest{\textbf{0.664}} & \cellbest{\textbf{0.971}} & 0.083 & 0.890 & \cellbest{\textbf{0.227}} \\
     \cmidrule(lr){1-9}
-    LRP $\gamma=0.25$ & conv1 & y & \textbf{3.550} & \textbf{0.656} & 0.852 & \textbf{0.213} & \textbf{1.737} & 0.521 \\
-    LRP $\gamma=0.25$ & 4.1.1 & n & 5.649 & 0.630 & \textbf{0.965} & 0.081 & 0.877 & \textbf{0.200} \\
+    LRP $\gamma=0.25$ & conv1 & y & \cellbest{\textbf{3.550}} & \cellbest{\textbf{0.656}} & 0.852 & \cellbest{\textbf{0.213}} & \cellbest{\textbf{1.737}} & 0.521 \\
+    LRP $\gamma=0.25$ & 4.1.1 & n & 5.649 & 0.630 & \cellbest{\textbf{0.965}} & 0.081 & 0.877 & \cellbest{\textbf{0.200}} \\
     \cmidrule(lr){1-9}
-    Guided Backprop & conv1 & n & \textbf{3.517} & \textbf{0.621} & 0.867 & \textbf{0.212} & \textbf{1.757} & 0.459 \\
-    Guided Backprop & 3.1.2 & n & 3.874 & 0.582 & \textbf{0.938} & 0.121 & 1.307 & \textbf{0.213} \\
+    Guided Backprop & conv1 & n & \cellbest{\textbf{3.517}} & \cellbest{\textbf{0.621}} & 0.867 & \cellbest{\textbf{0.212}} & \cellbest{\textbf{1.757}} & 0.459 \\
+    Guided Backprop & 3.1.2 & n & 3.874 & 0.582 & \cellbest{\textbf{0.938}} & 0.121 & 1.307 & \cellbest{\textbf{0.213}} \\
     \midrule
     \multicolumn{9}{c}{\textit{Baseline Methods}} \\
     \midrule
-    Baseline: Original Image & conv1 & y & 8.351 & -1.699 & 0.572 & 0.049 & 0.435 & -- \\
-    Baseline: Binary Mask & conv1 & y & 5.964 & 1.000 & 1.000 & 0.067 & 0.739 & -- \\
-    Random Baseline & - & y & 4.071 & 0.425 & 0.440 & 0.147 & 1.067 & -- \\
+    Baseline: Original Image & conv1 & y & 8.351 & -1.699 & 0.572 & 0.049 & 0.435 & n/r \\
+    Baseline: Binary Mask & conv1 & y & 5.964 & 1.000 & 1.000 & 0.067 & 0.739 & n/r \\
+    Random Baseline & n/a & y & 4.071 & 0.425 & 0.440 & 0.147 & 1.067 & n/r \\
     \midrule
     \end{longtable}
+\endgroup

@@ -25,6 +25,10 @@ weight decomposition is related to the \ac{dc} decomposition of neural networks-
 \textcite{hiddenMono} use directly for attribution. Our \ac{sg} and \ac{rg} are different games
 utilizing this weight decomposition, chosen to recover backward attribution rules rather than the
 pure DC decomposition.
+The \ac{nrm} framework of \textcite{Xiong2026nrm} also starts from walks through
+the network, assigning them normalized signed relevance. Section~\ref{sec:nrm_comparison}
+compares its treatment of \ac{lrp} and concept relevance propagation with our
+trajectory probabilities and discounted occupation measures.
 
 \textbf{Relevance propagation and stochastic explanations.} \ac{lrp}, Deep Taylor, and Excitation
 Backprop constitute the core relevance propagation family~\parencite{Bach2015,Montavon2017DeepTaylor,Zhang2018pointinggame}, with later variants modifying redistribution for contrast, stability, or
@@ -141,16 +145,14 @@ The players' expected payoffs realize the novel Stopping Decomposition, separati
 negative paths to each neuron activation (Lemma~\ref{ptnb:lem:parity-path}). The gradient is then the
 difference of two \emph{non-negative} occupation measures:
 
-\begin{theoremenv}[Gradient representation]\label{ptnb:thm:gradient}
+\begin{theoremenv}[Gradient representation, \LeanResult{ptnb:thm:gradient}]\label{ptnb:thm:gradient}
 The Stopping Game allows a subgame-perfect Nash equilibrium, unique up to tie-breaking at
 zero-activation neurons.
 On strict gate cells (and with unique max-pooling winners where applicable), under the stop-at-tie-breaks equilibrium the discounted occupation measure $\Gamma_x(s_{i,p}^{(l)})
     \ge 0$ equals the output derivative with respect to the corresponding \emph{Stopping Decomposition}
 activation. At ties, the corresponding identities refer to the backward quantities selected by the stated gate and winner conventions.
 On these cells, the gradient of $f$ with respect to the input is the difference $\Gamma_x(s_{i,+}^{(0)}) -
-    \Gamma_x(s_{i,-}^{(0)})$.
-\hfill\LeanResult{ptnb:thm:gradient}
-\end{theoremenv}
+    \Gamma_x(s_{i,-}^{(0)})$.\end{theoremenv}
 Section~\ref{ptnb:app:relu-net-game} proves the theorem, works through an example, gives the full state
 space with skip connections and max-pooling, and compares the Stopping Decomposition with the
 \ac{dc} decomposition.
@@ -193,12 +195,10 @@ Gibbs best response:
 where the sums include the bias node and $\perp_{\mathrm{lin}}$. At $\tau>0$ the game admits an
 SPNE whose occupation measure at $\tau=1$ is the $\alpha\beta$-\ac{lrp} attribution:
 
-\begin{theoremenv}[$\alpha\beta$-\ac{lrp} representation]\label{ptnb:thm:lrp-recovery}\label{thm:lrp_recovery}
+\begin{theoremenv}[$\alpha\beta$-\ac{lrp} representation, \LeanResult{ptnb:thm:lrp-recovery}]\label{ptnb:thm:lrp-recovery}\label{thm:lrp_recovery}
 For $\tau>0$, the Gibbs policies of Eq.~\eqref{ptnb:eq:gibbs-policy} and stopping decisions from the corresponding continuation values yield a canonical SPNE of the entropy-regularized \ac{rg}. We select stopping at every activation log tie and absorption for an empty routing stream, as specified in Remark~\ref{ptnb:rem:routing-spne-uniqueness}. At the anchor $\tau=1$, the selected gate is $\mathbf{1}[z>0]$ and the
 $\alpha\beta$-\ac{lrp} attribution map in~\eqref{ptnb:eq:lrp-ab} equals $R_i^{(l)} =
-    f(x)\,\bigl(\Gamma_x(s_{i,+}^{(l)}) - \Gamma_x(s_{i,-}^{(l)})\bigr)$.
-\hfill\LeanResult{ptnb:thm:lrp-recovery}
-\end{theoremenv}
+    f(x)\,\bigl(\Gamma_x(s_{i,+}^{(l)}) - \Gamma_x(s_{i,-}^{(l)})\bigr)$.\end{theoremenv}
 Section~\ref{ptnb:app:routing-formal} gives the full game definition, the proofs, and a worked example
 of the local routing dynamics (Figure~\ref{ptnb:fig:Routing-Game-illustration}).
 
@@ -403,15 +403,13 @@ the input-layer initialization
     a_{\mathrm{stop},k}^{(0,\pm)} = x_k^{\pm}.
 \end{align}
 
-\begin{theoremenv}[Layerwise Recovery of the Original Activations]\label{ptnb:thm:decomp-recovery}
+\begin{theoremenv}[Layer-wise Recovery of the Original Activations, \LeanResult{ptnb:thm:decomp-recovery}]\label{ptnb:thm:decomp-recovery}
 For every layer $l$ and neuron $j$,
 \begin{align}\label{ptnb:eq:decomp-recovery-stop-mix}
     a_{\mathrm{stop},j}^{(l,+)} - a_{\mathrm{stop},j}^{(l,-)}
     =
     a_j^{(l)} = \relu\!\bigl(z_j^{(l)}\bigr).
-\end{align}
-\hfill\LeanResult{ptnb:thm:decomp-recovery}
-\end{theoremenv}
+\end{align}\end{theoremenv}
 
 \begin{proof}
 Induction on $l$. At $l=0$, $x_k^+ - x_k^- = x_k = a_k^{(0)}$ by~\eqref{ptnb:eq:input-split-convention}.
@@ -439,7 +437,7 @@ times either the positive part $x_{P_0}^+$ or the negative part $x_{P_0}^-$ of t
 where the path terminates, with the choice between $x_{P_0}^+$ and $x_{P_0}^-$ determined by the
 parity of the number of negative weights traversed.
 
-\begin{lemmaenv}[Path view on the Stopping Decomposition]\label{ptnb:lem:parity-path}
+\begin{lemmaenv}[Path view on the Stopping Decomposition, \LeanResult{ptnb:lem:parity-path}]\label{ptnb:lem:parity-path}
 Fix a feedforward ReLU network with weights $W^{(l)}$ (biases ignored; see remark at end of proof).
 For neuron $j$ in layer $l \ge 1$, call a \emph{backward path} from $j$ to the input layer a list
 of neuron indices
@@ -470,9 +468,7 @@ representation
     \label{ptnb:eq:parity-plus}\\
     z_j^{(l,-)} &= \sum_{P:\, P_l = j} G_{<l}(P)\, |w|(P)\, x_{P_0}^{\mathrm{sgn}(P)'}.
     \label{ptnb:eq:parity-minus}
-\end{align}
-\hfill\LeanResult{ptnb:lem:parity-path}
-\end{lemmaenv}
+\end{align}\end{lemmaenv}
 
 \begin{proof}
 We prove~\eqref{ptnb:eq:parity-plus}--\eqref{ptnb:eq:parity-minus} by induction on $l$.
@@ -558,7 +554,7 @@ after absorbing these stub contributions into the path sums.
 
 \paragraph{Relation to the network games of \textcite{Gaubert2025}.}
 The Stopping Game adapts the game of Gaubert and Vlassopoulos to the Stopping Decomposition. We
-keep their state-space structure---per-neuron $\pm$ states, the bias as the continuation and
+keep their state-space structure\allowbreak---per-neuron $\pm$ states, the bias as the continuation and
 network input as final payoff, transitions driven by the positive and negative parts of the
 weights, a cemetery state, and a stop-versus-continue action. Two changes are load-bearing for
 attribution: (i)~the original formulation tracks only one game value, which equals $\pm a_j^{(l)}$;
@@ -695,7 +691,7 @@ advantage of player $p$ at $s$,
 Figure~\ref{ptnb:fig:Stopping-Game-illustration} shows a worked example of the induced trajectory
 distribution and the local stop/continue logic on a small toy network.
 
-\begin{theoremenv}[Forward Equivalence for Stopping Game]\label{ptnb:thm:forward-stopping}
+\begin{theoremenv}[Forward Equivalence for Stopping Game, \LeanResult{ptnb:thm:forward-stopping}]\label{ptnb:thm:forward-stopping}
 The game admits a Subgame Perfect Nash Equilibrium (SPNE) where both players follow the same pure
 strategy:
 \begin{align} \label{ptnb:eq:adf-spne-policy}
@@ -707,15 +703,13 @@ Under this equilibrium, the player-specific game values and the game values sati
     q)},
     \qquad
     V_p^{\pi^\star}\bigl(s_{j,q}^{(l, \mathrm{act})}\bigr) = \xi_{p,q}\, a_j^{(l)}.
-\end{align}
-\hfill\LeanResult{ptnb:thm:forward-stopping}
-\end{theoremenv}
+\end{align}\end{theoremenv}
 
 \begin{remark}[Uniqueness of the SPNE up to tie-breaking] \label{ptnb:rem:adf-spne-uniqueness}
 It is easy to see in the following proof that the SPNE \eqref{ptnb:eq:adf-spne-policy} is unique up to
 tie-breaking at states where continuing yields zero advantage $\tilde
     Q_q^{\pi^\star}(\cdot,\mathrm{cont})-\tilde Q_{q'}^{\pi^\star}(\cdot,\mathrm{cont}) = z_j^{(l)} =
-    0$---representing neurons of preactivation zero. The pinned Stopping-Game attribution code selects continuation at exact zero in its hard backward mask, while the Routing Game and Hellinger diagnostic use strict positivity. These choices give the same original forward activation at a tie but can give different selected backward quantities there. The theorem here uses stopping at ties. We refer to the policy
+    0$---representing neurons of pre-activation zero. The pinned Stopping-Game attribution code selects continuation at exact zero in its hard backward mask, while the Routing Game and Hellinger diagnostic use strict positivity. These choices give the same original forward activation at a tie but can give different selected backward quantities there. The theorem here uses stopping at ties. We refer to the policy
 \eqref{ptnb:eq:adf-spne-policy} by \textbf{stop-at-tie-breaks} equilibrium.
 \end{remark}
 
@@ -810,7 +804,7 @@ $r_p(s_{z,q}^{\mathrm{add}}) \coloneqq 0$ for both $p \in \{+,-\}$, and the stru
 $\gamma_{\mathrm{O}} \coloneqq 2$.
 \end{definition}
 
-\begin{proposition}[Forward Equivalence for Addition]\label{ptnb:prop:addition-equivalence}
+\begin{proposition}[Forward Equivalence for Addition, \LeanResult{ptnb:prop:addition-equivalence}]\label{ptnb:prop:addition-equivalence}
 The player-specific state value at the addition state equals the sum of the operand state values,
 \begin{align}
     \tilde V_p^{\pi}\bigl(s_{z,q}^{\mathrm{add}}\bigr)
@@ -820,9 +814,7 @@ The player-specific state value at the addition state equals the sum of the oper
 Consequently, if the operand states recover the Stopping-Decomposition activations---$\tilde
     V_p^{\pi^\star}(s_{x,q}) = x^{(p\oplus q)}$ and $\tilde V_p^{\pi^\star}(s_{y,q}) = y^{(p\oplus
     q)}$---then $\tilde V_p^{\pi^\star}(s_{z,q}^{\mathrm{add}}) = z^{(p\oplus q)}$, preserving the
-forward equivalence of Theorem~\ref{ptnb:thm:forward-stopping} across the residual sum.
-\hfill\LeanResult{ptnb:prop:addition-equivalence}
-\end{proposition}
+forward equivalence of Theorem~\ref{ptnb:thm:forward-stopping} across the residual sum.\end{proposition}
 
 \begin{proof}
 Apply the Bellman recursion~\eqref{ptnb:eq:adf-q-bellman}--\eqref{ptnb:eq:adf-v-active} at
@@ -880,7 +872,7 @@ Section~\ref{ptnb:app:notation-identities}, resolves this by the convention $k^\
 attaining the maximal payoff. All gradient and occupation-measure statements below are stated for
 this equilibrium.
 
-\begin{proposition}[Forward Equivalence for Max Pooling]\label{ptnb:prop:maxpool-equivalence}
+\begin{proposition}[Forward Equivalence for Max Pooling, \LeanResult{ptnb:prop:maxpool-equivalence}]\label{ptnb:prop:maxpool-equivalence}
 Assume the operand states recover the Stopping-Decomposition activations, $\tilde
     V_p^{\pi^\star}(s_{x_k,q}) = x_k^{(p\oplus q)}$ for all $k$, with non-negative operand activations
 $x_k \ge 0$. Then at the SPNE of the subgame rooted at $s_{z,q}^{\max}$,
@@ -888,9 +880,7 @@ $x_k \ge 0$. Then at the SPNE of the subgame rooted at $s_{z,q}^{\max}$,
     \tilde V_p^{\pi^\star}\bigl(s_{z,q}^{\max}\bigr) \;=\; z^{(p\oplus q)},
 \end{align}
 so the pooling state inherits the same Stopping-Decomposition identity as its winning operand and
-the forward equivalence of Theorem~\ref{ptnb:thm:forward-stopping} extends across the pooling node.
-\hfill\LeanResult{ptnb:prop:maxpool-equivalence}
-\end{proposition}
+the forward equivalence of Theorem~\ref{ptnb:thm:forward-stopping} extends across the pooling node.\end{proposition}
 
 \begin{proof}
 The active player $q$ chooses the operand that maximizes its game value $V_q^{\pi^\star} = \tilde
@@ -913,7 +903,7 @@ occupation measure}. This measure quantifies the expected influence of a neuron 
 outcome, weighted by the discount factors accumulated along all possible game trajectories
 (including those created by skip connections and max-pooling nodes).
 
-\begin{definition}[Game trajectory and trajectory law]\label{ptnb:def:trajectory-distribution}
+\begin{definition}[Game trajectory and trajectory law, \LeanResult{ptnb:def:trajectory-distribution}]\label{ptnb:def:trajectory-distribution}
 Fix an input $x$ and a root state $s$. A \emph{game trajectory} rooted at $s$ is a finite sequence
 of game states
 \begin{align}
@@ -937,7 +927,7 @@ continuing past a closed gate carries probability zero. We write $\Pi_x(\cdot \m
     s_{u,+}^{(L,\mathrm{act})}$.
 \end{definition}
 
-\begin{definition}[Discounted Occupation Measure]\label{ptnb:def:occupation}
+\begin{definition}[Discounted Occupation Measure, \LeanResult{ptnb:def:occupation}]\label{ptnb:def:occupation}
 Let $\Pi_x(\cdot \mid s)$ be the equilibrium trajectory law of
 Definition~\ref{ptnb:def:trajectory-distribution}.
 Define the cumulative discount
@@ -957,14 +947,14 @@ rooted at $s$ is
 \end{align}
 \end{definition}
 
-\begin{theoremenv}[Activation--Occupation Correspondence]\label{ptnb:thm:deriv-occ}\label{thm:gradient_occupation}
+\begin{theoremenv}[Activation--Occupation Correspondence, \LeanResult{ptnb:thm:deriv-occ}]\label{ptnb:thm:deriv-occ}\label{thm:gradient_occupation}
 Fix a neuron state $s = s_{j,q}^{(m, \mathrm{act})}$ and a layer $l \le m$ (for $l = 0$,
 $s_{i,\cdot}^{(0,\mathrm{act})}$ denotes the terminal state $s_{i,\cdot}^{(0)}$). Under the
 stop-at-tie-breaks equilibrium fixed by the boundary conventions of
 Section~\ref{ptnb:app:notation-identities} (uniquely fixing the SPNE at ReLU gates with $z = 0$ and at
 max-pooling states with multiple maximizers), the discounted occupation measures exactly represent,
 in a multi-trajectory ReLU network (e.g., a ResNet or a CNN with max pooling), the local
-Stopping-Decomposition and scalar activation derivatives on open cells with nonzero ReLU preactivations and unique max-pooling winners. At ties, the same formulas represent the backward quantities computed using the selected gates and winners; they do not assert classical differentiability of the individual stopping streams, which can be discontinuous there:
+Stopping-Decomposition and scalar activation derivatives on open cells with nonzero ReLU pre-activations and unique max-pooling winners. At ties, the same formulas represent the backward quantities computed using the selected gates and winners; they do not assert classical differentiability of the individual stopping streams, which can be discontinuous there:
 \begin{enumerate}
     \item \textbf{Stopping-Decomposition Gradient:}
         \begin{align}
@@ -980,9 +970,7 @@ Stopping-Decomposition and scalar activation derivatives on open cells with nonz
             \xi_{q, +}\bigl(\Gamma_x(s_{i, +}^{(l, \mathrm{act})} \mid s) - \Gamma_x(s_{i, -}^{(l,
             \mathrm{act})} \mid s)\bigr).
         \end{align}
-\end{enumerate}
-\hfill\LeanResult{ptnb:thm:deriv-occ}
-\end{theoremenv}
+\end{enumerate}\end{theoremenv}
 
 \begin{proof}
 We establish Part 1 by backward induction on the layer gap $m - l$ and derive Part 2 from it. Since
@@ -1076,7 +1064,7 @@ across skip connections and max-pooling nodes, completing the induction.
 \par\medskip
 \section{Routing Game: Log-Space Formulation}\label{ptnb:app:routing-formal}
 
-This section makes the two-player payoff structure of the Routing Game explicit. Its global network interpretation uses nonnegative activation outputs; the GeLU discussion later concerns local gates conditioned on a fixed forward pass. The recursion
+This section makes the two-player payoff structure of the Routing Game explicit. Its global network interpretation uses non-negative activation outputs; the GELU discussion later concerns local gates conditioned on a fixed forward pass. The recursion
 used in Section~\ref{ptnb:sec:routing} is the logarithmic representation of an entropy-regularized
 two-player game, and admits a Gibbs subgame-perfect equilibrium for every $\tau>0$.
 
@@ -1288,11 +1276,11 @@ In the following let us denote, with $a^{(0)} = x$,
 so that $z_j^{(l)} = \Sigma_j^{(l,+)} - \Sigma_j^{(l,-)}$; for $l \ge 2$, $a^{(l-1)} \ge 0$ gives
 $[a_i^{(l-1)}W_{ij}^{(l)}]^\kappa = a_i^{(l-1)} W_{ij}^{(l,\kappa)}$.
 
-\begin{theoremenv}[SPNE and Forward Equivalence of the Routing Game]\label{ptnb:thm:routing-forward}
+\begin{theoremenv}[SPNE and Forward Equivalence of the Routing Game, \LeanResult{ptnb:thm:routing-forward}]\label{ptnb:thm:routing-forward}
 \leavevmode
 \begin{description}
     \item[\textnormal{(i) \emph{SPNE existence for every $\tau > 0$ and $\varepsilon \ge 0$.}}]
-        For every $\tau > 0$ and every $\varepsilon \ge 0$, the entropy-regularized two-player Routing Game
+        For every $\tau > 0$ and every $\varepsilon \ge 0$, the entropy-regularized two-player Routing Game\allowbreak
         of Definition~\ref{ptnb:def:routing-recursion} (with linear-state entropy weight $\tau\,\mathcal{H}$ and
         outside-option stabilizer $\varepsilon$) admits a subgame-perfect Nash equilibrium
         (see~\eqref{ptnb:eq:routing-spne-linear}--\eqref{ptnb:eq:routing-spne-stop} in the proof for the explicit
@@ -1310,9 +1298,7 @@ $[a_i^{(l-1)}W_{ij}^{(l)}]^\kappa = a_i^{(l-1)} W_{ij}^{(l,\kappa)}$.
             \label{ptnb:eq:routing-forward-act}\\
             \pi_p^\star\bigl(s_{j,p}^{(l, act)}\bigr) &= \1[z_j^{(l)} > 0]. \label{ptnb:eq:routing-forward-stop}
         \end{align}
-\end{description}
-\hfill\LeanResult{ptnb:thm:routing-forward}
-\end{theoremenv}
+\end{description}\end{theoremenv}
 
 \begin{remark}[Uniqueness]\label{ptnb:rem:routing-spne-uniqueness}
 The linear-state Gibbs best response~\eqref{ptnb:eq:routing-spne-linear} is the unique maximizer of the
@@ -1345,7 +1331,7 @@ state the active player solves $\max_{\nu \in \Delta(\mathrm{Pred}_j^{(1)})} \{ 
     \end{cases}
 \end{align}
 with zero mass on routes of zero or wrong sign and closed-form value $V_q(s_{j,q,\kappa}^{(1,lin)})
-    = \tau \log \sum_i \exp(Q_q(s_{j,q,\kappa}^{(1,lin)},i)/\tau)$. With these values in hand, the
+    \allowbreak= \tau \log \sum_i \allowbreak\exp(Q_q(s_{j,q,\kappa}^{(1,lin)},i)/\tau)$. With these values in hand, the
 activation-state subgame at layer $l=1$ is a binary choice between stop (log-payoff $\ell(0) =
     -\infty$) and continue~\eqref{ptnb:eq:routing-activation-continue}; comparing log-space action values and choosing stopping at every tie, the active player's best response is the pure stop/continue strategy
 \begin{align}\label{ptnb:eq:routing-spne-stop}
@@ -1377,9 +1363,9 @@ values $Q_q(s_{j,q,\kappa}^{(1, lin)}, i) = \ell([x_iW_{ij}^{(1)}]^\kappa)$
 of~\eqref{ptnb:eq:routing-linear-action} in place of $\ell(a_i^{(l-1)} W_{ij}^{(l,\kappa)})$.
 
 \textbf{Inductive step ($l \ge 2$):} Assume $V_q(s_{i,q}^{(l-1, act)}) = \ell(a_i^{(l-1)})$ for all
-predecessors $i$ and both player labels $q$. Since the assumed nonnegative activation functions satisfy $a_i^{(l-1)} \ge
+predecessors $i$ and both player labels $q$. Since the assumed non-negative activation functions satisfy $a_i^{(l-1)} \ge
     0$, the linear routing-state action values become
-\begin{align}
+    \begin{align}
     Q_q \bigl( s_{j,q,\kappa}^{(l, lin)}, i \bigr)
     &=
     \ell\!\bigl(W_{ij}^{(l,\kappa)}\bigr) + \ell\!\bigl(a_i^{(l-1)}\bigr)
@@ -1534,7 +1520,7 @@ constructions and do not state this combined form; it is the convention of commo
 implementations~\parencite{Anders2021Zennit}, and Theorem~\ref{ptnb:thm:ab-recovery} is exact for this form.
 At $\varepsilon = 0$ it is the original $\alpha\beta$ rule.}
 
-\begin{theoremenv}[Recovery of Multi-Path $\alpha\beta$-\ac{lrp}]\label{ptnb:thm:ab-recovery}
+\begin{theoremenv}[Recovery of Multi-Path $\alpha\beta$-\ac{lrp}, \LeanResult{ptnb:thm:ab-recovery}]\label{ptnb:thm:ab-recovery}
 For every $\varepsilon \ge 0$ and every input with $f(x)=a_u^{(L)}>0$ (if $f(x)=0$ the root player
 stops and $R^{(l)}=f(x)\Gamma^{(l)}=0$ trivially), under the stop-at-tie-breaks equilibrium
 (Remark~\ref{ptnb:rem:routing-spne-uniqueness}; ties at max-pooling states broken by the smallest index)
@@ -1583,9 +1569,7 @@ from~\eqref{ptnb:eq:routing-Gamma-pair}:
             \qquad
             \Gamma_x\!\bigl(s^{\max}_{z,p}\to s_{x_{k},p}\bigr) \;=\; 0 \text{ for } k \neq k^\star.
         \end{align}
-\end{enumerate}
-\hfill\LeanResult{ptnb:thm:ab-recovery}
-\end{theoremenv}
+\end{enumerate}\end{theoremenv}
 
 \begin{proof}
 We prove $R_u^{(L)} \cdot \Gamma^{(l)}_j = R^{(l)}_j$ at every layer $l$ by backward induction on
@@ -1842,9 +1826,7 @@ For every $z\in\RR$, the regularized maximization
 admits the unique maximizer $\pi^\star = \Phi(z)$ and optimum value
 \begin{align}\label{ptnb:eq:noisy-gate-optimum}
     z\,\Phi(z) + \phi(z) \;=\; \E_{\eta\sim\mathcal{N}(0,1)}\!\bigl[\max(z+\eta,\,0)\bigr].
-\end{align}
-\hfill\LeanResult{ptnb:lem:noisy-gate-dual}
-\end{lemmaenv}
+\end{align}\end{lemmaenv}
 
 \begin{proof}
 Using $\phi'(y) = -y\,\phi(y)$ and the inverse-function derivative $(\Phi^{-1})'(\pi) =
@@ -1968,7 +1950,7 @@ payoffs $r_p$, the Bellman equations~\eqref{ptnb:eq:adf-q-bellman}--\eqref{ptnb:
 that $\pi$ is no longer pure and the entropy bonus $\theta\mathcal{H}(\pi_q(s))$ is credited to the
 active player $q$.
 
-\begin{theoremenv}[Softplus forward equivalence]\label{ptnb:thm:softplus-forward}\label{prop:softplus_game}
+\begin{theoremenv}[Softplus forward equivalence, \LeanResult{ptnb:thm:softplus-forward}]\label{ptnb:thm:softplus-forward}\label{prop:softplus_game}
 The entropy-regularized Stopping Game of~\eqref{ptnb:eq:softplus-soft-bellman} admits an SPNE whose
 activation-state policy is the Gibbs policy~\eqref{ptnb:eq:softplus-policy}; it is unique on networks
 without max-pooling nodes, since~\eqref{ptnb:eq:softplus-soft-bellman} is strictly concave (ties at
@@ -1992,9 +1974,7 @@ with the decomposition function
     \theta\, \mathcal{H}_\theta(z^+ - z^-),\;\; \mathrm{sp}'_\theta(z^+ - z^-)\, z^-\,\bigr),
 \end{align}
 and $\mathcal{H}_\theta(z) \coloneqq \mathcal{H}(\mathrm{sp}'_\theta(z))$ the binary entropy of the
-Gibbs weight.
-\hfill\LeanResult{ptnb:thm:softplus-forward}
-\end{theoremenv}
+Gibbs weight.\end{theoremenv}
 
 \begin{proof}
 By backward induction in $l$, mirroring the proof of Theorem~\ref{ptnb:thm:forward-stopping}, with the
@@ -2035,7 +2015,7 @@ The discounted occupation measure of Definition~\ref{ptnb:def:occupation} is unc
 trajectory law $\Pi_x^\theta$ is now generated by the Gibbs policies~\eqref{ptnb:eq:softplus-policy} in
 place of the deterministic stop/continue rule.
 
-\begin{theoremenv}[Softplus gradient recovery]\label{ptnb:thm:softplus-gradient}
+\begin{theoremenv}[Softplus gradient recovery, \LeanResult{ptnb:thm:softplus-gradient}]\label{ptnb:thm:softplus-gradient}
 Under the SPNE of Theorem~\ref{ptnb:thm:softplus-forward} on the Softplus network with activation
 $\mathrm{sp}_\theta$, the discounted occupation difference recovers the Softplus-network gradient
 exactly as in Theorem~\ref{ptnb:thm:deriv-occ}:
@@ -2046,9 +2026,7 @@ exactly as in Theorem~\ref{ptnb:thm:deriv-occ}:
     \Gamma_x\bigl(s_{i,-}^{(l, \mathrm{act})} \bigm| s\bigr)\Bigr),
     \qquad s = s_{j,q}^{(m, \mathrm{act})},
 \end{align}
-with $\Gamma_x$ now driven by $\Pi_x^\theta$.
-\hfill\LeanResult{ptnb:thm:softplus-gradient}
-\end{theoremenv}
+with $\Gamma_x$ now driven by $\Pi_x^\theta$.\end{theoremenv}
 
 \begin{proof}
 Write $D(s_{h,r}^{(m',\mathrm{act})}) \coloneqq \Gamma_x(s_{i,r}^{(l,\mathrm{act})} \mid

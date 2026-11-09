@@ -1,0 +1,19 @@
+import Thesis.CPWLLattice
+import Mathlib.Data.Nat.Log
+open Finset Matrix
+#check Equiv.sum_comp
+#check Fintype.sum_equiv
+#check Fin.sum_univ_succ
+#check Fin.sum_univ_two
+#check Fintype.card_le_iff_surjective
+#check Fintype.card_le_of_surjective
+#check Fintype.card_fun
+#check Nat.le_pow_clog
+#check Fin.cases
+#check Fin.tail
+#check Fin.cons
+#check Fin.cons_self_tail
+#check Fin.cases_self_tail
+#check Fintype.sum_prod_type
+#check Fintype.sum_prod_type'
+#check Finset.sum_ite_eq'

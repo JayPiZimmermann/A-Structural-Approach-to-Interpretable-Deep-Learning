@@ -2,17 +2,22 @@
 % Equation-number linking follows the approach in arXiv:2610.01728v2.
 \definecolor{leangray}{gray}{0.35}
 \makeatletter
-\newcommand{\DeclareLeanResult}[4]{%
+\newcommand{\DeclareLeanResult}[5]{%
   \expandafter\def\csname thesis@leanurl@#1\endcsname{#2}%
   \expandafter\def\csname thesis@leandecl@#1\endcsname{#3}%
   \expandafter\def\csname thesis@leantext@#1\endcsname{#4}%
+  \expandafter\def\csname thesis@leannumber@#1\endcsname{#5}%
 }
-\newcommand{\LeanResult}[1]{%
+% As in the planar-features paper, put Lean_N in the theorem's optional
+% heading brackets. Numbers are generated, so repeated references are stable.
+\DeclareRobustCommand{\LeanResult}[1]{%
   \ifcsname thesis@leanurl@#1\endcsname
     \href{\csname thesis@leanurl@#1\endcsname}{%
-      \textcolor{leangray}{\textsf{\footnotesize[\csname thesis@leantext@#1\endcsname]}}}%
+      \textcolor{leangray}{\normalfont\texttt{Lean\_\csname thesis@leannumber@#1\endcsname}}}%
   \else\PackageError{thesis-lean}{Missing Lean declaration mapping for #1}{Regenerate Lean links.}\fi
 }
+\newcommand{\leanref}[3]{\href{\leanbase/#1\#L#2}{\textcolor{leangray}{\texttt{#3}}}}
+\newcommand{\leandecl}[1]{\LeanResult{#1}}
 \makeatother
 \input{preamble/lean_equation_links.sty}
 \InputIfFileExists{preamble/lean_links_generated.tex}{}{}

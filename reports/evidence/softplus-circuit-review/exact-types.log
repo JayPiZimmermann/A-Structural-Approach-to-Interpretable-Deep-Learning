@@ -1,0 +1,251 @@
+@Thesis.SoftplusCircuit.graphWith_relu : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (x : HiddenMonotonicity.Vec d),
+  Thesis.SoftplusCircuit.graphWith HiddenMonotonicity.relu c plan x = c.eval x
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:39:98: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.SoftplusCircuit.graphSplit_recovery : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ),
+  0 < θ →
+    ∀ (x : HiddenMonotonicity.PairVec d),
+      (Thesis.SoftplusCircuit.graphSplit θ c plan x).1 - (Thesis.SoftplusCircuit.graphSplit θ c plan x).2 =
+        Thesis.SoftplusCircuit.graphSoft θ c plan (x.1 - x.2)
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:66:98: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.SoftplusCircuit.graph_saddle : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ),
+  0 < θ →
+    ∀ (x : HiddenMonotonicity.Vec d) (plus minus : Thesis.SoftplusCircuit.Strategy c plan),
+      Thesis.SoftplusCircuit.signedValue θ c plan plus (Thesis.SoftplusCircuit.canonicalStrategy θ c plan x) (x, -x) ≤
+          (Thesis.SoftplusCircuit.graphSoft θ c plan x, -Thesis.SoftplusCircuit.graphSoft θ c plan x) ∧
+        Thesis.SoftplusCircuit.signedValue θ c plan (Thesis.SoftplusCircuit.canonicalStrategy θ c plan x)
+              (Thesis.SoftplusCircuit.canonicalStrategy θ c plan x) (x, -x) =
+            (Thesis.SoftplusCircuit.graphSoft θ c plan x, -Thesis.SoftplusCircuit.graphSoft θ c plan x) ∧
+          (Thesis.SoftplusCircuit.graphSoft θ c plan x, -Thesis.SoftplusCircuit.graphSoft θ c plan x) ≤
+            Thesis.SoftplusCircuit.signedValue θ c plan (Thesis.SoftplusCircuit.canonicalStrategy θ c plan x) minus
+              (x, -x)
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:99:98: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.SoftplusCircuit.canonical_spne : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ),
+  0 < θ →
+    ∀ (x : HiddenMonotonicity.Vec d),
+      Thesis.SoftplusCircuit.SubgamePerfect θ c plan (Thesis.SoftplusCircuit.canonicalStrategy θ c plan x)
+        (Thesis.SoftplusCircuit.canonicalStrategy θ c plan x) (x, -x)
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.SoftplusCircuit.playerValue_advantage : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ) (plus minus : Thesis.SoftplusCircuit.Strategy c plan)
+  (v : Thesis.SoftplusGame.PlayerValues d),
+  Thesis.SoftplusGame.advantage (Thesis.SoftplusCircuit.playerValue θ c plan plus minus v) =
+    Thesis.SoftplusCircuit.signedValue θ c plan plus minus (Thesis.SoftplusGame.advantage v)
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:155:98: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.SoftplusCircuit.playerValue_canonical : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ),
+  0 < θ →
+    ∀ (x : HiddenMonotonicity.PairVec d),
+      Thesis.SoftplusCircuit.playerValue θ c plan (Thesis.SoftplusCircuit.canonicalStrategy θ c plan (x.1 - x.2))
+          (Thesis.SoftplusCircuit.canonicalStrategy θ c plan (x.1 - x.2)) (Thesis.SoftplusGame.pairValues x) =
+        Thesis.SoftplusGame.pairValues (Thesis.SoftplusCircuit.graphSplit θ c plan x)
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:184:98: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:185:2: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.SoftplusCircuit.subgamePerfect_iff : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ),
+  0 < θ →
+    Thesis.SoftplusCircuit.NoPools c plan →
+      ∀ (x : HiddenMonotonicity.Vec d) (plus minus : Thesis.SoftplusCircuit.Strategy c plan),
+        Thesis.SoftplusCircuit.SubgamePerfect θ c plan plus minus (x, -x) ↔
+          plus = Thesis.SoftplusCircuit.canonicalStrategy θ c plan x ∧
+            minus = Thesis.SoftplusCircuit.canonicalStrategy θ c plan x
+'_ThesisExactChecks.target_6' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:213:98: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.SoftplusCircuit.softplus_forward_spne : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ),
+  0 < θ →
+    ∀ (x : HiddenMonotonicity.PairVec d),
+      Thesis.SoftplusCircuit.SubgamePerfect θ c plan (Thesis.SoftplusCircuit.canonicalStrategy θ c plan (x.1 - x.2))
+          (Thesis.SoftplusCircuit.canonicalStrategy θ c plan (x.1 - x.2)) (x.1 - x.2, -(x.1 - x.2)) ∧
+        Thesis.SoftplusCircuit.playerValue θ c plan (Thesis.SoftplusCircuit.canonicalStrategy θ c plan (x.1 - x.2))
+              (Thesis.SoftplusCircuit.canonicalStrategy θ c plan (x.1 - x.2)) (Thesis.SoftplusGame.pairValues x) =
+            Thesis.SoftplusGame.pairValues (Thesis.SoftplusCircuit.graphSplit θ c plan x) ∧
+          (Thesis.SoftplusCircuit.graphSplit θ c plan x).1 - (Thesis.SoftplusCircuit.graphSplit θ c plan x).2 =
+            Thesis.SoftplusCircuit.graphSoft θ c plan (x.1 - x.2)
+'_ThesisExactChecks.target_7' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.SoftplusCircuit.nodeProbability_normalized : ∀ {n : ℕ} {e : HiddenMonotonicity.SignedExpr (Fin n)} (θ : ℝ)
+  (spec : Thesis.SoftplusCircuit.NodeSpec e) (x : HiddenMonotonicity.Vec n),
+  ∑ target, Thesis.SoftplusCircuit.nodeProbability θ spec x target = 1
+'_ThesisExactChecks.target_8' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.SoftplusCircuit.node_discount_recovery : ∀ {n : ℕ} {e : HiddenMonotonicity.SignedExpr (Fin n)} (θ : ℝ)
+  (spec : Thesis.SoftplusCircuit.NodeSpec e) (x : HiddenMonotonicity.Vec n) (i : Fin n) (b : Bool),
+  Thesis.SoftplusCircuit.nodeDiscount spec x * Thesis.SoftplusCircuit.nodeProbability θ spec x (some (i, b)) =
+    if b = true then (Thesis.SoftplusCircuit.selectedWeights θ spec x).2 i
+    else (Thesis.SoftplusCircuit.selectedWeights θ spec x).1 i
+'_ThesisExactChecks.target_9' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.SoftplusCircuit.nodePlayer_transition : ∀ {n : ℕ} {e : HiddenMonotonicity.SignedExpr (Fin n)} (θ : ℝ)
+  (spec : Thesis.SoftplusCircuit.NodeSpec e) (x : HiddenMonotonicity.Vec n) (v : Thesis.SoftplusGame.PlayerValues n)
+  (player turn : Bool),
+  Thesis.SoftplusCircuit.nodePlayer θ spec (Thesis.SoftplusCircuit.canonicalNode θ spec x)
+      (Thesis.SoftplusCircuit.canonicalNode θ spec x) v player turn =
+    Thesis.SoftplusCircuit.nodeReward θ spec x player turn +
+      ∑ i,
+        ∑ b,
+          Thesis.SoftplusCircuit.nodeDiscount spec x * Thesis.SoftplusCircuit.nodeProbability θ spec x (some (i, b)) *
+            v player (turn ^^ b) i
+'_ThesisExactChecks.target_10' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:331:99: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:332:14: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.SoftplusCircuit.graphSoft_hasFDerivAt : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ),
+  0 < θ →
+    ∀ (x : HiddenMonotonicity.Vec d),
+      Thesis.SoftplusCircuit.Regular θ c plan x →
+        HasFDerivAt (Thesis.SoftplusCircuit.graphSoft θ c plan)
+          (HiddenMonotonicity.matrixCLM
+            ((Thesis.SoftplusCircuit.graphKernel θ c plan x).1 - (Thesis.SoftplusCircuit.graphKernel θ c plan x).2))
+          x
+'_ThesisExactChecks.target_11' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.SoftplusCircuit.pathProbability_normalized : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ) (x : HiddenMonotonicity.Vec d) (j : Fin n),
+  ∑ path, Thesis.SoftplusCircuit.pathProbability θ c plan x j path = 1
+'_ThesisExactChecks.target_12' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.SoftplusCircuit.occupation_eq_kernel : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ) (x : HiddenMonotonicity.Vec d) (j : Fin n) (turn : Bool) (i : Fin d)
+  (channel : Bool),
+  Thesis.SoftplusCircuit.occupation c plan θ x j turn i channel =
+    if (channel ^^ turn) = true then (Thesis.SoftplusCircuit.graphKernel θ c plan x).2 j i
+    else (Thesis.SoftplusCircuit.graphKernel θ c plan x).1 j i
+'_ThesisExactChecks.target_13' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:416:99: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:417:14: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.SoftplusCircuit.graph_derivative_occupation : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ),
+  0 < θ →
+    ∀ (x : HiddenMonotonicity.Vec d),
+      Thesis.SoftplusCircuit.Regular θ c plan x →
+        ∀ (j : Fin n) (i : Fin d),
+          (fderiv ℝ (Thesis.SoftplusCircuit.graphSoft θ c plan) x) (Pi.single i 1) j =
+            Thesis.SoftplusCircuit.occupation c plan θ x j false i false -
+              Thesis.SoftplusCircuit.occupation c plan θ x j false i true
+'_ThesisExactChecks.target_14' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.SoftplusCircuit.graft_soft : ∀ {d m n : ℕ} (pre : HiddenMonotonicity.Circuit d m)
+  (prePlan : Thesis.SoftplusCircuit.Plan pre) (suffix : HiddenMonotonicity.Circuit m n)
+  (suffixPlan : Thesis.SoftplusCircuit.Plan suffix) (θ : ℝ) (x : HiddenMonotonicity.Vec d),
+  Thesis.SoftplusCircuit.graphSoft θ (Thesis.StoppingDAG.graft pre suffix)
+      (Thesis.SoftplusCircuit.graftPlan pre prePlan suffix suffixPlan) x =
+    Thesis.SoftplusCircuit.graphSoft θ suffix suffixPlan (Thesis.SoftplusCircuit.graphSoft θ pre prePlan x)
+'_ThesisExactChecks.target_15' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.SoftplusCircuit.fullOccupation_graft_last : ∀ {d m n : ℕ} (pre : HiddenMonotonicity.Circuit d (m + 1))
+  (prePlan : Thesis.SoftplusCircuit.Plan pre) (suffix : HiddenMonotonicity.Circuit (m + 1) n)
+  (suffixPlan : Thesis.SoftplusCircuit.Plan suffix) (θ : ℝ) (x : HiddenMonotonicity.Vec d) (j : Fin n)
+  (turn channel : Bool),
+  Thesis.SoftplusCircuit.fullOccupation (Thesis.StoppingDAG.graft pre suffix)
+      (Thesis.SoftplusCircuit.graftPlan pre prePlan suffix suffixPlan) θ x j turn m channel =
+    Thesis.SoftplusCircuit.occupation suffix suffixPlan θ (Thesis.SoftplusCircuit.graphSoft θ pre prePlan x) j turn
+      (Fin.last m) channel
+'_ThesisExactChecks.target_16' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:506:64: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:507:2: warning: Variable name `hx` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hx
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.SoftplusCircuit.intermediate_derivative_fullOccupation : ∀ {d m n : ℕ}
+  (pre : HiddenMonotonicity.Circuit d (m + 1)) (prePlan : Thesis.SoftplusCircuit.Plan pre)
+  (suffix : HiddenMonotonicity.Circuit (m + 1) n) (suffixPlan : Thesis.SoftplusCircuit.Plan suffix) (θ : ℝ),
+  0 < θ →
+    ∀ (x : HiddenMonotonicity.Vec d),
+      Thesis.SoftplusCircuit.Regular θ (Thesis.StoppingDAG.graft pre suffix)
+          (Thesis.SoftplusCircuit.graftPlan pre prePlan suffix suffixPlan) x →
+        ∀ (j : Fin n) (q : Bool),
+          (fderiv ℝ (Thesis.SoftplusCircuit.graphSoft θ suffix suffixPlan)
+                (Thesis.SoftplusCircuit.graphSoft θ pre prePlan x))
+              (Pi.single (Fin.last m) 1) j =
+            (if q = true then -1 else 1) *
+              (Thesis.SoftplusCircuit.fullOccupation (Thesis.StoppingDAG.graft pre suffix)
+                  (Thesis.SoftplusCircuit.graftPlan pre prePlan suffix suffixPlan) θ x j q m false -
+                Thesis.SoftplusCircuit.fullOccupation (Thesis.StoppingDAG.graft pre suffix)
+                  (Thesis.SoftplusCircuit.graftPlan pre prePlan suffix suffixPlan) θ x j q m true)
+'_ThesisExactChecks.target_17' depends on axioms: [propext, Classical.choice, Quot.sound]
+@Thesis.SoftplusCircuit.expectedPayoff_eq_playerValue : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ) (x : HiddenMonotonicity.Vec d) (v : Thesis.SoftplusGame.PlayerValues d)
+  (player : Bool) (j : Fin n) (turn : Bool),
+  Thesis.SoftplusCircuit.expectedPayoff c plan θ x v player j turn =
+    Thesis.SoftplusCircuit.playerValue θ c plan (Thesis.SoftplusCircuit.canonicalStrategy θ c plan x)
+      (Thesis.SoftplusCircuit.canonicalStrategy θ c plan x) v player turn j
+'_ThesisExactChecks.target_18' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/softplus-circuit-review/ExactTypes.lean:567:99: warning: Variable name `hθ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hθ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Thesis.SoftplusCircuit.expectedPayoff_eq_split : ∀ {d n : ℕ} (c : HiddenMonotonicity.Circuit d n)
+  (plan : Thesis.SoftplusCircuit.Plan c) (θ : ℝ),
+  0 < θ →
+    ∀ (x : HiddenMonotonicity.PairVec d) (player turn : Bool) (j : Fin n),
+      Thesis.SoftplusCircuit.expectedPayoff c plan θ (x.1 - x.2) (Thesis.SoftplusGame.pairValues x) player j turn =
+        if player = turn then (Thesis.SoftplusCircuit.graphSplit θ c plan x).1 j
+        else (Thesis.SoftplusCircuit.graphSplit θ c plan x).2 j
+'_ThesisExactChecks.target_19' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 1889 project theorem declarations in the imported environment

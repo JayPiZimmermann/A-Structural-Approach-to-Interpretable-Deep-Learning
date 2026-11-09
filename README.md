@@ -4,6 +4,13 @@ Master's thesis by Jakob Zimmermann: **From DC Decompositions to Two-Player Game
 This repository contains the thesis TeX, the two paper sources, a shared Lean
 formalization, and adapters for reproducing the thesis tables from the official code.
 
+## Continue this checkpoint on another server
+
+Read [HANDOVER_TEX.md](HANDOVER_TEX.md) for the independent TeX task and
+[HANDOVER_LEAN.md](HANDOVER_LEAN.md) for the independent Astra proof task.
+They distinguish the clean verified root, frozen extensions awaiting integration,
+and unfinished drafts. All work was checkpointed at the user’s request.
+
 ## Contents
 
 - `tex/`: thesis sources and figures. Build from `tex/main.tex`.
@@ -23,8 +30,8 @@ A link to a component is not a certificate for an entire theorem or paper.
 ## Clone with the official code
 
 ```sh
-git clone --recurse-submodules https://github.com/JayPiZimmermann/structural-interpretability-thesis.git
-cd structural-interpretability-thesis
+git clone --recurse-submodules https://github.com/JayPiZimmermann/A-Structural-Approach-to-Interpretable-Deep-Learning.git
+cd A-Structural-Approach-to-Interpretable-Deep-Learning
 ```
 
 For an existing checkout, run `git submodule update --init --recursive`. The Git
@@ -84,10 +91,13 @@ python3 scripts/generate_thesis_tables.py --python /path/to/environment/bin/pyth
 
 This invokes the official CPU table writer on its shipped summaries. It runs no
 model evaluations and downloads no datasets. All 13 available outputs were checked
-against the thesis: values, row order, labels, and whitespace-normalized TeX agree.
+against the thesis after its presentation adapter. Measured values and row order
+are preserved; the adapter standardizes labels and colors, removes entirely
+unmeasured metric columns, and makes non-applicable configurations explicit.
 The check includes the main/CI tables, validation selections, ablations, attention
 rule comparison, VOC transfer, and macros for numbers in the prose.
-`reports/table-reproduction.json` records the exact output hashes.
+`reports/table-reproduction.json` retains the original raw-output check;
+`reports/table-adapter-verification.json` records the current adapted-output check.
 
 The adapter first writes to a review directory and records provenance. Add
 `--check --write` to synchronize only after every comparison succeeds against
@@ -120,13 +130,21 @@ bibliography. The current report has no missing references (74 source keys from
 Hidden Monotonicity, including appendix aliases, and 72 from the revised game paper).
 Publication and named-method titles retain their official wording.
 
+The trajectory chapter also compares the thesis with Xiong et al.’s
+[Normalized Relevance Measure framework](https://arxiv.org/abs/2606.00557).
+`reports/nrm-source-provenance.json` records the versioned source/PDF URLs and
+checksums used for that comparison. The third-party source archive is available
+from arXiv; it is not redistributed here.
+
 ## Stable links from TeX to Lean
 
-Thesis statements use `\LeanResult{source-label}`; selected equation numbers are
-linked too. The design follows the TeX commands in arXiv:2610.01728v2, with links
+Thesis statements use numbered `Lean_1`, `Lean_2`, … references inside their
+heading brackets, via `\LeanResult{source-label}`; selected equation numbers
+link directly to their declarations too. The design follows the TeX commands in arXiv:2610.01728v2, with links
 pinned to a commit instead of the moving default branch.
 
-After changing Lean sources, build and audit them, commit those sources, then run:
+After changing Lean sources, compile and review them, commit the reviewed sources
+and configuration, and run the clean verification gate. Then generate links:
 
 ```sh
 python3 scripts/generate_lean_links.py --revision HEAD

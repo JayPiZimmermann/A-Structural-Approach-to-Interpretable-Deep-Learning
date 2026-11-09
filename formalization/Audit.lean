@@ -74,24 +74,11 @@ import All
 #print axioms HiddenMonotonicity.shifted_gradient_g_finite_sum
 #print axioms HiddenMonotonicity.shifted_gradient_h_finite_sum
 #print axioms HiddenMonotonicity.shifted_heads_reconstruct
-#print axioms HiddenMonotonicity.Network.split_convex_input
-#print axioms HiddenMonotonicity.coefficientRow_convex
-#print axioms HiddenMonotonicity.Network.affine_heads_convex_input
-#print axioms HiddenMonotonicity.Network.mixing_one_convex_input
 #print axioms HiddenMonotonicity.positive_matrix_monotone
 #print axioms HiddenMonotonicity.Network.monotone
 #print axioms HiddenMonotonicity.affine_layer_mix
 #print axioms HiddenMonotonicity.max_jensen
 #print axioms HiddenMonotonicity.Network.convex
-#print axioms HiddenMonotonicity.Convolution.sampling_sum
-#print axioms HiddenMonotonicity.Convolution.applyKernel_eq_mulVec
-#print axioms HiddenMonotonicity.Convolution.applyKernel_hasFDerivAt
-#print axioms HiddenMonotonicity.Convolution.kernelMatrix_nonnegative
-#print axioms HiddenMonotonicity.Convolution.kernelMatrix_sign_difference
-#print axioms HiddenMonotonicity.Convolution.splitKernel_eq_affineChunk
-#print axioms HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt
-#print axioms HiddenMonotonicity.Convolution.splitKernel_recovery
-#print axioms HiddenMonotonicity.Convolution.splitKernel_properties
 #print axioms HiddenMonotonicity.max_sub
 #print axioms HiddenMonotonicity.pre_difference
 #print axioms HiddenMonotonicity.split_correct
@@ -197,35 +184,6 @@ import All
 #print axioms HiddenMonotonicity.poolWinner_exists
 #print axioms HiddenMonotonicity.winnerPool_recovery
 #print axioms HiddenMonotonicity.winnerPool_nonnegative
-#print axioms HiddenMonotonicity.weightedInputs_eval
-#print axioms HiddenMonotonicity.weightedInputs_size
-#print axioms HiddenMonotonicity.weightedInputs_depth
-#print axioms HiddenMonotonicity.affineInputs_eval
-#print axioms HiddenMonotonicity.affineInputs_size
-#print axioms HiddenMonotonicity.affineInputs_depth
-#print axioms HiddenMonotonicity.SignedExpr.maxList_size
-#print axioms HiddenMonotonicity.SignedExpr.maxList_depth
-#print axioms HiddenMonotonicity.productInputs_eval
-#print axioms HiddenMonotonicity.productInputs_size
-#print axioms HiddenMonotonicity.productInputs_depth
-#print axioms HiddenMonotonicity.repeatedParents_length
-#print axioms HiddenMonotonicity.repeatedParents_product
-#print axioms HiddenMonotonicity.MaxoutProductGate.toExpr_eval
-#print axioms HiddenMonotonicity.MaxoutProductGate.toExpr_depth
-#print axioms HiddenMonotonicity.MaxoutProductGate.toExpr_size
-#print axioms HiddenMonotonicity.PositiveExpr.maxoutRank_le_two
-#print axioms HiddenMonotonicity.SplitDAG.maxoutRank_le_two
-#print axioms HiddenMonotonicity.MaxoutProductDAG.toCircuit_eval
-#print axioms HiddenMonotonicity.MaxoutProductDAG.toCircuit_depth_bound
-#print axioms HiddenMonotonicity.MaxoutProductDAG.toCircuit_size
-#print axioms HiddenMonotonicity.MaxoutProductDAG.compile_size
-#print axioms HiddenMonotonicity.MaxoutProductDAG.compile_recovery
-#print axioms HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery
-#print axioms HiddenMonotonicity.MaxoutProductDAG.compile_polynomials
-#print axioms HiddenMonotonicity.MaxoutProductDAG.split_linear_size
-#print axioms HiddenMonotonicity.MaxoutProductGate.degree_le_expandedTerms
-#print axioms HiddenMonotonicity.MaxoutProductDAG.degree_bound_of_expansion
-#print axioms HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion
 #print axioms HiddenMonotonicity.SmoothDC.locally_AC_of_continuous_derivative
 #print axioms HiddenMonotonicity.SmoothDC.cumulative_hasDerivAt_of_continuous
 #print axioms HiddenMonotonicity.SmoothDC.integrable_even_of_Ioi
@@ -411,13 +369,6 @@ import All
 #print axioms HiddenMonotonicity.SmoothDC.smooth_pair_nonnegative
 #print axioms HiddenMonotonicity.SmoothDC.smooth_network_recovery
 #print axioms HiddenMonotonicity.SmoothDC.smooth_network_nonnegative
-#print axioms HiddenMonotonicity.PositiveExpr.graphSize_le
-#print axioms HiddenMonotonicity.Circuit.compileSplitDAG_eval
-#print axioms HiddenMonotonicity.SplitDAG.nonnegative
-#print axioms HiddenMonotonicity.SplitDAG.monotone_nonnegative
-#print axioms HiddenMonotonicity.SignedExpr.split_vertices_bound
-#print axioms HiddenMonotonicity.Circuit.compileSplitDAG_size
-#print axioms HiddenMonotonicity.Circuit.split_DAG_with_size
 #print axioms HiddenMonotonicity.assemble_partialPair
 #print axioms HiddenMonotonicity.shiftPair_sum
 #print axioms HiddenMonotonicity.unified_shift
@@ -442,10 +393,6 @@ import All
 #print axioms HiddenMonotonicity.MaskedTrace.correction_half
 #print axioms HiddenMonotonicity.Network.half_shift_gradients
 #print axioms HiddenMonotonicity.MaskedTrace.stabilized_partial_invariants
-#print axioms Thesis.AffineMaxPartition.dependence_coefficients
-#print axioms Thesis.AffineMaxPartition.oriented_dependence
-#print axioms Thesis.AffineMaxPartition.weighted_affine_constant
-#print axioms Thesis.AffineMaxPartition.global_partition
 #print axioms Thesis.AffineOutputBackward.originalJac_sg_coordinate
 #print axioms Thesis.AffineOutputBackward.affineOutput_hasFDerivAt
 #print axioms Thesis.AffineOutputBackward.thesis_affine_output_gradient
@@ -514,17 +461,6 @@ import All
 #print axioms Thesis.Bellman.MDP.discounted_iterate
 #print axioms Thesis.Bellman.MDP.expected_return_hasSum
 #print axioms Thesis.Bellman.MDP.expected_return_eq_value
-#print axioms Thesis.PiecewiseLinear.continuous_finite_selection_local
-#print axioms Thesis.PiecewiseLinear.affine_selection_separation
-#print axioms Thesis.PiecewiseLinear.affine_cover_separation
-#print axioms Thesis.PiecewiseLinear.cpwl_lattice_representation
-#print axioms Thesis.PiecewiseLinear.polynomial_difference_finset_sup
-#print axioms Thesis.PiecewiseLinear.cpwl_polynomial_difference
-#print axioms Thesis.PiecewiseLinear.cpwl_iff_polynomial_difference
-#print axioms Thesis.PiecewiseLinear.CPWL.scalar_component
-#print axioms Thesis.PiecewiseLinear.scalar_affine_network_cpwl
-#print axioms Thesis.PiecewiseLinear.cpwl_relu_bounded_depth
-#print axioms Thesis.PiecewiseLinear.cpwl_relu_equivalence
 #print axioms Thesis.Coarsening.pushforward_nonneg
 #print axioms Thesis.Coarsening.pushforward_mass
 #print axioms Thesis.Coarsening.fiber_nonneg
@@ -601,29 +537,6 @@ import All
 #print axioms Thesis.Games.doob_kernel_nonneg
 #print axioms Thesis.Games.doob_path_telescoping
 #print axioms Thesis.Games.doob_survival_path
-#print axioms Thesis.GeneralRegularization.exists_optimizer
-#print axioms Thesis.GeneralRegularization.gate_mem
-#print axioms Thesis.GeneralRegularization.gate_optimal
-#print axioms Thesis.GeneralRegularization.objective_le
-#print axioms Thesis.GeneralRegularization.activation_isGreatest
-#print axioms Thesis.GeneralRegularization.activation_eq_sup
-#print axioms Thesis.GeneralRegularization.activation_convex
-#print axioms Thesis.GeneralRegularization.activation_monotone
-#print axioms Thesis.GeneralRegularization.activation_sub_le
-#print axioms Thesis.GeneralRegularization.activation_lipschitz
-#print axioms Thesis.GeneralRegularization.optimizer_supports
-#print axioms Thesis.GeneralRegularization.optimizer_eq_deriv
-#print axioms Thesis.GeneralRegularization.pairWith_valid
-#print axioms Thesis.GeneralRegularization.pairWith_nonnegative
-#print axioms Thesis.GeneralRegularization.network_recovery
-#print axioms Thesis.GeneralRegularization.affine_readout_recovery
-#print axioms Thesis.GeneralRegularization.hardGate_optimal
-#print axioms Thesis.GeneralRegularization.zero_activation
-#print axioms Thesis.GeneralRegularization.zero_pair_is_stopping
-#print axioms Thesis.GeneralRegularization.sigmoid_optimal
-#print axioms Thesis.GeneralRegularization.entropy_activation
-#print axioms Thesis.GeneralRegularization.entropy_pair_is_softSplit
-#print axioms Thesis.GeneralRegularization.regularized_decomposition_validity
 #print axioms Thesis.LayeredGames.best_attained
 #print axioms Thesis.LayeredGames.selector_value
 #print axioms Thesis.LayeredGames.le_best_max
@@ -676,18 +589,6 @@ import All
 #print axioms Thesis.RandomizationExpectation.thesis_rand_adf_full_depth
 #print axioms Thesis.RandomizationExpectation.survival_threshold_pointwise
 #print axioms Thesis.RandomizationExpectation.thesis_conditioned_survival_lower
-#print axioms Thesis.ReLURepresentation.concatenate_eval
-#print axioms Thesis.ReLURepresentation.concatenate_depth
-#print axioms Thesis.ReLURepresentation.affineHead_eval
-#print axioms Thesis.ReLURepresentation.max_rails
-#print axioms Thesis.ReLURepresentation.AffineHead.pairwiseMax_eval
-#print axioms Thesis.ReLURepresentation.AffineHead.pairwiseMax_depth
-#print axioms Thesis.ReLURepresentation.finiteMax_bits_succ
-#print axioms Thesis.ReLURepresentation.affine_max_forest
-#print axioms Thesis.ReLURepresentation.polynomial_forest
-#print axioms Thesis.ReLURepresentation.AffineHead.linearCombination_eval
-#print axioms Thesis.ReLURepresentation.AffineHead.linearCombination_depth
-#print axioms Thesis.ReLURepresentation.signed_polynomial_compiler
 #print axioms Thesis.ReLUNetGame.gateProbability_pure
 #print axioms Thesis.ReLUNetGame.gateProbability_value
 #print axioms Thesis.ReLUNetGame.randomized_stop_bounds
@@ -872,15 +773,6 @@ import All
 #print axioms Thesis.RoutingTransitions.transition_ordinary
 #print axioms Thesis.RoutingTransitions.probability_nonnegative
 #print axioms Thesis.RoutingTransitions.occupation_nonnegative
-#print axioms Thesis.SignedMaxIdentities.baseMax_insert_dominated
-#print axioms Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion
-#print axioms Thesis.SignedMaxIdentities.alternating_max_zero
-#print axioms Thesis.SignedMaxReduction.restrict_card
-#print axioms Thesis.SignedMaxReduction.restrict_eval
-#print axioms Thesis.SignedMaxReduction.eval_mem_smallSpan
-#print axioms Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan
-#print axioms Thesis.SignedMaxReduction.polynomial_signed_small_max
-#print axioms Thesis.SignedMaxReduction.difference_signed_small_max
 #print axioms Thesis.SoftplusBackward.softLayer_hasFDerivAt
 #print axioms Thesis.SoftplusBackward.softTrace_layer_map
 #print axioms Thesis.SoftplusBackward.softEval_hasFDerivAt
@@ -902,10 +794,6 @@ import All
 #print axioms Thesis.SoftplusBoundary.gradient_occupation
 #print axioms Thesis.SoftplusDecomposition.softEval_eq_forwardWith
 #print axioms Thesis.SoftplusDecomposition.thesis_softplus_forward
-#print axioms Thesis.SoftplusLimits.gate_limit_positive
-#print axioms Thesis.SoftplusLimits.gate_limit_negative
-#print axioms Thesis.SoftplusLimits.softSplit_tendsto_stopping
-#print axioms Thesis.SoftplusLimits.softSplit_tendsto_tie
 #print axioms Thesis.SourceFoundations.monotone_represents
 #print axioms Thesis.SourceFoundations.icnn_represents_convex
 #print axioms Thesis.SourceFoundations.maxout_special_cases
@@ -954,73 +842,6 @@ import All
 #print axioms Thesis.StoppingCircuit.winner_probability_law
 #print axioms Thesis.StoppingCircuit.winner_discounted_occupation
 #print axioms Thesis.StoppingCircuit.winner_derivative_occupation
-#print axioms Thesis.StoppingDAG.pairMap_apply
-#print axioms Thesis.StoppingDAG.pairMap_basis
-#print axioms Thesis.StoppingDAG.selected_operator_occupation
-#print axioms Thesis.StoppingDAG.stopping_derivative_occupation
-#print axioms Thesis.StoppingDAG.difference_pairMap
-#print axioms Thesis.StoppingDAG.difference_lift
-#print axioms Thesis.StoppingDAG.circuit_hasFDerivAt
-#print axioms Thesis.StoppingDAG.circuit_derivative_occupation
-#print axioms Thesis.StoppingDAG.graft_eval
-#print axioms Thesis.StoppingDAG.graft_stopping
-#print axioms Thesis.StoppingDAG.graft_additive
-#print axioms Thesis.StoppingDAG.graft_regular
-#print axioms Thesis.StoppingDAG.cut_stopping_derivative_occupation
-#print axioms Thesis.StoppingDAG.circuit_derivative_occupation_signed
-#print axioms Thesis.StoppingDAG.coefficientRow_vecMul
-#print axioms Thesis.StoppingDAG.kernelMap_comp_pairMap
-#print axioms Thesis.StoppingDAG.pairMap_snoc_apply
-#print axioms Thesis.StoppingDAG.snocPair_hasFDerivAt
-#print axioms Thesis.StoppingDAG.stoppingCircuit_hasFDerivAt
-#print axioms Thesis.StoppingDAG.combineKernel_nonnegative
-#print axioms Thesis.StoppingDAG.dagKernel_nonnegative
-#print axioms Thesis.StoppingDAG.circuit_hasFDerivAt_split
-#print axioms Thesis.StoppingDAG.circuit_derivative_occupation_split
-#print axioms Thesis.StoppingDAG.exists_graph_cut
-#print axioms Thesis.StoppingDAG.fullOccupation_input
-#print axioms Thesis.StoppingDAG.intermediate_selected_occupation
-#print axioms Thesis.StoppingDAG.intermediate_stopping_derivative_occupation
-#print axioms Thesis.StoppingDAG.intermediate_circuit_derivative_occupation
-#print axioms Thesis.StoppingDAG.path_weight_recovery
-#print axioms Thesis.StoppingDAG.pathRaw_sum
-#print axioms Thesis.StoppingDAG.occupation_eq_kernel
-#print axioms Thesis.StoppingDAG.occupation_nonnegative
-#print axioms Thesis.StoppingDAG.localDiscount_nonnegative
-#print axioms Thesis.StoppingDAG.localProbability_nonnegative
-#print axioms Thesis.StoppingDAG.localProbability_normalized
-#print axioms Thesis.StoppingDAG.local_zero_weights
-#print axioms Thesis.StoppingDAG.local_discount_recovery
-#print axioms Thesis.StoppingDAG.pathProbability_nonnegative
-#print axioms Thesis.StoppingDAG.pathDiscount_nonnegative
-#print axioms Thesis.StoppingDAG.sum_paths_node
-#print axioms Thesis.StoppingDAG.pathProbability_normalized
-#print axioms Thesis.StoppingDAG.stoppingExpr_affine
-#print axioms Thesis.StoppingDAG.channelValue_add
-#print axioms Thesis.StoppingDAG.local_value_recovery
-#print axioms Thesis.StoppingDAG.expectedPayoff_node
-#print axioms Thesis.StoppingDAG.expectedPayoff_eq_stoppingCircuit
-#print axioms Thesis.StoppingDAG.expressionKernel_sum
-#print axioms Thesis.StoppingDAG.expressionOffset_sum
-#print axioms Thesis.StoppingDAG.expressionKernel_affine
-#print axioms Thesis.StoppingDAG.expressionOffset_affine
-#print axioms Thesis.StoppingDAG.ExpressionRegular_affine
-#print axioms Thesis.StoppingDAG.affine_discount
-#print axioms Thesis.StoppingDAG.constant_cemetery
-#print axioms Thesis.StoppingDAG.addition_discount
-#print axioms Thesis.StoppingDAG.addition_probability
-#print axioms Thesis.StoppingDAG.pool_kernel
-#print axioms Thesis.StoppingDAG.pool_discount
-#print axioms Thesis.StoppingDAG.relu_kernel
-#print axioms Thesis.StoppingDAG.fullOccupation_node
-#print axioms Thesis.StoppingDAG.fullOccupation_old
-#print axioms Thesis.StoppingDAG.visitWeight_above
-#print axioms Thesis.StoppingDAG.fullOccupation_above
-#print axioms Thesis.StoppingDAG.fullOccupation_self
-#print axioms Thesis.StoppingDAG.circuit_width_le
-#print axioms Thesis.StoppingDAG.occupation_node
-#print axioms Thesis.StoppingDAG.occupation_old
-#print axioms Thesis.StoppingDAG.fullOccupation_graft_last
 #print axioms Thesis.StoppingDecomposition.stopPair_valid
 #print axioms Thesis.StoppingDecomposition.stopPair_nonnegative
 #print axioms Thesis.StoppingDecomposition.thesis_stopping_validity
@@ -1035,32 +856,6 @@ import All
 #print axioms Thesis.StoppingDecomposition.pairMap_comp
 #print axioms Thesis.StoppingDecomposition.stoppingJac_occupation
 #print axioms Thesis.StoppingDecomposition.thesis_stopping_decomposition_gradient
-#print axioms Thesis.StoppingDAG.score_continuous
-#print axioms Thesis.StoppingDAG.coefficientRow_add
-#print axioms Thesis.StoppingDAG.coefficientRow_smul
-#print axioms Thesis.StoppingDAG.coefficientRow_zero
-#print axioms Thesis.StoppingDAG.coefficientRow_single
-#print axioms Thesis.StoppingDAG.kernelMap_apply
-#print axioms Thesis.StoppingDAG.kernelMap_add
-#print axioms Thesis.StoppingDAG.kernelMap_zero
-#print axioms Thesis.StoppingDAG.kernelMap_scale
-#print axioms Thesis.StoppingDAG.stoppingExpr_maximum
-#print axioms Thesis.StoppingDAG.expressionKernel_nonnegative
-#print axioms Thesis.StoppingDAG.stoppingExpr_hasFDerivAt
-#print axioms Thesis.StoppingDAG.earliestWinner_maximal
-#print axioms Thesis.StoppingDAG.earliestWinner_le_of_eq
-#print axioms Thesis.StoppingDAG.earliestWinner_spec
-#print axioms Thesis.StoppingDAG.earliestWinner_eq_of_strict
-#print axioms Thesis.StoppingDAG.orderedPool_eval
-#print axioms Thesis.StoppingDAG.orderedPool_score
-#print axioms Thesis.StoppingDAG.orderedPool_stopping
-#print axioms Thesis.StoppingDAG.orderedPool_kernel
-#print axioms Thesis.StoppingDAG.orderedPool_additive
-#print axioms Thesis.StoppingDAG.orderedPool_regular
-#print axioms Thesis.StoppingDAG.orderedInputPool_regular
-#print axioms Thesis.StoppingDAG.orderedInputPool_source
-#print axioms Thesis.StoppingDAG.orderedInputPool_minimum_graph_index
-#print axioms Thesis.StoppingDAG.orderedInputPool_dag_row
 #print axioms Thesis.StoppingStructure.geometricParity_negative_count
 #print axioms Thesis.StoppingStructure.trace_canonical
 #print axioms Thesis.StoppingStructure.canonical_edge_parity
@@ -1147,21 +942,14 @@ import All
 #check HiddenMonotonicity.Circuit.ordinary_polynomial_stream_witnesses
 #check HiddenMonotonicity.Circuit.split_policy_correct
 #check HiddenMonotonicity.Circuit.split_policy_nonnegative
-#check HiddenMonotonicity.Convolution.applyKernel_eq_mulVec
-#check HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt
-#check HiddenMonotonicity.Convolution.splitKernel_properties
 #check HiddenMonotonicity.MaskedTrace.bulkCoefficient_product
 #check HiddenMonotonicity.MaskedTrace.stabilized
 #check HiddenMonotonicity.MaskedTrace.stabilized_bulk
 #check HiddenMonotonicity.MaxPolynomial.ordinary_finite_polynomial_witness
-#check HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery
-#check HiddenMonotonicity.MaxoutProductDAG.split_linear_size
-#check HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion
 #check HiddenMonotonicity.Network.affine_Q_closed_form_ae
 #check HiddenMonotonicity.Network.affine_ae_backward_invariants
 #check HiddenMonotonicity.Network.affine_backward_invariants_of_differentiable
 #check HiddenMonotonicity.Network.affine_canonical_mass
-#check HiddenMonotonicity.Network.affine_heads_convex_input
 #check HiddenMonotonicity.Network.affine_heads_recovery
 #check HiddenMonotonicity.Network.affine_plain_Q_gradients_ae
 #check HiddenMonotonicity.Network.affine_plain_head_formulas
@@ -1172,7 +960,6 @@ import All
 #check HiddenMonotonicity.Network.decomposition_nonnegative
 #check HiddenMonotonicity.Network.gradient_blindness
 #check HiddenMonotonicity.Network.locally_constant_jacobian
-#check HiddenMonotonicity.Network.mixing_one_convex_input
 #check HiddenMonotonicity.Network.mixing_one_is_split
 #check HiddenMonotonicity.Network.mixing_recovery
 #check HiddenMonotonicity.Network.monotone
@@ -1191,12 +978,14 @@ import All
 #check HiddenMonotonicity.actual_positive_pullback
 #check HiddenMonotonicity.canonical_weight_split
 #check HiddenMonotonicity.layer_derivative
+#check HiddenMonotonicity.layer_difference
 #check HiddenMonotonicity.linear_chunk_properties
 #check HiddenMonotonicity.matrix_backward_difference
 #check HiddenMonotonicity.matrix_backward_sum
 #check HiddenMonotonicity.maxpool_correct
 #check HiddenMonotonicity.maxpool_properties
 #check HiddenMonotonicity.mixPair_nonnegative
+#check HiddenMonotonicity.mixing_correct
 #check HiddenMonotonicity.monotone_directional_nonnegative
 #check HiddenMonotonicity.winnerPool_recovery
 #check Thesis.AffineOutputBackward.thesis_affine_output_gradient
@@ -1226,17 +1015,8 @@ import All
 #check Thesis.Games.pixelDisagreement_total
 #check Thesis.Games.survival_overlap
 #check Thesis.Games.trajectory_overlap_eq_DP
-#check Thesis.GeneralRegularization.activation_isGreatest
-#check Thesis.GeneralRegularization.entropy_activation
-#check Thesis.GeneralRegularization.entropy_pair_is_softSplit
-#check Thesis.GeneralRegularization.exists_optimizer
-#check Thesis.GeneralRegularization.regularized_decomposition_validity
-#check Thesis.GeneralRegularization.sigmoid_optimal
-#check Thesis.GeneralRegularization.zero_activation
-#check Thesis.GeneralRegularization.zero_pair_is_stopping
 #check Thesis.PiecewiseLinear.affine_network_cpwl
 #check Thesis.PiecewiseLinear.convex_cpwl_iff_max_affine
-#check Thesis.PiecewiseLinear.cpwl_relu_equivalence
 #check Thesis.PiecewiseLinear.homogeneous_convex_cpwl_vertices
 #check Thesis.Randomization.thesis_alive_mismatch_full
 #check Thesis.Randomization.thesis_alive_mismatch_ordinary
@@ -1248,6 +1028,7 @@ import All
 #check Thesis.ReferencePolicy.thesis_attention_value_policy
 #check Thesis.ReferencePolicy.thesis_kl_legendre_fenchel
 #check Thesis.Regularization.entropy_gate_unique
+#check Thesis.Regularization.softSplit_recovery
 #check Thesis.Regularization.softplus_variational
 #check Thesis.RoutingBackward.thesis_alpha_beta_recovery
 #check Thesis.RoutingExpectation.conditional_affinity_full_depth
@@ -1260,8 +1041,6 @@ import All
 #check Thesis.SoftplusBackward.thesis_softplus_gradient
 #check Thesis.SoftplusDecomposition.softEval_eq_forwardWith
 #check Thesis.SoftplusDecomposition.thesis_softplus_forward
-#check Thesis.SoftplusLimits.softSplit_tendsto_stopping
-#check Thesis.SoftplusLimits.softSplit_tendsto_tie
 #check Thesis.SourceFoundations.bellman_equations
 #check Thesis.SourceFoundations.icnn_represents_convex
 #check Thesis.SourceFoundations.maxout_special_cases
@@ -1274,16 +1053,9 @@ import All
 #check Thesis.SourceGeometry.network_polytopes_nonnegative
 #check Thesis.SourceGeometry.newton_calculus
 #check Thesis.SourceGeometry.support_properties
-#check Thesis.StoppingCircuit.addition_discounted_occupation
-#check Thesis.StoppingDAG.addition_discount
-#check Thesis.StoppingDAG.addition_probability
-#check Thesis.StoppingDAG.earliestWinner_spec
-#check Thesis.StoppingDAG.exists_graph_cut
-#check Thesis.StoppingDAG.intermediate_circuit_derivative_occupation
-#check Thesis.StoppingDAG.intermediate_selected_occupation
-#check Thesis.StoppingDAG.intermediate_stopping_derivative_occupation
-#check Thesis.StoppingDAG.orderedInputPool_dag_row
-#check Thesis.StoppingDAG.orderedInputPool_source
+#check Thesis.StoppingBoundary.strict_affine_output_gradient
+#check Thesis.StoppingBoundary.strict_gradient_occupation
+#check Thesis.StoppingBoundary.strict_stopping_decomposition_gradient
 #check Thesis.StoppingDecomposition.stopping_nonnegative
 #check Thesis.StoppingDecomposition.thesis_stopping_validity
 #check Thesis.StoppingStructure.stopping_biased_parity_paths

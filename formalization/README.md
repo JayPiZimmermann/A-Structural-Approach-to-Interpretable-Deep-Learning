@@ -80,6 +80,9 @@ linear functions with continuity recorded for mathlib's differentiation API.
 | `Thesis/StoppingDAGIntermediate.lean` | Full normalized shared-graph paths, bias payoffs, intermediate-state visits and actual stopping/ordinary derivative identities |
 | `Thesis/StoppingOrderedPool.lean` | Source smallest-operand-index tie convention, exact pair/kernel forwarding, and source-to-DAG bridge |
 | `Thesis/SoftplusLimits.lean` | Actual pair limit as positive temperature vanishes; distinct diagonal/tie limit |
+| `Thesis/SoftplusTransitionPayoff.lean` and its imported game modules | Layered mixed-policy softplus SPNE, source player payoffs, zero rows, signed affine readouts, and actual intermediate gradient occupations |
+| `Thesis/ConditionedSurvival.lean` | Actual survival potentials, zero-support pruning and normalized conditioned path laws with positivity only at the initial state |
+| `Thesis/AttentionReference.lean` | Extended reference-KL routing objective, exact optimizer including zero entries, and all-zero-total boundary |
 
 ## Assumptions and boundaries
 

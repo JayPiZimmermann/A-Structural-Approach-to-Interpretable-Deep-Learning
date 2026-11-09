@@ -1,0 +1,107 @@
+Thesis/RoutingPolicyBridge.lean:39:11: error: unsolved goals
+case some.false.false
+n : ℕ
+positive negative : Policy (Fin (n + 2))
+a : Fin (n + 2)
+⊢ 0 ≤ 0
+
+case some.false.true
+n : ℕ
+positive negative : Policy (Fin (n + 2))
+a : Fin (n + 2)
+⊢ 0 ≤ 0
+
+case some.true.false
+n : ℕ
+positive negative : Policy (Fin (n + 2))
+a : Fin (n + 2)
+⊢ 0 ≤ positive.prob a / 2
+
+case some.true.true
+n : ℕ
+positive negative : Policy (Fin (n + 2))
+a : Fin (n + 2)
+⊢ 0 ≤ negative.prob a / 2
+Thesis/RoutingPolicyBridge.lean:41:6: error: unexpected identifier; expected command
+Thesis/RoutingPolicyBridge.lean:48:2: error: Type mismatch: After simplification, term
+  stepProbability_normalized gate positive negative
+ has type
+  ∑ h, stepProbability gate positive negative h = 1
+but is expected to have type
+  (∑ y, ∑ x, if stepTarget q y = x then stepProbability gate positive negative y else 0) = 1
+Thesis/RoutingPolicyBridge.lean:95:22: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (canonical 1 (route q ε ?m.55 ?m.56 ?m.60 ?m.61 ?m.62 ?m.63)).1.prob (Fin.succ ?i).succ
+in the target expression
+  (canonical 1
+            (route q ε (max (bp j - bn j) 0) (posContribution wp wn x j) (fun x => Tree.terminal (signed q 1)) hε ⋯
+              ⋯)).1.prob
+      i.succ.succ =
+    posContribution wp wn x j i / posDenominator wp wn bp bn ε x j
+
+case left
+n k : ℕ
+wp wn : Matrix (Fin k) (Fin n) ℝ
+bp bn : Vec k
+ε : ℝ
+hε : 0 ≤ ε
+x : Vec n
+j : Fin k
+q : Bool
+i : Fin n
+⊢ (canonical 1
+            (route q ε (max (bp j - bn j) 0) (posContribution wp wn x j) (fun x => Tree.terminal (signed q 1)) hε ⋯
+              ⋯)).1.prob
+      i.succ.succ =
+    posContribution wp wn x j i / posDenominator wp wn bp bn ε x j
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  function expected
+    posContribution wp wn x j
+Thesis/RoutingPolicyBridge.lean:99:22: error: Tactic `rewrite` failed: Did not find an occurrence of the pattern
+  (canonical 1 (route (!q) ε ?m.89 ?m.90 ?m.94 ?m.95 ?m.96 ?m.97)).1.prob (Fin.succ ?i).succ
+in the target expression
+  (canonical 1
+            (route (!q) ε (max (-(bp j - bn j)) 0) (negContribution wp wn x j) (fun x => Tree.terminal (signed (!q) 1))
+              hε ⋯ ⋯)).1.prob
+      i.succ.succ =
+    negContribution wp wn x j i / negDenominator wp wn bp bn ε x j
+
+case right
+n k : ℕ
+wp wn : Matrix (Fin k) (Fin n) ℝ
+bp bn : Vec k
+ε : ℝ
+hε : 0 ≤ ε
+x : Vec n
+j : Fin k
+q : Bool
+i : Fin n
+⊢ (canonical 1
+            (route (!q) ε (max (-(bp j - bn j)) 0) (negContribution wp wn x j) (fun x => Tree.terminal (signed (!q) 1))
+              hε ⋯ ⋯)).1.prob
+      i.succ.succ =
+    negContribution wp wn x j i / negDenominator wp wn bp bn ε x j
+
+Note: The target expression is not type-correct under the `implicit` transparency level, which may have triggered the failure. This is usually caused by unfolding of semireducible definitions in prior tactic steps. Use `set_option linter.tacticCheckInstances true` to investigate the source of the issue.
+Full error:
+  function expected
+    negContribution wp wn x j
+Thesis/RoutingPolicyBridge.lean:100:39: error: Type mismatch
+  rfl
+has type
+  ?m.106 = ?m.106
+but is expected to have type
+  value 1 (?m.94 x✝) = signed (!q) 1
+Thesis/RoutingPolicyBridge.lean:123:12: warning: Unused tactic linter: `<;>` should be replaced with `;` or be removed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+Thesis/RoutingPolicyBridge.lean:127:12: warning: Unused tactic linter: `<;>` should be replaced with `;` or be removed.
+
+Note: This linter can be disabled with `set_option linter.unusedTactic false`
+Thesis/RoutingPolicyBridge.lean:123:12: warning: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`
+Thesis/RoutingPolicyBridge.lean:127:12: warning: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice
+
+Note: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`

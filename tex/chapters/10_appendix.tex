@@ -30,7 +30,7 @@ Table~\ref{tab:xai_eval_comprehensive_res} presents the detailed quantitative me
 
 \subsection{Randomization Sanity Check}\label{app:p1_sanity}
 
-The model-randomization sanity check~\parencite{Adebayo2018sanity} tests whether a saliency method truly depends on the model's learned parameters or merely reflects input-dependent patterns that survive when the model is corrupted. For each attribution method, saliency maps on the trained VGG-16 are compared with maps obtained after randomly reinitializing the weights of the last three feed-forward layers with Gaussian noise; a method genuinely sensitive to the trained parameters should show a substantial similarity drop. While \textcite{Binder2022shortcomings} discuss important shortcomings of top-down randomization-based sanity checks, the test is applied here as a complementary diagnostic (the trajectory-space randomization diagnostic of Section~\ref{subsec:hellinger_randomization} is the thesis' primary tool). Similarity is quantified by (i)~HOG similarity (Pearson correlation of the histograms of oriented gradients), (ii)~signed Spearman rank correlation, and (iii)~SSIM; lower similarity indicates stronger parameter dependence.
+The model-randomization sanity check~\parencite{Adebayo2018sanity} tests whether a saliency method truly depends on the model's learned parameters or merely reflects input-dependent patterns that survive when the model is corrupted. For each attribution method, saliency maps on the trained VGG-16 are compared with maps obtained after randomly reinitializing the weights of the last three feedforward layers with Gaussian noise; a method genuinely sensitive to the trained parameters should show a substantial similarity drop. While \textcite{Binder2022shortcomings} discuss important shortcomings of top-down randomization-based sanity checks, the test is applied here as a complementary diagnostic (the trajectory-space randomization diagnostic of Section~\ref{subsec:hellinger_randomization} is the thesis' primary tool). Similarity is quantified by (i)~HOG similarity (Pearson correlation of the histograms of oriented gradients), (ii)~signed Spearman rank correlation, and (iii)~SSIM; lower similarity indicates stronger parameter dependence.
 
 \input{tables/appendix/randomization_sanity_check}
 
@@ -81,13 +81,13 @@ described in Section~\ref{ptnb:app:voc-cross-data}.
 
 \paragraph{Backbone and dataset provenance.}
 All game-based experiments use the pretrained torchvision checkpoints shipped with the library
-release used for evaluation. Specifically, VGG-16 uses \texttt{VGG16\_Weights.IMAGENET1K\_V1}
+release used for evaluation. Specifically, VGG-16 uses \path{VGG16_Weights.IMAGENET1K_V1}
 (\url{https://download.pytorch.org/models/vgg16-397923af.pth}; recipe
 \url{https://github.com/pytorch/vision/tree/main/references/classification#alexnet-and-vgg}),
-ResNet-50 uses \texttt{ResNet50\_Weights.IMAGENET1K\_V2}
+ResNet-50 uses \path{ResNet50_Weights.IMAGENET1K_V2}
 (\url{https://download.pytorch.org/models/resnet50-11ad3fa6.pth}; recipe
 \url{https://github.com/pytorch/vision/issues/3995#issuecomment-1013906621}), and ViT-B/16 uses
-\texttt{ViT\_B\_16\_Weights.IMAGENET1K\_V1}
+\path{ViT_B_16_Weights.IMAGENET1K_V1}
 (\url{https://download.pytorch.org/models/vit_b_16-c867db91.pth}; recipe
 \url{https://github.com/pytorch/vision/tree/main/references/classification#vit_b_16}). These are
 ImageNet-1K classifiers trained on the ImageNet / ILSVRC
@@ -110,7 +110,7 @@ and were trained on ImageNet-1K. Libraries: PyTorch and torchvision (BSD-3-Claus
 \textbf{Gradient} is the raw input-gradient saliency map~\parencite{Simonyan2014}, the maximum over
 color channels of the absolute gradient. \textbf{SmGrad} is SmoothGrad, i.e.\ an average over noisy
 gradient maps~\parencite{Smilkov2017}. \textbf{IntGrad} is Integrated
-Gradients~\parencite{Sundararajan2017} with a black-image baseline. \textbf{DeepLift}
+Gradients~\parencite{Sundararajan2017} with a black-image baseline. \textbf{DeepLIFT}
 propagates activation differences relative to a reference input with the Rescale
 rule~\parencite{Shrikumar2017} (CNNs only). \textbf{DAVE} is the distribution-aware ViT gradient
 decomposition of~\textcite{Wrobel2024}. \textbf{SG} is our \ac{sg}, included in this block because it
@@ -135,7 +135,7 @@ last convolutional block of the CNNs and upsampled bilinearly.
 
 \paragraph{Perturbation block.}
 \textbf{LIME} is Local Interpretable Model-agnostic Explanations~\parencite{Ribeiro2016}.
-\textbf{KShap} denotes KernelSHAP, the model-agnostic weighted-regression estimator of SHAP
+\textbf{KernelSHAP} is the model-agnostic weighted-regression estimator of SHAP
 values~\parencite{LundbergLee2017}. Both perturb SLIC superpixels~\parencite{Achanta2012slic}. These methods
 explain predictions by perturbing the input and fitting a local surrogate, so they are separated
 from the backward-propagation methods above.
@@ -225,7 +225,7 @@ of their reference implementations.
     \label{ptnb:tab:main-search-grid}
     \small
     \renewcommand{\arraystretch}{1.15}
-    \begin{tabular}{@{}l p{0.73\textwidth}@{}}
+    \begin{tabularx}{\linewidth}{@{}l >{\raggedright\arraybackslash}X@{}}
         \toprule
         Method & Grid \\
         \midrule
@@ -233,7 +233,7 @@ of their reference implementations.
         SmGrad & $N{=}50$, noise level $\sigma/(x_{\max}{-}x_{\min}) \in \{0.1, 0.15, 0.2\}$, mean
         aggregation \quad (3 configs) \\
         IntGrad & black-image baseline, $N_{\text{steps}} \in \{20, 50, 100, 300\}$ \quad (4 configs) \\
-        DeepLift & Rescale rule, single config \quad (CNNs only) \\
+        DeepLIFT & Rescale rule, single config \quad (CNNs only) \\
         DAVE & $N \in \{25, 50\} \times \theta_{\max} \in \{0, 10, 20\} \times s_{\max} \in \{0, 0.05,
             0.1\} \times t_{\max} \in \{0, 0.25, 0.5\}$, horizontal flips with probability $0.5$, averaged
         effective map multiplied by the input \quad (54 configs; ViT-B/16 only) \\
@@ -246,8 +246,8 @@ of their reference implementations.
         $\gamma$ on all layers (30 configs) \\
         AttnLRP & $\gamma$-composite of~\textcite{Achtibat2024AttnLRP}: reference setting
         $(\gamma_{\text{conv}}, \gamma_{\text{lin}}, \varepsilon_{\text{attn}}){=}(0.25, 0.05, 10^{-6})$ +
-        univariate sweeps $\gamma_{\text{lin}}\!\in\!\{0.01, 0.025, 0.1, 0.25\}$,
-        $\gamma_{\text{conv}}\!\in\!\{0.1, 0.5, 1\}$, $\varepsilon_{\text{attn}}\!\in\!\{0.01, 0.05,
+        univariate sweeps $\gamma_{\text{lin}}\in\{0.01, 0.025, 0.1, 0.25\}$,
+        $\gamma_{\text{conv}}\in\{0.1, 0.5, 1\}$, $\varepsilon_{\text{attn}}\in\{0.01, 0.05,
             0.25\}$ \quad (11 configs; ViT-B/16 only) \\
         TIBAV & single config \quad (ViT-B/16 only) \\
         GAE & single config \quad (ViT-B/16 only) \\
@@ -264,12 +264,12 @@ of their reference implementations.
         LIME & 80 SLIC superpixels, $N{=}1000$, ridge surrogate, exponential kernel of width $0.25$ on the
         cosine distance of the binary superpixel vectors, removed superpixels filled with their mean color;
         fixed reference row \\
-        KShap & 80 SLIC superpixels, $N{=}2M{+}2048$ for $M$ superpixels, removed superpixels filled with
+        KernelSHAP & 80 SLIC superpixels, $N{=}2M{+}2048$ for $M$ superpixels, removed superpixels filled with
         the image mean; fixed reference row \\
         Anchor & $\alpha\beta$-\ac{lrp} anchor $(\alpha,\beta,\varepsilon,\tau){=}(2,1,0.5,1)$ of \ac{rg}
         and \ac{rg}+Eq, reported as the theorem-driven reference row (not selected) \\
         \bottomrule
-    \end{tabular}
+    \end{tabularx}
 \end{table}
 
 \subsection{Selection}\label{ptnb:app:selection}
@@ -357,7 +357,7 @@ $z^{\mathcal{B}}$ rule at the input layer. AttnLRP: $\gamma$-rule parameters
 $\gamma_{\mathrm{conv}}$ and $\gamma_{\mathrm{lin}}$ of the convolutional and linear layers and the
 stabilizer $\varepsilon_{\mathrm{attn}}$ of the attention layers. AR (attention rollout): residual
 weight $w_r$. LIME and KernelSHAP: $N$ perturbation samples ($2M{+}2048$ for $M$ superpixels) on 80
-SLIC superpixels; LIME fits a ridge surrogate. DeepLift: Rescale rule. Grad-CAM, Grad-CAM++ and
+SLIC superpixels; LIME fits a ridge surrogate. DeepLIFT: Rescale rule. Grad-CAM, Grad-CAM++ and
 LayerCAM: the target layer (torchvision module name). Row labels in parentheses give the selection
 criterion (\texttt{loc}, \texttt{faith}); single-configuration methods have no criterion.
 
@@ -365,7 +365,7 @@ criterion (\texttt{loc}, \texttt{faith}); single-configuration methods have no c
 
 Tables~\ref{ptnb:tab:val-selection-vit}--\ref{ptnb:tab:val-selection-resnet} list, for every method, the
 configurations selected on the 50-image validation split under the \texttt{loc} and \texttt{faith}
-criteria of Section~\ref{ptnb:app:selection}, together with both validation rank-sums.
+criteria of Section~\ref{ptnb:app:selection}, together with both validation rank-sums. For fixed configurations there is no selection comparison, so the rank-sums are marked n/a.
 
 \begin{table}[H]
     \centering
@@ -501,7 +501,7 @@ counted per metric with the tests of Section~\ref{ptnb:app:stats}.
 \begin{center}
     \captionof{table}{ViT-B/16 on the Pascal VOC 2012 test pool ($2{,}743$ samples): all rows with 95\%
     bootstrap confidence intervals. \ac{rg} / \ac{rg}+Eq use the ImageNet-S-selected configurations
-    without re-tuning; baselines are selected on the VOC val pool. Metrics as in
+    without re-tuning; baselines are selected on the VOC val pool. Only localization and faithfulness metrics were evaluated; the unmeasured MaxS and AvgS columns are omitted. Metrics as in
     Table~\ref{ptnb:tab:eval-vit}; configuration symbols and row labels: Section~\ref{ptnb:app:config-symbols}.}
     \label{ptnb:tab:eval-vit-voc}
 \end{center}
@@ -730,14 +730,13 @@ legible in print; the same display transform is used for every method.
 
 \section{Formal Verification and Mathematical Audit}\label{app:lean}
 
-The accompanying \href{https://github.com/JayPiZimmermann/structural-interpretability-thesis}{thesis repository}
+The accompanying \href{https://github.com/JayPiZimmermann/A-Structural-Approach-to-Interpretable-Deep-Learning}{thesis repository}
 contains the TeX sources, pinned links to both official code repositories, and a
 Lean~4 project with mathlib pinned to version~4.35.0. The formalization makes the
 assumptions of each checked statement explicit. It remains partial: a related
 lemma does not certify an entire theorem or either paper.
 
-The \textsf{[Lean variant]} badges link complete statements in the formal model;
-the \textsf{[Lean components]} badges link checked parts of a broader statement.
+Numbered \texttt{Lean\_1}, \texttt{Lean\_2}, \ldots{} references appear in the brackets of theorem and lemma headings, following the convention of the planar-features paper. Each links to the checked declaration or components of the corresponding statement; the coverage map distinguishes these cases.
 The exact assumptions and remaining parts are recorded by source label in
 \texttt{formalization/coverage\_map.json}. Selected equation numbers also link to
 their checked identities or definitions. All links identify a fixed Git commit
@@ -769,7 +768,7 @@ and original-gradient reconstruction are checked. Shifted algorithmic sensitivit
 are distinguished from derivatives through input-dependent forward re-centering;
 classical derivatives at gate ties are not asserted.
 
-The game developments define finite sign-labelled paths, their probabilities,
+The game developments define finite sign-labeled paths, their probabilities,
 discounts, and occupation sums. For the stated policies, the discounted stopping
 occupations recover the actual MLP gradient; routing occupations recover the
 complete $\alpha\beta$ recurrence from network-derived contributions. The smooth

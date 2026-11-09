@@ -1,0 +1,43 @@
+{
+  "targets": [
+    {
+      "module": "HiddenMonotonicity.ConvexInput",
+      "declaration": "HiddenMonotonicity.Network.split_convex_input",
+      "expected_type": "\u2200 {d n m : \u2115} (net : Network n m) (hw : net.Nonnegative)\n(p q : Vec d \u2192 Vec n)\n(hp : \u2200 i, ConvexOn \u211d univ (fun x => p x i))\n(hq : \u2200 i, ConvexOn \u211d univ (fun x => q x i)),\n(\u2200 i, ConvexOn \u211d univ (fun x => (net.split (p x) (q x)).1 i)) \u2227\n(\u2200 i, ConvexOn \u211d univ (fun x => (net.split (p x) (q x)).2 i))",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "CONVEX-INPUT-split_convex_input",
+      "review_evidence": "reports/convex-input-repairs.json",
+      "scope": "Arbitrary coordinatewise convex input lifts on the shared network, nonnegative split weights, arbitrary biases, no smoothness or gate strictness. The affine-head theorem uses actual ungated readout definitions."
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexInput",
+      "declaration": "HiddenMonotonicity.Network.affine_heads_convex_input",
+      "expected_type": "\u2200 {d n m : \u2115} (net : Network n m) (hw : net.Nonnegative)\n(p q : Vec d \u2192 Vec n)\n(hp : \u2200 i, ConvexOn \u211d univ (fun x => p x i))\n(hq : \u2200 i, ConvexOn \u211d univ (fun x => q x i))\n(wp wn : Vec m) (hwp : \u2200 i, 0 \u2264 wp i) (hwn : \u2200 i, 0 \u2264 wn i) (bp bn : \u211d),\nConvexOn \u211d univ (fun x => (net.affineHeads (coefficientRow wp) (coefficientRow wn) bp bn (p x,q x)).1) \u2227\nConvexOn \u211d univ (fun x => (net.affineHeads (coefficientRow wp) (coefficientRow wn) bp bn (p x,q x)).2)",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "CONVEX-INPUT-affine_heads_convex_input",
+      "review_evidence": "reports/convex-input-repairs.json",
+      "scope": "Arbitrary coordinatewise convex input lifts on the shared network, nonnegative split weights, arbitrary biases, no smoothness or gate strictness. The affine-head theorem uses actual ungated readout definitions."
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexInput",
+      "declaration": "HiddenMonotonicity.Network.mixing_one_convex_input",
+      "expected_type": "\u2200 {d n m : \u2115} (net : Network n m) (hw : net.Nonnegative)\n(p q : Vec d \u2192 Vec n)\n(hp : \u2200 i, ConvexOn \u211d univ (fun x => p x i))\n(hq : \u2200 i, ConvexOn \u211d univ (fun x => q x i)),\n(\u2200 i, ConvexOn \u211d univ (fun x => (net.decomposeWith (mixPair 1) (p x,q x)).1 i)) \u2227\n(\u2200 i, ConvexOn \u211d univ (fun x => (net.decomposeWith (mixPair 1) (p x,q x)).2 i)) \u2227\n(\u2200 x, (net.decomposeWith (mixPair 1) (p x,q x)).1 - (net.decomposeWith (mixPair 1) (p x,q x)).2 = net.eval (p x-q x))",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "CONVEX-INPUT-mixing_one_convex_input",
+      "review_evidence": "reports/convex-input-repairs.json",
+      "scope": "Arbitrary coordinatewise convex input lifts on the shared network, nonnegative split weights, arbitrary biases, no smoothness or gate strictness. The affine-head theorem uses actual ungated readout definitions."
+    }
+  ]
+}

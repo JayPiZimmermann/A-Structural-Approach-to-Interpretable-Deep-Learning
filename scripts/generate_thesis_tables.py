@@ -13,6 +13,7 @@ import sys
 import tempfile
 import os
 from pathlib import Path
+from table_presentation import adapt_directory
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "scripts" / "table_sources.json"
@@ -230,6 +231,10 @@ def main() -> int:
         print("Expected upstream outputs missing: " + ", ".join(absent), file=sys.stderr)
         return 2
 
+    raw_hashes = {name: hashlib.sha256((output_dir / name).read_bytes()).hexdigest()
+                  for name in generated}
+    presentation_changes = adapt_directory(output_dir, generated)
+
     print(f"Generated {len(produced)} summary-backed tables in {output_dir}.")
     print(
         f"Not generated from shipped summaries ({len(missing)} diagnostics): "
@@ -274,6 +279,8 @@ def main() -> int:
         "expected_commit": ptnb["verified_commit"],
         "actual_commit": actual_commit,
         "tracked_source_modified": tracked_dirty,
+        "raw_upstream_sha256": raw_hashes,
+        "thesis_presentation_changes": presentation_changes,
         "outputs": {
             name: hashlib.sha256((output_dir / name).read_bytes()).hexdigest()
             for name in generated

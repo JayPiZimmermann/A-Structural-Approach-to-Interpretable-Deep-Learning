@@ -1,0 +1,305 @@
+{
+  "title": "Adversarial vocabulary review: thesis and source papers",
+  "scope": {
+    "thesis_files_reviewed": [
+      "tex/chapters/*.tex",
+      "tex/frontmatter/*.tex",
+      "tex/figures/**/*.tex",
+      "tex/tables/*.tex",
+      "tex/preamble/abbreviations_def.tex",
+      "tex/preamble/paper_v2.tex"
+    ],
+    "source_papers_reviewed": [
+      "arxive/hiddenMonotonicity/main.tex",
+      "arxive/hiddenMonotonicity/sections/experiments.tex",
+      "arxive/playingTheNetworkBackward/main.tex"
+    ],
+    "constraints": "Recommendations apply to thesis-authored prose, captions, tables, and acronym definitions. Preserve official paper titles, quoted/source-paper formulations, URLs, and code/Lean identifiers. Do not rewrite the source papers."
+  },
+  "canonical_policy": {
+    "language": "US English",
+    "paper_names": {
+      "Hidden Monotonicity: Explaining Deep Neural Networks via their DC Decomposition": "Use the exact title on first mention; HM thereafter.",
+      "Playing the Network Backward: A Game-Theoretic Attribution Framework": "Use the exact title on first mention; PTNB thereafter. Preserve the official title's capitalization and hyphenation."
+    },
+    "architecture_names": {
+      "VGG-16": "Use hyphenated model name in thesis prose/captions; retain source identifiers such as VGG16 only in citations, titles, paths, and code labels.",
+      "ResNet-18": "Use hyphenated model name in thesis prose/captions; retain source identifiers such as ResNet18 only in citations, titles, paths, and code labels.",
+      "ResNet-50": "Use hyphenated model name in thesis prose/captions; retain source identifiers such as ResNet50 only in citations, titles, paths, and code labels.",
+      "ViT-B/16": "Use consistently as currently established."
+    },
+    "core_terms": {
+      "DC decomposition": "Name the convex, monotone difference-of-convex construction from HM; use DC split only for its layerwise/pair-valued split when that distinction matters.",
+      "Stopping Decomposition": "Name the hard-gated, active-support-preserving decomposition used by PTNB and the game chapters. Keep distinct from the DC decomposition.",
+      "attribution": "Use for feature/neuron scores or attribution maps produced by a specified backward rule.",
+      "interpretation": "Use for the process/claim of assigning meaning to internal structure; do not silently substitute it for attribution.",
+      "explanation": "Use where a user-facing explanation or explanatory claim is intended; do not treat as a universal synonym for attribution or interpretation."
+    },
+    "hyphenation": "Use compound modifiers consistently before nouns (e.g. game-theoretic, two-player, zero-sum, split-stream, backward-pass, forward-pass, Pixel-Flipping when adjectival); use open forms in ordinary noun phrases (e.g. backward pass, split stream, Pixel Flipping). Preserve official titles and source-specific capitalization."
+  },
+  "high_priority_semantic_conflicts": [
+    {
+      "id": "pixel_flipping_auc_direction",
+      "severity": "critical",
+      "canonical_names": {
+        "HM metric": "score-drop Pixel Flipping AUC (AUC@5/AUC@20; higher is better)",
+        "PTNB metric": "remaining-logit Pixel-Flipping AUC (PF_5/PF_20; lower is better)"
+      },
+      "recommendation": "Keep distinct metric names, symbols, curve descriptions, and optimization arrows in every thesis table and comparison. Do not rename both to an undifferentiated Pixel Flipping AUC or compare their raw values.",
+      "thesis_evidence": [
+        {
+          "file": "tex/chapters/08_experiments.tex",
+          "line": 9,
+          "excerpt": "The split tables report Pixel Flipping as area under the score-drop curve (↑) ... The revised game campaign reports area under the logit curve (↓) ... their scores are not interchangeable."
+        },
+        {
+          "file": "tex/chapters/08_experiments.tex",
+          "lines": "21, 55",
+          "excerpt": "Both are called Pixel Flipping / area under the curve without carrying the score-drop versus remaining-logit qualifier into the local discussion."
+        },
+        {
+          "file": "tex/tables/eval_vgg_main.tex",
+          "line": 10,
+          "excerpt": "Pixel Fl. (AUC@5), Pixel Fl. (AUC@20)"
+        },
+        {
+          "file": "tex/chapters/10_appendix.tex",
+          "line": 179,
+          "excerpt": "Pixel-flipping AUC (PF_5, PF_20)"
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "arxive/hiddenMonotonicity/sections/experiments.tex",
+          "lines": "26-27",
+          "excerpt": "Pixel Flipping measures the drop of the respective class logit ... We report the area under the curve (AUC) of this drop at 5% and 20%, where a faster drop means higher area under the drop curve."
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "lines": "4381-4403",
+          "excerpt": "Pixel-flipping AUC (PF_5, PF_20) ... target logit is recorded after each deletion step; lower remaining logit is the better direction (also shown by PF columns with ↓ in the PTNB tables)."
+        }
+      ],
+      "classification": "Distinct empirical quantities and opposite score directions; this is not a spelling variant."
+    },
+    {
+      "id": "dc_vs_stopping_decomposition",
+      "severity": "critical",
+      "canonical_names": {
+        "convex construction": "DC decomposition",
+        "hard-gated construction": "Stopping Decomposition"
+      },
+      "recommendation": "Do not consolidate these names as synonyms. Use the formal names consistently; 'DC split' can refer locally to the pair-valued DC construction, and 'stopping split' only if it is explicitly defined as the layerwise form of the Stopping Decomposition.",
+      "thesis_evidence": [
+        {
+          "file": "tex/chapters/01_introduction.tex",
+          "line": 17,
+          "excerpt": "The DC and stopping decompositions use the same split of weights by sign but retain different internal information."
+        },
+        {
+          "file": "tex/chapters/03_decompositions.tex",
+          "line": 313,
+          "excerpt": "The DC split preserves the sub-threshold magnitude; the Stopping Decomposition outputs (0, 0), annihilating both streams where the original ReLU does."
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "arxive/hiddenMonotonicity/main.tex",
+          "line": 18,
+          "excerpt": "Official title names its construction a DC Decomposition."
+        },
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "lines": "277, 295-297, 897-904",
+          "excerpt": "Names a novel Stopping Decomposition and explicitly distinguishes the SG/RG from the pure DC decomposition."
+        }
+      ],
+      "classification": "Distinct mathematical objects; terminology is already explained correctly, but preserve this distinction in all shortening and editing."
+    },
+    {
+      "id": "claim_vocabulary",
+      "severity": "high",
+      "canonical_names": {
+        "attribution": "feature/neuron score or map returned by a specified method",
+        "interpretation": "meaning assigned to model structure or behavior",
+        "explanation": "user-facing explanatory output or claim"
+      },
+      "recommendation": "Avoid substituting these terms mechanically. In particular, trajectory distributions are the backward calculation in PTNB, while pixel attribution maps are projections; conclusions about calculation fidelity do not automatically establish explanation quality or user understanding.",
+      "thesis_evidence": [
+        {
+          "file": "tex/chapters/01_introduction.tex",
+          "lines": "11, 15, 38",
+          "excerpt": "Separates interpretability objectives, backward attribution, and trajectory distributions from map projections."
+        },
+        {
+          "file": "tex/chapters/11_trajectory.tex",
+          "line": 8,
+          "excerpt": "The trajectory distribution is the object whose distance is measured; attribution maps are projections."
+        }
+      ],
+      "source_evidence": [
+        {
+          "file": "arxive/playingTheNetworkBackward/main.tex",
+          "lines": "207-208, 566-569, 747",
+          "excerpt": "Trajectory distributions are primary in the framework; attribution maps are described as pixel projections."
+        }
+      ],
+      "classification": "Related but non-equivalent claims; preserve distinctions rather than choosing a single blanket synonym."
+    }
+  ],
+  "editorial_variants": [
+    {
+      "id": "us_uk_spelling",
+      "severity": "medium",
+      "canonical": "US English",
+      "variants": [
+        {
+          "canonical_form": "artifact(s)",
+          "variant": "artefact(s)",
+          "locations": [
+            "tex/chapters/01_introduction.tex:62",
+            "tex/chapters/05_saliency.tex:497",
+            "tex/chapters/07_transformers.tex:11",
+            "tex/chapters/09_conclusion.tex:23"
+          ],
+          "supporting_us_form_locations": [
+            "tex/chapters/01_introduction.tex:9",
+            "tex/chapters/04_game_theory.tex:58,62,221,270,1769,1793",
+            "tex/chapters/05_saliency.tex:38",
+            "tex/chapters/07_transformers.tex:97",
+            "tex/chapters/10_appendix.tex:59,126,822"
+          ]
+        },
+        {
+          "canonical_form": "organizes/organizing",
+          "variant": "organises/organising",
+          "locations": ["tex/chapters/03_decompositions.tex:110"],
+          "supporting_us_form_locations": ["tex/chapters/01_introduction.tex:9,21,23", "tex/chapters/03_decompositions.tex:750", "tex/chapters/10_appendix.tex:808"]
+        },
+        {
+          "canonical_form": "labeled",
+          "variant": "labelled",
+          "locations": ["tex/chapters/10_appendix.tex:772"],
+          "supporting_us_form_locations": ["tex/chapters/11_trajectory.tex:245"]
+        },
+        {
+          "canonical_form": "flavored",
+          "variant": "flavoured",
+          "locations": ["tex/chapters/09_conclusion.tex:63"],
+          "supporting_us_form_locations": []
+        },
+        {
+          "canonical_form": "modeling",
+          "variant": "modelling",
+          "locations": ["No conflicting prose variant found in reviewed authored files."],
+          "supporting_us_form_locations": ["tex/chapters/04_game_theory.tex:41,158,166,1105", "tex/chapters/07_transformers.tex:147"]
+        }
+      ],
+      "note": "Use US forms in thesis-authored prose. Do not alter official names, verbatim quotations, citations, or inherited source-paper content. Terms such as behavior/colour used only in code/color descriptions need not be searched by substring as language variants (e.g. LaTeX centering is unrelated to center)."
+    },
+    {
+      "id": "architecture_spelling",
+      "severity": "medium",
+      "canonical": "VGG-16, ResNet-18, ResNet-50, ViT-B/16",
+      "variants": [
+        {
+          "variant": "VGG16 / ResNet18 / ResNet50",
+          "locations": [
+            "tex/frontmatter/abstract.tex:23",
+            "tex/chapters/01_introduction.tex:41",
+            "tex/chapters/02_foundations.tex:625",
+            "tex/chapters/09_conclusion.tex:15,29"
+          ],
+          "recommendation": "Hyphenate architecture names in thesis-authored prose and captions, matching the dominant thesis form. Preserve exact model spellings in citations, official titles, filenames, path/code identifiers, and inherited tables where these are literal source labels."
+        },
+        {
+          "variant": "ImageNet-S / Pascal VOC / PASCAL VOC",
+          "locations": ["tex/chapters/09_conclusion.tex:29 uses PASCAL VOC; other thesis mentions use Pascal VOC"],
+          "recommendation": "Use Pascal VOC consistently in thesis prose; preserve dataset's official casing only when quoting its official title."
+        }
+      ]
+    },
+    {
+      "id": "metric_label_hyphens_and_case",
+      "severity": "high",
+      "canonical": "Pixel Flipping (noun), Pixel-Flipping AUC (compound modifier/metric label); score-drop AUC and remaining-logit AUC explicitly qualified",
+      "locations": [
+        "tex/chapters/08_experiments.tex:7 uses Pixel-Flipping-selected",
+        "tex/chapters/08_experiments.tex:9 uses Pixel Flipping",
+        "tex/chapters/08_experiments.tex:21 uses Pixel Flipping (AUC@5 and AUC@20)",
+        "tex/chapters/08_experiments.tex:151 uses Pixel flipping",
+        "tex/chapters/10_appendix.tex:179 uses Pixel-flipping AUC",
+        "tex/tables/eval_vgg_main.tex:10 and tex/tables/eval_res_main.tex:10 use Pixel Fl."
+      ],
+      "recommendation": "Follow the qualified metric naming above and capitalize the named metric consistently in prose. Keep compact table headings only when accompanied by the two distinct metric definitions and arrows."
+    },
+    {
+      "id": "model_metric_acronyms",
+      "severity": "medium",
+      "canonical": {
+        "localization": "AL (Attribution Localization)",
+        "pointing game": "PG (Pointing Game)",
+        "selectivity": "Sel (Selectivity)",
+        "maximum sensitivity": "MaxS (Maximum Sensitivity)",
+        "score-drop Pixel Flipping": "AUC@5/AUC@20 with ↑",
+        "remaining-logit Pixel Flipping": "PF_5/PF_20 with ↓"
+      },
+      "locations": [
+        "tex/chapters/08_experiments.tex:54-56 mixes acronym forms and expanded names in the shared metric overview",
+        "tex/preamble/paper_v2.tex:31-40 defines AL, AUC, MaxS, PF, PF-AUC, PG, Sel",
+        "tex/preamble/abbreviations_def.tex:4-20 defines shared DC/LRP/CAM/SG/RG and architecture abbreviations"
+      ],
+      "recommendation": "Use AL/PG/Sel/MaxS as requested for PTNB metrics while retaining the distinct two PF metrics and arrows. Do not use a generic PF acronym for the HM AUC; its AUC@5/AUC@20 labels represent a different curve. Introduce aliases once in prose/table legend and avoid repeated expansion."
+    }
+  ],
+  "acronym_audit": [
+    {
+      "id": "kernelshap_alias",
+      "severity": "low",
+      "location": "tex/preamble/paper_v2.tex:52-53",
+      "definitions": [
+        "ptnbKShap: short KShap, long KernelSHAP",
+        "ptnbKernelSHAP: short KernelSHAP, long Kernel SHapley Additive exPlanations"
+      ],
+      "finding": "Both definitions denote KernelSHAP, with one using the method name and one expanding it. This is a true alias pair, not two distinct methods.",
+      "recommendation": "If both are needed for legacy table/source labels, retain both explicitly as aliases; otherwise choose one canonical acronym entry and update only thesis-authored references. Preserve source-paper tables and identifiers."
+    },
+    {
+      "id": "pf_vs_pf_auc",
+      "severity": "medium",
+      "location": "tex/preamble/paper_v2.tex:37-38",
+      "definitions": [
+        "ptnbPF: Pixel Flipping (procedure)",
+        "ptnbPFAUC: Pixel-Flipping Area Under the Curve (metric)"
+      ],
+      "finding": "These are related but not duplicate concepts: one names the perturbation procedure and one the aggregate metric. The latter is underspecified across the thesis because HM's AUC is score-drop area (higher better), whereas PTNB's is remaining logit (lower better).",
+      "recommendation": "Keep the procedure/metric distinction; qualify the metric by curve and direction in thesis text and tables. Avoid expanding PF-AUC without the curve qualifier."
+    },
+    {
+      "id": "legacy_acronym_inventory",
+      "severity": "low",
+      "location": "tex/preamble/paper_v2.tex:13-64",
+      "finding": "This file defines the PTNB paper's inherited acronym inventory; only a subset is referenced with acronym commands in thesis chapters. Unused entries are not duplicate entries by themselves, and the definitions may support inherited tables or macros.",
+      "recommendation": "Do not delete acronym definitions solely because a direct text search finds no \u005cac{...} use. Keep the user's requested AL/PG/Sel/MaxS display vocabulary consistent in the authored experiment chapter."
+    }
+  ],
+  "preserve_as_distinct": [
+    {
+      "terms": ["DC decomposition", "Stopping Decomposition"],
+      "reason": "Different split activation rules and different retained information; see high_priority_semantic_conflicts.dc_vs_stopping_decomposition."
+    },
+    {
+      "terms": ["score-drop Pixel Flipping AUC", "remaining-logit Pixel-Flipping AUC"],
+      "reason": "Different curve values, reported at different step granularities, and opposite optimization directions; see high_priority_semantic_conflicts.pixel_flipping_auc_direction."
+    },
+    {
+      "terms": ["attribution", "interpretation", "explanation"],
+      "reason": "Related but different levels of claim/object; attribution is a score/map, interpretation is a meaning claim, and explanation may refer to a user-facing output."
+    },
+    {
+      "terms": ["trajectory distribution", "attribution map"],
+      "reason": "PTNB treats the former as the backward calculation and the latter as its pixel-space projection."
+    }
+  ],
+  "review_limits": "This is an adversarial, terminology-focused audit rather than a line-by-line copyedit. Recommendations intentionally avoid broad paraphrase. Standard LaTeX commands (e.g. centering) and identifiers are excluded from spelling counts."
+}

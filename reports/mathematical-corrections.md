@@ -224,3 +224,7 @@ The short gradient and routing theorem statements are now aligned with the detai
 Reported before correction on 2026-11-09. The thesis conclusion conjectured that every smooth activation with integrable curvature could arise from a convex regularizer on a binary stop/continue probability. The variational value is a supremum of affine functions with slopes in [0,1], so it is convex, nondecreasing and 1-Lipschitz. This rules out global GeLU/Swish representations of that form. The paragraph now asks about games on nonnegative DC streams and local interpretations conditional on realized activation patterns, with new recovery theorems required. The papers themselves made no such conjecture and were not changed for this correction.
 
 The final consistency pass also removed a surviving introductory description of the mixing family as interpolating to a “fully concave” split; the existing eta-zero counterexample already rules this out under canonical input splitting. The introduction now describes maximum/minimum pair activations. General convex regularization is described as capable of smoothing the gate, without asserting smoothness for every convex cost (the zero cost is a counterexample).
+
+### Lean link audit: probit versus entropy
+
+The thesis probit/noisy-gate lemma had an unrelated link to the binary-entropy softplus variational theorem. The link and coverage claim were removed. The Gaussian/probit proof remains an explicit formalization obligation; the mathematical paper statement was not changed by this link correction.

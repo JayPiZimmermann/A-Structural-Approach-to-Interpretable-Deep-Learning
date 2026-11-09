@@ -4,23 +4,34 @@ This chapter evaluates the two design choices developed throughout the thesis: c
 
 \section{Experimental Setup}\label{sec:experimental_setup}\label{sec:quantus_evaluation}
 
-The split campaign evaluates pretrained VGG-16 and ResNet-18 on a custom 50-class ImageNet-S subset at $224\times224$ resolution. A 50-image validation split (one image per class) selects layer--formula combinations; the remaining 566 images form its test split. Baseline attributions use Captum, with Zennit for $\gamma$-LRP and separate GradCAM++ and LayerCAM implementations. For each method, localization-selected and Pixel-Flipping-selected configurations are retained. Full settings and results are given in Appendix~\ref{app:saliency}.
+The split campaign evaluates pretrained VGG-16 and ResNet-18 on a custom 50-class ImageNet-S subset at $224\times224$ resolution. A 50-image validation split (one image per class) selects layer--formula combinations; the remaining 566 images form its test split. Baseline attributions use Captum, with Zennit for $\gamma$-LRP and separate Grad-CAM++ and LayerCAM implementations. For each method, localization-selected and Pixel-Flipping-selected configurations are retained. Full settings and results are given in Appendix~\ref{app:saliency}.
 
-The split tables report Pixel Flipping as area under the score-drop curve ($\uparrow$), perturbing 112 pixels per step, and Maximum Sensitivity with 25 perturbations. The revised game campaign reports area under the logit curve ($\downarrow$), using 1,568 features per step, and sensitivity with 50 perturbations on a common 200-image test subset. Selectivity, Attribution Localization and Pointing Game are measured using Quantus. VGG-16 is shared, while ResNet-18 belongs to the split campaign and ResNet-50 to the game campaign; their scores are not interchangeable.
+The split tables report Pixel Flipping as area under the score-drop curve (PF$^{\mathrm{drop}}_5$, PF$^{\mathrm{drop}}_{20}$; $\uparrow$), perturbing 112 pixels per step, and Maximum Sensitivity with 25 perturbations. The revised game campaign reports area under the remaining-logit curve (PF$_5$, PF$_{20}$; $\downarrow$), using 1,568 features per step, and sensitivity with 50 perturbations on a common 200-image test subset. Selectivity, Attribution Localization and Pointing Game are measured using Quantus. VGG-16 is shared, while ResNet-18 belongs to the split campaign and ResNet-50 to the game campaign; their scores are not interchangeable. Throughout the tables, AL denotes Attribution Localization, PG Pointing Game, Sel Selectivity, MaxS Maximum Sensitivity, and AvgS Average Sensitivity. Method abbreviations are GCAM (Grad-CAM), GCAM++ (Grad-CAM++), LCAM (LayerCAM), IntGrad (Integrated Gradients), and SmGrad (SmoothGrad); Guided GCAM denotes Guided Grad-CAM. Dark blue shading and bold type mark the best values within the comparison stated in each caption. The notation n/r means that the source paper did not report a result; n/a means that the entry does not apply.
 
 \section{Split Methods: VGG-16}\label{sec:results_vgg}
 
 \input{figures/experiments/vgg_saliency_comparison_main}
 
 \paragraph{Qualitative analysis.}
-Figure~\ref{fig:vgg_saliency_comparison_main} compares saliency maps from the split methods with their baseline counterparts at the best-performing layers. Mid-layer SplitCAM shares key visual characteristics with classical $\gamma$-\ac{lrp} from earlier layers. Compared to standard LayerCAM on the same layer, it assigns more weight to all object pixels while still marking the key object features as especially important. For $\alpha \ll 0.5$, SplitGrad yields less focused yet finely aligned gradients that closely follow image details, which is attributable to the Maxout activation retaining preactivation information that \ac{relu} discards in inactive neurons. Further qualitative examples are collected in Appendix~\ref{app:saliency}.
+Figure~\ref{fig:vgg_saliency_comparison_main} qualitatively compares saliency maps from our split methods with their baseline counterparts at the best-performing layers.
+Mid-layer SplitCAM shares key visual characteristics with classical $\gamma$-\ac{lrp} from earlier layers.
+Compared to standard LayerCAM on the same layer it focuses more weight to all object pixels, while still marking the key object features as especially important.
+For $\alpha \ll 0.5$, SplitGrad yields less focused yet finely aligned gradients that closely follow image details. We attribute this to the Maxout activation retaining pre-activation information, unlike ReLU, which discards it in inactive neurons.
+Overall, mid-layer SplitCAM offers an effective balance between interpretability and focus (low entropy). Further qualitative examples are collected in Appendix~\ref{app:saliency}.
 
 \input{tables/eval_vgg_main}
 
 \paragraph{Quantitative analysis.}
-Table~\ref{tab:eval_vgg_main} reports the comparison of attribution methods on VGG-16 across five key Quantus metrics: Selectivity, Attribution Localization, Pointing Game accuracy, Pixel Flipping (AUC@5 and AUC@20), and Maximum Sensitivity. The \emph{Abs} column specifies whether absolute saliency values were used prior to evaluation. The full evaluation tables with all selected layers and further parameter configurations are given in Appendix~\ref{app:saliency}, where the strong layer dependence of all considered backpropagation-based methods is also visible.
+Table~\ref{tab:eval_vgg_main} and Table~\ref{tab:eval_res_main} report a comprehensive comparison of attribution methods on VGG-16 and ResNet-18 across five key Quantus metrics: Selectivity, Attribution Localization, Pointing Game accuracy, Pixel Flipping (score-drop AUC, PF$^{\mathrm{drop}}_5$ and PF$^{\mathrm{drop}}_{20}$) and Maximum Sensitivity.
+The \emph{Abs} column specifies whether absolute saliency values were used prior to evaluation in Quantus.
+A full table and explanation of both VGG-16 and ResNet-18 evaluation results with all selected layers and other parameter configurations is found in Appendix~\ref{app:saliency}.
 
-On VGG-16, the split methods demonstrate superior performance compared to all considered baselines across the Quantus metric categories. SplitCAM achieves the highest Pointing Game score of $\mathbf{0.938}$ with $\alpha = 0.4$, overshadowing the best baselines, Guided Backprop in layer 5 with $0.887$ and LayerCAM in layer 2 with $0.855$. SplitCAM outperforms the classical methods on Selectivity, with Pixel Flipping performance comparable to the most faithful baseline, LayerCAM. SplitLRP slightly outperforms classical $\gamma$-\ac{lrp} in localization while staying competitive in faithfulness.
+Overall, the considered backpropagation-based attribution methods heavily depend on the selected network layer, also see Appendix~\ref{app:ablation} for extensive ablation.
+
+On VGG-16, the split methods demonstrate superior performance compared to all considered baseline methods across the Quantus metric categories.
+For example, SplitCAM achieves the highest Pointing Game score \textbf{0.938} with $\alpha = 0.4$ overshadowing the best baseline Guided Backprop in layer 5 with $0.887$ and LayerCAM in layer 2 with $0.855$.
+SplitCAM outperforms classical methods on Selectivity, with comparable Pixel Flipping score-drop AUC performance as the most faithful baseline LayerCAM.
+SplitLRP slightly outperforms classical $\gamma$-\ac{lrp} in localization while staying competitive in faithfulness.
 
 \section{Split Methods: ResNet-18}\label{sec:results_resnet}
 
@@ -52,7 +63,7 @@ test split), and on Pascal VOC 2012~\parencite{Everingham2010voc}. ImageNet-S pr
 required by the localization metrics; ImageNet boxes over-credit mass anywhere inside the box. All
 metrics are computed through Quantus~\parencite{Hedstrom2023} (definitions in
 Section~\ref{ptnb:app:metrics}): localization (\ac{ptnbAttrLoc}, \ac{ptnbPG}, Top-$k$ Intersection (TK);
-$\uparrow$), faithfulness (Pixel Flipping area under the curve over the first 5\% and 20\% of flips
+$\uparrow$), faithfulness (Pixel Flipping area under the remaining-logit curve over the first 5\% and 20\% of flips
 (PF$_5$, PF$_{20}$), \ac{ptnbSel}; $\downarrow$), robustness (Maximum Sensitivity (MaxS), Average
 Sensitivity (AvgS); $\downarrow$). Baselines run in their reference implementations (lxt, zennit,
 captum, pytorch-grad-cam, and the authors' code for \acs{ptnbTIBAV} and \acs{ptnbGAE}) at the authors'

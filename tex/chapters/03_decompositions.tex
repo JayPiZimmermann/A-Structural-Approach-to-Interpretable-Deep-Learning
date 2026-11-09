@@ -75,9 +75,9 @@ A decomposition (Definition~\ref{def:decomposition}) is \emph{valid} for the net
 for every layer $l \in \{0, \dots, L\}$ and every neuron $i$, where at $l = 0$ condition~\eqref{eq:validity_condition} is read as $\act{0}{+}_k - \act{0}{-}_k = x_k$.
 \end{definition}
 
-Validity is a layerwise condition, but it propagates through the canonical linear map and forces the decomposition to recover the network output at the final layer.
+Validity is a layer-wise condition, but it propagates through the canonical linear map and forces the decomposition to recover the network output at the final layer.
 
-\begin{proposition}[Validity recovers the network]\label{prop:validity_recovery}
+\begin{proposition}[Validity recovers the network, \LeanResult{prop:validity_recovery}]\label{prop:validity_recovery}
 Let a decomposition use the canonical non-negative linear map \eqref{eq:split_pos}--\eqref{eq:split_neg}. If the validity condition~\eqref{eq:validity_condition} holds at layer $l-1$, then the decomposed pre-activations at layer $l$ satisfy
 \begin{equation}
 	\preact{l}{+}_i - \preact{l}{-}_i = \preactl{l}_i
@@ -88,9 +88,7 @@ Consequently, every valid decomposition recovers the original network output as 
 \begin{equation}
 	f(x) = \act{L}{+} - \act{L}{-}.
 	\label{eq:output_recovery}
-\end{equation}
-\hfill\LeanResult{prop:validity_recovery}
-\end{proposition}
+\end{equation}\end{proposition}
 
 \begin{proof}
 Subtracting~\eqref{eq:split_neg} from~\eqref{eq:split_pos} and regrouping by predecessor $j$,
@@ -107,9 +105,9 @@ By Proposition~\ref{prop:validity_recovery}, the pre-activation pair always carr
 
 \section{The Mixing Decomposition family}\label{sec:mixing_decomposition}
 
-The first family of pairwise activation functions targets \ac{relu} networks. It exploits the fact that \ac{relu} networks compute \ac{cpwl} functions \parencite{Arora2018}, which admit a \ac{dc} decomposition \parencite{Melzer1986_PLasDC,Kripfganz1987_PWAasDC,hiddenMono}, and organises the decompositions into a one-parameter family interpolating between two arithmetic extremes.
+The first family of pairwise activation functions targets \ac{relu} networks. It exploits the fact that \ac{relu} networks compute \ac{cpwl} functions \parencite{Arora2018}, which admit a \ac{dc} decomposition \parencite{Melzer1986_PLasDC,Kripfganz1987_PWAasDC,hiddenMono}, and organizes the decompositions into a one-parameter family interpolating between two arithmetic extremes.
 
-\begin{definition}[Mixing decomposition function]\label{def:fmix}
+\begin{definition}[Mixing decomposition function, \LeanResult{def:fmix}]\label{def:fmix}
 For $\eta \in [0,1]$, the \emph{mixing decomposition function} is
 \begin{equation}
 	\fmix(z^+, z^-) \coloneqq \bigl(\, \eta \max\{z^+, z^-\} + (1-\eta)\, z^+, \;\; \eta\, z^- + (1-\eta) \min\{z^+, z^-\} \,\bigr).
@@ -120,15 +118,13 @@ The decomposition obtained by applying $\fmix$ at every hidden neuron and retain
 
 Both components of $\fmix$ are non-negative on $\RR^2_{\ge 0}$, being convex combinations and maxima/minima of the non-negative inputs; hence $\fmix$ is a pairwise activation function (Definition~\ref{def:decomposition}). At $\eta = 1$ the pair reads $\bigl(\max\{z^+, z^-\},\, z^-\bigr)$, at $\eta = 0$ it reads $\bigl(z^+,\, \min\{z^+, z^-\}\bigr)$, and intermediate $\eta$ mixes the two linearly. The family is valid for \ac{relu} networks for \emph{every} mixing parameter.
 
-\begin{theoremenv}[Layerwise recovery of the Mixing Decomposition]\label{thm:mixing_recovery}
+\begin{theoremenv}[Layer-wise recovery of the Mixing Decomposition, \LeanResult{thm:mixing_recovery}]\label{thm:mixing_recovery}
 Let the activation pairs be propagated by the canonical non-negative linear map \eqref{eq:split_pos}--\eqref{eq:split_neg}, initialised by~\eqref{eq:input_split_convention}, and updated by $\fmix$ for some $\eta \in [0,1]$. Then for every layer $l$ and neuron $i$,
 \begin{equation}
 	a_{\mathrm{mix},i}^{(l,+,\eta)} - a_{\mathrm{mix},i}^{(l,-,\eta)} = \varrho_l\bigl(\preactl{l}_i\bigr) = \actl{l}_i,
 	\label{eq:mixing_recovery}
 \end{equation}
-i.e.\ the Mixing Decomposition is a valid decomposition (Definition~\ref{def:valid_decomposition}) of the \ac{relu} network for every $\eta \in [0,1]$.
-\hfill\LeanResult{thm:mixing_recovery}
-\end{theoremenv}
+i.e.\ the Mixing Decomposition is a valid decomposition (Definition~\ref{def:valid_decomposition}) of the \ac{relu} network for every $\eta \in [0,1]$.\end{theoremenv}
 
 \begin{proof}
 We argue by induction on the layer index $l$.
@@ -148,16 +144,14 @@ using the identities $\max\{u,v\} - v = \max\{u - v, 0\}$ and $u - \min\{u,v\} =
 
 The proof reveals the structural difference within the family: at $\eta = 1$ the non-linearity is carried by the $+$ stream through a per-stream maximum, at $\eta = 0$ by the $-$ stream through a per-stream minimum, both realising the same difference $\relu(u-v)$. The endpoints are not symmetric in their analytic properties, however: the $\eta = 1$ extreme produces \emph{convex} decomposed activations at every layer.
 
-\begin{theoremenv}[$\eta = 1$ convex characterisation of the Mixing Decomposition]\label{thm:mixing_convex_extreme}
+\begin{theoremenv}[$\eta = 1$ convex characterization of the Mixing Decomposition, \LeanResult{thm:mixing_convex_extreme}]\label{thm:mixing_convex_extreme}
 Under the input convention~\eqref{eq:input_split_convention} with split components $x_k^\pm$ that are convex functions of $x$ (e.g.\ the entrywise split $x^\pm = \posneg{x}{\pm}$, or any affine split), the $\eta = 1$ mixing decomposed activations
 \begin{equation*}
 	a_{\mathrm{mix},i}^{(l,+,1)}(x) = \max\bigl\{ \preact{l}{+}_i(x),\, \preact{l}{-}_i(x) \bigr\}
 	\qquad \text{and} \qquad
 	a_{\mathrm{mix},i}^{(l,-,1)}(x) = \preact{l}{-}_i(x)
 \end{equation*}
-are convex in $x$ at every hidden layer $l$ and neuron $i$; at the final layer, both streams are nonnegative affine combinations of the previous streams and remain convex. Consequently $\actl{l}_i = a_{\mathrm{mix},i}^{(l,+,1)} - a_{\mathrm{mix},i}^{(l,-,1)}$ is a difference of convex functions, the standard \ac{dc} representation of the \ac{cpwl} function computed by the network \parencite{Arora2018,hiddenMono}.
-\hfill\LeanResult{thm:mixing_convex_extreme}
-\end{theoremenv}
+are convex in $x$ at every hidden layer $l$ and neuron $i$; at the final layer, both streams are non-negative affine combinations of the previous streams and remain convex. Consequently $\actl{l}_i = a_{\mathrm{mix},i}^{(l,+,1)} - a_{\mathrm{mix},i}^{(l,-,1)}$ is a difference of convex functions, the standard \ac{dc} representation of the \ac{cpwl} function computed by the network \parencite{Arora2018,hiddenMono}.\end{theoremenv}
 
 \begin{proof}
 Induction on $l$. At $l = 0$, $a_{\mathrm{mix},k}^{(0,\pm,1)} = x_k^\pm$ is convex by assumption. At $l \ge 1$, each $\preact{l}{\pm}_i$ is a non-negative-coefficient combination of the layer-$(l-1)$ activations plus a constant, hence convex by the hypothesis; the maximum of two convex functions is convex, so both components remain convex.
@@ -179,7 +173,7 @@ The $\eta = 1$ endpoint underlies the stabilized split passes (Section~\ref{sec:
 \end{equation}
 which follows by adding and subtracting $b$ inside the maximum. It rewrites the \ac{relu} of a difference as a difference of two functions, each convex and non-decreasing in $(a, b)$---a Maxout unit \parencite{Goodfellow2013Maxout} and a coordinate projection.
 
-\begin{corollary}[DC split as the $\eta = 1$ mixing endpoint]\label{cor:dc_split_endpoint}
+\begin{corollary}[DC split as the $\eta = 1$ mixing endpoint, \LeanResult{cor:dc_split_endpoint}]\label{cor:dc_split_endpoint}
 Set $\eta = 1$ in Definition~\ref{def:fmix} and drop the decomposition tag, writing $\act{l}{\pm} \coloneqq a_{\mathrm{mix}}^{(l,\pm,1)}$. The resulting \emph{\ac{dc} split} propagates, for hidden layers $l = 1, \dots, L-1$,
 \begin{equation}
 	\act{l}{+} = \max\bigl\{ \preact{l}{+},\, \preact{l}{-} \bigr\},
@@ -187,9 +181,7 @@ Set $\eta = 1$ in Definition~\ref{def:fmix} and drop the decomposition tag, writ
 	\act{l}{-} = \preact{l}{-}
 	\label{eq:dc_split_activations}
 \end{equation}
-entrywise, and sets $\act{L}{\pm}=\preact{L}{\pm}$ at the final affine readout, with the decomposed pre-activations \eqref{eq:split_pos}--\eqref{eq:split_neg} induced by the weight split $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$ and the input split $x = x^+ - x^-$. It is a valid decomposition of the \ac{relu} network, and under the input convention of Theorem~\ref{thm:mixing_convex_extreme} its decomposed activations are convex functions of the input.
-\hfill\LeanResult{cor:dc_split_endpoint}
-\end{corollary}
+entrywise, and sets $\act{L}{\pm}=\preact{L}{\pm}$ at the final affine readout, with the decomposed pre-activations \eqref{eq:split_pos}--\eqref{eq:split_neg} induced by the weight split $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$ and the input split $x = x^+ - x^-$. It is a valid decomposition of the \ac{relu} network, and under the input convention of Theorem~\ref{thm:mixing_convex_extreme} its decomposed activations are convex functions of the input.\end{corollary}
 
 \begin{proof}
 Validity is Theorem~\ref{thm:mixing_recovery} at $\eta = 1$, convexity Theorem~\ref{thm:mixing_convex_extreme}. The update~\eqref{eq:dc_split_activations} is~\eqref{eq:fmix_def} at $\eta = 1$, and neuron-level recovery is the splitting identity~\eqref{eq:splitting_identity} at $a = \preact{l}{+}_i$, $b = \preact{l}{-}_i$.
@@ -221,26 +213,22 @@ where the pair $\bigl(\act{l+1}{+}, \act{l+1}{-}\bigr)$ is computed from $(x^+, 
 
 The split streams are non-negative linear maps followed by entrywise Maxout gates and projections, i.e.\ monotone networks with convex, monotone activations; by the composition principles of Section~\ref{sec:convex_monotone_foundations} \parencite{Amos2017} this yields their two defining properties.
 
-\begin{proposition}[Monotonicity and convexity of the split streams]\label{prop:stream_properties}
-For every $0 \le l \le L$, the stream functions $g^{(l)}$ and $h^{(l)}$ of~\eqref{eq:stream_functions} are convex and non-decreasing in each coordinate of the pair $(x^+, x^-) \in \RR^{d^{(l)}} \times \RR^{d^{(l)}}$.
-\hfill\LeanResult{prop:stream_properties}
-\end{proposition}
+\begin{proposition}[Monotonicity and convexity of the split streams, \LeanResult{prop:stream_properties}]\label{prop:stream_properties}
+For every $0 \le l \le L$, the stream functions $g^{(l)}$ and $h^{(l)}$ of~\eqref{eq:stream_functions} are convex and non-decreasing in each coordinate of the pair $(x^+, x^-) \in \RR^{d^{(l)}} \times \RR^{d^{(l)}}$.\end{proposition}
 
 \begin{proof}
-Downward induction on $l$. Base case: $g^{(L)}, h^{(L)}$ are coordinate projections, linear with non-negative coefficients. For the step, fix $l < L$ and assume the claim for $l+1$. The map $(x^+, x^-) \mapsto \bigl(\preact{l+1}{+}, \preact{l+1}{-}\bigr)$ of \eqref{eq:split_pos}--\eqref{eq:split_neg} is affine with non-negative coefficients, and the entrywise updates~\eqref{eq:dc_split_activations} apply a maximum or a projection, preserving convexity and monotonicity. By~\eqref{eq:stream_recursion}, $g^{(l)}, h^{(l)}$ compose the convex, non-decreasing $g^{(l+1)}, h^{(l+1)}$ with such a map, hence are again convex and non-decreasing \parencite{Amos2017}.
+Downward induction on $l$. Base case: $g^{(L)}, h^{(L)}$ are coordinate projections, linear with non-negative coefficients. For the step, fix $l < L$ and assume the claim for $l+1$. The map $(x^+, x^-) \mapsto \bigl(\preact{l+1}{+}, \preact{l+1}{-}\bigr)$ of \eqref{eq:split_pos}--\allowbreak\eqref{eq:split_neg} is affine with non-negative coefficients, and the entrywise updates~\eqref{eq:dc_split_activations} apply a maximum or a projection, preserving convexity and monotonicity. By~\eqref{eq:stream_recursion}, $g^{(l)}, h^{(l)}$ compose the convex, non-decreasing $g^{(l+1)}, h^{(l+1)}$ with such a map, hence are again convex and non-decreasing \parencite{Amos2017}.
 \end{proof}
 
 The correctness statement asserts that the difference of the two split-stream outputs equals the original tail network evaluated at the difference of their inputs---at \emph{every} layer, not only at the input.
 
-\begin{theoremenv}[Correctness of the split forward pass]\label{thm:split_correct}
+\begin{theoremenv}[Correctness of the split forward pass, \LeanResult{thm:split_correct}]\label{thm:split_correct}
 For every $0 \le l \le L$ and all $x^+, x^- \in \RR^{d^{(l)}}_{\ge 0}$,
 \begin{equation}
 	f^{(l)}\bigl( x^+ - x^- \bigr)
 	= \bigl( g^{(l)} - h^{(l)} \bigr)(x^+, x^-).
 	\label{eq:split_correctness}
-\end{equation}
-\hfill\LeanResult{thm:split_correct}
-\end{theoremenv}
+\end{equation}\end{theoremenv}
 
 \begin{proof}
 Downward induction on $l = L, \dots, 0$, absorbing biases into the weights via~\eqref{eq:canonical_weight_split}.
@@ -277,7 +265,7 @@ The difference-of-convex split is not special to \ac{relu}. Theorem~\ref{thm:smo
 
 The mixing family realises the \ac{relu} through per-stream maxima and minima: each stream applies its own non-linearity. A structurally different mechanism applies one \emph{shared} decision to both streams---the hard gate of the original network.
 
-\begin{definition}[Stopping decomposition function]\label{def:fstop}
+\begin{definition}[Stopping decomposition function, \LeanResult{def:fstop}]\label{def:fstop}
 The \emph{stopping decomposition function} is
 \begin{equation}
 	\fstop(z^+, z^-) \coloneqq \bigl(\, \1\bigl[z^+ - z^- > 0\bigr]\, z^+, \;\; \1\bigl[z^+ - z^- > 0\bigr]\, z^- \,\bigr).
@@ -288,15 +276,13 @@ The decomposition obtained by applying $\fstop$ at every hidden neuron and retai
 
 Both components of $\fstop$ are products of an indicator and a non-negative input, so $\fstop$ maps $\RR^2_{\ge 0}$ to $\RR^2_{\ge 0}$ and is a pairwise activation function (Definition~\ref{def:decomposition}). Its name anticipates the reinterpretation of the gate as a stop/continue decision (Chapter~\ref{ch:game_theory}).
 
-\begin{theoremenv}[Validity of the Stopping Decomposition]\label{thm:stopping_validity}
+\begin{theoremenv}[Validity of the Stopping Decomposition, \LeanResult{thm:stopping_validity}]\label{thm:stopping_validity}
 Let the activation pairs be propagated by the canonical non-negative linear map \eqref{eq:split_pos}--\eqref{eq:split_neg}, initialised by~\eqref{eq:input_split_convention}, and updated by $\fstop$. Then for every layer $l$ and neuron $i$,
 \begin{equation}
 	a_{\mathrm{stop},i}^{(l,+)} - a_{\mathrm{stop},i}^{(l,-)} = \varrho_l\bigl(\preactl{l}_i\bigr) = \actl{l}_i,
 	\label{eq:stopping_recovery}
 \end{equation}
-i.e.\ the Stopping Decomposition is a valid decomposition (Definition~\ref{def:valid_decomposition}) of the \ac{relu} network.
-\hfill\LeanResult{thm:stopping_validity}
-\end{theoremenv}
+i.e.\ the Stopping Decomposition is a valid decomposition (Definition~\ref{def:valid_decomposition}) of the \ac{relu} network.\end{theoremenv}
 
 \begin{proof}
 Induction on $l$. The base case $l = 0$ is the input convention, and the final affine step follows directly from Proposition~\ref{prop:validity_recovery}. For a hidden-layer step, assume~\eqref{eq:stopping_recovery} at $l-1$; Proposition~\ref{prop:validity_recovery} gives $\preact{l}{+}_i - \preact{l}{-}_i = \preactl{l}_i$. Since both components of~\eqref{eq:fstop_def} carry the \emph{same} gate $\1\bigl[\preactl{l}_i > 0\bigr]$,
@@ -313,10 +299,8 @@ Induction on $l$. The base case $l = 0$ is the input convention, and the final a
 The contrast with the mixing family is sharpest at an inactive neuron, $\preactl{l}_i \le 0$. The \ac{dc} split of Corollary~\ref{cor:dc_split_endpoint} outputs $\bigl(\preact{l}{-}_i, \preact{l}{-}_i\bigr)$, preserving the sub-threshold magnitude (Remark~\ref{rem:subthreshold}) at the price of letting cancelled mass flow onward. The Stopping Decomposition outputs $(0, 0)$: the shared hard gate annihilates \emph{both} streams exactly where the original \ac{relu} annihilates its activation, so decomposed mass flows only along neurons active in the original network. The mixing streams are convex (at $\eta = 1$) but blend contributions of dead neurons into every downstream pair; the stopping streams sacrifice global convexity---the gate is discontinuous---for exact support agreement with the original forward pass, while remaining as well-behaved as possible on each linear region.
 \end{remark}
 
-\begin{lemmaenv}[Monotonicity of the Stopping Decomposition on linear regions]\label{lem:stop_monotone}
-On each linear region of the \ac{relu} network---a maximal subset of input space on which all gate indicators $\1\bigl[\preactl{l}_j > 0\bigr]$ are constant---each stopping decomposed activation $a_{\mathrm{stop},i}^{(l,\pm)}$ is a non-negative-linear (i.e.\ affine with non-negative coefficients) function of the input pair $(x^+, x^-) \in \RR^{2 d^{(0)}}_{\ge 0}$, hence monotone non-decreasing in each coordinate $x_k^+$ and $x_k^-$.
-\hfill\LeanResult{lem:stop_monotone}
-\end{lemmaenv}
+\begin{lemmaenv}[Monotonicity of the Stopping Decomposition on linear regions, \LeanResult{lem:stop_monotone}]\label{lem:stop_monotone}
+On each linear region of the \ac{relu} network---a maximal subset of input space on which all gate indicators $\1\bigl[\preactl{l}_j > 0\bigr]$ are constant---each stopping decomposed activation $a_{\mathrm{stop},i}^{(l,\pm)}$ is a non-negative-linear (i.e.\ affine with non-negative coefficients) function of the input pair $(x^+, x^-) \in \RR^{2 d^{(0)}}_{\ge 0}$, hence monotone non-decreasing in each coordinate $x_k^+$ and $x_k^-$.\end{lemmaenv}
 
 \begin{proof}
 Induction on $l$. At $l = 0$, $a_{\mathrm{stop},k}^{(0,\pm)} = x_k^\pm$ is a coordinate of $(x^+, x^-)$. At $l \ge 1$, the map \eqref{eq:split_pos}--\eqref{eq:split_neg} has $\Wsig{l}{\pm}, b^{(l,\pm)} \ge 0$, so $\preact{l}{\pm}_i$ is non-negative-linear in the layer-$(l-1)$ activations and, by the hypothesis, in $(x^+, x^-)$. On the linear region the gate $\1\bigl[\preactl{l}_i > 0\bigr]$ is constant, so $a_{\mathrm{stop},i}^{(l,\pm)} = \1\bigl[\preactl{l}_i > 0\bigr]\, \preact{l}{\pm}_i$ stays non-negative-linear.
@@ -325,14 +309,17 @@ Induction on $l$. At $l = 0$, $a_{\mathrm{stop},k}^{(0,\pm)} = x_k^\pm$ is a coo
 \paragraph{Excitatory and inhibitory path isolation.}
 Because the shared gate never mixes the two streams, the Stopping Decomposition admits an exact accounting of \emph{which input mass reaches which stream}: each decomposed pre-activation is a sum over backward paths, and whether a path feeds the excitatory ($+$) or inhibitory ($-$) stream is determined by the parity of the number of negative weights it traverses.
 
-\begin{lemmaenv}[Parity path view on the Stopping Decomposition]\label{lem:parity_path}
+\begin{lemmaenv}[Parity path view on the Stopping Decomposition, \LeanResult{lem:parity_path}]\label{lem:parity_path}
 Fix a \ac{relu} network with weights $\Wl{l}$ and, for clarity, vanishing biases. For a neuron $i$ in layer $l \ge 1$, a \emph{backward path} to the input is a list $P = (P_l, \dots, P_0)$ with $P_l = i$ and $P_t$ a neuron in layer $t$, using weights $\Wl{t}_{P_t, P_{t-1}}$. Define the absolute weight product, parity sign, and gate factor
 \begin{equation*}
+\begin{gathered}
 	\abs{w}(P) \coloneqq \prod_{t=1}^{l} \bigl|\Wl{t}_{P_t, P_{t-1}}\bigr|,
-	\qquad
-	\operatorname{sgn}(P) = + \iff \#\bigl\{ t : \Wl{t}_{P_t, P_{t-1}} < 0 \bigr\} \text{ is even},
-	\qquad
+\\
+\operatorname{sgn}(P) = + \iff \#\bigl\{ t : \Wl{t}_{P_t, P_{t-1}} < 0 \bigr\}
+    \text{ is even},
+\\
 	G_{<l}(P) \coloneqq \prod_{t=1}^{l-1} \1\bigl[\preactl{t}_{P_t} > 0\bigr].
+\end{gathered}
 \end{equation*}
 Then the decomposed pre-activations of the Stopping Decomposition admit the path-sum representation
 \begin{equation}
@@ -341,9 +328,7 @@ Then the decomposed pre-activations of the Stopping Decomposition admit the path
 	\preact{l}{-}_i = \sum_{P :\, P_l = i} G_{<l}(P)\, \abs{w}(P)\, x_{P_0}^{\operatorname{sgn}(P)'},
 	\label{eq:parity_path_sums}
 \end{equation}
-where $\operatorname{sgn}(P)' $ denotes the opposite sign of $\operatorname{sgn}(P)$.
-\hfill\LeanResult{lem:parity_path}
-\end{lemmaenv}
+where $\operatorname{sgn}(P)' $ denotes the opposite sign of $\operatorname{sgn}(P)$.\end{lemmaenv}
 
 \begin{proof}
 Induction on $l$.
@@ -372,7 +357,7 @@ The hard gate of the Stopping Decomposition solves an optimization problem: for 
 \end{equation}
 so the indicator in~\eqref{eq:fstop_def} is the \emph{unregularized} argmax over a stop ($\pi = 0$) versus continue ($\pi = 1$) decision applied to $\Delta = z^+ - z^-$. This suggests a family of decompositions: penalizing the decision variable by a convex regularizer can smooth the gate and changes the recovered activation function from $\relu$ to the Fenchel conjugate of the regularizer.
 
-\begin{definition}[Regularized decomposition function]\label{def:freg}
+\begin{definition}[Regularized decomposition function, \LeanResult{def:freg}]\label{def:freg}
 Let $\Omega \colon [0,1] \to \RR_{\le 0}$ be a proper, closed, convex regularizer with $\Omega \le 0$. Define the \emph{regularized gate} and the \emph{conjugate activation}
 \begin{equation}
 	\pi_\Omega(\Delta) \in \argmax_{\pi \in [0,1]} \bigl\{ \pi \Delta - \Omega(\pi) \bigr\},
@@ -391,15 +376,13 @@ where an arbitrary maximizer is fixed if several exist. The \emph{regularized de
 
 The maximum in~\eqref{eq:regularized_gate} is attained ($[0,1]$ compact, objective upper semicontinuous), and $\Omega^*$ is the Fenchel conjugate of $\Omega$ (extended by $+\infty$ outside $[0,1]$). Both components of~\eqref{eq:freg_def} are non-negative on $\RR^2_{\ge 0}$, since $\pi_\Omega(\Delta) \in [0,1]$, $z^\pm \ge 0$, $-\Omega \ge 0$; hence $\freg$ is a pairwise activation function (Definition~\ref{def:decomposition}). Every maximizer gives the same reconstructed difference $\Omega^*(\Delta)$, although the individual components may depend on the selected maximizer. For example, with $\Omega=0$ and $z^+=z^-=1$, the choices $\pi=0$ and $\pi=1$ produce $(0,0)$ and $(1,1)$ respectively. We therefore retain the fixed selection in Definition~\ref{def:freg}. Throughout this section the untagged pair $\bigl(\act{l}{+}_i, \act{l}{-}_i\bigr)$ denotes the regularized-family activations produced by $\freg$---not the \ac{dc} ($\eta = 1$) activations to which Corollary~\ref{cor:dc_split_endpoint} binds the same untagged symbol.
 
-\begin{theoremenv}[Validity of regularized decompositions]\label{thm:freg_validity}
+\begin{theoremenv}[Validity of regularized decompositions, \LeanResult{thm:freg_validity}]\label{thm:freg_validity}
 Let $\Omega$ be as in Definition~\ref{def:freg}, and let the activation pairs be propagated by the canonical non-negative linear map \eqref{eq:split_pos}--\eqref{eq:split_neg}, initialised by~\eqref{eq:input_split_convention}, and updated by $\freg$ at hidden layers, with the identity pair at the final affine readout. Then for every hidden layer $l$ and neuron $i$,
 \begin{equation}
 	\act{l}{+}_i - \act{l}{-}_i = \Omega^*\bigl(\preactl{l}_i\bigr),
 	\label{eq:freg_recovery}
 \end{equation}
-At the final affine layer, the difference is $\preactl{L}=\actl{L}$. Thus $\freg$ is a valid decomposition of the network~\eqref{eq:original_forward_pass} with activation function $\varrho = \Omega^*$. Moreover, $\Omega^*$ is convex, non-decreasing, and $1$-Lipschitz, and wherever $\Omega^*$ is differentiable the gate is its derivative, $\pi_\Omega(\Delta) = (\Omega^*)'(\Delta) \in [0,1]$.
-\hfill\LeanResult{thm:freg_validity}
-\end{theoremenv}
+At the final affine layer, the difference is $\preactl{L}=\actl{L}$. Thus $\freg$ is a valid decomposition of the network~\eqref{eq:original_forward_pass} with activation function $\varrho = \Omega^*$. Moreover, $\Omega^*$ is convex, non-decreasing, and $1$-Lipschitz, and wherever $\Omega^*$ is differentiable the gate is its derivative, $\pi_\Omega(\Delta) = (\Omega^*)'(\Delta) \in [0,1]$.\end{theoremenv}
 
 \begin{proof}
 \emph{Recovery.} Induction on $l$. The base case is the input convention. Assume~\eqref{eq:freg_recovery} at $l-1$ for the network with activation $\Omega^*$; Proposition~\ref{prop:validity_recovery}---whose proof uses only the difference identity---gives $\Delta_i \coloneqq \preact{l}{+}_i - \preact{l}{-}_i = \preactl{l}_i$. Subtracting the components of~\eqref{eq:freg_def},
@@ -414,10 +397,8 @@ where the last step evaluates~\eqref{eq:regularized_gate} at its maximizer (Fenc
 \emph{Properties of $\Omega^*$.} As a supremum of affine functions $\Delta \mapsto \pi \Delta - \Omega(\pi)$ with slopes $\pi \in [0,1]$, $\Omega^*$ is convex with subgradients in $[0,1]$, hence non-decreasing and $1$-Lipschitz. At a point of differentiability the subdifferential is $\{(\Omega^*)'(\Delta)\}$, and by Fenchel--Young every maximizer $\pi_\Omega(\Delta)$ is a subgradient; thus $\pi_\Omega(\Delta) = (\Omega^*)'(\Delta)$.
 \end{proof}
 
-\begin{corollary}[Unregularized case]\label{cor:freg_stop}
-For $\Omega \equiv 0$ on $[0,1]$, Definition~\ref{def:freg} with the maximizer $\pi_\Omega(\Delta) = \1[\Delta > 0]$ recovers the stopping decomposition function, $\freg[0] = \fstop$, and Theorem~\ref{thm:freg_validity} specialises to Theorem~\ref{thm:stopping_validity} with $\Omega^*(\Delta) = \max_{\pi \in [0,1]} \pi\Delta = \relu(\Delta)$.
-\hfill\LeanResult{cor:freg_stop}
-\end{corollary}
+\begin{corollary}[Unregularized case, \LeanResult{cor:freg_stop}]\label{cor:freg_stop}
+For $\Omega \equiv 0$ on $[0,1]$, Definition~\ref{def:freg} with the maximizer $\pi_\Omega(\Delta) = \1[\Delta > 0]$ recovers the stopping decomposition function, $\freg[0] = \fstop$, and Theorem~\ref{thm:freg_validity} specialises to Theorem~\ref{thm:stopping_validity} with $\Omega^*(\Delta) = \max_{\pi \in [0,1]} \pi\Delta = \relu(\Delta)$.\end{corollary}
 
 \begin{proof}
 For $\Delta \neq 0$ the objective $\pi \Delta$ has the unique maximizer $\1[\Delta > 0]$ over $[0,1]$, and at $\Delta = 0$ every $\pi$ is a maximizer, including $\1[0 > 0] = 0$; in all cases~\eqref{eq:freg_def} with $\Omega = 0$ coincides with~\eqref{eq:fstop_def} and the optimal value is $\relu(\Delta)$.
@@ -434,7 +415,7 @@ The canonical smooth regularizer is the (negative) binary Shannon entropy at tem
 \end{equation}
 which is strictly convex on $[0,1]$ and satisfies $\Omega_\theta \le 0$.
 
-\begin{corollary}[Softplus Decomposition]\label{cor:fsoft}
+\begin{corollary}[Softplus Decomposition, \LeanResult{cor:fsoft}]\label{cor:fsoft}
 For $\Omega = \Omega_\theta$ as in~\eqref{eq:entropy_regularizer}, the regularized gate and conjugate activation are
 \begin{equation}
 	\pi_{\Omega_\theta}(\Delta) = \sigma'_\theta(\Delta) \coloneqq \frac{1}{1 + e^{-\Delta/\theta}},
@@ -449,9 +430,7 @@ the sigmoid gate and the softplus function at temperature $\theta$. The resultin
 	\Delta = z^+ - z^-,
 	\label{eq:fsoft_def}
 \end{equation}
-and by Theorem~\ref{thm:freg_validity} it yields a valid decomposition---the \emph{Softplus Decomposition}---of the softplus network with parameter $\beta = 1/\theta$. In the limit $\theta \to 0$, $\fsoft \to \fstop$ pointwise on $\{\Delta \neq 0\}$.
-\hfill\LeanResult{cor:fsoft}
-\end{corollary}
+and by Theorem~\ref{thm:freg_validity} it yields a valid decomposition---the \emph{Softplus Decomposition}---of the softplus network with parameter $\beta = 1/\theta$. In the limit $\theta \to 0$, $\fsoft \to \fstop$ pointwise on $\{\Delta \neq 0\}$.\end{corollary}
 
 \begin{proof}
 The objective $\pi \Delta + \theta H(\pi)$ is strictly concave on $(0,1)$ with derivative $\Delta - \theta \log\frac{\pi}{1-\pi}$; the first-order condition gives the unique maximizer $\pi = \sigma'_\theta(\Delta)$. Substituting back, with $\log \sigma'_\theta(\Delta) = \Delta/\theta - \log(1 + e^{\Delta/\theta})$ and $\log(1 - \sigma'_\theta(\Delta)) = -\log(1 + e^{\Delta/\theta})$, yields the optimal value
@@ -494,17 +473,18 @@ with the empty product at $l = L$ read as the identity.
 
 The key fact is that adding a \emph{common} shift to both streams at any layer translates both stream outputs by the same amount, so the difference---and by Theorem~\ref{thm:split_correct} the represented network value---is invariant.
 
-\begin{theoremenv}[Shift equivariance of the split streams]\label{thm:shift_forward}
+\begin{theoremenv}[Shift equivariance of the split streams, \LeanResult{thm:shift_forward}]\label{thm:shift_forward}
 For any $0 \le l \le L$ and any $c, a^{(+)}, a^{(-)} \in \RR^{d^{(l)}}$ with $a^{(\pm)}, a^{(\pm)} + c \ge 0$,
 \begin{equation}
-	g^{(l)}\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr) = g^{(l)}\bigl( a^{(+)},\, a^{(-)} \bigr) + W_{\mathrm{abs}}^{[l, \rightarrow]}\, c,
-	\qquad
-	h^{(l)}\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr) = h^{(l)}\bigl( a^{(+)},\, a^{(-)} \bigr) + W_{\mathrm{abs}}^{[l, \rightarrow]}\, c.
+\begin{aligned}
+g^{(l)}\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr)
+    &= g^{(l)}\bigl( a^{(+)},\, a^{(-)} \bigr) + W_{\mathrm{abs}}^{[l, \rightarrow]}\, c,\\
+h^{(l)}\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr)
+    &= h^{(l)}\bigl( a^{(+)},\, a^{(-)} \bigr) + W_{\mathrm{abs}}^{[l, \rightarrow]}\, c.
+\end{aligned}
 	\label{eq:shift_forward}
 \end{equation}
-In particular, $\bigl(g^{(l)} - h^{(l)}\bigr)\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr) = \bigl(g^{(l)} - h^{(l)}\bigr)\bigl( a^{(+)},\, a^{(-)} \bigr)$.
-\hfill\LeanResult{thm:shift_forward}
-\end{theoremenv}
+In particular, $\bigl(g^{(l)} - h^{(l)}\bigr)\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr) = \bigl(g^{(l)} - h^{(l)}\bigr)\bigl( a^{(+)},\, a^{(-)} \bigr)$.\end{theoremenv}
 
 \begin{proof}
 We show the claim for $g^{(l)}$ by induction on $l$; $h^{(l)}$ is analogous and the difference statement follows by subtraction. The base case $l = L$ is trivial, as $W_{\mathrm{abs}}^{[L, \rightarrow]} = I$ and $g^{(L)}$ is a projection. For $0 \le l < L$, the positive and negative neurons of layer $l+1$ connect to layer $l$ by the same two matrices with $\Wsig{l+1}{+}$ and $\Wsig{l+1}{-}$ flipped (Figure~\ref{fig:splitstreams}), so a uniform shift of the layer-$l$ pair produces a uniform shift of the layer-$(l+1)$ pair. For a hidden layer $l+1<L$,
@@ -514,11 +494,15 @@ We show the claim for $g^{(l)}$ by induction on $l$; $h^{(l)}$ is analogous and 
 	\act{l+1}{-}\big|_{+c}
 	&= \Wsig{l+1}{-} a^{(+)} + \Wsig{l+1}{+} a^{(-)} + \bigl| \Wl{l+1} \bigr|\, c,
 \end{align*}
-since $\bigl(\Wsig{l+1}{+} + \Wsig{l+1}{-}\bigr) c = \bigl|\Wl{l+1}\bigr| c$ enters both arguments of the maximum and factors out. At the final affine layer $l+1=L$, both stream activations equal their respective pre-activations, and nonnegative linearity gives the same common shift $|\Wl{L}|c$ directly, without a maximum. Applying the induction hypothesis at layer $l+1$ with the shift $\bigl|\Wl{l+1}\bigr| c$,
+since $\bigl(\Wsig{l+1}{+} + \Wsig{l+1}{-}\bigr) c = \bigl|\Wl{l+1}\bigr| c$ enters both arguments of the maximum and factors out. At the final affine layer $l+1=L$, both stream activations equal their respective pre-activations, and non-negative linearity gives the same common shift $|\Wl{L}|c$ directly, without a maximum. Applying the induction hypothesis at layer $l+1$ with the shift $\bigl|\Wl{l+1}\bigr| c$,
 \begin{equation*}
-	g^{(l)}\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr)
-	= g^{(l+1)}\Bigl( \act{l+1}{+} + \bigl|\Wl{l+1}\bigr| c,\, \act{l+1}{-} + \bigl|\Wl{l+1}\bigr| c \Bigr)
-	= g^{(l)}\bigl( a^{(+)},\, a^{(-)} \bigr) + W_{\mathrm{abs}}^{[l, \rightarrow]}\, c. \qedhere
+\begin{aligned}
+g^{(l)}\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr)
+    &= g^{(l+1)}\Bigl( \act{l+1}{+} + \bigl|\Wl{l+1}\bigr| c,\,
+        \act{l+1}{-} + \bigl|\Wl{l+1}\bigr| c \Bigr)\\
+    &= g^{(l)}\bigl( a^{(+)},\, a^{(-)} \bigr)
+        + W_{\mathrm{abs}}^{[l, \rightarrow]}\, c. \qedhere
+\end{aligned}
 \end{equation*}
 \end{proof}
 
@@ -539,16 +523,14 @@ All classical derivative statements in this subsection are restricted to points 
 \end{equation}
 denote the \emph{local sensitivities} of the stream heads with respect to the split activations of layer $l$. Theorem~\ref{thm:shift_forward} pins down their pairwise structure.
 
-\begin{theoremenv}[Sensitivity complementarity]\label{thm:delta_connection}
+\begin{theoremenv}[Sensitivity complementarity, \LeanResult{thm:delta_connection}]\label{thm:delta_connection}
 For every $0 \le l \le L$,
 \begin{equation}
 	\delta^{(l,+,g)} = W_{\mathrm{abs}}^{[l, \rightarrow]} - \delta^{(l,-,g)},
 	\qquad
 	\delta^{(l,+,h)} = W_{\mathrm{abs}}^{[l, \rightarrow]} - \delta^{(l,-,h)}.
 	\label{eq:delta_complementarity}
-\end{equation}
-\hfill\LeanResult{thm:delta_connection}
-\end{theoremenv}
+\end{equation}\end{theoremenv}
 
 \begin{proof}
 For a coordinate direction $e_j$, $j \in \{1, \dots, d^{(l)}\}$, Theorem~\ref{thm:shift_forward} with $c = \epsilon\, e_j$ gives $g^{(l)}\bigl(\act{l}{+} + \epsilon e_j,\, \act{l}{-}\bigr) = g^{(l)}\bigl(\act{l}{+},\, \act{l}{-} - \epsilon e_j\bigr) + \epsilon\, W_{\mathrm{abs}}^{[l, \rightarrow]} e_j$. Subtracting $g^{(l)}\bigl(\act{l}{+}, \act{l}{-}\bigr)$, dividing by $\epsilon$, and letting $\epsilon \to 0$ yields $\delta_j^{(l,+,g)} = W_{\mathrm{abs}}^{[l, \rightarrow]} e_j - \delta_j^{(l,-,g)}$. The claim for $h$ follows analogously.
@@ -560,7 +542,7 @@ For completeness, the four block Jacobians underlying the backward recursions ar
 &=\frac{\partial \act{l+1}{+}}{\partial \preact{l+1}{+}}\frac{\partial \preact{l+1}{+}}{\partial \act{l}{+}}
  +\frac{\partial \act{l+1}{+}}{\partial \preact{l+1}{-}}\frac{\partial \preact{l+1}{-}}{\partial \act{l}{+}}
 \notag\\
-&= M^{(l+1,+)}\Wsig{l+1}{+}+M^{(l+1,-)}\Wsig{l+1}{-},\notag\\
+		&= M^{(l+1,+)}\Wsig{l+1}{+}\!+\!M^{(l+1,-)}\Wsig{l+1}{-},\notag\\
 \frac{\partial \act{l+1}{-}}{\partial \act{l}{+}}
 &=0\cdot\Wsig{l+1}{+}+\Wsig{l+1}{-},\notag\\
 \frac{\partial \act{l+1}{+}}{\partial \act{l}{-}}
@@ -597,7 +579,7 @@ To state what the stabilized quantities compute, we express the split gradients 
 \end{equation}
 and write $\delta_{\mathrm{shift}}^{(l,g)} \coloneqq \bigl( \delta_{\mathrm{shift}}^{(l,+,g)} - \delta_{\mathrm{shift}}^{(l,-,g)} \bigr)/2$, $\delta_{\mathrm{shift}}^{(l,h)} \coloneqq \bigl( \delta_{\mathrm{shift}}^{(l,+,h)} - \delta_{\mathrm{shift}}^{(l,-,h)} \bigr)/2$ for their stabilized counterparts, with $\delta^g_{\mathrm{shift}} \coloneqq \delta_{\mathrm{shift}}^{(0,g)}$, $\delta^h_{\mathrm{shift}} \coloneqq \delta_{\mathrm{shift}}^{(0,h)}$. For the final affine readout we use the uniform-notation convention $M^{(L,+)}=I$, $M^{(L,-)}=0$; these are algebraic placeholders, not an additional gate. Standard backpropagation gives $\delta^{(l)} \coloneqq \partial f^{(l)} / \partial \actl{l} = \prod_{j = L, \dots, l+1} W^{(j,x)}$ with gated matrices $W^{(l,x)} \coloneqq M^{(l,+)} \Wl{l}$.
 
-\begin{theoremenv}[Closed formulas for the stabilized split gradients]\label{thm:closed_formula_shift}
+\begin{theoremenv}[Closed formulas for the stabilized split gradients, \LeanResult{thm:closed_formula_shift}]\label{thm:closed_formula_shift}
 With $\overline{\alpha}_j \coloneqq \prod_{j \le i \le L} \bigl( 1 - 2 \alpha^{(i)} \bigr)$, the stabilized backward pass \eqref{eq:delta_int_pos}--\eqref{eq:delta_shift_def} computes, for every $0 \le l \le L$,
 \begin{align}
 	\delta_{\mathrm{shift}}^{(l,g)}
@@ -607,9 +589,7 @@ With $\overline{\alpha}_j \coloneqq \prod_{j \le i \le L} \bigl( 1 - 2 \alpha^{(
 	&= -\frac{1}{2} \Bigl[ \delta^{(l)} + \sum_{l \le j < L} \overline{\alpha}_{j+1}\; W_{\mathrm{abs}}^{[j+1, \rightarrow]} \bigl( M^{(j+1,-)} \Wl{j+1} \bigr) \prod_{i = (j-1), \dots, l} W^{(i+1,x)} \Bigr].
 	\label{eq:closed_formula_h}
 \end{align}
-The $j=L-1$ correction term is zero because $M^{(L,-)}=0$: no minimum or auxiliary $Q$ source is inserted at the affine readout. In particular, $\delta_{\mathrm{shift}}^{(l,g)} - \delta_{\mathrm{shift}}^{(l,h)} = \delta^{(l)}$ for all $l$; for $\alpha^{(i)} \equiv 0$ (i.e.\ $\overline{\alpha}_j = 1$) the formulas describe the plain split-pair gradients, and for $\alpha^{(i)} \equiv 1/2$ all correction terms vanish and the stabilized quantities are $\pm\delta^{(l)}/2$, halves of the original gradient.
-\hfill\LeanResult{thm:closed_formula_shift}
-\end{theoremenv}
+The $j=L-1$ correction term is zero because $M^{(L,-)}=0$: no minimum or auxiliary $Q$ source is inserted at the affine readout. In particular, $\delta_{\mathrm{shift}}^{(l,g)} - \delta_{\mathrm{shift}}^{(l,h)} = \delta^{(l)}$ for all $l$; for $\alpha^{(i)} \equiv 0$ (i.e.\ $\overline{\alpha}_j = 1$) the formulas describe the plain split-pair gradients, and for $\alpha^{(i)} \equiv 1/2$ all correction terms vanish and the stabilized quantities are $\pm\delta^{(l)}/2$, halves of the original gradient.\end{theoremenv}
 
 \begin{proof}
 We record two auxiliary identities.
@@ -665,13 +645,11 @@ A convolutional layer with kernel $K$ and bias $b$ computes $u \mapsto K * u + b
 	\label{eq:conv_split}
 \end{equation}
 
-\begin{proposition}[Correctness of split convolution]\label{prop:conv_correct}
+\begin{proposition}[Correctness of split convolution, \LeanResult{prop:conv_correct}]\label{prop:conv_correct}
 The chunk~\eqref{eq:conv_split} maps non-negative pairs to non-negative pairs, each output component is a non-negative linear (affine) function of $(u^+, u^-)$---hence convex and non-decreasing in each coordinate---and
 \begin{equation*}
 	v^+ - v^- = K * (u^+ - u^-) + b.
-\end{equation*}
-\hfill\LeanResult{prop:conv_correct}
-\end{proposition}
+\end{equation*}\end{proposition}
 
 \begin{proof}
 Cross-correlation with a non-negative kernel is a linear map with non-negative coefficients, so $v^\pm \ge 0$ for $u^\pm \ge 0$ and both components are affine with non-negative coefficients in $(u^+, u^-)$, hence convex and non-decreasing in each coordinate. By linearity of $*$,
@@ -682,16 +660,14 @@ Cross-correlation with a non-negative kernel is a linear map with non-negative c
 
 Convolution followed by a \ac{relu} chunk---the entrywise Maxout gate~\eqref{eq:dc_split_activations}---is covered by the argument of Theorem~\ref{thm:split_correct}, a convolution being a dense layer with a sparse, weight-shared matrix. The same entrywise weight split handles every linear chunk at once.
 
-\begin{lemmaenv}[Non-negative linear chunks preserve the invariants]\label{lem:linear_chunk}
+\begin{lemmaenv}[Non-negative linear chunks preserve the invariants, \LeanResult{lem:linear_chunk}]\label{lem:linear_chunk}
 Let a chunk compute an affine map $u \mapsto A u + c$ with real matrix $A = \posneg{A}{+} - \posneg{A}{-}$ and bias $c = \posneg{c}{+} - \posneg{c}{-}$, split streamwise as
 \begin{equation*}
 	v^+ \coloneqq \posneg{A}{+} u^+ + \posneg{A}{-} u^- + \posneg{c}{+},
 	\qquad
 	v^- \coloneqq \posneg{A}{-} u^+ + \posneg{A}{+} u^- + \posneg{c}{-}.
 \end{equation*}
-Then the chunk maps non-negative pairs to non-negative pairs, each component is affine with non-negative coefficients in $(u^+, u^-)$---hence convex and non-decreasing in each coordinate---and $v^+ - v^- = A(u^+ - u^-) + c$.
-\hfill\LeanResult{lem:linear_chunk}
-\end{lemmaenv}
+Then the chunk maps non-negative pairs to non-negative pairs, each component is affine with non-negative coefficients in $(u^+, u^-)$---hence convex and non-decreasing in each coordinate---and $v^+ - v^- = A(u^+ - u^-) + c$.\end{lemmaenv}
 
 \begin{proof}
 Identical to Proposition~\ref{prop:conv_correct}: the coefficients $\posneg{A}{\pm}, \posneg{c}{\pm}$ are non-negative, and subtracting the two lines gives $(\posneg{A}{+} - \posneg{A}{-})(u^+ - u^-) + \posneg{c}{+} - \posneg{c}{-} = A(u^+ - u^-) + c$.
@@ -720,7 +696,7 @@ Two instances deserve a comment. Evaluation-mode batch normalization has a per-c
 \paragraph{Gated max-pooling.}
 Max-pooling over a window $[q]$ computes $\max_{j \in [q]} u_j$ per channel, which is neither linear nor a shared gate on a single pair. It is a \ac{cpwl} function of the window and admits its own convexity-preserving splitting identity.
 
-\begin{proposition}[Correctness of gated max-pooling]\label{prop:maxpool_correct}
+\begin{proposition}[Correctness of gated max-pooling, \LeanResult{prop:maxpool_correct}]\label{prop:maxpool_correct}
 For a pooling window $[q]$, define the split chunk
 \begin{equation}
 	v^+ \coloneqq \max_{j \in [q]} \Bigl\{ u_j^+ + \sum_{i \in [q],\, i \neq j} u_i^- \Bigr\},
@@ -732,9 +708,7 @@ Then $v^\pm \ge 0$ for $u^\pm \ge 0$, both components are convex and non-decreas
 \begin{equation}
 	v^+ - v^- = \max_{j \in [q]} \bigl( u_j^+ - u_j^- \bigr).
 	\label{eq:maxpool_identity}
-\end{equation}
-\hfill\LeanResult{prop:maxpool_correct}
-\end{proposition}
+\end{equation}\end{proposition}
 
 \begin{proof}
 Non-negativity is clear, as every candidate and the sum are sums of non-negative inputs; both components are non-negative-coefficient linear combinations and an entrywise maximum, hence convex and non-decreasing. For~\eqref{eq:maxpool_identity}, add and subtract $u_j^-$ in each candidate: for every $j \in [q]$,
@@ -744,7 +718,7 @@ Non-negativity is clear, as every candidate and the sum are sums of non-negative
 and since the second summand does not depend on $j$, taking the maximum over $j$ and subtracting $v^- = \sum_i u_i^-$ yields $\max_j \bigl( u_j^+ - u_j^- \bigr)$.
 \end{proof}
 
-Identity~\eqref{eq:maxpool_identity} generalizes~\eqref{eq:splitting_identity}, the case $q = 2$ with the pair $\bigl( u^+ - u^-, 0 \bigr)$. Optionally, \eqref{eq:maxpool_split} can be replaced by a \emph{winner-takes-all} rule forwarding, in both streams, the entries where the \emph{difference} is maximal; this preserves the difference invariant but sacrifices monotonicity and convexity, mirroring the shared-gate trade-off of Remark~\ref{rem:gate_vs_maxima}.
+Identity~\eqref{eq:maxpool_identity} generalizes~\eqref{eq:splitting_identity}, the case $q = 2$ with the pair $\bigl( u^+ - u^-, 0 \bigr)$. Optionally, \eqref{eq:maxpool_split} can be replaced by a \emph{winner-takes-it-all} rule forwarding, in both streams, the entries where the \emph{difference} is maximal; this preserves the difference invariant but sacrifices monotonicity and convexity, mirroring the shared-gate trade-off of Remark~\ref{rem:gate_vs_maxima}.
 
 \paragraph{Implementation and caches.}
 The pinned implementation uses PyTorch FX to trace a model and organize supported graph operations into decomposition chunks. A forward/backward cache accumulates inflowing activations and gradients per chunk, and a parallel cache mirrors the original model. The latter serves both analysis---layer-wise activation/gradient error---and optional on-the-fly correction, and reuses the original model's positivity patterns in place of drifted split-pair maxima in the backward pass. The current code provides configurable \texttt{float16}, \texttt{float32}, or \texttt{float64} arithmetic, with \texttt{float32} as its default; this configuration choice is distinct from the double-precision setup reported in the original paper. The graph conversion applies to the operations supported by its chunk implementations.
@@ -755,14 +729,12 @@ The source implementation discussion proposes replacing alternative nonlineariti
 \paragraph{The CNN split pass.}
 The split forward pass processes the chunks of a computation graph $\mathcal{G}$ in topological order, applying to each the split rule of its type---Lemma~\ref{lem:linear_chunk} for the linear chunks, the Maxout gate~\eqref{eq:dc_split_activations} or max-pool split~\eqref{eq:maxpool_split} for the non-linear ones---with optional entrywise re-centering $v^\pm \leftarrow v^\pm - \min\{v^+, v^-\}$ after each chunk. The stabilization of Section~\ref{sec:stabilization_dc} applies unchanged, since Theorem~\ref{thm:shift_forward} uses only non-negative linearity and the Maxout gate structure.
 
-\begin{theoremenv}[Correctness of the CNN split pass]\label{thm:cnn_split_correct}
+\begin{theoremenv}[Correctness of the CNN split pass, \LeanResult{thm:cnn_split_correct}]\label{thm:cnn_split_correct}
 Let $\mathcal{G}$ be a feedforward computation graph composed of the chunk types above, computing the function $x \mapsto f(x)$. Then for every input split $x = x^+ - x^-$ with $x^\pm \ge 0$, the split pass produces non-negative pairs satisfying the difference invariant
 \begin{equation*}
 	v_m^+ - v_m^- = v_m \qquad \text{for every chunk } C_m,
 \end{equation*}
-where $v_m$ is the corresponding original activation; in particular $f(x) = v_M^+ - v_M^-$. If neither winner-takes-all pooling nor input-dependent re-centering is used, every $v_m^\pm$ is convex in $(x^+, x^-)$ and non-decreasing in each coordinate.
-\hfill\LeanResult{thm:cnn_split_correct}
-\end{theoremenv}
+where $v_m$ is the corresponding original activation; in particular $f(x) = v_M^+ - v_M^-$. If neither winner-takes-it-all pooling nor input-dependent re-centering is used, every $v_m^\pm$ is convex in $(x^+, x^-)$ and non-decreasing in each coordinate.\end{theoremenv}
 
 \begin{proof}
 Induction over the topological order of $\mathcal{G}$. At the input node the invariant is the input convention, non-negativity holds by assumption, and $x^\pm_k$ are affine, convex, non-decreasing. For the step, assume all predecessors of $C_m$ satisfy the three properties. Lemma~\ref{lem:linear_chunk} (linear chunks), Proposition~\ref{prop:maxpool_correct} (max-pool), and Corollary~\ref{cor:dc_split_endpoint} with~\eqref{eq:splitting_identity} (the \ac{relu} gate) establish for every type that (i) non-negative pairs map to non-negative pairs, (ii) the output difference equals the original operation on the input difference---by the invariant the activation $v_m$---and (iii) each output component is convex and non-decreasing, being built from non-negative linear combinations and entrywise maxima whose compositions preserve both properties \parencite{Amos2017}. Re-centering subtracts a common shift, preserving the invariant and non-negativity (Theorem~\ref{thm:shift_forward}); it is omitted when convexity and coordinatewise monotonicity are required, since these properties need not survive the subtraction. Already re-centering the pair $(\max\{p,n\},n)$ gives $(\relu(p-n),0)$, whose first component decreases when $n$ increases with $p$ fixed. The output claim is the invariant at $C_M$.

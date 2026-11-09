@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "scope": {
+    "thesis_tables": "tex/tables/** and inline tabular/table blocks in tex/chapters/08_experiments.tex and tex/chapters/10_appendix.tex",
+    "source_papers": [
+      "arxive/hiddenMonotonicity/main.tex",
+      "arxive/playingTheNetworkBackward/main.tex"
+    ],
+    "build_log": "tex/main.log (stale, before current table adapter changes; treat widths as baseline evidence)"
+  },
+  "priority_findings": [
+    {
+      "priority": "critical",
+      "table": "tex/tables/appendix/xai_eval_vgg_full.tex (A.1)",
+      "evidence": "tex/main.log lines 9164-9212: repeated longtable overfull alignments by 103.87476 pt; source layout p{4cm}cc cccccc, 9 columns, repeated 2-line metric header.",
+      "assessment": "Does not fit the text block. Longtable spans pages vertically but does not constrain its horizontal width. Reducing p{4cm} alone cannot solve the reported ~104 pt excess; must deliberately compact columns/labels and spacing or set this table in landscape."
+    },
+    {
+      "priority": "critical",
+      "table": "tex/tables/appendix/xai_eval_res_full.tex (A.2)",
+      "evidence": "tex/main.log lines 9320-9368: repeated longtable overfull alignments by 115.72972 pt; same 9-column layout.",
+      "assessment": "Does not fit the text block; needs the same coordinated width fix as A.1, sized to the larger ResNet overrun."
+    },
+    {
+      "priority": "high",
+      "table": "tex/tables/ptnb_v2/generated/test_vgg16_ci_longtable.tex",
+      "evidence": "tex/main.log lines 9988-10027: longtable alignment overfull by 3.52977 pt across all sections/rows.",
+      "assessment": "Slight width overflow. Once MaxS and AvgS are omitted in the VOC table, the remaining test tables still need a small width reduction or the font/column spacing treatment applied consistently."
+    },
+    {
+      "priority": "high",
+      "table": "Paper 1 result tables (main VGG/ResNet, full VGG/ResNet, alpha ablations)",
+      "evidence": "arxive/hiddenMonotonicity source result tables use red cell fills for best metric values; thesis copies keep boldface but no fill. The source alpha_none/alpha_shift green fill was explicitly represented by asterisk markers instead.",
+      "assessment": "Best-value emphasis has lost the source color cue in the main and comprehensive split-method tables. Alpha_none/alpha_shift preserve the green highlight's stated interpretation using asterisk markers, but this differs visually from PTNB's best/approx blue-cell convention."
+    }
+  ],
+  "placeholder_audit": {
+    "thesis_split_method_dashes": [
+      {
+        "files": ["tex/tables/eval_vgg_main.tex", "tex/tables/appendix/xai_eval_vgg_full.tex"],
+        "cells": "LayerCAM Abs column: '-'",
+        "source_semantics": "Absolute saliency transformation is not applicable to these LayerCAM rows; present in source paper as '-'.",
+        "recommended_display": "n/a or em dash with a note defining not applicable"
+      },
+      {
+        "files": ["tex/tables/eval_vgg_main.tex", "tex/tables/eval_res_main.tex", "tex/tables/appendix/xai_eval_vgg_full.tex", "tex/tables/appendix/xai_eval_res_full.tex"],
+        "cells": "Max Sens. entries shown as '--' for random/baseline rows",
+        "source_semantics": "No reported value in the source tables; no missing numeric value was found to restore.",
+        "recommended_display": "Use one consistent unavailable marker and define it in the caption/legend. Do not impute a value."
+      },
+      {
+        "files": ["tex/tables/eval_res_main.tex", "tex/tables/appendix/xai_eval_res_full.tex"],
+        "cells": "Random Baseline Layer and Abs cells shown as '-'",
+        "source_semantics": "Not applicable in source; not an evaluated layer/configuration.",
+        "recommended_display": "n/a or a defined not-applicable marker"
+      }
+    ],
+    "ptnb_adapter_semantics": {
+      "fully_empty_voc_columns": "MaxS and AvgS are wholly unmeasured for VOC in the source paper, so dropping both columns is correct and preserves all measured values.",
+      "test_and_main_config_dash": "Rows without a tunable configuration are fixed; mapping the config placeholder to 'fixed' is semantically correct.",
+      "validation_rank_sum_dash": "A missing selection rank for the fixed row is n/a, not zero; mapping to n/a is correct.",
+      "ablation_eq_dash": "The Eq factor is switched on for +Eq rows; 'on' is an accurate clarification.",
+      "correlation_diagonal": "A suppressed correlation-matrix diagonal is exactly 1.00; restoring 1.00 is correct."
+    },
+    "result": "No numerical values were identified as lost in the reviewed table adaptations. Dashes found in active Paper 1 thesis tables also occur in the source paper and represent non-applicability or unreported Max Sensitivity. The PTNB VOC MaxS/AvgS omissions are correct because the source experiment did not evaluate them."
+  },
+  "metric_semantics": {
+    "split_campaign": "Pixel Flipping is AUC of confidence/score drop; higher is better. Use a label such as PF-drop or PF-score-drop with an up arrow.",
+    "ptnb_campaign": "Pixel Flipping is AUC over remaining target logit; lower is better. Use PF-rem (remaining-logit AUC) with a down arrow.",
+    "constraint": "Do not use one undifferentiated PF abbreviation across both campaigns; preserve the different curve quantity, protocol and direction."
+  },
+  "unified_style_mapping": {
+    "rules": "Booktabs horizontal rules, no vertical rules, compact two-line headers, consistent sans/roman table text per existing thesis convention, right-aligned decimal values, and per-table captions that define abbreviations, direction, and unavailable markers.",
+    "best_cell": "Pale blue fill RGB(190,214,238) with bold value, matching PTNB source bestcell.",
+    "near_best_cell": "Lighter blue fill RGB(226,237,248), with the existing approximate/not-significant marker, matching PTNB source approxcell.",
+    "legacy_red_or_green": "Re-express best and near-best cues through the shared blue palette while preserving bold/approx/significance meaning; retain alpha-ablation comparison-to-default marker semantics where applicable.",
+    "placeholders": "Use n/a for not applicable; use a distinct defined unavailable marker for an unreported/not-computable value. Never silently convert missing numeric data to a number.",
+    "metric_headings": "AL (up), PG (up), TK (up), PF-drop (up) for split-method tables; PF-rem (down) for PTNB; Sel (down), MaxS (down), AvgS (down). Expand each abbreviation in table caption/legend or nearby prose.",
+    "large_tables": "Longtable for multipage records, but constrain its declared column widths to the text width; reduce descriptor width, wrap configurations, abbreviate repeated metric headers, reduce inter-column padding modestly, and only use landscape if a compact portrait layout remains unreadable."
+  },
+  "additional_observations": [
+    "Main split evaluation tables use resizebox and did not produce table-alignment overflow in the stale log.",
+    "PTNB main/test/ablation generated tables already use booktabs and blue best/approx shading. The VGG CI table's 3.53 pt overflow is the only non-A.1/A.2 table alignment overflow found in tex/main.log.",
+    "The reviewed table rows and numeric tokens remain present through source-to-thesis restyling; numeric token-count mismatches in a naive text scan were due to formatting, headers and differing legend markup, not evidence of deleted metric observations."
+  ]
+}

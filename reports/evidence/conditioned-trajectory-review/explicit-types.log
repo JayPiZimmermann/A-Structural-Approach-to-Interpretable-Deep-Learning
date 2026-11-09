@@ -1,0 +1,308 @@
+@Thesis.ConditionedSurvival.timeMass_factorization : ∀ {S : Type} [inst : Fintype.{0} S] (N i : Nat)
+  (hi : @LE.le.{0} Nat instLENat i N) (K : Nat → S → S → Real) (s t : S),
+  @Eq.{1} Real (@Thesis.ConditionedSurvival.timeMass S inst N i K s t)
+    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+      (@Thesis.ConditionedSurvival.prefixMass S inst i K s t) (@Thesis.ConditionedSurvival.survival S inst N K i t))
+@Thesis.ConditionedSurvival.conditioned_time_marginal : ∀ {S : Type} [inst : Fintype.{0} S] (N i : Nat)
+  (hi : @LE.le.{0} Nat instLENat i N) (K : Nat → S → S → Real)
+  (hK :
+    ∀ (j : Nat) (s t : S),
+      @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) (K j s t))
+  (s : S)
+  (hs :
+    @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+      (@Thesis.ConditionedSurvival.survival S inst N K (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) s))
+  (t : S),
+  @Eq.{1} Real
+    (@Thesis.ConditionedSurvival.timeMass S inst N i
+      (@Thesis.ConditionedSurvival.kernel S K (@Thesis.ConditionedSurvival.survival S inst N K)) s t)
+    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@Thesis.ConditionedSurvival.prefixMass S inst i K s t) (@Thesis.ConditionedSurvival.survival S inst N K i t))
+      (@Thesis.ConditionedSurvival.survival S inst N K (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) s))
+@Thesis.ConditionedSurvival.conditioned_geometric_kernel : ∀ {S : Type} [inst : Fintype.{0} S] (N : Nat)
+  (A B : Nat → S → S → Real)
+  (hA :
+    ∀ (i : Nat) (s t : S),
+      @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) (A i s t))
+  (hB :
+    ∀ (i : Nat) (s t : S),
+      @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) (B i s t))
+  (i : Nat) (s t : S),
+  @Eq.{1} Real
+    (Real.sqrt
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (@Thesis.ConditionedSurvival.kernel S A (@Thesis.ConditionedSurvival.survival S inst N A) i s t)
+        (@Thesis.ConditionedSurvival.kernel S B (@Thesis.ConditionedSurvival.survival S inst N B) i s t)))
+    (@HDiv.hDiv.{0, 0, 0} Real Real Real (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+        (Real.sqrt (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (A i s t) (B i s t)))
+        (Real.sqrt
+          (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+            (@Thesis.ConditionedSurvival.survival S inst N A
+              (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) i
+                (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+              t)
+            (@Thesis.ConditionedSurvival.survival S inst N B
+              (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) i
+                (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+              t))))
+      (Real.sqrt
+        (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+          (@Thesis.ConditionedSurvival.survival S inst N A i s) (@Thesis.ConditionedSurvival.survival S inst N B i s))))
+@Thesis.ConditionedSurvival.conditioned_survival_statistics : ∀ {S : Type} [inst : Fintype.{0} S] (N : Nat)
+  (A B : Nat → S → S → Real)
+  (hA :
+    ∀ (i : Nat) (s t : S),
+      @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) (A i s t))
+  (hB :
+    ∀ (i : Nat) (s t : S),
+      @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) (B i s t))
+  (hArow :
+    ∀ (i : Nat) (s : S),
+      @LE.le.{0} Real Real.instLE
+        (@Finset.sum.{0, 0} S Real Real.instAddCommMonoid (@Finset.univ.{0} S inst) fun (t : S) => A i s t)
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+  (hBrow :
+    ∀ (i : Nat) (s : S),
+      @LE.le.{0} Real Real.instLE
+        (@Finset.sum.{0, 0} S Real Real.instAddCommMonoid (@Finset.univ.{0} S inst) fun (t : S) => B i s t)
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+  (s : S)
+  (hsA :
+    @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+      (@Thesis.ConditionedSurvival.survival S inst N A (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) s))
+  (hsB :
+    @LT.lt.{0} Real Real.instLT (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+      (@Thesis.ConditionedSurvival.survival S inst N B (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))
+        s)),
+  And
+    (And
+      (@LE.le.{0} Real Real.instLE
+        (@Thesis.ConditionedSurvival.survival S inst N A (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))
+          s)
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+      (@LE.le.{0} Real Real.instLE
+        (@Thesis.ConditionedSurvival.survival S inst N B (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0)))
+          s)
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+    (And
+      (∀ (i : Nat),
+        @LE.le.{0} Nat instLENat i N →
+          ∀ (t : S),
+            And
+              (@Eq.{1} Real
+                (@Thesis.ConditionedSurvival.timeMass S inst N i
+                  (@Thesis.ConditionedSurvival.kernel S A (@Thesis.ConditionedSurvival.survival S inst N A)) s t)
+                (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                  (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                    (@Thesis.ConditionedSurvival.prefixMass S inst i A s t)
+                    (@Thesis.ConditionedSurvival.survival S inst N A i t))
+                  (@Thesis.ConditionedSurvival.survival S inst N A
+                    (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) s)))
+              (@Eq.{1} Real
+                (@Thesis.ConditionedSurvival.timeMass S inst N i
+                  (@Thesis.ConditionedSurvival.kernel S B (@Thesis.ConditionedSurvival.survival S inst N B)) s t)
+                (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                  (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                    (@Thesis.ConditionedSurvival.prefixMass S inst i B s t)
+                    (@Thesis.ConditionedSurvival.survival S inst N B i t))
+                  (@Thesis.ConditionedSurvival.survival S inst N B
+                    (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) s))))
+      (And
+        (∀ (i : Nat) (u v : S),
+          @Eq.{1} Real
+            (Real.sqrt
+              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                (@Thesis.ConditionedSurvival.kernel S A (@Thesis.ConditionedSurvival.survival S inst N A) i u v)
+                (@Thesis.ConditionedSurvival.kernel S B (@Thesis.ConditionedSurvival.survival S inst N B) i u v)))
+            (@HDiv.hDiv.{0, 0, 0} Real Real Real
+              (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                (Real.sqrt (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (A i u v) (B i u v)))
+                (Real.sqrt
+                  (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                    (@Thesis.ConditionedSurvival.survival S inst N A
+                      (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) i
+                        (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+                      v)
+                    (@Thesis.ConditionedSurvival.survival S inst N B
+                      (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) i
+                        (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+                      v))))
+              (Real.sqrt
+                (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                  (@Thesis.ConditionedSurvival.survival S inst N A i u)
+                  (@Thesis.ConditionedSurvival.survival S inst N B i u)))))
+        (And
+          (@Eq.{1} Real
+            (@Thesis.Games.overlap.{0} (Thesis.Games.Paths S N) (@Thesis.Games.pathsFintype S inst N)
+              (@Thesis.Games.pathLaw S N
+                (@Thesis.ConditionedSurvival.kernel S A (@Thesis.ConditionedSurvival.survival S inst N A)) s)
+              (@Thesis.Games.pathLaw S N
+                (@Thesis.ConditionedSurvival.kernel S B (@Thesis.ConditionedSurvival.survival S inst N B)) s))
+            (@Finset.sum.{0, 0} (Thesis.Games.Paths S N) Real Real.instAddCommMonoid
+              (@Finset.univ.{0} (Thesis.Games.Paths S N) (@Thesis.Games.pathsFintype S inst N))
+              fun (path : Thesis.Games.Paths S N) =>
+              @Thesis.Games.pathLaw S N
+                (fun (i : Nat) (u v : S) =>
+                  Real.sqrt
+                    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                      (@Thesis.ConditionedSurvival.kernel S A (@Thesis.ConditionedSurvival.survival S inst N A) i u v)
+                      (@Thesis.ConditionedSurvival.kernel S B (@Thesis.ConditionedSurvival.survival S inst N B) i u v)))
+                s path))
+          (And
+            (@Eq.{1} Real
+              (@Thesis.Games.overlap.{0} (Thesis.Games.Paths S N) (@Thesis.Games.pathsFintype S inst N)
+                (@Thesis.Games.pathLaw S N
+                  (@Thesis.ConditionedSurvival.kernel S A (@Thesis.ConditionedSurvival.survival S inst N A)) s)
+                (@Thesis.Games.pathLaw S N
+                  (@Thesis.ConditionedSurvival.kernel S B (@Thesis.ConditionedSurvival.survival S inst N B)) s))
+              (@Thesis.Games.backwardDP S inst N
+                (fun (i : Nat) (u v : S) =>
+                  Real.sqrt
+                    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                      (@Thesis.ConditionedSurvival.kernel S A (@Thesis.ConditionedSurvival.survival S inst N A) i u v)
+                      (@Thesis.ConditionedSurvival.kernel S B (@Thesis.ConditionedSurvival.survival S inst N B) i u v)))
+                (fun (x : S) => @OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)) s))
+            (And
+              (@Eq.{1} Real
+                (@Thesis.Games.overlap.{0} (Thesis.Games.Paths S N) (@Thesis.Games.pathsFintype S inst N)
+                  (@Thesis.Games.pathLaw S N
+                    (@Thesis.ConditionedSurvival.kernel S A (@Thesis.ConditionedSurvival.survival S inst N A)) s)
+                  (@Thesis.Games.pathLaw S N
+                    (@Thesis.ConditionedSurvival.kernel S B (@Thesis.ConditionedSurvival.survival S inst N B)) s))
+                (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                  (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                  (@Thesis.Randomization.ordinaryOverlap S inst N A B s)
+                  (Real.sqrt
+                    (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                      (@Thesis.ConditionedSurvival.survival S inst N A
+                        (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) s)
+                      (@Thesis.ConditionedSurvival.survival S inst N B
+                        (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) s)))))
+              (@Eq.{1} Real
+                (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                  (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                    (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                    (@OfNat.ofNat.{0} Real (nat_lit 2)
+                      (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+                        (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+                          (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))))))))
+                  (@Finset.sum.{0, 0} (Thesis.Games.Paths S N) Real Real.instAddCommMonoid
+                    (@Finset.univ.{0} (Thesis.Games.Paths S N) (@Thesis.Games.pathsFintype S inst N))
+                    fun (path : Thesis.Games.Paths S N) =>
+                    @HPow.hPow.{0, 0, 0} Real Nat Real
+                      (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                        (Real.sqrt
+                          (@Thesis.Games.pathLaw S N
+                            (@Thesis.ConditionedSurvival.kernel S A (@Thesis.ConditionedSurvival.survival S inst N A)) s
+                            path))
+                        (Real.sqrt
+                          (@Thesis.Games.pathLaw S N
+                            (@Thesis.ConditionedSurvival.kernel S B (@Thesis.ConditionedSurvival.survival S inst N B)) s
+                            path)))
+                      (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+                (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                  (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                    (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                    (@Thesis.Randomization.ordinaryOverlap S inst N A B s)
+                    (Real.sqrt
+                      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                        (@Thesis.ConditionedSurvival.survival S inst N A
+                          (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) s)
+                        (@Thesis.ConditionedSurvival.survival S inst N B
+                          (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) s)))))))))))
+@Thesis.ConditionedSurvival.trajectory_bc_monotone : ∀ {S : Type} [inst : Fintype.{0} S] (A B : Nat → S → S → Real)
+  (hA :
+    ∀ (i : Nat) (s t : S),
+      @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) (A i s t))
+  (hB :
+    ∀ (i : Nat) (s t : S),
+      @LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)) (B i s t))
+  (hArow :
+    ∀ (i : Nat) (s : S),
+      @Eq.{1} Real (@Finset.sum.{0, 0} S Real Real.instAddCommMonoid (@Finset.univ.{0} S inst) fun (t : S) => A i s t)
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+  (hBrow :
+    ∀ (i : Nat) (s : S),
+      @Eq.{1} Real (@Finset.sum.{0, 0} S Real Real.instAddCommMonoid (@Finset.univ.{0} S inst) fun (t : S) => B i s t)
+        (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+  (s : S),
+  And
+    (@Eq.{1} Real
+      (@Thesis.Games.overlap.{0} (Thesis.Games.Paths S (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))))
+        (@Thesis.Games.pathsFintype S inst (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))))
+        (@Thesis.Games.pathLaw S (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) A s)
+        (@Thesis.Games.pathLaw S (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))) B s))
+      (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+    (And
+      (∀ (n : Nat),
+        And
+          (@LE.le.{0} Real Real.instLE (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+            (@Thesis.Games.overlap.{0} (Thesis.Games.Paths S n) (@Thesis.Games.pathsFintype S inst n)
+              (@Thesis.Games.pathLaw S n A s) (@Thesis.Games.pathLaw S n B s)))
+          (@LE.le.{0} Real Real.instLE
+            (@Thesis.Games.overlap.{0} (Thesis.Games.Paths S n) (@Thesis.Games.pathsFintype S inst n)
+              (@Thesis.Games.pathLaw S n A s) (@Thesis.Games.pathLaw S n B s))
+            (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+      (And
+        (@Antitone.{0, 0} Nat Real Nat.instPreorder Real.instPreorder fun (n : Nat) =>
+          @Thesis.Games.overlap.{0} (Thesis.Games.Paths S n) (@Thesis.Games.pathsFintype S inst n)
+            (@Thesis.Games.pathLaw S n A s) (@Thesis.Games.pathLaw S n B s))
+        (And
+          (@Monotone.{0, 0} Nat Real Nat.instPreorder Real.instPreorder fun (n : Nat) =>
+            @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+              (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                (@OfNat.ofNat.{0} Real (nat_lit 2)
+                  (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+                    (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+                      (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))))))))
+              (@Finset.sum.{0, 0} (Thesis.Games.Paths S n) Real Real.instAddCommMonoid
+                (@Finset.univ.{0} (Thesis.Games.Paths S n) (@Thesis.Games.pathsFintype S inst n))
+                fun (path : Thesis.Games.Paths S n) =>
+                @HPow.hPow.{0, 0, 0} Real Nat Real
+                  (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                  (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                    (Real.sqrt (@Thesis.Games.pathLaw S n A s path)) (Real.sqrt (@Thesis.Games.pathLaw S n B s path)))
+                  (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+          (And
+            (∀ (n : Nat),
+              @Eq.{1} Real
+                (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                  (@HDiv.hDiv.{0, 0, 0} Real Real Real
+                    (@instHDiv.{0} Real (@DivInvMonoid.toDiv.{0} Real Real.instDivInvMonoid))
+                    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                    (@OfNat.ofNat.{0} Real (nat_lit 2)
+                      (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast
+                        (@Nat.instAtLeastTwoHAddOfNat (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))
+                          (@Nat.instNeZeroSucc (@OfNat.ofNat.{0} Nat (nat_lit 0) (instOfNatNat (nat_lit 0))))))))
+                  (@Finset.sum.{0, 0} (Thesis.Games.Paths S n) Real Real.instAddCommMonoid
+                    (@Finset.univ.{0} (Thesis.Games.Paths S n) (@Thesis.Games.pathsFintype S inst n))
+                    fun (path : Thesis.Games.Paths S n) =>
+                    @HPow.hPow.{0, 0, 0} Real Nat Real
+                      (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                      (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                        (Real.sqrt (@Thesis.Games.pathLaw S n A s path))
+                        (Real.sqrt (@Thesis.Games.pathLaw S n B s path)))
+                      (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2)))))
+                (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))
+                  (@Thesis.Games.overlap.{0} (Thesis.Games.Paths S n) (@Thesis.Games.pathsFintype S inst n)
+                    (@Thesis.Games.pathLaw S n A s) (@Thesis.Games.pathLaw S n B s))))
+            (∀ (n : Nat),
+              @Eq.{1} Real
+                (@Thesis.Games.overlap.{0} (Thesis.Games.Paths S n) (@Thesis.Games.pathsFintype S inst n)
+                  (@Thesis.Games.pathLaw S n A s) (@Thesis.Games.pathLaw S n B s))
+                (@Thesis.Games.backwardDP S inst n
+                  (fun (i : Nat) (u v : S) =>
+                    Real.sqrt
+                      (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (A i u v) (B i u v)))
+                  (fun (x : S) => @OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)) s))))))

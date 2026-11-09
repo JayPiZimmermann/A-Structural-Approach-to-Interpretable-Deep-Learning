@@ -1,0 +1,137 @@
+{
+  "scope": {
+    "workspace": "/home/jzimmermann/code/dc_decompose/master_thesis",
+    "reviewed": [
+      "authored thesis chapters, abstract, front matter, figure captions, table captions and labels",
+      "reports/terminology-normalization.json and scripts/normalize_thesis_terms.py",
+      "relevant passages in arxive/hiddenMonotonicity and arxive/playingTheNetworkBackward"
+    ],
+    "limits": "Read-only review of TeX and source papers; only this JSON report was created."
+  },
+  "findings": [
+    {
+      "priority": "high",
+      "type": "remaining metric-name ambiguity",
+      "thesis_locations": [
+        "tex/chapters/08_experiments.tex:21,23",
+        "tex/chapters/08_experiments.tex:55-56"
+      ],
+      "source_evidence": [
+        {
+          "location": "arxive/hiddenMonotonicity/sections/experiments.tex:26-28",
+          "excerpt": "Pixel Flipping measures the drop of the respective class logit ... We report the area under the curve (AUC) of this drop at 5% and 20%, where a faster drop means higher area under the drop curve."
+        },
+        {
+          "location": "arxive/playingTheNetworkBackward/main.tex:4381-4394",
+          "excerpt": "PF_p is the trapezoidal area over the first p% of this flipping curve ... Lower is better. The curve tracks the remaining class score."
+        }
+      ],
+      "issue": "The chapter preamble at line 9 explicitly distinguishes PF^drop_5/PF^drop_20 (score-drop AUC, higher is better) from PF_5/PF_20 (remaining-logit AUC, lower is better). Later prose calls both simply Pixel Flipping/AUC: line 21 labels the split result AUC@5/AUC@20, line 23 compares Pixel Flipping performance, and lines 55-56 introduce the game study's PF_5/PF_20 as Pixel Flipping area without saying remaining-logit. A reader can mistakenly infer that the reported quantities or their direction are interchangeable.",
+      "targeted_action": "Add the existing short qualifiers 'score-drop' to the split-study references and 'remaining-logit' to the game-study definition/reference, or use the already introduced PF^drop and PF notation. Preserve the distinct definitions, step sizes, and directions; do not merge or numerically compare these AUCs as one metric.",
+      "semantic_status": "The values are genuinely different quantities and must remain distinct."
+    },
+    {
+      "priority": "medium",
+      "type": "source method-name normalization diverges from the source's named rule",
+      "thesis_locations": [
+        "tex/chapters/03_decompositions.tex:711",
+        "tex/chapters/03_decompositions.tex:727",
+        "tex/chapters/05_saliency.tex:205",
+        "tex/chapters/08_experiments.tex:36",
+        "tex/chapters/10_appendix.tex:53",
+        "tex/tables/eval_vgg_main.tex:5"
+      ],
+      "source_evidence": [
+        {
+          "location": "arxive/hiddenMonotonicity/sections/method.tex:105",
+          "excerpt": "a \"winner-takes-it-all\" (wta) rule"
+        },
+        {
+          "location": "arxive/hiddenMonotonicity/sections/experiments.tex table caption",
+          "excerpt": "winner-takes-it-all (wta)"
+        }
+      ],
+      "issue": "The normalization script changed the paper's named rule from 'winner-takes-it-all' to 'winner-take-all'. The thesis is now internally consistent, and this is not an evident mathematical change, but it is an unnecessary departure from the source's specific terminology and the original WTA label.",
+      "targeted_action": "Choose one form for the named pooling rule. Since the user asked to retain original formulations where possible, prefer the source's 'winner-takes-it-all' in prose and caption, or explicitly record 'winner-take-all' as a deliberate thesis house-style choice. Keep code identifiers and image filenames untouched.",
+      "semantic_status": "Same described max-pooling rule; terminology difference only, pending confirmation against the implementation."
+    },
+    {
+      "priority": "low",
+      "type": "acronym gloss is not the canonical method name",
+      "thesis_locations": [
+        "tex/preamble/paper_v2.tex:52"
+      ],
+      "source_evidence": [
+        {
+          "location": "tex/preamble/paper_v2.tex:52",
+          "excerpt": "short={KernelSHAP}, long={Kernel SHapley Additive exPlanations}"
+        },
+        {
+          "location": "tex/chapters/10_appendix.tex:138",
+          "excerpt": "KernelSHAP denotes KernelSHAP, the model-agnostic weighted-regression estimator of SHAP"
+        }
+      ],
+      "issue": "The canonical spelling KernelSHAP is consistent. The acronym expansion begins 'Kernel SHapley...' and the appendix's self-expansion reads awkwardly as a repeated name. The algorithm's proper name is already clear in prose and tables.",
+      "targeted_action": "If the acronym system prints the long form in running text, revise only the long-form gloss to 'Kernel SHapley Additive exPlanations' or leave the current proper name and avoid expanding it. Do not rename the method or its citation keys.",
+      "semantic_status": "Editorial acronym-gloss issue only."
+    }
+  ],
+  "normalization_script_audit": {
+    "result": "No accidental mathematical, reference, URL, path, code, or identifier change was found in the script's logged edits or spot checks.",
+    "evidence": [
+      "reports/terminology-normalization.json records 105 direct token substitutions across 25 TeX files; every listed old/new pair is a spelling, capitalization, hyphenation, architecture-name, or method-name normalization.",
+      "Spot checks of tex/chapters/03_decompositions.tex:711-727 show the winner-take-all edits changed only the label phrase; the surrounding difference invariant and convexity/monotonicity conditions remain intact.",
+      "Spot checks of tex/chapters/08_experiments.tex and table captions show model-name and method-name changes without altered numeric results or formulas.",
+      "The appendix comments retain source-specific strings such as ResNet50, and Python model identifiers such as VGG16_Weights and ResNet50_Weights remain unchanged. Reference labels, citation keys, URLs, \texttt{} code and Lean identifiers are protected or unchanged in the edit log."
+    ],
+    "style_observation": "US spellings and the chosen forms non-negative, pre-activation, feedforward, layer-wise, VGG-16, ResNet-18/50, GELU, DeepLIFT, GradientSHAP and Grad-CAM are internally consistent across authored prose and relevant tables. Table abbreviations GCAM/GCAM++/LCAM/IntGrad/SmGrad are explicitly glossed in tex/chapters/08_experiments.tex:9 and tex/chapters/10_appendix.tex:111-138. Variants preserved inside official paper titles, quotations, code, comments, filenames and identifiers are not ordinary prose inconsistencies."
+  },
+  "original_wording_review": [
+    {
+      "priority": "high",
+      "source_location": "arxive/hiddenMonotonicity/sections/experiments.tex:61-70",
+      "thesis_location": "tex/chapters/08_experiments.tex:21,23",
+      "source_excerpt": "On VGG, the Split methods demonstrate superior performance compared to all considered baseline methods across the Quantus metric categories. For example, SplitCAM achieves the highest Pointing Game score 0.938 with alpha = 0.4 ... SplitCAM outperforms classical methods on Selectivity, with comparable Pixel Flipping performance as the most faithful baseline LayerCAM. SplitLRP slightly outperforms classical gamma-LRP in localization while staying competitive in Faithfulness.",
+      "thesis_excerpt": "On VGG-16, the split methods demonstrate superior performance compared to all considered baselines across the Quantus metric categories. SplitCAM achieves the highest Pointing Game score of 0.938 ... SplitCAM outperforms the classical methods on Selectivity, with Pixel Flipping performance comparable to the most faithful baseline, LayerCAM. SplitLRP slightly outperforms classical gamma-LRP in localization while staying competitive in faithfulness.",
+      "assessment": "This is a close sentence-by-sentence paraphrase of the source results, with changes largely limited to architecture spelling, grammar, punctuation and styling. It is the clearest opportunity to retain the source formulation verbatim while updating only cross-reference handling and house spelling. The metric definitions and reported numbers do not need rewriting."
+    },
+    {
+      "priority": "medium",
+      "source_location": "arxive/hiddenMonotonicity/sections/experiments.tex:51-55",
+      "thesis_location": "tex/chapters/08_experiments.tex:16",
+      "source_excerpt": "Mid-layer SplitCAM shares key visual characteristics with classical gamma-LRP from earlier layers. Compared to standard LayerCAM on the same layer it focuses more weight to all object pixels, while still marking the key object features as especially important. For alpha much less than 0.5, SplitGrad yields less focused yet finely aligned gradients that closely follow image details. We attribute this to the Maxout activation retaining preactivation information, unlike ReLU, which discards it in inactive neurons.",
+      "thesis_excerpt": "Mid-layer SplitCAM shares key visual characteristics with classical gamma-LRP from earlier layers. Compared to standard LayerCAM on the same layer, it assigns more weight to all object pixels while still marking the key object features as especially important. For alpha much less than 0.5, SplitGrad yields less focused yet finely aligned gradients that closely follow image details, which is attributable to the Maxout activation retaining pre-activation information that ReLU discards in inactive neurons.",
+      "assessment": "Most of this paragraph is near-verbatim source text, with a few grammatical or house-style edits. Prefer the source formulations, changing only the agreed pre-activation spelling and references if required. Do not restore the source's unsupported concluding claim about 'interpretability and focus'; it is omitted from the thesis."
+    },
+    {
+      "priority": "positive-retention",
+      "source_location": "arxive/playingTheNetworkBackward/main.tex:726-732",
+      "thesis_location": "tex/chapters/08_experiments.tex:147-154",
+      "source_excerpt": "On the CNNs, where LRP-type rules are already strong, the localization-selected RG rows also lead on AL ... Pixel flipping favors the LRP rules ... On VGG-16 the risk-averse SG mode is the most robust method ...",
+      "thesis_excerpt": "Same wording, with only cross-reference and acronym macro casing adjusted.",
+      "assessment": "The passage already retains source wording closely; no rewrite is recommended. Keep its results distinct from the split-campaign evaluation."
+    },
+    {
+      "priority": "positive-retention",
+      "source_location": "arxive/hiddenMonotonicity/sections/vgg_saliency_comparison_main.tex:138",
+      "thesis_location": "tex/figures/experiments/vgg_saliency_comparison_main.tex:138",
+      "source_excerpt": "Saliency map comparison for VGG16 on our custom ImageNet-S test split. Each row shows the predicted class (with confidence), original image, and saliency maps from different methods.",
+      "thesis_excerpt": "Saliency map comparison for VGG-16 on our custom ImageNet-S test split. Each row shows the predicted class (with confidence), original image, and saliency maps from different methods.",
+      "assessment": "Verbatim apart from the agreed architecture spelling. No change needed."
+    }
+  ],
+  "distinct_concepts_checked": [
+    {
+      "concepts": ["DC decomposition", "stopping decomposition"],
+      "result": "Kept distinct. The thesis presents the stopping channel as an additional construction and does not conflate it with the difference-of-convex split."
+    },
+    {
+      "concepts": ["PF^drop_5/PF^drop_20 score-drop AUC", "PF_5/PF_20 remaining-logit AUC"],
+      "result": "Explicitly distinguished in tex/chapters/08_experiments.tex:9, with opposite directions and different perturbation step sizes. Later prose still needs the local qualifiers identified above."
+    },
+    {
+      "concepts": ["interpretability", "interpretation", "attribution", "explanation"],
+      "result": "No blanket synonym substitution is appropriate. Authored chapters use the terms for different objects or tasks (model property, user-facing account, computed attribution map, and broader explanatory output); no harmful automated merger was found. Preserve these distinctions."
+    }
+  ]
+}

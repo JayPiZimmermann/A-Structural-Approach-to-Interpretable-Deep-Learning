@@ -5674,6 +5674,4176 @@ run_cmd do
 #check @Thesis.StoppingCircuit.winner_derivative_occupation
 #print axioms _ThesisExactChecks.target_191
 
+section
+open Set Filter Matrix Finset Thesis.Tropical Thesis.PiecewiseLinear
+open scoped Topology
+def _ThesisExpectedTypes.type_192 : Prop := (∀ {A : Type} [Fintype A] (f : ℝ → ℝ) (a b : A → ℝ)
+(hf : Continuous f) (hsel : ∀ t, ∃ i, f t=(1-t)*a i+t*b i),
+∃ i, f 0≤a i ∧ b i≤f 1)
+theorem _ThesisExactChecks.target_192 : _ThesisExpectedTypes.type_192 := by exact @Thesis.PiecewiseLinear.affine_selection_separation
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.PiecewiseLinear.affine_selection_separation
+  let expected ← getConstInfo `_ThesisExactChecks.target_192
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.PiecewiseLinear.affine_selection_separation"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.PiecewiseLinear.affine_selection_separation | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.CPWLLattice do
+    throwError "Defining module mismatch: Thesis.PiecewiseLinear.affine_selection_separation"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_192) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.PiecewiseLinear.affine_selection_separation: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.PiecewiseLinear.affine_selection_separation"
+#check @Thesis.PiecewiseLinear.affine_selection_separation
+#print axioms _ThesisExactChecks.target_192
+
+section
+open Set Filter Matrix Finset Thesis.Tropical Thesis.PiecewiseLinear
+open scoped Topology
+def _ThesisExpectedTypes.type_193 : Prop := (∀ {I : Type} [Fintype I] (f : (I → ℝ) → ℝ)
+(hf : CPWL (fun x (_ : Unit) => f x)),
+∃ p : MaxMinPolynomial I, ∀ x, f x=p.eval x)
+theorem _ThesisExactChecks.target_193 : _ThesisExpectedTypes.type_193 := by exact @Thesis.PiecewiseLinear.cpwl_lattice_representation
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.PiecewiseLinear.cpwl_lattice_representation
+  let expected ← getConstInfo `_ThesisExactChecks.target_193
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.PiecewiseLinear.cpwl_lattice_representation"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.PiecewiseLinear.cpwl_lattice_representation | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.CPWLLattice do
+    throwError "Defining module mismatch: Thesis.PiecewiseLinear.cpwl_lattice_representation"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_193) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.PiecewiseLinear.cpwl_lattice_representation: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.PiecewiseLinear.cpwl_lattice_representation"
+#check @Thesis.PiecewiseLinear.cpwl_lattice_representation
+#print axioms _ThesisExactChecks.target_193
+
+section
+open Set Filter Matrix Finset Thesis.Tropical Thesis.PiecewiseLinear
+open scoped Topology
+def _ThesisExpectedTypes.type_194 : Prop := (∀ {I : Type} [Fintype I] (f : (I → ℝ) → ℝ)
+(hf : CPWL (fun x (_ : Unit) => f x)),
+∃ g h : Thesis.Tropical.Polynomial I, ∀ x, f x=g.eval x-h.eval x)
+theorem _ThesisExactChecks.target_194 : _ThesisExpectedTypes.type_194 := by exact @Thesis.PiecewiseLinear.cpwl_polynomial_difference
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.PiecewiseLinear.cpwl_polynomial_difference
+  let expected ← getConstInfo `_ThesisExactChecks.target_194
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.PiecewiseLinear.cpwl_polynomial_difference"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.PiecewiseLinear.cpwl_polynomial_difference | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.CPWLLattice do
+    throwError "Defining module mismatch: Thesis.PiecewiseLinear.cpwl_polynomial_difference"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_194) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.PiecewiseLinear.cpwl_polynomial_difference: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.PiecewiseLinear.cpwl_polynomial_difference"
+#check @Thesis.PiecewiseLinear.cpwl_polynomial_difference
+#print axioms _ThesisExactChecks.target_194
+
+section
+open Set Filter Matrix Finset Thesis.Tropical Thesis.PiecewiseLinear
+open scoped Topology
+def _ThesisExpectedTypes.type_195 : Prop := (∀ {I : Type} [Fintype I] (f : (I → ℝ) → ℝ),
+CPWL (fun x (_ : Unit) => f x) ↔
+∃ g h : Thesis.Tropical.Polynomial I, ∀ x, f x=g.eval x-h.eval x)
+theorem _ThesisExactChecks.target_195 : _ThesisExpectedTypes.type_195 := by exact @Thesis.PiecewiseLinear.cpwl_iff_polynomial_difference
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.PiecewiseLinear.cpwl_iff_polynomial_difference
+  let expected ← getConstInfo `_ThesisExactChecks.target_195
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.PiecewiseLinear.cpwl_iff_polynomial_difference"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.PiecewiseLinear.cpwl_iff_polynomial_difference | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.CPWLLattice do
+    throwError "Defining module mismatch: Thesis.PiecewiseLinear.cpwl_iff_polynomial_difference"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_195) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.PiecewiseLinear.cpwl_iff_polynomial_difference: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.PiecewiseLinear.cpwl_iff_polynomial_difference"
+#check @Thesis.PiecewiseLinear.cpwl_iff_polynomial_difference
+#print axioms _ThesisExactChecks.target_195
+
+section
+open Set Filter Matrix Finset HiddenMonotonicity Thesis.Tropical Thesis.PiecewiseLinear Thesis.ReLURepresentation
+open scoped Topology
+def _ThesisExpectedTypes.type_196 : Prop := (∀ {n : ℕ} (k : ℕ) (O : Type) [Fintype O]
+(w : O → (Fin k → Bool) → Fin n → ℝ) (b : O → (Fin k → Bool) → ℝ),
+∃ H : AffineHead n O, H.depth=k ∧
+∀ x i, H.eval x i=finiteMax (fun t => w i t ⬝ᵥ x+b i t))
+theorem _ThesisExactChecks.target_196 : _ThesisExpectedTypes.type_196 := by exact @Thesis.ReLURepresentation.affine_max_forest
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.ReLURepresentation.affine_max_forest
+  let expected ← getConstInfo `_ThesisExactChecks.target_196
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.ReLURepresentation.affine_max_forest"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.ReLURepresentation.affine_max_forest | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.ReLUCompiler do
+    throwError "Defining module mismatch: Thesis.ReLURepresentation.affine_max_forest"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_196) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.ReLURepresentation.affine_max_forest: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.ReLURepresentation.affine_max_forest"
+#check @Thesis.ReLURepresentation.affine_max_forest
+#print axioms _ThesisExactChecks.target_196
+
+section
+open Set Filter Matrix Finset HiddenMonotonicity Thesis.Tropical Thesis.PiecewiseLinear Thesis.ReLURepresentation
+open scoped Topology
+def _ThesisExpectedTypes.type_197 : Prop := (∀ {n k : ℕ} (O : Type) [Fintype O]
+(p : O → Thesis.Tropical.Polynomial (Fin n))
+(hcard : ∀ i, Fintype.card (p i).Terms≤2^k),
+∃ H : AffineHead n O, H.depth=k ∧ ∀ x i, H.eval x i=(p i).eval x)
+theorem _ThesisExactChecks.target_197 : _ThesisExpectedTypes.type_197 := by exact @Thesis.ReLURepresentation.polynomial_forest
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.ReLURepresentation.polynomial_forest
+  let expected ← getConstInfo `_ThesisExactChecks.target_197
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.ReLURepresentation.polynomial_forest"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.ReLURepresentation.polynomial_forest | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.ReLUCompiler do
+    throwError "Defining module mismatch: Thesis.ReLURepresentation.polynomial_forest"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_197) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.ReLURepresentation.polynomial_forest: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.ReLURepresentation.polynomial_forest"
+#check @Thesis.ReLURepresentation.polynomial_forest
+#print axioms _ThesisExactChecks.target_197
+
+section
+open Set Filter Matrix Finset HiddenMonotonicity Thesis.Tropical Thesis.PiecewiseLinear Thesis.ReLURepresentation
+open scoped Topology
+def _ThesisExpectedTypes.type_198 : Prop := (∀ {n k : ℕ} (O : Type) [Fintype O]
+(p : O → Thesis.Tropical.Polynomial (Fin n)) (c : O → ℝ)
+(hcard : ∀ i, Fintype.card (p i).Terms≤2^k),
+∃ H : AffineHead n Unit, H.depth=k ∧
+∀ x, H.eval x ()=∑ i, c i*(p i).eval x)
+theorem _ThesisExactChecks.target_198 : _ThesisExpectedTypes.type_198 := by exact @Thesis.ReLURepresentation.signed_polynomial_compiler
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.ReLURepresentation.signed_polynomial_compiler
+  let expected ← getConstInfo `_ThesisExactChecks.target_198
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.ReLURepresentation.signed_polynomial_compiler"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.ReLURepresentation.signed_polynomial_compiler | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.ReLUCompiler do
+    throwError "Defining module mismatch: Thesis.ReLURepresentation.signed_polynomial_compiler"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_198) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.ReLURepresentation.signed_polynomial_compiler: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.ReLURepresentation.signed_polynomial_compiler"
+#check @Thesis.ReLURepresentation.signed_polynomial_compiler
+#print axioms _ThesisExactChecks.target_198
+
+section
+open Set Filter Matrix Finset HiddenMonotonicity Thesis.Tropical Thesis.PiecewiseLinear Thesis.ReLURepresentation
+open scoped Topology
+def _ThesisExpectedTypes.type_199 : Prop := (∀ {n : ℕ} (f : (Fin n → ℝ) → ℝ)
+(hf : CPWL (fun x (_ : Unit) => f x)),
+∃ (m : ℕ) (net : Network n m) (w : Fin m → ℝ) (b : ℝ),
+hiddenDepth net+1≤⌈Real.logb 2 (n+1)⌉₊+1 ∧
+∀ x, f x=w ⬝ᵥ net.eval x+b)
+theorem _ThesisExactChecks.target_199 : _ThesisExpectedTypes.type_199 := by exact @Thesis.PiecewiseLinear.cpwl_relu_bounded_depth
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.PiecewiseLinear.cpwl_relu_bounded_depth
+  let expected ← getConstInfo `_ThesisExactChecks.target_199
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.PiecewiseLinear.cpwl_relu_bounded_depth"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.PiecewiseLinear.cpwl_relu_bounded_depth | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.CPWLReLUEquivalence do
+    throwError "Defining module mismatch: Thesis.PiecewiseLinear.cpwl_relu_bounded_depth"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_199) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.PiecewiseLinear.cpwl_relu_bounded_depth: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.PiecewiseLinear.cpwl_relu_bounded_depth"
+#check @Thesis.PiecewiseLinear.cpwl_relu_bounded_depth
+#print axioms _ThesisExactChecks.target_199
+
+section
+open Set Filter Matrix Finset HiddenMonotonicity Thesis.Tropical Thesis.PiecewiseLinear Thesis.ReLURepresentation
+open scoped Topology
+def _ThesisExpectedTypes.type_200 : Prop := (∀ {n : ℕ} (f : (Fin n → ℝ) → ℝ),
+(CPWL (fun x (_ : Unit) => f x) ↔
+  ∃ (m : ℕ) (net : Network n m) (w : Fin m → ℝ) (b : ℝ),
+    ∀ x, f x=w ⬝ᵥ net.eval x+b) ∧
+(CPWL (fun x (_ : Unit) => f x) →
+  ∃ (m : ℕ) (net : Network n m) (w : Fin m → ℝ) (b : ℝ),
+    hiddenDepth net+1≤⌈Real.logb 2 (n+1)⌉₊+1 ∧
+    ∀ x, f x=w ⬝ᵥ net.eval x+b))
+theorem _ThesisExactChecks.target_200 : _ThesisExpectedTypes.type_200 := by exact @Thesis.PiecewiseLinear.cpwl_relu_equivalence
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.PiecewiseLinear.cpwl_relu_equivalence
+  let expected ← getConstInfo `_ThesisExactChecks.target_200
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.PiecewiseLinear.cpwl_relu_equivalence"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.PiecewiseLinear.cpwl_relu_equivalence | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.CPWLReLUEquivalence do
+    throwError "Defining module mismatch: Thesis.PiecewiseLinear.cpwl_relu_equivalence"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_200) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.PiecewiseLinear.cpwl_relu_equivalence: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.PiecewiseLinear.cpwl_relu_equivalence"
+#check @Thesis.PiecewiseLinear.cpwl_relu_equivalence
+#print axioms _ThesisExactChecks.target_200
+
+section
+open Finset Matrix Thesis.Tropical Thesis.SignedMaxIdentities
+open scoped Classical
+def _ThesisExpectedTypes.type_201 : Prop := (∀ {A : Type} [DecidableEq A] (f : A → ℝ) (B : Finset A) (hB : B.Nonempty)
+    (a : A) (ha : f a ≤ B.sup' hB f) (S : Finset A),
+    baseMax f B hB (insert a S) = baseMax f B hB S)
+theorem _ThesisExactChecks.target_201 : _ThesisExpectedTypes.type_201 := by exact @Thesis.SignedMaxIdentities.baseMax_insert_dominated
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SignedMaxIdentities.baseMax_insert_dominated
+  let expected ← getConstInfo `_ThesisExactChecks.target_201
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SignedMaxIdentities.baseMax_insert_dominated"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SignedMaxIdentities.baseMax_insert_dominated | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SignedMaxIdentities do
+    throwError "Defining module mismatch: Thesis.SignedMaxIdentities.baseMax_insert_dominated"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_201) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SignedMaxIdentities.baseMax_insert_dominated: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SignedMaxIdentities.baseMax_insert_dominated"
+#check @Thesis.SignedMaxIdentities.baseMax_insert_dominated
+#print axioms _ThesisExactChecks.target_201
+
+section
+open Finset Matrix Thesis.Tropical Thesis.SignedMaxIdentities
+open scoped Classical
+def _ThesisExpectedTypes.type_202 : Prop := (∀ {A : Type} [DecidableEq A] (S : Finset A) (a : A) (ha : a ∈ S)
+    (F : Finset A → ℝ)
+    (hF : ∀ T ⊆ S.erase a, F (insert a T) = F T),
+    (∑ T ∈ S.powerset, (-1 : ℝ)^T.card * F T) = 0)
+theorem _ThesisExactChecks.target_202 : _ThesisExpectedTypes.type_202 := by exact @Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion
+  let expected ← getConstInfo `_ThesisExactChecks.target_202
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SignedMaxIdentities do
+    throwError "Defining module mismatch: Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_202) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion"
+#check @Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion
+#print axioms _ThesisExactChecks.target_202
+
+section
+open Finset Matrix Thesis.Tropical Thesis.SignedMaxIdentities
+open scoped Classical
+def _ThesisExpectedTypes.type_203 : Prop := (∀ {A : Type} [DecidableEq A] (f : A → ℝ) (A₀ B : Finset A) (hB : B.Nonempty)
+    (hdom : ∃ a ∈ A₀, f a ≤ B.sup' hB f),
+    (∑ S ∈ A₀.powerset, (-1 : ℝ)^S.card * baseMax f B hB S) = 0)
+theorem _ThesisExactChecks.target_203 : _ThesisExpectedTypes.type_203 := by exact @Thesis.SignedMaxIdentities.alternating_max_zero
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SignedMaxIdentities.alternating_max_zero
+  let expected ← getConstInfo `_ThesisExactChecks.target_203
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SignedMaxIdentities.alternating_max_zero"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SignedMaxIdentities.alternating_max_zero | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SignedMaxIdentities do
+    throwError "Defining module mismatch: Thesis.SignedMaxIdentities.alternating_max_zero"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_203) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SignedMaxIdentities.alternating_max_zero: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SignedMaxIdentities.alternating_max_zero"
+#check @Thesis.SignedMaxIdentities.alternating_max_zero
+#print axioms _ThesisExactChecks.target_203
+
+section
+open Finset Matrix Thesis.Tropical Thesis.AffineMaxPartition
+open scoped Classical
+def _ThesisExpectedTypes.type_204 : Prop := (∀ {I : Type} [Fintype I] (p : Polynomial I)
+    (hcard : Fintype.card I + 1 < Fintype.card p.Terms),
+    ∃ c : p.Terms → ℝ, (∑ i, c i) = 0 ∧ (∑ i, c i • p.slope i) = 0 ∧ ∃ i, c i ≠ 0)
+theorem _ThesisExactChecks.target_204 : _ThesisExpectedTypes.type_204 := by exact @Thesis.AffineMaxPartition.dependence_coefficients
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.AffineMaxPartition.dependence_coefficients
+  let expected ← getConstInfo `_ThesisExactChecks.target_204
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.AffineMaxPartition.dependence_coefficients"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.AffineMaxPartition.dependence_coefficients | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.AffineMaxPartition do
+    throwError "Defining module mismatch: Thesis.AffineMaxPartition.dependence_coefficients"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_204) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.AffineMaxPartition.dependence_coefficients: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.AffineMaxPartition.dependence_coefficients"
+#check @Thesis.AffineMaxPartition.dependence_coefficients
+#print axioms _ThesisExactChecks.target_204
+
+section
+open Finset Matrix Thesis.Tropical Thesis.AffineMaxPartition
+open scoped Classical
+def _ThesisExpectedTypes.type_205 : Prop := (∀ {I : Type} [Fintype I] (p : Polynomial I)
+    (hcard : Fintype.card I + 1 < Fintype.card p.Terms),
+    ∃ c : p.Terms → ℝ, (∑ i, c i) = 0 ∧ (∑ i, c i • p.slope i) = 0 ∧
+      (∑ i, c i * p.intercept i) ≤ 0 ∧ ∃ i, c i ≠ 0)
+theorem _ThesisExactChecks.target_205 : _ThesisExpectedTypes.type_205 := by exact @Thesis.AffineMaxPartition.oriented_dependence
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.AffineMaxPartition.oriented_dependence
+  let expected ← getConstInfo `_ThesisExactChecks.target_205
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.AffineMaxPartition.oriented_dependence"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.AffineMaxPartition.oriented_dependence | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.AffineMaxPartition do
+    throwError "Defining module mismatch: Thesis.AffineMaxPartition.oriented_dependence"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_205) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.AffineMaxPartition.oriented_dependence: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.AffineMaxPartition.oriented_dependence"
+#check @Thesis.AffineMaxPartition.oriented_dependence
+#print axioms _ThesisExactChecks.target_205
+
+section
+open Finset Matrix Thesis.Tropical Thesis.AffineMaxPartition
+open scoped Classical
+def _ThesisExpectedTypes.type_206 : Prop := (∀ {I : Type} [Fintype I] (p : Polynomial I) (c : p.Terms → ℝ)
+    (hv : (∑ i, c i • p.slope i) = 0) (x : I → ℝ),
+    (∑ i, c i * (p.slope i ⬝ᵥ x + p.intercept i)) = ∑ i, c i * p.intercept i)
+theorem _ThesisExactChecks.target_206 : _ThesisExpectedTypes.type_206 := by exact @Thesis.AffineMaxPartition.weighted_affine_constant
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.AffineMaxPartition.weighted_affine_constant
+  let expected ← getConstInfo `_ThesisExactChecks.target_206
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.AffineMaxPartition.weighted_affine_constant"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.AffineMaxPartition.weighted_affine_constant | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.AffineMaxPartition do
+    throwError "Defining module mismatch: Thesis.AffineMaxPartition.weighted_affine_constant"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_206) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.AffineMaxPartition.weighted_affine_constant: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.AffineMaxPartition.weighted_affine_constant"
+#check @Thesis.AffineMaxPartition.weighted_affine_constant
+#print axioms _ThesisExactChecks.target_206
+
+section
+open Finset Matrix Thesis.Tropical Thesis.AffineMaxPartition
+open scoped Classical
+def _ThesisExpectedTypes.type_207 : Prop := (∀ {I : Type} [Fintype I] (p : Polynomial I)
+    (hcard : Fintype.card I + 1 < Fintype.card p.Terms),
+    ∃ (A B : Finset p.Terms) (_ : A.Nonempty) (hB : B.Nonempty),
+      Disjoint A B ∧ A ∪ B = Finset.univ ∧
+      ∀ x : I → ℝ, ∃ a ∈ A,
+        p.slope a ⬝ᵥ x + p.intercept a ≤ B.sup' hB (fun b => p.slope b ⬝ᵥ x + p.intercept b))
+theorem _ThesisExactChecks.target_207 : _ThesisExpectedTypes.type_207 := by exact @Thesis.AffineMaxPartition.global_partition
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.AffineMaxPartition.global_partition
+  let expected ← getConstInfo `_ThesisExactChecks.target_207
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.AffineMaxPartition.global_partition"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.AffineMaxPartition.global_partition | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.AffineMaxPartition do
+    throwError "Defining module mismatch: Thesis.AffineMaxPartition.global_partition"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_207) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.AffineMaxPartition.global_partition: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.AffineMaxPartition.global_partition"
+#check @Thesis.AffineMaxPartition.global_partition
+#print axioms _ThesisExactChecks.target_207
+
+section
+open Finset Matrix Thesis.Tropical Thesis.SignedMaxReduction
+open scoped Classical
+def _ThesisExpectedTypes.type_208 : Prop := (∀ {I : Type} (p : Polynomial I) (S : Finset p.Terms) (hS : S.Nonempty),
+    Fintype.card (restrict p S hS).Terms = S.card)
+theorem _ThesisExactChecks.target_208 : _ThesisExpectedTypes.type_208 := by exact @Thesis.SignedMaxReduction.restrict_card
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SignedMaxReduction.restrict_card
+  let expected ← getConstInfo `_ThesisExactChecks.target_208
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SignedMaxReduction.restrict_card"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SignedMaxReduction.restrict_card | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SignedMaxReduction do
+    throwError "Defining module mismatch: Thesis.SignedMaxReduction.restrict_card"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_208) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SignedMaxReduction.restrict_card: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SignedMaxReduction.restrict_card"
+#check @Thesis.SignedMaxReduction.restrict_card
+#print axioms _ThesisExactChecks.target_208
+
+section
+open Finset Matrix Thesis.Tropical Thesis.SignedMaxReduction
+open scoped Classical
+def _ThesisExpectedTypes.type_209 : Prop := (∀ {I : Type} [Fintype I] (p : Polynomial I) (S : Finset p.Terms) (hS : S.Nonempty)
+    (x : I → ℝ),
+    (restrict p S hS).eval x = S.sup' hS (fun a => p.slope a ⬝ᵥ x + p.intercept a))
+theorem _ThesisExactChecks.target_209 : _ThesisExpectedTypes.type_209 := by exact @Thesis.SignedMaxReduction.restrict_eval
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SignedMaxReduction.restrict_eval
+  let expected ← getConstInfo `_ThesisExactChecks.target_209
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SignedMaxReduction.restrict_eval"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SignedMaxReduction.restrict_eval | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SignedMaxReduction do
+    throwError "Defining module mismatch: Thesis.SignedMaxReduction.restrict_eval"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_209) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SignedMaxReduction.restrict_eval: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SignedMaxReduction.restrict_eval"
+#check @Thesis.SignedMaxReduction.restrict_eval
+#print axioms _ThesisExactChecks.target_209
+
+section
+open Finset Matrix Thesis.Tropical Thesis.SignedMaxReduction
+open scoped Classical
+def _ThesisExpectedTypes.type_210 : Prop := (∀ {I : Type} [Fintype I] (p : Polynomial I),
+    p.eval ∈ smallSpan I)
+theorem _ThesisExactChecks.target_210 : _ThesisExpectedTypes.type_210 := by exact @Thesis.SignedMaxReduction.eval_mem_smallSpan
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SignedMaxReduction.eval_mem_smallSpan
+  let expected ← getConstInfo `_ThesisExactChecks.target_210
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SignedMaxReduction.eval_mem_smallSpan"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SignedMaxReduction.eval_mem_smallSpan | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SignedMaxReduction do
+    throwError "Defining module mismatch: Thesis.SignedMaxReduction.eval_mem_smallSpan"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_210) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SignedMaxReduction.eval_mem_smallSpan: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SignedMaxReduction.eval_mem_smallSpan"
+#check @Thesis.SignedMaxReduction.eval_mem_smallSpan
+#print axioms _ThesisExactChecks.target_210
+
+section
+open Finset Matrix Thesis.Tropical Thesis.SignedMaxReduction
+open scoped Classical
+def _ThesisExpectedTypes.type_211 : Prop := (∀ {I : Type} [Fintype I] (f : (I → ℝ) → ℝ)
+    (hf : f ∈ smallSpan I),
+    ∃ (N : ℕ) (c : Fin N → ℝ) (q : Fin N → Polynomial I),
+      (∀ j, Fintype.card (q j).Terms ≤ Fintype.card I + 1) ∧
+      ∀ x, f x = ∑ j, c j * (q j).eval x)
+theorem _ThesisExactChecks.target_211 : _ThesisExpectedTypes.type_211 := by exact @Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan
+  let expected ← getConstInfo `_ThesisExactChecks.target_211
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SignedMaxReduction do
+    throwError "Defining module mismatch: Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_211) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan"
+#check @Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan
+#print axioms _ThesisExactChecks.target_211
+
+section
+open Finset Matrix Thesis.Tropical Thesis.SignedMaxReduction
+open scoped Classical
+def _ThesisExpectedTypes.type_212 : Prop := (∀ {I : Type} [Fintype I] (p : Polynomial I),
+    ∃ (N : ℕ) (c : Fin N → ℝ) (q : Fin N → Polynomial I),
+      (∀ j, Fintype.card (q j).Terms ≤ Fintype.card I + 1) ∧
+      ∀ x, p.eval x = ∑ j, c j * (q j).eval x)
+theorem _ThesisExactChecks.target_212 : _ThesisExpectedTypes.type_212 := by exact @Thesis.SignedMaxReduction.polynomial_signed_small_max
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SignedMaxReduction.polynomial_signed_small_max
+  let expected ← getConstInfo `_ThesisExactChecks.target_212
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SignedMaxReduction.polynomial_signed_small_max"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SignedMaxReduction.polynomial_signed_small_max | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SignedMaxReduction do
+    throwError "Defining module mismatch: Thesis.SignedMaxReduction.polynomial_signed_small_max"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_212) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SignedMaxReduction.polynomial_signed_small_max: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SignedMaxReduction.polynomial_signed_small_max"
+#check @Thesis.SignedMaxReduction.polynomial_signed_small_max
+#print axioms _ThesisExactChecks.target_212
+
+section
+open Finset Matrix Thesis.Tropical Thesis.SignedMaxReduction
+open scoped Classical
+def _ThesisExpectedTypes.type_213 : Prop := (∀ {I : Type} [Fintype I] (p r : Polynomial I),
+    ∃ (N : ℕ) (c : Fin N → ℝ) (q : Fin N → Polynomial I),
+      (∀ j, Fintype.card (q j).Terms ≤ Fintype.card I + 1) ∧
+      ∀ x, p.eval x - r.eval x = ∑ j, c j * (q j).eval x)
+theorem _ThesisExactChecks.target_213 : _ThesisExpectedTypes.type_213 := by exact @Thesis.SignedMaxReduction.difference_signed_small_max
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SignedMaxReduction.difference_signed_small_max
+  let expected ← getConstInfo `_ThesisExactChecks.target_213
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SignedMaxReduction.difference_signed_small_max"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SignedMaxReduction.difference_signed_small_max | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SignedMaxReduction do
+    throwError "Defining module mismatch: Thesis.SignedMaxReduction.difference_signed_small_max"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_213) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SignedMaxReduction.difference_signed_small_max: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SignedMaxReduction.difference_signed_small_max"
+#check @Thesis.SignedMaxReduction.difference_signed_small_max
+#print axioms _ThesisExactChecks.target_213
+
+section
+open Set HiddenMonotonicity Matrix Thesis.GeneralRegularization
+def _ThesisExpectedTypes.type_214 : Prop := (∀ (R : Regularizer) (z : ℝ), ∃ p ∈ Icc (0 : ℝ) 1, IsMaxOn (objective R z) (Icc 0 1) p)
+theorem _ThesisExactChecks.target_214 : _ThesisExpectedTypes.type_214 := by exact @Thesis.GeneralRegularization.exists_optimizer
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.GeneralRegularization.exists_optimizer
+  let expected ← getConstInfo `_ThesisExactChecks.target_214
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.GeneralRegularization.exists_optimizer"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.GeneralRegularization.exists_optimizer | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.GeneralRegularization do
+    throwError "Defining module mismatch: Thesis.GeneralRegularization.exists_optimizer"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_214) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.GeneralRegularization.exists_optimizer: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.GeneralRegularization.exists_optimizer"
+#check @Thesis.GeneralRegularization.exists_optimizer
+#print axioms _ThesisExactChecks.target_214
+
+section
+open Set HiddenMonotonicity Matrix Thesis.GeneralRegularization
+def _ThesisExpectedTypes.type_215 : Prop := (∀ (R : Regularizer) (z : ℝ), IsGreatest ((objective R z) '' Icc (0 : ℝ) 1) (activation R z))
+theorem _ThesisExactChecks.target_215 : _ThesisExpectedTypes.type_215 := by exact @Thesis.GeneralRegularization.activation_isGreatest
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.GeneralRegularization.activation_isGreatest
+  let expected ← getConstInfo `_ThesisExactChecks.target_215
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.GeneralRegularization.activation_isGreatest"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.GeneralRegularization.activation_isGreatest | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.GeneralRegularization do
+    throwError "Defining module mismatch: Thesis.GeneralRegularization.activation_isGreatest"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_215) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.GeneralRegularization.activation_isGreatest: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.GeneralRegularization.activation_isGreatest"
+#check @Thesis.GeneralRegularization.activation_isGreatest
+#print axioms _ThesisExactChecks.target_215
+
+section
+open Set HiddenMonotonicity Matrix Thesis.GeneralRegularization
+def _ThesisExpectedTypes.type_216 : Prop := (∀ (R : Regularizer) (π : ℝ → ℝ)
+(hπ : ∀ z, π z ∈ Icc (0 : ℝ) 1 ∧ IsMaxOn (objective R z) (Icc 0 1) (π z))
+{n m k : ℕ} (net : Network n m) (x : PairVec n)
+(wp wn : Matrix (Fin k) (Fin m) ℝ) (bp bn : Vec k),
+ValidPairActivation (activation R) (pairWith R π) ∧
+NonnegativePairActivation (pairWith R π) ∧
+ConvexOn ℝ univ (activation R) ∧ Monotone (activation R) ∧
+LipschitzWith 1 (activation R) ∧
+(∀ z, DifferentiableAt ℝ (activation R) z → π z = deriv (activation R) z) ∧
+(preP wp wn (net.decomposeWith (pairWith R π) x)+bp -
+(preN wp wn (net.decomposeWith (pairWith R π) x)+bn) =
+affineLayer wp wn bp bn (net.forwardWith (activation R) (x.1-x.2))))
+theorem _ThesisExactChecks.target_216 : _ThesisExpectedTypes.type_216 := by exact @Thesis.GeneralRegularization.regularized_decomposition_validity
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.GeneralRegularization.regularized_decomposition_validity
+  let expected ← getConstInfo `_ThesisExactChecks.target_216
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.GeneralRegularization.regularized_decomposition_validity"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.GeneralRegularization.regularized_decomposition_validity | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.GeneralRegularization do
+    throwError "Defining module mismatch: Thesis.GeneralRegularization.regularized_decomposition_validity"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_216) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.GeneralRegularization.regularized_decomposition_validity: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.GeneralRegularization.regularized_decomposition_validity"
+#check @Thesis.GeneralRegularization.regularized_decomposition_validity
+#print axioms _ThesisExactChecks.target_216
+
+section
+open Set HiddenMonotonicity Matrix Thesis.GeneralRegularization
+def _ThesisExpectedTypes.type_217 : Prop := (∀ z : ℝ, activation zeroRegularizer z = relu z)
+theorem _ThesisExactChecks.target_217 : _ThesisExpectedTypes.type_217 := by exact @Thesis.GeneralRegularization.zero_activation
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.GeneralRegularization.zero_activation
+  let expected ← getConstInfo `_ThesisExactChecks.target_217
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.GeneralRegularization.zero_activation"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.GeneralRegularization.zero_activation | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.GeneralRegularization do
+    throwError "Defining module mismatch: Thesis.GeneralRegularization.zero_activation"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_217) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.GeneralRegularization.zero_activation: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.GeneralRegularization.zero_activation"
+#check @Thesis.GeneralRegularization.zero_activation
+#print axioms _ThesisExactChecks.target_217
+
+section
+open Set HiddenMonotonicity Matrix Thesis.GeneralRegularization
+def _ThesisExpectedTypes.type_218 : Prop := (pairWith zeroRegularizer hardGate = Thesis.StoppingDecomposition.stopPair)
+theorem _ThesisExactChecks.target_218 : _ThesisExpectedTypes.type_218 := by exact @Thesis.GeneralRegularization.zero_pair_is_stopping
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.GeneralRegularization.zero_pair_is_stopping
+  let expected ← getConstInfo `_ThesisExactChecks.target_218
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.GeneralRegularization.zero_pair_is_stopping"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.GeneralRegularization.zero_pair_is_stopping | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.GeneralRegularization do
+    throwError "Defining module mismatch: Thesis.GeneralRegularization.zero_pair_is_stopping"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_218) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.GeneralRegularization.zero_pair_is_stopping: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.GeneralRegularization.zero_pair_is_stopping"
+#check @Thesis.GeneralRegularization.zero_pair_is_stopping
+#print axioms _ThesisExactChecks.target_218
+
+section
+open Set HiddenMonotonicity Matrix Thesis.GeneralRegularization
+def _ThesisExpectedTypes.type_219 : Prop := (∀ (θ : ℝ) (hθ : 0 < θ) (z : ℝ),
+Thesis.Regularization.gate θ z ∈ Icc (0 : ℝ) 1 ∧
+IsMaxOn (objective (entropyRegularizer θ hθ) z) (Icc 0 1)
+  (Thesis.Regularization.gate θ z))
+theorem _ThesisExactChecks.target_219 : _ThesisExpectedTypes.type_219 := by exact @Thesis.GeneralRegularization.sigmoid_optimal
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.GeneralRegularization.sigmoid_optimal
+  let expected ← getConstInfo `_ThesisExactChecks.target_219
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.GeneralRegularization.sigmoid_optimal"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.GeneralRegularization.sigmoid_optimal | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.GeneralRegularization do
+    throwError "Defining module mismatch: Thesis.GeneralRegularization.sigmoid_optimal"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_219) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.GeneralRegularization.sigmoid_optimal: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.GeneralRegularization.sigmoid_optimal"
+#check @Thesis.GeneralRegularization.sigmoid_optimal
+#print axioms _ThesisExactChecks.target_219
+
+section
+open Set HiddenMonotonicity Matrix Thesis.GeneralRegularization
+def _ThesisExpectedTypes.type_220 : Prop := (∀ (θ : ℝ) (hθ : 0 < θ) (z : ℝ), activation (entropyRegularizer θ hθ) z = Thesis.Regularization.softplus θ z)
+theorem _ThesisExactChecks.target_220 : _ThesisExpectedTypes.type_220 := by exact @Thesis.GeneralRegularization.entropy_activation
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.GeneralRegularization.entropy_activation
+  let expected ← getConstInfo `_ThesisExactChecks.target_220
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.GeneralRegularization.entropy_activation"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.GeneralRegularization.entropy_activation | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.GeneralRegularization do
+    throwError "Defining module mismatch: Thesis.GeneralRegularization.entropy_activation"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_220) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.GeneralRegularization.entropy_activation: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.GeneralRegularization.entropy_activation"
+#check @Thesis.GeneralRegularization.entropy_activation
+#print axioms _ThesisExactChecks.target_220
+
+section
+open Set HiddenMonotonicity Matrix Thesis.GeneralRegularization
+def _ThesisExpectedTypes.type_221 : Prop := (∀ (θ : ℝ) (hθ : 0 < θ) (z : ℝ × ℝ),
+pairWith (entropyRegularizer θ hθ) (Thesis.Regularization.gate θ) z =
+Thesis.Regularization.softSplit θ z.1 z.2)
+theorem _ThesisExactChecks.target_221 : _ThesisExpectedTypes.type_221 := by exact @Thesis.GeneralRegularization.entropy_pair_is_softSplit
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.GeneralRegularization.entropy_pair_is_softSplit
+  let expected ← getConstInfo `_ThesisExactChecks.target_221
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.GeneralRegularization.entropy_pair_is_softSplit"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.GeneralRegularization.entropy_pair_is_softSplit | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.GeneralRegularization do
+    throwError "Defining module mismatch: Thesis.GeneralRegularization.entropy_pair_is_softSplit"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_221) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.GeneralRegularization.entropy_pair_is_softSplit: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.GeneralRegularization.entropy_pair_is_softSplit"
+#check @Thesis.GeneralRegularization.entropy_pair_is_softSplit
+#print axioms _ThesisExactChecks.target_221
+
+section
+open Set HiddenMonotonicity
+def _ThesisExpectedTypes.type_222 : Prop := (∀ {d n m : ℕ} (net : Network n m) (hw : net.Nonnegative)
+(p q : Vec d → Vec n)
+(hp : ∀ i, ConvexOn ℝ univ (fun x => p x i))
+(hq : ∀ i, ConvexOn ℝ univ (fun x => q x i)),
+(∀ i, ConvexOn ℝ univ (fun x => (net.split (p x) (q x)).1 i)) ∧
+(∀ i, ConvexOn ℝ univ (fun x => (net.split (p x) (q x)).2 i)))
+theorem _ThesisExactChecks.target_222 : _ThesisExpectedTypes.type_222 := by exact @HiddenMonotonicity.Network.split_convex_input
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Network.split_convex_input
+  let expected ← getConstInfo `_ThesisExactChecks.target_222
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Network.split_convex_input"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Network.split_convex_input | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ConvexInput do
+    throwError "Defining module mismatch: HiddenMonotonicity.Network.split_convex_input"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_222) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Network.split_convex_input: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Network.split_convex_input"
+#check @HiddenMonotonicity.Network.split_convex_input
+#print axioms _ThesisExactChecks.target_222
+
+section
+open Set HiddenMonotonicity
+def _ThesisExpectedTypes.type_223 : Prop := (∀ {d n m : ℕ} (net : Network n m) (hw : net.Nonnegative)
+(p q : Vec d → Vec n)
+(hp : ∀ i, ConvexOn ℝ univ (fun x => p x i))
+(hq : ∀ i, ConvexOn ℝ univ (fun x => q x i))
+(wp wn : Vec m) (hwp : ∀ i, 0 ≤ wp i) (hwn : ∀ i, 0 ≤ wn i) (bp bn : ℝ),
+ConvexOn ℝ univ (fun x => (net.affineHeads (coefficientRow wp) (coefficientRow wn) bp bn (p x,q x)).1) ∧
+ConvexOn ℝ univ (fun x => (net.affineHeads (coefficientRow wp) (coefficientRow wn) bp bn (p x,q x)).2))
+theorem _ThesisExactChecks.target_223 : _ThesisExpectedTypes.type_223 := by exact @HiddenMonotonicity.Network.affine_heads_convex_input
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Network.affine_heads_convex_input
+  let expected ← getConstInfo `_ThesisExactChecks.target_223
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Network.affine_heads_convex_input"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Network.affine_heads_convex_input | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ConvexInput do
+    throwError "Defining module mismatch: HiddenMonotonicity.Network.affine_heads_convex_input"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_223) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Network.affine_heads_convex_input: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Network.affine_heads_convex_input"
+#check @HiddenMonotonicity.Network.affine_heads_convex_input
+#print axioms _ThesisExactChecks.target_223
+
+section
+open Set HiddenMonotonicity
+def _ThesisExpectedTypes.type_224 : Prop := (∀ {d n m : ℕ} (net : Network n m) (hw : net.Nonnegative)
+(p q : Vec d → Vec n)
+(hp : ∀ i, ConvexOn ℝ univ (fun x => p x i))
+(hq : ∀ i, ConvexOn ℝ univ (fun x => q x i)),
+(∀ i, ConvexOn ℝ univ (fun x => (net.decomposeWith (mixPair 1) (p x,q x)).1 i)) ∧
+(∀ i, ConvexOn ℝ univ (fun x => (net.decomposeWith (mixPair 1) (p x,q x)).2 i)) ∧
+(∀ x, (net.decomposeWith (mixPair 1) (p x,q x)).1 - (net.decomposeWith (mixPair 1) (p x,q x)).2 = net.eval (p x-q x)))
+theorem _ThesisExactChecks.target_224 : _ThesisExpectedTypes.type_224 := by exact @HiddenMonotonicity.Network.mixing_one_convex_input
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Network.mixing_one_convex_input
+  let expected ← getConstInfo `_ThesisExactChecks.target_224
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Network.mixing_one_convex_input"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Network.mixing_one_convex_input | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.ConvexInput do
+    throwError "Defining module mismatch: HiddenMonotonicity.Network.mixing_one_convex_input"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_224) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Network.mixing_one_convex_input: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Network.mixing_one_convex_input"
+#check @HiddenMonotonicity.Network.mixing_one_convex_input
+#print axioms _ThesisExactChecks.target_224
+
+section
+open HiddenMonotonicity HiddenMonotonicity.Convolution
+def _ThesisExpectedTypes.type_225 : Prop := (∀ {ci co ip op taps : ℕ}
+(K : Fin co → Fin ci → Fin taps → ℝ)
+(stencil : Fin op → Fin taps → Option (Fin ip)) (x : Vec (ci*ip)),
+applyKernel K stencil x = (kernelMatrix K stencil).mulVec x)
+theorem _ThesisExactChecks.target_225 : _ThesisExpectedTypes.type_225 := by exact @HiddenMonotonicity.Convolution.applyKernel_eq_mulVec
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Convolution.applyKernel_eq_mulVec
+  let expected ← getConstInfo `_ThesisExactChecks.target_225
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Convolution.applyKernel_eq_mulVec"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Convolution.applyKernel_eq_mulVec | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.Convolution do
+    throwError "Defining module mismatch: HiddenMonotonicity.Convolution.applyKernel_eq_mulVec"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_225) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Convolution.applyKernel_eq_mulVec: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Convolution.applyKernel_eq_mulVec"
+#check @HiddenMonotonicity.Convolution.applyKernel_eq_mulVec
+#print axioms _ThesisExactChecks.target_225
+
+section
+open HiddenMonotonicity HiddenMonotonicity.Convolution
+def _ThesisExpectedTypes.type_226 : Prop := (∀ {ci co ip op taps : ℕ}
+(K : Fin co → Fin ci → Fin taps → ℝ)
+(stencil : Fin op → Fin taps → Option (Fin ip)) (x : Vec (ci*ip)),
+HasFDerivAt (applyKernel K stencil) (matrixCLM (kernelMatrix K stencil)) x)
+theorem _ThesisExactChecks.target_226 : _ThesisExpectedTypes.type_226 := by exact @HiddenMonotonicity.Convolution.applyKernel_hasFDerivAt
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Convolution.applyKernel_hasFDerivAt
+  let expected ← getConstInfo `_ThesisExactChecks.target_226
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Convolution.applyKernel_hasFDerivAt"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Convolution.applyKernel_hasFDerivAt | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.Convolution do
+    throwError "Defining module mismatch: HiddenMonotonicity.Convolution.applyKernel_hasFDerivAt"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_226) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Convolution.applyKernel_hasFDerivAt: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Convolution.applyKernel_hasFDerivAt"
+#check @HiddenMonotonicity.Convolution.applyKernel_hasFDerivAt
+#print axioms _ThesisExactChecks.target_226
+
+section
+open HiddenMonotonicity HiddenMonotonicity.Convolution
+def _ThesisExpectedTypes.type_227 : Prop := (∀ {ci co ip op taps : ℕ}
+(K : Fin co → Fin ci → Fin taps → ℝ)
+(stencil : Fin op → Fin taps → Option (Fin ip)) (b : Fin co → ℝ) (x : PairVec (ci*ip)),
+HasFDerivAt (splitKernel K stencil b)
+((preP (kernelMatrix (positiveKernel K) stencil) (kernelMatrix (negativeKernel K) stencil)).prod
+(preN (kernelMatrix (positiveKernel K) stencil) (kernelMatrix (negativeKernel K) stencil))) x)
+theorem _ThesisExactChecks.target_227 : _ThesisExpectedTypes.type_227 := by exact @HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt
+  let expected ← getConstInfo `_ThesisExactChecks.target_227
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.Convolution do
+    throwError "Defining module mismatch: HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_227) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt"
+#check @HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt
+#print axioms _ThesisExactChecks.target_227
+
+section
+open HiddenMonotonicity HiddenMonotonicity.Convolution
+def _ThesisExpectedTypes.type_228 : Prop := (∀ {ci co ip op taps : ℕ}
+(K : Fin co → Fin ci → Fin taps → ℝ)
+(stencil : Fin op → Fin taps → Option (Fin ip)) (b : Fin co → ℝ),
+(∀ x, 0 ≤ x → 0 ≤ splitKernel K stencil b x) ∧
+Monotone (splitKernel K stencil b) ∧
+(∀ i, ConvexOn ℝ Set.univ (fun x => (splitKernel K stencil b x).1 i) ∧
+ConvexOn ℝ Set.univ (fun x => (splitKernel K stencil b x).2 i)) ∧
+(∀ x, (splitKernel K stencil b x).1-(splitKernel K stencil b x).2 =
+applyKernel K stencil (x.1-x.2)+(fun u => b (unflat u).1)))
+theorem _ThesisExactChecks.target_228 : _ThesisExpectedTypes.type_228 := by exact @HiddenMonotonicity.Convolution.splitKernel_properties
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Convolution.splitKernel_properties
+  let expected ← getConstInfo `_ThesisExactChecks.target_228
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Convolution.splitKernel_properties"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Convolution.splitKernel_properties | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.Convolution do
+    throwError "Defining module mismatch: HiddenMonotonicity.Convolution.splitKernel_properties"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_228) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Convolution.splitKernel_properties: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Convolution.splitKernel_properties"
+#check @HiddenMonotonicity.Convolution.splitKernel_properties
+#print axioms _ThesisExactChecks.target_228
+
+section
+open HiddenMonotonicity Finset Matrix
+def _ThesisExpectedTypes.type_229 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (x : Fin d × Bool → ℝ),
+c.compileSplitDAG.eval x=c.split false x)
+theorem _ThesisExactChecks.target_229 : _ThesisExpectedTypes.type_229 := by exact @HiddenMonotonicity.Circuit.compileSplitDAG_eval
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Circuit.compileSplitDAG_eval
+  let expected ← getConstInfo `_ThesisExactChecks.target_229
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Circuit.compileSplitDAG_eval"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Circuit.compileSplitDAG_eval | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SplitDAGSize do
+    throwError "Defining module mismatch: HiddenMonotonicity.Circuit.compileSplitDAG_eval"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_229) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Circuit.compileSplitDAG_eval: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Circuit.compileSplitDAG_eval"
+#check @HiddenMonotonicity.Circuit.compileSplitDAG_eval
+#print axioms _ThesisExactChecks.target_229
+
+section
+open HiddenMonotonicity Finset Matrix
+def _ThesisExpectedTypes.type_230 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (D : ℕ)
+(hc : c.BoundedDuplication D),
+c.compileSplitDAG.graphSize≤24*2^D*c.syntaxSize ∧
+(∀ x : Fin d × Bool → ℝ,
+  (c.compileSplitDAG.eval x).1-(c.compileSplitDAG.eval x).2=
+    c.eval (fun i => x (i,false)-x (i,true))) ∧
+(∀ x : Fin d × Bool → ℝ, 0≤x → 0≤c.compileSplitDAG.eval x) ∧
+(∀ x y : Fin d × Bool → ℝ, 0≤x → 0≤y → x≤y →
+  c.compileSplitDAG.eval x≤c.compileSplitDAG.eval y))
+theorem _ThesisExactChecks.target_230 : _ThesisExpectedTypes.type_230 := by exact @HiddenMonotonicity.Circuit.split_DAG_with_size
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.Circuit.split_DAG_with_size
+  let expected ← getConstInfo `_ThesisExactChecks.target_230
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.Circuit.split_DAG_with_size"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.Circuit.split_DAG_with_size | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.SplitDAGSize do
+    throwError "Defining module mismatch: HiddenMonotonicity.Circuit.split_DAG_with_size"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_230) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.Circuit.split_DAG_with_size: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.Circuit.split_DAG_with_size"
+#check @HiddenMonotonicity.Circuit.split_DAG_with_size
+#print axioms _ThesisExactChecks.target_230
+
+section
+open HiddenMonotonicity Finset Matrix
+def _ThesisExpectedTypes.type_231 : Prop := (∀ {n : ℕ} (g : MaxoutProductGate n) (x : Vec n),
+g.toExpr.eval x=g.eval x)
+theorem _ThesisExactChecks.target_231 : _ThesisExpectedTypes.type_231 := by exact @HiddenMonotonicity.MaxoutProductGate.toExpr_eval
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.MaxoutProductGate.toExpr_eval
+  let expected ← getConstInfo `_ThesisExactChecks.target_231
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.MaxoutProductGate.toExpr_eval"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.MaxoutProductGate.toExpr_eval | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MaxoutProductSize do
+    throwError "Defining module mismatch: HiddenMonotonicity.MaxoutProductGate.toExpr_eval"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_231) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.MaxoutProductGate.toExpr_eval: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.MaxoutProductGate.toExpr_eval"
+#check @HiddenMonotonicity.MaxoutProductGate.toExpr_eval
+#print axioms _ThesisExactChecks.target_231
+
+section
+open HiddenMonotonicity Finset Matrix
+def _ThesisExpectedTypes.type_232 : Prop := (∀ {d n : ℕ} (c : MaxoutProductDAG d n) (x : Vec d),
+c.toCircuit.eval x=c.eval x)
+theorem _ThesisExactChecks.target_232 : _ThesisExpectedTypes.type_232 := by exact @HiddenMonotonicity.MaxoutProductDAG.toCircuit_eval
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.MaxoutProductDAG.toCircuit_eval
+  let expected ← getConstInfo `_ThesisExactChecks.target_232
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.MaxoutProductDAG.toCircuit_eval"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.MaxoutProductDAG.toCircuit_eval | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MaxoutProductSize do
+    throwError "Defining module mismatch: HiddenMonotonicity.MaxoutProductDAG.toCircuit_eval"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_232) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.MaxoutProductDAG.toCircuit_eval: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.MaxoutProductDAG.toCircuit_eval"
+#check @HiddenMonotonicity.MaxoutProductDAG.toCircuit_eval
+#print axioms _ThesisExactChecks.target_232
+
+section
+open HiddenMonotonicity Finset Matrix
+def _ThesisExpectedTypes.type_233 : Prop := (∀ {d n : ℕ} (c : MaxoutProductDAG d n) (x : Vec d),
+c.eval x=(c.compile.eval (canonicalSplitInput x)).1-
+(c.compile.eval (canonicalSplitInput x)).2)
+theorem _ThesisExactChecks.target_233 : _ThesisExpectedTypes.type_233 := by exact @HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery
+  let expected ← getConstInfo `_ThesisExactChecks.target_233
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MaxoutProductSize do
+    throwError "Defining module mismatch: HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_233) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery"
+#check @HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery
+#print axioms _ThesisExactChecks.target_233
+
+section
+open HiddenMonotonicity Finset Matrix
+def _ThesisExpectedTypes.type_234 : Prop := (∀ {d n : ℕ} (c : MaxoutProductDAG d n) (K D : ℕ)
+(hc : c.BoundedRankDegree K D),
+∃ g : SplitDAG d n,
+g.maxoutRank≤2 ∧ g.graphSize≤(24*2^(max K D)*(4*K+2*D+1))*c.graphSize ∧
+(∀ x : Fin d × Bool → ℝ, (g.eval x).1-(g.eval x).2=
+  c.eval (fun i => x (i,false)-x (i,true))) ∧
+(∀ x : Fin d × Bool → ℝ, 0≤x → 0≤g.eval x) ∧
+(∀ x y : Fin d × Bool → ℝ, 0≤x → 0≤y → x≤y → g.eval x≤g.eval y) ∧
+(∀ i : Fin n, ∃ P Q : MaxPolynomial (Fin d × Bool),
+  ∀ x : Fin d × Bool → ℝ, 0≤x → (g.eval x).1 i=P.eval x ∧ (g.eval x).2 i=Q.eval x))
+theorem _ThesisExactChecks.target_234 : _ThesisExpectedTypes.type_234 := by exact @HiddenMonotonicity.MaxoutProductDAG.split_linear_size
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.MaxoutProductDAG.split_linear_size
+  let expected ← getConstInfo `_ThesisExactChecks.target_234
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.MaxoutProductDAG.split_linear_size"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.MaxoutProductDAG.split_linear_size | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MaxoutProductSize do
+    throwError "Defining module mismatch: HiddenMonotonicity.MaxoutProductDAG.split_linear_size"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_234) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.MaxoutProductDAG.split_linear_size: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.MaxoutProductDAG.split_linear_size"
+#check @HiddenMonotonicity.MaxoutProductDAG.split_linear_size
+#print axioms _ThesisExactChecks.target_234
+
+section
+open HiddenMonotonicity Finset Matrix
+def _ThesisExpectedTypes.type_235 : Prop := (∀ {n : ℕ} (g : MaxoutProductGate n),
+g.totalDegree≤g.expandedTerms)
+theorem _ThesisExactChecks.target_235 : _ThesisExpectedTypes.type_235 := by exact @HiddenMonotonicity.MaxoutProductGate.degree_le_expandedTerms
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.MaxoutProductGate.degree_le_expandedTerms
+  let expected ← getConstInfo `_ThesisExactChecks.target_235
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.MaxoutProductGate.degree_le_expandedTerms"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.MaxoutProductGate.degree_le_expandedTerms | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MaxoutProductSize do
+    throwError "Defining module mismatch: HiddenMonotonicity.MaxoutProductGate.degree_le_expandedTerms"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_235) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.MaxoutProductGate.degree_le_expandedTerms: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.MaxoutProductGate.degree_le_expandedTerms"
+#check @HiddenMonotonicity.MaxoutProductGate.degree_le_expandedTerms
+#print axioms _ThesisExactChecks.target_235
+
+section
+open HiddenMonotonicity Finset Matrix
+def _ThesisExpectedTypes.type_236 : Prop := (∀ {d n : ℕ} (c : MaxoutProductDAG d n) (K B : ℕ)
+(hc : c.BoundedRankExpansion K B),
+∃ g : SplitDAG d n,
+g.maxoutRank≤2 ∧ g.graphSize≤(24*2^(max K B)*(4*K+2*B+1))*c.graphSize ∧
+(∀ x : Fin d × Bool → ℝ, (g.eval x).1-(g.eval x).2=
+  c.eval (fun i => x (i,false)-x (i,true))) ∧
+(∀ x : Fin d × Bool → ℝ, 0≤x → 0≤g.eval x) ∧
+(∀ x y : Fin d × Bool → ℝ, 0≤x → 0≤y → x≤y → g.eval x≤g.eval y) ∧
+(∀ i : Fin n, ∃ P Q : MaxPolynomial (Fin d × Bool),
+  ∀ x : Fin d × Bool → ℝ, 0≤x → (g.eval x).1 i=P.eval x ∧ (g.eval x).2 i=Q.eval x))
+theorem _ThesisExactChecks.target_236 : _ThesisExpectedTypes.type_236 := by exact @HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion
+  let expected ← getConstInfo `_ThesisExactChecks.target_236
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MaxoutProductSize do
+    throwError "Defining module mismatch: HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_236) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion"
+#check @HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion
+#print axioms _ThesisExactChecks.target_236
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_237 : Prop := (∀ {n : ℕ} (e : SignedExpr (Fin n)) (he : e.Additive) (x : PairVec n) (hx : ExpressionRegular e x), HasFDerivAt (stoppingExpr e) (kernelMap (expressionKernel e x)) x)
+theorem _ThesisExactChecks.target_237 : _ThesisExpectedTypes.type_237 := by exact @Thesis.StoppingDAG.stoppingExpr_hasFDerivAt
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.stoppingExpr_hasFDerivAt
+  let expected ← getConstInfo `_ThesisExactChecks.target_237
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.stoppingExpr_hasFDerivAt"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.stoppingExpr_hasFDerivAt | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingExpressionKernel do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.stoppingExpr_hasFDerivAt"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_237) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.stoppingExpr_hasFDerivAt: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.stoppingExpr_hasFDerivAt"
+#check @Thesis.StoppingDAG.stoppingExpr_hasFDerivAt
+#print axioms _ThesisExactChecks.target_237
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_238 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (hx : CircuitRegular c x), HasFDerivAt (stoppingCircuit c) (pairMap (dagKernel c x).1 (dagKernel c x).2) x)
+theorem _ThesisExactChecks.target_238 : _ThesisExpectedTypes.type_238 := by exact @Thesis.StoppingDAG.stoppingCircuit_hasFDerivAt
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.stoppingCircuit_hasFDerivAt
+  let expected ← getConstInfo `_ThesisExactChecks.target_238
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.stoppingCircuit_hasFDerivAt"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.stoppingCircuit_hasFDerivAt | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGDerivative do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.stoppingCircuit_hasFDerivAt"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_238) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.stoppingCircuit_hasFDerivAt: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.stoppingCircuit_hasFDerivAt"
+#check @Thesis.StoppingDAG.stoppingCircuit_hasFDerivAt
+#print axioms _ThesisExactChecks.target_238
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_239 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (j : Fin n) (path : DAGPaths c), 0≤pathProbability c x j path)
+theorem _ThesisExactChecks.target_239 : _ThesisExpectedTypes.type_239 := by exact @Thesis.StoppingDAG.pathProbability_nonnegative
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.pathProbability_nonnegative
+  let expected ← getConstInfo `_ThesisExactChecks.target_239
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.pathProbability_nonnegative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.pathProbability_nonnegative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPaths do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.pathProbability_nonnegative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_239) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.pathProbability_nonnegative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.pathProbability_nonnegative"
+#check @Thesis.StoppingDAG.pathProbability_nonnegative
+#print axioms _ThesisExactChecks.target_239
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_240 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (x : PairVec d) (j : Fin n), (∑ path : DAGPaths c,pathProbability c x j path)=1)
+theorem _ThesisExactChecks.target_240 : _ThesisExpectedTypes.type_240 := by exact @Thesis.StoppingDAG.pathProbability_normalized
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.pathProbability_normalized
+  let expected ← getConstInfo `_ThesisExactChecks.target_240
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.pathProbability_normalized"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.pathProbability_normalized | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPaths do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.pathProbability_normalized"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_240) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.pathProbability_normalized: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.pathProbability_normalized"
+#check @Thesis.StoppingDAG.pathProbability_normalized
+#print axioms _ThesisExactChecks.target_240
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_241 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (j : Fin n) (path : DAGPaths c), 0≤pathDiscount c x j path)
+theorem _ThesisExactChecks.target_241 : _ThesisExpectedTypes.type_241 := by exact @Thesis.StoppingDAG.pathDiscount_nonnegative
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.pathDiscount_nonnegative
+  let expected ← getConstInfo `_ThesisExactChecks.target_241
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.pathDiscount_nonnegative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.pathDiscount_nonnegative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPaths do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.pathDiscount_nonnegative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_241) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.pathDiscount_nonnegative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.pathDiscount_nonnegative"
+#check @Thesis.StoppingDAG.pathDiscount_nonnegative
+#print axioms _ThesisExactChecks.target_241
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_242 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (j : Fin n) (turn : Bool) (i : Fin d) (channel : Bool), occupation c x j turn i channel = if Bool.xor channel turn then (dagKernel c x).2 j i else (dagKernel c x).1 j i)
+theorem _ThesisExactChecks.target_242 : _ThesisExpectedTypes.type_242 := by exact @Thesis.StoppingDAG.occupation_eq_kernel
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.occupation_eq_kernel
+  let expected ← getConstInfo `_ThesisExactChecks.target_242
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.occupation_eq_kernel"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.occupation_eq_kernel | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGOccupation do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.occupation_eq_kernel"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_242) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.occupation_eq_kernel: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.occupation_eq_kernel"
+#check @Thesis.StoppingDAG.occupation_eq_kernel
+#print axioms _ThesisExactChecks.target_242
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_243 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (j : Fin n) (turn : Bool) (i : Fin d) (channel : Bool), (if turn then (pairMap (dagKernel c x).1 (dagKernel c x).2 (splitBasis i channel)).2 j else (pairMap (dagKernel c x).1 (dagKernel c x).2 (splitBasis i channel)).1 j) = occupation c x j turn i channel)
+theorem _ThesisExactChecks.target_243 : _ThesisExpectedTypes.type_243 := by exact @Thesis.StoppingDAG.selected_operator_occupation
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.selected_operator_occupation
+  let expected ← getConstInfo `_ThesisExactChecks.target_243
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.selected_operator_occupation"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.selected_operator_occupation | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGBackward do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.selected_operator_occupation"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_243) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.selected_operator_occupation: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.selected_operator_occupation"
+#check @Thesis.StoppingDAG.selected_operator_occupation
+#print axioms _ThesisExactChecks.target_243
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_244 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (hx : CircuitRegular c x) (j : Fin n) (turn : Bool) (i : Fin d) (channel : Bool), (if turn then (fderiv ℝ (stoppingCircuit c) x (splitBasis i channel)).2 j else (fderiv ℝ (stoppingCircuit c) x (splitBasis i channel)).1 j) = occupation c x j turn i channel)
+theorem _ThesisExactChecks.target_244 : _ThesisExpectedTypes.type_244 := by exact @Thesis.StoppingDAG.stopping_derivative_occupation
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.stopping_derivative_occupation
+  let expected ← getConstInfo `_ThesisExactChecks.target_244
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.stopping_derivative_occupation"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.stopping_derivative_occupation | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGBackward do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.stopping_derivative_occupation"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_244) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.stopping_derivative_occupation: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.stopping_derivative_occupation"
+#check @Thesis.StoppingDAG.stopping_derivative_occupation
+#print axioms _ThesisExactChecks.target_244
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_245 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (hc : c.Additive) (x : Vec d) (hx : CircuitRegular c (x,0)), HasFDerivAt c.eval (matrixCLM ((dagKernel c (x,0)).1-(dagKernel c (x,0)).2)) x)
+theorem _ThesisExactChecks.target_245 : _ThesisExpectedTypes.type_245 := by exact @Thesis.StoppingDAG.circuit_hasFDerivAt
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.circuit_hasFDerivAt
+  let expected ← getConstInfo `_ThesisExactChecks.target_245
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.circuit_hasFDerivAt"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.circuit_hasFDerivAt | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGBackward do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.circuit_hasFDerivAt"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_245) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.circuit_hasFDerivAt: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.circuit_hasFDerivAt"
+#check @Thesis.StoppingDAG.circuit_hasFDerivAt
+#print axioms _ThesisExactChecks.target_245
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_246 : Prop := (∀ {n : ℕ} (e : SignedExpr (Fin n)) (he : e.Additive) (x : PairVec n), stoppingExpr e x=kernelMap (expressionKernel e x) x+expressionOffset e x)
+theorem _ThesisExactChecks.target_246 : _ThesisExpectedTypes.type_246 := by exact @Thesis.StoppingDAG.stoppingExpr_affine
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.stoppingExpr_affine
+  let expected ← getConstInfo `_ThesisExactChecks.target_246
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.stoppingExpr_affine"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.stoppingExpr_affine | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPayoff do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.stoppingExpr_affine"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_246) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.stoppingExpr_affine: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.stoppingExpr_affine"
+#check @Thesis.StoppingDAG.stoppingExpr_affine
+#print axioms _ThesisExactChecks.target_246
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_247 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (j : Fin n) (turn : Bool), expectedPayoff c x j turn=streamValue (stoppingCircuit c x) j turn)
+theorem _ThesisExactChecks.target_247 : _ThesisExpectedTypes.type_247 := by exact @Thesis.StoppingDAG.expectedPayoff_eq_stoppingCircuit
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.expectedPayoff_eq_stoppingCircuit
+  let expected ← getConstInfo `_ThesisExactChecks.target_247
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.expectedPayoff_eq_stoppingCircuit"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.expectedPayoff_eq_stoppingCircuit | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPayoff do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.expectedPayoff_eq_stoppingCircuit"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_247) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.expectedPayoff_eq_stoppingCircuit: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.expectedPayoff_eq_stoppingCircuit"
+#check @Thesis.StoppingDAG.expectedPayoff_eq_stoppingCircuit
+#print axioms _ThesisExactChecks.target_247
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_248 : Prop := (∀ {n : ℕ} (w : Vec n) (b : ℝ) (x : PairVec n), expressionKernel (SignedExpr.affine w b) x=(fun i => max (w i) 0,fun i => max (-w i) 0))
+theorem _ThesisExactChecks.target_248 : _ThesisExpectedTypes.type_248 := by exact @Thesis.StoppingDAG.expressionKernel_affine
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.expressionKernel_affine
+  let expected ← getConstInfo `_ThesisExactChecks.target_248
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.expressionKernel_affine"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.expressionKernel_affine | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPrimitives do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.expressionKernel_affine"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_248) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.expressionKernel_affine: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.expressionKernel_affine"
+#check @Thesis.StoppingDAG.expressionKernel_affine
+#print axioms _ThesisExactChecks.target_248
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_249 : Prop := (∀ {n : ℕ} (w : Vec n) (b : ℝ) (x : PairVec n), expressionOffset (SignedExpr.affine w b) x=(max b 0,max (-b) 0))
+theorem _ThesisExactChecks.target_249 : _ThesisExpectedTypes.type_249 := by exact @Thesis.StoppingDAG.expressionOffset_affine
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.expressionOffset_affine
+  let expected ← getConstInfo `_ThesisExactChecks.target_249
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.expressionOffset_affine"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.expressionOffset_affine | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPrimitives do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.expressionOffset_affine"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_249) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.expressionOffset_affine: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.expressionOffset_affine"
+#check @Thesis.StoppingDAG.expressionOffset_affine
+#print axioms _ThesisExactChecks.target_249
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_250 : Prop := (∀ {n : ℕ} (w : Vec n) (b : ℝ) (x : PairVec n), localDiscount (expressionKernel (SignedExpr.affine w b) x)=∑ i,|w i|)
+theorem _ThesisExactChecks.target_250 : _ThesisExpectedTypes.type_250 := by exact @Thesis.StoppingDAG.affine_discount
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.affine_discount
+  let expected ← getConstInfo `_ThesisExactChecks.target_250
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.affine_discount"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.affine_discount | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPrimitives do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.affine_discount"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_250) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.affine_discount: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.affine_discount"
+#check @Thesis.StoppingDAG.affine_discount
+#print axioms _ThesisExactChecks.target_250
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_251 : Prop := (∀ {n : ℕ} (b : ℝ) (x : PairVec n), localDiscount (expressionKernel (.constant b) x)=0 ∧ localProbability (expressionKernel (.constant b) x) none=1 ∧ expressionOffset (.constant b) x=(max b 0,max (-b) 0))
+theorem _ThesisExactChecks.target_251 : _ThesisExpectedTypes.type_251 := by exact @Thesis.StoppingDAG.constant_cemetery
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.constant_cemetery
+  let expected ← getConstInfo `_ThesisExactChecks.target_251
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.constant_cemetery"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.constant_cemetery | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPrimitives do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.constant_cemetery"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_251) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.constant_cemetery: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.constant_cemetery"
+#check @Thesis.StoppingDAG.constant_cemetery
+#print axioms _ThesisExactChecks.target_251
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_252 : Prop := (∀ {n : ℕ} (i j : Fin n) (x : PairVec n), localDiscount (expressionKernel (.add (.input i) (.input j)) x)=2)
+theorem _ThesisExactChecks.target_252 : _ThesisExpectedTypes.type_252 := by exact @Thesis.StoppingDAG.addition_discount
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.addition_discount
+  let expected ← getConstInfo `_ThesisExactChecks.target_252
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.addition_discount"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.addition_discount | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPrimitives do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.addition_discount"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_252) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.addition_discount: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.addition_discount"
+#check @Thesis.StoppingDAG.addition_discount
+#print axioms _ThesisExactChecks.target_252
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_253 : Prop := (∀ {n : ℕ} (i j k : Fin n) (x : PairVec n), localProbability (expressionKernel (.add (.input i) (.input j)) x) (some (k,false)) = additionProbability false*(if k=i then 1 else 0)+additionProbability true*(if k=j then 1 else 0))
+theorem _ThesisExactChecks.target_253 : _ThesisExpectedTypes.type_253 := by exact @Thesis.StoppingDAG.addition_probability
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.addition_probability
+  let expected ← getConstInfo `_ThesisExactChecks.target_253
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.addition_probability"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.addition_probability | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPrimitives do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.addition_probability"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_253) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.addition_probability: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.addition_probability"
+#check @Thesis.StoppingDAG.addition_probability
+#print axioms _ThesisExactChecks.target_253
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_254 : Prop := (∀ {n : ℕ} (i j : Fin n) (x : PairVec n), expressionKernel (.maximum (.input i) (.input j)) x = (Pi.single (if x.1 j-x.2 j<x.1 i-x.2 i then i else j) 1,0))
+theorem _ThesisExactChecks.target_254 : _ThesisExpectedTypes.type_254 := by exact @Thesis.StoppingDAG.pool_kernel
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.pool_kernel
+  let expected ← getConstInfo `_ThesisExactChecks.target_254
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.pool_kernel"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.pool_kernel | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPrimitives do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.pool_kernel"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_254) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.pool_kernel: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.pool_kernel"
+#check @Thesis.StoppingDAG.pool_kernel
+#print axioms _ThesisExactChecks.target_254
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_255 : Prop := (∀ {n : ℕ} (i j : Fin n) (x : PairVec n), localDiscount (expressionKernel (.maximum (.input i) (.input j)) x)=1)
+theorem _ThesisExactChecks.target_255 : _ThesisExpectedTypes.type_255 := by exact @Thesis.StoppingDAG.pool_discount
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.pool_discount
+  let expected ← getConstInfo `_ThesisExactChecks.target_255
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.pool_discount"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.pool_discount | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPrimitives do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.pool_discount"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_255) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.pool_discount: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.pool_discount"
+#check @Thesis.StoppingDAG.pool_discount
+#print axioms _ThesisExactChecks.target_255
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_256 : Prop := (∀ {n : ℕ} (i : Fin n) (x : PairVec n), expressionKernel (.maximum (.input i) (.constant 0)) x = if x.2 i<x.1 i then (Pi.single i 1,0) else (0,0))
+theorem _ThesisExactChecks.target_256 : _ThesisExpectedTypes.type_256 := by exact @Thesis.StoppingDAG.relu_kernel
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.relu_kernel
+  let expected ← getConstInfo `_ThesisExactChecks.target_256
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.relu_kernel"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.relu_kernel | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPrimitives do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.relu_kernel"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_256) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.relu_kernel: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.relu_kernel"
+#check @Thesis.StoppingDAG.relu_kernel
+#print axioms _ThesisExactChecks.target_256
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_257 : Prop := (∀ {d m n : ℕ} (pre : Circuit d m) (suffix : Circuit m n) (x : PairVec d), stoppingCircuit (graft pre suffix) x=stoppingCircuit suffix (stoppingCircuit pre x))
+theorem _ThesisExactChecks.target_257 : _ThesisExpectedTypes.type_257 := by exact @Thesis.StoppingDAG.graft_stopping
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.graft_stopping
+  let expected ← getConstInfo `_ThesisExactChecks.target_257
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.graft_stopping"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.graft_stopping | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGCuts do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.graft_stopping"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_257) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.graft_stopping: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.graft_stopping"
+#check @Thesis.StoppingDAG.graft_stopping
+#print axioms _ThesisExactChecks.target_257
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_258 : Prop := (∀ {d m n : ℕ} (pre : Circuit d (m+1)) (suffix : Circuit (m+1) n) (hc : (graft pre suffix).Additive) (x : PairVec d) (j : Fin n) (turn channel : Bool), fullOccupation (graft pre suffix) x j turn m channel = occupation suffix (stoppingCircuit pre x) j turn (Fin.last m) channel)
+theorem _ThesisExactChecks.target_258 : _ThesisExpectedTypes.type_258 := by exact @Thesis.StoppingDAG.fullOccupation_graft_last
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.fullOccupation_graft_last
+  let expected ← getConstInfo `_ThesisExactChecks.target_258
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.fullOccupation_graft_last"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.fullOccupation_graft_last | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGVisits do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.fullOccupation_graft_last"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_258) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.fullOccupation_graft_last: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.fullOccupation_graft_last"
+#check @Thesis.StoppingDAG.fullOccupation_graft_last
+#print axioms _ThesisExactChecks.target_258
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_259 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (hc : c.Additive) (s : PairVec d) (hs : CircuitRegular c s), HasFDerivAt c.eval (matrixCLM ((dagKernel c s).1-(dagKernel c s).2)) (s.1-s.2))
+theorem _ThesisExactChecks.target_259 : _ThesisExpectedTypes.type_259 := by exact @Thesis.StoppingDAG.circuit_hasFDerivAt_split
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.circuit_hasFDerivAt_split
+  let expected ← getConstInfo `_ThesisExactChecks.target_259
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.circuit_hasFDerivAt_split"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.circuit_hasFDerivAt_split | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGIntermediate do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.circuit_hasFDerivAt_split"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_259) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.circuit_hasFDerivAt_split: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.circuit_hasFDerivAt_split"
+#check @Thesis.StoppingDAG.circuit_hasFDerivAt_split
+#print axioms _ThesisExactChecks.target_259
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_260 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (target : ℕ) (hd : d≤target) (hn : target<n), ∃ pre : Circuit d (target+1),∃ suffix : Circuit (target+1) n,c=graft pre suffix)
+theorem _ThesisExactChecks.target_260 : _ThesisExpectedTypes.type_260 := by exact @Thesis.StoppingDAG.exists_graph_cut
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.exists_graph_cut
+  let expected ← getConstInfo `_ThesisExactChecks.target_260
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.exists_graph_cut"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.exists_graph_cut | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGIntermediate do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.exists_graph_cut"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_260) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.exists_graph_cut: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.exists_graph_cut"
+#check @Thesis.StoppingDAG.exists_graph_cut
+#print axioms _ThesisExactChecks.target_260
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_261 : Prop := (∀ {d n : ℕ} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (j : Fin n) (turn : Bool) (i : Fin d) (channel : Bool), fullOccupation c x j turn i.val channel=occupation c x j turn i channel)
+theorem _ThesisExactChecks.target_261 : _ThesisExpectedTypes.type_261 := by exact @Thesis.StoppingDAG.fullOccupation_input
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.fullOccupation_input
+  let expected ← getConstInfo `_ThesisExactChecks.target_261
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.fullOccupation_input"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.fullOccupation_input | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGIntermediate do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.fullOccupation_input"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_261) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.fullOccupation_input: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.fullOccupation_input"
+#check @Thesis.StoppingDAG.fullOccupation_input
+#print axioms _ThesisExactChecks.target_261
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_262 : Prop := (∀ {d m n : ℕ} (pre : Circuit d (m+1)) (suffix : Circuit (m+1) n) (hc : (graft pre suffix).Additive) (x : PairVec d) (hx : CircuitRegular (graft pre suffix) x) (j : Fin n) (p q k : Bool), (if Bool.xor p q then (fderiv ℝ (stoppingCircuit suffix) (stoppingCircuit pre x) (splitBasis (Fin.last m) k)).2 j else (fderiv ℝ (stoppingCircuit suffix) (stoppingCircuit pre x) (splitBasis (Fin.last m) k)).1 j) = fullOccupation (graft pre suffix) x j q m (Bool.xor p k))
+theorem _ThesisExactChecks.target_262 : _ThesisExpectedTypes.type_262 := by exact @Thesis.StoppingDAG.intermediate_stopping_derivative_occupation
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.intermediate_stopping_derivative_occupation
+  let expected ← getConstInfo `_ThesisExactChecks.target_262
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.intermediate_stopping_derivative_occupation"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.intermediate_stopping_derivative_occupation | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGIntermediate do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.intermediate_stopping_derivative_occupation"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_262) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.intermediate_stopping_derivative_occupation: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.intermediate_stopping_derivative_occupation"
+#check @Thesis.StoppingDAG.intermediate_stopping_derivative_occupation
+#print axioms _ThesisExactChecks.target_262
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_263 : Prop := (∀ {d m n : ℕ} (pre : Circuit d (m+1)) (suffix : Circuit (m+1) n) (hc : (graft pre suffix).Additive) (x : PairVec d) (hx : CircuitRegular (graft pre suffix) x) (j : Fin n) (q : Bool), (fderiv ℝ suffix.eval (pre.eval (x.1-x.2)) (Pi.single (Fin.last m) 1)) j = (if q then (-1 : ℝ) else 1)*(fullOccupation (graft pre suffix) x j q m false-fullOccupation (graft pre suffix) x j q m true))
+theorem _ThesisExactChecks.target_263 : _ThesisExpectedTypes.type_263 := by exact @Thesis.StoppingDAG.intermediate_circuit_derivative_occupation
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.intermediate_circuit_derivative_occupation
+  let expected ← getConstInfo `_ThesisExactChecks.target_263
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.intermediate_circuit_derivative_occupation"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.intermediate_circuit_derivative_occupation | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGIntermediate do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.intermediate_circuit_derivative_occupation"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_263) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.intermediate_circuit_derivative_occupation: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.intermediate_circuit_derivative_occupation"
+#check @Thesis.StoppingDAG.intermediate_circuit_derivative_occupation
+#print axioms _ThesisExactChecks.target_263
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDecomposition Thesis.StoppingDAG Matrix
+open scoped BigOperators
+def _ThesisExpectedTypes.type_264 : Prop := (∀ {d m n : ℕ} (pre : Circuit d (m+1)) (suffix : Circuit (m+1) n) (hc : (graft pre suffix).Additive) (x : PairVec d) (j : Fin n) (p q k : Bool), (if Bool.xor p q then (pairMap (dagKernel suffix (stoppingCircuit pre x)).1 (dagKernel suffix (stoppingCircuit pre x)).2 (splitBasis (Fin.last m) k)).2 j else (pairMap (dagKernel suffix (stoppingCircuit pre x)).1 (dagKernel suffix (stoppingCircuit pre x)).2 (splitBasis (Fin.last m) k)).1 j) = fullOccupation (graft pre suffix) x j q m (Bool.xor p k))
+theorem _ThesisExactChecks.target_264 : _ThesisExpectedTypes.type_264 := by exact @Thesis.StoppingDAG.intermediate_selected_occupation
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.intermediate_selected_occupation
+  let expected ← getConstInfo `_ThesisExactChecks.target_264
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.intermediate_selected_occupation"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.intermediate_selected_occupation | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGIntermediate do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.intermediate_selected_occupation"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_264) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.intermediate_selected_occupation: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.intermediate_selected_occupation"
+#check @Thesis.StoppingDAG.intermediate_selected_occupation
+#print axioms _ThesisExactChecks.target_264
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDAG
+open scoped BigOperators
+def _ThesisExpectedTypes.type_265 : Prop := (∀ {k : ℕ} (v : Fin (k+1) → ℝ), (∀ i,v i ≤ v (earliestWinner v)) ∧ (∀ i,v i=v (earliestWinner v) → earliestWinner v ≤ i))
+theorem _ThesisExactChecks.target_265 : _ThesisExpectedTypes.type_265 := by exact @Thesis.StoppingDAG.earliestWinner_spec
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.earliestWinner_spec
+  let expected ← getConstInfo `_ThesisExactChecks.target_265
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.earliestWinner_spec"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.earliestWinner_spec | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingOrderedPool do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.earliestWinner_spec"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_265) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.earliestWinner_spec: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.earliestWinner_spec"
+#check @Thesis.StoppingDAG.earliestWinner_spec
+#print axioms _ThesisExactChecks.target_265
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDAG
+open scoped BigOperators
+def _ThesisExpectedTypes.type_266 : Prop := (∀ {n k : ℕ} (inputs : Fin (k+1) → Fin n) (x : PairVec n), let values := fun i => x.1 (inputs i)-x.2 (inputs i); let winner := earliestWinner values; (∀ i,values i ≤ values winner) ∧ (∀ i,values i=values winner → winner ≤ i) ∧ stoppingExpr (orderedInputPool inputs) x=(x.1 (inputs winner),x.2 (inputs winner)) ∧ expressionKernel (orderedInputPool inputs) x=(Pi.single (inputs winner) 1,0))
+theorem _ThesisExactChecks.target_266 : _ThesisExpectedTypes.type_266 := by exact @Thesis.StoppingDAG.orderedInputPool_source
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.orderedInputPool_source
+  let expected ← getConstInfo `_ThesisExactChecks.target_266
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.orderedInputPool_source"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.orderedInputPool_source | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingOrderedPool do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.orderedInputPool_source"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_266) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.orderedInputPool_source: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.orderedInputPool_source"
+#check @Thesis.StoppingDAG.orderedInputPool_source
+#print axioms _ThesisExactChecks.target_266
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDAG
+open scoped BigOperators
+def _ThesisExpectedTypes.type_267 : Prop := (∀ {n k : ℕ} (inputs : Fin (k+1) → Fin n) (horder : Monotone inputs) (x : PairVec n), let values := fun i => x.1 (inputs i)-x.2 (inputs i); let winner := earliestWinner values; ∀ i,values i=values winner → inputs winner ≤ inputs i)
+theorem _ThesisExactChecks.target_267 : _ThesisExpectedTypes.type_267 := by exact @Thesis.StoppingDAG.orderedInputPool_minimum_graph_index
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.orderedInputPool_minimum_graph_index
+  let expected ← getConstInfo `_ThesisExactChecks.target_267
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.orderedInputPool_minimum_graph_index"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.orderedInputPool_minimum_graph_index | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingOrderedPool do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.orderedInputPool_minimum_graph_index"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_267) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.orderedInputPool_minimum_graph_index: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.orderedInputPool_minimum_graph_index"
+#check @Thesis.StoppingDAG.orderedInputPool_minimum_graph_index
+#print axioms _ThesisExactChecks.target_267
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDAG
+open scoped BigOperators
+def _ThesisExpectedTypes.type_268 : Prop := (∀ {d n k : ℕ} (prior : Circuit d n) (inputs : Fin (k+1) → Fin n) (x : PairVec d), let s := stoppingCircuit prior x; let winner := earliestWinner (fun i => s.1 (inputs i)-s.2 (inputs i)); (dagKernel (.node prior (orderedInputPool inputs)) x).1 (Fin.last n)=(dagKernel prior x).1 (inputs winner) ∧ (dagKernel (.node prior (orderedInputPool inputs)) x).2 (Fin.last n)=(dagKernel prior x).2 (inputs winner))
+theorem _ThesisExactChecks.target_268 : _ThesisExpectedTypes.type_268 := by exact @Thesis.StoppingDAG.orderedInputPool_dag_row
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.orderedInputPool_dag_row
+  let expected ← getConstInfo `_ThesisExactChecks.target_268
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.orderedInputPool_dag_row"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.orderedInputPool_dag_row | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingOrderedPool do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.orderedInputPool_dag_row"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_268) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.orderedInputPool_dag_row: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.orderedInputPool_dag_row"
+#check @Thesis.StoppingDAG.orderedInputPool_dag_row
+#print axioms _ThesisExactChecks.target_268
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDAG
+open scoped BigOperators
+def _ThesisExpectedTypes.type_269 : Prop := (∀ {n k : ℕ} (es : Fin (k+1) → SignedExpr (Fin n)) (x : PairVec n) (winner : Fin (k+1)) (hw : ∀ i,i≠winner → score (es i) x<score (es winner) x) (hr : ExpressionRegular (es winner) x), ExpressionRegular (orderedPool es) x)
+theorem _ThesisExactChecks.target_269 : _ThesisExpectedTypes.type_269 := by exact @Thesis.StoppingDAG.orderedPool_regular
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.orderedPool_regular
+  let expected ← getConstInfo `_ThesisExactChecks.target_269
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.orderedPool_regular"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.orderedPool_regular | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingOrderedPool do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.orderedPool_regular"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_269) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.orderedPool_regular: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.orderedPool_regular"
+#check @Thesis.StoppingDAG.orderedPool_regular
+#print axioms _ThesisExactChecks.target_269
+
+section
+open HiddenMonotonicity Thesis.StoppingCircuit Thesis.StoppingDAG
+open scoped BigOperators
+def _ThesisExpectedTypes.type_270 : Prop := (∀ {n k : ℕ} (inputs : Fin (k+1) → Fin n) (x : PairVec n) (winner : Fin (k+1)) (hw : ∀ i,i≠winner → x.1 (inputs i)-x.2 (inputs i)<x.1 (inputs winner)-x.2 (inputs winner)), ExpressionRegular (orderedInputPool inputs) x)
+theorem _ThesisExactChecks.target_270 : _ThesisExpectedTypes.type_270 := by exact @Thesis.StoppingDAG.orderedInputPool_regular
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.orderedInputPool_regular
+  let expected ← getConstInfo `_ThesisExactChecks.target_270
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.orderedInputPool_regular"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.orderedInputPool_regular | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingOrderedPool do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.orderedInputPool_regular"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_270) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.orderedInputPool_regular: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.orderedInputPool_regular"
+#check @Thesis.StoppingDAG.orderedInputPool_regular
+#print axioms _ThesisExactChecks.target_270
+
+section
+open Filter Thesis.Regularization
+open scoped Topology
+def _ThesisExpectedTypes.type_271 : Prop := (∀ (z : ℝ) (hz : 0 < z), Tendsto (fun θ : ℝ => gate θ z) (𝓝[>] 0) (𝓝 1))
+theorem _ThesisExactChecks.target_271 : _ThesisExpectedTypes.type_271 := by exact @Thesis.SoftplusLimits.gate_limit_positive
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusLimits.gate_limit_positive
+  let expected ← getConstInfo `_ThesisExactChecks.target_271
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusLimits.gate_limit_positive"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusLimits.gate_limit_positive | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusLimits do
+    throwError "Defining module mismatch: Thesis.SoftplusLimits.gate_limit_positive"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_271) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusLimits.gate_limit_positive: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusLimits.gate_limit_positive"
+#check @Thesis.SoftplusLimits.gate_limit_positive
+#print axioms _ThesisExactChecks.target_271
+
+section
+open Filter Thesis.Regularization
+open scoped Topology
+def _ThesisExpectedTypes.type_272 : Prop := (∀ (z : ℝ) (hz : z < 0), Tendsto (fun θ : ℝ => gate θ z) (𝓝[>] 0) (𝓝 0))
+theorem _ThesisExactChecks.target_272 : _ThesisExpectedTypes.type_272 := by exact @Thesis.SoftplusLimits.gate_limit_negative
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusLimits.gate_limit_negative
+  let expected ← getConstInfo `_ThesisExactChecks.target_272
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusLimits.gate_limit_negative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusLimits.gate_limit_negative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusLimits do
+    throwError "Defining module mismatch: Thesis.SoftplusLimits.gate_limit_negative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_272) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusLimits.gate_limit_negative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusLimits.gate_limit_negative"
+#check @Thesis.SoftplusLimits.gate_limit_negative
+#print axioms _ThesisExactChecks.target_272
+
+section
+open Filter Thesis.Regularization
+open scoped Topology
+def _ThesisExpectedTypes.type_273 : Prop := (∀ (u v : ℝ) (hne : u ≠ v), Tendsto (fun θ : ℝ => softSplit θ u v) (𝓝[>] 0) (𝓝 (Thesis.StoppingDecomposition.stopPair (u,v))))
+theorem _ThesisExactChecks.target_273 : _ThesisExpectedTypes.type_273 := by exact @Thesis.SoftplusLimits.softSplit_tendsto_stopping
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusLimits.softSplit_tendsto_stopping
+  let expected ← getConstInfo `_ThesisExactChecks.target_273
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusLimits.softSplit_tendsto_stopping"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusLimits.softSplit_tendsto_stopping | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusLimits do
+    throwError "Defining module mismatch: Thesis.SoftplusLimits.softSplit_tendsto_stopping"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_273) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusLimits.softSplit_tendsto_stopping: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusLimits.softSplit_tendsto_stopping"
+#check @Thesis.SoftplusLimits.softSplit_tendsto_stopping
+#print axioms _ThesisExactChecks.target_273
+
+section
+open Filter Thesis.Regularization
+open scoped Topology
+def _ThesisExpectedTypes.type_274 : Prop := (∀ u : ℝ, Tendsto (fun θ : ℝ => softSplit θ u u) (𝓝[>] 0) (𝓝 (u/2,u/2)))
+theorem _ThesisExactChecks.target_274 : _ThesisExpectedTypes.type_274 := by exact @Thesis.SoftplusLimits.softSplit_tendsto_tie
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusLimits.softSplit_tendsto_tie
+  let expected ← getConstInfo `_ThesisExactChecks.target_274
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusLimits.softSplit_tendsto_tie"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusLimits.softSplit_tendsto_tie | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusLimits do
+    throwError "Defining module mismatch: Thesis.SoftplusLimits.softSplit_tendsto_tie"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_274) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusLimits.softSplit_tendsto_tie: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusLimits.softSplit_tendsto_tie"
+#check @Thesis.SoftplusLimits.softSplit_tendsto_tie
+#print axioms _ThesisExactChecks.target_274
+
+section
+open Thesis.StoppingCircuit
+def _ThesisExpectedTypes.type_275 : Prop := (∀ (left right : ℝ), 2*(additionProbability false*left+additionProbability true*right)=left+right)
+theorem _ThesisExactChecks.target_275 : _ThesisExpectedTypes.type_275 := by exact @Thesis.StoppingCircuit.addition_discounted_occupation
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingCircuit.addition_discounted_occupation
+  let expected ← getConstInfo `_ThesisExactChecks.target_275
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingCircuit.addition_discounted_occupation"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingCircuit.addition_discounted_occupation | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingCircuit do
+    throwError "Defining module mismatch: Thesis.StoppingCircuit.addition_discounted_occupation"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_275) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingCircuit.addition_discounted_occupation: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingCircuit.addition_discounted_occupation"
+#check @Thesis.StoppingCircuit.addition_discounted_occupation
+#print axioms _ThesisExactChecks.target_275
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_276 : Prop := (∀ {n k : ℕ} (r : Set.Icc (0 : ℝ) 1) (wp wn : Matrix (Fin k) (Fin n) ℝ) (j : Fin k) (turn : Bool), (∑ target,mixedTransition r wp wn j turn target)=1)
+theorem _ThesisExactChecks.target_276 : _ThesisExpectedTypes.type_276 := by exact @Thesis.SoftplusGame.mixedTransition_normalized
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.mixedTransition_normalized
+  let expected ← getConstInfo `_ThesisExactChecks.target_276
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.mixedTransition_normalized"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.mixedTransition_normalized | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusPolicies do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.mixedTransition_normalized"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_276) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.mixedTransition_normalized: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.mixedTransition_normalized"
+#check @Thesis.SoftplusGame.mixedTransition_normalized
+#print axioms _ThesisExactChecks.target_276
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_277 : Prop := (∀ {n k : ℕ} (r : Set.Icc (0 : ℝ) 1) (wp wn : Matrix (Fin k) (Fin n) ℝ) (hw : ∀ j i,0≤wp j i ∧ 0≤wn j i) (j : Fin k) (turn : Bool) (target : Option (Fin n × Bool)), 0≤mixedTransition r wp wn j turn target)
+theorem _ThesisExactChecks.target_277 : _ThesisExpectedTypes.type_277 := by exact @Thesis.SoftplusGame.mixedTransition_nonnegative
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.mixedTransition_nonnegative
+  let expected ← getConstInfo `_ThesisExactChecks.target_277
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.mixedTransition_nonnegative"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.mixedTransition_nonnegative | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusPolicies do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.mixedTransition_nonnegative"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_277) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.mixedTransition_nonnegative: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.mixedTransition_nonnegative"
+#check @Thesis.SoftplusGame.mixedTransition_nonnegative
+#print axioms _ThesisExactChecks.target_277
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_278 : Prop := (∀ {n k : ℕ} (r : Set.Icc (0 : ℝ) 1) (wp wn : Matrix (Fin k) (Fin n) ℝ) (j : Fin k) (turn : Bool) (hz : fanIn wp wn j=0), mixedTransition r wp wn j turn none=1)
+theorem _ThesisExactChecks.target_278 : _ThesisExpectedTypes.type_278 := by exact @Thesis.SoftplusGame.mixed_zero_fanIn_absorbs
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.mixed_zero_fanIn_absorbs
+  let expected ← getConstInfo `_ThesisExactChecks.target_278
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.mixed_zero_fanIn_absorbs"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.mixed_zero_fanIn_absorbs | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusPolicies do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.mixed_zero_fanIn_absorbs"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_278) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.mixed_zero_fanIn_absorbs: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.mixed_zero_fanIn_absorbs"
+#check @Thesis.SoftplusGame.mixed_zero_fanIn_absorbs
+#print axioms _ThesisExactChecks.target_278
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_279 : Prop := (∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (hw : ∀ j i,0≤wp j i ∧ 0≤wn j i) (b : Vec k) (p q : Vec n) (j : Fin k), continuation wp wn b p q j=((wp *ᵥ p+wn *ᵥ q)+b) j)
+theorem _ThesisExactChecks.target_279 : _ThesisExpectedTypes.type_279 := by exact @Thesis.SoftplusGame.continuation_recovery_total
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.continuation_recovery_total
+  let expected ← getConstInfo `_ThesisExactChecks.target_279
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.continuation_recovery_total"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.continuation_recovery_total | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusPolicies do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.continuation_recovery_total"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_279) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.continuation_recovery_total: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.continuation_recovery_total"
+#check @Thesis.SoftplusGame.continuation_recovery_total
+#print axioms _ThesisExactChecks.target_279
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_280 : Prop := (∀ {n m : ℕ} (net : Network n m) (θ : ℝ) (hθ : 0<θ) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net),
+ (policyValue θ net plus (gibbsStrategy θ net x) x (-x)).1≤softEval θ net x ∧
+ (policyValue θ net plus (gibbsStrategy θ net x) x (-x)).2≤ -softEval θ net x ∧
+ policyValue θ net (gibbsStrategy θ net x) (gibbsStrategy θ net x) x (-x)=(softEval θ net x,-softEval θ net x) ∧
+ softEval θ net x≤(policyValue θ net (gibbsStrategy θ net x) minus x (-x)).1 ∧
+ -softEval θ net x≤(policyValue θ net (gibbsStrategy θ net x) minus x (-x)).2)
+theorem _ThesisExactChecks.target_280 : _ThesisExpectedTypes.type_280 := by exact @Thesis.SoftplusGame.softplus_saddle
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.softplus_saddle
+  let expected ← getConstInfo `_ThesisExactChecks.target_280
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.softplus_saddle"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.softplus_saddle | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusEquilibrium do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.softplus_saddle"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_280) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.softplus_saddle: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.softplus_saddle"
+#check @Thesis.SoftplusGame.softplus_saddle
+#print axioms _ThesisExactChecks.target_280
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_281 : Prop := (∀ {n m : ℕ} (net : Network n m) (θ : ℝ) (hθ : 0<θ) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net), SubgamePerfect θ net plus minus x (-x) ↔ plus=gibbsStrategy θ net x ∧ minus=gibbsStrategy θ net x)
+theorem _ThesisExactChecks.target_281 : _ThesisExpectedTypes.type_281 := by exact @Thesis.SoftplusGame.subgamePerfect_iff
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.subgamePerfect_iff
+  let expected ← getConstInfo `_ThesisExactChecks.target_281
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.subgamePerfect_iff"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.subgamePerfect_iff | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusEquilibrium do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.subgamePerfect_iff"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_281) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.subgamePerfect_iff: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.subgamePerfect_iff"
+#check @Thesis.SoftplusGame.subgamePerfect_iff
+#print axioms _ThesisExactChecks.target_281
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_282 : Prop := (∀ {n m : ℕ} (net : Network n m) (θ : ℝ) (hw : net.Nonnegative) (plus minus : Strategy net) (v : PlayerValues n), advantage (playerValue θ net plus minus v)=policyValue θ net plus minus (advantage v).1 (advantage v).2)
+theorem _ThesisExactChecks.target_282 : _ThesisExpectedTypes.type_282 := by exact @Thesis.SoftplusGame.playerValue_advantage
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.playerValue_advantage
+  let expected ← getConstInfo `_ThesisExactChecks.target_282
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.playerValue_advantage"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.playerValue_advantage | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusPlayerValues do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.playerValue_advantage"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_282) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.playerValue_advantage: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.playerValue_advantage"
+#check @Thesis.SoftplusGame.playerValue_advantage
+#print axioms _ThesisExactChecks.target_282
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_283 : Prop := (∀ {n m : ℕ} (net : Network n m) (θ : ℝ) (hθ : 0<θ) (hw : net.Nonnegative) (x : PairVec n), playerValue θ net (gibbsStrategy θ net (x.1-x.2)) (gibbsStrategy θ net (x.1-x.2)) (pairValues x)=pairValues (net.decomposeWith (fun z => softSplit θ z.1 z.2) x))
+theorem _ThesisExactChecks.target_283 : _ThesisExpectedTypes.type_283 := by exact @Thesis.SoftplusGame.playerValue_gibbs
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.playerValue_gibbs
+  let expected ← getConstInfo `_ThesisExactChecks.target_283
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.playerValue_gibbs"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.playerValue_gibbs | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusPlayerValues do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.playerValue_gibbs"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_283) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.playerValue_gibbs: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.playerValue_gibbs"
+#check @Thesis.SoftplusGame.playerValue_gibbs
+#print axioms _ThesisExactChecks.target_283
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_284 : Prop := (∀ {n m r : ℕ} (net : Network n m) (θ : ℝ) (hθ : 0<θ) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net) (wp wn : Matrix (Fin r) (Fin m) ℝ) (hrow : ∀ j i,0≤wp j i ∧ 0≤wn j i) (b : Vec r) (j : Fin r),
+ let read := fun v : PairVec m => continuation wp wn b v.1 v.2 j;
+ read (policyValue θ net plus (gibbsStrategy θ net x) x (-x))≤affineOutput θ net (wp-wn) b x j ∧
+ read (policyValue θ net (gibbsStrategy θ net x) (gibbsStrategy θ net x) x (-x))=affineOutput θ net (wp-wn) b x j ∧
+ affineOutput θ net (wp-wn) b x j≤read (policyValue θ net (gibbsStrategy θ net x) minus x (-x)))
+theorem _ThesisExactChecks.target_284 : _ThesisExpectedTypes.type_284 := by exact @Thesis.SoftplusGame.affine_saddle
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.affine_saddle
+  let expected ← getConstInfo `_ThesisExactChecks.target_284
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.affine_saddle"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.affine_saddle | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusReadout do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.affine_saddle"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_284) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.affine_saddle: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.affine_saddle"
+#check @Thesis.SoftplusGame.affine_saddle
+#print axioms _ThesisExactChecks.target_284
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_285 : Prop := (∀ {n m : ℕ} (net : Network n m) (θ : ℝ) (hθ : 0<θ) (hw : net.Nonnegative) (x : PairVec n),
+ SubgamePerfect θ net (gibbsStrategy θ net (x.1-x.2)) (gibbsStrategy θ net (x.1-x.2)) (x.1-x.2) (-(x.1-x.2)) ∧
+ (∀ plus minus : Strategy net,SubgamePerfect θ net plus minus (x.1-x.2) (-(x.1-x.2)) ↔ plus=gibbsStrategy θ net (x.1-x.2) ∧ minus=gibbsStrategy θ net (x.1-x.2)) ∧
+ playerValue θ net (gibbsStrategy θ net (x.1-x.2)) (gibbsStrategy θ net (x.1-x.2)) (pairValues x)=pairValues (net.decomposeWith (fun z => softSplit θ z.1 z.2) x) ∧
+ (net.decomposeWith (fun z => softSplit θ z.1 z.2) x).1-(net.decomposeWith (fun z => softSplit θ z.1 z.2) x).2=softEval θ net (x.1-x.2))
+theorem _ThesisExactChecks.target_285 : _ThesisExpectedTypes.type_285 := by exact @Thesis.SoftplusGame.softplus_forward_spne
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.softplus_forward_spne
+  let expected ← getConstInfo `_ThesisExactChecks.target_285
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.softplus_forward_spne"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.softplus_forward_spne | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusReadout do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.softplus_forward_spne"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_285) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.softplus_forward_spne: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.softplus_forward_spne"
+#check @Thesis.SoftplusGame.softplus_forward_spne
+#print axioms _ThesisExactChecks.target_285
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_286 : Prop := (∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (plus minus : Fin k → Set.Icc (0 : ℝ) 1) (j : Fin k) (i : Fin n) (r b : Bool), mixedTransition (if Bool.xor r b then minus j else plus j) wp wn j (Bool.xor r b) (some (i,r))=(if Bool.xor r b then (minus j).val else (plus j).val)*(if b then wn j i else wp j i)/fanIn wp wn j)
+theorem _ThesisExactChecks.target_286 : _ThesisExpectedTypes.type_286 := by exact @Thesis.SoftplusGame.profile_step_transition
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.profile_step_transition
+  let expected ← getConstInfo `_ThesisExactChecks.target_286
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.profile_step_transition"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.profile_step_transition | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusGameOccupation do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.profile_step_transition"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_286) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.profile_step_transition: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.profile_step_transition"
+#check @Thesis.SoftplusGame.profile_step_transition
+#print axioms _ThesisExactChecks.target_286
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_287 : Prop := (∀ {n m : ℕ} (net : Network n m) (θ : ℝ) (x : Vec n) (j : Fin m) (i : Fin n) (q r : Bool) (path : Paths (softTrace θ net x)), profileProbability θ net (gibbsStrategy θ net x) (gibbsStrategy θ net x) x j i q r path=softProbability θ net x j i (Bool.xor q r) path)
+theorem _ThesisExactChecks.target_287 : _ThesisExpectedTypes.type_287 := by exact @Thesis.SoftplusGame.profileProbability_gibbs
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.profileProbability_gibbs
+  let expected ← getConstInfo `_ThesisExactChecks.target_287
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.profileProbability_gibbs"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.profileProbability_gibbs | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusGameOccupation do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.profileProbability_gibbs"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_287) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.profileProbability_gibbs: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.profileProbability_gibbs"
+#check @Thesis.SoftplusGame.profileProbability_gibbs
+#print axioms _ThesisExactChecks.target_287
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_288 : Prop := (∀ {n m : ℕ} (net : Network n m) (θ : ℝ) (hθ : 0<θ) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net) (hsp : SubgamePerfect θ net plus minus x (-x)) (j : Fin m) (i : Fin n) (q r : Bool), profileOccupation net θ plus minus x j i q r=softOccupation net θ x j i (Bool.xor q r))
+theorem _ThesisExactChecks.target_288 : _ThesisExpectedTypes.type_288 := by exact @Thesis.SoftplusGame.spne_occupation_eq
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.spne_occupation_eq
+  let expected ← getConstInfo `_ThesisExactChecks.target_288
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.spne_occupation_eq"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.spne_occupation_eq | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusGameOccupation do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.spne_occupation_eq"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_288) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.spne_occupation_eq: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.spne_occupation_eq"
+#check @Thesis.SoftplusGame.spne_occupation_eq
+#print axioms _ThesisExactChecks.target_288
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_289 : Prop := (∀ {n m : ℕ} (net : Network n m) (θ : ℝ) (hθ : 0<θ) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net) (hsp : SubgamePerfect θ net plus minus x (-x)) (j : Fin m) (i : Fin n) (q : Bool), fderiv ℝ (softEval θ net) x (Pi.single i 1) j=(if q then (-1 : ℝ) else 1)*(profileOccupation net θ plus minus x j i q false-profileOccupation net θ plus minus x j i q true))
+theorem _ThesisExactChecks.target_289 : _ThesisExpectedTypes.type_289 := by exact @Thesis.SoftplusGame.spne_gradient
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.spne_gradient
+  let expected ← getConstInfo `_ThesisExactChecks.target_289
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.spne_gradient"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.spne_gradient | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusGameOccupation do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.spne_gradient"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_289) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.spne_gradient: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.spne_gradient"
+#check @Thesis.SoftplusGame.spne_gradient
+#print axioms _ThesisExactChecks.target_289
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_290 : Prop := (∀ {n m r : ℕ} (net : Network n m) (θ : ℝ) (hθ : 0<θ) (hw : net.Nonnegative) (x : Vec n) (plus minus : Strategy net) (hsp : SubgamePerfect θ net plus minus x (-x)) (C : Matrix (Fin r) (Fin m) ℝ) (b : Vec r) (j : Fin r) (i : Fin n) (q : Bool), fderiv ℝ (affineOutput θ net C b) x (Pi.single i 1) j=∑ h,C j h*(if q then (-1 : ℝ) else 1)*(profileOccupation net θ plus minus x h i q false-profileOccupation net θ plus minus x h i q true))
+theorem _ThesisExactChecks.target_290 : _ThesisExpectedTypes.type_290 := by exact @Thesis.SoftplusGame.spne_affine_gradient_profile
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.spne_affine_gradient_profile
+  let expected ← getConstInfo `_ThesisExactChecks.target_290
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.spne_affine_gradient_profile"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.spne_affine_gradient_profile | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusGameOccupation do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.spne_affine_gradient_profile"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_290) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.spne_affine_gradient_profile: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.spne_affine_gradient_profile"
+#check @Thesis.SoftplusGame.spne_affine_gradient_profile
+#print axioms _ThesisExactChecks.target_290
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_291 : Prop := (∀ {a b c : ℕ} (pre : Network a b) (suffix : Network b c) (θ : ℝ) (x : Vec a), softEval θ (pre.append suffix) x=softEval θ suffix (softEval θ pre x))
+theorem _ThesisExactChecks.target_291 : _ThesisExpectedTypes.type_291 := by exact @Thesis.SoftplusGame.softEval_append
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.softEval_append
+  let expected ← getConstInfo `_ThesisExactChecks.target_291
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.softEval_append"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.softEval_append | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusSubgames do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.softEval_append"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_291) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.softEval_append: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.softEval_append"
+#check @Thesis.SoftplusGame.softEval_append
+#print axioms _ThesisExactChecks.target_291
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_292 : Prop := (∀ {a b c : ℕ} (pre : Network a b) (suffix : Network b c) (θ : ℝ) (hθ : 0<θ) (hp : pre.Nonnegative) (hs : suffix.Nonnegative) (x : Vec a) (plus minus : Strategy (pre.append suffix)) (hsp : SubgamePerfect θ (pre.append suffix) plus minus x (-x)), SubgamePerfect θ suffix (suffixStrategy pre suffix plus) (suffixStrategy pre suffix minus) (softEval θ pre x) (-(softEval θ pre x)))
+theorem _ThesisExactChecks.target_292 : _ThesisExpectedTypes.type_292 := by exact @Thesis.SoftplusGame.spne_suffix
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.spne_suffix
+  let expected ← getConstInfo `_ThesisExactChecks.target_292
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.spne_suffix"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.spne_suffix | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusSubgames do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.spne_suffix"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_292) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.spne_suffix: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.spne_suffix"
+#check @Thesis.SoftplusGame.spne_suffix
+#print axioms _ThesisExactChecks.target_292
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_293 : Prop := (∀ {a b c : ℕ} (pre : Network a b) (suffix : Network b c) (θ : ℝ) (hθ : 0<θ) (hp : pre.Nonnegative) (hs : suffix.Nonnegative) (x : Vec a) (plus minus : Strategy (pre.append suffix)) (hsp : SubgamePerfect θ (pre.append suffix) plus minus x (-x)) (plusDev minusDev : Strategy pre),
+ (policyValue θ pre plusDev (prefixStrategy pre suffix minus) x (-x)).1 ≤ softEval θ pre x ∧
+ (policyValue θ pre plusDev (prefixStrategy pre suffix minus) x (-x)).2 ≤ -softEval θ pre x ∧
+ policyValue θ pre (prefixStrategy pre suffix plus) (prefixStrategy pre suffix minus) x (-x)=(softEval θ pre x,-softEval θ pre x) ∧
+ softEval θ pre x ≤ (policyValue θ pre (prefixStrategy pre suffix plus) minusDev x (-x)).1 ∧
+ -softEval θ pre x ≤ (policyValue θ pre (prefixStrategy pre suffix plus) minusDev x (-x)).2)
+theorem _ThesisExactChecks.target_293 : _ThesisExpectedTypes.type_293 := by exact @Thesis.SoftplusGame.spne_prefix_saddle
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.spne_prefix_saddle
+  let expected ← getConstInfo `_ThesisExactChecks.target_293
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.spne_prefix_saddle"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.spne_prefix_saddle | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusSubgames do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.spne_prefix_saddle"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_293) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.spne_prefix_saddle: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.spne_prefix_saddle"
+#check @Thesis.SoftplusGame.spne_prefix_saddle
+#print axioms _ThesisExactChecks.target_293
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_294 : Prop := (∀ {a b c : ℕ} (pre : Network a b) (suffix : Network b c) (θ : ℝ) (hθ : 0<θ) (hp : pre.Nonnegative) (hs : suffix.Nonnegative) (x : Vec a) (plus minus : Strategy (pre.append suffix)) (hsp : SubgamePerfect θ (pre.append suffix) plus minus x (-x)) (j : Fin c) (i : Fin b) (q : Bool),
+ fderiv ℝ (softEval θ suffix) (softEval θ pre x) (Pi.single i 1) j=(if q then (-1 : ℝ) else 1)*(profileOccupation suffix θ (suffixStrategy pre suffix plus) (suffixStrategy pre suffix minus) (softEval θ pre x) j i q false-profileOccupation suffix θ (suffixStrategy pre suffix plus) (suffixStrategy pre suffix minus) (softEval θ pre x) j i q true))
+theorem _ThesisExactChecks.target_294 : _ThesisExpectedTypes.type_294 := by exact @Thesis.SoftplusGame.spne_intermediate_gradient
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.spne_intermediate_gradient
+  let expected ← getConstInfo `_ThesisExactChecks.target_294
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.spne_intermediate_gradient"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.spne_intermediate_gradient | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusSubgames do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.spne_intermediate_gradient"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_294) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.spne_intermediate_gradient: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.spne_intermediate_gradient"
+#check @Thesis.SoftplusGame.spne_intermediate_gradient
+#print axioms _ThesisExactChecks.target_294
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_295 : Prop := (∀ {n k : ℕ} (r : Set.Icc (0 : ℝ) 1) (wp wn : Matrix (Fin k) (Fin n) ℝ) (j : Fin k) (turn : Bool) (v : Bool → Vec n), (∑ target : Option (Fin n × Bool),mixedTransition r wp wn j turn target*target.elim 0 (fun t => v t.2 t.1))=r.val*∑ i,(wp j i/rowDiscount wp wn j*v turn i+wn j i/rowDiscount wp wn j*v (!turn) i))
+theorem _ThesisExactChecks.target_295 : _ThesisExpectedTypes.type_295 := by exact @Thesis.SoftplusGame.mixed_expected_value
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.mixed_expected_value
+  let expected ← getConstInfo `_ThesisExactChecks.target_295
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.mixed_expected_value"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.mixed_expected_value | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusTransitionPayoff do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.mixed_expected_value"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_295) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.mixed_expected_value: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.mixed_expected_value"
+#check @Thesis.SoftplusGame.mixed_expected_value
+#print axioms _ThesisExactChecks.target_295
+
+section
+open HiddenMonotonicity Thesis.Regularization Thesis.SoftplusBackward Thesis.ReLUNetGame Thesis.RoutingBackward Thesis.BackwardGames Matrix Thesis.SoftplusGame
+open scoped BigOperators
+def _ThesisExpectedTypes.type_296 : Prop := (∀ {n k : ℕ} (θ : ℝ) (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k) (plus minus : Fin k → Set.Icc (0 : ℝ) 1) (v : PlayerValues n) (player turn : Bool) (j : Fin k), let r := if turn then minus j else plus j; playerStep θ wp wn bp bn plus minus v player turn j=r.val*(if player=turn then bp j else bn j)+(if player=turn then θ*Real.binEntropy r.val else 0)+rowDiscount wp wn j*∑ target : Option (Fin n × Bool),mixedTransition r wp wn j turn target*target.elim 0 (fun t => v player t.2 t.1))
+theorem _ThesisExactChecks.target_296 : _ThesisExpectedTypes.type_296 := by exact @Thesis.SoftplusGame.playerStep_transition
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.SoftplusGame.playerStep_transition
+  let expected ← getConstInfo `_ThesisExactChecks.target_296
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.SoftplusGame.playerStep_transition"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.SoftplusGame.playerStep_transition | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.SoftplusTransitionPayoff do
+    throwError "Defining module mismatch: Thesis.SoftplusGame.playerStep_transition"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_296) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.SoftplusGame.playerStep_transition: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.SoftplusGame.playerStep_transition"
+#check @Thesis.SoftplusGame.playerStep_transition
+#print axioms _ThesisExactChecks.target_296
+
+section
+open Thesis.Games Thesis.ConditionedSurvival
+open scoped BigOperators
+def _ThesisExpectedTypes.type_297 : Prop := (∀ {S : Type} [Fintype S] (n : ℕ) (K : ℕ → S → S → ℝ)
+(h : ℕ → S → ℝ) (hK : ∀ i s t, 0 ≤ K i s t)
+(hh : ∀ i s, 0 ≤ h i s)
+(hrec : ∀ i < n, ∀ s, h i s = ∑ t, K i s t * h (i+1) t)
+(s : S) (path : Paths S n),
+pathLaw n (kernel K h) s path * h 0 s =
+pathLaw n K s path * h n (endpoint n s path))
+theorem _ThesisExactChecks.target_297 : _ThesisExpectedTypes.type_297 := by exact @Thesis.ConditionedSurvival.weighted_path_identity
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.ConditionedSurvival.weighted_path_identity
+  let expected ← getConstInfo `_ThesisExactChecks.target_297
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.ConditionedSurvival.weighted_path_identity"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.ConditionedSurvival.weighted_path_identity | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.ConditionedSurvival do
+    throwError "Defining module mismatch: Thesis.ConditionedSurvival.weighted_path_identity"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_297) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.ConditionedSurvival.weighted_path_identity: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.ConditionedSurvival.weighted_path_identity"
+#check @Thesis.ConditionedSurvival.weighted_path_identity
+#print axioms _ThesisExactChecks.target_297
+
+section
+open Thesis.Games Thesis.ConditionedSurvival
+open scoped BigOperators
+def _ThesisExpectedTypes.type_298 : Prop := (∀ {S : Type} (n : ℕ) (K : ℕ → S → S → ℝ)
+(h : ℕ → S → ℝ) (hh : ∀ i s, 0 ≤ h i s)
+(s : S) (hs : 0 < h 0 s) (path : Paths S n) (i : ℕ) (hi : i ≤ n)
+(hz : h i (stateAt n s path i) = 0),
+pathLaw n (kernel K h) s path = 0)
+theorem _ThesisExactChecks.target_298 : _ThesisExpectedTypes.type_298 := by exact @Thesis.ConditionedSurvival.path_zero_at_zero_potential
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.ConditionedSurvival.path_zero_at_zero_potential
+  let expected ← getConstInfo `_ThesisExactChecks.target_298
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.ConditionedSurvival.path_zero_at_zero_potential"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.ConditionedSurvival.path_zero_at_zero_potential | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.ConditionedSurvival do
+    throwError "Defining module mismatch: Thesis.ConditionedSurvival.path_zero_at_zero_potential"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_298) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.ConditionedSurvival.path_zero_at_zero_potential: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.ConditionedSurvival.path_zero_at_zero_potential"
+#check @Thesis.ConditionedSurvival.path_zero_at_zero_potential
+#print axioms _ThesisExactChecks.target_298
+
+section
+open Thesis.Games Thesis.ConditionedSurvival
+open scoped BigOperators
+def _ThesisExpectedTypes.type_299 : Prop := (∀ {S : Type} [Fintype S] (N : ℕ) (K : ℕ → S → S → ℝ)
+(i : ℕ) (hi : i < N) (s : S),
+survival N K i s = ∑ t, K i s t * survival N K (i+1) t)
+theorem _ThesisExactChecks.target_299 : _ThesisExpectedTypes.type_299 := by exact @Thesis.ConditionedSurvival.survival_recurrence
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.ConditionedSurvival.survival_recurrence
+  let expected ← getConstInfo `_ThesisExactChecks.target_299
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.ConditionedSurvival.survival_recurrence"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.ConditionedSurvival.survival_recurrence | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.ConditionedSurvival do
+    throwError "Defining module mismatch: Thesis.ConditionedSurvival.survival_recurrence"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_299) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.ConditionedSurvival.survival_recurrence: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.ConditionedSurvival.survival_recurrence"
+#check @Thesis.ConditionedSurvival.survival_recurrence
+#print axioms _ThesisExactChecks.target_299
+
+section
+open Thesis.Games Thesis.ConditionedSurvival
+open scoped BigOperators
+def _ThesisExpectedTypes.type_300 : Prop := (∀ {S : Type} [Fintype S] (N : ℕ) (K : ℕ → S → S → ℝ) (s : S),
+survival N K 0 s = ∑ path : Paths S N, pathLaw N K s path)
+theorem _ThesisExactChecks.target_300 : _ThesisExpectedTypes.type_300 := by exact @Thesis.ConditionedSurvival.survival_eq_path_mass
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.ConditionedSurvival.survival_eq_path_mass
+  let expected ← getConstInfo `_ThesisExactChecks.target_300
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.ConditionedSurvival.survival_eq_path_mass"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.ConditionedSurvival.survival_eq_path_mass | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.ConditionedSurvival do
+    throwError "Defining module mismatch: Thesis.ConditionedSurvival.survival_eq_path_mass"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_300) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.ConditionedSurvival.survival_eq_path_mass: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.ConditionedSurvival.survival_eq_path_mass"
+#check @Thesis.ConditionedSurvival.survival_eq_path_mass
+#print axioms _ThesisExactChecks.target_300
+
+section
+open Thesis.Games Thesis.ConditionedSurvival
+open scoped BigOperators
+def _ThesisExpectedTypes.type_301 : Prop := (∀ {S : Type} [Fintype S] (N : ℕ) (K : ℕ → S → S → ℝ)
+(hK : ∀ i s t, 0 ≤ K i s t) (s : S) (hs : survival N K 0 s = 0)
+(path : Paths S N), pathLaw N K s path = 0)
+theorem _ThesisExactChecks.target_301 : _ThesisExpectedTypes.type_301 := by exact @Thesis.ConditionedSurvival.survival_zero_path
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.ConditionedSurvival.survival_zero_path
+  let expected ← getConstInfo `_ThesisExactChecks.target_301
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.ConditionedSurvival.survival_zero_path"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.ConditionedSurvival.survival_zero_path | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.ConditionedSurvival do
+    throwError "Defining module mismatch: Thesis.ConditionedSurvival.survival_zero_path"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_301) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.ConditionedSurvival.survival_zero_path: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.ConditionedSurvival.survival_zero_path"
+#check @Thesis.ConditionedSurvival.survival_zero_path
+#print axioms _ThesisExactChecks.target_301
+
+section
+open Thesis.Games Thesis.ConditionedSurvival
+open scoped BigOperators
+def _ThesisExpectedTypes.type_302 : Prop := (∀ {S : Type} [Fintype S] (N : ℕ) (K : ℕ → S → S → ℝ)
+(hK : ∀ i s t, 0 ≤ K i s t) (hrow : ∀ i s, ∑ t, K i s t ≤ 1)
+(s : S) (hs : 0 < survival N K 0 s),
+(∀ i t, 0 ≤ survival N K i t ∧ survival N K i t ≤ 1) ∧
+(∀ t, survival N K N t = 1) ∧
+(∀ i < N, ∀ u, survival N K i u = ∑ t, K i u t * survival N K (i+1) t) ∧
+(survival N K 0 s = ∑ path : Paths S N, pathLaw N K s path) ∧
+(∀ i < N, ∀ u, (∑ t, kernel K (survival N K) i u t) =
+if 0 < survival N K i u then 1 else 0) ∧
+(∀ i u t, survival N K (i+1) t = 0 → kernel K (survival N K) i u t = 0) ∧
+(∀ path : Paths S N, pathLaw N (kernel K (survival N K)) s path =
+pathLaw N K s path / survival N K 0 s) ∧
+((∑ path : Paths S N, pathLaw N (kernel K (survival N K)) s path) = 1) ∧
+(∀ (path : Paths S N) (i : ℕ), i ≤ N →
+survival N K i (stateAt N s path i) = 0 →
+pathLaw N (kernel K (survival N K)) s path = 0))
+theorem _ThesisExactChecks.target_302 : _ThesisExpectedTypes.type_302 := by exact @Thesis.ConditionedSurvival.conditioned_survival
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.ConditionedSurvival.conditioned_survival
+  let expected ← getConstInfo `_ThesisExactChecks.target_302
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.ConditionedSurvival.conditioned_survival"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.ConditionedSurvival.conditioned_survival | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.ConditionedSurvival do
+    throwError "Defining module mismatch: Thesis.ConditionedSurvival.conditioned_survival"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_302) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.ConditionedSurvival.conditioned_survival: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.ConditionedSurvival.conditioned_survival"
+#check @Thesis.ConditionedSurvival.conditioned_survival
+#print axioms _ThesisExactChecks.target_302
+
+section
+universe u
+open Finset Thesis.RoutingExtended Thesis.AttentionReference
+open scoped BigOperators
+def _ThesisExpectedTypes.type_303 : Prop := (∀ {A : Type u} [Fintype A] (reference contribution : A → ℝ) (p : Policy A) (hr : ∀ i, 0 ≤ reference i) (hc : ∀ i, 0 ≤ contribution i),
+objective reference contribution p = sourceValue 1 (mass reference contribution) p)
+theorem _ThesisExactChecks.target_303 : _ThesisExpectedTypes.type_303.{u} := by exact @Thesis.AttentionReference.objective_eq_sourceValue.{u}
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.AttentionReference.objective_eq_sourceValue
+  let expected ← getConstInfo `_ThesisExactChecks.target_303
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: Thesis.AttentionReference.objective_eq_sourceValue"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.AttentionReference.objective_eq_sourceValue | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.AttentionReference do
+    throwError "Defining module mismatch: Thesis.AttentionReference.objective_eq_sourceValue"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_303) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.AttentionReference.objective_eq_sourceValue: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.AttentionReference.objective_eq_sourceValue"
+#check @Thesis.AttentionReference.objective_eq_sourceValue
+#print axioms _ThesisExactChecks.target_303
+
+section
+universe u
+open Finset Thesis.RoutingExtended Thesis.AttentionReference
+open scoped BigOperators
+def _ThesisExpectedTypes.type_304 : Prop := (∀ {A : Type u} [Fintype A] (reference contribution : A → ℝ) (hr : ∀ i, 0 ≤ reference i) (hc : ∀ i, 0 ≤ contribution i) (hz : 0 < ∑ i, mass reference contribution i),
+objective reference contribution (valuePolicy reference contribution hr hc hz) = (Real.log (∑ i, reference i * contribution i) : WithBot ℝ))
+theorem _ThesisExactChecks.target_304 : _ThesisExpectedTypes.type_304.{u} := by exact @Thesis.AttentionReference.valuePolicy_value.{u}
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.AttentionReference.valuePolicy_value
+  let expected ← getConstInfo `_ThesisExactChecks.target_304
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: Thesis.AttentionReference.valuePolicy_value"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.AttentionReference.valuePolicy_value | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.AttentionReference do
+    throwError "Defining module mismatch: Thesis.AttentionReference.valuePolicy_value"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_304) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.AttentionReference.valuePolicy_value: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.AttentionReference.valuePolicy_value"
+#check @Thesis.AttentionReference.valuePolicy_value
+#print axioms _ThesisExactChecks.target_304
+
+section
+universe u
+open Finset Thesis.RoutingExtended Thesis.AttentionReference
+open scoped BigOperators
+def _ThesisExpectedTypes.type_305 : Prop := (∀ {A : Type u} [Fintype A] (reference contribution : A → ℝ) (p : Policy A) (hr : ∀ i, 0 ≤ reference i) (hc : ∀ i, 0 ≤ contribution i) (hz : 0 < ∑ i, mass reference contribution i),
+objective reference contribution p = (Real.log (∑ i, reference i * contribution i) : WithBot ℝ) ↔ p.prob = (valuePolicy reference contribution hr hc hz).prob)
+theorem _ThesisExactChecks.target_305 : _ThesisExpectedTypes.type_305.{u} := by exact @Thesis.AttentionReference.valuePolicy_unique.{u}
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.AttentionReference.valuePolicy_unique
+  let expected ← getConstInfo `_ThesisExactChecks.target_305
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: Thesis.AttentionReference.valuePolicy_unique"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.AttentionReference.valuePolicy_unique | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.AttentionReference do
+    throwError "Defining module mismatch: Thesis.AttentionReference.valuePolicy_unique"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_305) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.AttentionReference.valuePolicy_unique: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.AttentionReference.valuePolicy_unique"
+#check @Thesis.AttentionReference.valuePolicy_unique
+#print axioms _ThesisExactChecks.target_305
+
+section
+universe u
+open Finset Thesis.RoutingExtended Thesis.AttentionReference
+open scoped BigOperators
+def _ThesisExpectedTypes.type_306 : Prop := (∀ {A : Type u} [Fintype A] (reference contribution : A → ℝ) (p : Policy A) (hr : ∀ i, 0 ≤ reference i) (hc : ∀ i, 0 ≤ contribution i)
+(hz : (∑ i, reference i * contribution i) = 0),
+objective reference contribution p = ⊥)
+theorem _ThesisExactChecks.target_306 : _ThesisExpectedTypes.type_306.{u} := by exact @Thesis.AttentionReference.zero_mass_value.{u}
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.AttentionReference.zero_mass_value
+  let expected ← getConstInfo `_ThesisExactChecks.target_306
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: Thesis.AttentionReference.zero_mass_value"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.AttentionReference.zero_mass_value | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.AttentionReference do
+    throwError "Defining module mismatch: Thesis.AttentionReference.zero_mass_value"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_306) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.AttentionReference.zero_mass_value: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.AttentionReference.zero_mass_value"
+#check @Thesis.AttentionReference.zero_mass_value
+#print axioms _ThesisExactChecks.target_306
+
+section
+universe u
+open Finset Thesis.RoutingExtended Thesis.AttentionReference
+open scoped BigOperators
+def _ThesisExpectedTypes.type_307 : Prop := (∀ {A : Type u} [Fintype A] (reference contribution : A → ℝ) (hr : ∀ i, 0 ≤ reference i) (hc : ∀ i, 0 ≤ contribution i) (hz : 0 < ∑ i, mass reference contribution i),
+IsGreatest (Set.range (objective reference contribution)) (Real.log (∑ i, reference i * contribution i) : WithBot ℝ) ∧
+(∀ p : Policy A, objective reference contribution p = (Real.log (∑ i, reference i * contribution i) : WithBot ℝ) ↔ p.prob = (valuePolicy reference contribution hr hc hz).prob) ∧
+(∀ i, (valuePolicy reference contribution hr hc hz).prob i = reference i * contribution i / ∑ j, reference j * contribution j))
+theorem _ThesisExactChecks.target_307 : _ThesisExpectedTypes.type_307.{u} := by exact @Thesis.AttentionReference.attention_value_routing.{u}
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.AttentionReference.attention_value_routing
+  let expected ← getConstInfo `_ThesisExactChecks.target_307
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: Thesis.AttentionReference.attention_value_routing"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.AttentionReference.attention_value_routing | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.AttentionReference do
+    throwError "Defining module mismatch: Thesis.AttentionReference.attention_value_routing"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_307) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.AttentionReference.attention_value_routing: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.AttentionReference.attention_value_routing"
+#check @Thesis.AttentionReference.attention_value_routing
+#print axioms _ThesisExactChecks.target_307
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_308 := (∀ {n : ℕ}, ℝ → Sensitivity n → Sensitivity n)
+noncomputable def _ThesisExactChecks.target_308 : _ThesisExpectedTypes.type_308 := by exact @HiddenMonotonicity.shiftPair
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.shiftPair
+  let expected ← getConstInfo `_ThesisExactChecks.target_308
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.shiftPair"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.shiftPair | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.StabilizedBackward do
+    throwError "Defining module mismatch: HiddenMonotonicity.shiftPair"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_308) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.shiftPair: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.shiftPair"
+#check @HiddenMonotonicity.shiftPair
+#print axioms _ThesisExactChecks.target_308
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_309 := (∀ {n : ℕ}, Sensitivity n → Row n)
+noncomputable def _ThesisExactChecks.target_309 : _ThesisExpectedTypes.type_309 := by exact @HiddenMonotonicity.unified
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.unified
+  let expected ← getConstInfo `_ThesisExactChecks.target_309
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.unified"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.unified | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.StabilizedBackward do
+    throwError "Defining module mismatch: HiddenMonotonicity.unified"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_309) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.unified: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.unified"
+#check @HiddenMonotonicity.unified
+#print axioms _ThesisExactChecks.target_309
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_310 : Prop := (∀ {n : ℕ} (α : ℝ) (s : Sensitivity n), (shiftPair α s).1+(shiftPair α s).2 = (1-2*α) • (s.1+s.2))
+theorem _ThesisExactChecks.target_310 : _ThesisExpectedTypes.type_310 := by exact @HiddenMonotonicity.shiftPair_sum
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.shiftPair_sum
+  let expected ← getConstInfo `_ThesisExactChecks.target_310
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.shiftPair_sum"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.shiftPair_sum | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.StabilizedBackward do
+    throwError "Defining module mismatch: HiddenMonotonicity.shiftPair_sum"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_310) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.shiftPair_sum: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.shiftPair_sum"
+#check @HiddenMonotonicity.shiftPair_sum
+#print axioms _ThesisExactChecks.target_310
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_311 : Prop := (∀ {n : ℕ} (α : ℝ) (s : Sensitivity n), unified (shiftPair α s)=unified s)
+theorem _ThesisExactChecks.target_311 : _ThesisExpectedTypes.type_311 := by exact @HiddenMonotonicity.unified_shift
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.unified_shift
+  let expected ← getConstInfo `_ThesisExactChecks.target_311
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.unified_shift"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.unified_shift | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.StabilizedBackward do
+    throwError "Defining module mismatch: HiddenMonotonicity.unified_shift"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_311) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.unified_shift: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.unified_shift"
+#check @HiddenMonotonicity.unified_shift
+#print axioms _ThesisExactChecks.target_311
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_312 : Prop := (∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (gate : Fin k → Bool) (s : Sensitivity k), unified (MaskedTrace.pull wp wn gate s)=(unified s).comp (MaskedTrace.signedMap wp wn gate)-(1/2 : ℝ) • ((s.1+s.2).comp (MaskedTrace.deadMap wp wn gate)))
+theorem _ThesisExactChecks.target_312 : _ThesisExpectedTypes.type_312 := by exact @HiddenMonotonicity.MaskedTrace.pull_unified
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.MaskedTrace.pull_unified
+  let expected ← getConstInfo `_ThesisExactChecks.target_312
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.MaskedTrace.pull_unified"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.MaskedTrace.pull_unified | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.StabilizedBackward do
+    throwError "Defining module mismatch: HiddenMonotonicity.MaskedTrace.pull_unified"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_312) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.MaskedTrace.pull_unified: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.MaskedTrace.pull_unified"
+#check @HiddenMonotonicity.MaskedTrace.pull_unified
+#print axioms _ThesisExactChecks.target_312
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_313 : Prop := (∀ {n m : ℕ} (tr : MaskedTrace n m) (α : ℕ → ℝ) (seed : Sensitivity m), (tr.run α seed).1+(tr.run α seed).2=tr.bulkCoefficient α • ((seed.1+seed.2).comp tr.absMap))
+theorem _ThesisExactChecks.target_313 : _ThesisExpectedTypes.type_313 := by exact @HiddenMonotonicity.MaskedTrace.run_bulk
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.MaskedTrace.run_bulk
+  let expected ← getConstInfo `_ThesisExactChecks.target_313
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.MaskedTrace.run_bulk"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.MaskedTrace.run_bulk | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.AffineReadout do
+    throwError "Defining module mismatch: HiddenMonotonicity.MaskedTrace.run_bulk"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_313) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.MaskedTrace.run_bulk: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.MaskedTrace.run_bulk"
+#check @HiddenMonotonicity.MaskedTrace.run_bulk
+#print axioms _ThesisExactChecks.target_313
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_314 : Prop := (∀ {n m : ℕ} (tr : MaskedTrace n m) (α : ℕ → ℝ), tr.bulkCoefficient α=∏ i ∈ Finset.range (tr.depth+1), (1-2*α i))
+theorem _ThesisExactChecks.target_314 : _ThesisExpectedTypes.type_314 := by exact @HiddenMonotonicity.MaskedTrace.bulkCoefficient_product
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.MaskedTrace.bulkCoefficient_product
+  let expected ← getConstInfo `_ThesisExactChecks.target_314
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.MaskedTrace.bulkCoefficient_product"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.MaskedTrace.bulkCoefficient_product | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.StabilizedBackward do
+    throwError "Defining module mismatch: HiddenMonotonicity.MaskedTrace.bulkCoefficient_product"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_314) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.MaskedTrace.bulkCoefficient_product: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.MaskedTrace.bulkCoefficient_product"
+#check @HiddenMonotonicity.MaskedTrace.bulkCoefficient_product
+#print axioms _ThesisExactChecks.target_314
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_315 := (∀ {n k : ℕ}, Matrix (Fin k) (Fin n) ℝ → Matrix (Fin k) (Fin n) ℝ → Vec k → Vec k → PairVec n → PairVec k)
+noncomputable def _ThesisExactChecks.target_315 : _ThesisExpectedTypes.type_315 := by exact @HiddenMonotonicity.affineChunk
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.affineChunk
+  let expected ← getConstInfo `_ThesisExactChecks.target_315
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.affineChunk"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.affineChunk | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.AffineChunk do
+    throwError "Defining module mismatch: HiddenMonotonicity.affineChunk"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_315) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.affineChunk: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.affineChunk"
+#check @HiddenMonotonicity.affineChunk
+#print axioms _ThesisExactChecks.target_315
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_316 : Prop := (∀ {n k : ℕ} (wp wn : Matrix (Fin k) (Fin n) ℝ) (bp bn : Vec k) (x : PairVec n), preP wp wn x+bp-(preN wp wn x+bn)=affineLayer wp wn bp bn (x.1-x.2))
+theorem _ThesisExactChecks.target_316 : _ThesisExpectedTypes.type_316 := by exact @HiddenMonotonicity.preactivation_difference
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.preactivation_difference
+  let expected ← getConstInfo `_ThesisExactChecks.target_316
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.preactivation_difference"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.preactivation_difference | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.OriginalTrace do
+    throwError "Defining module mismatch: HiddenMonotonicity.preactivation_difference"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_316) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.preactivation_difference: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.preactivation_difference"
+#check @HiddenMonotonicity.preactivation_difference
+#print axioms _ThesisExactChecks.target_316
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_317 := (ℝ → (ℝ × ℝ) → ℝ × ℝ)
+noncomputable def _ThesisExactChecks.target_317 : _ThesisExpectedTypes.type_317 := by exact @HiddenMonotonicity.mixPair
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.mixPair
+  let expected ← getConstInfo `_ThesisExactChecks.target_317
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.mixPair"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.mixPair | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.Decomposition do
+    throwError "Defining module mismatch: HiddenMonotonicity.mixPair"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_317) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.mixPair: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.mixPair"
+#check @HiddenMonotonicity.mixPair
+#print axioms _ThesisExactChecks.target_317
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_318 : Prop := (∀ p n : ℝ, max p n-n=relu (p-n))
+theorem _ThesisExactChecks.target_318 : _ThesisExpectedTypes.type_318 := by exact @HiddenMonotonicity.max_sub
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.max_sub
+  let expected ← getConstInfo `_ThesisExactChecks.target_318
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.max_sub"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.max_sub | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.Core do
+    throwError "Defining module mismatch: HiddenMonotonicity.max_sub"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_318) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.max_sub: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.max_sub"
+#check @HiddenMonotonicity.max_sub
+#print axioms _ThesisExactChecks.target_318
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_319 := (∀ {n k : ℕ}, Matrix (Fin k) (Fin n) ℝ → Matrix (Fin k) (Fin n) ℝ → Vec k → Vec k → PairVec n → PairVec k)
+noncomputable def _ThesisExactChecks.target_319 : _ThesisExpectedTypes.type_319 := by exact @HiddenMonotonicity.layerFun
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.layerFun
+  let expected ← getConstInfo `_ThesisExactChecks.target_319
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.layerFun"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.layerFun | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.NetworkDerivative do
+    throwError "Defining module mismatch: HiddenMonotonicity.layerFun"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_319) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.layerFun: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.layerFun"
+#check @HiddenMonotonicity.layerFun
+#print axioms _ThesisExactChecks.target_319
+
+section
+universe u
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_320 := (∀ {ι : Type u} [Fintype ι] [Nonempty ι] [DecidableEq ι], ((ι → ℝ) × (ι → ℝ)) → ℝ × ℝ)
+noncomputable def _ThesisExactChecks.target_320 : _ThesisExpectedTypes.type_320.{u} := by exact @HiddenMonotonicity.finitePool.{u}
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.finitePool
+  let expected ← getConstInfo `_ThesisExactChecks.target_320
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.finitePool"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.finitePool | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.MaxPool do
+    throwError "Defining module mismatch: HiddenMonotonicity.finitePool"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_320) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.finitePool: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.finitePool"
+#check @HiddenMonotonicity.finitePool
+#print axioms _ThesisExactChecks.target_320
+
+section
+open HiddenMonotonicity
+open scoped BigOperators
+def _ThesisExpectedTypes.type_321 : Prop := (∀ p q r s : ℝ, (p*r+q*s)-(p*s+q*r)=(p-q)*(r-s))
+theorem _ThesisExactChecks.target_321 : _ThesisExpectedTypes.type_321 := by exact @HiddenMonotonicity.multiplicative_split_correct
+end
+run_cmd do
+  let target ← getConstInfo `HiddenMonotonicity.multiplicative_split_correct
+  let expected ← getConstInfo `_ThesisExactChecks.target_321
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: HiddenMonotonicity.multiplicative_split_correct"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `HiddenMonotonicity.multiplicative_split_correct | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `HiddenMonotonicity.Chunks do
+    throwError "Defining module mismatch: HiddenMonotonicity.multiplicative_split_correct"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_321) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target HiddenMonotonicity.multiplicative_split_correct: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: HiddenMonotonicity.multiplicative_split_correct"
+#check @HiddenMonotonicity.multiplicative_split_correct
+#print axioms _ThesisExactChecks.target_321
+
+section
+open HiddenMonotonicity Thesis.StoppingDecomposition
+open scoped BigOperators
+def _ThesisExpectedTypes.type_322 := ((ℝ × ℝ) → ℝ × ℝ)
+noncomputable def _ThesisExactChecks.target_322 : _ThesisExpectedTypes.type_322 := by exact @Thesis.StoppingDecomposition.stopPair
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDecomposition.stopPair
+  let expected ← getConstInfo `_ThesisExactChecks.target_322
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDecomposition.stopPair"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDecomposition.stopPair | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDecomposition do
+    throwError "Defining module mismatch: Thesis.StoppingDecomposition.stopPair"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_322) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDecomposition.stopPair: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDecomposition.stopPair"
+#check @Thesis.StoppingDecomposition.stopPair
+#print axioms _ThesisExactChecks.target_322
+
+section
+open HiddenMonotonicity Thesis.StoppingDecomposition
+open scoped BigOperators
+def _ThesisExpectedTypes.type_323 := (∀ {n k : ℕ}, Matrix (Fin k) (Fin n) ℝ → Matrix (Fin k) (Fin n) ℝ → Vec k → Vec k → PairVec n → PairVec k)
+noncomputable def _ThesisExactChecks.target_323 : _ThesisExpectedTypes.type_323 := by exact @Thesis.StoppingDecomposition.stopLayer
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDecomposition.stopLayer
+  let expected ← getConstInfo `_ThesisExactChecks.target_323
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDecomposition.stopLayer"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDecomposition.stopLayer | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDecomposition do
+    throwError "Defining module mismatch: Thesis.StoppingDecomposition.stopLayer"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_323) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDecomposition.stopLayer: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDecomposition.stopLayer"
+#check @Thesis.StoppingDecomposition.stopLayer
+#print axioms _ThesisExactChecks.target_323
+
+section
+open HiddenMonotonicity Thesis.GeneralRegularization
+open scoped BigOperators
+def _ThesisExpectedTypes.type_324 := (Regularizer → (ℝ → ℝ) → (ℝ × ℝ) → ℝ × ℝ)
+noncomputable def _ThesisExactChecks.target_324 : _ThesisExpectedTypes.type_324 := by exact @Thesis.GeneralRegularization.pairWith
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.GeneralRegularization.pairWith
+  let expected ← getConstInfo `_ThesisExactChecks.target_324
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.GeneralRegularization.pairWith"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.GeneralRegularization.pairWith | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.GeneralRegularization do
+    throwError "Defining module mismatch: Thesis.GeneralRegularization.pairWith"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_324) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.GeneralRegularization.pairWith: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.GeneralRegularization.pairWith"
+#check @Thesis.GeneralRegularization.pairWith
+#print axioms _ThesisExactChecks.target_324
+
+section
+open HiddenMonotonicity Thesis.GeneralRegularization
+open scoped BigOperators
+def _ThesisExpectedTypes.type_325 := (∀ θ : ℝ, 0<θ → Regularizer)
+noncomputable def _ThesisExactChecks.target_325 : _ThesisExpectedTypes.type_325 := by exact @Thesis.GeneralRegularization.entropyRegularizer
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.GeneralRegularization.entropyRegularizer
+  let expected ← getConstInfo `_ThesisExactChecks.target_325
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.GeneralRegularization.entropyRegularizer"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.GeneralRegularization.entropyRegularizer | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.GeneralRegularization do
+    throwError "Defining module mismatch: Thesis.GeneralRegularization.entropyRegularizer"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_325) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.GeneralRegularization.entropyRegularizer: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.GeneralRegularization.entropyRegularizer"
+#check @Thesis.GeneralRegularization.entropyRegularizer
+#print axioms _ThesisExactChecks.target_325
+
+section
+open HiddenMonotonicity Thesis.GeneralRegularization
+open scoped BigOperators
+def _ThesisExpectedTypes.type_326 : Prop := (∀ z : ℝ, hardGate z ∈ Set.Icc (0 : ℝ) 1 ∧ IsMaxOn (objective zeroRegularizer z) (Set.Icc 0 1) (hardGate z))
+theorem _ThesisExactChecks.target_326 : _ThesisExpectedTypes.type_326 := by exact @Thesis.GeneralRegularization.hardGate_optimal
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.GeneralRegularization.hardGate_optimal
+  let expected ← getConstInfo `_ThesisExactChecks.target_326
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.GeneralRegularization.hardGate_optimal"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.GeneralRegularization.hardGate_optimal | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.GeneralRegularization do
+    throwError "Defining module mismatch: Thesis.GeneralRegularization.hardGate_optimal"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_326) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.GeneralRegularization.hardGate_optimal: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.GeneralRegularization.hardGate_optimal"
+#check @Thesis.GeneralRegularization.hardGate_optimal
+#print axioms _ThesisExactChecks.target_326
+
+section
+open HiddenMonotonicity Thesis.Regularization
+open scoped BigOperators
+def _ThesisExpectedTypes.type_327 := (ℝ → ℝ → ℝ → ℝ × ℝ)
+noncomputable def _ThesisExactChecks.target_327 : _ThesisExpectedTypes.type_327 := by exact @Thesis.Regularization.softSplit
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.Regularization.softSplit
+  let expected ← getConstInfo `_ThesisExactChecks.target_327
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.Regularization.softSplit"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.Regularization.softSplit | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.Regularization do
+    throwError "Defining module mismatch: Thesis.Regularization.softSplit"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_327) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.Regularization.softSplit: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.Regularization.softSplit"
+#check @Thesis.Regularization.softSplit
+#print axioms _ThesisExactChecks.target_327
+
+section
+open HiddenMonotonicity Thesis.Regularization
+open scoped BigOperators
+def _ThesisExpectedTypes.type_328 : Prop := (∀ (θ z : ℝ) (hθ : 0<θ), gate θ z*z+θ*Real.binEntropy (gate θ z)=softplus θ z)
+theorem _ThesisExactChecks.target_328 : _ThesisExpectedTypes.type_328 := by exact @Thesis.Regularization.entropy_gate_value
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.Regularization.entropy_gate_value
+  let expected ← getConstInfo `_ThesisExactChecks.target_328
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.Regularization.entropy_gate_value"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.Regularization.entropy_gate_value | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.Regularization do
+    throwError "Defining module mismatch: Thesis.Regularization.entropy_gate_value"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_328) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.Regularization.entropy_gate_value: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.Regularization.entropy_gate_value"
+#check @Thesis.Regularization.entropy_gate_value
+#print axioms _ThesisExactChecks.target_328
+
+section
+universe u
+open HiddenMonotonicity Thesis.ReferencePolicy
+open scoped BigOperators
+def _ThesisExpectedTypes.type_329 : Prop := (∀ {A : Type u} [Fintype A] (ρ u : A → ℝ) (hu : ∀ i,0<u i), referencePolicy 1 ρ (fun i => Real.log (u i))=(fun i => ρ i*u i/∑ j,ρ j*u j))
+theorem _ThesisExactChecks.target_329 : _ThesisExpectedTypes.type_329.{u} := by exact @Thesis.ReferencePolicy.reference_log_policy.{u}
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.ReferencePolicy.reference_log_policy
+  let expected ← getConstInfo `_ThesisExactChecks.target_329
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: Thesis.ReferencePolicy.reference_log_policy"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.ReferencePolicy.reference_log_policy | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.ReferencePolicy do
+    throwError "Defining module mismatch: Thesis.ReferencePolicy.reference_log_policy"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_329) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.ReferencePolicy.reference_log_policy: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.ReferencePolicy.reference_log_policy"
+#check @Thesis.ReferencePolicy.reference_log_policy
+#print axioms _ThesisExactChecks.target_329
+
+section
+universe u
+open HiddenMonotonicity Thesis.ReferencePolicy
+open scoped BigOperators
+def _ThesisExpectedTypes.type_330 : Prop := (∀ {A : Type u} [Fintype A] [Nonempty A] (θ : ℝ) (ρ q : A → ℝ) (hθ : 0<θ) (hρ : ∀ i,0<ρ i), (∑ i,referencePolicy θ ρ q i*q i)-θ*kl (referencePolicy θ ρ q) ρ=referenceValue θ ρ q)
+theorem _ThesisExactChecks.target_330 : _ThesisExpectedTypes.type_330.{u} := by exact @Thesis.ReferencePolicy.reference_policy_value.{u}
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.ReferencePolicy.reference_policy_value
+  let expected ← getConstInfo `_ThesisExactChecks.target_330
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: Thesis.ReferencePolicy.reference_policy_value"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.ReferencePolicy.reference_policy_value | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.ReferencePolicy do
+    throwError "Defining module mismatch: Thesis.ReferencePolicy.reference_policy_value"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_330) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.ReferencePolicy.reference_policy_value: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.ReferencePolicy.reference_policy_value"
+#check @Thesis.ReferencePolicy.reference_policy_value
+#print axioms _ThesisExactChecks.target_330
+
+section
+universe u v
+open HiddenMonotonicity Thesis.Games
+open scoped BigOperators
+def _ThesisExpectedTypes.type_331 : Prop := (∀ {X : Type u} {Y : Type v} [Fintype X] [Fintype Y] [DecidableEq Y] (p q : X → ℝ) (terminal : X → Y) (y : Y), pixelDisagreement p q terminal y=((∑ x,if terminal x=y then p x else 0)+(∑ x,if terminal x=y then q x else 0))/2-∑ x,if terminal x=y then Real.sqrt (p x*q x) else 0)
+theorem _ThesisExactChecks.target_331 : _ThesisExpectedTypes.type_331.{u, v} := by exact @Thesis.Games.pixelDisagreement_formula.{u, v}
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.Games.pixelDisagreement_formula
+  let expected ← getConstInfo `_ThesisExactChecks.target_331
+  unless target.levelParams.length == 2 && expected.levelParams.length == 2 do
+    throwError "Universe arity mismatch: Thesis.Games.pixelDisagreement_formula"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.Games.pixelDisagreement_formula | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.Games do
+    throwError "Defining module mismatch: Thesis.Games.pixelDisagreement_formula"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_331) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.Games.pixelDisagreement_formula: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.Games.pixelDisagreement_formula"
+#check @Thesis.Games.pixelDisagreement_formula
+#print axioms _ThesisExactChecks.target_331
+
+section
+universe u v
+open HiddenMonotonicity Thesis.Games
+open scoped BigOperators
+def _ThesisExpectedTypes.type_332 : Prop := (∀ {X : Type u} {Y : Type v} [Fintype X] [Fintype Y] [DecidableEq Y] (p q : X → ℝ) (terminal : X → Y) (hp1 : ∑ x,p x=1) (hq1 : ∑ x,q x=1), (∑ y,pixelDisagreement p q terminal y)=1-overlap p q)
+theorem _ThesisExactChecks.target_332 : _ThesisExpectedTypes.type_332.{u, v} := by exact @Thesis.Games.pixelDisagreement_total.{u, v}
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.Games.pixelDisagreement_total
+  let expected ← getConstInfo `_ThesisExactChecks.target_332
+  unless target.levelParams.length == 2 && expected.levelParams.length == 2 do
+    throwError "Universe arity mismatch: Thesis.Games.pixelDisagreement_total"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.Games.pixelDisagreement_total | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.Games do
+    throwError "Defining module mismatch: Thesis.Games.pixelDisagreement_total"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_332) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.Games.pixelDisagreement_total: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.Games.pixelDisagreement_total"
+#check @Thesis.Games.pixelDisagreement_total
+#print axioms _ThesisExactChecks.target_332
+
+section
+universe u
+open HiddenMonotonicity Thesis.Games
+open scoped BigOperators
+def _ThesisExpectedTypes.type_333 : Prop := (∀ {S : Type u} [Fintype S] (p q : S → ℝ) (hp : ∀ s,0≤p s) (hq : ∀ s,0≤q s) (hp1 : ∑ s,p s=1) (hq1 : ∑ s,q s=1), overlap p q≤1)
+theorem _ThesisExactChecks.target_333 : _ThesisExpectedTypes.type_333.{u} := by exact @Thesis.Games.overlap_le_one.{u}
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.Games.overlap_le_one
+  let expected ← getConstInfo `_ThesisExactChecks.target_333
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: Thesis.Games.overlap_le_one"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.Games.overlap_le_one | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.Games do
+    throwError "Defining module mismatch: Thesis.Games.overlap_le_one"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_333) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.Games.overlap_le_one: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.Games.overlap_le_one"
+#check @Thesis.Games.overlap_le_one
+#print axioms _ThesisExactChecks.target_333
+
+section
+universe u
+open HiddenMonotonicity Thesis.Games
+open scoped BigOperators
+def _ThesisExpectedTypes.type_334 : Prop := (∀ {S : Type u} [Fintype S] (p q : S → ℝ), 0≤overlap p q)
+theorem _ThesisExactChecks.target_334 : _ThesisExpectedTypes.type_334.{u} := by exact @Thesis.Games.overlap_nonneg.{u}
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.Games.overlap_nonneg
+  let expected ← getConstInfo `_ThesisExactChecks.target_334
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: Thesis.Games.overlap_nonneg"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.Games.overlap_nonneg | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.Games do
+    throwError "Defining module mismatch: Thesis.Games.overlap_nonneg"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_334) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.Games.overlap_nonneg: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.Games.overlap_nonneg"
+#check @Thesis.Games.overlap_nonneg
+#print axioms _ThesisExactChecks.target_334
+
+section
+open HiddenMonotonicity Thesis.RoutingSupport
+open scoped BigOperators
+def _ThesisExpectedTypes.type_335 := (∀ {n k : ℕ}, Matrix (Fin k) (Fin n) ℝ → Matrix (Fin k) (Fin n) ℝ → Vec k → Vec k → ℝ → ℝ → ℝ → Vec n → Matrix (Fin k) (Fin n) ℝ)
+noncomputable def _ThesisExactChecks.target_335 : _ThesisExpectedTypes.type_335 := by exact @Thesis.RoutingSupport.sourceLayer
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.RoutingSupport.sourceLayer
+  let expected ← getConstInfo `_ThesisExactChecks.target_335
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.RoutingSupport.sourceLayer"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.RoutingSupport.sourceLayer | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.RoutingSupport do
+    throwError "Defining module mismatch: Thesis.RoutingSupport.sourceLayer"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_335) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.RoutingSupport.sourceLayer: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.RoutingSupport.sourceLayer"
+#check @Thesis.RoutingSupport.sourceLayer
+#print axioms _ThesisExactChecks.target_335
+
+section
+open HiddenMonotonicity Thesis.RoutingSupport
+open scoped BigOperators
+def _ThesisExpectedTypes.type_336 := (∀ {n m : ℕ}, ℝ → ℝ → ℝ → Network n m → Vec n → Vec m → Vec n)
+noncomputable def _ThesisExactChecks.target_336 : _ThesisExpectedTypes.type_336 := by exact @Thesis.RoutingSupport.sourceLRP
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.RoutingSupport.sourceLRP
+  let expected ← getConstInfo `_ThesisExactChecks.target_336
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.RoutingSupport.sourceLRP"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.RoutingSupport.sourceLRP | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.RoutingSupport do
+    throwError "Defining module mismatch: Thesis.RoutingSupport.sourceLRP"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_336) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.RoutingSupport.sourceLRP: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.RoutingSupport.sourceLRP"
+#check @Thesis.RoutingSupport.sourceLRP
+#print axioms _ThesisExactChecks.target_336
+
+section
+open HiddenMonotonicity Thesis.Games
+open scoped BigOperators
+def _ThesisExpectedTypes.type_337 := (∀ {S : Type}, (n : ℕ) → (ℕ → S → S → ℝ) → S → Paths S n → ℝ)
+noncomputable def _ThesisExactChecks.target_337 : _ThesisExpectedTypes.type_337 := by exact @Thesis.Games.pathLaw
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.Games.pathLaw
+  let expected ← getConstInfo `_ThesisExactChecks.target_337
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.Games.pathLaw"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.Games.pathLaw | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.Games do
+    throwError "Defining module mismatch: Thesis.Games.pathLaw"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_337) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.Games.pathLaw: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.Games.pathLaw"
+#check @Thesis.Games.pathLaw
+#print axioms _ThesisExactChecks.target_337
+
+section
+open HiddenMonotonicity Thesis.Games
+open scoped BigOperators
+def _ThesisExpectedTypes.type_338 := (∀ {S : Type} [Fintype S], ℕ → (ℕ → S → S → ℝ) → (S → ℝ) → S → ℝ)
+noncomputable def _ThesisExactChecks.target_338 : _ThesisExpectedTypes.type_338 := by exact @Thesis.Games.backwardDP
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.Games.backwardDP
+  let expected ← getConstInfo `_ThesisExactChecks.target_338
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.Games.backwardDP"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.Games.backwardDP | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.Games do
+    throwError "Defining module mismatch: Thesis.Games.backwardDP"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_338) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.Games.backwardDP: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.Games.backwardDP"
+#check @Thesis.Games.backwardDP
+#print axioms _ThesisExactChecks.target_338
+
+section
+universe u
+open HiddenMonotonicity Thesis.Games
+open scoped BigOperators
+def _ThesisExpectedTypes.type_339 := (∀ {S : Type u} [Fintype S], (S → ℝ) → (S → ℝ) → ℝ)
+noncomputable def _ThesisExactChecks.target_339 : _ThesisExpectedTypes.type_339.{u} := by exact @Thesis.Games.overlap.{u}
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.Games.overlap
+  let expected ← getConstInfo `_ThesisExactChecks.target_339
+  unless target.levelParams.length == 1 && expected.levelParams.length == 1 do
+    throwError "Universe arity mismatch: Thesis.Games.overlap"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.Games.overlap | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.Games do
+    throwError "Defining module mismatch: Thesis.Games.overlap"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_339) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.Games.overlap: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.Games.overlap"
+#check @Thesis.Games.overlap
+#print axioms _ThesisExactChecks.target_339
+
+section
+open HiddenMonotonicity Thesis.Tropical
+open scoped BigOperators
+def _ThesisExpectedTypes.type_340 := (∀ {I : Type} [Fintype I], Polynomial I → (I → ℝ) → ℝ)
+noncomputable def _ThesisExactChecks.target_340 : _ThesisExpectedTypes.type_340 := by exact @Thesis.Tropical.Polynomial.eval
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.Tropical.Polynomial.eval
+  let expected ← getConstInfo `_ThesisExactChecks.target_340
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.Tropical.Polynomial.eval"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.Tropical.Polynomial.eval | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.Tropical do
+    throwError "Defining module mismatch: Thesis.Tropical.Polynomial.eval"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_340) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.Tropical.Polynomial.eval: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.Tropical.Polynomial.eval"
+#check @Thesis.Tropical.Polynomial.eval
+#print axioms _ThesisExactChecks.target_340
+
+section
+open HiddenMonotonicity Thesis.Tropical
+open scoped BigOperators
+def _ThesisExpectedTypes.type_341 := (∀ {I : Type}, Polynomial I → Set (I → ℝ))
+noncomputable def _ThesisExactChecks.target_341 : _ThesisExpectedTypes.type_341 := by exact @Thesis.Tropical.Polynomial.newton
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.Tropical.Polynomial.newton
+  let expected ← getConstInfo `_ThesisExactChecks.target_341
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.Tropical.Polynomial.newton"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.Tropical.Polynomial.newton | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.Tropical do
+    throwError "Defining module mismatch: Thesis.Tropical.Polynomial.newton"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_341) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.Tropical.Polynomial.newton: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.Tropical.Polynomial.newton"
+#check @Thesis.Tropical.Polynomial.newton
+#print axioms _ThesisExactChecks.target_341
+
+section
+open HiddenMonotonicity Thesis.Tropical
+open scoped BigOperators
+def _ThesisExpectedTypes.type_342 := (∀ {I : Type} [Fintype I], Set (I → ℝ) → (I → ℝ) → ℝ)
+noncomputable def _ThesisExactChecks.target_342 : _ThesisExpectedTypes.type_342 := by exact @Thesis.Tropical.support
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.Tropical.support
+  let expected ← getConstInfo `_ThesisExactChecks.target_342
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.Tropical.support"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.Tropical.support | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.Tropical do
+    throwError "Defining module mismatch: Thesis.Tropical.support"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_342) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.Tropical.support: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.Tropical.support"
+#check @Thesis.Tropical.support
+#print axioms _ThesisExactChecks.target_342
+
+section
+open HiddenMonotonicity Thesis.StoppingDAG
+open scoped BigOperators
+def _ThesisExpectedTypes.type_343 := (∀ {d n : ℕ} (c : Circuit d n), PairVec d → Fin n → Thesis.StoppingDAG.DAGPaths c → ℝ)
+noncomputable def _ThesisExactChecks.target_343 : _ThesisExpectedTypes.type_343 := by exact @Thesis.StoppingDAG.pathProbability
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.pathProbability
+  let expected ← getConstInfo `_ThesisExactChecks.target_343
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.pathProbability"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.pathProbability | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGPaths do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.pathProbability"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_343) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.pathProbability: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.pathProbability"
+#check @Thesis.StoppingDAG.pathProbability
+#print axioms _ThesisExactChecks.target_343
+
+section
+open HiddenMonotonicity Thesis.StoppingDAG
+open scoped BigOperators
+def _ThesisExpectedTypes.type_344 := (∀ {d n : ℕ}, Circuit d n → PairVec d → Fin n → Bool → ℕ → Bool → ℝ)
+noncomputable def _ThesisExactChecks.target_344 : _ThesisExpectedTypes.type_344 := by exact @Thesis.StoppingDAG.fullOccupation
+end
+run_cmd do
+  let target ← getConstInfo `Thesis.StoppingDAG.fullOccupation
+  let expected ← getConstInfo `_ThesisExactChecks.target_344
+  unless target.levelParams.length == 0 && expected.levelParams.length == 0 do
+    throwError "Universe arity mismatch: Thesis.StoppingDAG.fullOccupation"
+  let env ← getEnv
+  let some index := env.getModuleIdxFor? `Thesis.StoppingDAG.fullOccupation | throwError "Target was not imported"
+  unless env.header.moduleNames[index.toNat]! == `Thesis.StoppingDAGVisits do
+    throwError "Defining module mismatch: Thesis.StoppingDAG.fullOccupation"
+  for axiomName in (← Lean.collectAxioms `_ThesisExactChecks.target_344) do
+    unless #[``propext, ``Classical.choice, ``Quot.sound].contains axiomName do
+      throwError "Unapproved axiom in exact target Thesis.StoppingDAG.fullOccupation: {axiomName}"
+  liftTermElabM do
+    let levels := expected.levelParams.map Level.param
+    let targetType := target.type.instantiateLevelParams target.levelParams levels
+    unless ← Meta.isDefEq targetType expected.type do
+      throwError "Exact type mismatch: Thesis.StoppingDAG.fullOccupation"
+#check @Thesis.StoppingDAG.fullOccupation
+#print axioms _ThesisExactChecks.target_344
+
 set_option maxHeartbeats 0
 set_option pp.universes true
 set_option pp.fullNames true

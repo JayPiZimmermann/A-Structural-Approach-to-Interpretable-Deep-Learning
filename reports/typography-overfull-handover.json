@@ -1,0 +1,124 @@
+{
+  "status": "Frozen for root build and publication checkpoint. No build was run by this reviewer.",
+  "baseline": {
+    "log": "/tmp/thesis-nrm-build.log",
+    "pdf": "tex/main.pdf",
+    "logged_overfull_boxes": 16,
+    "important_limit": "This handover separates formatting edits from source edits already present in the shared worktree. It does not claim the current source compiles; root must rebuild and verify."
+  },
+  "formatting_edits_made": [
+    {
+      "file": "tex/chapters/03_decompositions.tex",
+      "locations": [
+        "parity-path definition around lines 314-323",
+        "shift-equivariance theorem around lines 478-485",
+        "shift-equivariance proof around lines 498-506",
+        "Jacobian display around lines 539-547",
+        "convexity proof around line 220"
+      ],
+      "changes": [
+        "Placed the absolute path weight, parity sign, and gate factor on separate display rows instead of one over-wide row.",
+        "Aligned the two unchanged shift-equivariance equations on separate rows.",
+        "Split the two equalities in the inductive proof across aligned rows.",
+        "Tightened spacing around the plus sign in the long Jacobian row.",
+        "Added an optional break between the two equation references in the convexity proof."
+      ],
+      "math_and_labels": "No terms, hypotheses, labels, prose words, or equation numbering were intentionally changed."
+    },
+    {
+      "file": "tex/chapters/04_game_theory.tex",
+      "locations": [
+        "lines 556-559",
+        "lines 1282-1287",
+        "lines 1333-1336"
+      ],
+      "changes": [
+        "Added an optional break before the em dash after 'state-space structure'.",
+        "Added an optional break after 'Routing Game' in the SPNE existence paragraph.",
+        "Added optional math breaks inside the closed-form log-sum-exp value."
+      ],
+      "math_and_labels": "No equation terms, theorem labels, or prose words were changed."
+    },
+    {
+      "file": "tex/chapters/07_transformers.tex",
+      "location": "lines 568-575",
+      "changes": [
+        "Set the unchanged QK-oracle argmax and log-sum-exp identities on separate gathered rows."
+      ],
+      "math_and_labels": "The single display label and both identities are preserved."
+    },
+    {
+      "file": "tex/preamble/packages.tex",
+      "location": "lines 97-99",
+      "changes": [
+        "Redefined the existing caption 'period' text format to use `\\unskip\\@addpunct{.}`, so captions ending in punctuation do not receive a duplicate terminal period."
+      ],
+      "reason": "The prior caption package format unconditionally appended a period. This fixes the visible `entry..` in Table A.1 while preserving that caption's original terminal period and other caption wording."
+    }
+  ],
+  "caption_check": {
+    "result": "Only the Table A.1 caption was found ending in an explicit period where the prior global caption formatter appended another period.",
+    "location": "tex/tables/appendix/xai_eval_vgg_full.tex:7",
+    "source_text": "The caption retains its original final period; the global formatter now avoids duplicating it."
+  },
+  "remaining_or_recheck_after_build": [
+    {
+      "severity": "small",
+      "baseline_overfull": "0.20364 pt",
+      "context": "List-of-tables entry for Table 8.1 in main.lot, line 28; underlying caption is tex/chapters/11_trajectory.tex around line 878.",
+      "status": "Not edited. Tiny list-entry overrun; root can verify whether it persists with the new caption formatter."
+    },
+    {
+      "severity": "small",
+      "baseline_overfull": "0.68991 pt",
+      "context": "Long Jacobian display in tex/chapters/03_decompositions.tex around the first block Jacobian.",
+      "status": "Spacing was tightened around the plus in that display; recheck in root's build."
+    },
+    {
+      "severity": "small",
+      "baseline_overfull": "3.17865 pt",
+      "context": "Pooling/normalization bullet in tex/chapters/05_saliency.tex:205-206.",
+      "status": "Not edited before freeze. A possible formatting-only break is after 'maximum;' if it persists."
+    },
+    {
+      "severity": "moderate",
+      "baseline_overfull": "7.61055 pt",
+      "context": "Probit/GELU paragraph in tex/chapters/04_game_theory.tex:2052-2064; long inline Gaussian-smoothed-ReLU identity.",
+      "status": "Not edited before freeze. Any adjustment should add break opportunities inside the existing inline identity or place that identity on a display row without changing its terms."
+    },
+    {
+      "severity": "moderate",
+      "baseline_overfull": "22.63513 pt",
+      "context": "Long inline cemetery-residual formula in tex/chapters/11_trajectory.tex:224-231.",
+      "status": "Not edited before freeze. If still present, move only the existing residual identity to a display or add break opportunities at its operators."
+    },
+    {
+      "severity": "small",
+      "baseline_overfull": "3.7479 pt",
+      "context": "Input-noise sigma list in tex/chapters/11_trajectory.tex:828-837.",
+      "status": "Not edited before freeze. Optional break points in the existing set are sufficient if needed."
+    },
+    {
+      "severity": "moderate",
+      "baseline_overfull": "27.64334 pt",
+      "context": "Cemetery-floor remark in tex/chapters/11_trajectory.tex:957-971, with a long inline overlap recurrence and conditional bound.",
+      "status": "Not edited before freeze. A later formatter should split only the existing equations, preserving the surrounding prose and assumptions."
+    },
+    {
+      "severity": "moderate",
+      "baseline_overfull": "15.46352 pt",
+      "context": "Regularized decompositions paragraph in tex/chapters/09_conclusion.tex:59-60, including the inline conjugate definition.",
+      "status": "Not edited before freeze. Any remaining overflow should be handled with optional breaks within the displayed inline definition, without changing notation."
+    }
+  ],
+  "build_note": "The baseline PDF/log predate these edits. Root should use the next primary build to confirm which targeted overfull boxes disappeared and should inspect equation numbering/line grouping after the display changes.",
+  "root_checkpoint_validation": {
+    "public_pdf_pages": 207,
+    "build_log": "reports/evidence/publication-handover/latexmk.log",
+    "compile": "passed",
+    "undefined_refs_or_citations": false,
+    "duplicate_A1_caption_period": false,
+    "remaining_overfull_boxes": 12,
+    "scope": "Final public rebuild after frozen formatting edits. Residual prose/math boxes remain; no claim of complete typographic cleanup."
+  }
+}

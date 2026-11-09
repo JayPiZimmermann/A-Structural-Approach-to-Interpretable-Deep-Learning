@@ -1,0 +1,122 @@
+{
+  "paper": {
+    "title": "Normalized Relevance Measure as a Unifying Framework to Explain Neural Network Latent Structures",
+    "authors": [
+      "Ping Xiong",
+      "Thomas Schnake",
+      "Grégoire Montavon",
+      "Klaus-Robert Müller",
+      "Shinichi Nakajima"
+    ],
+    "version": "arXiv:2606.00557v1",
+    "official_abs_url": "https://arxiv.org/abs/2606.00557v1",
+    "official_html_url": "https://arxiv.org/html/2606.00557v1",
+    "local_source": "literature/references/normalized_relevance_measure/source/main.tex",
+    "local_pdf": "literature/references/normalized_relevance_measure/2606.00557v1.pdf"
+  },
+  "shared_structure": [
+    {
+      "claim": "Both frameworks place a path/walk object beneath neuron-level quantities and obtain marginals by summing over paths. NRM defines full joint relevance of neuron walks and marginal/joint relevance of neuron sets. The game framework defines a law on complete backward trajectories and derives state or edge occupations from it.",
+      "nrm_evidence": "Official HTML §3.2-3.3, especially Eq. (9)-(12); §3.4 Theorem 1, Eqs. (24)-(25). Local source main.tex lines 459-496, 674-684.",
+      "thesis_evidence": "tex/chapters/04_game_theory.tex:3, 1433-1461; tex/chapters/11_trajectory.tex:204-220, 303-360.",
+      "qualification": "The formal resemblance is a path factorization and marginalization pattern. The weights and resulting objects are not identical."
+    },
+    {
+      "claim": "NRM uses a Markov-style product of consecutive conditional relevance terms and an output relevance; game trajectories factor according to equilibrium transition policies. Both support message-passing or dynamic-programming computations over layered paths.",
+      "nrm_evidence": "Official HTML §3.3 Eq. (12), §3.4 Theorem 1. Local source main.tex lines 680-684; 903 onward.",
+      "thesis_evidence": "tex/chapters/04_game_theory.tex:124-147, 1433-1461; tex/chapters/11_trajectory.tex:204-220, 338-360.",
+      "qualification": "NRM's Markov factorization applies to relevance weights, which may be signed; the game's un-discounted path law is a probability distribution."
+    }
+  ],
+  "essential_differences": [
+    {
+      "topic": "Sign and normalization",
+      "nrm": "NRM defines a normalized signed measure over walks: total relevance is normalized to one and relevance is additive, but non-negativity is expressly not required. Therefore it is probability-like, not in general a probability measure.",
+      "source": "Official HTML abstract and §3.2, footnote to Definition 1; Eq. (6) and discussion after Eq. (11). Local source main.tex lines 469-489 and 620-629.",
+      "game": "The equilibrium trajectory law Pi_x is a genuine non-negative probability law. The discounted occupation Gamma_x(s) is an expectation weighted by cumulative path discounts and is not, in general, a normalized probability measure. Per-neuron signed attributions arise from subtracting occupations on the + and - player copies.",
+      "source_game": "tex/chapters/04_game_theory.tex:124-147, 1433-1461; tex/chapters/11_trajectory.tex:220-250.",
+      "editorial_implication": "Use probability law/distribution for Pi; signed measure for NRM relevance; discounted occupation measure for Gamma; and signed difference for the projected attribution. Do not label NRM relevance as a probability distribution or Gamma as a normalized trajectory law."
+    },
+    {
+      "topic": "What carries path weight",
+      "nrm": "NRM's path weight is the product of consecutive normalized relevance conditionals and a normalized output relevance. Each conditional is normalized over its preceding-layer states under positive-sum assumptions. These factors may nevertheless be signed.",
+      "source": "Official HTML §3.3 Eqs. (12)-(18). Local source main.tex lines 680-740.",
+      "game": "Pi_x is induced by equilibrium policies. Gamma_x is the expected sum of visit indicators multiplied by cumulative discounts d_t(zeta); discounts affect occupation/recovered attribution, while the Hellinger comparison in Chapter 11 compares the undiscounted trajectory laws.",
+      "source_game": "tex/chapters/04_game_theory.tex:124-147, 1441-1461; tex/chapters/11_trajectory.tex:234-252.",
+      "editorial_implication": "Do not equate NRM conditional relevance factors with game transition probabilities or NRM's normalized walk relevance with discounted game occupations. A precise analogy can say both factorize over paths, with different path weights."
+    },
+    {
+      "topic": "Normalization conditions and correspondence to LRP/CRP",
+      "nrm": "NRM constructs consecutive conditional relevances by normalizing propagation-matrix columns and normalizes output relevance (Eq. 17-18), under positive-sum conditions. Theorem 2 (Eq. 29) says its full joint relevance equals normalized original walk relevance if the unnormalized matrices have constant positive column sums; with unit-normalized matrices/output it coincides directly. Some common LRP rules are approximately normalized; alpha-beta rules can satisfy constant-sum without unit normalization. Epsilon-LRP need not satisfy constant-sum, so naively normalizing the original walk relevance breaks the backward Markov property; NRM instead uses the conditional-normalization construction.",
+      "source": "Official HTML §3.3 Eqs. (15)-(18), §3.5.1 Theorem 2 Eqs. (27)-(32); Appendix F discussion. Local source main.tex lines 708-740, 920-984, 1960-1984.",
+      "crp_detail": "The paper's CRP quantity is the joint relevance R(n^(0), n^(l), n^(L)) (and for sets, R(n^(0) in S^(0), n^(l) in S^(l), n^(L))). ConRel is R(n^(l), n^(L)); the input-conditioned CRP expression is a joint quantity, not itself the conditional relevance R(n^(0) | n^(l), n^(L)). The framework separately defines conditional relevance by a ratio when the conditioning relevance is nonzero and sets it to zero otherwise.",
+      "crp_source": "Official HTML Appendix F, CRP and RelMax, Eqs. (52-53 in source numbering around the CRP paragraph), and §3.2 Eq. (11). Local source main.tex lines 2054-2105 and 620-629.",
+      "game": "The games derive attribution recursions through equilibrium policy plus state/edge discounts, then identify the per-neuron player-copy occupation difference with gradients or alpha-beta-LRP under explicit hypotheses. This is an equality of attribution vectors at anchors, not an NRM normalization theorem.",
+      "source_game": "tex/chapters/04_game_theory.tex:1433-1461 and corresponding recovery theorems.",
+      "editorial_implication": "Do not imply that the game's structural discount replaces the NRM normalization axiom, or that game occupation recovery proves NRM's normalized-relevance properties. Any NRM-on-doubled-graph synthesis would need to define a new relevance measure, its normalization and conditioning rules, and establish the desired correspondences."
+    },
+    {
+      "topic": "Support and architecture",
+      "nrm": "The core walk derivation assumes a proper feed-forward network without skip connections for its simple Markov factorization; the paper discusses arbitrary architectures by virtual transformation to a restricted feed-forward form and treats multiple variables per layer.",
+      "source": "Official HTML §1, §3.3, and Appendix A. Local source main.tex lines 97-99 and 674-684.",
+      "game": "The game is defined on a doubled state graph with sign/player copies, stopping, routing, and architecture-specific transitions for additions and max pooling; trajectories can also terminate in a cemetery state in the diagnostic process.",
+      "source_game": "tex/chapters/04_game_theory.tex:3, 1406-1431; tex/chapters/11_trajectory.tex:146-198.",
+      "editorial_implication": "The two path spaces differ in states and support. Say that the game graph could be a substrate for a future extension, not that the NRM path space already is the doubled game graph."
+    }
+  ],
+  "current_thesis_review": [
+    {
+      "location": "tex/chapters/01_introduction.tex:62",
+      "current_text": "The NRM framework is described as 'a signed-measure calculus over walks' and the chapter is said to compare it in detail.",
+      "assessment": "Broadly accurate but incomplete. NRM defines normalized signed relevance on walks and neuron sets and derives layer-wise LRP message passing; it is not only a generic calculus. The promised detail is absent in Chapter 4: rg finds no NRM reference there.",
+      "recommendation": "A new comparison subsection now appears at tex/chapters/11_trajectory.tex:5-46, and the Chapter 4 pointer is present at tex/chapters/04_game_theory.tex:28-31. The revised introduction now points to the comparison at tex/chapters/01_introduction.tex:62. Add an explicit sentence thanking Nakajima; listing the authors and citing the paper does not itself acknowledge his comparison."
+    },
+    {
+      "location": "tex/chapters/09_conclusion.tex:11",
+      "current_text": "The NRM comparison now says that both share a path perspective, distinguishes NRM normalized signed walk relevance from game probability law and discounted occupations, and says a direct identification requires matching propagation and normalization conventions.",
+      "assessment": "The previous 'full statistical toolbox' claim has been removed. The revised paragraph accurately distinguishes the main objects and appropriately limits direct identification.",
+      "recommendation": "No further edit needed here."
+    },
+    {
+      "location": "tex/chapters/09_conclusion.tex:57",
+      "current_text": "The proposed extension now treats selected concepts as events for game trajectories, separates event probabilities from signed discounted occupations, requires a correspondence with a chosen NRM or CRP rule to match propagation, normalization, and absorption conventions, and explicitly says discounts do not replace probability normalization.",
+      "assessment": "The earlier normalization/discount overclaim has been corrected. The new text appropriately makes the connection a proposed extension and conditions Hellinger comparison on positive-probability concept events.",
+      "recommendation": "No further mathematical correction needed in this paragraph. The separate subsection has one small terminology precision issue noted below: signed attributions are differences of non-negative player-copy occupations."
+    }
+  ],
+  "review_of_new_comparison_subsection": {
+    "location": "tex/chapters/11_trajectory.tex:5-46",
+    "assessment": "The four-paragraph comparison is well-supported by the primary source and resolves the previous lack of detailed treatment. It correctly states that NRM walk relevance is signed though normalized; that set relevance is obtained by summing over walks and conditional relevance by a ratio when its denominator is nonzero; that CRP is a joint input/concept/output relevance; that game trajectories have a non-negative probability law; that discounts act in occupation measures; and that Hellinger is applied to probability laws, not arbitrary signed relevance measures. Section 3.5's constant-sum qualification is accurately summarized.",
+    "residual_actions": [
+      {
+        "priority": "medium-precision",
+        "location": "tex/chapters/11_trajectory.tex:25",
+        "issue": "'Gradients and relevance scores are recovered from signed, discounted occupation measures' can be read as saying each occupation measure is signed. The detailed game account states each player's occupation is non-negative and the signed attribution is the difference between the + and - player-copy occupations.",
+        "source_evidence": "tex/chapters/04_game_theory.tex:1445-1453 explicitly defines non-negative Gamma_x and then forms Gamma^(l)_j = Gamma_x(s_{j,+}) - Gamma_x(s_{j,-}).",
+        "status": "Resolved in the live file: line 25 now says 'signed differences of discounted occupation measures'."
+      }
+    ],
+    "acknowledgement_status": {
+      "location": "tex/frontmatter/acknowledgements.tex:17-20",
+      "status": "Resolved. The text thanks Shinichi Nakajima for discussions and for comparing the trajectory-distribution view with NRM and its signed-measure perspective on LRP and CRP.",
+      "assessment": "This explicitly satisfies the requested acknowledgement without implying endorsement or authorship of the thesis."
+    },
+    "verified_details": [
+      "tex/chapters/11_trajectory.tex:15-17 correctly identifies CRP as joint relevance of input, concept, and target, rather than a conditional probability.",
+      "tex/chapters/11_trajectory.tex:39-40 correctly notes the distinction between conditioning a probability law on a positive-mass event and NRM's signed ratio with a separate zero-denominator convention.",
+      "tex/chapters/11_trajectory.tex:31-38 fairly summarizes NRM's positive-sum normalization and the stronger constant-sum condition relating it to globally normalized original walk relevance."
+    ]
+  },
+  "suggested_concise_insert": {
+    "proposed_location": "tex/chapters/11_trajectory.tex, near the discussion of marginal occupations or the final discussion paragraph; optionally add a short pointer in tex/chapters/04_game_theory.tex:29-41.",
+    "text": "We thank Shinichi Nakajima for drawing our attention to the Normalized Relevance Measure (NRM) framework and for comparing its walk-relevance view with our trajectory-distribution perspective. The two share a path-factorized structure: NRM defines relevance for neuron walks and obtains neuron-set quantities by marginalization and conditioning, while the games define a law over backward trajectories and derive state occupations from it. Their path weights encode different objects. NRM is a normalized signed measure: its total relevance is one, but relevance may be negative; the game's trajectory law is non-negative, while its discounted occupation measure weights visits by cumulative structural discounts and is not generally normalized. NRM's conditional relevance and its LRP/CRP quantities therefore do not coincide automatically with game transition probabilities or occupations. A relation between NRM relevance laws and the doubled game graph would require a separate construction and proofs.",
+    "source_basis": "NRM §3.2 Eq. (6), §3.3 Eqs. (12)-(18), §3.4 Theorem 1, §3.5.1 Theorem 2; CRP Appendix F. Game occupation definitions and attribution recovery: tex/chapters/04_game_theory.tex:124-147, 1433-1461.",
+    "note": "This proposed insertion includes the explicit acknowledgement requested. The live prose has not yet added that sentence."
+  },
+  "recommended_citation": {
+    "key": "Xiong2026nrm",
+    "suggested_form": "Normalized Relevance Measure (NRM)~\\parencite{Xiong2026nrm}",
+    "versioned_url": "https://arxiv.org/abs/2606.00557v1",
+    "bibliography_note": "The current bib entry already lists all five authors, title and arXiv identifier. Retain it; optionally add the versioned URL to distinguish the reviewed v1."
+  }
+}

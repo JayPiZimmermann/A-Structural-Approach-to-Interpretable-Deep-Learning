@@ -1,0 +1,194 @@
+{
+  "review_id": "attack_hidden/conditioned-trajectory",
+  "status": "semantic_and_exact_checks_pass_boundary_consumer_pending",
+  "high_severity_findings": [],
+  "verified_counterexamples_to_claimed_theorems": [],
+  "source_locations": [
+    "tex/chapters/11_trajectory.tex:362",
+    "tex/chapters/11_trajectory.tex:606",
+    "tex/chapters/11_trajectory.tex:655",
+    "tex/chapters/11_trajectory.tex:662",
+    "tex/chapters/11_trajectory.tex:669",
+    "tex/chapters/11_trajectory.tex:688",
+    "tex/chapters/11_trajectory.tex:694"
+  ],
+  "source_correspondence": [
+    {
+      "topic": "Actual full-law marginal",
+      "locations": [
+        "Thesis/ConditionedTrajectory.lean:14",
+        "Thesis/ConditionedTrajectory.lean:20",
+        "Thesis/ConditionedTrajectory.lean:77",
+        "Thesis/ConditionedTrajectory.lean:101"
+      ],
+      "verdict": "pass",
+      "evidence": "prefixMass is an endpoint sum over original prefix paths. timeMass is a stateAt sum over full N-paths. Factorization follows by induction on actual sums, not an assumed representation. The normalized marginal follows from previously proved actual guarded-path quotient."
+    },
+    {
+      "topic": "Zero survival support",
+      "locations": [
+        "Thesis/ConditionedTrajectory.lean:101",
+        "Thesis/ConditionedTrajectory.lean:130"
+      ],
+      "verdict": "pass",
+      "evidence": "Only initial survival is positive. The kernel is explicitly zero at nonpositive potential, with computed survival nonnegative. Zero-denominator geometric identity uses totalized division consistently with the guarded zero row. Intermediate dead states may have positive original prefix mass."
+    },
+    {
+      "topic": "Actual overlap and Hellinger",
+      "locations": [
+        "Thesis/ConditionedTrajectory.lean:153",
+        "Thesis/ConditionedTrajectory.lean:164",
+        "Thesis/ConditionedTrajectory.lean:179",
+        "Thesis/ConditionedTrajectory.lean:195"
+      ],
+      "verdict": "pass",
+      "evidence": "overlap is the finite sqrt(product) sum on full path laws. The geometric path-product and backwardDP formulas are derived. The actual half-sum of squared square-root differences uses proved normalization; no desired Hellinger identity is assumed."
+    },
+    {
+      "topic": "Full prefix monotonicity",
+      "locations": [
+        "Thesis/ConditionedTrajectory.lean:250"
+      ],
+      "verdict": "pass",
+      "evidence": "Both kernels are nonnegative and row stochastic. Actual prefix laws are normalized at each depth, actual BC starts at one and is antitone, and actual Hellinger square is monotone. A single common kernel sequence is fixed for all prefixes; no monotonicity across changing horizon-conditioned kernels is asserted."
+    }
+  ],
+  "boundaries_to_preserve": [
+    "Conditioned statistics apply to the finite ordinary substochastic-kernel model, together with ConditionedSurvival. The explicit cemetery-event conditional-probability notation of the source is interpreted through ordinary surviving path mass; this leaf does not construct a new cemetery completion theorem.",
+    "A common finite state type is used at every time, with root at time zero. Varying layer state types need a tagged-state embedding/bridge; source layer indices run in reverse.",
+    "Normalized conditioning requires positive initial survival for each model. No normalized law is asserted when it is zero.",
+    "Full-prefix BC monotonicity concerns fixed row-stochastic A/B laws, including a cemetery if desired. It does not apply across separately reconditioned laws for different horizons.",
+    "No new automatic bridge from arbitrary network implementations into the finite kernel model is supplied by this leaf."
+  ],
+  "exact_declarations_reviewed": [
+    {
+      "module": "Thesis.ConditionedTrajectory",
+      "declaration": "Thesis.ConditionedSurvival.timeMass_factorization",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N i : \u2115) (hi : i \u2264 N)\n(K : \u2115 \u2192 S \u2192 S \u2192 \u211d) (s t : S),\ntimeMass N i K s t = prefixMass i K s t * survival N K i t",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival",
+        "Thesis.Randomization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-COMPOSED-timeMass_factorization",
+      "review_evidence": "reports/conditioned-trajectory-repairs.md",
+      "scope": "Actual full-length path marginal factorization into the original time-i prefix occupation and backward future survival. Both marginals are independent literal sums on Games.Paths, using endpoint and stateAt. No representation or factorization hypothesis is assumed."
+    },
+    {
+      "module": "Thesis.ConditionedTrajectory",
+      "declaration": "Thesis.ConditionedSurvival.conditioned_time_marginal",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N i : \u2115) (hi : i \u2264 N)\n(K : \u2115 \u2192 S \u2192 S \u2192 \u211d) (hK : \u2200 j s t, 0 \u2264 K j s t)\n(s : S) (hs : 0 < survival N K 0 s) (t : S),\ntimeMass N i (kernel K (survival N K)) s t =\nprefixMass i K s t * survival N K i t / survival N K 0 s",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival",
+        "Thesis.Randomization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-COMPOSED-conditioned_time_marginal",
+      "review_evidence": "reports/conditioned-trajectory-repairs.md",
+      "scope": "The source conditioned-alpha formula is proved for the actual time-i marginal of the full conditioned N-path distribution, including zero-potential states; only the initial survival mass must be positive."
+    },
+    {
+      "module": "Thesis.ConditionedTrajectory",
+      "declaration": "Thesis.ConditionedSurvival.conditioned_geometric_kernel",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (A B : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hA : \u2200 i s t, 0 \u2264 A i s t) (hB : \u2200 i s t, 0 \u2264 B i s t)\n(i : \u2115) (s t : S),\nReal.sqrt (kernel A (survival N A) i s t * kernel B (survival N B) i s t) =\nReal.sqrt (A i s t * B i s t) *\nReal.sqrt (survival N A (i+1) t * survival N B (i+1) t) /\nReal.sqrt (survival N A i s * survival N B i s)",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival",
+        "Thesis.Randomization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-COMPOSED-conditioned_geometric_kernel",
+      "review_evidence": "reports/conditioned-trajectory-repairs.md",
+      "scope": "Geometric-mean identity for the actual guarded conditioned kernels. At positive-potential states this is ordinary division; at zero denominator Lean's totalized quotient agrees with the explicit zero-row convention, whose unreachable support was proved separately."
+    },
+    {
+      "module": "Thesis.ConditionedTrajectory",
+      "declaration": "Thesis.ConditionedSurvival.conditioned_survival_statistics",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (N : \u2115) (A B : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hA : \u2200 i s t, 0 \u2264 A i s t) (hB : \u2200 i s t, 0 \u2264 B i s t)\n(hArow : \u2200 i s, \u2211 t, A i s t \u2264 1) (hBrow : \u2200 i s, \u2211 t, B i s t \u2264 1)\n(s : S) (hsA : 0 < survival N A 0 s) (hsB : 0 < survival N B 0 s),\n(survival N A 0 s \u2264 1 \u2227 survival N B 0 s \u2264 1) \u2227\n(\u2200 i \u2264 N, \u2200 t,\ntimeMass N i (kernel A (survival N A)) s t =\nprefixMass i A s t * survival N A i t / survival N A 0 s \u2227\ntimeMass N i (kernel B (survival N B)) s t =\nprefixMass i B s t * survival N B i t / survival N B 0 s) \u2227\n(\u2200 i u v,\nReal.sqrt (kernel A (survival N A) i u v * kernel B (survival N B) i u v) =\nReal.sqrt (A i u v * B i u v) *\nReal.sqrt (survival N A (i+1) v * survival N B (i+1) v) /\nReal.sqrt (survival N A i u * survival N B i u)) \u2227\n(overlap (pathLaw N (kernel A (survival N A)) s)\n(pathLaw N (kernel B (survival N B)) s) =\n\u2211 path : Paths S N, pathLaw N (fun i u v => Real.sqrt\n(kernel A (survival N A) i u v * kernel B (survival N B) i u v)) s path) \u2227\n(overlap (pathLaw N (kernel A (survival N A)) s)\n(pathLaw N (kernel B (survival N B)) s) =\nbackwardDP N (fun i u v => Real.sqrt\n(kernel A (survival N A) i u v * kernel B (survival N B) i u v)) (fun _ => 1) s) \u2227\n(overlap (pathLaw N (kernel A (survival N A)) s)\n(pathLaw N (kernel B (survival N B)) s) =\nordinaryOverlap N A B s / Real.sqrt (survival N A 0 s * survival N B 0 s)) \u2227\n((1/2 : \u211d) * (\u2211 path : Paths S N,\n(Real.sqrt (pathLaw N (kernel A (survival N A)) s path) -\nReal.sqrt (pathLaw N (kernel B (survival N B)) s path))^2) =\n1 - ordinaryOverlap N A B s / Real.sqrt (survival N A 0 s * survival N B 0 s))",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival",
+        "Thesis.Randomization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-COMPOSED-conditioned_survival_statistics",
+      "review_evidence": "reports/conditioned-trajectory-repairs.md",
+      "scope": "The remaining source conditioned-survival clauses are assembled: actual full-law layer marginals, conditioned geometric edges, overlap as a sum of actual geometric path products and as backwardDP, overlap normalized by computed initial survival masses, and the actual finite square-root Hellinger sum. Together with conditioned_survival in the frozen prerequisite this covers the requested ordinary-state survival, conditioning, pruning, marginal and comparison clauses. No strict positivity at intermediate states."
+    },
+    {
+      "module": "Thesis.ConditionedTrajectory",
+      "declaration": "Thesis.ConditionedSurvival.trajectory_bc_monotone",
+      "expected_type": "\u2200 {S : Type} [Fintype S] (A B : \u2115 \u2192 S \u2192 S \u2192 \u211d)\n(hA : \u2200 i s t, 0 \u2264 A i s t) (hB : \u2200 i s t, 0 \u2264 B i s t)\n(hArow : \u2200 i s, \u2211 t, A i s t = 1) (hBrow : \u2200 i s, \u2211 t, B i s t = 1) (s : S),\noverlap (pathLaw 0 A s) (pathLaw 0 B s) = 1 \u2227\n(\u2200 n, 0 \u2264 overlap (pathLaw n A s) (pathLaw n B s) \u2227\noverlap (pathLaw n A s) (pathLaw n B s) \u2264 1) \u2227\nAntitone (fun n => overlap (pathLaw n A s) (pathLaw n B s)) \u2227\nMonotone (fun n => (1/2 : \u211d) * \u2211 path : Paths S n,\n(Real.sqrt (pathLaw n A s path) - Real.sqrt (pathLaw n B s path))^2) \u2227\n(\u2200 n, (1/2 : \u211d) * (\u2211 path : Paths S n,\n(Real.sqrt (pathLaw n A s path) - Real.sqrt (pathLaw n B s path))^2) =\n1 - overlap (pathLaw n A s) (pathLaw n B s)) \u2227\n(\u2200 n, overlap (pathLaw n A s) (pathLaw n B s) =\nbackwardDP n (fun i u v => Real.sqrt (A i u v * B i u v)) (fun _ => 1) s)",
+      "open_namespaces": [
+        "Thesis.Games",
+        "Thesis.ConditionedSurvival",
+        "Thesis.Randomization"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "SURVIVAL-COMPOSED-trajectory_bc_monotone",
+      "review_evidence": "reports/conditioned-trajectory-repairs.md",
+      "scope": "Full source bc-monotone on actual row-stochastic Markov prefix path laws: overlap starts at one, stays in [0,1], is antitone at all depths, actual squared Hellinger is monotone, and every depth has the exact square-root sum and geometric-kernel DP identities. The common finite state space may include a cemetery; this is not an ordinary-only assertion about absorbing paths."
+    }
+  ],
+  "validation": {
+    "exact_contracts": 5,
+    "exact_type_module_universe_axiom_checks": "passed",
+    "explicit_fully_unfolded_checks": "ExplicitChecks.lean / explicit-types.log",
+    "project_theorem_axiom_closures": 351,
+    "fresh_source_compile_exit": 0,
+    "boundary_consumer_exit": 1,
+    "independent_experiment": {
+      "status": "pass",
+      "seed": 1132026,
+      "counts": {
+        "pairs": 161,
+        "positive_pairs": 125,
+        "zero_starts": 47,
+        "paths": 2099,
+        "marginals": 1994,
+        "geometric_edges": 1595,
+        "completed_prefix_checks": 494
+      },
+      "negative_control": {
+        "different_horizon_conditioning_BC": [
+          0.8660254037844386,
+          1.0
+        ],
+        "interpretation": "No monotonicity is claimed across different horizon-dependent conditioning transforms."
+      },
+      "cases_sha256": "0f56d73fe25c11c7a86e2d1ad08402d94386fff2bccbe91f47636e0d8b79047e",
+      "producer_sha256": "9bc7339fb9498b5f792a22e66f93a480f50c4135f9d1412a8c91e59ed7a9cee6"
+    },
+    "frozen_source_hashes": {
+      "formalization/Thesis/ConditionedTrajectory.lean": "f981b0b7669441009d6145714d7f5c518869eefae0deaa67671c4d940cfb49fe",
+      "formalization/Thesis/ConditionedSurvival.lean": "1e7539c0f323f6bab04d66c673b7b8fe64fe71eba42ed20e104df3bf6456a756",
+      "formalization/Thesis/Games.lean": "585f3fadd0c405584ec7ddb0b76be7a1606d8005ce8d179c9de6095f831fd312",
+      "formalization/Thesis/Randomization.lean": "ebb6e8d9718becac7c807b6cc22f305a4fe90cdefc60ed55f6bbc8787b41618b"
+    },
+    "source_unchanged": true,
+    "production_edits": [],
+    "shared_olean_writes": false
+  },
+  "pending": [
+    "Finish only the independent Boundary.lean nontrivial_overlap finite-sum simplification; preceding boundary examples and all production/exact checks passed."
+  ],
+  "conclusion": "No semantic or kernel defect found. The new leaf closes the previously pending actual conditioned marginal, geometric-kernel, normalized BC/Hellinger and full stochastic-prefix BC monotonicity clauses in the finite-kernel model.",
+  "completed_utc": "2026-11-09T13:38:35.605420+00:00"
+}

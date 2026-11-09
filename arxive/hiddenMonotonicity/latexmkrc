@@ -1,0 +1,12 @@
+# Latexmk configuration for multibib support
+# This tells latexmk to run bibtex on the appendix bibliography
+
+# Add custom dependency for multibib 'app' bibliography
+add_cus_dep('aux', 'bbl', 0, 'run_bibtex');
+
+sub run_bibtex {
+    system("bibtex \"$_[0]\"");
+}
+
+# Ensure these extensions are cleaned up
+push @generated_exts, 'bbl', 'blg';

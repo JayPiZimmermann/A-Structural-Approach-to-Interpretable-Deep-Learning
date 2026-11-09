@@ -1,0 +1,63 @@
+{
+  "scope": "Read-only QA of the completed primary build, numerical-table adapters, table-width/alignment warnings, and rendered Tables A.1 and A.16. No TeX was changed and no build was run by this reviewer.",
+  "build": {
+    "command_owner": "Primary latexmk session (started by root)",
+    "log": "/tmp/thesis-nrm-build.log",
+    "final_status": "Latexmk reports all targets (main.pdf) up-to-date.",
+    "pdf": "tex/main.pdf",
+    "pdf_pages": 207,
+    "page_size": "A4",
+    "table_a1_physical_page": 166,
+    "table_a16_physical_pages": [187, 188],
+    "printed_pages": {
+      "A.1": 142,
+      "A.16": [163, 164]
+    }
+  },
+  "table_value_and_shape_checks": {
+    "presentation_adapter": {
+      "report": "reports/table-adapter-verification.json",
+      "result": "All 13 adapted table/macro outputs match canonical generated output after documented presentation changes; no mismatches.",
+      "changes_report": "reports/table-presentation-changes.json",
+      "unmeasured_columns_removed": {
+        "table": "tex/tables/ptnb_v2/generated/test_voc_vit_b16_ci_longtable.tex",
+        "columns": ["MaxS", "AvgS"],
+        "reason": "Every VOC test row had no measurement for these metrics; this is explicitly described in tex/chapters/10_appendix.tex:503-505. The adapted longtable now has eight outer columns: Method, Config, and six measured metrics. Its continuation header repeats the same shape."
+      },
+      "other_placeholder_adaptations": "Nonnumeric '--' entries in descriptor cells are represented as fixed/on, and validation-selection inapplicability is labeled n/a. These are not metric columns. Correlation-matrix diagonal dashes are filled with 1.00, the self-correlation."
+    },
+    "split_study_numeric_preservation": {
+      "report": "reports/split-table-numeric-preservation.json",
+      "result": "All 10 source-to-thesis table comparisons match for ordered metric tokens and row associations: 19/16 main VGG/ResNet rows; 36/30 comprehensive appendix rows; and the randomization, timing, alpha-combined, scale-shift, alpha-none and alpha-shift tables. No numerical changes were found."
+    },
+    "other_included_numeric_tables": "Spot checks of the included Hellinger, sanity-check, pointing-game granularity, and correlation tables show numeric data in measured columns; their diagonal/placeholder treatment is documented. The generated tables parse and compile without alignment errors.",
+    "all_placeholder_metric_columns": "None remain among the adapted test tables. The only wholly unmeasured metric columns found were VOC MaxS and AvgS, and both were removed."
+  },
+  "rendered_visual_review": [
+    {
+      "table": "A.1",
+      "render": "/tmp/thesis-A1.png",
+      "pdf_page": 166,
+      "assessment": "The table fits within the A4 text block. Method/configuration names, all seven metrics, arrows, n/r and n/a markers, and blue best-value shading are visible; rows and column boundaries align, with no clipping or spill into the margins. The table is dense but readable at rendered page size.",
+      "remaining_issue": "The caption ends 'entry..' on the page. Source tex/tables/appendix/xai_eval_vgg_full.tex:7 supplies a final period while the caption setup in tex/preamble/packages.tex:95 automatically adds a final period. Remove one of the two periods."
+    },
+    {
+      "table": "A.16",
+      "renders": ["/tmp/thesis-A16.png", "/tmp/thesis-A16-cont.png"],
+      "pdf_pages": [187, 188],
+      "assessment": "The shortened VOC table has six measured metrics and no empty MaxS/AvgS columns. Its wrapped configuration column stays inside the text block; numeric estimates, confidence intervals, arrow directions, and highlight colors remain readable. The repeated header on the continuation page is aligned and the final data rows close cleanly before Table A.17. No edge clipping observed."
+    }
+  ],
+  "log_review": {
+    "source": "tex/main.log from the completed build; /tmp/thesis-nrm-build.log was also checked for first-pass versus final-pass reference warnings.",
+    "alignment_errors": "No 'Extra alignment tab', 'Too many alignment tabs', misplaced alignment, or longtable alignment errors found.",
+    "undefined_references": "None in the final tex/main.log. The latexmk transcript shows first-pass undefined sec:nrm_comparison references that were resolved in subsequent passes.",
+    "overfull_boxes": {
+      "count_in_final_main_log": 16,
+      "table_grid_overfull": 0,
+      "context": "The logged overfull boxes are in body prose/equations or one list-of-tables entry (0.20 pt); they are not table data grids. Larger examples include 26.04 pt at game-theory line 320, 32.46 pt at game-theory lines 1332-1337, 27.64 pt at trajectory lines 957-971, and 15.46 pt in conclusion lines 59-60. These warrant separate body-math/prose review; this QA does not claim the whole PDF is overfull-free."
+    },
+    "underfull_boxes": "Warnings occur in wrapped fixed-width configuration cells of generated longtables, especially long parameter strings. Visual inspection of A.16 shows these rows wrap and remain legible; no corresponding overfull table cells were reported. Other caption-package, typearea, font, and microtype warnings are outside the table-layout finding."
+  },
+  "overall": "Numerical preservation, adapted table column counts, and A.1/A.16 page layout pass. One small caption punctuation defect remains in A.1. The PDF still has unrelated overfull body-text/math boxes; this report does not certify the entire thesis PDF as clean."
+}
