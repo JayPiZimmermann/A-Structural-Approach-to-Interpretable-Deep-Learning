@@ -1,0 +1,315 @@
+{
+  "schema_version": 1,
+  "reviewer": "independent adversarial reviewer /root/attack_hidden",
+  "review_date": "2026-11-09",
+  "verdict": "PASS_FOR_CPWL_LATTICE_DC_AND_SIGNED_MAX",
+  "findings": [],
+  "summary": "No verified counterexample, circular assumption, changed-target defect or high-severity semantic gap found in these 17 frozen contracts. The new network compiler/depth theorem is excluded from this report and reviewed separately.",
+  "production_mutations": false,
+  "shared_olean_writes": false,
+  "source_scope": [
+    "tex/chapters/02_foundations.tex:48 independent finite-polyhedral CPWL definition",
+    "tex/chapters/02_foundations.tex:72-88 DC and dimension-only signed-max supporting steps"
+  ],
+  "model_correspondence": [
+    {
+      "topic": "Primitive CPWL",
+      "locations": [
+        "formalization/Thesis/PiecewiseLinear.lean:15",
+        "formalization/Thesis/PiecewiseLinear.lean:45",
+        "formalization/Thesis/PiecewiseLinear.lean:56"
+      ],
+      "verdict": "faithful",
+      "evidence": "A Polyhedron is finitely many actual closed affine halfspaces. AffineCover contains finite pieces, slopes, arbitrary biases, global coverage and pointwise affine equality on each cell. CPWL is continuity plus existence of this cover, with no convexity/DC/lattice/network premise."
+    },
+    {
+      "topic": "Finite-selection separation",
+      "locations": [
+        "formalization/Thesis/CPWLLattice.lean:14",
+        "formalization/Thesis/CPWLLattice.lean:30",
+        "formalization/Thesis/CPWLLattice.lean:122"
+      ],
+      "verdict": "genuine proof",
+      "evidence": "Local branches are restricted to those active at a point by finite continuity. The one-dimensional endpoint separator follows by an intermediate-value/greatest-zero contradiction. Applying this to the entire affine segment line is valid because the source domain is all real input space. No separation premise is assumed in the lattice theorem."
+    },
+    {
+      "topic": "Lattice construction",
+      "locations": [
+        "formalization/Thesis/CPWLLattice.lean:144"
+      ],
+      "verdict": "genuine finite representation",
+      "evidence": "Blocks are realized subsets of the finite affine-piece type, hence finite despite their existential point witnesses. Each block is nonempty from actual cover equality. Negative max-affine blocks are literal affine minima; separation proves every block below f, and the block at the evaluated point gives equality. Realized-set membership does not contain a representation conclusion."
+    },
+    {
+      "topic": "DC construction",
+      "locations": [
+        "formalization/Thesis/CPWLLattice.lean:185",
+        "formalization/Thesis/CPWLLattice.lean:219",
+        "formalization/Thesis/CPWLLattice.lean:238",
+        "formalization/Thesis/Tropical.lean:36"
+      ],
+      "verdict": "genuine nonconvex direction and converse",
+      "evidence": "Polynomial means a nonempty finite max of unrestricted real affine terms. Maximum closure constructs max(g1+h2,g2+h1)-(h1+h2), starting from negative max blocks. The converse uses explicit active-piece polyhedral cells. A directly covered nonconvex cap 3-|x| was checked in Lean without using a pre-existing DC representation to supply CPWL."
+    },
+    {
+      "topic": "Slope-based dimension bound with biases",
+      "locations": [
+        "formalization/Thesis/AffineMaxPartition.lean:15",
+        "formalization/Thesis/AffineMaxPartition.lean:30",
+        "formalization/Thesis/AffineMaxPartition.lean:52"
+      ],
+      "verdict": "correct d+1 bound",
+      "evidence": "Dependence is obtained among slopes in the d-dimensional coordinate space, with zero coefficient sum and nonzero coefficient vector. Its sign is reversed if necessary so the weighted intercept sum is nonpositive. Positive coefficients define A and all remaining terms B; both are nonempty. A fixed partition satisfies min(A)<=max(B) pointwise. This avoids increasing dimension by homogenizing intercepts; arbitrary biases, repeated slopes and zero coefficients are allowed."
+    },
+    {
+      "topic": "Cancellation and strict induction",
+      "locations": [
+        "formalization/Thesis/SignedMaxIdentities.lean:29",
+        "formalization/Thesis/SignedMaxIdentities.lean:47",
+        "formalization/Thesis/SignedMaxReduction.lean:41"
+      ],
+      "verdict": "correct and noncircular",
+      "evidence": "The dominated member may depend on the evaluation point, while partition and alternating coefficients are fixed. Pairing powerset subsets containing/omitting that member proves cancellation. The full-maximum coefficient is +/-1; every other restricted maximum contains nonempty B and has strictly fewer terms. Strong induction reaches cardinality <=d+1."
+    },
+    {
+      "topic": "Span extraction",
+      "locations": [
+        "formalization/Thesis/SignedMaxReduction.lean:94",
+        "formalization/Thesis/SignedMaxReduction.lean:115",
+        "formalization/Thesis/SignedMaxReduction.lean:121"
+      ],
+      "verdict": "helper premise does not contaminate headline",
+      "evidence": "finite_representation_of_mem_smallSpan explicitly assumes span membership and extracts a finitely supported sum. That helper assumption is essentially the representation property, but eval_mem_smallSpan independently proves it by the cardinal induction; neither headline assumes it. The final coefficients are real and every indexed maximum nonempty; an empty outer sum is permitted for zero."
+    }
+  ],
+  "boundary_cases": [
+    "Dimension zero is allowed and each indexed small maximum has exactly one term.",
+    "Empty term sets are excluded by Polynomial.inhabited; all recursion bases include nonempty B.",
+    "A finite empty affine-piece type cannot cover the inhabited real vector domain.",
+    "Ties and duplicate pieces/coefficients need no generic-position hypothesis.",
+    "Arbitrary positive and negative intercepts are retained, including in dimension zero."
+  ],
+  "validation": {
+    "exact_contracts": [
+      {
+        "group": "cpwl",
+        "contracts": 4,
+        "exit": 0,
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "driver": "reports/evidence/cpwl-review/cpwlTypes.lean"
+      },
+      {
+        "group": "signed-max",
+        "contracts": 13,
+        "exit": 0,
+        "axioms": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "driver": "reports/evidence/cpwl-review/signed-maxTypes.lean"
+      }
+    ],
+    "targeted_current_source_compiles": [
+      "Thesis.CPWLLattice",
+      "Thesis.SignedMaxIdentities",
+      "Thesis.AffineMaxPartition",
+      "Thesis.SignedMaxReduction"
+    ],
+    "boundary_driver": "reports/evidence/cpwl-review/Boundary.lean",
+    "boundary_exit": 0,
+    "boundary_cases": [
+      "primitive definition unfolding",
+      "direct two-halfspace nonconvex cap cover",
+      "proof that the cap is not convex",
+      "actual CPWL-to-DC specialization",
+      "direct composition to arbitrary CPWL signed small maxima",
+      "zero-dimensional nonempty single-term bound",
+      "biased dependence requiring sign orientation",
+      "nonvacuous global partition at dimension 1 and 3 terms",
+      "equality/tie cancellation"
+    ],
+    "independent_experiment": {
+      "seed": 20261109,
+      "counts": {
+        "polynomials": 360,
+        "dimension_zero": 90,
+        "partition_steps": 1678,
+        "orientation_flips": 748,
+        "zero_bias_dependence": 46,
+        "repeated_slopes": 408,
+        "signed_max_evaluations": 14040,
+        "lattice_functions": 140,
+        "lattice_blocks": 655,
+        "lattice_evaluations": 6158,
+        "separation_pairs": 20160
+      },
+      "failures": [],
+      "negative_controls_detected": [
+        "omitting intercept orientation",
+        "omitting continuity",
+        "reducing d+1 to d"
+      ],
+      "cases_sha256": "74b5d5a0703965780ab0232e3318340320c04d45ff0f2886fc54145a357ad676",
+      "producer_sha256": "4c49f07d4f9b49aa53991ae49e8b0afe645ef63935833a8e2504e8a491e87cde",
+      "scope": "Independent exact finite tests and constructive coefficient producer; not a replacement for the universal Lean proofs."
+    },
+    "source_hashes": "reports/evidence/cpwl-review/initial-sha256.json",
+    "source_changed_during_review": []
+  },
+  "residual_scope": [
+    {
+      "id": "NETWORK-COMPILER",
+      "classification": "not_reviewed_in_this_report",
+      "detail": "No ReLU network realization or depth is credited here. New ReLUCompiler and CPWLReLUEquivalence are a separate review requested after this batch."
+    },
+    {
+      "id": "SIZE-ALGORITHM",
+      "classification": "explicit_scope_limit",
+      "detail": "Existence of a finite real linear combination is proved. No bound on its number of terms, coefficient size, runtime, or executable coefficient extraction is asserted. Classical finite constructions are legitimate for the source existence theorem."
+    }
+  ],
+  "reviewed_contracts": [
+    {
+      "module": "Thesis.CPWLLattice",
+      "declaration": "Thesis.PiecewiseLinear.affine_selection_separation",
+      "expected_type": "∀ {A : Type} [Fintype A] (f : ℝ → ℝ) (a b : A → ℝ)\n(hf : Continuous f) (hsel : ∀ t, ∃ i, f t=(1-t)*a i+t*b i),\n∃ i, f 0≤a i ∧ b i≤f 1",
+      "scope": "One-dimensional continuous finite affine-selection endpoint separation. Derived by finite local active-set control, the intermediate-value theorem and the greatest zero of a compact level set; no lattice/DC representation assumption.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/cpwl-types.log"
+    },
+    {
+      "module": "Thesis.CPWLLattice",
+      "declaration": "Thesis.PiecewiseLinear.cpwl_lattice_representation",
+      "expected_type": "∀ {I : Type} [Fintype I] (f : (I → ℝ) → ℝ)\n(hf : CPWL (fun x (_ : Unit) => f x)),\n∃ p : MaxMinPolynomial I, ∀ x, f x=p.eval x",
+      "scope": "General scalar nonconvex CPWL on a finite-dimensional real coordinate space. The independent CPWL definition is continuity plus an actual finite closed-polyhedral affine cover. The constructed max-min blocks are upper-piece subsets at actual input points; segment separation proves their global bounds. No lattice representation premise.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/cpwl-types.log"
+    },
+    {
+      "module": "Thesis.CPWLLattice",
+      "declaration": "Thesis.PiecewiseLinear.cpwl_polynomial_difference",
+      "expected_type": "∀ {I : Type} [Fintype I] (f : (I → ℝ) → ℝ)\n(hf : CPWL (fun x (_ : Unit) => f x)),\n∃ g h : Thesis.Tropical.Polynomial I, ∀ x, f x=g.eval x-h.eval x",
+      "scope": "Genuine arbitrary CPWL-to-finite max-affine difference theorem. Uses the proved lattice bridge and constructive maximum closure of differences. No convexity or pre-existing DC representation hypothesis.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/cpwl-types.log"
+    },
+    {
+      "module": "Thesis.CPWLLattice",
+      "declaration": "Thesis.PiecewiseLinear.cpwl_iff_polynomial_difference",
+      "expected_type": "∀ {I : Type} [Fintype I] (f : (I → ℝ) → ℝ),\nCPWL (fun x (_ : Unit) => f x) ↔\n∃ g h : Thesis.Tropical.Polynomial I, ∀ x, f x=g.eval x-h.eval x",
+      "scope": "Both directions of the finite max-affine difference characterization for the actual finite-polyhedral-cover CPWL definition; applies to nonconvex functions as well as convex ones. Neural-network realization and its dimension-only depth are separate next bridges.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/cpwl-types.log"
+    },
+    {
+      "module": "Thesis.SignedMaxIdentities",
+      "declaration": "Thesis.SignedMaxIdentities.baseMax_insert_dominated",
+      "expected_type": "∀ {A : Type} [DecidableEq A] (f : A → ℝ) (B : Finset A) (hB : B.Nonempty)\n    (a : A) (ha : f a ≤ B.sup' hB f) (S : Finset A),\n    baseMax f B hB (insert a S) = baseMax f B hB S",
+      "scope": "Finite powerset cancellation for maxima with a nonempty base; the dominated element may depend on the evaluation point.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    },
+    {
+      "module": "Thesis.SignedMaxIdentities",
+      "declaration": "Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion",
+      "expected_type": "∀ {A : Type} [DecidableEq A] (S : Finset A) (a : A) (ha : a ∈ S)\n    (F : Finset A → ℝ)\n    (hF : ∀ T ⊆ S.erase a, F (insert a T) = F T),\n    (∑ T ∈ S.powerset, (-1 : ℝ)^T.card * F T) = 0",
+      "scope": "Finite powerset cancellation for maxima with a nonempty base; the dominated element may depend on the evaluation point.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    },
+    {
+      "module": "Thesis.SignedMaxIdentities",
+      "declaration": "Thesis.SignedMaxIdentities.alternating_max_zero",
+      "expected_type": "∀ {A : Type} [DecidableEq A] (f : A → ℝ) (A₀ B : Finset A) (hB : B.Nonempty)\n    (hdom : ∃ a ∈ A₀, f a ≤ B.sup' hB f),\n    (∑ S ∈ A₀.powerset, (-1 : ℝ)^S.card * baseMax f B hB S) = 0",
+      "scope": "Finite powerset cancellation for maxima with a nonempty base; the dominated element may depend on the evaluation point.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    },
+    {
+      "module": "Thesis.AffineMaxPartition",
+      "declaration": "Thesis.AffineMaxPartition.dependence_coefficients",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I)\n    (hcard : Fintype.card I + 1 < Fintype.card p.Terms),\n    ∃ c : p.Terms → ℝ, (∑ i, c i) = 0 ∧ (∑ i, c i • p.slope i) = 0 ∧ ∃ i, c i ≠ 0",
+      "scope": "Affine functions with arbitrary real intercepts in finite dimension. Nontrivial affine dependence of slopes, oriented by the intercept sum, yields a fixed global partition whenever the term count exceeds dimension+1.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    },
+    {
+      "module": "Thesis.AffineMaxPartition",
+      "declaration": "Thesis.AffineMaxPartition.oriented_dependence",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I)\n    (hcard : Fintype.card I + 1 < Fintype.card p.Terms),\n    ∃ c : p.Terms → ℝ, (∑ i, c i) = 0 ∧ (∑ i, c i • p.slope i) = 0 ∧\n      (∑ i, c i * p.intercept i) ≤ 0 ∧ ∃ i, c i ≠ 0",
+      "scope": "Affine functions with arbitrary real intercepts in finite dimension. Nontrivial affine dependence of slopes, oriented by the intercept sum, yields a fixed global partition whenever the term count exceeds dimension+1.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    },
+    {
+      "module": "Thesis.AffineMaxPartition",
+      "declaration": "Thesis.AffineMaxPartition.weighted_affine_constant",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I) (c : p.Terms → ℝ)\n    (hv : (∑ i, c i • p.slope i) = 0) (x : I → ℝ),\n    (∑ i, c i * (p.slope i ⬝ᵥ x + p.intercept i)) = ∑ i, c i * p.intercept i",
+      "scope": "Affine functions with arbitrary real intercepts in finite dimension. Nontrivial affine dependence of slopes, oriented by the intercept sum, yields a fixed global partition whenever the term count exceeds dimension+1.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    },
+    {
+      "module": "Thesis.AffineMaxPartition",
+      "declaration": "Thesis.AffineMaxPartition.global_partition",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I)\n    (hcard : Fintype.card I + 1 < Fintype.card p.Terms),\n    ∃ (A B : Finset p.Terms) (_ : A.Nonempty) (hB : B.Nonempty),\n      Disjoint A B ∧ A ∪ B = Finset.univ ∧\n      ∀ x : I → ℝ, ∃ a ∈ A,\n        p.slope a ⬝ᵥ x + p.intercept a ≤ B.sup' hB (fun b => p.slope b ⬝ᵥ x + p.intercept b)",
+      "scope": "Affine functions with arbitrary real intercepts in finite dimension. Nontrivial affine dependence of slopes, oriented by the intercept sum, yields a fixed global partition whenever the term count exceeds dimension+1.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    },
+    {
+      "module": "Thesis.SignedMaxReduction",
+      "declaration": "Thesis.SignedMaxReduction.restrict_card",
+      "expected_type": "∀ {I : Type} (p : Polynomial I) (S : Finset p.Terms) (hS : S.Nonempty),\n    Fintype.card (restrict p S hS).Terms = S.card",
+      "scope": "Exact representation of every finite nonempty max-affine polynomial, and differences of two such polynomials, by a finite real linear combination of maxima of at most dimension+1 affine functions. No representation hypothesis on the polynomial; no network-depth claim in this leaf.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    },
+    {
+      "module": "Thesis.SignedMaxReduction",
+      "declaration": "Thesis.SignedMaxReduction.restrict_eval",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I) (S : Finset p.Terms) (hS : S.Nonempty)\n    (x : I → ℝ),\n    (restrict p S hS).eval x = S.sup' hS (fun a => p.slope a ⬝ᵥ x + p.intercept a)",
+      "scope": "Exact representation of every finite nonempty max-affine polynomial, and differences of two such polynomials, by a finite real linear combination of maxima of at most dimension+1 affine functions. No representation hypothesis on the polynomial; no network-depth claim in this leaf.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    },
+    {
+      "module": "Thesis.SignedMaxReduction",
+      "declaration": "Thesis.SignedMaxReduction.eval_mem_smallSpan",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I),\n    p.eval ∈ smallSpan I",
+      "scope": "Exact representation of every finite nonempty max-affine polynomial, and differences of two such polynomials, by a finite real linear combination of maxima of at most dimension+1 affine functions. No representation hypothesis on the polynomial; no network-depth claim in this leaf.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    },
+    {
+      "module": "Thesis.SignedMaxReduction",
+      "declaration": "Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan",
+      "expected_type": "∀ {I : Type} [Fintype I] (f : (I → ℝ) → ℝ)\n    (hf : f ∈ smallSpan I),\n    ∃ (N : ℕ) (c : Fin N → ℝ) (q : Fin N → Polynomial I),\n      (∀ j, Fintype.card (q j).Terms ≤ Fintype.card I + 1) ∧\n      ∀ x, f x = ∑ j, c j * (q j).eval x",
+      "scope": "Exact representation of every finite nonempty max-affine polynomial, and differences of two such polynomials, by a finite real linear combination of maxima of at most dimension+1 affine functions. No representation hypothesis on the polynomial; no network-depth claim in this leaf.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    },
+    {
+      "module": "Thesis.SignedMaxReduction",
+      "declaration": "Thesis.SignedMaxReduction.polynomial_signed_small_max",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I),\n    ∃ (N : ℕ) (c : Fin N → ℝ) (q : Fin N → Polynomial I),\n      (∀ j, Fintype.card (q j).Terms ≤ Fintype.card I + 1) ∧\n      ∀ x, p.eval x = ∑ j, c j * (q j).eval x",
+      "scope": "Exact representation of every finite nonempty max-affine polynomial, and differences of two such polynomials, by a finite real linear combination of maxima of at most dimension+1 affine functions. No representation hypothesis on the polynomial; no network-depth claim in this leaf.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    },
+    {
+      "module": "Thesis.SignedMaxReduction",
+      "declaration": "Thesis.SignedMaxReduction.difference_signed_small_max",
+      "expected_type": "∀ {I : Type} [Fintype I] (p r : Polynomial I),\n    ∃ (N : ℕ) (c : Fin N → ℝ) (q : Fin N → Polynomial I),\n      (∀ j, Fintype.card (q j).Terms ≤ Fintype.card I + 1) ∧\n      ∀ x, p.eval x - r.eval x = ∑ j, c j * (q j).eval x",
+      "scope": "Exact representation of every finite nonempty max-affine polynomial, and differences of two such polynomials, by a finite real linear combination of maxima of at most dimension+1 affine functions. No representation hypothesis on the polynomial; no network-depth claim in this leaf.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/cpwl-review/signed-max-types.log"
+    }
+  ],
+  "publication_gate_conclusion": "These 17 supporting contracts have no identified high-severity blocker. They establish the genuine CPWL-to-DC and d+1 signed-max steps; final network depth requires the separate compiler review."
+}

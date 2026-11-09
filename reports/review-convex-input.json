@@ -1,0 +1,27 @@
+{
+  "reviewer": "/root/repair_foundations",
+  "status": "passed",
+  "source": "formalization/HiddenMonotonicity/ConvexInput.lean",
+  "source_sha256": "7314ecb9661c9ae982e700ebabd373ae41df4248f23f2322c678354462a018d4",
+  "reviewed_contract": "reports/convex-input-expected-types.json",
+  "reviewed_contract_sha256": "1052444d9b936952bd7271eccaed489c6626d55c2c80f5af0540249eb4283af5",
+  "source_scope": ["tex/chapters/03_decompositions.tex: thm:mixing_convex_extreme", "cor:dc_split_endpoint"],
+  "semantic_findings": [
+    "The inputs p and q are arbitrary coordinatewise ConvexOn functions on all of real finite-dimensional input space. They are not restricted to affine or canonical sign lifts and need not themselves be monotone, nonnegative, or differentiable.",
+    "Network.Nonnegative is a structural condition on the two stored sign matrices at every actual network layer. It does not assume the desired convexity conclusion, positivity of effective signed weights, disjoint sign supports, or positive biases.",
+    "The proof derives Jensen bounds for p and q, applies genuine monotonicity of Network.split, and then genuine network Jensen convexity. It uses the actual recursive evaluator.",
+    "The affine-head clause uses the actual ungated affineHeads definition, with nonnegative coefficientRow weights and arbitrary real readout biases. Each head is a nonnegative weighted sum of the two convex streams plus a constant.",
+    "At eta=1, decomposeWith (mixPair 1) is identified with the actual split evaluator. The exact recovery conclusion is net.eval (p x - q x). Original-input recovery follows only after supplying the input convention p x - q x = x, as required by the source.",
+    "The universal dimension binders admit zero-dimensional domains and zero-width layers; no nonempty-coordinate assumption is hidden in the statement."
+  ],
+  "coverage_note": "The three reviewed declarations form the source-facing bundle. mixing_one_convex_input by itself states hidden-output convexity and recovery, while affine_heads_convex_input supplies the final affine-readout clause. This review does not conflate the two declarations.",
+  "findings": [],
+  "validation": {
+    "fresh_source_compile": "reports/evidence/convolution-review/source-ConvexInput.exit",
+    "direct_exact_type_module_universe_and_axiom_checks": "reports/evidence/convolution-review/ExactTypes.lean",
+    "receipt": "reports/evidence/convolution-review/receipt.json",
+    "scope": "Three manually reviewed full contract statements, checked independently with direct kernel definitional equality, defining-module equality, universe arity and standard-axiom allowlist. The shared receipt additionally checks the four convolution contracts and audits every project theorem in these imports.",
+    "additional_independent_reviewer_receipts": ["reports/evidence/convex-input-review/exact-types.exit", "reports/evidence/convex-input-review/source.exit"]
+  },
+  "production_edits": []
+}

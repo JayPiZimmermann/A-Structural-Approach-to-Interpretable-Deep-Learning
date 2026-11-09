@@ -16,12 +16,12 @@
     "scope": "Whole-network common shift propagated by Wp+Wn. Canonical sign parts have Wp+Wn=abs(W), checked scalarwise."
   },
   "thm:convexity_monotonicity": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.Network.monotone",
-      "HiddenMonotonicity.Network.convex"
+      "Thesis.SourceFoundations.monotone_represents",
+      "Thesis.SourceFoundations.icnn_represents_convex"
     ],
-    "scope": "Proved for actual split ReLU/Maxout networks; broader arbitrary ICNN activation theorem is not formalized."
+    "scope": "Arbitrary monotone scalar activation for monotone networks; arbitrary convex monotone scalar activation for ICNNs with unrestricted first affine matrix, nonnegative effective downstream matrices and nonnegative signed readout coefficients; arbitrary biases and varying widths."
   },
   "prop:stream_properties": {
     "status": "formalized_variant",
@@ -32,11 +32,12 @@
     "scope": "Both heads of arbitrary-width biased split networks, nonnegative split weights, Jensen form of convexity."
   },
   "thm:mixing_convex_extreme": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.Network.convex"
+      "HiddenMonotonicity.Network.mixing_one_convex_input",
+      "HiddenMonotonicity.Network.affine_heads_convex_input"
     ],
-    "scope": "Convexity in split input pair proved; composition with an arbitrary convex input splitting is not packaged as a theorem."
+    "scope": "Arbitrary coordinatewise convex input lifts, actual nonnegative split network, arbitrary biases and varying widths. Both mixing-one streams and actual ungated nonnegative affine heads are convex. Recovery is net.eval(p\u2212q); the source input-split identity specializes this to the original input."
   },
   "thm:monotonicity_positive_gradients": {
     "status": "formalized_variant",
@@ -132,11 +133,13 @@
     "scope": "Full actual ungated biased affine chunk, including nonnegative outputs, monotonicity, exact affine dependence and both coordinate ConvexOn statements."
   },
   "prop:conv_correct": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.layer_difference"
+      "HiddenMonotonicity.Convolution.splitKernel_properties",
+      "HiddenMonotonicity.Convolution.applyKernel_eq_mulVec",
+      "HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt"
     ],
-    "scope": "Arbitrary rectangular linear operator algebra applies after flattening convolution; tensor/convolution index correspondence not encoded."
+    "scope": "Actual multi-channel cross-correlation tensor sums with explicit stencil, zero padding, shared kernel/bias and arbitrary finite dimensions. Proved sparse-matrix index bridge, nonnegative/convex/monotone split heads, exact reconstruction, actual ordinary convolution derivative and all four split Jacobian blocks. Repeated taps and zero-sized dimensions included; no claim about PyTorch option parsing."
   },
   "thm:mixing_recovery": {
     "status": "formalized_variant",
@@ -148,14 +151,14 @@
     "scope": "Full varying-width network eta-mixing recovery for every real eta; nonnegative streams when eta is in [0,1] and parameters/input pairs are nonnegative."
   },
   "cor:dc_split_endpoint": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
       "HiddenMonotonicity.Network.mixing_one_is_split",
-      "HiddenMonotonicity.mixing_correct",
-      "HiddenMonotonicity.Network.correct",
-      "HiddenMonotonicity.Network.convex"
+      "HiddenMonotonicity.Network.mixing_one_convex_input",
+      "HiddenMonotonicity.Network.affine_heads_convex_input",
+      "HiddenMonotonicity.Network.affine_heads_recovery"
     ],
-    "scope": "The eta=1 entire network is definitionally identified with the proved convex monotone split; recovery and convexity proved separately with explicit assumptions."
+    "scope": "Literal eta-one identity with the actual DC split, exact reconstruction, convexity under arbitrary convex input lifts, and actual final affine-head convexity/recovery."
   },
   "lem:bc-chain-rule": {
     "status": "formalized_variant",
@@ -204,13 +207,16 @@
     "scope": "Normalization identity and mass overlap bound; strictly positive survival Doob kernels normalize, stay nonnegative, and telescope to conditional path law; overlap endpoint equivalences proved for normalized finite laws. Source zero-survival pruning/layer-specific cemetery encoding not packaged."
   },
   "thm:deriv-occ": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
-      "Thesis.StoppingBoundary.strict_stopping_decomposition_gradient",
-      "Thesis.StoppingBoundary.strict_gradient_occupation",
-      "Thesis.StoppingBoundary.strict_affine_output_gradient"
+      "Thesis.StoppingDAG.intermediate_stopping_derivative_occupation",
+      "Thesis.StoppingDAG.intermediate_circuit_derivative_occupation",
+      "Thesis.StoppingDAG.intermediate_selected_occupation",
+      "Thesis.StoppingDAG.exists_graph_cut",
+      "Thesis.StoppingDAG.orderedInputPool_source",
+      "Thesis.StoppingDAG.orderedInputPool_dag_row"
     ],
-    "scope": "Actual classical stopping-head and ordinary-network derivatives on strict cells of the shared varying-width MLP, equal to discounted sign-labelled occupations, including zero fan-in and ungated affine readout. At ties selected-mask identities are separate. General residual/max-pooling DAG derivative assembly remains open."
+    "scope": "Full discounted visits under the original additive shared-DAG trajectory law equal all four actual stopping-stream derivatives and the ordinary signed derivative at every actual intermediate graph cut. Includes signed affine/bias, residual addition, ReLU, maxpool, skip references, zero fan-in and normalized cemetery paths. Classical derivatives require explicit forward regularity; selected-operator identities hold at ties. The source smallest-index pool convention is realized by the proved orderedInputPool adapter; the generic binary primitive itself uses right ties."
   },
   "thm:gradient": {
     "status": "partial",
@@ -279,19 +285,25 @@
     "scope": "Actual full varying-width Softplus network derivative equals discounted sign-path occupations with sigmoid stopping and positive fan-in; same Network parameters/evaluator as the ReLU development. Positive temperature and nonnegative split weights for stochastic interpretation. Global equilibrium existence is not included."
   },
   "thm:freg_validity": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
-      "Thesis.Regularization.softSplit_recovery"
+      "Thesis.GeneralRegularization.regularized_decomposition_validity",
+      "Thesis.GeneralRegularization.exists_optimizer",
+      "Thesis.GeneralRegularization.activation_isGreatest"
     ],
-    "scope": "Scalar entropy/softplus regularized pair recovery; general convex regularizers and complete network induction not encoded."
+    "scope": "General finite closed convex nonpositive cost on [0,1]. Optimizer existence is derived from compactness and lower semicontinuity. Any fixed maximizing selection gives nonnegative pair validity; activation is convex, nondecreasing, 1-Lipschitz, and every optimizer equals the derivative at differentiable points. Full shared biased network and actual ungated signed affine readout recover the conjugate-activation network."
   },
   "cor:fsoft": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
+      "Thesis.GeneralRegularization.entropy_activation",
+      "Thesis.GeneralRegularization.entropy_pair_is_softSplit",
+      "Thesis.GeneralRegularization.sigmoid_optimal",
       "Thesis.SoftplusDecomposition.thesis_softplus_forward",
-      "Thesis.Regularization.softplus_variational"
+      "Thesis.SoftplusLimits.softSplit_tendsto_stopping",
+      "Thesis.SoftplusLimits.softSplit_tendsto_tie"
     ],
-    "scope": "Entire shared Network soft pair decomposition recovers the Softplus forward pass; scalar entropy optimizer proved separately. Full game SPNE not asserted."
+    "scope": "Actual negative binary entropy on [0,1], sigmoid optimizer and exact softplus conjugate/pair bridge, full shared-network decomposition recovery. Positive-temperature pair limit is strict stopping away from score ties; at a tie the actual limit is the half-input pair. This decomposition corollary makes no separate global-game SPNE claim."
   },
   "prop:monotone_represents": {
     "status": "formalized_variant",
@@ -400,9 +412,11 @@
     "lean": [
       "HiddenMonotonicity.Circuit.split_policy_correct",
       "HiddenMonotonicity.Circuit.split_policy_nonnegative",
-      "HiddenMonotonicity.Circuit.cnn_split_correct"
+      "HiddenMonotonicity.Circuit.cnn_split_correct",
+      "HiddenMonotonicity.Convolution.splitKernel_properties",
+      "HiddenMonotonicity.MaxoutProductDAG.split_linear_size"
     ],
-    "scope": "Actual finite shared-node scalar DAG including affine/residual/max/product operations, per-node recentering and an actual maximizing-winner pooling policy: recovery and nonnegativity. Additive convex-pooling circuits without recentering have convex monotone heads. Concrete tensor flattening/indexing and source linear-size bound are not yet proved."
+    "scope": "Actual finite shared scalar DAG with affine/residual/max/product operations, recentering and maximizing-winner pooling: recovery and nonnegativity. Additive convex-pooling circuits without recentering have convex monotone heads. Concrete kernel/stencil tensor-to-matrix bridge and fixed-rank/degree linear vertices-plus-arcs size bound are now separate checked components. A single source-facing CNN architecture/compiler bundle remains to be assembled."
   },
   "thm:main_simplified": {
     "status": "formalized_variant",
@@ -416,19 +430,18 @@
   "thm:multiplicative_split": {
     "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.Circuit.maxout_multiplication_split_correct",
-      "HiddenMonotonicity.Circuit.multiplicative_streams_monotone",
-      "HiddenMonotonicity.Circuit.ordinary_polynomial_stream_witnesses"
+      "HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion",
+      "HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery"
     ],
-    "scope": "Actual shared-node arithmetic DAG, signed affine/residual/max/product operations, exact rank-two max/product split and nonnegative-orthant monotonicity. Explicit nonempty finite lists of ordinary MvPolynomials with nonnegative coefficients represent each stream. Concrete tensor indexing is a flattening boundary."
+    "scope": "Actual finite shared Maxout/product DAG with arbitrary signed affine weights/biases and natural exponents. Constructed positive rank-two DAG has exact all-node recovery, monotonicity on nonnegative split inputs and finite maxima of nonnegative-coefficient ordinary polynomials; explicit vertices-plus-arcs size bound C(K,D) times source size under fixed rank and bounded total multiplication degree. Canonical input recovery is explicit; raw-input splitting is a separate preprocessing map. The chapter-7 variant bounds the actual expanded monomial count; its degree bound is derived, not assumed from compiled size."
   },
   "thm:main": {
-    "status": "partial",
+    "status": "formalized_variant",
     "lean": [
-      "HiddenMonotonicity.Circuit.maxout_multiplication_split_correct",
-      "HiddenMonotonicity.Circuit.cnn_split_correct"
+      "HiddenMonotonicity.MaxoutProductDAG.split_linear_size",
+      "HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery"
     ],
-    "scope": "Exact constructive topological DAG splitting and all-node recovery including products; the source fixed-rank/bounded-degree linear SIZE clause is not formalized."
+    "scope": "Actual finite shared Maxout/product DAG with arbitrary signed affine weights/biases and natural exponents. Constructed positive rank-two DAG has exact all-node recovery, monotonicity on nonnegative split inputs and finite maxima of nonnegative-coefficient ordinary polynomials; explicit vertices-plus-arcs size bound C(K,D) times source size under fixed rank and bounded total multiplication degree. Canonical input recovery is explicit; raw-input splitting is a separate preprocessing map."
   },
   "claim:main_correct": {
     "status": "partial",
@@ -602,5 +615,38 @@
       "Thesis.StoppingStructure.stopping_biased_parity_paths"
     ],
     "scope": "Actual preactivation sums over geometric neuron-index paths, absolute signed-weight products and parity of the literal negative-edge count. Intermediate gates are used and the top preactivation edge is ungated. Zero-weight paths and a separate actual bias-source extension are included."
+  },
+  "thm:cpwl_relu_equivalence": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.PiecewiseLinear.cpwl_relu_equivalence"
+    ],
+    "scope": "Both directions for genuine continuous finite-polyhedral-cover scalar CPWL functions on R^d, with explicit shared Network and signed affine readout witnesses; exact ceil(log_2(d+1))+1 total-layer bound. Includes arbitrary biases, nonconvex functions, d=0 and negative constants. Lattice/DC/signed-max/compiler bridges derived rather than assumed."
+  },
+  "cor:freg_stop": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.GeneralRegularization.zero_pair_is_stopping",
+      "Thesis.GeneralRegularization.zero_activation"
+    ],
+    "scope": "Literal equality of the zero-cost pair with the original stopping pair, using strict-positive hardGate so zero ties stop, and exact variational value ReLU."
+  },
+  "prop:addition-equivalence": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.StoppingCircuit.addition_discounted_occupation",
+      "Thesis.StoppingDAG.addition_probability",
+      "Thesis.StoppingDAG.addition_discount"
+    ],
+    "scope": "The uniform two-operand oracle with structural discount two equals the sum of arbitrary operand values; the actual shared-DAG local kernel has the same probability/discount, including repeated operand references."
+  },
+  "prop:maxpool-equivalence": {
+    "status": "formalized_variant",
+    "lean": [
+      "Thesis.StoppingDAG.orderedInputPool_source",
+      "Thesis.StoppingDAG.orderedInputPool_dag_row",
+      "Thesis.StoppingDAG.earliestWinner_spec"
+    ],
+    "scope": "The finite ordered pool selects the earliest maximal original operand, forwards both actual stopping streams and the exact selected predecessor kernel, and composes with the shared-DAG row. Smallest graph-index tie selection follows when original operand indices are sorted. No false identification with the generic binary right-tie primitive."
   }
 }

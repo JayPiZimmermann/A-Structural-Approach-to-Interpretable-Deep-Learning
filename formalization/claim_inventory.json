@@ -33,13 +33,13 @@
     "line": 51,
     "environment": "theorem",
     "label": "thm:main",
-    "status": "partial",
+    "status": "formalized_variant",
     "statement_tex": "\\label{thm:main}\n    Let $f: \\ \\RR^d \\longrightarrow \\RR$ be represented by a rank-$k$ Maxout multiplication network.\n    Then it can be written as an exact difference $f = g - h$ of two rank-$\\max\\{k,2\\}$ Maxout multiplication networks, whose downstream maps are monotone in the non-negative split inputs $x^+=\\max\\{x,0\\}$ and $x^-=\\max\\{-x,0\\}$. The constructed functions need not be convex in $x$.\n    For fixed rank and uniformly bounded total multiplication degree $\\sum_u w^{uv}$, the construction has linear size in the original graph size (counting arcs as well as neurons). A bound on the number of distinct inputs alone does not bound the number $\\prod_u(w^{uv}+1)$ of binomial summands.",
     "lean": [
-      "HiddenMonotonicity.Circuit.maxout_multiplication_split_correct",
-      "HiddenMonotonicity.Circuit.cnn_split_correct"
+      "HiddenMonotonicity.MaxoutProductDAG.split_linear_size",
+      "HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery"
     ],
-    "scope": "Exact constructive topological DAG splitting and all-node recovery including products; the source fixed-rank/bounded-degree linear SIZE clause is not formalized."
+    "scope": "Actual finite shared Maxout/product DAG with arbitrary signed affine weights/biases and natural exponents. Constructed positive rank-two DAG has exact all-node recovery, monotonicity on nonnegative split inputs and finite maxima of nonnegative-coefficient ordinary polynomials; explicit vertices-plus-arcs size bound C(K,D) times source size under fixed rank and bounded total multiplication degree. Canonical input recovery is explicit; raw-input splitting is a separate preprocessing map."
   },
   {
     "source_group": "hidden_monotonicity",
@@ -61,13 +61,13 @@
     "line": 11,
     "environment": "theorem",
     "label": "thm:convexity_monotonicity",
-    "status": "partial",
+    "status": "formalized_variant",
     "statement_tex": "\\label{thm:convexity_monotonicity}\n    An input-convex neural network represents a convex function. A monotone neural network represents a monotone function.",
     "lean": [
-      "HiddenMonotonicity.Network.monotone",
-      "HiddenMonotonicity.Network.convex"
+      "Thesis.SourceFoundations.monotone_represents",
+      "Thesis.SourceFoundations.icnn_represents_convex"
     ],
-    "scope": "Proved for actual split ReLU/Maxout networks; broader arbitrary ICNN activation theorem is not formalized."
+    "scope": "Arbitrary monotone scalar activation for monotone networks; arbitrary convex monotone scalar activation for ICNNs with unrestricted first affine matrix, nonnegative effective downstream matrices and nonnegative signed readout coefficients; arbitrary biases and varying widths."
   },
   {
     "source_group": "hidden_monotonicity",
@@ -307,8 +307,14 @@
     "line": 1315,
     "environment": "proposition",
     "label": "prop:addition-equivalence",
-    "status": "not_formalized",
-    "statement_tex": "[Forward Equivalence for Addition]\\label{prop:addition-equivalence}\nThe player-specific state value at the addition state equals the sum of the operand state values,\n\\begin{align}\n    \\tilde V_p^{\\pi}\\bigl(s_{z,q}^{\\mathrm{add}}\\bigr)\n    \\;=\\;\n    \\tilde V_p^{\\pi}(s_{x,q}) + \\tilde V_p^{\\pi}(s_{y,q}).\n\\end{align}\nConsequently, if the operand states recover the Stopping-Decomposition activations---$\\tilde\n    V_p^{\\pi^\\star}(s_{x,q}) = x^{(p\\oplus q)}$ and $\\tilde V_p^{\\pi^\\star}(s_{y,q}) = y^{(p\\oplus\n    q)}$---then $\\tilde V_p^{\\pi^\\star}(s_{z,q}^{\\mathrm{add}}) = z^{(p\\oplus q)}$, preserving the\nforward equivalence of Theorem~\\ref{thm:forward-stopping} across the residual sum."
+    "status": "formalized_variant",
+    "statement_tex": "[Forward Equivalence for Addition]\\label{prop:addition-equivalence}\nThe player-specific state value at the addition state equals the sum of the operand state values,\n\\begin{align}\n    \\tilde V_p^{\\pi}\\bigl(s_{z,q}^{\\mathrm{add}}\\bigr)\n    \\;=\\;\n    \\tilde V_p^{\\pi}(s_{x,q}) + \\tilde V_p^{\\pi}(s_{y,q}).\n\\end{align}\nConsequently, if the operand states recover the Stopping-Decomposition activations---$\\tilde\n    V_p^{\\pi^\\star}(s_{x,q}) = x^{(p\\oplus q)}$ and $\\tilde V_p^{\\pi^\\star}(s_{y,q}) = y^{(p\\oplus\n    q)}$---then $\\tilde V_p^{\\pi^\\star}(s_{z,q}^{\\mathrm{add}}) = z^{(p\\oplus q)}$, preserving the\nforward equivalence of Theorem~\\ref{thm:forward-stopping} across the residual sum.",
+    "lean": [
+      "Thesis.StoppingCircuit.addition_discounted_occupation",
+      "Thesis.StoppingDAG.addition_probability",
+      "Thesis.StoppingDAG.addition_discount"
+    ],
+    "scope": "The uniform two-operand oracle with structural discount two equals the sum of arbitrary operand values; the actual shared-DAG local kernel has the same probability/discount, including repeated operand references."
   },
   {
     "source_group": "playing_backward",
@@ -325,8 +331,14 @@
     "line": 1384,
     "environment": "proposition",
     "label": "prop:maxpool-equivalence",
-    "status": "not_formalized",
-    "statement_tex": "[Forward Equivalence for Max Pooling]\\label{prop:maxpool-equivalence}\nAssume the operand states recover the Stopping-Decomposition activations, $\\tilde\n    V_p^{\\pi^\\star}(s_{x_k,q}) = x_k^{(p\\oplus q)}$ for all $k$, with non-negative operand activations\n$x_k \\ge 0$. Then at the SPNE of the subgame rooted at $s_{z,q}^{\\max}$,\n\\begin{align}\n    \\tilde V_p^{\\pi^\\star}\\bigl(s_{z,q}^{\\max}\\bigr) \\;=\\; z^{(p\\oplus q)},\n\\end{align}\nso the pooling state inherits the same Stopping-Decomposition identity as its winning operand and\nthe forward equivalence of Theorem~\\ref{thm:forward-stopping} extends across the pooling node."
+    "status": "formalized_variant",
+    "statement_tex": "[Forward Equivalence for Max Pooling]\\label{prop:maxpool-equivalence}\nAssume the operand states recover the Stopping-Decomposition activations, $\\tilde\n    V_p^{\\pi^\\star}(s_{x_k,q}) = x_k^{(p\\oplus q)}$ for all $k$, with non-negative operand activations\n$x_k \\ge 0$. Then at the SPNE of the subgame rooted at $s_{z,q}^{\\max}$,\n\\begin{align}\n    \\tilde V_p^{\\pi^\\star}\\bigl(s_{z,q}^{\\max}\\bigr) \\;=\\; z^{(p\\oplus q)},\n\\end{align}\nso the pooling state inherits the same Stopping-Decomposition identity as its winning operand and\nthe forward equivalence of Theorem~\\ref{thm:forward-stopping} extends across the pooling node.",
+    "lean": [
+      "Thesis.StoppingDAG.orderedInputPool_source",
+      "Thesis.StoppingDAG.orderedInputPool_dag_row",
+      "Thesis.StoppingDAG.earliestWinner_spec"
+    ],
+    "scope": "The finite ordered pool selects the earliest maximal original operand, forwards both actual stopping streams and the exact selected predecessor kernel, and composes with the shared-DAG row. Smallest graph-index tie selection follows when original operand indices are sorted. No false identification with the generic binary right-tie primitive."
   },
   {
     "source_group": "playing_backward",
@@ -357,14 +369,17 @@
     "line": 1460,
     "environment": "theorem",
     "label": "thm:deriv-occ",
-    "status": "partial",
+    "status": "formalized_variant",
     "statement_tex": "[Activation--Occupation Correspondence]\\label{thm:deriv-occ}\nFix a neuron state $s = s_{j,q}^{(m, \\mathrm{act})}$ and a layer $l \\le m$ (for $l = 0$,\n$s_{i,\\cdot}^{(0,\\mathrm{act})}$ denotes the terminal state $s_{i,\\cdot}^{(0)}$). Under the\nstop-at-tie-breaks equilibrium fixed by the boundary conventions of\nAppendix~\\ref{app:notation-identities} (uniquely fixing the SPNE at ReLU gates with $z = 0$ and at\nmax-pooling states with multiple maximizers), the discounted occupation measures exactly represent,\nin a multi-trajectory ReLU network (e.g., a ResNet or a CNN with max pooling), the local\nStopping-Decomposition and scalar activation derivatives on open cells with nonzero ReLU preactivations and unique max-pooling winners. At ties, the same formulas represent the backward quantities computed using the selected gates and winners; they do not assert classical differentiability of the individual stopping streams, which can be discontinuous there:\n\\begin{enumerate}\n    \\item \\textbf{Stopping-Decomposition Gradient:}\n        \\begin{align}\n            \\frac{\\partial a_{\\mathrm{stop},j}^{(m, p \\oplus q)}}{\\partial a_{\\mathrm{stop},i}^{(l, k)}}\n            \\;=\\;\n            \\Gamma_x\\!\\bigl(s_{i, p \\oplus k}^{(l, \\mathrm{act})} \\bigm| s\\bigr).\n        \\end{align}\n    \\item \\textbf{Network Activation Gradient.} The ordinary-network gradient of $a_j^{(m)}$ with respect to\n        the scalar activation $a_i^{(l)}$ is\n        \\begin{align}\n            \\frac{\\partial a_j^{(m)}}{\\partial a_i^{(l)}}\n            \\;=\\;\n            \\xi_{q, +}\\bigl(\\Gamma_x(s_{i, +}^{(l, \\mathrm{act})} \\mid s) - \\Gamma_x(s_{i, -}^{(l,\n            \\mathrm{act})} \\mid s)\\bigr).\n        \\end{align}\n\\end{enumerate}",
     "lean": [
-      "Thesis.StoppingBoundary.strict_stopping_decomposition_gradient",
-      "Thesis.StoppingBoundary.strict_gradient_occupation",
-      "Thesis.StoppingBoundary.strict_affine_output_gradient"
+      "Thesis.StoppingDAG.intermediate_stopping_derivative_occupation",
+      "Thesis.StoppingDAG.intermediate_circuit_derivative_occupation",
+      "Thesis.StoppingDAG.intermediate_selected_occupation",
+      "Thesis.StoppingDAG.exists_graph_cut",
+      "Thesis.StoppingDAG.orderedInputPool_source",
+      "Thesis.StoppingDAG.orderedInputPool_dag_row"
     ],
-    "scope": "Actual classical stopping-head and ordinary-network derivatives on strict cells of the shared varying-width MLP, equal to discounted sign-labelled occupations, including zero fan-in and ungated affine readout. At ties selected-mask identities are separate. General residual/max-pooling DAG derivative assembly remains open."
+    "scope": "Full discounted visits under the original additive shared-DAG trajectory law equal all four actual stopping-stream derivatives and the ordinary signed derivative at every actual intermediate graph cut. Includes signed affine/bias, residual addition, ReLU, maxpool, skip references, zero fan-in and normalized cemetery paths. Classical derivatives require explicit forward regularity; selected-operator identities hold at ties. The source smallest-index pool convention is realized by the proved orderedInputPool adapter; the generic binary primitive itself uses right ties."
   },
   {
     "source_group": "playing_backward",
@@ -720,13 +735,17 @@
     "line": 67,
     "environment": "theoremenv",
     "label": "thm:cpwl_relu_equivalence",
-    "status": "not_formalized",
-    "statement_tex": "[\\ac{cpwl}--\\ac{relu} equivalence, \\parencite{Arora2018}]\\label{thm:cpwl_relu_equivalence}\nA function $f \\colon \\RR^{d} \\to \\RR$ is \\ac{cpwl} if and only if it is representable by a feedforward \\ac{relu} network. Moreover, every \\ac{cpwl} function on $\\RR^d$ is representable by a \\ac{relu} network of depth at most $\\bigl\\lceil \\log_2(d+1) \\bigr\\rceil + 1$."
+    "status": "formalized_variant",
+    "statement_tex": "[\\ac{cpwl}--\\ac{relu} equivalence, \\parencite{Arora2018}]\\label{thm:cpwl_relu_equivalence}\nA function $f \\colon \\RR^{d} \\to \\RR$ is \\ac{cpwl} if and only if it is representable by a feedforward \\ac{relu} network. Moreover, every \\ac{cpwl} function on $\\RR^d$ is representable by a \\ac{relu} network of depth at most $\\bigl\\lceil \\log_2(d+1) \\bigr\\rceil + 1$.\n\\hfill\\LeanResult{thm:cpwl_relu_equivalence}",
+    "lean": [
+      "Thesis.PiecewiseLinear.cpwl_relu_equivalence"
+    ],
+    "scope": "Both directions for genuine continuous finite-polyhedral-cover scalar CPWL functions on R^d, with explicit shared Network and signed affine readout witnesses; exact ceil(log_2(d+1))+1 total-layer bound. Includes arbitrary biases, nonconvex functions, d=0 and negative constants. Lattice/DC/signed-max/compiler bridges derived rather than assumed."
   },
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 91,
+    "line": 92,
     "environment": "remark",
     "label": "rem:linear_regions",
     "status": "not_formalized",
@@ -735,7 +754,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 101,
+    "line": 102,
     "environment": "definition",
     "label": "def:monotone_network",
     "status": "not_formalized",
@@ -744,7 +763,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 107,
+    "line": 108,
     "environment": "proposition",
     "label": "prop:monotone_represents",
     "status": "formalized_variant",
@@ -757,7 +776,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 116,
+    "line": 117,
     "environment": "definition",
     "label": "def:icnn",
     "status": "not_formalized",
@@ -766,7 +785,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 122,
+    "line": 123,
     "environment": "proposition",
     "label": "prop:icnn_convex",
     "status": "formalized_variant",
@@ -779,7 +798,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 139,
+    "line": 140,
     "environment": "remark",
     "label": "rem:monotone_convex_combined",
     "status": "not_formalized",
@@ -788,7 +807,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 145,
+    "line": 146,
     "environment": "definition",
     "label": "def:maxout",
     "status": "not_formalized",
@@ -797,7 +816,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 158,
+    "line": 159,
     "environment": "observation",
     "label": "obs:relu_maxout_special_case",
     "status": "formalized_variant",
@@ -810,7 +829,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 167,
+    "line": 168,
     "environment": "remark",
     "label": "rem:maxout_role",
     "status": "not_formalized",
@@ -819,7 +838,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 175,
+    "line": 176,
     "environment": "definition",
     "label": "def:mdp",
     "status": "not_formalized",
@@ -828,7 +847,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 186,
+    "line": 187,
     "environment": "proposition",
     "label": "prop:bellman",
     "status": "formalized_variant",
@@ -841,7 +860,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 210,
+    "line": 211,
     "environment": "remark",
     "label": "rem:structural_discount",
     "status": "not_formalized",
@@ -850,7 +869,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 223,
+    "line": 224,
     "environment": "definition",
     "label": "def:turn_based_game",
     "status": "not_formalized",
@@ -859,7 +878,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 227,
+    "line": 228,
     "environment": "theoremenv",
     "label": "thm:shapley_bellman",
     "status": "formalized_variant",
@@ -872,7 +891,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 258,
+    "line": 259,
     "environment": "remark",
     "label": "rem:shapley_history",
     "status": "not_formalized",
@@ -881,7 +900,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 268,
+    "line": 269,
     "environment": "definition",
     "label": "def:relu_net_game",
     "status": "not_formalized",
@@ -890,7 +909,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 289,
+    "line": 290,
     "environment": "theoremenv",
     "label": "thm:relu_net_game_value",
     "status": "formalized_variant",
@@ -904,7 +923,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 334,
+    "line": 335,
     "environment": "remark",
     "label": "rem:softplus_game",
     "status": "not_formalized",
@@ -913,7 +932,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 346,
+    "line": 347,
     "environment": "remark",
     "label": "rem:inherited_vs_new",
     "status": "not_formalized",
@@ -922,7 +941,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 354,
+    "line": 355,
     "environment": "definition",
     "label": "def:maxplus_semiring",
     "status": "not_formalized",
@@ -931,7 +950,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 367,
+    "line": 368,
     "environment": "definition",
     "label": "def:tropical_polynomial",
     "status": "not_formalized",
@@ -940,7 +959,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 379,
+    "line": 380,
     "environment": "observation",
     "label": "obs:tropical_convex_cpwl",
     "status": "formalized_variant",
@@ -953,7 +972,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 394,
+    "line": 395,
     "environment": "definition",
     "label": "def:newton_polytope",
     "status": "not_formalized",
@@ -962,7 +981,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 406,
+    "line": 407,
     "environment": "definition",
     "label": "def:minkowski_sum",
     "status": "not_formalized",
@@ -971,7 +990,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 412,
+    "line": 413,
     "environment": "definition",
     "label": "def:support_function",
     "status": "not_formalized",
@@ -980,7 +999,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 422,
+    "line": 423,
     "environment": "lemmaenv",
     "label": "lem:support_properties",
     "status": "formalized_variant",
@@ -993,7 +1012,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 442,
+    "line": 443,
     "environment": "proposition",
     "label": "prop:newton_calculus",
     "status": "formalized_variant",
@@ -1006,7 +1025,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 483,
+    "line": 484,
     "environment": "remark",
     "label": "rem:polytope_layer_transitions",
     "status": "not_formalized",
@@ -1015,7 +1034,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 505,
+    "line": 506,
     "environment": "theoremenv",
     "label": "thm:split_tropical_rational",
     "status": "formalized_variant",
@@ -1028,7 +1047,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 525,
+    "line": 526,
     "environment": "theoremenv",
     "label": "thm:monotone_nonneg_gradients",
     "status": "formalized_variant",
@@ -1041,7 +1060,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 543,
+    "line": 544,
     "environment": "corollary",
     "label": "cor:minkowski_propagation",
     "status": "formalized_variant",
@@ -1054,7 +1073,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 569,
+    "line": 570,
     "environment": "proposition",
     "label": "prop:subdifferential_face",
     "status": "formalized_variant",
@@ -1067,7 +1086,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 582,
+    "line": 583,
     "environment": "definition",
     "label": "def:imaginative_polytopes",
     "status": "not_formalized",
@@ -1076,7 +1095,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 588,
+    "line": 589,
     "environment": "corollary",
     "label": "cor:polytopes_nonneg",
     "status": "formalized_variant",
@@ -1089,7 +1108,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 597,
+    "line": 598,
     "environment": "theoremenv",
     "label": "thm:vertices_gradients",
     "status": "formalized_variant",
@@ -1103,7 +1122,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 634,
+    "line": 635,
     "environment": "theoremenv",
     "label": "thm:smooth_dc_split",
     "status": "formalized_variant",
@@ -1117,7 +1136,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 689,
+    "line": 690,
     "environment": "proposition",
     "label": "prop:curvature_minimality",
     "status": "formalized_variant",
@@ -1131,7 +1150,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 698,
+    "line": 699,
     "environment": "corollary",
     "label": "cor:modern_activations",
     "status": "formalized_variant",
@@ -1144,7 +1163,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 716,
+    "line": 717,
     "environment": "remark",
     "label": "rem:bv_extension",
     "status": "not_formalized",
@@ -1153,7 +1172,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/02_foundations.tex",
-    "line": 724,
+    "line": 725,
     "environment": "remark",
     "label": "rem:smooth_valid_decomposition",
     "status": "not_formalized",
@@ -1221,12 +1240,13 @@
     "line": 151,
     "environment": "theoremenv",
     "label": "thm:mixing_convex_extreme",
-    "status": "partial",
+    "status": "formalized_variant",
     "statement_tex": "[$\\eta = 1$ convex characterisation of the Mixing Decomposition]\\label{thm:mixing_convex_extreme}\nUnder the input convention~\\eqref{eq:input_split_convention} with split components $x_k^\\pm$ that are convex functions of $x$ (e.g.\\ the entrywise split $x^\\pm = \\posneg{x}{\\pm}$, or any affine split), the $\\eta = 1$ mixing decomposed activations\n\\begin{equation*}\n\ta_{\\mathrm{mix},i}^{(l,+,1)}(x) = \\max\\bigl\\{ \\preact{l}{+}_i(x),\\, \\preact{l}{-}_i(x) \\bigr\\}\n\t\\qquad \\text{and} \\qquad\n\ta_{\\mathrm{mix},i}^{(l,-,1)}(x) = \\preact{l}{-}_i(x)\n\\end{equation*}\nare convex in $x$ at every hidden layer $l$ and neuron $i$; at the final layer, both streams are nonnegative affine combinations of the previous streams and remain convex. Consequently $\\actl{l}_i = a_{\\mathrm{mix},i}^{(l,+,1)} - a_{\\mathrm{mix},i}^{(l,-,1)}$ is a difference of convex functions, the standard \\ac{dc} representation of the \\ac{cpwl} function computed by the network \\parencite{Arora2018,hiddenMono}.\n\\hfill\\LeanResult{thm:mixing_convex_extreme}",
     "lean": [
-      "HiddenMonotonicity.Network.convex"
+      "HiddenMonotonicity.Network.mixing_one_convex_input",
+      "HiddenMonotonicity.Network.affine_heads_convex_input"
     ],
-    "scope": "Convexity in split input pair proved; composition with an arbitrary convex input splitting is not packaged as a theorem."
+    "scope": "Arbitrary coordinatewise convex input lifts, actual nonnegative split network, arbitrary biases and varying widths. Both mixing-one streams and actual ungated nonnegative affine heads are convex. Recovery is net.eval(p\u2212q); the source input-split identity specializes this to the original input."
   },
   {
     "source_group": "thesis",
@@ -1243,15 +1263,15 @@
     "line": 182,
     "environment": "corollary",
     "label": "cor:dc_split_endpoint",
-    "status": "partial",
+    "status": "formalized_variant",
     "statement_tex": "[DC split as the $\\eta = 1$ mixing endpoint]\\label{cor:dc_split_endpoint}\nSet $\\eta = 1$ in Definition~\\ref{def:fmix} and drop the decomposition tag, writing $\\act{l}{\\pm} \\coloneqq a_{\\mathrm{mix}}^{(l,\\pm,1)}$. The resulting \\emph{\\ac{dc} split} propagates, for hidden layers $l = 1, \\dots, L-1$,\n\\begin{equation}\n\t\\act{l}{+} = \\max\\bigl\\{ \\preact{l}{+},\\, \\preact{l}{-} \\bigr\\},\n\t\\qquad\n\t\\act{l}{-} = \\preact{l}{-}\n\t\\label{eq:dc_split_activations}\n\\end{equation}\nentrywise, and sets $\\act{L}{\\pm}=\\preact{L}{\\pm}$ at the final affine readout, with the decomposed pre-activations \\eqref{eq:split_pos}--\\eqref{eq:split_neg} induced by the weight split $\\Wl{l} = \\Wsig{l}{+} - \\Wsig{l}{-}$ and the input split $x = x^+ - x^-$. It is a valid decomposition of the \\ac{relu} network, and under the input convention of Theorem~\\ref{thm:mixing_convex_extreme} its decomposed activations are convex functions of the input.\n\\hfill\\LeanResult{cor:dc_split_endpoint}",
     "lean": [
       "HiddenMonotonicity.Network.mixing_one_is_split",
-      "HiddenMonotonicity.mixing_correct",
-      "HiddenMonotonicity.Network.correct",
-      "HiddenMonotonicity.Network.convex"
+      "HiddenMonotonicity.Network.mixing_one_convex_input",
+      "HiddenMonotonicity.Network.affine_heads_convex_input",
+      "HiddenMonotonicity.Network.affine_heads_recovery"
     ],
-    "scope": "The eta=1 entire network is definitionally identified with the proved convex monotone split; recovery and convexity proved separately with explicit assumptions."
+    "scope": "Literal eta-one identity with the actual DC split, exact reconstruction, convexity under arbitrary convex input lifts, and actual final affine-head convexity/recovery."
   },
   {
     "source_group": "thesis",
@@ -1382,12 +1402,14 @@
     "line": 394,
     "environment": "theoremenv",
     "label": "thm:freg_validity",
-    "status": "partial",
+    "status": "formalized_variant",
     "statement_tex": "[Validity of regularized decompositions]\\label{thm:freg_validity}\nLet $\\Omega$ be as in Definition~\\ref{def:freg}, and let the activation pairs be propagated by the canonical non-negative linear map \\eqref{eq:split_pos}--\\eqref{eq:split_neg}, initialised by~\\eqref{eq:input_split_convention}, and updated by $\\freg$ at hidden layers, with the identity pair at the final affine readout. Then for every hidden layer $l$ and neuron $i$,\n\\begin{equation}\n\t\\act{l}{+}_i - \\act{l}{-}_i = \\Omega^*\\bigl(\\preactl{l}_i\\bigr),\n\t\\label{eq:freg_recovery}\n\\end{equation}\nAt the final affine layer, the difference is $\\preactl{L}=\\actl{L}$. Thus $\\freg$ is a valid decomposition of the network~\\eqref{eq:original_forward_pass} with activation function $\\varrho = \\Omega^*$. Moreover, $\\Omega^*$ is convex, non-decreasing, and $1$-Lipschitz, and wherever $\\Omega^*$ is differentiable the gate is its derivative, $\\pi_\\Omega(\\Delta) = (\\Omega^*)'(\\Delta) \\in [0,1]$.\n\\hfill\\LeanResult{thm:freg_validity}",
     "lean": [
-      "Thesis.Regularization.softSplit_recovery"
+      "Thesis.GeneralRegularization.regularized_decomposition_validity",
+      "Thesis.GeneralRegularization.exists_optimizer",
+      "Thesis.GeneralRegularization.activation_isGreatest"
     ],
-    "scope": "Scalar entropy/softplus regularized pair recovery; general convex regularizers and complete network induction not encoded."
+    "scope": "General finite closed convex nonpositive cost on [0,1]. Optimizer existence is derived from compactness and lower semicontinuity. Any fixed maximizing selection gives nonnegative pair validity; activation is convex, nondecreasing, 1-Lipschitz, and every optimizer equals the derivative at differentiable points. Full shared biased network and actual ungated signed affine readout recover the conjugate-activation network."
   },
   {
     "source_group": "thesis",
@@ -1395,27 +1417,36 @@
     "line": 417,
     "environment": "corollary",
     "label": "cor:freg_stop",
-    "status": "not_formalized",
-    "statement_tex": "[Unregularized case]\\label{cor:freg_stop}\nFor $\\Omega \\equiv 0$ on $[0,1]$, Definition~\\ref{def:freg} with the maximizer $\\pi_\\Omega(\\Delta) = \\1[\\Delta > 0]$ recovers the stopping decomposition function, $\\freg[0] = \\fstop$, and Theorem~\\ref{thm:freg_validity} specialises to Theorem~\\ref{thm:stopping_validity} with $\\Omega^*(\\Delta) = \\max_{\\pi \\in [0,1]} \\pi\\Delta = \\relu(\\Delta)$."
+    "status": "formalized_variant",
+    "statement_tex": "[Unregularized case]\\label{cor:freg_stop}\nFor $\\Omega \\equiv 0$ on $[0,1]$, Definition~\\ref{def:freg} with the maximizer $\\pi_\\Omega(\\Delta) = \\1[\\Delta > 0]$ recovers the stopping decomposition function, $\\freg[0] = \\fstop$, and Theorem~\\ref{thm:freg_validity} specialises to Theorem~\\ref{thm:stopping_validity} with $\\Omega^*(\\Delta) = \\max_{\\pi \\in [0,1]} \\pi\\Delta = \\relu(\\Delta)$.\n\\hfill\\LeanResult{cor:freg_stop}",
+    "lean": [
+      "Thesis.GeneralRegularization.zero_pair_is_stopping",
+      "Thesis.GeneralRegularization.zero_activation"
+    ],
+    "scope": "Literal equality of the zero-cost pair with the original stopping pair, using strict-positive hardGate so zero ties stop, and exact variational value ReLU."
   },
   {
     "source_group": "thesis",
     "file": "tex/chapters/03_decompositions.tex",
-    "line": 436,
+    "line": 437,
     "environment": "corollary",
     "label": "cor:fsoft",
-    "status": "partial",
+    "status": "formalized_variant",
     "statement_tex": "[Softplus Decomposition]\\label{cor:fsoft}\nFor $\\Omega = \\Omega_\\theta$ as in~\\eqref{eq:entropy_regularizer}, the regularized gate and conjugate activation are\n\\begin{equation}\n\t\\pi_{\\Omega_\\theta}(\\Delta) = \\sigma'_\\theta(\\Delta) \\coloneqq \\frac{1}{1 + e^{-\\Delta/\\theta}},\n\t\\qquad\n\t\\Omega_\\theta^*(\\Delta) = \\sigma_\\theta(\\Delta) \\coloneqq \\theta \\log\\bigl( 1 + e^{\\Delta/\\theta} \\bigr),\n\t\\label{eq:sigmoid_gate}\n\\end{equation}\nthe sigmoid gate and the softplus function at temperature $\\theta$. The resulting decomposition function is the \\emph{softplus decomposition function}\n\\begin{equation}\n\t\\fsoft(z^+, z^-) = \\Bigl(\\, \\sigma'_\\theta(\\Delta)\\, z^+ + \\theta\\, H\\bigl(\\sigma'_\\theta(\\Delta)\\bigr), \\;\\; \\sigma'_\\theta(\\Delta)\\, z^- \\,\\Bigr),\n\t\\qquad\n\t\\Delta = z^+ - z^-,\n\t\\label{eq:fsoft_def}\n\\end{equation}\nand by Theorem~\\ref{thm:freg_validity} it yields a valid decomposition---the \\emph{Softplus Decomposition}---of the softplus network with parameter $\\beta = 1/\\theta$. In the limit $\\theta \\to 0$, $\\fsoft \\to \\fstop$ pointwise on $\\{\\Delta \\neq 0\\}$.\n\\hfill\\LeanResult{cor:fsoft}",
     "lean": [
+      "Thesis.GeneralRegularization.entropy_activation",
+      "Thesis.GeneralRegularization.entropy_pair_is_softSplit",
+      "Thesis.GeneralRegularization.sigmoid_optimal",
       "Thesis.SoftplusDecomposition.thesis_softplus_forward",
-      "Thesis.Regularization.softplus_variational"
+      "Thesis.SoftplusLimits.softSplit_tendsto_stopping",
+      "Thesis.SoftplusLimits.softSplit_tendsto_tie"
     ],
-    "scope": "Entire shared Network soft pair decomposition recovers the Softplus forward pass; scalar entropy optimizer proved separately. Full game SPNE not asserted."
+    "scope": "Actual negative binary entropy on [0,1], sigmoid optimizer and exact softplus conjugate/pair bridge, full shared-network decomposition recovery. Positive-temperature pair limit is strict stopping away from score ties; at a tie the actual limit is the half-input pair. This decomposition corollary makes no separate global-game SPNE claim."
   },
   {
     "source_group": "thesis",
     "file": "tex/chapters/03_decompositions.tex",
-    "line": 466,
+    "line": 467,
     "environment": "remark",
     "label": "rem:soft-monotone",
     "status": "not_formalized",
@@ -1424,7 +1455,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/03_decompositions.tex",
-    "line": 470,
+    "line": 471,
     "environment": "remark",
     "label": "rem:probit_gelu",
     "status": "not_formalized",
@@ -1433,7 +1464,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/03_decompositions.tex",
-    "line": 478,
+    "line": 479,
     "environment": "remark",
     "label": "rem:freg_smooth_connection",
     "status": "not_formalized",
@@ -1442,7 +1473,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/03_decompositions.tex",
-    "line": 496,
+    "line": 497,
     "environment": "theoremenv",
     "label": "thm:shift_forward",
     "status": "formalized_variant",
@@ -1456,7 +1487,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/03_decompositions.tex",
-    "line": 541,
+    "line": 542,
     "environment": "theoremenv",
     "label": "thm:delta_connection",
     "status": "formalized_variant",
@@ -1469,7 +1500,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/03_decompositions.tex",
-    "line": 599,
+    "line": 600,
     "environment": "theoremenv",
     "label": "thm:closed_formula_shift",
     "status": "formalized_variant",
@@ -1483,7 +1514,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/03_decompositions.tex",
-    "line": 650,
+    "line": 651,
     "environment": "remark",
     "label": "rem:Q_network",
     "status": "not_formalized",
@@ -1492,20 +1523,22 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/03_decompositions.tex",
-    "line": 667,
+    "line": 668,
     "environment": "proposition",
     "label": "prop:conv_correct",
-    "status": "partial",
+    "status": "formalized_variant",
     "statement_tex": "[Correctness of split convolution]\\label{prop:conv_correct}\nThe chunk~\\eqref{eq:conv_split} maps non-negative pairs to non-negative pairs, each output component is a non-negative linear (affine) function of $(u^+, u^-)$---hence convex and non-decreasing in each coordinate---and\n\\begin{equation*}\n\tv^+ - v^- = K * (u^+ - u^-) + b.\n\\end{equation*}\n\\hfill\\LeanResult{prop:conv_correct}",
     "lean": [
-      "HiddenMonotonicity.layer_difference"
+      "HiddenMonotonicity.Convolution.splitKernel_properties",
+      "HiddenMonotonicity.Convolution.applyKernel_eq_mulVec",
+      "HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt"
     ],
-    "scope": "Arbitrary rectangular linear operator algebra applies after flattening convolution; tensor/convolution index correspondence not encoded."
+    "scope": "Actual multi-channel cross-correlation tensor sums with explicit stencil, zero padding, shared kernel/bias and arbitrary finite dimensions. Proved sparse-matrix index bridge, nonnegative/convex/monotone split heads, exact reconstruction, actual ordinary convolution derivative and all four split Jacobian blocks. Repeated taps and zero-sized dimensions included; no claim about PyTorch option parsing."
   },
   {
     "source_group": "thesis",
     "file": "tex/chapters/03_decompositions.tex",
-    "line": 684,
+    "line": 685,
     "environment": "lemmaenv",
     "label": "lem:linear_chunk",
     "status": "formalized_variant",
@@ -1518,7 +1551,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/03_decompositions.tex",
-    "line": 722,
+    "line": 723,
     "environment": "proposition",
     "label": "prop:maxpool_correct",
     "status": "formalized_variant",
@@ -1532,7 +1565,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/03_decompositions.tex",
-    "line": 757,
+    "line": 758,
     "environment": "theoremenv",
     "label": "thm:cnn_split_correct",
     "status": "partial",
@@ -1540,14 +1573,16 @@
     "lean": [
       "HiddenMonotonicity.Circuit.split_policy_correct",
       "HiddenMonotonicity.Circuit.split_policy_nonnegative",
-      "HiddenMonotonicity.Circuit.cnn_split_correct"
+      "HiddenMonotonicity.Circuit.cnn_split_correct",
+      "HiddenMonotonicity.Convolution.splitKernel_properties",
+      "HiddenMonotonicity.MaxoutProductDAG.split_linear_size"
     ],
-    "scope": "Actual finite shared-node scalar DAG including affine/residual/max/product operations, per-node recentering and an actual maximizing-winner pooling policy: recovery and nonnegativity. Additive convex-pooling circuits without recentering have convex monotone heads. Concrete tensor flattening/indexing and source linear-size bound are not yet proved."
+    "scope": "Actual finite shared scalar DAG with affine/residual/max/product operations, recentering and maximizing-winner pooling: recovery and nonnegativity. Additive convex-pooling circuits without recentering have convex monotone heads. Concrete kernel/stencil tensor-to-matrix bridge and fixed-rank/degree linear vertices-plus-arcs size bound are now separate checked components. A single source-facing CNN architecture/compiler bundle remains to be assembled."
   },
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 140,
+    "line": 144,
     "environment": "theoremenv",
     "label": "ptnb:thm:gradient",
     "status": "partial",
@@ -1563,7 +1598,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 192,
+    "line": 196,
     "environment": "theoremenv",
     "label": "ptnb:thm:lrp-recovery",
     "status": "partial",
@@ -1577,7 +1612,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 402,
+    "line": 406,
     "environment": "theoremenv",
     "label": "ptnb:thm:decomp-recovery",
     "status": "formalized_variant",
@@ -1590,7 +1625,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 438,
+    "line": 442,
     "environment": "lemmaenv",
     "label": "ptnb:lem:parity-path",
     "status": "formalized_variant",
@@ -1604,7 +1639,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 586,
+    "line": 590,
     "environment": "definition",
     "label": "ptnb:def:adf-game-states",
     "status": "not_formalized",
@@ -1613,7 +1648,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 600,
+    "line": 604,
     "environment": "definition",
     "label": "ptnb:def:adf-recursion",
     "status": "not_formalized",
@@ -1622,7 +1657,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 694,
+    "line": 698,
     "environment": "theoremenv",
     "label": "ptnb:thm:forward-stopping",
     "status": "partial",
@@ -1636,7 +1671,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 710,
+    "line": 714,
     "environment": "remark",
     "label": "ptnb:rem:adf-spne-uniqueness",
     "status": "not_formalized",
@@ -1645,7 +1680,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 795,
+    "line": 799,
     "environment": "definition",
     "label": "ptnb:def:addition-subgame",
     "status": "not_formalized",
@@ -1654,16 +1689,22 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 809,
+    "line": 813,
     "environment": "proposition",
     "label": "ptnb:prop:addition-equivalence",
-    "status": "not_formalized",
-    "statement_tex": "[Forward Equivalence for Addition]\\label{ptnb:prop:addition-equivalence}\nThe player-specific state value at the addition state equals the sum of the operand state values,\n\\begin{align}\n    \\tilde V_p^{\\pi}\\bigl(s_{z,q}^{\\mathrm{add}}\\bigr)\n    \\;=\\;\n    \\tilde V_p^{\\pi}(s_{x,q}) + \\tilde V_p^{\\pi}(s_{y,q}).\n\\end{align}\nConsequently, if the operand states recover the Stopping-Decomposition activations---$\\tilde\n    V_p^{\\pi^\\star}(s_{x,q}) = x^{(p\\oplus q)}$ and $\\tilde V_p^{\\pi^\\star}(s_{y,q}) = y^{(p\\oplus\n    q)}$---then $\\tilde V_p^{\\pi^\\star}(s_{z,q}^{\\mathrm{add}}) = z^{(p\\oplus q)}$, preserving the\nforward equivalence of Theorem~\\ref{ptnb:thm:forward-stopping} across the residual sum."
+    "status": "formalized_variant",
+    "statement_tex": "[Forward Equivalence for Addition]\\label{ptnb:prop:addition-equivalence}\nThe player-specific state value at the addition state equals the sum of the operand state values,\n\\begin{align}\n    \\tilde V_p^{\\pi}\\bigl(s_{z,q}^{\\mathrm{add}}\\bigr)\n    \\;=\\;\n    \\tilde V_p^{\\pi}(s_{x,q}) + \\tilde V_p^{\\pi}(s_{y,q}).\n\\end{align}\nConsequently, if the operand states recover the Stopping-Decomposition activations---$\\tilde\n    V_p^{\\pi^\\star}(s_{x,q}) = x^{(p\\oplus q)}$ and $\\tilde V_p^{\\pi^\\star}(s_{y,q}) = y^{(p\\oplus\n    q)}$---then $\\tilde V_p^{\\pi^\\star}(s_{z,q}^{\\mathrm{add}}) = z^{(p\\oplus q)}$, preserving the\nforward equivalence of Theorem~\\ref{ptnb:thm:forward-stopping} across the residual sum.\n\\hfill\\LeanResult{ptnb:prop:addition-equivalence}",
+    "lean": [
+      "Thesis.StoppingCircuit.addition_discounted_occupation",
+      "Thesis.StoppingDAG.addition_probability",
+      "Thesis.StoppingDAG.addition_discount"
+    ],
+    "scope": "The uniform two-operand oracle with structural discount two equals the sum of arbitrary operand values; the actual shared-DAG local kernel has the same probability/discount, including repeated operand references."
   },
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 855,
+    "line": 860,
     "environment": "definition",
     "label": "ptnb:def:maxpool-subgame",
     "status": "not_formalized",
@@ -1672,16 +1713,22 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 878,
+    "line": 883,
     "environment": "proposition",
     "label": "ptnb:prop:maxpool-equivalence",
-    "status": "not_formalized",
-    "statement_tex": "[Forward Equivalence for Max Pooling]\\label{ptnb:prop:maxpool-equivalence}\nAssume the operand states recover the Stopping-Decomposition activations, $\\tilde\n    V_p^{\\pi^\\star}(s_{x_k,q}) = x_k^{(p\\oplus q)}$ for all $k$, with non-negative operand activations\n$x_k \\ge 0$. Then at the SPNE of the subgame rooted at $s_{z,q}^{\\max}$,\n\\begin{align}\n    \\tilde V_p^{\\pi^\\star}\\bigl(s_{z,q}^{\\max}\\bigr) \\;=\\; z^{(p\\oplus q)},\n\\end{align}\nso the pooling state inherits the same Stopping-Decomposition identity as its winning operand and\nthe forward equivalence of Theorem~\\ref{ptnb:thm:forward-stopping} extends across the pooling node."
+    "status": "formalized_variant",
+    "statement_tex": "[Forward Equivalence for Max Pooling]\\label{ptnb:prop:maxpool-equivalence}\nAssume the operand states recover the Stopping-Decomposition activations, $\\tilde\n    V_p^{\\pi^\\star}(s_{x_k,q}) = x_k^{(p\\oplus q)}$ for all $k$, with non-negative operand activations\n$x_k \\ge 0$. Then at the SPNE of the subgame rooted at $s_{z,q}^{\\max}$,\n\\begin{align}\n    \\tilde V_p^{\\pi^\\star}\\bigl(s_{z,q}^{\\max}\\bigr) \\;=\\; z^{(p\\oplus q)},\n\\end{align}\nso the pooling state inherits the same Stopping-Decomposition identity as its winning operand and\nthe forward equivalence of Theorem~\\ref{ptnb:thm:forward-stopping} extends across the pooling node.\n\\hfill\\LeanResult{ptnb:prop:maxpool-equivalence}",
+    "lean": [
+      "Thesis.StoppingDAG.orderedInputPool_source",
+      "Thesis.StoppingDAG.orderedInputPool_dag_row",
+      "Thesis.StoppingDAG.earliestWinner_spec"
+    ],
+    "scope": "The finite ordered pool selects the earliest maximal original operand, forwards both actual stopping streams and the exact selected predecessor kernel, and composes with the shared-DAG row. Smallest graph-index tie selection follows when original operand indices are sorted. No false identification with the generic binary right-tie primitive."
   },
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 910,
+    "line": 916,
     "environment": "definition",
     "label": "ptnb:def:trajectory-distribution",
     "status": "encoded_definition",
@@ -1695,7 +1742,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 934,
+    "line": 940,
     "environment": "definition",
     "label": "ptnb:def:occupation",
     "status": "not_formalized",
@@ -1704,22 +1751,25 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 954,
+    "line": 960,
     "environment": "theoremenv",
     "label": "ptnb:thm:deriv-occ",
-    "status": "partial",
+    "status": "formalized_variant",
     "statement_tex": "[Activation--Occupation Correspondence]\\label{ptnb:thm:deriv-occ}\\label{thm:gradient_occupation}\nFix a neuron state $s = s_{j,q}^{(m, \\mathrm{act})}$ and a layer $l \\le m$ (for $l = 0$,\n$s_{i,\\cdot}^{(0,\\mathrm{act})}$ denotes the terminal state $s_{i,\\cdot}^{(0)}$). Under the\nstop-at-tie-breaks equilibrium fixed by the boundary conventions of\nSection~\\ref{ptnb:app:notation-identities} (uniquely fixing the SPNE at ReLU gates with $z = 0$ and at\nmax-pooling states with multiple maximizers), the discounted occupation measures exactly represent,\nin a multi-trajectory ReLU network (e.g., a ResNet or a CNN with max pooling), the local\nStopping-Decomposition and scalar activation derivatives on open cells with nonzero ReLU preactivations and unique max-pooling winners. At ties, the same formulas represent the backward quantities computed using the selected gates and winners; they do not assert classical differentiability of the individual stopping streams, which can be discontinuous there:\n\\begin{enumerate}\n    \\item \\textbf{Stopping-Decomposition Gradient:}\n        \\begin{align}\n            \\frac{\\partial a_{\\mathrm{stop},j}^{(m, p \\oplus q)}}{\\partial a_{\\mathrm{stop},i}^{(l, k)}}\n            \\;=\\;\n            \\Gamma_x\\!\\bigl(s_{i, p \\oplus k}^{(l, \\mathrm{act})} \\bigm| s\\bigr).\n        \\end{align}\n    \\item \\textbf{Network Activation Gradient.} The ordinary-network gradient of $a_j^{(m)}$ with respect to\n        the scalar activation $a_i^{(l)}$ is\n        \\begin{align}\n            \\frac{\\partial a_j^{(m)}}{\\partial a_i^{(l)}}\n            \\;=\\;\n            \\xi_{q, +}\\bigl(\\Gamma_x(s_{i, +}^{(l, \\mathrm{act})} \\mid s) - \\Gamma_x(s_{i, -}^{(l,\n            \\mathrm{act})} \\mid s)\\bigr).\n        \\end{align}\n\\end{enumerate}\n\\hfill\\LeanResult{ptnb:thm:deriv-occ}",
     "lean": [
-      "Thesis.StoppingBoundary.strict_stopping_decomposition_gradient",
-      "Thesis.StoppingBoundary.strict_gradient_occupation",
-      "Thesis.StoppingBoundary.strict_affine_output_gradient"
+      "Thesis.StoppingDAG.intermediate_stopping_derivative_occupation",
+      "Thesis.StoppingDAG.intermediate_circuit_derivative_occupation",
+      "Thesis.StoppingDAG.intermediate_selected_occupation",
+      "Thesis.StoppingDAG.exists_graph_cut",
+      "Thesis.StoppingDAG.orderedInputPool_source",
+      "Thesis.StoppingDAG.orderedInputPool_dag_row"
     ],
-    "scope": "Actual classical stopping-head and ordinary-network derivatives on strict cells of the shared varying-width MLP, equal to discounted sign-labelled occupations, including zero fan-in and ungated affine readout. At ties selected-mask identities are separate. General residual/max-pooling DAG derivative assembly remains open."
+    "scope": "Full discounted visits under the original additive shared-DAG trajectory law equal all four actual stopping-stream derivatives and the ordinary signed derivative at every actual intermediate graph cut. Includes signed affine/bias, residual addition, ReLU, maxpool, skip references, zero fan-in and normalized cemetery paths. Classical derivatives require explicit forward regularity; selected-operator identities hold at ties. The source smallest-index pool convention is realized by the proved orderedInputPool adapter; the generic binary primitive itself uses right ties."
   },
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 1127,
+    "line": 1133,
     "environment": "definition",
     "label": "ptnb:def:routing-recursion",
     "status": "not_formalized",
@@ -1728,7 +1778,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 1285,
+    "line": 1291,
     "environment": "theoremenv",
     "label": "ptnb:thm:routing-forward",
     "status": "formalized_variant",
@@ -1743,7 +1793,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 1311,
+    "line": 1317,
     "environment": "remark",
     "label": "ptnb:rem:routing-spne-uniqueness",
     "status": "not_formalized",
@@ -1752,7 +1802,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 1496,
+    "line": 1502,
     "environment": "remark",
     "label": "ptnb:rem:starting-player",
     "status": "not_formalized",
@@ -1761,7 +1811,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 1502,
+    "line": 1508,
     "environment": "remark",
     "label": "ptnb:rem:signed-discount-alt",
     "status": "not_formalized",
@@ -1770,7 +1820,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 1531,
+    "line": 1537,
     "environment": "theoremenv",
     "label": "ptnb:thm:ab-recovery",
     "status": "partial",
@@ -1784,7 +1834,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 1831,
+    "line": 1837,
     "environment": "lemmaenv",
     "label": "ptnb:lem:noisy-gate-dual",
     "status": "partial",
@@ -1798,7 +1848,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 1857,
+    "line": 1863,
     "environment": "remark",
     "label": "ptnb:rem:noisy-gate-perception",
     "status": "not_formalized",
@@ -1807,7 +1857,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 1965,
+    "line": 1971,
     "environment": "theoremenv",
     "label": "ptnb:thm:softplus-forward",
     "status": "partial",
@@ -1821,7 +1871,7 @@
   {
     "source_group": "thesis",
     "file": "tex/chapters/04_game_theory.tex",
-    "line": 2032,
+    "line": 2038,
     "environment": "theoremenv",
     "label": "ptnb:thm:softplus-gradient",
     "status": "partial",
@@ -2031,11 +2081,10 @@
     "status": "formalized_variant",
     "statement_tex": "[Monotone split of multiplicative \\ac{relu} networks]\\label{thm:multiplicative_split}\nLet $N$ be a (residual) \\ac{relu} network containing linear, convolutional, maximum, matrix-product, and Hadamard-product components. Then, on non-negative split-input variables, $N$ has two \\emph{monotone} rank-$2$ Maxout multiplication networks $N^{+}$ and $N^{-}$ satisfying\n\\begin{equation*}\n\tN(x) = N^{+}(x^+,x^-) - N^{-}(x^+,x^-), \\qquad x=x^+-x^-,\\quad x^\\pm\\ge0,\n\\end{equation*}\nEach component is monotone as a function of its non-negative split inputs and is representable there by a finite maximum of posynomials. This gives a difference-of-monotone representation; it does not establish a difference-of-convex representation in the original inputs. If the number of expanded monomials per multiplication neuron is uniformly bounded, the sizes of the split networks are linear in the size of $N$.\n\\hfill\\LeanResult{thm:multiplicative_split}",
     "lean": [
-      "HiddenMonotonicity.Circuit.maxout_multiplication_split_correct",
-      "HiddenMonotonicity.Circuit.multiplicative_streams_monotone",
-      "HiddenMonotonicity.Circuit.ordinary_polynomial_stream_witnesses"
+      "HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion",
+      "HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery"
     ],
-    "scope": "Actual shared-node arithmetic DAG, signed affine/residual/max/product operations, exact rank-two max/product split and nonnegative-orthant monotonicity. Explicit nonempty finite lists of ordinary MvPolynomials with nonnegative coefficients represent each stream. Concrete tensor indexing is a flattening boundary."
+    "scope": "Actual finite shared Maxout/product DAG with arbitrary signed affine weights/biases and natural exponents. Constructed positive rank-two DAG has exact all-node recovery, monotonicity on nonnegative split inputs and finite maxima of nonnegative-coefficient ordinary polynomials; explicit vertices-plus-arcs size bound C(K,D) times source size under fixed rank and bounded total multiplication degree. Canonical input recovery is explicit; raw-input splitting is a separate preprocessing map. The chapter-7 variant bounds the actual expanded monomial count; its degree bound is derived, not assumed from compiled size."
   },
   {
     "source_group": "thesis",

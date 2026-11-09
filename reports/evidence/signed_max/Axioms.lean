@@ -1,0 +1,14 @@
+import Thesis.SignedMaxReduction
+#print axioms Thesis.SignedMaxIdentities.baseMax_insert_dominated
+#print axioms Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion
+#print axioms Thesis.SignedMaxIdentities.alternating_max_zero
+#print axioms Thesis.AffineMaxPartition.dependence_coefficients
+#print axioms Thesis.AffineMaxPartition.oriented_dependence
+#print axioms Thesis.AffineMaxPartition.weighted_affine_constant
+#print axioms Thesis.AffineMaxPartition.global_partition
+#print axioms Thesis.SignedMaxReduction.restrict_card
+#print axioms Thesis.SignedMaxReduction.restrict_eval
+#print axioms Thesis.SignedMaxReduction.eval_mem_smallSpan
+#print axioms Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan
+#print axioms Thesis.SignedMaxReduction.polynomial_signed_small_max
+#print axioms Thesis.SignedMaxReduction.difference_signed_small_max

@@ -37,6 +37,12 @@ differences are the ordinary weights and biases.
   one ReLU by a minimum, and uses a linear absolute-weight tail without biases.
   Every listed derivative is proved correct.
 
+For residual and mixed-operation graphs, `Circuit` appends one operation to a
+finite table of earlier node values. References preserve sharing. A graph cut
+keeps the actual prefix table and evaluates the remaining suffix from that table;
+the derivative and full-trajectory visit theorems refer to those same states.
+The ordered max-pool adapter preserves the paper's smallest-operand-index ties.
+
 Continuous linear maps carry the finite-dimensional derivatives without hiding
 matrix transposes or requiring all layer widths to be equal. They are ordinary
 linear functions with continuity recorded for mathlib's differentiation API.
@@ -48,6 +54,9 @@ linear functions with continuity recorded for mathlib's differentiation API.
 | `HiddenMonotonicity/Network.lean` | Shared finite MLP, original and split evaluation, exact recovery and common-shift law |
 | `HiddenMonotonicity/Decomposition.lean` | Same network with generic scalar/pair activations; full-network validity and mixing recovery |
 | `HiddenMonotonicity/Convexity.lean` | Nonnegative split streams are monotone and Jensen convex |
+| `HiddenMonotonicity/ConvexInput.lean` | Arbitrary convex input lifts, mixing-one recovery, and convex actual affine heads |
+| `HiddenMonotonicity/Convolution.lean` | Indexed multi-channel kernel/stencil sums, exact sparse-matrix bridge, split properties and all four Jacobian blocks |
+| `HiddenMonotonicity/SplitDAGSize.lean`, `MaxoutProductSize.lean` | Explicit shared positive graph construction, rank-two split and linear vertex-plus-arc bound under fixed rank/degree or expansion count |
 | `HiddenMonotonicity/NetworkDerivative.lean` | Actual Frechet derivatives of the full split network |
 | `HiddenMonotonicity/MaskedTrace.lean`, `OriginalTrace.lean` | Gate extraction, original/split Jacobian agreement, canonical absolute-weight products |
 | `HiddenMonotonicity/StabilizedBackward.lean` | Full varying-width shifted algorithm, mass law, finite correction sum, half-shift specialization |
@@ -60,11 +69,17 @@ linear functions with continuity recorded for mathlib's differentiation API.
 | `Thesis/SoftplusBackward.lean` | Actual full Softplus-network derivative and discounted occupation recovery |
 | `Thesis/Games.lean` | Finite path laws, dynamic programming, Hellinger overlap, per-pixel partition, Doob conditioning |
 | `Thesis/Regularization.lean` | Softplus derivatives, binary entropy optimizer, finite Gibbs variational principle |
+| `Thesis/GeneralRegularization.lean` | Compact optimizer existence, convex monotone Lipschitz conjugate activation, arbitrary chosen-pair validity and actual affine readout recovery |
+| `Thesis/CPWLLattice.lean`, `SignedMaxReduction.lean` | Genuine finite-polyhedral CPWL cover to a max-affine difference and a signed sum of maxima of at most d+1 affine functions |
+| `Thesis/ReLUCompiler.lean`, `CPWLReLUEquivalence.lean` | Actual shared-network realization and the literal ceil(log₂(d+1))+1 total-depth bound |
 | `HiddenMonotonicity/ModernActivationCorollary.lean` | Actual GELU, Swish, Mish, tanh, sigmoid and softplus curvature constructions |
 | `HiddenMonotonicity/DistributionalRegularity.lean` | Classical regularity derived from weak second derivatives, then full curvature minimality |
 | `Thesis/RoutingNetwork.lean` | Actual network game, original log utilities for every profile, canonical SPNE and anchor forward values |
 | `Thesis/StoppingRegions.lean`, `StoppingPaths.lean` | Fixed-region affine monotonicity, actual geometric parity paths and bias sources |
 | `Thesis/StoppingCircuit.lean` | Shared-graph stopping/WTA recovery and local addition/maxpool derivative–occupation steps |
+| `Thesis/StoppingDAGIntermediate.lean` | Full normalized shared-graph paths, bias payoffs, intermediate-state visits and actual stopping/ordinary derivative identities |
+| `Thesis/StoppingOrderedPool.lean` | Source smallest-operand-index tie convention, exact pair/kernel forwarding, and source-to-DAG bridge |
+| `Thesis/SoftplusLimits.lean` | Actual pair limit as positive temperature vanishes; distinct diagonal/tie limit |
 
 ## Assumptions and boundaries
 

@@ -1,0 +1,151 @@
+{
+  "version": 1,
+  "status": "complete_new_leaves_frozen",
+  "timestamp_utc": "2026-11-09 12:00:47 UTC",
+  "source_anchor": {
+    "file": "tex/chapters/02_foundations.tex",
+    "label": "thm:cpwl_relu_equivalence",
+    "supporting_claim": "Every finite max-affine polynomial, and each difference of two such polynomials, is a finite real linear combination of maxima of at most d+1 affine functions."
+  },
+  "scope": "Dimension-only signed-max representation. Does not itself assert a feedforward network realization or depth bound; those require the separate CPWL bridge and network compiler.",
+  "headlines": [
+    "Thesis.SignedMaxReduction.polynomial_signed_small_max",
+    "Thesis.SignedMaxReduction.difference_signed_small_max"
+  ],
+  "modules": [
+    "Thesis.SignedMaxIdentities",
+    "Thesis.AffineMaxPartition",
+    "Thesis.SignedMaxReduction"
+  ],
+  "proof_steps": [
+    "More than d+1 slopes in the d-dimensional coordinate vector space are affinely dependent. Extract nonzero weights whose sum and weighted slope sum vanish.",
+    "Choose the sign of the dependence so the weighted intercept sum is nonpositive. The positive-weight set A and its complement B are nonempty. For every input, some affine value in A is at most the maximum over B. This includes arbitrary biases without lifting the dimension.",
+    "Pair subsets containing a dominated a with the subsets omitting a. This gives an exact alternating powerset identity. The dominated member may vary with the input; the partition and identity coefficients are fixed globally.",
+    "Isolate the full-maximum term, whose coefficient is (-1)^card(A), and induct on the strictly smaller cardinalities of all remaining restricted maxima.",
+    "Extract finitely supported real coefficients from span membership and reindex their finite support by Fin N. Submodule subtraction gives the polynomial-difference version."
+  ],
+  "boundary_cases": [
+    "Input dimension zero is allowed: the resulting maxima have at most one affine term.",
+    "Each max-affine polynomial has a nonempty finite term set by its actual structure; every restricted maximum used in the proof contains the nonempty base B.",
+    "Repeated slopes, repeated full affine terms, and arbitrary positive or negative intercepts are allowed.",
+    "No generic-position, strict positivity, full-dimensional-cell, or pre-existing representation assumption is introduced.",
+    "The outer finite sum may be empty for the zero function. Every indexed maximum remains nonempty.",
+    "Coefficients are arbitrary real numbers; no width or coefficient-size bound is asserted."
+  ],
+  "validation": {
+    "focused_modules": "All three new leaves compiled sequentially; final module logs are clean.",
+    "exact_type_targets": 13,
+    "exact_type_result": "passed; unused binder-name warnings in the independent contract driver only",
+    "axiom_result": "All 13 theorems depend only on propext, Classical.choice, Quot.sound.",
+    "no_sorry_or_new_axioms": true,
+    "full_build_run": false,
+    "frozen_frontier_edited": false,
+    "source_or_root_or_coverage_edited": false
+  },
+  "contracts": "reports/signed-max-expected-types.json",
+  "evidence": "reports/evidence/signed_max/",
+  "reviewed_declarations": [
+    {
+      "declaration": "Thesis.SignedMaxIdentities.baseMax",
+      "kind": "def",
+      "file": "formalization/Thesis/SignedMaxIdentities.lean",
+      "line": 13
+    },
+    {
+      "declaration": "Thesis.SignedMaxIdentities.baseMax_insert_dominated",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SignedMaxIdentities.lean",
+      "line": 16
+    },
+    {
+      "declaration": "Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SignedMaxIdentities.lean",
+      "line": 29
+    },
+    {
+      "declaration": "Thesis.SignedMaxIdentities.alternating_max_zero",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SignedMaxIdentities.lean",
+      "line": 45
+    },
+    {
+      "declaration": "Thesis.AffineMaxPartition.dependence_coefficients",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AffineMaxPartition.lean",
+      "line": 15
+    },
+    {
+      "declaration": "Thesis.AffineMaxPartition.oriented_dependence",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AffineMaxPartition.lean",
+      "line": 30
+    },
+    {
+      "declaration": "Thesis.AffineMaxPartition.weighted_affine_constant",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AffineMaxPartition.lean",
+      "line": 43
+    },
+    {
+      "declaration": "Thesis.AffineMaxPartition.global_partition",
+      "kind": "theorem",
+      "file": "formalization/Thesis/AffineMaxPartition.lean",
+      "line": 52
+    },
+    {
+      "declaration": "Thesis.SignedMaxReduction.restrict",
+      "kind": "def",
+      "file": "formalization/Thesis/SignedMaxReduction.lean",
+      "line": 13
+    },
+    {
+      "declaration": "Thesis.SignedMaxReduction.restrict_card",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SignedMaxReduction.lean",
+      "line": 21
+    },
+    {
+      "declaration": "Thesis.SignedMaxReduction.restrict_eval",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SignedMaxReduction.lean",
+      "line": 24
+    },
+    {
+      "declaration": "Thesis.SignedMaxReduction.smallSpan",
+      "kind": "def",
+      "file": "formalization/Thesis/SignedMaxReduction.lean",
+      "line": 37
+    },
+    {
+      "declaration": "Thesis.SignedMaxReduction.eval_mem_smallSpan",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SignedMaxReduction.lean",
+      "line": 41
+    },
+    {
+      "declaration": "Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SignedMaxReduction.lean",
+      "line": 94
+    },
+    {
+      "declaration": "Thesis.SignedMaxReduction.polynomial_signed_small_max",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SignedMaxReduction.lean",
+      "line": 115
+    },
+    {
+      "declaration": "Thesis.SignedMaxReduction.difference_signed_small_max",
+      "kind": "theorem",
+      "file": "formalization/Thesis/SignedMaxReduction.lean",
+      "line": 121
+    }
+  ],
+  "sha256": {
+    "formalization/Thesis/SignedMaxIdentities.lean": "3c9d291991cda5cc8dfd8081b7922257df46c1f8f363cbd5bd9d188e4a4af733",
+    "formalization/Thesis/AffineMaxPartition.lean": "3cc9fa0b2862f8af4e9ae59aca642cc0939652e2b5f637e6c802eb18cbc11420",
+    "formalization/Thesis/SignedMaxReduction.lean": "7f68655ab78a3c8d4da8ec77a6e3e4a28c8e7fcc820651fc302ee1309595c10d"
+  },
+  "remaining_integration": "Compose difference_signed_small_max with CPWLLattice.cpwl_polynomial_difference, then compile the bounded-size maxima as balanced ReLU computations and prove layer accounting. These steps belong to repair_foundations; they are not silently assumed by this report."
+}

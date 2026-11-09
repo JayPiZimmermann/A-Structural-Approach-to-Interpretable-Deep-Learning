@@ -43,3 +43,6 @@ import HiddenMonotonicity.DifferentiableBackward
 import HiddenMonotonicity.ModernTanh
 import HiddenMonotonicity.DistributionalRegularity
 import HiddenMonotonicity.ModernActivationCorollary
+import HiddenMonotonicity.ConvexInput
+import HiddenMonotonicity.Convolution
+import HiddenMonotonicity.MaxoutProductSize

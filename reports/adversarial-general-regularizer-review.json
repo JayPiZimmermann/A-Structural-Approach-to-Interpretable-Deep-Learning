@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "reviewer": "independent adversarial reviewer /root/attack_hidden",
+  "review_date": "2026-11-09",
+  "verdict": "PASS_GENERIC_REGULARIZED_DECOMPOSITION_AND_ACTUAL_AFFINE_READOUT",
+  "findings": [],
+  "production_mutations": false,
+  "shared_olean_writes": false,
+  "summary": "Compact lower-semicontinuous finite convex costs genuinely yield optimizers and the claimed scalar value properties. Arbitrary maximizing selections recover the full shared network and its signed biased affine output. Hard and entropy specializations use actual formulas.",
+  "source": [
+    "tex/chapters/03_decompositions.tex:374\u2013453"
+  ],
+  "model_correspondence": [
+    {
+      "topic": "Primitive hypotheses and existence",
+      "locations": [
+        "formalization/Thesis/GeneralRegularization.lean:19",
+        "formalization/Thesis/GeneralRegularization.lean:27"
+      ],
+      "verdict": "faithful, noncircular",
+      "evidence": "Regularizer contains only a finite real cost, lower semicontinuity, convexity and nonpositivity on actual Icc 0 1. Compactness and upper semicontinuity construct the optimizer. Its objective maximum is proved an IsGreatest and actual supremum, not assumed."
+    },
+    {
+      "topic": "Convex value, monotonicity, Lipschitz bound, derivative",
+      "locations": [
+        "formalization/Thesis/GeneralRegularization.lean:65",
+        "formalization/Thesis/GeneralRegularization.lean:117"
+      ],
+      "verdict": "genuine supporting-line argument",
+      "evidence": "Each maximizing probability supplies an affine lower support. Actual probability interval bounds yield monotonicity and 1-Lipschitz continuity. Fermat gives every optimizer equals deriv only at differentiable points; nonunique hard ties are not silently declared differentiable."
+    },
+    {
+      "topic": "Full network and output",
+      "locations": [
+        "formalization/Thesis/GeneralRegularization.lean:141",
+        "formalization/Thesis/GeneralRegularization.lean:164",
+        "formalization/Thesis/GeneralRegularization.lean:174",
+        "formalization/Thesis/GeneralRegularization.lean:266"
+      ],
+      "verdict": "actual shared definitions",
+      "evidence": "pairWith subtracts cost in its positive stream; validity follows optimizer value equality, and nonnegativity follows nonpositive cost. Network.forwardWith and decomposeWith use the same arbitrary varying-width network and actual biases. The ungated final affine readout includes unrestricted signed weight difference and signed bias difference."
+    },
+    {
+      "topic": "Hard and entropy bridges",
+      "locations": [
+        "formalization/Thesis/GeneralRegularization.lean:193",
+        "formalization/Thesis/GeneralRegularization.lean:218",
+        "formalization/Thesis/GeneralRegularization.lean:225"
+      ],
+      "verdict": "literal specializations",
+      "evidence": "Zero cost hardGate explicitly stops at zero and yields literal stopPair. Actual negative binary entropy has sigmoid optimizer against every probability including endpoints, value softplus, and literal softSplit pair. An independent consumer derives arbitrary chosen entropy gate equals sigmoid from generic derivative uniqueness."
+    }
+  ],
+  "validation": {
+    "contracts": 8,
+    "exact_types": "passed",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "current_source_compile_exit": 0,
+    "boundary_exit": 0,
+    "boundary_cases": [
+      "shifted constant nonpositive cost gives ReLU+2 without endpoint normalization",
+      "hard tie has both optimizers but distinct streams",
+      "canonical gate makes arbitrary-selection hypothesis satisfiable",
+      "activation nonnegative",
+      "any selected entropy optimizer equals sigmoid",
+      "signed affine readout with negative output and bias"
+    ],
+    "independent_experiment": {
+      "seed": 20261109,
+      "counts": {
+        "optimizer_comparisons": 4200,
+        "support_inequalities": 5000,
+        "pair_checks": 392,
+        "regularized_networks": 240,
+        "negative_affine_outputs": 115,
+        "convex_input_jensen": 4320
+      },
+      "failures": [],
+      "negative_controls_detected": [
+        "claiming tie-selection-independent streams",
+        "dropping nonnegative convex readout weights"
+      ],
+      "cases_sha256": "66c87ce5cf914e40586baba064f5d212cc7849e9fbdb0471cb372542ae2f7202",
+      "producer_sha256": "9befec2601b6433f5541d44d5e90060b99b98f7a45245e4cffb6f2af517a0283",
+      "scope": "Independent exact finite checks; quadratic convex costs and nonlinear convex lifts supplement universal Lean contracts."
+    },
+    "driver": "reports/evidence/general-regularizer-review/ExactTypes.lean",
+    "boundary_driver": "reports/evidence/general-regularizer-review/Boundary.lean"
+  },
+  "reviewed_contracts": [
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.exists_optimizer",
+      "expected_type": "\u2200 (R : Regularizer) (z : \u211d), \u2203 p \u2208 Icc (0 : \u211d) 1, IsMaxOn (objective R z) (Icc 0 1) p",
+      "review_id": "GENERAL-REGULARIZER-exists_optimizer",
+      "scope": "Optimizer existence from lower semicontinuity on the compact closed probability interval, including endpoints."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.activation_isGreatest",
+      "expected_type": "\u2200 (R : Regularizer) (z : \u211d), IsGreatest ((objective R z) '' Icc (0 : \u211d) 1) (activation R z)",
+      "review_id": "GENERAL-REGULARIZER-activation_isGreatest",
+      "scope": "The chosen-value definition is proved to be the actual maximum of the binary objective."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.regularized_decomposition_validity",
+      "expected_type": "\u2200 (R : Regularizer) (\u03c0 : \u211d \u2192 \u211d)\n(h\u03c0 : \u2200 z, \u03c0 z \u2208 Icc (0 : \u211d) 1 \u2227 IsMaxOn (objective R z) (Icc 0 1) (\u03c0 z))\n{n m k : \u2115} (net : Network n m) (x : PairVec n)\n(wp wn : Matrix (Fin k) (Fin m) \u211d) (bp bn : Vec k),\nValidPairActivation (activation R) (pairWith R \u03c0) \u2227\nNonnegativePairActivation (pairWith R \u03c0) \u2227\nConvexOn \u211d univ (activation R) \u2227 Monotone (activation R) \u2227\nLipschitzWith 1 (activation R) \u2227\n(\u2200 z, DifferentiableAt \u211d (activation R) z \u2192 \u03c0 z = deriv (activation R) z) \u2227\n(preP wp wn (net.decomposeWith (pairWith R \u03c0) x)+bp -\n(preN wp wn (net.decomposeWith (pairWith R \u03c0) x)+bn) =\naffineLayer wp wn bp bn (net.forwardWith (activation R) (x.1-x.2)))",
+      "review_id": "GENERAL-REGULARIZER-regularized_decomposition_validity",
+      "scope": "Complete regularized-pair validity, convex/nondecreasing/1-Lipschitz activation, every optimizer equals actual derivative at differentiable points, and exact arbitrary-width biased network recovery with ungated signed affine readout."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.zero_activation",
+      "expected_type": "\u2200 z : \u211d, activation zeroRegularizer z = relu z",
+      "review_id": "GENERAL-REGULARIZER-zero_activation",
+      "scope": "Unregularized variational value equals ReLU."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.zero_pair_is_stopping",
+      "expected_type": "pairWith zeroRegularizer hardGate = Thesis.StoppingDecomposition.stopPair",
+      "review_id": "GENERAL-REGULARIZER-zero_pair_is_stopping",
+      "scope": "Exact pair equality with strict-positive gate and stopping at zero."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.sigmoid_optimal",
+      "expected_type": "\u2200 (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8) (z : \u211d),\nThesis.Regularization.gate \u03b8 z \u2208 Icc (0 : \u211d) 1 \u2227\nIsMaxOn (objective (entropyRegularizer \u03b8 h\u03b8) z) (Icc 0 1)\n(Thesis.Regularization.gate \u03b8 z)",
+      "review_id": "GENERAL-REGULARIZER-sigmoid_optimal",
+      "scope": "Actual negative-binary-entropy regularizer and its sigmoid optimizer, including comparison against endpoint policies."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.entropy_activation",
+      "expected_type": "\u2200 (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8) (z : \u211d), activation (entropyRegularizer \u03b8 h\u03b8) z = Thesis.Regularization.softplus \u03b8 z",
+      "review_id": "GENERAL-REGULARIZER-entropy_activation",
+      "scope": "The general variational activation specializes exactly to the existing softplus function."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.entropy_pair_is_softSplit",
+      "expected_type": "\u2200 (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8) (z : \u211d \u00d7 \u211d),\npairWith (entropyRegularizer \u03b8 h\u03b8) (Thesis.Regularization.gate \u03b8) z =\nThesis.Regularization.softSplit \u03b8 z.1 z.2",
+      "review_id": "GENERAL-REGULARIZER-entropy_pair_is_softSplit",
+      "scope": "The generic pair specializes exactly to the existing entropy split, bridging shared network constructions."
+    }
+  ],
+  "scope_limits": [
+    "Finite real costs on the closed probability interval, matching the stated source codomain; extended-real barrier costs are not claimed.",
+    "No generic smoothness, second-derivative absolute continuity, or GeLU/Swish representation follows from this theorem.",
+    "The maximizing selection can alter the two streams at nondifferentiable ties; the reconstructed difference is selection independent."
+  ],
+  "evidence_directory": "reports/evidence/general-regularizer-review"
+}

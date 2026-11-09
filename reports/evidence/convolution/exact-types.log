@@ -1,0 +1,35 @@
+@HiddenMonotonicity.Convolution.applyKernel_eq_mulVec : ∀ {ci co ip op taps : ℕ} (K : Fin co → Fin ci → Fin taps → ℝ)
+  (stencil : Fin op → Fin taps → Option (Fin ip)) (x : HiddenMonotonicity.Vec (ci * ip)),
+  HiddenMonotonicity.Convolution.applyKernel K stencil x =
+    (HiddenMonotonicity.Convolution.kernelMatrix K stencil).mulVec x
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.Convolution.applyKernel_hasFDerivAt : ∀ {ci co ip op taps : ℕ} (K : Fin co → Fin ci → Fin taps → ℝ)
+  (stencil : Fin op → Fin taps → Option (Fin ip)) (x : HiddenMonotonicity.Vec (ci * ip)),
+  HasFDerivAt (HiddenMonotonicity.Convolution.applyKernel K stencil)
+    (HiddenMonotonicity.matrixCLM (HiddenMonotonicity.Convolution.kernelMatrix K stencil)) x
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt : ∀ {ci co ip op taps : ℕ} (K : Fin co → Fin ci → Fin taps → ℝ)
+  (stencil : Fin op → Fin taps → Option (Fin ip)) (b : Fin co → ℝ) (x : HiddenMonotonicity.PairVec (ci * ip)),
+  HasFDerivAt (HiddenMonotonicity.Convolution.splitKernel K stencil b)
+    ((HiddenMonotonicity.preP
+          (HiddenMonotonicity.Convolution.kernelMatrix (HiddenMonotonicity.Convolution.positiveKernel K) stencil)
+          (HiddenMonotonicity.Convolution.kernelMatrix (HiddenMonotonicity.Convolution.negativeKernel K) stencil)).prod
+      (HiddenMonotonicity.preN
+        (HiddenMonotonicity.Convolution.kernelMatrix (HiddenMonotonicity.Convolution.positiveKernel K) stencil)
+        (HiddenMonotonicity.Convolution.kernelMatrix (HiddenMonotonicity.Convolution.negativeKernel K) stencil)))
+    x
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+@HiddenMonotonicity.Convolution.splitKernel_properties : ∀ {ci co ip op taps : ℕ} (K : Fin co → Fin ci → Fin taps → ℝ)
+  (stencil : Fin op → Fin taps → Option (Fin ip)) (b : Fin co → ℝ),
+  (∀ (x : HiddenMonotonicity.PairVec (ci * ip)), 0 ≤ x → 0 ≤ HiddenMonotonicity.Convolution.splitKernel K stencil b x) ∧
+    Monotone (HiddenMonotonicity.Convolution.splitKernel K stencil b) ∧
+      (∀ (i : Fin (co * op)),
+          (ConvexOn ℝ Set.univ fun x => (HiddenMonotonicity.Convolution.splitKernel K stencil b x).1 i) ∧
+            ConvexOn ℝ Set.univ fun x => (HiddenMonotonicity.Convolution.splitKernel K stencil b x).2 i) ∧
+        ∀ (x : HiddenMonotonicity.PairVec (ci * ip)),
+          (HiddenMonotonicity.Convolution.splitKernel K stencil b x).1 -
+              (HiddenMonotonicity.Convolution.splitKernel K stencil b x).2 =
+            HiddenMonotonicity.Convolution.applyKernel K stencil (x.1 - x.2) + fun u =>
+              b (HiddenMonotonicity.Convolution.unflat u).1
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 256 project theorem declarations in the imported environment

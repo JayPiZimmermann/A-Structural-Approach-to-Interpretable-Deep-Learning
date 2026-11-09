@@ -1,0 +1,46 @@
+{
+  "reviewer": "/root/repair_foundations",
+  "status": "passed",
+  "source": "formalization/Thesis/SoftplusLimits.lean",
+  "source_sha256": "5da96f5843caf39417c507bb9cdc75c7dc8b637f5bf57f11719831494bcd9b8c",
+  "contract": "reports/softplus-limits-expected-types.json",
+  "contract_sha256": "9015d72a5e7614cd616ae620e5d8b752402f2c42019f44b66be04985aca4d29c",
+  "scope": "The positive-temperature, temperature-to-zero pair limit clause of cor:fsoft, with the excluded diagonal explicitly characterized. This review makes no SPNE or whole-network convergence claim.",
+  "semantic_findings": [
+    "The filter is the right-hand neighborhood of zero, so the temperature approaches zero through positive values.",
+    "gate is the actual sigmoid of the score divided by temperature. Strictly positive and negative fixed scores tend to the corresponding infinities, yielding gate limits one and zero respectively.",
+    "softSplit is the actual pair (gate*u + temperature*binaryEntropy(gate), gate*v). Continuity of binary entropy on the closed interval, including its endpoints, makes the scaled entropy term vanish.",
+    "The two pair coordinates converge to the actual strict stopPair off the diagonal, with separate positive-score and negative-score cases. The proof is not restricted to a statement about their difference.",
+    "At a tied score the gate is exactly one half and the limit is (u/2,u/2). The theorem does not incorrectly extend strict-stopping pair convergence to nonzero tied inputs.",
+    "The statements accept arbitrary signed real inputs; the pairwise analytic limit needs no input positivity or gate differentiability premise."
+  ],
+  "findings": [],
+  "evidence": "reports/evidence/softplus-limits-review/",
+  "production_edits": [],
+  "validation": {
+    "fresh_source_compile_exit": 0,
+    "direct_exact_type_module_universe_and_axiom_exit": 0,
+    "exact_target_count": 4,
+    "imported_project_theorem_count": 528,
+    "commands": [
+      [
+        "lake",
+        "env",
+        "lean",
+        "Thesis/SoftplusLimits.lean"
+      ],
+      [
+        "lake",
+        "env",
+        "lean",
+        "../reports/evidence/softplus-limits-review/ExactTypes.lean"
+      ]
+    ],
+    "cwd": "formalization",
+    "allowed_axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  }
+}

@@ -1,0 +1,234 @@
+@earliestWinner_spec : ∀ {k : Nat}
+  (v :
+    Fin
+        (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+          (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))) →
+      Real),
+  And
+    (∀
+      (i :
+        Fin
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))),
+      @LE.le.{0} Real Real.instLE (v i) (v (@earliestWinner k v)))
+    (∀
+      (i :
+        Fin
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))),
+      @Eq.{1} Real (v i) (v (@earliestWinner k v)) →
+        @LE.le.{0}
+          (Fin
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+          (@instLEFin
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+          (@earliestWinner k v) i)
+'Thesis.StoppingDAG.earliestWinner_spec' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@orderedInputPool_source : ∀ {n k : Nat}
+  (inputs :
+    Fin
+        (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+          (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))) →
+      Fin n)
+  (x : PairVec n),
+  have values := fun i =>
+    @HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+      (@Prod.fst.{0, 0} (Vec n) (Vec n) x (inputs i)) (@Prod.snd.{0, 0} (Vec n) (Vec n) x (inputs i));
+  have winner := @earliestWinner k values;
+  And
+    (∀
+      (i :
+        Fin
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))),
+      @LE.le.{0} Real Real.instLE (values i) (values winner))
+    (And
+      (∀
+        (i :
+          Fin
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))),
+        @Eq.{1} Real (values i) (values winner) →
+          @LE.le.{0}
+            (Fin
+              (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+                (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+            (@instLEFin
+              (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+                (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+            winner i)
+      (And
+        (@Eq.{1} (Prod.{0, 0} Real Real) (@stoppingExpr n (@orderedInputPool n k inputs) x)
+          (@Prod.mk.{0, 0} Real Real (@Prod.fst.{0, 0} (Vec n) (Vec n) x (inputs winner))
+            (@Prod.snd.{0, 0} (Vec n) (Vec n) x (inputs winner))))
+        (@Eq.{1} (PairVec n) (@expressionKernel n (@orderedInputPool n k inputs) x)
+          (@Prod.mk.{0, 0} (Fin n → Real) (Vec n)
+            (@Pi.single.{0, 0} (Fin n) (fun j => Real) (fun i => Real.instZero) (instDecidableEqFin n) (inputs winner)
+              (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+            (@OfNat.ofNat.{0} (Vec n) (nat_lit 0)
+              (@Zero.toOfNat0.{0} (Vec n) (@Pi.instZero.{0, 0} (Fin n) (fun a => Real) fun i => Real.instZero)))))))
+'Thesis.StoppingDAG.orderedInputPool_source' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/stopping-dag-review/ordered-pool/ExactTypes.lean:22:53: warning: Variable name `horder` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _horder
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@orderedInputPool_minimum_graph_index : ∀ {n k : Nat}
+  (inputs :
+    Fin
+        (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+          (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))) →
+      Fin n),
+  @Monotone.{0, 0}
+      (Fin
+        (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+          (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+      (Fin n)
+      (@PartialOrder.toPreorder.{0}
+        (Fin
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+        (@Fin.instPartialOrder
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))))
+      (@PartialOrder.toPreorder.{0} (Fin n) (@Fin.instPartialOrder n)) inputs →
+    ∀ (x : PairVec n),
+      have values := fun i =>
+        @HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+          (@Prod.fst.{0, 0} (Vec n) (Vec n) x (inputs i)) (@Prod.snd.{0, 0} (Vec n) (Vec n) x (inputs i));
+      have winner := @earliestWinner k values;
+      ∀
+        (i :
+          Fin
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))),
+        @Eq.{1} Real (values i) (values winner) → @LE.le.{0} (Fin n) (@instLEFin n) (inputs winner) (inputs i)
+'Thesis.StoppingDAG.orderedInputPool_minimum_graph_index' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@orderedInputPool_dag_row : ∀ {d n k : Nat} (prior : Circuit d n)
+  (inputs :
+    Fin
+        (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+          (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))) →
+      Fin n)
+  (x : PairVec d),
+  have s := @stoppingCircuit d n prior x;
+  have winner :=
+    @earliestWinner k fun i =>
+      @HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+        (@Prod.fst.{0, 0} (Vec n) (Vec n) s (inputs i)) (@Prod.snd.{0, 0} (Vec n) (Vec n) s (inputs i));
+  And
+    (@Eq.{1} (Fin d → Real)
+      (@Prod.fst.{0, 0}
+        (Matrix.{0, 0, 0}
+          (Fin
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) n
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+          (Fin d) Real)
+        (Matrix.{0, 0, 0}
+          (Fin
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) n
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+          (Fin d) Real)
+        (@dagKernel d
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) n
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+          (@Circuit.node d n prior (@orderedInputPool n k inputs)) x)
+        (Fin.last n))
+      (@Prod.fst.{0, 0} (Matrix.{0, 0, 0} (Fin n) (Fin d) Real) (Matrix.{0, 0, 0} (Fin n) (Fin d) Real)
+        (@dagKernel d n prior x) (inputs winner)))
+    (@Eq.{1} (Fin d → Real)
+      (@Prod.snd.{0, 0}
+        (Matrix.{0, 0, 0}
+          (Fin
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) n
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+          (Fin d) Real)
+        (Matrix.{0, 0, 0}
+          (Fin
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) n
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+          (Fin d) Real)
+        (@dagKernel d
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) n
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+          (@Circuit.node d n prior (@orderedInputPool n k inputs)) x)
+        (Fin.last n))
+      (@Prod.snd.{0, 0} (Matrix.{0, 0, 0} (Fin n) (Fin d) Real) (Matrix.{0, 0, 0} (Fin n) (Fin d) Real)
+        (@dagKernel d n prior x) (inputs winner)))
+'Thesis.StoppingDAG.orderedInputPool_dag_row' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/stopping-dag-review/ordered-pool/ExactTypes.lean:36:99: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/stopping-dag-review/ordered-pool/ExactTypes.lean:36:156: warning: Variable name `hr` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hr
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@orderedPool_regular : ∀ {n k : Nat}
+  (es :
+    Fin
+        (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+          (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))) →
+      SignedExpr.{0} (Fin n))
+  (x : PairVec n)
+  (winner :
+    Fin
+      (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+        (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))),
+  (∀
+      (i :
+        Fin
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))),
+      @Ne.{1}
+          (Fin
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+          i winner →
+        @LT.lt.{0} Real Real.instLT (@score n (es i) x) (@score n (es winner) x)) →
+    @ExpressionRegular n (es winner) x → @ExpressionRegular n (@orderedPool n k es) x
+'Thesis.StoppingDAG.orderedPool_regular' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/stopping-dag-review/ordered-pool/ExactTypes.lean:43:90: warning: Variable name `hw` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hw
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@orderedInputPool_regular : ∀ {n k : Nat}
+  (inputs :
+    Fin
+        (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+          (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))) →
+      Fin n)
+  (x : PairVec n)
+  (winner :
+    Fin
+      (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+        (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))),
+  (∀
+      (i :
+        Fin
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))),
+      @Ne.{1}
+          (Fin
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) k
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+          i winner →
+        @LT.lt.{0} Real Real.instLT
+          (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+            (@Prod.fst.{0, 0} (Vec n) (Vec n) x (inputs i)) (@Prod.snd.{0, 0} (Vec n) (Vec n) x (inputs i)))
+          (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+            (@Prod.fst.{0, 0} (Vec n) (Vec n) x (inputs winner))
+            (@Prod.snd.{0, 0} (Vec n) (Vec n) x (inputs winner)))) →
+    @ExpressionRegular n (@orderedInputPool n k inputs) x
+'Thesis.StoppingDAG.orderedInputPool_regular' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]

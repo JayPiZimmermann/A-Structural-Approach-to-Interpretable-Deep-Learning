@@ -37,3 +37,8 @@ import Thesis.RoutingNetwork
 import Thesis.StoppingRegions
 import Thesis.StoppingPaths
 import Thesis.StoppingCircuit
+import Thesis.CPWLReLUEquivalence
+import Thesis.GeneralRegularization
+import Thesis.StoppingDAGIntermediate
+import Thesis.StoppingOrderedPool
+import Thesis.SoftplusLimits

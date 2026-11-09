@@ -1,0 +1,239 @@
+{
+  "version": 1,
+  "targets": [
+    {
+      "module": "Thesis.SignedMaxIdentities",
+      "declaration": "Thesis.SignedMaxIdentities.baseMax_insert_dominated",
+      "expected_type": "∀ {A : Type} [DecidableEq A] (f : A → ℝ) (B : Finset A) (hB : B.Nonempty)\n    (a : A) (ha : f a ≤ B.sup' hB f) (S : Finset A),\n    baseMax f B hB (insert a S) = baseMax f B hB S",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.SignedMaxIdentities"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/baseMax_insert_dominated",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Finite powerset cancellation for maxima with a nonempty base; the dominated element may depend on the evaluation point."
+    },
+    {
+      "module": "Thesis.SignedMaxIdentities",
+      "declaration": "Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion",
+      "expected_type": "∀ {A : Type} [DecidableEq A] (S : Finset A) (a : A) (ha : a ∈ S)\n    (F : Finset A → ℝ)\n    (hF : ∀ T ⊆ S.erase a, F (insert a T) = F T),\n    (∑ T ∈ S.powerset, (-1 : ℝ)^T.card * F T) = 0",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.SignedMaxIdentities"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/alternating_sum_zero_of_insertion",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Finite powerset cancellation for maxima with a nonempty base; the dominated element may depend on the evaluation point."
+    },
+    {
+      "module": "Thesis.SignedMaxIdentities",
+      "declaration": "Thesis.SignedMaxIdentities.alternating_max_zero",
+      "expected_type": "∀ {A : Type} [DecidableEq A] (f : A → ℝ) (A₀ B : Finset A) (hB : B.Nonempty)\n    (hdom : ∃ a ∈ A₀, f a ≤ B.sup' hB f),\n    (∑ S ∈ A₀.powerset, (-1 : ℝ)^S.card * baseMax f B hB S) = 0",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.SignedMaxIdentities"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/alternating_max_zero",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Finite powerset cancellation for maxima with a nonempty base; the dominated element may depend on the evaluation point."
+    },
+    {
+      "module": "Thesis.AffineMaxPartition",
+      "declaration": "Thesis.AffineMaxPartition.dependence_coefficients",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I)\n    (hcard : Fintype.card I + 1 < Fintype.card p.Terms),\n    ∃ c : p.Terms → ℝ, (∑ i, c i) = 0 ∧ (∑ i, c i • p.slope i) = 0 ∧ ∃ i, c i ≠ 0",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.AffineMaxPartition"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/dependence_coefficients",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Affine functions with arbitrary real intercepts in finite dimension. Nontrivial affine dependence of slopes, oriented by the intercept sum, yields a fixed global partition whenever the term count exceeds dimension+1."
+    },
+    {
+      "module": "Thesis.AffineMaxPartition",
+      "declaration": "Thesis.AffineMaxPartition.oriented_dependence",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I)\n    (hcard : Fintype.card I + 1 < Fintype.card p.Terms),\n    ∃ c : p.Terms → ℝ, (∑ i, c i) = 0 ∧ (∑ i, c i • p.slope i) = 0 ∧\n      (∑ i, c i * p.intercept i) ≤ 0 ∧ ∃ i, c i ≠ 0",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.AffineMaxPartition"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/oriented_dependence",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Affine functions with arbitrary real intercepts in finite dimension. Nontrivial affine dependence of slopes, oriented by the intercept sum, yields a fixed global partition whenever the term count exceeds dimension+1."
+    },
+    {
+      "module": "Thesis.AffineMaxPartition",
+      "declaration": "Thesis.AffineMaxPartition.weighted_affine_constant",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I) (c : p.Terms → ℝ)\n    (hv : (∑ i, c i • p.slope i) = 0) (x : I → ℝ),\n    (∑ i, c i * (p.slope i ⬝ᵥ x + p.intercept i)) = ∑ i, c i * p.intercept i",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.AffineMaxPartition"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/weighted_affine_constant",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Affine functions with arbitrary real intercepts in finite dimension. Nontrivial affine dependence of slopes, oriented by the intercept sum, yields a fixed global partition whenever the term count exceeds dimension+1."
+    },
+    {
+      "module": "Thesis.AffineMaxPartition",
+      "declaration": "Thesis.AffineMaxPartition.global_partition",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I)\n    (hcard : Fintype.card I + 1 < Fintype.card p.Terms),\n    ∃ (A B : Finset p.Terms) (_ : A.Nonempty) (hB : B.Nonempty),\n      Disjoint A B ∧ A ∪ B = Finset.univ ∧\n      ∀ x : I → ℝ, ∃ a ∈ A,\n        p.slope a ⬝ᵥ x + p.intercept a ≤ B.sup' hB (fun b => p.slope b ⬝ᵥ x + p.intercept b)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.AffineMaxPartition"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/global_partition",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Affine functions with arbitrary real intercepts in finite dimension. Nontrivial affine dependence of slopes, oriented by the intercept sum, yields a fixed global partition whenever the term count exceeds dimension+1."
+    },
+    {
+      "module": "Thesis.SignedMaxReduction",
+      "declaration": "Thesis.SignedMaxReduction.restrict_card",
+      "expected_type": "∀ {I : Type} (p : Polynomial I) (S : Finset p.Terms) (hS : S.Nonempty),\n    Fintype.card (restrict p S hS).Terms = S.card",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.SignedMaxReduction"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/restrict_card",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Exact representation of every finite nonempty max-affine polynomial, and differences of two such polynomials, by a finite real linear combination of maxima of at most dimension+1 affine functions. No representation hypothesis on the polynomial; no network-depth claim in this leaf."
+    },
+    {
+      "module": "Thesis.SignedMaxReduction",
+      "declaration": "Thesis.SignedMaxReduction.restrict_eval",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I) (S : Finset p.Terms) (hS : S.Nonempty)\n    (x : I → ℝ),\n    (restrict p S hS).eval x = S.sup' hS (fun a => p.slope a ⬝ᵥ x + p.intercept a)",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.SignedMaxReduction"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/restrict_eval",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Exact representation of every finite nonempty max-affine polynomial, and differences of two such polynomials, by a finite real linear combination of maxima of at most dimension+1 affine functions. No representation hypothesis on the polynomial; no network-depth claim in this leaf."
+    },
+    {
+      "module": "Thesis.SignedMaxReduction",
+      "declaration": "Thesis.SignedMaxReduction.eval_mem_smallSpan",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I),\n    p.eval ∈ smallSpan I",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.SignedMaxReduction"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/eval_mem_smallSpan",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Exact representation of every finite nonempty max-affine polynomial, and differences of two such polynomials, by a finite real linear combination of maxima of at most dimension+1 affine functions. No representation hypothesis on the polynomial; no network-depth claim in this leaf."
+    },
+    {
+      "module": "Thesis.SignedMaxReduction",
+      "declaration": "Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan",
+      "expected_type": "∀ {I : Type} [Fintype I] (f : (I → ℝ) → ℝ)\n    (hf : f ∈ smallSpan I),\n    ∃ (N : ℕ) (c : Fin N → ℝ) (q : Fin N → Polynomial I),\n      (∀ j, Fintype.card (q j).Terms ≤ Fintype.card I + 1) ∧\n      ∀ x, f x = ∑ j, c j * (q j).eval x",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.SignedMaxReduction"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/finite_representation_of_mem_smallSpan",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Exact representation of every finite nonempty max-affine polynomial, and differences of two such polynomials, by a finite real linear combination of maxima of at most dimension+1 affine functions. No representation hypothesis on the polynomial; no network-depth claim in this leaf."
+    },
+    {
+      "module": "Thesis.SignedMaxReduction",
+      "declaration": "Thesis.SignedMaxReduction.polynomial_signed_small_max",
+      "expected_type": "∀ {I : Type} [Fintype I] (p : Polynomial I),\n    ∃ (N : ℕ) (c : Fin N → ℝ) (q : Fin N → Polynomial I),\n      (∀ j, Fintype.card (q j).Terms ≤ Fintype.card I + 1) ∧\n      ∀ x, p.eval x = ∑ j, c j * (q j).eval x",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.SignedMaxReduction"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/polynomial_signed_small_max",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Exact representation of every finite nonempty max-affine polynomial, and differences of two such polynomials, by a finite real linear combination of maxima of at most dimension+1 affine functions. No representation hypothesis on the polynomial; no network-depth claim in this leaf."
+    },
+    {
+      "module": "Thesis.SignedMaxReduction",
+      "declaration": "Thesis.SignedMaxReduction.difference_signed_small_max",
+      "expected_type": "∀ {I : Type} [Fintype I] (p r : Polynomial I),\n    ∃ (N : ℕ) (c : Fin N → ℝ) (q : Fin N → Polynomial I),\n      (∀ j, Fintype.card (q j).Terms ≤ Fintype.card I + 1) ∧\n      ∀ x, p.eval x - r.eval x = ∑ j, c j * (q j).eval x",
+      "open_namespaces": [
+        "Finset",
+        "Matrix",
+        "Thesis.Tropical",
+        "Thesis.SignedMaxReduction"
+      ],
+      "open_scopes": [
+        "Classical"
+      ],
+      "universes": [],
+      "review_id": "attack_games/signed-max/difference_signed_small_max",
+      "review_evidence": "reports/evidence/signed_max/ExactTypes.lean",
+      "scope": "Exact representation of every finite nonempty max-affine polynomial, and differences of two such polynomials, by a finite real linear combination of maxima of at most dimension+1 affine functions. No representation hypothesis on the polynomial; no network-depth claim in this leaf."
+    }
+  ]
+}

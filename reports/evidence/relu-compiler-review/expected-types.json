@@ -1,0 +1,114 @@
+{
+  "targets": [
+    {
+      "open_namespaces": [
+        "Set",
+        "Filter",
+        "Matrix",
+        "Finset",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis.ReLURepresentation"
+      ],
+      "open_scopes": [
+        "Topology"
+      ],
+      "universes": [],
+      "review_evidence": "reports/cpwl-repairs.md",
+      "module": "Thesis.ReLUCompiler",
+      "declaration": "Thesis.ReLURepresentation.affine_max_forest",
+      "expected_type": "∀ {n : ℕ} (k : ℕ) (O : Type) [Fintype O]\n(w : O → (Fin k → Bool) → Fin n → ℝ) (b : O → (Fin k → Bool) → ℝ),\n∃ H : AffineHead n O, H.depth=k ∧\n∀ x i, H.eval x i=finiteMax (fun t => w i t ⬝ᵥ x+b i t)",
+      "review_id": "CPWL-affine_max_forest",
+      "scope": "Actual shared Network and affine readout realizing any finite forest of affine maxima with 2^k binary-indexed leaves each, with exactly k hidden layers. No pre-existing network realization hypothesis. Empty output forests and k=0 are included."
+    },
+    {
+      "open_namespaces": [
+        "Set",
+        "Filter",
+        "Matrix",
+        "Finset",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis.ReLURepresentation"
+      ],
+      "open_scopes": [
+        "Topology"
+      ],
+      "universes": [],
+      "review_evidence": "reports/cpwl-repairs.md",
+      "module": "Thesis.ReLUCompiler",
+      "declaration": "Thesis.ReLURepresentation.polynomial_forest",
+      "expected_type": "∀ {n k : ℕ} (O : Type) [Fintype O]\n(p : O → Thesis.Tropical.Polynomial (Fin n))\n(hcard : ∀ i, Fintype.card (p i).Terms≤2^k),\n∃ H : AffineHead n O, H.depth=k ∧ ∀ x i, H.eval x i=(p i).eval x",
+      "review_id": "CPWL-polynomial_forest",
+      "scope": "Any finite collection of actual nonempty max-affine polynomials with at most 2^k terms each; exact shared-network realization with k hidden layers. Padding uses a proved surjection onto each term type, including repeated affine terms."
+    },
+    {
+      "open_namespaces": [
+        "Set",
+        "Filter",
+        "Matrix",
+        "Finset",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis.ReLURepresentation"
+      ],
+      "open_scopes": [
+        "Topology"
+      ],
+      "universes": [],
+      "review_evidence": "reports/cpwl-repairs.md",
+      "module": "Thesis.ReLUCompiler",
+      "declaration": "Thesis.ReLURepresentation.signed_polynomial_compiler",
+      "expected_type": "∀ {n k : ℕ} (O : Type) [Fintype O]\n(p : O → Thesis.Tropical.Polynomial (Fin n)) (c : O → ℝ)\n(hcard : ∀ i, Fintype.card (p i).Terms≤2^k),\n∃ H : AffineHead n Unit, H.depth=k ∧\n∀ x, H.eval x ()=∑ i, c i*(p i).eval x",
+      "review_id": "CPWL-signed_polynomial_compiler",
+      "scope": "Arbitrary finite signed real linear combinations of max-affine polynomials compiled into the same Network datatype and one actual affine readout. Hidden depth is k, affine readout adds no hidden layer. The zero-summand case is included."
+    },
+    {
+      "open_namespaces": [
+        "Set",
+        "Filter",
+        "Matrix",
+        "Finset",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis.ReLURepresentation"
+      ],
+      "open_scopes": [
+        "Topology"
+      ],
+      "universes": [],
+      "review_evidence": "reports/cpwl-repairs.md",
+      "module": "Thesis.CPWLReLUEquivalence",
+      "declaration": "Thesis.PiecewiseLinear.cpwl_relu_bounded_depth",
+      "expected_type": "∀ {n : ℕ} (f : (Fin n → ℝ) → ℝ)\n(hf : CPWL (fun x (_ : Unit) => f x)),\n∃ (m : ℕ) (net : Network n m) (w : Fin m → ℝ) (b : ℝ),\nhiddenDepth net+1≤⌈Real.logb 2 (n+1)⌉₊+1 ∧\n∀ x, f x=w ⬝ᵥ net.eval x+b",
+      "review_id": "CPWL-cpwl_relu_bounded_depth",
+      "scope": "Every scalar CPWL function under the original independent finite-polyhedral-cover definition has an actual varying-width shared Network and signed affine output. Total depth counts its hidden ReLU layers plus the final affine readout and obeys the literal real-logarithm ceiling bound. No DC, lattice or signed-max premise; n=0 is included."
+    },
+    {
+      "open_namespaces": [
+        "Set",
+        "Filter",
+        "Matrix",
+        "Finset",
+        "HiddenMonotonicity",
+        "Thesis.Tropical",
+        "Thesis.PiecewiseLinear",
+        "Thesis.ReLURepresentation"
+      ],
+      "open_scopes": [
+        "Topology"
+      ],
+      "universes": [],
+      "review_evidence": "reports/cpwl-repairs.md",
+      "module": "Thesis.CPWLReLUEquivalence",
+      "declaration": "Thesis.PiecewiseLinear.cpwl_relu_equivalence",
+      "expected_type": "∀ {n : ℕ} (f : (Fin n → ℝ) → ℝ),\n(CPWL (fun x (_ : Unit) => f x) ↔\n  ∃ (m : ℕ) (net : Network n m) (w : Fin m → ℝ) (b : ℝ),\n    ∀ x, f x=w ⬝ᵥ net.eval x+b) ∧\n(CPWL (fun x (_ : Unit) => f x) →\n  ∃ (m : ℕ) (net : Network n m) (w : Fin m → ℝ) (b : ℝ),\n    hiddenDepth net+1≤⌈Real.logb 2 (n+1)⌉₊+1 ∧\n    ∀ x, f x=w ⬝ᵥ net.eval x+b)",
+      "review_id": "CPWL-cpwl_relu_equivalence",
+      "scope": "Complete thm:cpwl_relu_equivalence: both directions and the dimension-only ceil(log₂(n+1))+1 depth theorem with explicit shared Network, weight vector and bias witnesses. CPWL remains continuity plus a genuine finite closed-polyhedral affine cover. Networks use ReLU hidden layers and a final affine readout, as in the corrected source convention. No hidden representation hypotheses."
+    }
+  ]
+}

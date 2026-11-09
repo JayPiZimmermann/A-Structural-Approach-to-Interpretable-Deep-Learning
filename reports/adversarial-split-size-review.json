@@ -1,0 +1,295 @@
+{
+  "schema_version": 1,
+  "reviewer": "independent adversarial reviewer /root/attack_hidden",
+  "review_date": "2026-11-09",
+  "verdict": "PASS_ACTUAL_SHARED_POSITIVE_GRAPH_AND_FIXED_RANK_DEGREE_LINEAR_SIZE",
+  "findings": [],
+  "production_mutations": false,
+  "shared_olean_writes": false,
+  "summary": "The size is a literal count of positive local-tree vertices and arcs over references to retained earlier shared pairs. The actual source rank and natural exponents imply local duplication and syntax-size bounds; compiled size or desired representation is never assumed.",
+  "source": [
+    "arxive/hiddenMonotonicity/appendix/maxout_networks.tex:51\u201354",
+    "tex/chapters/07_transformers.tex:35",
+    "tex/chapters/07_transformers.tex:61\u201371"
+  ],
+  "model_correspondence": [
+    {
+      "topic": "Literal source gates and evaluation bridge",
+      "locations": [
+        "formalization/HiddenMonotonicity/MaxoutProductSize.lean:91",
+        "formalization/HiddenMonotonicity/MaxoutProductSize.lean:109",
+        "formalization/HiddenMonotonicity/MaxoutProductSize.lean:128"
+      ],
+      "verdict": "genuine source construction",
+      "evidence": "A maxout gate takes the finite maximum of nonempty signed biased affine forms over explicit prior-node references. A monomial gate takes the product of actual natural powers, including zero powers and empty products. The compiler repeats parents for powers and proves the product identity. No expression-representation field or hypothesis is stored in the source gate."
+    },
+    {
+      "topic": "Positive shared graph and complete size count",
+      "locations": [
+        "formalization/HiddenMonotonicity/SplitDAGSize.lean:8",
+        "formalization/HiddenMonotonicity/SplitDAGSize.lean:28",
+        "formalization/HiddenMonotonicity/SplitDAGSize.lean:40"
+      ],
+      "verdict": "literal graph, not renamed original operation count",
+      "evidence": "SplitDAG stores two positive expression trees at each source node. Every constructor occurrence counts a vertex; binary constructors count two child arcs, scales one, constants none, and a reference counts a conservative copy vertex plus its edge to the earlier shared stream. Earlier source-node computation is retained and referenced rather than inlined. Either stream may be read from the resulting graph."
+    },
+    {
+      "topic": "Bound from source hypotheses",
+      "locations": [
+        "formalization/HiddenMonotonicity/SplitDAGSize.lean:109",
+        "formalization/HiddenMonotonicity/SplitDAGSize.lean:120",
+        "formalization/HiddenMonotonicity/MaxoutProductSize.lean:177",
+        "formalization/HiddenMonotonicity/MaxoutProductSize.lean:275"
+      ],
+      "verdict": "noncircular quantitative proof",
+      "evidence": "The local split tree may duplicate descendants; actual positive vertices are bounded by 8*2^D times source syntax size, with arcs at most twice vertices. A source maxout of rank K and monomial of total degree D imply duplication depth at most max(K,D) and syntax size at most (4*K+2*D+1)*(fanIn+1). Summing these actual per-node costs yields the displayed constant times original neurons plus incoming arcs. The intermediate duplication bound is derived, not substituted for the source premise."
+    },
+    {
+      "topic": "Expanded-monomial hypothesis",
+      "locations": [
+        "formalization/HiddenMonotonicity/MaxoutProductSize.lean:342",
+        "formalization/HiddenMonotonicity/MaxoutProductSize.lean:357",
+        "formalization/HiddenMonotonicity/MaxoutProductSize.lean:377"
+      ],
+      "verdict": "correct sufficient source bound",
+      "evidence": "The actual uncollected binomial expansion count is product(power+1). A finite induction proves sum(power)+1 <= product(power+1), hence the degree bound needed for the compiler. Fixed distinct fan-in alone is not misrepresented as a degree bound."
+    },
+    {
+      "topic": "Recovery, monotonicity, rank and finite polynomials",
+      "locations": [
+        "formalization/HiddenMonotonicity/MaxoutProductSize.lean:293",
+        "formalization/HiddenMonotonicity/MaxoutProductSize.lean:313",
+        "formalization/HiddenMonotonicity/MaxoutProductSize.lean:326"
+      ],
+      "verdict": "same actual constructed graph",
+      "evidence": "All-node recovery holds for arbitrary split pairs. Canonical input recovery uses actual max(x,0),max(-x,0). Positivity and monotonicity are restricted to nonnegative split inputs, where products preserve them. Output syntax uses only binary maxima, and finite nonnegative-coefficient polynomial maxima are inherited through the proved actual evaluator bridge. No ordinary convexity claim is made."
+    }
+  ],
+  "validation": {
+    "contracts": 8,
+    "exact_types": "passed",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "source_compiles": {
+      "SplitDAGSize": 0,
+      "MaxoutProductSize": 0
+    },
+    "boundary_exit": 0,
+    "boundary_cases": [
+      "dimension-zero empty product equals one with total degree zero",
+      "actual compiled dimension-zero constant graph has size two",
+      "one-parent square source graph size three and actual compiled size eighty-eight",
+      "negative input square evaluation",
+      "zero-fan-in negative biased finite maximum stays negative",
+      "one parent can have exponent one hundred"
+    ],
+    "independent_materialization_experiment": {
+      "seed": 20261109,
+      "counts": {
+        "source_graphs": 144,
+        "zero_input_graphs": 48,
+        "gates": 574,
+        "materialized_vertices": 19532,
+        "materialized_arcs": 23164,
+        "recovery_checks": 6462,
+        "monotonicity_checks": 12924,
+        "empty_products": 95,
+        "zero_exponents": 249,
+        "negative_biases": 166,
+        "repeated_parents": 160
+      },
+      "failures": [],
+      "sharing_chain": [
+        {
+          "depth": 1,
+          "source_size": 3,
+          "split_size": 88
+        },
+        {
+          "depth": 2,
+          "source_size": 5,
+          "split_size": 174
+        },
+        {
+          "depth": 4,
+          "source_size": 9,
+          "split_size": 346
+        },
+        {
+          "depth": 8,
+          "source_size": 17,
+          "split_size": 690
+        },
+        {
+          "depth": 16,
+          "source_size": 33,
+          "split_size": 1378
+        },
+        {
+          "depth": 32,
+          "source_size": 65,
+          "split_size": 2754
+        }
+      ],
+      "unbounded_exponent_control": [
+        {
+          "exponent": 1,
+          "source_size": 3,
+          "split_size": 32
+        },
+        {
+          "exponent": 2,
+          "source_size": 3,
+          "split_size": 88
+        },
+        {
+          "exponent": 4,
+          "source_size": 3,
+          "split_size": 424
+        },
+        {
+          "exponent": 8,
+          "source_size": 3,
+          "split_size": 7144
+        }
+      ],
+      "cases_sha256": "2a023d302a775df8b777da5d5d765f38a4abf93378e159770452a008051f116b",
+      "producer_sha256": "7a8068d9f8e1937ec4c7b3fd06d55f21ae6460cea45333f188888a85f29b8293",
+      "scope": "Independent materialization counts literal vertices and edges and evaluates actual emitted graph. Finite rational checks supplement universal Lean source/size contracts; no polynomial-size claim in K,D."
+    },
+    "exact_driver": "reports/evidence/split-size-review/ExactTypes.lean",
+    "boundary_driver": "reports/evidence/split-size-review/Boundary.lean"
+  },
+  "scope_limits": [
+    "The displayed size counts the downstream positive graph whose input variables are the two split streams. The canonical raw-input splitter is given as a function, not included as extra vertices in this displayed graphSize.",
+    "The constant is uniform only for fixed rank and total degree, or fixed rank and expansion count. No efficient dependence on those bounds is claimed.",
+    "General tensor/CNN architecture encodings and their separate parameter-sharing bridges are outside these two leaves; the literal source Maxout/product graph theorem is complete.",
+    "Nonempty maxout arity is built into the source datatype; empty multiplication is correctly one."
+  ],
+  "reviewed_contracts": [
+    {
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Finset",
+        "Matrix"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_evidence": "reports/split-size-repairs.md",
+      "module": "HiddenMonotonicity.SplitDAGSize",
+      "declaration": "HiddenMonotonicity.Circuit.compileSplitDAG_eval",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (x : Fin d \u00d7 Bool \u2192 \u211d),\nc.compileSplitDAG.eval x=c.split false x",
+      "review_id": "SPLIT-SIZE-Circuit.compileSplitDAG_eval",
+      "scope": "Explicit positive pair-DAG with local positive expression trees and references to prior shared node pairs computes exactly the existing Circuit split pass without recentering."
+    },
+    {
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Finset",
+        "Matrix"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_evidence": "reports/split-size-repairs.md",
+      "module": "HiddenMonotonicity.SplitDAGSize",
+      "declaration": "HiddenMonotonicity.Circuit.split_DAG_with_size",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (D : \u2115)\n(hc : c.BoundedDuplication D),\nc.compileSplitDAG.graphSize\u226424*2^D*c.syntaxSize \u2227\n(\u2200 x : Fin d \u00d7 Bool \u2192 \u211d,\n  (c.compileSplitDAG.eval x).1-(c.compileSplitDAG.eval x).2=\n    c.eval (fun i => x (i,false)-x (i,true))) \u2227\n(\u2200 x : Fin d \u00d7 Bool \u2192 \u211d, 0\u2264x \u2192 0\u2264c.compileSplitDAG.eval x) \u2227\n(\u2200 x y : Fin d \u00d7 Bool \u2192 \u211d, 0\u2264x \u2192 0\u2264y \u2192 x\u2264y \u2192\n  c.compileSplitDAG.eval x\u2264c.compileSplitDAG.eval y)",
+      "review_id": "SPLIT-SIZE-Circuit.split_DAG_with_size",
+      "scope": "Intermediate compiler theorem for bounded local syntactic duplication depth. Counts every local positive-expression constructor vertex and arc; original-node references retain sharing. This premise is derived from actual source rank/degree in the separate headline theorem, not treated as the original source assumption."
+    },
+    {
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Finset",
+        "Matrix"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_evidence": "reports/split-size-repairs.md",
+      "module": "HiddenMonotonicity.MaxoutProductSize",
+      "declaration": "HiddenMonotonicity.MaxoutProductGate.toExpr_eval",
+      "expected_type": "\u2200 {n : \u2115} (g : MaxoutProductGate n) (x : Vec n),\ng.toExpr.eval x=g.eval x",
+      "review_id": "SPLIT-SIZE-MaxoutProductGate.toExpr_eval",
+      "scope": "Bridge from literal source gate evaluation (finite max of signed affine forms or product of natural powers) to the existing signed-expression evaluator. Repeated parents implement powers with a proved product identity."
+    },
+    {
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Finset",
+        "Matrix"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_evidence": "reports/split-size-repairs.md",
+      "module": "HiddenMonotonicity.MaxoutProductSize",
+      "declaration": "HiddenMonotonicity.MaxoutProductDAG.toCircuit_eval",
+      "expected_type": "\u2200 {d n : \u2115} (c : MaxoutProductDAG d n) (x : Vec d),\nc.toCircuit.eval x=c.eval x",
+      "review_id": "SPLIT-SIZE-MaxoutProductDAG.toCircuit_eval",
+      "scope": "Actual topologically ordered source Maxout multiplication DAG evaluates identically to its constructed Circuit, at every recorded node. Arbitrary sharing and residual references are allowed."
+    },
+    {
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Finset",
+        "Matrix"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_evidence": "reports/split-size-repairs.md",
+      "module": "HiddenMonotonicity.MaxoutProductSize",
+      "declaration": "HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery",
+      "expected_type": "\u2200 {d n : \u2115} (c : MaxoutProductDAG d n) (x : Vec d),\nc.eval x=(c.compile.eval (canonicalSplitInput x)).1-\n(c.compile.eval (canonicalSplitInput x)).2",
+      "review_id": "SPLIT-SIZE-MaxoutProductDAG.compile_canonical_recovery",
+      "scope": "Literal original-input recovery by the two constructed downstream positive streams on x\u207a=max(x,0), x\u207b=max(-x,0); no convexity claim."
+    },
+    {
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Finset",
+        "Matrix"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_evidence": "reports/split-size-repairs.md",
+      "module": "HiddenMonotonicity.MaxoutProductSize",
+      "declaration": "HiddenMonotonicity.MaxoutProductDAG.split_linear_size",
+      "expected_type": "\u2200 {d n : \u2115} (c : MaxoutProductDAG d n) (K D : \u2115)\n(hc : c.BoundedRankDegree K D),\n\u2203 g : SplitDAG d n,\ng.maxoutRank\u22642 \u2227 g.graphSize\u2264(24*2^(max K D)*(4*K+2*D+1))*c.graphSize \u2227\n(\u2200 x : Fin d \u00d7 Bool \u2192 \u211d, (g.eval x).1-(g.eval x).2=\n  c.eval (fun i => x (i,false)-x (i,true))) \u2227\n(\u2200 x : Fin d \u00d7 Bool \u2192 \u211d, 0\u2264x \u2192 0\u2264g.eval x) \u2227\n(\u2200 x y : Fin d \u00d7 Bool \u2192 \u211d, 0\u2264x \u2192 0\u2264y \u2192 x\u2264y \u2192 g.eval x\u2264g.eval y) \u2227\n(\u2200 i : Fin n, \u2203 P Q : MaxPolynomial (Fin d \u00d7 Bool),\n  \u2200 x : Fin d \u00d7 Bool \u2192 \u211d, 0\u2264x \u2192 (g.eval x).1 i=P.eval x \u2227 (g.eval x).2 i=Q.eval x)",
+      "review_id": "SPLIT-SIZE-MaxoutProductDAG.split_linear_size",
+      "scope": "Complete fixed-rank/bounded-total-multiplication-degree theorem for actual source Maxout/product DAGs. Source graphSize counts neurons plus each incoming vector-weight arc once. Constructed split DAG has maximum maxout arity two, explicit linear size constant depending only on K,D, exact all-node recovery, positivity, monotonicity and finite positive-polynomial maxima. Hypotheses bound actual gate rank and sum of natural exponents, not compiled size."
+    },
+    {
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Finset",
+        "Matrix"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_evidence": "reports/split-size-repairs.md",
+      "module": "HiddenMonotonicity.MaxoutProductSize",
+      "declaration": "HiddenMonotonicity.MaxoutProductGate.degree_le_expandedTerms",
+      "expected_type": "\u2200 {n : \u2115} (g : MaxoutProductGate n),\ng.totalDegree\u2264g.expandedTerms",
+      "review_id": "SPLIT-SIZE-MaxoutProductGate.degree_le_expandedTerms",
+      "scope": "The actual binomial expansion count \u220f(power+1) bounds total multiplication degree; proved from sum(power)+1\u2264product(power+1). Maxout gates have degree/count zero for this purpose."
+    },
+    {
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Finset",
+        "Matrix"
+      ],
+      "open_scopes": [],
+      "universes": [],
+      "review_evidence": "reports/split-size-repairs.md",
+      "module": "HiddenMonotonicity.MaxoutProductSize",
+      "declaration": "HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion",
+      "expected_type": "\u2200 {d n : \u2115} (c : MaxoutProductDAG d n) (K B : \u2115)\n(hc : c.BoundedRankExpansion K B),\n\u2203 g : SplitDAG d n,\ng.maxoutRank\u22642 \u2227 g.graphSize\u2264(24*2^(max K B)*(4*K+2*B+1))*c.graphSize \u2227\n(\u2200 x : Fin d \u00d7 Bool \u2192 \u211d, (g.eval x).1-(g.eval x).2=\n  c.eval (fun i => x (i,false)-x (i,true))) \u2227\n(\u2200 x : Fin d \u00d7 Bool \u2192 \u211d, 0\u2264x \u2192 0\u2264g.eval x) \u2227\n(\u2200 x y : Fin d \u00d7 Bool \u2192 \u211d, 0\u2264x \u2192 0\u2264y \u2192 x\u2264y \u2192 g.eval x\u2264g.eval y) \u2227\n(\u2200 i : Fin n, \u2203 P Q : MaxPolynomial (Fin d \u00d7 Bool),\n  \u2200 x : Fin d \u00d7 Bool \u2192 \u211d, 0\u2264x \u2192 (g.eval x).1 i=P.eval x \u2227 (g.eval x).2 i=Q.eval x)",
+      "review_id": "SPLIT-SIZE-MaxoutProductDAG.split_linear_size_expansion",
+      "scope": "Complete chapter-7 variant: fixed maxout rank and uniform bound on actual expanded binomial monomial count yield a constructed rank-two positive split DAG with explicit linear neuron-plus-arc bound, exactness, positivity, monotonicity and finite positive-polynomial maxima. Degree bound is derived mathematically; no split-size hypothesis."
+    }
+  ],
+  "evidence_directory": "reports/evidence/split-size-review"
+}

@@ -1,0 +1,170 @@
+{
+  "schema_version": 1,
+  "reviewer": "independent adversarial reviewer /root/attack_hidden",
+  "review_date": "2026-11-09",
+  "verdict": "PASS_FULL_SCALAR_CPWL_RELU_EQUIVALENCE_AND_LITERAL_DEPTH",
+  "findings": [],
+  "summary": "The two new leaves genuinely construct a shared varying-width ReLU network and arbitrary signed affine readout from the independent finite-cover CPWL definition, and count actual hidden constructors plus the output layer. No network, DC, lattice, or small-max representation is assumed by the headline theorem.",
+  "production_mutations": false,
+  "shared_olean_writes": false,
+  "prerequisite_review": "reports/adversarial-cpwl-review.json",
+  "source": [
+    "tex/chapters/02_foundations.tex:9 feedforward hidden-ReLU/final-affine convention",
+    "tex/chapters/02_foundations.tex:67 CPWL equivalence and ceil(log2(d+1))+1 bound"
+  ],
+  "model_correspondence": [
+    {
+      "topic": "Actual model and depth",
+      "locations": [
+        "formalization/Thesis/ReLUCompiler.lean:10",
+        "formalization/Thesis/ReLUCompiler.lean:31",
+        "formalization/Thesis/ReLUCompiler.lean:37"
+      ],
+      "verdict": "faithful",
+      "evidence": "AffineHead stores the existing Network, actual readout matrix and bias. Its evaluator applies that matrix to Network.eval and adds the bias. hiddenDepth counts each actual .layer constructor once; .output is the identity at depth zero. The source-facing theorem counts hiddenDepth+1, matching the final affine layer."
+    },
+    {
+      "topic": "Signed max rails",
+      "locations": [
+        "formalization/Thesis/ReLUCompiler.lean:45",
+        "formalization/Thesis/ReLUCompiler.lean:62",
+        "formalization/Thesis/ReLUCompiler.lean:80"
+      ],
+      "verdict": "genuine construction",
+      "evidence": "One appended actual ReLU layer computes u-v, v, -v as affine preactivations and rectifies them. A signed affine readout adds the first two rails and subtracts the last. This recovers max(u,v) for arbitrary signs, including negative ties. Existing readout weights and bias are algebraically folded into the appended layer; no unsupported skip or clipping assumption is introduced."
+    },
+    {
+      "topic": "Balanced forests and padding",
+      "locations": [
+        "formalization/Thesis/ReLUCompiler.lean:132",
+        "formalization/Thesis/ReLUCompiler.lean:156"
+      ],
+      "verdict": "exact finite compiler",
+      "evidence": "Induction on binary string length constructs every finite output forest with exactly k hidden layers. Finite nonempty term sets are embedded in the 2^k leaves; inverse-function surjectivity ensures padding repeats actual terms rather than introducing a zero branch. This matters when all original affine values are negative. Empty output forests are allowed without vacating the final scalar conclusion."
+    },
+    {
+      "topic": "Outer signed coefficients and biases",
+      "locations": [
+        "formalization/Thesis/ReLUCompiler.lean:185",
+        "formalization/Thesis/ReLUCompiler.lean:210"
+      ],
+      "verdict": "correct affine absorption",
+      "evidence": "The linear combination uses unrestricted real coefficients and combines both readout matrices AND biases. The underlying network and hidden depth are unchanged. An empty outer sum produces a scalar zero affine head."
+    },
+    {
+      "topic": "Headline composition and literal depth",
+      "locations": [
+        "formalization/Thesis/CPWLReLUEquivalence.lean:35",
+        "formalization/Thesis/CPWLReLUEquivalence.lean:58"
+      ],
+      "verdict": "full source theorem at scalar scope",
+      "evidence": "Starting only from original CPWL, the theorem obtains a real max-affine difference, derives the signed maxima of <=n+1 terms, and invokes the actual network compiler with k=Nat.clog 2 (n+1). Mathlib proves the literal real-log natural-ceiling identity. Since n+1>=1 and base 2>1, the natural ceiling agrees with the usual nonnegative integer ceiling. The final bound counts k hidden layers plus exactly one signed affine output. The converse uses the existing actual finite-polyhedral network cover."
+    }
+  ],
+  "validation": {
+    "contracts": 5,
+    "exact_types": "passed",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "current_source_compiles": [
+      "Thesis.ReLUCompiler",
+      "Thesis.CPWLReLUEquivalence"
+    ],
+    "boundary_driver": "reports/evidence/relu-compiler-review/Boundary.lean",
+    "boundary_exit": 0,
+    "boundary_cases": [
+      "negative maximum of biased affine arguments",
+      "negative exact tie",
+      "one actual hidden layer added",
+      "negative outer coefficient without a hidden layer",
+      "three terms padded to four leaves",
+      "empty outer sum yields actual scalar zero head",
+      "negative constant at dimension zero forces zero hidden layers",
+      "signed affine zero-hidden-layer witness",
+      "literal total depth bounds 1,2,3,3 for dimensions 0,1,2,3"
+    ],
+    "independent_exact_experiment": {
+      "seed": 20261109,
+      "counts": {
+        "forests": 168,
+        "zero_dimension": 24,
+        "empty_outer_sum": 35,
+        "padded_forests": 106,
+        "evaluations": 2856,
+        "negative_outputs": 986,
+        "exact_hidden_gate_ties": 12491,
+        "total_hidden_layers": 336,
+        "negative_outer_coefficients": 155
+      },
+      "failures": [],
+      "negative_controls_detected": [
+        "dropping negative signed rail",
+        "adding final output ReLU"
+      ],
+      "cases_sha256": "b688a9fc9e6e336382d8b7e1a3108c204bf3cc6eb5e87635ac830116e0336aa0",
+      "producer_sha256": "7d8ccf0a0b6d73e706ec39082554db9c7c7865a2cc1b922ee668732d2535f9dd",
+      "scope": "Independent exact matrix constructions and evaluations; universal correctness and literal real-log depth are checked in Lean."
+    },
+    "source_hashes": "reports/evidence/relu-compiler-review/source-sha256.json",
+    "source_changed_during_review": [],
+    "transient_environment_note": "One scratch rerun encountered an absent imported olean during normal shared Lake invalidation/rebuild. Imports were restored by root targeted build, and the final diagnostic completed successfully; no reviewer writes to shared cache occurred."
+  },
+  "reviewed_contracts": [
+    {
+      "module": "Thesis.ReLUCompiler",
+      "declaration": "Thesis.ReLURepresentation.affine_max_forest",
+      "expected_type": "∀ {n : ℕ} (k : ℕ) (O : Type) [Fintype O]\n(w : O → (Fin k → Bool) → Fin n → ℝ) (b : O → (Fin k → Bool) → ℝ),\n∃ H : AffineHead n O, H.depth=k ∧\n∀ x i, H.eval x i=finiteMax (fun t => w i t ⬝ᵥ x+b i t)",
+      "scope": "Actual shared Network and affine readout realizing any finite forest of affine maxima with 2^k binary-indexed leaves each, with exactly k hidden layers. No pre-existing network realization hypothesis. Empty output forests and k=0 are included.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/relu-compiler-review/exact-types.log"
+    },
+    {
+      "module": "Thesis.ReLUCompiler",
+      "declaration": "Thesis.ReLURepresentation.polynomial_forest",
+      "expected_type": "∀ {n k : ℕ} (O : Type) [Fintype O]\n(p : O → Thesis.Tropical.Polynomial (Fin n))\n(hcard : ∀ i, Fintype.card (p i).Terms≤2^k),\n∃ H : AffineHead n O, H.depth=k ∧ ∀ x i, H.eval x i=(p i).eval x",
+      "scope": "Any finite collection of actual nonempty max-affine polynomials with at most 2^k terms each; exact shared-network realization with k hidden layers. Padding uses a proved surjection onto each term type, including repeated affine terms.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/relu-compiler-review/exact-types.log"
+    },
+    {
+      "module": "Thesis.ReLUCompiler",
+      "declaration": "Thesis.ReLURepresentation.signed_polynomial_compiler",
+      "expected_type": "∀ {n k : ℕ} (O : Type) [Fintype O]\n(p : O → Thesis.Tropical.Polynomial (Fin n)) (c : O → ℝ)\n(hcard : ∀ i, Fintype.card (p i).Terms≤2^k),\n∃ H : AffineHead n Unit, H.depth=k ∧\n∀ x, H.eval x ()=∑ i, c i*(p i).eval x",
+      "scope": "Arbitrary finite signed real linear combinations of max-affine polynomials compiled into the same Network datatype and one actual affine readout. Hidden depth is k, affine readout adds no hidden layer. The zero-summand case is included.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/relu-compiler-review/exact-types.log"
+    },
+    {
+      "module": "Thesis.CPWLReLUEquivalence",
+      "declaration": "Thesis.PiecewiseLinear.cpwl_relu_bounded_depth",
+      "expected_type": "∀ {n : ℕ} (f : (Fin n → ℝ) → ℝ)\n(hf : CPWL (fun x (_ : Unit) => f x)),\n∃ (m : ℕ) (net : Network n m) (w : Fin m → ℝ) (b : ℝ),\nhiddenDepth net+1≤⌈Real.logb 2 (n+1)⌉₊+1 ∧\n∀ x, f x=w ⬝ᵥ net.eval x+b",
+      "scope": "Every scalar CPWL function under the original independent finite-polyhedral-cover definition has an actual varying-width shared Network and signed affine output. Total depth counts its hidden ReLU layers plus the final affine readout and obeys the literal real-logarithm ceiling bound. No DC, lattice or signed-max premise; n=0 is included.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/relu-compiler-review/exact-types.log"
+    },
+    {
+      "module": "Thesis.CPWLReLUEquivalence",
+      "declaration": "Thesis.PiecewiseLinear.cpwl_relu_equivalence",
+      "expected_type": "∀ {n : ℕ} (f : (Fin n → ℝ) → ℝ),\n(CPWL (fun x (_ : Unit) => f x) ↔\n  ∃ (m : ℕ) (net : Network n m) (w : Fin m → ℝ) (b : ℝ),\n    ∀ x, f x=w ⬝ᵥ net.eval x+b) ∧\n(CPWL (fun x (_ : Unit) => f x) →\n  ∃ (m : ℕ) (net : Network n m) (w : Fin m → ℝ) (b : ℝ),\n    hiddenDepth net+1≤⌈Real.logb 2 (n+1)⌉₊+1 ∧\n    ∀ x, f x=w ⬝ᵥ net.eval x+b)",
+      "scope": "Complete thm:cpwl_relu_equivalence: both directions and the dimension-only ceil(log₂(n+1))+1 depth theorem with explicit shared Network, weight vector and bias witnesses. CPWL remains continuity plus a genuine finite closed-polyhedral affine cover. Networks use ReLU hidden layers and a final affine readout, as in the corrected source convention. No hidden representation hypotheses.",
+      "exact_type_verdict": "pass",
+      "receipt": "reports/evidence/relu-compiler-review/exact-types.log"
+    }
+  ],
+  "residual_scope": [
+    {
+      "id": "WIDTH-COST",
+      "classification": "source-consistent limit",
+      "detail": "No finite width-size, efficient coefficient extraction or runtime bound is asserted. Existence with dimension-only depth is the source claim."
+    },
+    {
+      "id": "SCALAR-SCOPE",
+      "classification": "source-consistent limit",
+      "detail": "The final theorem is scalar-output CPWL equivalence, exactly as the thesis statement; the compiler internally supports finite output forests."
+    }
+  ],
+  "publication_gate_conclusion": "No identified mathematical or semantic blocker for linking the full scalar CPWL-ReLU equivalence and its literal dimension-only depth theorem. Root still owns the whole-project clean-build and coverage integration gate."
+}

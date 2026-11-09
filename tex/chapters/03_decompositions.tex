@@ -370,7 +370,7 @@ The hard gate of the Stopping Decomposition solves an optimization problem: for 
 	\1[\Delta > 0] \in \argmax_{\pi \in [0,1]} \pi \Delta,
 	\label{eq:gate_as_argmax}
 \end{equation}
-so the indicator in~\eqref{eq:fstop_def} is the \emph{unregularized} argmax over a stop ($\pi = 0$) versus continue ($\pi = 1$) decision applied to $\Delta = z^+ - z^-$. This suggests a family of decompositions: penalizing the decision variable by a convex regularizer smooths the gate and changes the recovered activation function from $\relu$ to the Fenchel conjugate of the regularizer.
+so the indicator in~\eqref{eq:fstop_def} is the \emph{unregularized} argmax over a stop ($\pi = 0$) versus continue ($\pi = 1$) decision applied to $\Delta = z^+ - z^-$. This suggests a family of decompositions: penalizing the decision variable by a convex regularizer can smooth the gate and changes the recovered activation function from $\relu$ to the Fenchel conjugate of the regularizer.
 
 \begin{definition}[Regularized decomposition function]\label{def:freg}
 Let $\Omega \colon [0,1] \to \RR_{\le 0}$ be a proper, closed, convex regularizer with $\Omega \le 0$. Define the \emph{regularized gate} and the \emph{conjugate activation}
@@ -416,6 +416,7 @@ where the last step evaluates~\eqref{eq:regularized_gate} at its maximizer (Fenc
 
 \begin{corollary}[Unregularized case]\label{cor:freg_stop}
 For $\Omega \equiv 0$ on $[0,1]$, Definition~\ref{def:freg} with the maximizer $\pi_\Omega(\Delta) = \1[\Delta > 0]$ recovers the stopping decomposition function, $\freg[0] = \fstop$, and Theorem~\ref{thm:freg_validity} specialises to Theorem~\ref{thm:stopping_validity} with $\Omega^*(\Delta) = \max_{\pi \in [0,1]} \pi\Delta = \relu(\Delta)$.
+\hfill\LeanResult{cor:freg_stop}
 \end{corollary}
 
 \begin{proof}

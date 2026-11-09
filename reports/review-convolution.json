@@ -1,0 +1,42 @@
+{
+  "reviewer": "/root/repair_foundations",
+  "status": "passed",
+  "source": "formalization/HiddenMonotonicity/Convolution.lean",
+  "source_sha256": "2afd7181914e49bb3add5cd509d080e125df2b4915a818ddf138b82937c08348",
+  "reviewed_contract": "reports/convolution-expected-types.json",
+  "reviewed_contract_sha256": "b47f15fa068dde8854d29e8668d23ee27308304ad53ef7dac700e2635bb97b3f",
+  "source_scope": "tex/chapters/03_decompositions.tex, eq:conv_split and prop:conv_correct; supplies the convolution-chunk instance used in thm:cnn_split_correct, not the entire CNN composition theorem on its own.",
+  "semantic_findings": [
+    "applyKernel is defined independently as a direct finite tensor sum over input channels and kernel taps. Its coefficient indices are output channel, input channel, tap; the stencil indices are output position and tap. Kernel coefficients and output-channel biases are shared across output positions.",
+    "finProdFinEquiv flattens channel and position with position as the fast coordinate. Both sampling and the matrix construction use the same inverse equivalence. The flattening bridge reindexes the actual input-column sum through this equivalence and proves the optional sample-selector identity.",
+    "A missing sample is exactly zero padding. The kernelMatrix entry sums all matching taps; no stencil injectivity assumption is present, and repeated taps are accumulated rather than overwritten.",
+    "The sign split is correctly performed at the kernel-parameter level before flattening. When opposite signed taps share a sample, kernelMatrix (positiveKernel K) need not be the positive part of kernelMatrix K. No such false equality is asserted. The proved subtraction identity is the correct one.",
+    "Biases are broadcast once per output position according to output channel and split with max b 0 and max (-b) 0. They are not accidentally summed once per input channel or tap.",
+    "splitKernel_eq_affineChunk identifies the literal tensor split with the actual shared affine chunk. Nonnegative outputs require nonnegative pair inputs; monotonicity, affine dependence and coordinate convexity hold globally. Recovery is proved for every real input pair, without a nonnegativity premise.",
+    "The ordinary Frechet derivative is the actual induced matrix. The split derivative has blocks A+, A-, A-, A+ in that order, through the existing preP and preN continuous linear maps, with no derivative contribution from the constant bias.",
+    "All finite dimension binders are unrestricted. Empty input-channel or tap sums vanish, absent input positions force samples to be none, and empty output spaces make the coordinate assertions correctly vacuous."
+  ],
+  "adversarial_examples": [
+    "Two taps +1 and -1 at the same input position: ordinary matrix entry is 0, while both kernel-sign matrices have entry 1.",
+    "The same repeated taps with negative bias -3: the split streams are p+q and q+p+3, so the bias is correctly recovered once.",
+    "Two input channels, two positions, two taps, shared weights [1,2] and [3,4], one padded tap, and shared bias -5: direct tensor outputs are 5 and 25 under channel-major input [1,2,3,4].",
+    "Zero input channels, zero kernel taps and zero input positions each produce the zero unbiassed convolution.",
+    "Zero output channels produce the unique empty output pair."
+  ],
+  "scope_limits": [
+    "The sampling stencil is an explicit mathematical parameter. The leaf does not separately formalize the arithmetic construction of a stencil from framework stride, dilation, padding, spatial-shape or tensor-layout options.",
+    "No PyTorch implementation, graph parser, converter, floating-point kernel, backward implementation or serialization is certified by these mathematical results.",
+    "Kernel-level and matrix-entry-level canonical sign parts coincide for the usual noncolliding samples, but the stronger arbitrary-stencil theorem deliberately requires only the proved difference identity."
+  ],
+  "findings": [],
+  "validation": {
+    "fresh_source_compile": "reports/evidence/convolution-review/source-Convolution.exit",
+    "direct_exact_type_module_universe_and_axiom_checks": "reports/evidence/convolution-review/ExactTypes.lean",
+    "adversarial_source": "reports/evidence/convolution-review/Adversarial.lean",
+    "adversarial_exit": "reports/evidence/convolution-review/adversarial.exit",
+    "receipt": "reports/evidence/convolution-review/receipt.json",
+    "reproduce": "python3 reports/evidence/convolution-review/verify_review.py",
+    "scope": "Four manually reviewed full contract statements, checked independently by direct kernel definitional equality, defining-module equality, universe arity and standard-axiom allowlist, plus nine concrete or empty-dimension Lean examples. The shared receipt additionally checks three ConvexInput contracts and every imported project theorem. This is focused review evidence; the root owns the clean public-closure verification."
+  },
+  "production_edits": []
+}

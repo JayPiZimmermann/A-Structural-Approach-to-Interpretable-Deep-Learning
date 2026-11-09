@@ -1,0 +1,861 @@
+{
+  "schema_version": 1,
+  "reviewer": "independent adversarial reviewer /root/attack_hidden",
+  "review_date": "2026-11-09",
+  "verdict": "PASS_ADDITIVE_SHARED_DAG_OCCUPATION_WITH_SOURCE_ORDERED_POOL_ADAPTER",
+  "open_high_severity_findings": 0,
+  "production_mutations": false,
+  "shared_olean_writes": false,
+  "summary": "The complete trajectory law, cumulative discounted visits and biased payoffs are actual finite interpreters. Genuine derivatives at actual prefix states are independently identified with those visits, rather than assumed. One verified source tie mismatch was repaired by a separately checked ordered finite-pool adapter; the generic binary primitive retains its own right-tie semantics.",
+  "source": [
+    "arxive/playingTheNetworkBackward/main.tex:1292\u20131408 addition/maxpool primitives",
+    "arxive/playingTheNetworkBackward/main.tex:1416\u20131457 trajectory law and discounted visits",
+    "arxive/playingTheNetworkBackward/main.tex:1460\u20131488 complete p/q/k derivative and tie formula"
+  ],
+  "findings": [
+    {
+      "id": "DAG-POOL-TIE-ORDER",
+      "severity": "high for direct source-tie promotion; no false generic theorem",
+      "classification": "verified counterexample to proposed model correspondence",
+      "status": "resolved_by_new_source_adapter",
+      "source_locations": [
+        "arxive/playingTheNetworkBackward/main.tex:1379 smallest maximizing operand index"
+      ],
+      "lean_locations": [
+        "formalization/Thesis/StoppingExpressionKernel.lean:33",
+        "formalization/Thesis/StoppingDAGPrimitives.lean:69",
+        "formalization/Thesis/StoppingCircuit.lean:22"
+      ],
+      "evidence": "At split operands (2,1) and (1,0), both represented values equal positive one. Generic maximum(input0,input1) selects input1 and pair(1,0); source min-index convention selects input0 and pair(2,1). Kernel entries are respectively (0,1) versus (1,0). Independent Boundary.lean proves this and excludes classical regularity at the tie.",
+      "minimal_repair": "Encode source finite pools with earlier operands on the right branches; prove least maximizing index, actual selected pair/kernel and unique-winner regularity, and use that adapter in source links.",
+      "resolution": {
+        "module": "Thesis.StoppingOrderedPool",
+        "source_sha256": "69e40425e37c030c35086a464dfead11cd39e558dbe08d0ed61f4edc9615a91f",
+        "contracts": 6,
+        "exact_types_exit": 0,
+        "fresh_source_compile_exit": 0,
+        "boundary_exit": 0,
+        "evidence": "reports/evidence/stopping-dag-review/ordered-pool",
+        "verdict": "The new orderedInputPool implements the paper convention at every nonempty finite arity, including unequal split pairs tied in represented value. The old generic primitive is not renamed. Source-facing promotion must include this adapter."
+      }
+    }
+  ],
+  "model_correspondence": [
+    {
+      "topic": "Independent actual derivatives",
+      "locations": [
+        "formalization/Thesis/StoppingExpressionKernel.lean:23",
+        "formalization/Thesis/StoppingExpressionKernel.lean:37",
+        "formalization/Thesis/StoppingDAGDerivative.lean:48",
+        "formalization/Thesis/StoppingDAGDerivative.lean:108"
+      ],
+      "verdict": "genuine calculus, no assumed Jacobian recurrence",
+      "evidence": "expressionKernel is computed from syntax and actual represented scores; local max derivatives follow eventual winner stability from score continuity. Actual chain rules through snoc and composition yield stoppingCircuit_hasFDerivAt for all recorded shared values. CircuitRegular is a concrete strict-cell property, checking only the winning subtree inside each max. Product syntax is explicitly excluded by Additive and cannot leak through zero placeholder rows."
+    },
+    {
+      "topic": "Normalized finite trajectory model",
+      "locations": [
+        "formalization/Thesis/StoppingDAGPaths.lean:10",
+        "formalization/Thesis/StoppingDAGPaths.lean:58",
+        "formalization/Thesis/StoppingDAGPaths.lean:68"
+      ],
+      "verdict": "actual path law, nonvacuous at empty fan-in",
+      "evidence": "A path either bypasses later recorded states, follows a signed predecessor, or ends at one cemetery; no fictitious post-cemetery tails are introduced. Transition weights are actual nonnegative edge coefficients divided by local magnitude sum. A zero sum leads to cemetery probability one; nonnegativity proves all weights vanish there. Sign changes are XOR. Normalization is proved separately from actual kernel recovery."
+    },
+    {
+      "topic": "Full visits and arbitrary intermediate cuts",
+      "locations": [
+        "formalization/Thesis/StoppingDAGVisits.lean:14",
+        "formalization/Thesis/StoppingDAGVisits.lean:29",
+        "formalization/Thesis/StoppingDAGVisits.lean:137",
+        "formalization/Thesis/StoppingDAGIntermediate.lean:39"
+      ],
+      "verdict": "original-graph occupation, not endpoint proxy",
+      "evidence": "visitWeight sums the current state indicator and discounted later visits, while bypasses add no visit. fullOccupation averages this actual quantity under the original graph law. Strictly decreasing node indices prove the cut bridge to suffix terminal occupation. exists_graph_cut constructs a prefix ending at every internal recorded target; original input visits are separately identified with endpoint occupation. Neither cut equality nor derivative identity is a hypothesis."
+    },
+    {
+      "topic": "Actual prefix states and full sign identities",
+      "locations": [
+        "formalization/Thesis/StoppingDAGCuts.lean:11",
+        "formalization/Thesis/StoppingDAGIntermediate.lean:10",
+        "formalization/Thesis/StoppingDAGIntermediate.lean:70",
+        "formalization/Thesis/StoppingDAGIntermediate.lean:88",
+        "formalization/Thesis/StoppingDAGIntermediate.lean:105"
+      ],
+      "verdict": "complete p/q/k formula and ordinary gradient",
+      "evidence": "Grafting literally reuses the same earlier recorded graph; both original and stopping evaluators compose. The suffix derivative is evaluated at the actual stopping prefix pair. Ordinary derivatives use an affine lift keeping the negative prefix stream fixed, hence are evaluated at actual pre.eval(xP-xN), without assuming a zero negative stream. All eight p/q/k parity cases and the arbitrary starting-sign scalar formula are included."
+    },
+    {
+      "topic": "Actual biases and payoff recovery",
+      "locations": [
+        "formalization/Thesis/StoppingDAGPayoff.lean:11",
+        "formalization/Thesis/StoppingDAGPayoff.lean:62",
+        "formalization/Thesis/StoppingDAGPayoff.lean:105",
+        "formalization/Thesis/StoppingDAGPrimitives.lean:27"
+      ],
+      "verdict": "syntax-derived reward, not circular remainder",
+      "evidence": "expressionOffset recursively computes the selected affine bias independently of the derivative. pathPayoff accumulates immediate bias rewards and discounted continuation/input rewards; its expectation is proved to equal actual stopping streams. Biases do not enter weight normalization. A dimension-zero negative constant graph terminates at cemetery yet pays its negative-stream magnitude five."
+    },
+    {
+      "topic": "Source primitive and tie adapters",
+      "locations": [
+        "formalization/Thesis/StoppingDAGPrimitives.lean:19",
+        "formalization/Thesis/StoppingDAGPrimitives.lean:46",
+        "formalization/Thesis/StoppingOrderedPool.lean:17",
+        "formalization/Thesis/StoppingOrderedPool.lean:105",
+        "formalization/Thesis/StoppingOrderedPool.lean:148"
+      ],
+      "verdict": "source-faithful with explicit finite-pool constructor",
+      "evidence": "Affine rows have canonical signs, discount sum|w|, and actual canonical bias. Addition has discount two with fair-branch push-forward, including duplicate operands. ReLU stops at zero. Ordered finite pools choose the least maximizing operand position and the actual shared predecessor row; sorted enumeration additionally gives least graph-node index. A unique maximum suffices for concrete regularity despite tied losing tails."
+    }
+  ],
+  "validation": {
+    "generic_contracts": 28,
+    "ordered_pool_contracts": 6,
+    "exact_types": "passed",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "fresh_source_compiles": {
+      "StoppingExpressionKernel": 0,
+      "StoppingDAGDerivative": 0,
+      "StoppingDAGPaths": 0,
+      "StoppingDAGOccupation": 0,
+      "StoppingDAGBackward": 0,
+      "StoppingDAGPayoff": 0,
+      "StoppingDAGPrimitives": 0,
+      "StoppingDAGCuts": 0,
+      "StoppingDAGVisits": 0,
+      "StoppingDAGIntermediate": 0,
+      "StoppingOrderedPool": 0
+    },
+    "generic_boundary_exit": 0,
+    "ordered_pool_boundary_exit": 0,
+    "generic_boundary_cases": [
+      "positive represented pool tie with unequal split streams proves original correspondence mismatch",
+      "dimension-zero negative constant graph has genuine normalized law and biased payoff",
+      "duplicate addition input probability aggregates to one with discount two",
+      "strictly winning constant ignores a tied losing subtree",
+      "zero-valued ReLU selects zero kernel"
+    ],
+    "ordered_pool_boundary_cases": [
+      "source min-index tie pair and unit kernel",
+      "singleton pool regularity",
+      "unsorted enumeration changes operand-position tie winner",
+      "unique winner above tied losing tail",
+      "actual shared-DAG occupation at source-selected predecessor"
+    ],
+    "independent_dag_experiment": {
+      "seed": 20261109,
+      "counts": {
+        "graphs": 161,
+        "zero_input_graphs": 40,
+        "nodes": 791,
+        "negative_scale_visits": 998,
+        "tied_max_comparisons": 973,
+        "zero_fanin_nodes": 441,
+        "paths": 2144,
+        "normalized_laws": 2066,
+        "payoff_checks": 2066,
+        "visit_cut_checks": 16300,
+        "scalar_cut_checks": 8150,
+        "finite_difference_checks": 6424,
+        "strict_graphs": 92
+      },
+      "failures": [],
+      "verified_source_mismatch": {
+        "inputs": [
+          [
+            2,
+            1
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "represented_values": [
+          1,
+          1
+        ],
+        "source_min_index": 0,
+        "generic_binary_winner": 1,
+        "source_pair": [
+          2,
+          1
+        ],
+        "generic_pair": [
+          1,
+          0
+        ]
+      },
+      "negative_controls_detected": [
+        "smallest-index source pool differs from generic right-tie pool",
+        "terminal-only proxy misses true internal visits",
+        "omitting bias payoff fails no-input constant graph"
+      ],
+      "cases_sha256": "67e7e2493550ac4dcb13528d179bcc068073f498d283ce0a6448da443b56297d",
+      "producer_sha256": "c62d3be9f7a5ed7f0a5d2b6559d212d3969f1833b45ccf35917317446c97302f",
+      "scope": "Finite exact checks supplement universal Lean proofs. Probabilities and full paths are independently enumerated; actual forward finite differences check strict-cell derivatives. Generic right-tie semantic model tested; ordered source pool adapter separately required."
+    },
+    "independent_ordered_pool_experiment": {
+      "seed": 20261109,
+      "counts": {
+        "pools": 1342,
+        "ties_for_maximum": 918,
+        "unique_max_with_losing_ties": 358,
+        "permuted_or_repeated_inputs": 207
+      },
+      "failures": [],
+      "cases_sha256": "90996668dd5c25fc7ffd7306e93e4e52059f115321e2f2145c77632ce9d80092",
+      "producer_sha256": "bcd6dbd15f7536c8cadbb6e3cdf4e2e5440c49da80767827a43eb68a7296f5f7",
+      "scope": "Source min-operand-index tie choice equals actual recursively compiled right-tie syntax; unique winners remain regular despite tied losing tails. Unsorted enumeration deliberately means operand position, not node index."
+    }
+  },
+  "scope_limits": [
+    "The source-directed model is additive shared DAG syntax: arbitrary signed affine/addition/scaling/maxima/ReLU. Products are excluded.",
+    "The path law follows the fixed selected stopping policy. This batch does not independently prove an extensive-form equilibrium theorem over alternative policies.",
+    "Full visits count recorded Circuit nodes. Compound expression interiors are collapsed into their selected local predecessor row; source structural states must be recorded when visits to those states are desired.",
+    "Actual classical derivatives require concrete regular cells. At ties only selected operators are identified, and individual stopping streams may be discontinuous. No merely-head-differentiability or almost-everywhere extension is asserted.",
+    "Generic binary maxima retain right ties. Source finite pools must use orderedInputPool with the intended operand enumeration; least graph index additionally needs sorted enumeration."
+  ],
+  "reviewed_contracts": [
+    {
+      "module": "Thesis.StoppingExpressionKernel",
+      "declaration": "Thesis.StoppingDAG.stoppingExpr_hasFDerivAt",
+      "expected_type": "\u2200 {n : \u2115} (e : SignedExpr (Fin n)) (he : e.Additive) (x : PairVec n) (hx : ExpressionRegular e x), HasFDerivAt (stoppingExpr e) (kernelMap (expressionKernel e x)) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/stoppingExpr_hasFDerivAt",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Actual selected additive expression derivative; concrete winning-subtree regularity."
+    },
+    {
+      "module": "Thesis.StoppingDAGDerivative",
+      "declaration": "Thesis.StoppingDAG.stoppingCircuit_hasFDerivAt",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (hx : CircuitRegular c x), HasFDerivAt (stoppingCircuit c) (pairMap (dagKernel c x).1 (dagKernel c x).2) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/stoppingCircuit_hasFDerivAt",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Actual shared-circuit stopping derivative from concrete forward regularity, including retained predecessors and fanout."
+    },
+    {
+      "module": "Thesis.StoppingDAGPaths",
+      "declaration": "Thesis.StoppingDAG.pathProbability_nonnegative",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (j : Fin n) (path : DAGPaths c), 0\u2264pathProbability c x j path",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/pathProbability_nonnegative",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Nonnegativity of full selected trajectory probabilities."
+    },
+    {
+      "module": "Thesis.StoppingDAGPaths",
+      "declaration": "Thesis.StoppingDAG.pathProbability_normalized",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (x : PairVec d) (j : Fin n), (\u2211 path : DAGPaths c,pathProbability c x j path)=1",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/pathProbability_normalized",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Normalized finite trajectory law including cemetery; ptnb:def:trajectory-distribution."
+    },
+    {
+      "module": "Thesis.StoppingDAGPaths",
+      "declaration": "Thesis.StoppingDAG.pathDiscount_nonnegative",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (j : Fin n) (path : DAGPaths c), 0\u2264pathDiscount c x j path",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/pathDiscount_nonnegative",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Nonnegative cumulative trajectory discount."
+    },
+    {
+      "module": "Thesis.StoppingDAGOccupation",
+      "declaration": "Thesis.StoppingDAG.occupation_eq_kernel",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (j : Fin n) (turn : Bool) (i : Fin d) (channel : Bool), occupation c x j turn i channel = if Bool.xor channel turn then (dagKernel c x).2 j i else (dagKernel c x).1 j i",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/occupation_eq_kernel",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Full finite boundary occupation equals computed signed graph kernel, with deterministic ties permitted."
+    },
+    {
+      "module": "Thesis.StoppingDAGBackward",
+      "declaration": "Thesis.StoppingDAG.selected_operator_occupation",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (j : Fin n) (turn : Bool) (i : Fin d) (channel : Bool), (if turn then (pairMap (dagKernel c x).1 (dagKernel c x).2 (splitBasis i channel)).2 j else (pairMap (dagKernel c x).1 (dagKernel c x).2 (splitBasis i channel)).1 j) = occupation c x j turn i channel",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/selected_operator_occupation",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Selected operator, not asserted classical derivative, at all points including tied ReLU/maxpool."
+    },
+    {
+      "module": "Thesis.StoppingDAGBackward",
+      "declaration": "Thesis.StoppingDAG.stopping_derivative_occupation",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (hx : CircuitRegular c x) (j : Fin n) (turn : Bool) (i : Fin d) (channel : Bool), (if turn then (fderiv \u211d (stoppingCircuit c) x (splitBasis i channel)).2 j else (fderiv \u211d (stoppingCircuit c) x (splitBasis i channel)).1 j) = occupation c x j turn i channel",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/stopping_derivative_occupation",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "All four actual end-to-end stopping-stream partial derivatives equal boundary occupation on regular cells."
+    },
+    {
+      "module": "Thesis.StoppingDAGBackward",
+      "declaration": "Thesis.StoppingDAG.circuit_hasFDerivAt",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (hc : c.Additive) (x : Vec d) (hx : CircuitRegular c (x,0)), HasFDerivAt c.eval (matrixCLM ((dagKernel c (x,0)).1-(dagKernel c (x,0)).2)) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/circuit_hasFDerivAt",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Actual original shared Circuit.eval derivative on canonical input lift."
+    },
+    {
+      "module": "Thesis.StoppingDAGPayoff",
+      "declaration": "Thesis.StoppingDAG.stoppingExpr_affine",
+      "expected_type": "\u2200 {n : \u2115} (e : SignedExpr (Fin n)) (he : e.Additive) (x : PairVec n), stoppingExpr e x=kernelMap (expressionKernel e x) x+expressionOffset e x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/stoppingExpr_affine",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Source-computed selected affine expression identity including syntax-derived biases, valid also at ties."
+    },
+    {
+      "module": "Thesis.StoppingDAGPayoff",
+      "declaration": "Thesis.StoppingDAG.expectedPayoff_eq_stoppingCircuit",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (j : Fin n) (turn : Bool), expectedPayoff c x j turn=streamValue (stoppingCircuit c x) j turn",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/expectedPayoff_eq_stoppingCircuit",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Actual full cumulative-discount payoff interpreter recovers forward stopping streams, including cemetery bias payoff; ptnb:thm:forward-stopping."
+    },
+    {
+      "module": "Thesis.StoppingDAGPrimitives",
+      "declaration": "Thesis.StoppingDAG.expressionKernel_affine",
+      "expected_type": "\u2200 {n : \u2115} (w : Vec n) (b : \u211d) (x : PairVec n), expressionKernel (SignedExpr.affine w b) x=(fun i => max (w i) 0,fun i => max (-w i) 0)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/expressionKernel_affine",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Existing shared affine syntax has exact canonical sign-split edges."
+    },
+    {
+      "module": "Thesis.StoppingDAGPrimitives",
+      "declaration": "Thesis.StoppingDAG.expressionOffset_affine",
+      "expected_type": "\u2200 {n : \u2115} (w : Vec n) (b : \u211d) (x : PairVec n), expressionOffset (SignedExpr.affine w b) x=(max b 0,max (-b) 0)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/expressionOffset_affine",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Exact affine bias reward, separate from weight fan-in."
+    },
+    {
+      "module": "Thesis.StoppingDAGPrimitives",
+      "declaration": "Thesis.StoppingDAG.affine_discount",
+      "expected_type": "\u2200 {n : \u2115} (w : Vec n) (b : \u211d) (x : PairVec n), localDiscount (expressionKernel (SignedExpr.affine w b) x)=\u2211 i,|w i|",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/affine_discount",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Source per-neuron weight-magnitude discount, including zero weights and empty fan-in."
+    },
+    {
+      "module": "Thesis.StoppingDAGPrimitives",
+      "declaration": "Thesis.StoppingDAG.constant_cemetery",
+      "expected_type": "\u2200 {n : \u2115} (b : \u211d) (x : PairVec n), localDiscount (expressionKernel (.constant b) x)=0 \u2227 localProbability (expressionKernel (.constant b) x) none=1 \u2227 expressionOffset (.constant b) x=(max b 0,max (-b) 0)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/constant_cemetery",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Zero-fan-in transition terminates at cemetery and retains the actual signed bias reward."
+    },
+    {
+      "module": "Thesis.StoppingDAGPrimitives",
+      "declaration": "Thesis.StoppingDAG.addition_discount",
+      "expected_type": "\u2200 {n : \u2115} (i j : Fin n) (x : PairVec n), localDiscount (expressionKernel (.add (.input i) (.input j)) x)=2",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/addition_discount",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Source addition-oracle discount 2, even for repeated predecessors."
+    },
+    {
+      "module": "Thesis.StoppingDAGPrimitives",
+      "declaration": "Thesis.StoppingDAG.addition_probability",
+      "expected_type": "\u2200 {n : \u2115} (i j k : Fin n) (x : PairVec n), localProbability (expressionKernel (.add (.input i) (.input j)) x) (some (k,false)) = additionProbability false*(if k=i then 1 else 0)+additionProbability true*(if k=j then 1 else 0)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/addition_probability",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Push-forward of actual fair two-branch addition oracle; duplicate predecessors aggregate correctly."
+    },
+    {
+      "module": "Thesis.StoppingDAGPrimitives",
+      "declaration": "Thesis.StoppingDAG.pool_kernel",
+      "expected_type": "\u2200 {n : \u2115} (i j : Fin n) (x : PairVec n), expressionKernel (.maximum (.input i) (.input j)) x = (Pi.single (if x.1 j-x.2 j<x.1 i-x.2 i then i else j) 1,0)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/pool_kernel",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Actual maxpool predecessor selects represented maximum with deterministic right tie."
+    },
+    {
+      "module": "Thesis.StoppingDAGPrimitives",
+      "declaration": "Thesis.StoppingDAG.pool_discount",
+      "expected_type": "\u2200 {n : \u2115} (i j : Fin n) (x : PairVec n), localDiscount (expressionKernel (.maximum (.input i) (.input j)) x)=1",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/pool_discount",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Source maxpool-oracle discount 1."
+    },
+    {
+      "module": "Thesis.StoppingDAGPrimitives",
+      "declaration": "Thesis.StoppingDAG.relu_kernel",
+      "expected_type": "\u2200 {n : \u2115} (i : Fin n) (x : PairVec n), expressionKernel (.maximum (.input i) (.constant 0)) x = if x.2 i<x.1 i then (Pi.single i 1,0) else (0,0)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/relu_kernel",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Actual ReLU selected derivative kernel with stop at zero."
+    },
+    {
+      "module": "Thesis.StoppingDAGCuts",
+      "declaration": "Thesis.StoppingDAG.graft_stopping",
+      "expected_type": "\u2200 {d m n : \u2115} (pre : Circuit d m) (suffix : Circuit m n) (x : PairVec d), stoppingCircuit (graft pre suffix) x=stoppingCircuit suffix (stoppingCircuit pre x)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/graft_stopping",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Actual shared graph prefix/suffix forward composition; no independently copied networks."
+    },
+    {
+      "module": "Thesis.StoppingDAGVisits",
+      "declaration": "Thesis.StoppingDAG.fullOccupation_graft_last",
+      "expected_type": "\u2200 {d m n : \u2115} (pre : Circuit d (m+1)) (suffix : Circuit (m+1) n) (hc : (graft pre suffix).Additive) (x : PairVec d) (j : Fin n) (turn channel : Bool), fullOccupation (graft pre suffix) x j turn m channel = occupation suffix (stoppingCircuit pre x) j turn (Fin.last m) channel",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/fullOccupation_graft_last",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Original full-trajectory visits to any chosen intermediate node equal terminal occupation at the actual graph cut ending there; ptnb:def:occupation."
+    },
+    {
+      "module": "Thesis.StoppingDAGIntermediate",
+      "declaration": "Thesis.StoppingDAG.circuit_hasFDerivAt_split",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (hc : c.Additive) (s : PairVec d) (hs : CircuitRegular c s), HasFDerivAt c.eval (matrixCLM ((dagKernel c s).1-(dagKernel c s).2)) (s.1-s.2)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/circuit_hasFDerivAt_split",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Original ordinary derivative at an arbitrary actual split state; does not assume the prefix has zero negative stream."
+    },
+    {
+      "module": "Thesis.StoppingDAGIntermediate",
+      "declaration": "Thesis.StoppingDAG.exists_graph_cut",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (target : \u2115) (hd : d\u2264target) (hn : target<n), \u2203 pre : Circuit d (target+1),\u2203 suffix : Circuit (target+1) n,c=graft pre suffix",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/exists_graph_cut",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "Every internal state of the original graph admits the shared prefix/suffix cut used by the source intermediate-node theorem."
+    },
+    {
+      "module": "Thesis.StoppingDAGIntermediate",
+      "declaration": "Thesis.StoppingDAG.fullOccupation_input",
+      "expected_type": "\u2200 {d n : \u2115} (c : Circuit d n) (hc : c.Additive) (x : PairVec d) (j : Fin n) (turn : Bool) (i : Fin d) (channel : Bool), fullOccupation c x j turn i.val channel=occupation c x j turn i channel",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/fullOccupation_input",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "For original input states, full visit occupation equals terminal occupation."
+    },
+    {
+      "module": "Thesis.StoppingDAGIntermediate",
+      "declaration": "Thesis.StoppingDAG.intermediate_stopping_derivative_occupation",
+      "expected_type": "\u2200 {d m n : \u2115} (pre : Circuit d (m+1)) (suffix : Circuit (m+1) n) (hc : (graft pre suffix).Additive) (x : PairVec d) (hx : CircuitRegular (graft pre suffix) x) (j : Fin n) (p q k : Bool), (if Bool.xor p q then (fderiv \u211d (stoppingCircuit suffix) (stoppingCircuit pre x) (splitBasis (Fin.last m) k)).2 j else (fderiv \u211d (stoppingCircuit suffix) (stoppingCircuit pre x) (splitBasis (Fin.last m) k)).1 j) = fullOccupation (graft pre suffix) x j q m (Bool.xor p k)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/intermediate_stopping_derivative_occupation",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "ptnb:thm:deriv-occ part 1: full p/q/k actual intermediate stopping-stream derivative equals original full DAG discounted visits on concrete regular cells."
+    },
+    {
+      "module": "Thesis.StoppingDAGIntermediate",
+      "declaration": "Thesis.StoppingDAG.intermediate_circuit_derivative_occupation",
+      "expected_type": "\u2200 {d m n : \u2115} (pre : Circuit d (m+1)) (suffix : Circuit (m+1) n) (hc : (graft pre suffix).Additive) (x : PairVec d) (hx : CircuitRegular (graft pre suffix) x) (j : Fin n) (q : Bool), (fderiv \u211d suffix.eval (pre.eval (x.1-x.2)) (Pi.single (Fin.last m) 1)) j = (if q then (-1 : \u211d) else 1)*(fullOccupation (graft pre suffix) x j q m false-fullOccupation (graft pre suffix) x j q m true)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/intermediate_circuit_derivative_occupation",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "ptnb:thm:deriv-occ part 2: actual scalar activation derivative at true prefix value equals signed difference of original full DAG discounted visits."
+    },
+    {
+      "module": "Thesis.StoppingDAGIntermediate",
+      "declaration": "Thesis.StoppingDAG.intermediate_selected_occupation",
+      "expected_type": "\u2200 {d m n : \u2115} (pre : Circuit d (m+1)) (suffix : Circuit (m+1) n) (hc : (graft pre suffix).Additive) (x : PairVec d) (j : Fin n) (p q k : Bool), (if Bool.xor p q then (pairMap (dagKernel suffix (stoppingCircuit pre x)).1 (dagKernel suffix (stoppingCircuit pre x)).2 (splitBasis (Fin.last m) k)).2 j else (pairMap (dagKernel suffix (stoppingCircuit pre x)).1 (dagKernel suffix (stoppingCircuit pre x)).2 (splitBasis (Fin.last m) k)).1 j) = fullOccupation (graft pre suffix) x j q m (Bool.xor p k)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDecomposition",
+        "Thesis.StoppingDAG",
+        "Matrix"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-dag/intermediate_selected_occupation",
+      "review_evidence": "reports/stopping-dag-repairs.md",
+      "scope": "ptnb:thm:deriv-occ tie clause: selected intermediate operator equals original full DAG occupation at every point, without a classical differentiability assertion."
+    },
+    {
+      "module": "Thesis.StoppingOrderedPool",
+      "declaration": "Thesis.StoppingDAG.earliestWinner_spec",
+      "expected_type": "\u2200 {k : \u2115} (v : Fin (k+1) \u2192 \u211d), (\u2200 i,v i \u2264 v (earliestWinner v)) \u2227 (\u2200 i,v i=v (earliestWinner v) \u2192 earliestWinner v \u2264 i)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-ordered-pool/earliestWinner_spec",
+      "review_evidence": "reports/stopping-ordered-pool-repairs.md",
+      "scope": "Least maximizing original operand index for every nonempty finite pool."
+    },
+    {
+      "module": "Thesis.StoppingOrderedPool",
+      "declaration": "Thesis.StoppingDAG.orderedInputPool_source",
+      "expected_type": "\u2200 {n k : \u2115} (inputs : Fin (k+1) \u2192 Fin n) (x : PairVec n), let values := fun i => x.1 (inputs i)-x.2 (inputs i); let winner := earliestWinner values; (\u2200 i,values i \u2264 values winner) \u2227 (\u2200 i,values i=values winner \u2192 winner \u2264 i) \u2227 stoppingExpr (orderedInputPool inputs) x=(x.1 (inputs winner),x.2 (inputs winner)) \u2227 expressionKernel (orderedInputPool inputs) x=(Pi.single (inputs winner) 1,0)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-ordered-pool/orderedInputPool_source",
+      "review_evidence": "reports/stopping-ordered-pool-repairs.md",
+      "scope": "Source PTNB finite-pool tie rule, actual selected pair and kernel; replaces direct generic-binary tie mapping."
+    },
+    {
+      "module": "Thesis.StoppingOrderedPool",
+      "declaration": "Thesis.StoppingDAG.orderedInputPool_minimum_graph_index",
+      "expected_type": "\u2200 {n k : \u2115} (inputs : Fin (k+1) \u2192 Fin n) (horder : Monotone inputs) (x : PairVec n), let values := fun i => x.1 (inputs i)-x.2 (inputs i); let winner := earliestWinner values; \u2200 i,values i=values winner \u2192 inputs winner \u2264 inputs i",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-ordered-pool/orderedInputPool_minimum_graph_index",
+      "review_evidence": "reports/stopping-ordered-pool-repairs.md",
+      "scope": "Sorted source predecessor enumeration yields the smallest original graph-node index at ties."
+    },
+    {
+      "module": "Thesis.StoppingOrderedPool",
+      "declaration": "Thesis.StoppingDAG.orderedInputPool_dag_row",
+      "expected_type": "\u2200 {d n k : \u2115} (prior : Circuit d n) (inputs : Fin (k+1) \u2192 Fin n) (x : PairVec d), let s := stoppingCircuit prior x; let winner := earliestWinner (fun i => s.1 (inputs i)-s.2 (inputs i)); (dagKernel (.node prior (orderedInputPool inputs)) x).1 (Fin.last n)=(dagKernel prior x).1 (inputs winner) \u2227 (dagKernel (.node prior (orderedInputPool inputs)) x).2 (Fin.last n)=(dagKernel prior x).2 (inputs winner)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-ordered-pool/orderedInputPool_dag_row",
+      "review_evidence": "reports/stopping-ordered-pool-repairs.md",
+      "scope": "Actual shared-DAG selected global Jacobian forwards the earliest maximizing predecessor rows."
+    },
+    {
+      "module": "Thesis.StoppingOrderedPool",
+      "declaration": "Thesis.StoppingDAG.orderedPool_regular",
+      "expected_type": "\u2200 {n k : \u2115} (es : Fin (k+1) \u2192 SignedExpr (Fin n)) (x : PairVec n) (winner : Fin (k+1)) (hw : \u2200 i,i\u2260winner \u2192 score (es i) x<score (es winner) x) (hr : ExpressionRegular (es winner) x), ExpressionRegular (orderedPool es) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-ordered-pool/orderedPool_regular",
+      "review_evidence": "reports/stopping-ordered-pool-repairs.md",
+      "scope": "Unique finite maximum plus only winning-operand regularity suffices; no regularity premise on losing subtrees."
+    },
+    {
+      "module": "Thesis.StoppingOrderedPool",
+      "declaration": "Thesis.StoppingDAG.orderedInputPool_regular",
+      "expected_type": "\u2200 {n k : \u2115} (inputs : Fin (k+1) \u2192 Fin n) (x : PairVec n) (winner : Fin (k+1)) (hw : \u2200 i,i\u2260winner \u2192 x.1 (inputs i)-x.2 (inputs i)<x.1 (inputs winner)-x.2 (inputs winner)), ExpressionRegular (orderedInputPool inputs) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-ordered-pool/orderedInputPool_regular",
+      "review_evidence": "reports/stopping-ordered-pool-repairs.md",
+      "scope": "Source unique maximizing pool input supplies exactly the generic forward regularity condition even with tied losing values."
+    }
+  ],
+  "evidence_directory": "reports/evidence/stopping-dag-review"
+}

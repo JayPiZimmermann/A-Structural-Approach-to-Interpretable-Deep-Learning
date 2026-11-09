@@ -1,0 +1,114 @@
+@affine_max_forest : ∀ {n : Nat} (k : Nat) (O : Type) [Fintype.{0} O] (w : O → (Fin k → Bool) → Fin n → Real)
+  (b : O → (Fin k → Bool) → Real),
+  ∃ H,
+    And (@Eq.{1} Nat (@AffineHead.depth n O H) k)
+      (∀ (x : Fin n → Real) (i : O),
+        @Eq.{1} Real (@AffineHead.eval n O H x i)
+          (@finiteMax (Fin k → Bool)
+            (@Pi.instFintype.{0, 0} (Fin k) (fun a => Bool) (instDecidableEqFin k) (Fin.fintype k) fun a =>
+              Bool.fintype)
+            ⋯ fun t =>
+            @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+              (@dotProduct.{0, 0} (Fin n) Real (Fin.fintype n) Real.instMul Real.instAddCommMonoid (w i t) x) (b i t)))
+'Thesis.ReLURepresentation.affine_max_forest' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/relu-compiler-review/ExactTypes.lean:22:1: warning: Variable name `hcard` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hcard
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@polynomial_forest : ∀ {n k : Nat} (O : Type) [Fintype.{0} O] (p : O → Thesis.Tropical.Polynomial (Fin n)),
+  (∀ (i : O),
+      @LE.le.{0} Nat instLENat (@Fintype.card.{0} (@Polynomial.Terms (Fin n) (p i)) (@Polynomial.finite (Fin n) (p i)))
+        (@HPow.hPow.{0, 0, 0} Nat Nat Nat
+          (@instHPow.{0, 0} Nat Nat (@NPow.toPow.{0} Nat (@Monoid.toNPow.{0} Nat Nat.instMonoid)))
+          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) k)) →
+    ∃ H,
+      And (@Eq.{1} Nat (@AffineHead.depth n O H) k)
+        (∀ (x : Fin n → Real) (i : O),
+          @Eq.{1} Real (@AffineHead.eval n O H x i) (@Thesis.Tropical.Polynomial.eval (Fin n) (Fin.fintype n) (p i) x))
+'Thesis.ReLURepresentation.polynomial_forest' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/relu-compiler-review/ExactTypes.lean:33:1: warning: Variable name `hcard` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hcard
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@signed_polynomial_compiler : ∀ {n k : Nat} (O : Type) [inst : Fintype.{0} O]
+  (p : O → Thesis.Tropical.Polynomial (Fin n)) (c : O → Real),
+  (∀ (i : O),
+      @LE.le.{0} Nat instLENat (@Fintype.card.{0} (@Polynomial.Terms (Fin n) (p i)) (@Polynomial.finite (Fin n) (p i)))
+        (@HPow.hPow.{0, 0, 0} Nat Nat Nat
+          (@instHPow.{0, 0} Nat Nat (@NPow.toPow.{0} Nat (@Monoid.toNPow.{0} Nat Nat.instMonoid)))
+          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) k)) →
+    ∃ H,
+      And (@Eq.{1} Nat (@AffineHead.depth n Unit H) k)
+        (∀ (x : Fin n → Real),
+          @Eq.{1} Real (@AffineHead.eval n Unit H x Unit.unit)
+            (∑ i,
+              @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (c i)
+                (@Thesis.Tropical.Polynomial.eval (Fin n) (Fin.fintype n) (p i) x)))
+'Thesis.ReLURepresentation.signed_polynomial_compiler' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+../reports/evidence/relu-compiler-review/ExactTypes.lean:44:1: warning: Variable name `hf` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hf
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@cpwl_relu_bounded_depth : ∀ {n : Nat} (f : (Fin n → Real) → Real),
+  (@CPWL (Fin n) Unit (Fin.fintype n) fun x x_1 => f x) →
+    ∃ m net w b,
+      And
+        (@LE.le.{0} Nat instLENat
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) (@hiddenDepth n m net)
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat)
+            (@Nat.ceil.{0} Real Real.semiring Real.partialOrder
+              (@FloorRing.toFloorSemiring.{0} Real Real.instRing Real.linearOrder Real.instFloorRing)
+              (Real.logb
+                (@OfNat.ofNat.{0} Real (nat_lit 2) (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast ⋯))
+                (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+                  (@Nat.cast.{0} Real Real.instNatCast n)
+                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))))
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+        (∀ (x : Fin n → Real),
+          @Eq.{1} Real (f x)
+            (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+              (@dotProduct.{0, 0} (Fin m) Real (Fin.fintype m) Real.instMul Real.instAddCommMonoid w
+                (@Network.eval n m net x))
+              b))
+'Thesis.PiecewiseLinear.cpwl_relu_bounded_depth' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@cpwl_relu_equivalence : ∀ {n : Nat} (f : (Fin n → Real) → Real),
+  And
+    (Iff (@CPWL (Fin n) Unit (Fin.fintype n) fun x x_1 => f x)
+      (∃ m net w b,
+        ∀ (x : Fin n → Real),
+          @Eq.{1} Real (f x)
+            (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+              (@dotProduct.{0, 0} (Fin m) Real (Fin.fintype m) Real.instMul Real.instAddCommMonoid w
+                (@Network.eval n m net x))
+              b)))
+    ((@CPWL (Fin n) Unit (Fin.fintype n) fun x x_1 => f x) →
+      ∃ m net w b,
+        And
+          (@LE.le.{0} Nat instLENat
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) (@hiddenDepth n m net)
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat)
+              (@Nat.ceil.{0} Real Real.semiring Real.partialOrder
+                (@FloorRing.toFloorSemiring.{0} Real Real.instRing Real.linearOrder Real.instFloorRing)
+                (Real.logb
+                  (@OfNat.ofNat.{0} Real (nat_lit 2) (@instOfNatAtLeastTwo.{0} Real (nat_lit 2) Real.instNatCast ⋯))
+                  (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+                    (@Nat.cast.{0} Real Real.instNatCast n)
+                    (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))))
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+          (∀ (x : Fin n → Real),
+            @Eq.{1} Real (f x)
+              (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+                (@dotProduct.{0, 0} (Fin m) Real (Fin.fintype m) Real.instMul Real.instAddCommMonoid w
+                  (@Network.eval n m net x))
+                b)))
+'Thesis.PiecewiseLinear.cpwl_relu_equivalence' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]

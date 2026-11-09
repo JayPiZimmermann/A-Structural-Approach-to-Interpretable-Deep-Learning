@@ -1,0 +1,96 @@
+{
+  "public_root": "HiddenMonotonicity.Convolution",
+  "targets": [
+    {
+      "module": "HiddenMonotonicity.ConvexInput",
+      "declaration": "HiddenMonotonicity.Network.split_convex_input",
+      "expected_type": "\u2200 {d n m : \u2115} (net : Network n m) (hw : net.Nonnegative)\n(p q : Vec d \u2192 Vec n)\n(hp : \u2200 i, ConvexOn \u211d univ (fun x => p x i))\n(hq : \u2200 i, ConvexOn \u211d univ (fun x => q x i)),\n(\u2200 i, ConvexOn \u211d univ (fun x => (net.split (p x) (q x)).1 i)) \u2227\n(\u2200 i, ConvexOn \u211d univ (fun x => (net.split (p x) (q x)).2 i))",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "CONVEX-INPUT-split_convex_input",
+      "review_evidence": "reports/convex-input-repairs.json",
+      "scope": "Arbitrary coordinatewise convex input lifts on the shared network, nonnegative split weights, arbitrary biases, no smoothness or gate strictness. The affine-head theorem uses actual ungated readout definitions."
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexInput",
+      "declaration": "HiddenMonotonicity.Network.affine_heads_convex_input",
+      "expected_type": "\u2200 {d n m : \u2115} (net : Network n m) (hw : net.Nonnegative)\n(p q : Vec d \u2192 Vec n)\n(hp : \u2200 i, ConvexOn \u211d univ (fun x => p x i))\n(hq : \u2200 i, ConvexOn \u211d univ (fun x => q x i))\n(wp wn : Vec m) (hwp : \u2200 i, 0 \u2264 wp i) (hwn : \u2200 i, 0 \u2264 wn i) (bp bn : \u211d),\nConvexOn \u211d univ (fun x => (net.affineHeads (coefficientRow wp) (coefficientRow wn) bp bn (p x,q x)).1) \u2227\nConvexOn \u211d univ (fun x => (net.affineHeads (coefficientRow wp) (coefficientRow wn) bp bn (p x,q x)).2)",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "CONVEX-INPUT-affine_heads_convex_input",
+      "review_evidence": "reports/convex-input-repairs.json",
+      "scope": "Arbitrary coordinatewise convex input lifts on the shared network, nonnegative split weights, arbitrary biases, no smoothness or gate strictness. The affine-head theorem uses actual ungated readout definitions."
+    },
+    {
+      "module": "HiddenMonotonicity.ConvexInput",
+      "declaration": "HiddenMonotonicity.Network.mixing_one_convex_input",
+      "expected_type": "\u2200 {d n m : \u2115} (net : Network n m) (hw : net.Nonnegative)\n(p q : Vec d \u2192 Vec n)\n(hp : \u2200 i, ConvexOn \u211d univ (fun x => p x i))\n(hq : \u2200 i, ConvexOn \u211d univ (fun x => q x i)),\n(\u2200 i, ConvexOn \u211d univ (fun x => (net.decomposeWith (mixPair 1) (p x,q x)).1 i)) \u2227\n(\u2200 i, ConvexOn \u211d univ (fun x => (net.decomposeWith (mixPair 1) (p x,q x)).2 i)) \u2227\n(\u2200 x, (net.decomposeWith (mixPair 1) (p x,q x)).1 - (net.decomposeWith (mixPair 1) (p x,q x)).2 = net.eval (p x-q x))",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity"
+      ],
+      "universes": [],
+      "review_id": "CONVEX-INPUT-mixing_one_convex_input",
+      "review_evidence": "reports/convex-input-repairs.json",
+      "scope": "Arbitrary coordinatewise convex input lifts on the shared network, nonnegative split weights, arbitrary biases, no smoothness or gate strictness. The affine-head theorem uses actual ungated readout definitions."
+    },
+    {
+      "module": "HiddenMonotonicity.Convolution",
+      "declaration": "HiddenMonotonicity.Convolution.applyKernel_eq_mulVec",
+      "expected_type": "\u2200 {ci co ip op taps : \u2115}\n(K : Fin co \u2192 Fin ci \u2192 Fin taps \u2192 \u211d)\n(stencil : Fin op \u2192 Fin taps \u2192 Option (Fin ip)) (x : Vec (ci*ip)),\napplyKernel K stencil x = (kernelMatrix K stencil).mulVec x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.Convolution"
+      ],
+      "universes": [],
+      "review_id": "CONVOLUTION-applyKernel_eq_mulVec",
+      "review_evidence": "reports/convolution-repairs.json",
+      "scope": "Exact direct tensor-sum to explicit sparse shared matrix bridge, with arbitrary stencil, zero padding, repeated taps and zero-sized dimensions."
+    },
+    {
+      "module": "HiddenMonotonicity.Convolution",
+      "declaration": "HiddenMonotonicity.Convolution.applyKernel_hasFDerivAt",
+      "expected_type": "\u2200 {ci co ip op taps : \u2115}\n(K : Fin co \u2192 Fin ci \u2192 Fin taps \u2192 \u211d)\n(stencil : Fin op \u2192 Fin taps \u2192 Option (Fin ip)) (x : Vec (ci*ip)),\nHasFDerivAt (applyKernel K stencil) (matrixCLM (kernelMatrix K stencil)) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.Convolution"
+      ],
+      "universes": [],
+      "review_id": "CONVOLUTION-applyKernel_hasFDerivAt",
+      "review_evidence": "reports/convolution-repairs.json",
+      "scope": "Actual Frechet derivative of the direct tensor-sum evaluator."
+    },
+    {
+      "module": "HiddenMonotonicity.Convolution",
+      "declaration": "HiddenMonotonicity.Convolution.splitKernel_hasFDerivAt",
+      "expected_type": "\u2200 {ci co ip op taps : \u2115}\n(K : Fin co \u2192 Fin ci \u2192 Fin taps \u2192 \u211d)\n(stencil : Fin op \u2192 Fin taps \u2192 Option (Fin ip)) (b : Fin co \u2192 \u211d) (x : PairVec (ci*ip)),\nHasFDerivAt (splitKernel K stencil b)\n((preP (kernelMatrix (positiveKernel K) stencil) (kernelMatrix (negativeKernel K) stencil)).prod\n(preN (kernelMatrix (positiveKernel K) stencil) (kernelMatrix (negativeKernel K) stencil))) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.Convolution"
+      ],
+      "universes": [],
+      "review_id": "CONVOLUTION-splitKernel_hasFDerivAt",
+      "review_evidence": "reports/convolution-repairs.json",
+      "scope": "All four convolution split Jacobian blocks, with actual positive/negative kernel matrices and spatially shared biases."
+    },
+    {
+      "module": "HiddenMonotonicity.Convolution",
+      "declaration": "HiddenMonotonicity.Convolution.splitKernel_properties",
+      "expected_type": "\u2200 {ci co ip op taps : \u2115}\n(K : Fin co \u2192 Fin ci \u2192 Fin taps \u2192 \u211d)\n(stencil : Fin op \u2192 Fin taps \u2192 Option (Fin ip)) (b : Fin co \u2192 \u211d),\n(\u2200 x, 0 \u2264 x \u2192 0 \u2264 splitKernel K stencil b x) \u2227\nMonotone (splitKernel K stencil b) \u2227\n(\u2200 i, ConvexOn \u211d Set.univ (fun x => (splitKernel K stencil b x).1 i) \u2227\nConvexOn \u211d Set.univ (fun x => (splitKernel K stencil b x).2 i)) \u2227\n(\u2200 x, (splitKernel K stencil b x).1-(splitKernel K stencil b x).2 =\napplyKernel K stencil (x.1-x.2)+(fun u => b (unflat u).1))",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "HiddenMonotonicity.Convolution"
+      ],
+      "universes": [],
+      "review_id": "CONVOLUTION-splitKernel_properties",
+      "review_evidence": "reports/convolution-repairs.json",
+      "scope": "Full source convolution split claim for tensor-indexed cross-correlation: nonnegativity, monotonicity, convexity and exact reconstruction of arbitrary signed kernels and biases."
+    }
+  ]
+}

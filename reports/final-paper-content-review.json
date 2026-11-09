@@ -1,0 +1,81 @@
+{
+  "title": "Final active-paper source-to-thesis content review",
+  "date": "2026-11-09",
+  "scope": {
+    "sources": [
+      "arxive/hiddenMonotonicity/main.tex and its active recursive include closure (31 TeX files)",
+      "arxive/playingTheNetworkBackward/main.tex and its active recursive include closure (18 TeX files)"
+    ],
+    "thesis": "tex/main.tex and included chapters, figures, tables, and bibliography",
+    "reviewed_reports": [
+      "reports/hidden-paper-merge-audit.json",
+      "reports/ptnb-paper-merge-audit.json",
+      "reports/paper-merge-restorations.json"
+    ],
+    "method": "Read-only textual comparison of active-source claims, captions, examples, and cited references against current thesis locations. No TeX or Lean edits and no builds. This is an editorial coverage check, not proof verification."
+  },
+  "result": "No remaining substantive source-paper content omission identified in the targeted final checks. Earlier partial audit findings queried here are present in the active thesis at the cited locations. The broader technical coverage conclusions remain subject to the detailed prior audits; this check does not establish mathematical correctness.",
+  "restoration_checks": [
+    {
+      "item": "Hidden Monotonicity motivation: fairness, non-cancellation, and monotone streams retaining learned structure",
+      "source": "arxive/hiddenMonotonicity/sections/introduction.tex:25-52",
+      "thesis": "tex/chapters/01_introduction.tex:13",
+      "status": "present",
+      "note": "The thesis connects non-negative streams to no cancellation and domain-specific fairness constraints, while qualifying that a constraint does not guarantee fairness. The split preserves the represented function without retraining."
+    },
+    {
+      "item": "Single-IC ten-class comparison and second DICIN image_036 digit-3 example, including factual/counterfactual interpretation and plain-DIC signed-map observation",
+      "source": "arxive/hiddenMonotonicity/appendix/figures/mnist_ic_saliency.tex; arxive/hiddenMonotonicity/appendix/figures/mnist_split_ic_saliency.tex; arxive/hiddenMonotonicity/appendix/dcinns.tex:52-64",
+      "thesis": "tex/chapters/05_saliency.tex:379-385, 473 onward",
+      "status": "present",
+      "note": "Both figures and the associated qualitative observations are retained; the thesis properly limits the examples' generality."
+    },
+    {
+      "item": "Four block-Jacobian calculations and fixed-bias observation",
+      "source": "arxive/hiddenMonotonicity/sections/method.tex and appendix/proofs.tex (backward derivation)",
+      "thesis": "tex/chapters/03_decompositions.tex:558-575, label eq:split_layer_jacobians",
+      "status": "present",
+      "note": "All four blocks are displayed, with the ungated affine-readout convention and fixed-bias derivative/structure statement."
+    },
+    {
+      "item": "Implementation details and alternative-activation scope",
+      "source": "arxive/hiddenMonotonicity/sections/method.tex:61-102",
+      "thesis": "tex/chapters/03_decompositions.tex: implementation discussion around the CNN split pass and paragraphs Alternative nonlinearities and exactness / The CNN split pass (around lines 748-759)",
+      "status": "present with scoped qualifications",
+      "note": "The thesis covers chunk graph processing, forward/backward and original-model caches, layerwise activation/gradient analysis, optional correction, use of original activation positivity patterns, and the paper's float64 setup while distinguishing it from the inspected code's configurable default. It retains ELU/Swish references and correctly marks finite ReLU replacements as approximations, separate from the exact curvature construction."
+    },
+    {
+      "item": "PTNB full main-figure caption",
+      "source": "arxive/playingTheNetworkBackward/main.tex:110-118, fig:game-trajectory-distribution",
+      "thesis": "tex/chapters/04_game_theory.tex:5-13, fig:game_trajectory_overview",
+      "status": "present in full",
+      "note": "Sign split, stop/continue and routing decisions, induced equilibrium trajectory distribution, and input-state discounted occupation measure are all stated."
+    },
+    {
+      "item": "PTNB Ancona modified-gradient comparison",
+      "source": "arxive/playingTheNetworkBackward/main.tex:231-232",
+      "thesis": "tex/chapters/04_game_theory.tex:18",
+      "status": "present"
+    },
+    {
+      "item": "PTNB Broader Impact and paper-scoped AI-use disclosure",
+      "source": "arxive/playingTheNetworkBackward/main.tex:764-768, 4943 onward",
+      "thesis": "tex/chapters/09_conclusion.tex:31 onward; tex/chapters/10_appendix.tex:806-825",
+      "status": "present",
+      "note": "The broader-impact discussion preserves positive and misuse risks and states the limits of trajectory distance. The AI statement is attributed to the revised game paper and separated from subsequent thesis/Lean assistance."
+    },
+    {
+      "item": "Active-paper reference coverage",
+      "source": "Both active paper bibliographies and citation closures",
+      "thesis": "scripts/check_paper_references.py --check",
+      "status": "pass",
+      "note": "Checker output: HM 74 source keys; PTNB v2 72 references; genuinely missing references: 0. This records citation coverage only, not claim correctness."
+    }
+  ],
+  "remaining_gaps": [],
+  "limits": [
+    "Wording differences were not treated as omissions when the same claim or evidence was present in merged prose.",
+    "The merged introduction and conclusion intentionally do not reproduce both papers' standalone framing verbatim.",
+    "No Lean build, proof audit, or empirical verification was performed."
+  ]
+}

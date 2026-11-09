@@ -1,0 +1,124 @@
+{
+  "targets": [
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.exists_optimizer",
+      "expected_type": "\u2200 (R : Regularizer) (z : \u211d), \u2203 p \u2208 Icc (0 : \u211d) 1, IsMaxOn (objective R z) (Icc 0 1) p",
+      "review_id": "GENERAL-REGULARIZER-exists_optimizer",
+      "scope": "Optimizer existence from lower semicontinuity on the compact closed probability interval, including endpoints."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.activation_isGreatest",
+      "expected_type": "\u2200 (R : Regularizer) (z : \u211d), IsGreatest ((objective R z) '' Icc (0 : \u211d) 1) (activation R z)",
+      "review_id": "GENERAL-REGULARIZER-activation_isGreatest",
+      "scope": "The chosen-value definition is proved to be the actual maximum of the binary objective."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.regularized_decomposition_validity",
+      "expected_type": "\u2200 (R : Regularizer) (\u03c0 : \u211d \u2192 \u211d)\n(h\u03c0 : \u2200 z, \u03c0 z \u2208 Icc (0 : \u211d) 1 \u2227 IsMaxOn (objective R z) (Icc 0 1) (\u03c0 z))\n{n m k : \u2115} (net : Network n m) (x : PairVec n)\n(wp wn : Matrix (Fin k) (Fin m) \u211d) (bp bn : Vec k),\nValidPairActivation (activation R) (pairWith R \u03c0) \u2227\nNonnegativePairActivation (pairWith R \u03c0) \u2227\nConvexOn \u211d univ (activation R) \u2227 Monotone (activation R) \u2227\nLipschitzWith 1 (activation R) \u2227\n(\u2200 z, DifferentiableAt \u211d (activation R) z \u2192 \u03c0 z = deriv (activation R) z) \u2227\n(preP wp wn (net.decomposeWith (pairWith R \u03c0) x)+bp -\n(preN wp wn (net.decomposeWith (pairWith R \u03c0) x)+bn) =\naffineLayer wp wn bp bn (net.forwardWith (activation R) (x.1-x.2)))",
+      "review_id": "GENERAL-REGULARIZER-regularized_decomposition_validity",
+      "scope": "Complete regularized-pair validity, convex/nondecreasing/1-Lipschitz activation, every optimizer equals actual derivative at differentiable points, and exact arbitrary-width biased network recovery with ungated signed affine readout."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.zero_activation",
+      "expected_type": "\u2200 z : \u211d, activation zeroRegularizer z = relu z",
+      "review_id": "GENERAL-REGULARIZER-zero_activation",
+      "scope": "Unregularized variational value equals ReLU."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.zero_pair_is_stopping",
+      "expected_type": "pairWith zeroRegularizer hardGate = Thesis.StoppingDecomposition.stopPair",
+      "review_id": "GENERAL-REGULARIZER-zero_pair_is_stopping",
+      "scope": "Exact pair equality with strict-positive gate and stopping at zero."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.sigmoid_optimal",
+      "expected_type": "\u2200 (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8) (z : \u211d),\nThesis.Regularization.gate \u03b8 z \u2208 Icc (0 : \u211d) 1 \u2227\nIsMaxOn (objective (entropyRegularizer \u03b8 h\u03b8) z) (Icc 0 1)\n(Thesis.Regularization.gate \u03b8 z)",
+      "review_id": "GENERAL-REGULARIZER-sigmoid_optimal",
+      "scope": "Actual negative-binary-entropy regularizer and its sigmoid optimizer, including comparison against endpoint policies."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.entropy_activation",
+      "expected_type": "\u2200 (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8) (z : \u211d), activation (entropyRegularizer \u03b8 h\u03b8) z = Thesis.Regularization.softplus \u03b8 z",
+      "review_id": "GENERAL-REGULARIZER-entropy_activation",
+      "scope": "The general variational activation specializes exactly to the existing softplus function."
+    },
+    {
+      "module": "Thesis.GeneralRegularization",
+      "open_namespaces": [
+        "Set",
+        "HiddenMonotonicity",
+        "Matrix",
+        "Thesis.GeneralRegularization"
+      ],
+      "universes": [],
+      "review_evidence": "reports/general-regularizer-repairs.json",
+      "declaration": "Thesis.GeneralRegularization.entropy_pair_is_softSplit",
+      "expected_type": "\u2200 (\u03b8 : \u211d) (h\u03b8 : 0 < \u03b8) (z : \u211d \u00d7 \u211d),\npairWith (entropyRegularizer \u03b8 h\u03b8) (Thesis.Regularization.gate \u03b8) z =\nThesis.Regularization.softSplit \u03b8 z.1 z.2",
+      "review_id": "GENERAL-REGULARIZER-entropy_pair_is_softSplit",
+      "scope": "The generic pair specializes exactly to the existing entropy split, bridging shared network constructions."
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+Thesis.GeneralRegularization.exists_optimizer : ∀ (R : Thesis.GeneralRegularization.Regularizer) (z : ℝ),
+  ∃ p ∈ Set.Icc 0 1, IsMaxOn (Thesis.GeneralRegularization.objective R z) (Set.Icc 0 1) p
+'_ThesisExactChecks.target_0' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.GeneralRegularization.activation_isGreatest : ∀ (R : Thesis.GeneralRegularization.Regularizer) (z : ℝ),
+  IsGreatest (Thesis.GeneralRegularization.objective R z '' Set.Icc 0 1) (Thesis.GeneralRegularization.activation R z)
+'_ThesisExactChecks.target_1' depends on axioms: [propext, Classical.choice, Quot.sound]
+../reports/evidence/general-regularizer/ExactTypes.lean:60:1: warning: Variable name `hπ` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hπ
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+Thesis.GeneralRegularization.regularized_decomposition_validity : ∀ (R : Thesis.GeneralRegularization.Regularizer)
+  (π : ℝ → ℝ),
+  (∀ (z : ℝ), π z ∈ Set.Icc 0 1 ∧ IsMaxOn (Thesis.GeneralRegularization.objective R z) (Set.Icc 0 1) (π z)) →
+    ∀ {n m k : ℕ} (net : HiddenMonotonicity.Network n m) (x : HiddenMonotonicity.PairVec n)
+      (wp wn : Matrix (Fin k) (Fin m) ℝ) (bp bn : HiddenMonotonicity.Vec k),
+      HiddenMonotonicity.ValidPairActivation (Thesis.GeneralRegularization.activation R)
+          (Thesis.GeneralRegularization.pairWith R π) ∧
+        HiddenMonotonicity.NonnegativePairActivation (Thesis.GeneralRegularization.pairWith R π) ∧
+          ConvexOn ℝ Set.univ (Thesis.GeneralRegularization.activation R) ∧
+            Monotone (Thesis.GeneralRegularization.activation R) ∧
+              LipschitzWith 1 (Thesis.GeneralRegularization.activation R) ∧
+                (∀ (z : ℝ),
+                    DifferentiableAt ℝ (Thesis.GeneralRegularization.activation R) z →
+                      π z = deriv (Thesis.GeneralRegularization.activation R) z) ∧
+                  (HiddenMonotonicity.preP wp wn) (net.decomposeWith (Thesis.GeneralRegularization.pairWith R π) x) +
+                        bp -
+                      ((HiddenMonotonicity.preN wp wn)
+                          (net.decomposeWith (Thesis.GeneralRegularization.pairWith R π) x) +
+                        bn) =
+                    HiddenMonotonicity.affineLayer wp wn bp bn
+                      (net.forwardWith (Thesis.GeneralRegularization.activation R) (x.1 - x.2))
+'_ThesisExactChecks.target_2' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.GeneralRegularization.zero_activation : ∀ (z : ℝ),
+  Thesis.GeneralRegularization.activation Thesis.GeneralRegularization.zeroRegularizer z = HiddenMonotonicity.relu z
+'_ThesisExactChecks.target_3' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.GeneralRegularization.zero_pair_is_stopping : Thesis.GeneralRegularization.pairWith
+    Thesis.GeneralRegularization.zeroRegularizer Thesis.GeneralRegularization.hardGate =
+  Thesis.StoppingDecomposition.stopPair
+'_ThesisExactChecks.target_4' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.GeneralRegularization.sigmoid_optimal : ∀ (θ : ℝ) (hθ : 0 < θ) (z : ℝ),
+  Thesis.Regularization.gate θ z ∈ Set.Icc 0 1 ∧
+    IsMaxOn (Thesis.GeneralRegularization.objective (Thesis.GeneralRegularization.entropyRegularizer θ hθ) z)
+      (Set.Icc 0 1) (Thesis.Regularization.gate θ z)
+'_ThesisExactChecks.target_5' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.GeneralRegularization.entropy_activation : ∀ (θ : ℝ) (hθ : 0 < θ) (z : ℝ),
+  Thesis.GeneralRegularization.activation (Thesis.GeneralRegularization.entropyRegularizer θ hθ) z =
+    Thesis.Regularization.softplus θ z
+'_ThesisExactChecks.target_6' depends on axioms: [propext, Classical.choice, Quot.sound]
+Thesis.GeneralRegularization.entropy_pair_is_softSplit : ∀ (θ : ℝ) (hθ : 0 < θ) (z : ℝ × ℝ),
+  Thesis.GeneralRegularization.pairWith (Thesis.GeneralRegularization.entropyRegularizer θ hθ)
+      (Thesis.Regularization.gate θ) z =
+    Thesis.Regularization.softSplit θ z.1 z.2
+'_ThesisExactChecks.target_7' depends on axioms: [propext, Classical.choice, Quot.sound]
+Audited 452 project theorem declarations in the imported environment

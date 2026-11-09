@@ -1,0 +1,282 @@
+@Circuit.compileSplitDAG_eval : ∀ {d n : Nat} (c : Circuit d n) (x : Prod.{0, 0} (Fin d) Bool → Real),
+  @Eq.{1} (PairVec n) (@SplitDAG.eval d n (@Circuit.compileSplitDAG d n c) x) (@Circuit.split d n c false x)
+'HiddenMonotonicity.Circuit.compileSplitDAG_eval' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/split-size-review/ExactTypes.lean:14:50: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@Circuit.split_DAG_with_size : ∀ {d n : Nat} (c : Circuit d n) (D : Nat),
+  @Circuit.BoundedDuplication d n c D →
+    And
+      (@LE.le.{0} Nat instLENat (@SplitDAG.graphSize d n (@Circuit.compileSplitDAG d n c))
+        (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+          (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+            (@OfNat.ofNat.{0} Nat (nat_lit 24) (instOfNatNat (nat_lit 24)))
+            (@HPow.hPow.{0, 0, 0} Nat Nat Nat
+              (@instHPow.{0, 0} Nat Nat (@NPow.toPow.{0} Nat (@Monoid.toNPow.{0} Nat Nat.instMonoid)))
+              (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) D))
+          (@Circuit.syntaxSize d n c)))
+      (And
+        (∀ (x : Prod.{0, 0} (Fin d) Bool → Real),
+          @Eq.{1} (Vec n)
+            (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+              (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+              (@Prod.fst.{0, 0} (Vec n) (Vec n) (@SplitDAG.eval d n (@Circuit.compileSplitDAG d n c) x))
+              (@Prod.snd.{0, 0} (Vec n) (Vec n) (@SplitDAG.eval d n (@Circuit.compileSplitDAG d n c) x)))
+            (@Circuit.eval d n c fun i =>
+              @HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                (x (@Prod.mk.{0, 0} (Fin d) Bool i false)) (x (@Prod.mk.{0, 0} (Fin d) Bool i true))))
+        (And
+          (∀ (x : Prod.{0, 0} (Fin d) Bool → Real),
+            @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE)
+                (@OfNat.ofNat.{0} (Prod.{0, 0} (Fin d) Bool → Real) (nat_lit 0)
+                  (@Zero.toOfNat0.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                    (@Pi.instZero.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instZero)))
+                x →
+              @LE.le.{0} (PairVec n)
+                (@Prod.instLE_mathlib.{0, 0} (Vec n) (Vec n)
+                  (@Pi.hasLe.{0, 0} (Fin n) (fun a => Real) fun i => Real.instLE)
+                  (@Pi.hasLe.{0, 0} (Fin n) (fun a => Real) fun i => Real.instLE))
+                (@OfNat.ofNat.{0} (PairVec n) (nat_lit 0)
+                  (@Zero.toOfNat0.{0} (PairVec n)
+                    (@Prod.instZero.{0, 0} (Vec n) (Vec n)
+                      (@Pi.instZero.{0, 0} (Fin n) (fun a => Real) fun i => Real.instZero)
+                      (@Pi.instZero.{0, 0} (Fin n) (fun a => Real) fun i => Real.instZero))))
+                (@SplitDAG.eval d n (@Circuit.compileSplitDAG d n c) x))
+          (∀ (x y : Prod.{0, 0} (Fin d) Bool → Real),
+            @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE)
+                (@OfNat.ofNat.{0} (Prod.{0, 0} (Fin d) Bool → Real) (nat_lit 0)
+                  (@Zero.toOfNat0.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                    (@Pi.instZero.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instZero)))
+                x →
+              @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                  (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE)
+                  (@OfNat.ofNat.{0} (Prod.{0, 0} (Fin d) Bool → Real) (nat_lit 0)
+                    (@Zero.toOfNat0.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                      (@Pi.instZero.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instZero)))
+                  y →
+                @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                    (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE) x y →
+                  @LE.le.{0} (PairVec n)
+                    (@Prod.instLE_mathlib.{0, 0} (Vec n) (Vec n)
+                      (@Pi.hasLe.{0, 0} (Fin n) (fun a => Real) fun i => Real.instLE)
+                      (@Pi.hasLe.{0, 0} (Fin n) (fun a => Real) fun i => Real.instLE))
+                    (@SplitDAG.eval d n (@Circuit.compileSplitDAG d n c) x)
+                    (@SplitDAG.eval d n (@Circuit.compileSplitDAG d n c) y))))
+'HiddenMonotonicity.Circuit.split_DAG_with_size' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@MaxoutProductGate.toExpr_eval : ∀ {n : Nat} (g : MaxoutProductGate n) (x : Vec n),
+  @Eq.{1} Real (@SignedExpr.eval.{0} (Fin n) (@MaxoutProductGate.toExpr n g) x) (@MaxoutProductGate.eval n g x)
+'HiddenMonotonicity.MaxoutProductGate.toExpr_eval' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@MaxoutProductDAG.toCircuit_eval : ∀ {d n : Nat} (c : MaxoutProductDAG d n) (x : Vec d),
+  @Eq.{1} (Vec n) (@Circuit.eval d n (@MaxoutProductDAG.toCircuit d n c) x) (@MaxoutProductDAG.eval d n c x)
+'HiddenMonotonicity.MaxoutProductDAG.toCircuit_eval' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@MaxoutProductDAG.compile_canonical_recovery : ∀ {d n : Nat} (c : MaxoutProductDAG d n) (x : Vec d),
+  @Eq.{1} (Vec n) (@MaxoutProductDAG.eval d n c x)
+    (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+      (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+      (@Prod.fst.{0, 0} (Vec n) (Vec n)
+        (@SplitDAG.eval d n (@MaxoutProductDAG.compile d n c) (@canonicalSplitInput.{0} (Fin d) x)))
+      (@Prod.snd.{0, 0} (Vec n) (Vec n)
+        (@SplitDAG.eval d n (@MaxoutProductDAG.compile d n c) (@canonicalSplitInput.{0} (Fin d) x))))
+'HiddenMonotonicity.MaxoutProductDAG.compile_canonical_recovery' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+../reports/evidence/split-size-review/ExactTypes.lean:38:61: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@MaxoutProductDAG.split_linear_size : ∀ {d n : Nat} (c : MaxoutProductDAG d n) (K D : Nat),
+  @MaxoutProductDAG.BoundedRankDegree d n c K D →
+    ∃ g,
+      And
+        (@LE.le.{0} Nat instLENat (@SplitDAG.maxoutRank d n g)
+          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+        (And
+          (@LE.le.{0} Nat instLENat (@SplitDAG.graphSize d n g)
+            (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+              (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+                (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+                  (@OfNat.ofNat.{0} Nat (nat_lit 24) (instOfNatNat (nat_lit 24)))
+                  (@HPow.hPow.{0, 0, 0} Nat Nat Nat
+                    (@instHPow.{0, 0} Nat Nat (@NPow.toPow.{0} Nat (@Monoid.toNPow.{0} Nat Nat.instMonoid)))
+                    (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) (@max.{0} Nat Nat.instMax K D)))
+                (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat)
+                  (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat)
+                    (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+                      (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) K)
+                    (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+                      (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) D))
+                  (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+              (@MaxoutProductDAG.graphSize d n c)))
+          (And
+            (∀ (x : Prod.{0, 0} (Fin d) Bool → Real),
+              @Eq.{1} (Vec n)
+                (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                  (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                  (@Prod.fst.{0, 0} (Vec n) (Vec n) (@SplitDAG.eval d n g x))
+                  (@Prod.snd.{0, 0} (Vec n) (Vec n) (@SplitDAG.eval d n g x)))
+                (@MaxoutProductDAG.eval d n c fun i =>
+                  @HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                    (x (@Prod.mk.{0, 0} (Fin d) Bool i false)) (x (@Prod.mk.{0, 0} (Fin d) Bool i true))))
+            (And
+              (∀ (x : Prod.{0, 0} (Fin d) Bool → Real),
+                @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                    (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE)
+                    (@OfNat.ofNat.{0} (Prod.{0, 0} (Fin d) Bool → Real) (nat_lit 0)
+                      (@Zero.toOfNat0.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                        (@Pi.instZero.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instZero)))
+                    x →
+                  @LE.le.{0} (PairVec n)
+                    (@Prod.instLE_mathlib.{0, 0} (Vec n) (Vec n)
+                      (@Pi.hasLe.{0, 0} (Fin n) (fun a => Real) fun i => Real.instLE)
+                      (@Pi.hasLe.{0, 0} (Fin n) (fun a => Real) fun i => Real.instLE))
+                    (@OfNat.ofNat.{0} (PairVec n) (nat_lit 0)
+                      (@Zero.toOfNat0.{0} (PairVec n)
+                        (@Prod.instZero.{0, 0} (Vec n) (Vec n)
+                          (@Pi.instZero.{0, 0} (Fin n) (fun a => Real) fun i => Real.instZero)
+                          (@Pi.instZero.{0, 0} (Fin n) (fun a => Real) fun i => Real.instZero))))
+                    (@SplitDAG.eval d n g x))
+              (And
+                (∀ (x y : Prod.{0, 0} (Fin d) Bool → Real),
+                  @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                      (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE)
+                      (@OfNat.ofNat.{0} (Prod.{0, 0} (Fin d) Bool → Real) (nat_lit 0)
+                        (@Zero.toOfNat0.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                          (@Pi.instZero.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instZero)))
+                      x →
+                    @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                        (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE)
+                        (@OfNat.ofNat.{0} (Prod.{0, 0} (Fin d) Bool → Real) (nat_lit 0)
+                          (@Zero.toOfNat0.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                            (@Pi.instZero.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instZero)))
+                        y →
+                      @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                          (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE) x y →
+                        @LE.le.{0} (PairVec n)
+                          (@Prod.instLE_mathlib.{0, 0} (Vec n) (Vec n)
+                            (@Pi.hasLe.{0, 0} (Fin n) (fun a => Real) fun i => Real.instLE)
+                            (@Pi.hasLe.{0, 0} (Fin n) (fun a => Real) fun i => Real.instLE))
+                          (@SplitDAG.eval d n g x) (@SplitDAG.eval d n g y))
+                (∀ (i : Fin n),
+                  ∃ P Q,
+                    ∀ (x : Prod.{0, 0} (Fin d) Bool → Real),
+                      @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                          (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE)
+                          (@OfNat.ofNat.{0} (Prod.{0, 0} (Fin d) Bool → Real) (nat_lit 0)
+                            (@Zero.toOfNat0.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                              (@Pi.instZero.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instZero)))
+                          x →
+                        And
+                          (@Eq.{1} Real (@Prod.fst.{0, 0} (Vec n) (Vec n) (@SplitDAG.eval d n g x) i)
+                            (@MaxPolynomial.eval.{0} (Prod.{0, 0} (Fin d) Bool) P x))
+                          (@Eq.{1} Real (@Prod.snd.{0, 0} (Vec n) (Vec n) (@SplitDAG.eval d n g x) i)
+                            (@MaxPolynomial.eval.{0} (Prod.{0, 0} (Fin d) Bool) Q x)))))))
+'HiddenMonotonicity.MaxoutProductDAG.split_linear_size' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@MaxoutProductGate.degree_le_expandedTerms : ∀ {n : Nat} (g : MaxoutProductGate n),
+  @LE.le.{0} Nat instLENat (@MaxoutProductGate.totalDegree n g) (@MaxoutProductGate.expandedTerms n g)
+'HiddenMonotonicity.MaxoutProductGate.degree_le_expandedTerms' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+../reports/evidence/split-size-review/ExactTypes.lean:50:61: warning: Variable name `hc` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hc
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@MaxoutProductDAG.split_linear_size_expansion : ∀ {d n : Nat} (c : MaxoutProductDAG d n) (K B : Nat),
+  @MaxoutProductDAG.BoundedRankExpansion d n c K B →
+    ∃ g,
+      And
+        (@LE.le.{0} Nat instLENat (@SplitDAG.maxoutRank d n g)
+          (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))))
+        (And
+          (@LE.le.{0} Nat instLENat (@SplitDAG.graphSize d n g)
+            (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+              (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+                (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+                  (@OfNat.ofNat.{0} Nat (nat_lit 24) (instOfNatNat (nat_lit 24)))
+                  (@HPow.hPow.{0, 0, 0} Nat Nat Nat
+                    (@instHPow.{0, 0} Nat Nat (@NPow.toPow.{0} Nat (@Monoid.toNPow.{0} Nat Nat.instMonoid)))
+                    (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) (@max.{0} Nat Nat.instMax K B)))
+                (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat)
+                  (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat)
+                    (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+                      (@OfNat.ofNat.{0} Nat (nat_lit 4) (instOfNatNat (nat_lit 4))) K)
+                    (@HMul.hMul.{0, 0, 0} Nat Nat Nat (@instHMul.{0} Nat instMulNat)
+                      (@OfNat.ofNat.{0} Nat (nat_lit 2) (instOfNatNat (nat_lit 2))) B))
+                  (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+              (@MaxoutProductDAG.graphSize d n c)))
+          (And
+            (∀ (x : Prod.{0, 0} (Fin d) Bool → Real),
+              @Eq.{1} (Vec n)
+                (@HSub.hSub.{0, 0, 0} (Vec n) (Vec n) (Vec n)
+                  (@instHSub.{0} (Vec n) (@Pi.instSub.{0, 0} (Fin n) (fun a => Real) fun i => Real.instSub))
+                  (@Prod.fst.{0, 0} (Vec n) (Vec n) (@SplitDAG.eval d n g x))
+                  (@Prod.snd.{0, 0} (Vec n) (Vec n) (@SplitDAG.eval d n g x)))
+                (@MaxoutProductDAG.eval d n c fun i =>
+                  @HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                    (x (@Prod.mk.{0, 0} (Fin d) Bool i false)) (x (@Prod.mk.{0, 0} (Fin d) Bool i true))))
+            (And
+              (∀ (x : Prod.{0, 0} (Fin d) Bool → Real),
+                @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                    (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE)
+                    (@OfNat.ofNat.{0} (Prod.{0, 0} (Fin d) Bool → Real) (nat_lit 0)
+                      (@Zero.toOfNat0.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                        (@Pi.instZero.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instZero)))
+                    x →
+                  @LE.le.{0} (PairVec n)
+                    (@Prod.instLE_mathlib.{0, 0} (Vec n) (Vec n)
+                      (@Pi.hasLe.{0, 0} (Fin n) (fun a => Real) fun i => Real.instLE)
+                      (@Pi.hasLe.{0, 0} (Fin n) (fun a => Real) fun i => Real.instLE))
+                    (@OfNat.ofNat.{0} (PairVec n) (nat_lit 0)
+                      (@Zero.toOfNat0.{0} (PairVec n)
+                        (@Prod.instZero.{0, 0} (Vec n) (Vec n)
+                          (@Pi.instZero.{0, 0} (Fin n) (fun a => Real) fun i => Real.instZero)
+                          (@Pi.instZero.{0, 0} (Fin n) (fun a => Real) fun i => Real.instZero))))
+                    (@SplitDAG.eval d n g x))
+              (And
+                (∀ (x y : Prod.{0, 0} (Fin d) Bool → Real),
+                  @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                      (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE)
+                      (@OfNat.ofNat.{0} (Prod.{0, 0} (Fin d) Bool → Real) (nat_lit 0)
+                        (@Zero.toOfNat0.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                          (@Pi.instZero.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instZero)))
+                      x →
+                    @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                        (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE)
+                        (@OfNat.ofNat.{0} (Prod.{0, 0} (Fin d) Bool → Real) (nat_lit 0)
+                          (@Zero.toOfNat0.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                            (@Pi.instZero.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instZero)))
+                        y →
+                      @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                          (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE) x y →
+                        @LE.le.{0} (PairVec n)
+                          (@Prod.instLE_mathlib.{0, 0} (Vec n) (Vec n)
+                            (@Pi.hasLe.{0, 0} (Fin n) (fun a => Real) fun i => Real.instLE)
+                            (@Pi.hasLe.{0, 0} (Fin n) (fun a => Real) fun i => Real.instLE))
+                          (@SplitDAG.eval d n g x) (@SplitDAG.eval d n g y))
+                (∀ (i : Fin n),
+                  ∃ P Q,
+                    ∀ (x : Prod.{0, 0} (Fin d) Bool → Real),
+                      @LE.le.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                          (@Pi.hasLe.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instLE)
+                          (@OfNat.ofNat.{0} (Prod.{0, 0} (Fin d) Bool → Real) (nat_lit 0)
+                            (@Zero.toOfNat0.{0} (Prod.{0, 0} (Fin d) Bool → Real)
+                              (@Pi.instZero.{0, 0} (Prod.{0, 0} (Fin d) Bool) (fun a => Real) fun i => Real.instZero)))
+                          x →
+                        And
+                          (@Eq.{1} Real (@Prod.fst.{0, 0} (Vec n) (Vec n) (@SplitDAG.eval d n g x) i)
+                            (@MaxPolynomial.eval.{0} (Prod.{0, 0} (Fin d) Bool) P x))
+                          (@Eq.{1} Real (@Prod.snd.{0, 0} (Vec n) (Vec n) (@SplitDAG.eval d n g x) i)
+                            (@MaxPolynomial.eval.{0} (Prod.{0, 0} (Fin d) Bool) Q x)))))))
+'HiddenMonotonicity.MaxoutProductDAG.split_linear_size_expansion' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]

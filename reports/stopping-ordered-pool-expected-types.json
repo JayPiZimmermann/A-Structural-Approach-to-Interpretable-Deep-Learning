@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "targets": [
+    {
+      "module": "Thesis.StoppingOrderedPool",
+      "declaration": "Thesis.StoppingDAG.earliestWinner_spec",
+      "expected_type": "\u2200 {k : \u2115} (v : Fin (k+1) \u2192 \u211d), (\u2200 i,v i \u2264 v (earliestWinner v)) \u2227 (\u2200 i,v i=v (earliestWinner v) \u2192 earliestWinner v \u2264 i)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-ordered-pool/earliestWinner_spec",
+      "review_evidence": "reports/stopping-ordered-pool-repairs.md",
+      "scope": "Least maximizing original operand index for every nonempty finite pool."
+    },
+    {
+      "module": "Thesis.StoppingOrderedPool",
+      "declaration": "Thesis.StoppingDAG.orderedInputPool_source",
+      "expected_type": "\u2200 {n k : \u2115} (inputs : Fin (k+1) \u2192 Fin n) (x : PairVec n), let values := fun i => x.1 (inputs i)-x.2 (inputs i); let winner := earliestWinner values; (\u2200 i,values i \u2264 values winner) \u2227 (\u2200 i,values i=values winner \u2192 winner \u2264 i) \u2227 stoppingExpr (orderedInputPool inputs) x=(x.1 (inputs winner),x.2 (inputs winner)) \u2227 expressionKernel (orderedInputPool inputs) x=(Pi.single (inputs winner) 1,0)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-ordered-pool/orderedInputPool_source",
+      "review_evidence": "reports/stopping-ordered-pool-repairs.md",
+      "scope": "Source PTNB finite-pool tie rule, actual selected pair and kernel; replaces direct generic-binary tie mapping."
+    },
+    {
+      "module": "Thesis.StoppingOrderedPool",
+      "declaration": "Thesis.StoppingDAG.orderedInputPool_minimum_graph_index",
+      "expected_type": "\u2200 {n k : \u2115} (inputs : Fin (k+1) \u2192 Fin n) (horder : Monotone inputs) (x : PairVec n), let values := fun i => x.1 (inputs i)-x.2 (inputs i); let winner := earliestWinner values; \u2200 i,values i=values winner \u2192 inputs winner \u2264 inputs i",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-ordered-pool/orderedInputPool_minimum_graph_index",
+      "review_evidence": "reports/stopping-ordered-pool-repairs.md",
+      "scope": "Sorted source predecessor enumeration yields the smallest original graph-node index at ties."
+    },
+    {
+      "module": "Thesis.StoppingOrderedPool",
+      "declaration": "Thesis.StoppingDAG.orderedInputPool_dag_row",
+      "expected_type": "\u2200 {d n k : \u2115} (prior : Circuit d n) (inputs : Fin (k+1) \u2192 Fin n) (x : PairVec d), let s := stoppingCircuit prior x; let winner := earliestWinner (fun i => s.1 (inputs i)-s.2 (inputs i)); (dagKernel (.node prior (orderedInputPool inputs)) x).1 (Fin.last n)=(dagKernel prior x).1 (inputs winner) \u2227 (dagKernel (.node prior (orderedInputPool inputs)) x).2 (Fin.last n)=(dagKernel prior x).2 (inputs winner)",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-ordered-pool/orderedInputPool_dag_row",
+      "review_evidence": "reports/stopping-ordered-pool-repairs.md",
+      "scope": "Actual shared-DAG selected global Jacobian forwards the earliest maximizing predecessor rows."
+    },
+    {
+      "module": "Thesis.StoppingOrderedPool",
+      "declaration": "Thesis.StoppingDAG.orderedPool_regular",
+      "expected_type": "\u2200 {n k : \u2115} (es : Fin (k+1) \u2192 SignedExpr (Fin n)) (x : PairVec n) (winner : Fin (k+1)) (hw : \u2200 i,i\u2260winner \u2192 score (es i) x<score (es winner) x) (hr : ExpressionRegular (es winner) x), ExpressionRegular (orderedPool es) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-ordered-pool/orderedPool_regular",
+      "review_evidence": "reports/stopping-ordered-pool-repairs.md",
+      "scope": "Unique finite maximum plus only winning-operand regularity suffices; no regularity premise on losing subtrees."
+    },
+    {
+      "module": "Thesis.StoppingOrderedPool",
+      "declaration": "Thesis.StoppingDAG.orderedInputPool_regular",
+      "expected_type": "\u2200 {n k : \u2115} (inputs : Fin (k+1) \u2192 Fin n) (x : PairVec n) (winner : Fin (k+1)) (hw : \u2200 i,i\u2260winner \u2192 x.1 (inputs i)-x.2 (inputs i)<x.1 (inputs winner)-x.2 (inputs winner)), ExpressionRegular (orderedInputPool inputs) x",
+      "open_namespaces": [
+        "HiddenMonotonicity",
+        "Thesis.StoppingCircuit",
+        "Thesis.StoppingDAG"
+      ],
+      "open_scopes": [
+        "BigOperators"
+      ],
+      "universes": [],
+      "review_id": "stopping-ordered-pool/orderedInputPool_regular",
+      "review_evidence": "reports/stopping-ordered-pool-repairs.md",
+      "scope": "Source unique maximizing pool input supplies exactly the generic forward regularity condition even with tied losing values."
+    }
+  ]
+}

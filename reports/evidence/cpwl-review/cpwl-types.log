@@ -1,0 +1,66 @@
+../reports/evidence/cpwl-review/cpwlTypes.lean:9:1: warning: Variable name `hf` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hf
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/cpwl-review/cpwlTypes.lean:9:21: warning: Variable name `hsel` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hsel
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@affine_selection_separation : ∀ {A : Type} [Fintype.{0} A] (f : Real → Real) (a b : A → Real),
+  @Continuous.{0, 0} Real Real
+      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+      (@UniformSpace.toTopologicalSpace.{0} Real (@PseudoMetricSpace.toUniformSpace.{0} Real Real.pseudoMetricSpace))
+      f →
+    (∀ (t : Real),
+        ∃ i,
+          @Eq.{1} Real (f t)
+            (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+                (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)) t)
+                (a i))
+              (@HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) t (b i)))) →
+      ∃ i,
+        And
+          (@LE.le.{0} Real Real.instLE (f (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+            (a i))
+          (@LE.le.{0} Real Real.instLE (b i)
+            (f (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne))))
+'Thesis.PiecewiseLinear.affine_selection_separation' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/cpwl-review/cpwlTypes.lean:19:1: warning: Variable name `hf` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hf
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@cpwl_lattice_representation : ∀ {I : Type} [inst : Fintype.{0} I] (f : (I → Real) → Real),
+  (@CPWL I Unit inst fun x x_1 => f x) → ∃ p, ∀ (x : I → Real), @Eq.{1} Real (f x) (@MaxMinPolynomial.eval I inst p x)
+'Thesis.PiecewiseLinear.cpwl_lattice_representation' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/cpwl-review/cpwlTypes.lean:29:1: warning: Variable name `hf` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hf
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@cpwl_polynomial_difference : ∀ {I : Type} [inst : Fintype.{0} I] (f : (I → Real) → Real),
+  (@CPWL I Unit inst fun x x_1 => f x) →
+    ∃ g h,
+      ∀ (x : I → Real),
+        @Eq.{1} Real (f x)
+          (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+            (@Thesis.Tropical.Polynomial.eval I inst g x) (@Thesis.Tropical.Polynomial.eval I inst h x))
+'Thesis.PiecewiseLinear.cpwl_polynomial_difference' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@cpwl_iff_polynomial_difference : ∀ {I : Type} [inst : Fintype.{0} I] (f : (I → Real) → Real),
+  Iff (@CPWL I Unit inst fun x x_1 => f x)
+    (∃ g h,
+      ∀ (x : I → Real),
+        @Eq.{1} Real (f x)
+          (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+            (@Thesis.Tropical.Polynomial.eval I inst g x) (@Thesis.Tropical.Polynomial.eval I inst h x)))
+'Thesis.PiecewiseLinear.cpwl_iff_polynomial_difference' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]

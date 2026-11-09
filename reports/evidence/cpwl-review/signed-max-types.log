@@ -1,0 +1,290 @@
+../reports/evidence/cpwl-review/signed-maxTypes.lean:11:13: warning: Variable name `ha` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _ha
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@baseMax_insert_dominated : ∀ {A : Type} [inst : DecidableEq.{1} A] (f : A → Real) (B : Finset.{0} A)
+  (hB : @Finset.Nonempty.{0} A B) (a : A),
+  @LE.le.{0} Real Real.instLE (f a) (@sup'.{0, 0} Real A Real.instSemilatticeSup B hB f) →
+    ∀ (S : Finset.{0} A),
+      @Eq.{1} Real (@baseMax A inst f B hB (@insert.{0, 0} A (Finset.{0} A) (@instInsert.{0} A inst) a S))
+        (@baseMax A inst f B hB S)
+'Thesis.SignedMaxIdentities.baseMax_insert_dominated' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/cpwl-review/signed-maxTypes.lean:20:63: warning: Variable name `ha` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _ha
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+../reports/evidence/cpwl-review/signed-maxTypes.lean:22:5: warning: Variable name `hF` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hF
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@alternating_sum_zero_of_insertion : ∀ {A : Type} [inst : DecidableEq.{1} A] (S : Finset.{0} A) (a : A),
+  @Membership.mem.{0, 0} A (Finset.{0} A) (@SetLike.instMembership.{0, 0} (Finset.{0} A) A (@instSetLike.{0} A)) S a →
+    ∀ (F : Finset.{0} A → Real),
+      (∀ (T : Finset.{0} A),
+          @LE.le.{0} (Finset.{0} A)
+              (@Preorder.toLE.{0} (Finset.{0} A)
+                (@PartialOrder.toPreorder.{0} (Finset.{0} A) (@instPartialOrder.{0} A)))
+              T (@erase.{0} A inst S a) →
+            @Eq.{1} Real (F (@insert.{0, 0} A (Finset.{0} A) (@instInsert.{0} A inst) a T)) (F T)) →
+        @Eq.{1} Real
+          (∑ T ∈ @powerset.{0} A S,
+            @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+              (@HPow.hPow.{0, 0, 0} Real Nat Real
+                (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+                (@Neg.neg.{0} Real Real.instNeg
+                  (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+                (@card.{0} A T))
+              (F T))
+          (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+'Thesis.SignedMaxIdentities.alternating_sum_zero_of_insertion' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+../reports/evidence/cpwl-review/signed-maxTypes.lean:32:5: warning: Variable name `hdom` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hdom
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@alternating_max_zero : ∀ {A : Type} [inst : DecidableEq.{1} A] (f : A → Real) (A₀ B : Finset.{0} A)
+  (hB : @Finset.Nonempty.{0} A B),
+  (∃ a,
+      And
+        (@Membership.mem.{0, 0} A (Finset.{0} A) (@SetLike.instMembership.{0, 0} (Finset.{0} A) A (@instSetLike.{0} A))
+          A₀ a)
+        (@LE.le.{0} Real Real.instLE (f a) (@sup'.{0, 0} Real A Real.instSemilatticeSup B hB f))) →
+    @Eq.{1} Real
+      (∑ S ∈ @powerset.{0} A A₀,
+        @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul)
+          (@HPow.hPow.{0, 0, 0} Real Nat Real
+            (@instHPow.{0, 0} Real Nat (@NPow.toPow.{0} Real (@Monoid.toNPow.{0} Real Real.instMonoid)))
+            (@Neg.neg.{0} Real Real.instNeg (@OfNat.ofNat.{0} Real (nat_lit 1) (@One.toOfNat1.{0} Real Real.instOne)))
+            (@card.{0} A S))
+          (@baseMax A inst f B hB S))
+      (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))
+'Thesis.SignedMaxIdentities.alternating_max_zero' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/cpwl-review/signed-maxTypes.lean:42:5: warning: Variable name `hcard` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hcard
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@dependence_coefficients : ∀ {I : Type} [inst : Fintype.{0} I] (p : Thesis.Tropical.Polynomial I),
+  @LT.lt.{0} Nat instLTNat
+      (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) (@Fintype.card.{0} I inst)
+        (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+      (@Fintype.card.{0} (@Polynomial.Terms I p) (@Polynomial.finite I p)) →
+    ∃ c,
+      And (@Eq.{1} Real (∑ i, c i) (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+        (And
+          (@Eq.{1} (I → Real)
+            (∑ i,
+              @HSMul.hSMul.{0, 0, 0} Real (I → Real) (I → Real)
+                (@instHSMul.{0, 0} Real (I → Real)
+                  (@Function.hasSMul.{0, 0, 0} I Real Real (@instSMulOfMul.{0} Real Real.instMul)))
+                (c i) (@Polynomial.slope I p i))
+            (@OfNat.ofNat.{0} (I → Real) (nat_lit 0)
+              (@Zero.toOfNat0.{0} (I → Real) (@Pi.instZero.{0, 0} I (fun a => Real) fun i => Real.instZero))))
+          (∃ i, @Ne.{1} Real (c i) (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero))))
+'Thesis.AffineMaxPartition.dependence_coefficients' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/cpwl-review/signed-maxTypes.lean:52:5: warning: Variable name `hcard` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hcard
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@oriented_dependence : ∀ {I : Type} [inst : Fintype.{0} I] (p : Thesis.Tropical.Polynomial I),
+  @LT.lt.{0} Nat instLTNat
+      (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) (@Fintype.card.{0} I inst)
+        (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+      (@Fintype.card.{0} (@Polynomial.Terms I p) (@Polynomial.finite I p)) →
+    ∃ c,
+      And (@Eq.{1} Real (∑ i, c i) (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+        (And
+          (@Eq.{1} (I → Real)
+            (∑ i,
+              @HSMul.hSMul.{0, 0, 0} Real (I → Real) (I → Real)
+                (@instHSMul.{0, 0} Real (I → Real)
+                  (@Function.hasSMul.{0, 0, 0} I Real Real (@instSMulOfMul.{0} Real Real.instMul)))
+                (c i) (@Polynomial.slope I p i))
+            (@OfNat.ofNat.{0} (I → Real) (nat_lit 0)
+              (@Zero.toOfNat0.{0} (I → Real) (@Pi.instZero.{0, 0} I (fun a => Real) fun i => Real.instZero))))
+          (And
+            (@LE.le.{0} Real Real.instLE
+              (∑ i,
+                @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (c i)
+                  (@Polynomial.intercept I p i))
+              (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))
+            (∃ i, @Ne.{1} Real (c i) (@OfNat.ofNat.{0} Real (nat_lit 0) (@Zero.toOfNat0.{0} Real Real.instZero)))))
+'Thesis.AffineMaxPartition.oriented_dependence' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/cpwl-review/signed-maxTypes.lean:63:5: warning: Variable name `hv` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hv
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@weighted_affine_constant : ∀ {I : Type} [inst : Fintype.{0} I] (p : Thesis.Tropical.Polynomial I)
+  (c : @Polynomial.Terms I p → Real),
+  @Eq.{1} (I → Real)
+      (∑ i,
+        @HSMul.hSMul.{0, 0, 0} Real (I → Real) (I → Real)
+          (@instHSMul.{0, 0} Real (I → Real)
+            (@Function.hasSMul.{0, 0, 0} I Real Real (@instSMulOfMul.{0} Real Real.instMul)))
+          (c i) (@Polynomial.slope I p i))
+      (@OfNat.ofNat.{0} (I → Real) (nat_lit 0)
+        (@Zero.toOfNat0.{0} (I → Real) (@Pi.instZero.{0, 0} I (fun a => Real) fun i => Real.instZero))) →
+    ∀ (x : I → Real),
+      @Eq.{1} Real
+        (∑ i,
+          @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (c i)
+            (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+              (@dotProduct.{0, 0} I Real inst Real.instMul Real.instAddCommMonoid (@Polynomial.slope I p i) x)
+              (@Polynomial.intercept I p i)))
+        (∑ i, @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (c i) (@Polynomial.intercept I p i))
+'Thesis.AffineMaxPartition.weighted_affine_constant' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/cpwl-review/signed-maxTypes.lean:73:5: warning: Variable name `hcard` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hcard
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@global_partition : ∀ {I : Type} [inst : Fintype.{0} I] (p : Thesis.Tropical.Polynomial I),
+  @LT.lt.{0} Nat instLTNat
+      (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) (@Fintype.card.{0} I inst)
+        (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1))))
+      (@Fintype.card.{0} (@Polynomial.Terms I p) (@Polynomial.finite I p)) →
+    ∃ A B,
+      ∃ (_ : @Finset.Nonempty.{0} (@Polynomial.Terms I p) A) (hB : @Finset.Nonempty.{0} (@Polynomial.Terms I p) B),
+        And
+          (@Disjoint.{0} (Finset.{0} (@Polynomial.Terms I p)) (@instPartialOrder.{0} (@Polynomial.Terms I p))
+            (@instOrderBot.{0} (@Polynomial.Terms I p)) A B)
+          (And
+            (@Eq.{1} (Finset.{0} (@Polynomial.Terms I p))
+              (@Union.union.{0} (Finset.{0} (@Polynomial.Terms I p))
+                (@instUnion.{0} (@Polynomial.Terms I p) fun a b =>
+                  Classical.propDecidable (@Eq.{1} (@Polynomial.Terms I p) a b))
+                A B)
+              (@univ.{0} (@Polynomial.Terms I p) (@Polynomial.finite I p)))
+            (∀ (x : I → Real),
+              ∃ a,
+                And
+                  (@Membership.mem.{0, 0} (@Polynomial.Terms I p) (Finset.{0} (@Polynomial.Terms I p))
+                    (@SetLike.instMembership.{0, 0} (Finset.{0} (@Polynomial.Terms I p)) (@Polynomial.Terms I p)
+                      (@instSetLike.{0} (@Polynomial.Terms I p)))
+                    A a)
+                  (@LE.le.{0} Real Real.instLE
+                    (@HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+                      (@dotProduct.{0, 0} I Real inst Real.instMul Real.instAddCommMonoid (@Polynomial.slope I p a) x)
+                      (@Polynomial.intercept I p a))
+                    (@sup'.{0, 0} Real (@Polynomial.Terms I p) Real.instSemilatticeSup B hB fun b =>
+                      @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+                        (@dotProduct.{0, 0} I Real inst Real.instMul Real.instAddCommMonoid (@Polynomial.slope I p b) x)
+                        (@Polynomial.intercept I p b)))))
+'Thesis.AffineMaxPartition.global_partition' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@restrict_card : ∀ {I : Type} (p : Thesis.Tropical.Polynomial I) (S : Finset.{0} (@Polynomial.Terms I p))
+  (hS : @Finset.Nonempty.{0} (@Polynomial.Terms I p) S),
+  @Eq.{1} Nat
+    (@Fintype.card.{0} (@Polynomial.Terms I (@Thesis.SignedMaxReduction.restrict I p S hS))
+      (@Polynomial.finite I (@Thesis.SignedMaxReduction.restrict I p S hS)))
+    (@card.{0} (@Polynomial.Terms I p) S)
+'Thesis.SignedMaxReduction.restrict_card' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@restrict_eval : ∀ {I : Type} [inst : Fintype.{0} I] (p : Thesis.Tropical.Polynomial I)
+  (S : Finset.{0} (@Polynomial.Terms I p)) (hS : @Finset.Nonempty.{0} (@Polynomial.Terms I p) S) (x : I → Real),
+  @Eq.{1} Real (@Thesis.Tropical.Polynomial.eval I inst (@Thesis.SignedMaxReduction.restrict I p S hS) x)
+    (@sup'.{0, 0} Real (@Polynomial.Terms I p) Real.instSemilatticeSup S hS fun a =>
+      @HAdd.hAdd.{0, 0, 0} Real Real Real (@instHAdd.{0} Real Real.instAdd)
+        (@dotProduct.{0, 0} I Real inst Real.instMul Real.instAddCommMonoid (@Polynomial.slope I p a) x)
+        (@Polynomial.intercept I p a))
+'Thesis.SignedMaxReduction.restrict_eval' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+@eval_mem_smallSpan : ∀ {I : Type} [inst : Fintype.{0} I] (p : Thesis.Tropical.Polynomial I),
+  @Membership.mem.{0, 0} ((I → Real) → Real)
+    (@Submodule.{0, 0} Real ((I → Real) → Real) Real.semiring
+      (@Pi.addCommMonoid.{0, 0} (I → Real) (fun a => Real) fun i => Real.instAddCommMonoid)
+      (@Pi.Function.module.{0, 0, 0} (I → Real) Real Real Real.semiring Real.instAddCommMonoid
+        (@Semiring.toModule.{0} Real Real.semiring)))
+    (@SetLike.instMembership.{0, 0}
+      (@Submodule.{0, 0} Real ((I → Real) → Real) Real.semiring
+        (@Pi.addCommMonoid.{0, 0} (I → Real) (fun a => Real) fun i => Real.instAddCommMonoid)
+        (@Pi.Function.module.{0, 0, 0} (I → Real) Real Real Real.semiring Real.instAddCommMonoid
+          (@Semiring.toModule.{0} Real Real.semiring)))
+      ((I → Real) → Real)
+      (@Submodule.setLike.{0, 0} Real ((I → Real) → Real) Real.semiring
+        (@Pi.addCommMonoid.{0, 0} (I → Real) (fun a => Real) fun i => Real.instAddCommMonoid)
+        (@Pi.Function.module.{0, 0, 0} (I → Real) Real Real Real.semiring Real.instAddCommMonoid
+          (@Semiring.toModule.{0} Real Real.semiring))))
+    (@smallSpan I inst) (@Thesis.Tropical.Polynomial.eval I inst p)
+'Thesis.SignedMaxReduction.eval_mem_smallSpan' depends on axioms: [propext, Classical.choice.{u}, Quot.sound.{u}]
+../reports/evidence/cpwl-review/signed-maxTypes.lean:114:5: warning: Variable name `hf` is not explicitly referenced.
+
+Hint: The binding can be removed (if unused) or named `_` (if used implicitly). Alternatively, prefix the name with `_` to silence this warning:
+  [apply] _hf
+
+Note: This linter can be disabled with `set_option linter.unusedVariables false`
+@finite_representation_of_mem_smallSpan : ∀ {I : Type} [inst : Fintype.{0} I] (f : (I → Real) → Real),
+  @Membership.mem.{0, 0} ((I → Real) → Real)
+      (@Submodule.{0, 0} Real ((I → Real) → Real) Real.semiring
+        (@Pi.addCommMonoid.{0, 0} (I → Real) (fun a => Real) fun i => Real.instAddCommMonoid)
+        (@Pi.Function.module.{0, 0, 0} (I → Real) Real Real Real.semiring Real.instAddCommMonoid
+          (@Semiring.toModule.{0} Real Real.semiring)))
+      (@SetLike.instMembership.{0, 0}
+        (@Submodule.{0, 0} Real ((I → Real) → Real) Real.semiring
+          (@Pi.addCommMonoid.{0, 0} (I → Real) (fun a => Real) fun i => Real.instAddCommMonoid)
+          (@Pi.Function.module.{0, 0, 0} (I → Real) Real Real Real.semiring Real.instAddCommMonoid
+            (@Semiring.toModule.{0} Real Real.semiring)))
+        ((I → Real) → Real)
+        (@Submodule.setLike.{0, 0} Real ((I → Real) → Real) Real.semiring
+          (@Pi.addCommMonoid.{0, 0} (I → Real) (fun a => Real) fun i => Real.instAddCommMonoid)
+          (@Pi.Function.module.{0, 0, 0} (I → Real) Real Real Real.semiring Real.instAddCommMonoid
+            (@Semiring.toModule.{0} Real Real.semiring))))
+      (@smallSpan I inst) f →
+    ∃ N c q,
+      And
+        (∀ (j : Fin N),
+          @LE.le.{0} Nat instLENat (@Fintype.card.{0} (@Polynomial.Terms I (q j)) (@Polynomial.finite I (q j)))
+            (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) (@Fintype.card.{0} I inst)
+              (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+        (∀ (x : I → Real),
+          @Eq.{1} Real (f x)
+            (∑ j,
+              @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (c j)
+                (@Thesis.Tropical.Polynomial.eval I inst (q j) x)))
+'Thesis.SignedMaxReduction.finite_representation_of_mem_smallSpan' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@polynomial_signed_small_max : ∀ {I : Type} [inst : Fintype.{0} I] (p : Thesis.Tropical.Polynomial I),
+  ∃ N c q,
+    And
+      (∀ (j : Fin N),
+        @LE.le.{0} Nat instLENat (@Fintype.card.{0} (@Polynomial.Terms I (q j)) (@Polynomial.finite I (q j)))
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) (@Fintype.card.{0} I inst)
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+      (∀ (x : I → Real),
+        @Eq.{1} Real (@Thesis.Tropical.Polynomial.eval I inst p x)
+          (∑ j,
+            @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (c j)
+              (@Thesis.Tropical.Polynomial.eval I inst (q j) x)))
+'Thesis.SignedMaxReduction.polynomial_signed_small_max' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
+@difference_signed_small_max : ∀ {I : Type} [inst : Fintype.{0} I] (p r : Thesis.Tropical.Polynomial I),
+  ∃ N c q,
+    And
+      (∀ (j : Fin N),
+        @LE.le.{0} Nat instLENat (@Fintype.card.{0} (@Polynomial.Terms I (q j)) (@Polynomial.finite I (q j)))
+          (@HAdd.hAdd.{0, 0, 0} Nat Nat Nat (@instHAdd.{0} Nat instAddNat) (@Fintype.card.{0} I inst)
+            (@OfNat.ofNat.{0} Nat (nat_lit 1) (instOfNatNat (nat_lit 1)))))
+      (∀ (x : I → Real),
+        @Eq.{1} Real
+          (@HSub.hSub.{0, 0, 0} Real Real Real (@instHSub.{0} Real Real.instSub)
+            (@Thesis.Tropical.Polynomial.eval I inst p x) (@Thesis.Tropical.Polynomial.eval I inst r x))
+          (∑ j,
+            @HMul.hMul.{0, 0, 0} Real Real Real (@instHMul.{0} Real Real.instMul) (c j)
+              (@Thesis.Tropical.Polynomial.eval I inst (q j) x)))
+'Thesis.SignedMaxReduction.difference_signed_small_max' depends on axioms: [propext,
+ Classical.choice.{u},
+ Quot.sound.{u}]
