@@ -1,0 +1,821 @@
+{
+  "status": "partial",
+  "count": 10,
+  "method_columns": 6,
+  "candidate_selection": {
+    "rule": "rank distinct target classes by sha256('vit-extension-classes-v1|' + class_id); take ten; within each take minimum sha256('vit-extension-images-v1|' + image_id)",
+    "test_manifest_sha256": "dfe98ec7974e146728c855e2e7fabd4fadc53d2d7c54ef714cbb2e43cdcb0b0f",
+    "test_indices": [
+      7,
+      158,
+      250,
+      214,
+      167,
+      441,
+      276,
+      207,
+      403,
+      119
+    ],
+    "image_ids": [
+      "ILSVRC2012_val_00028713.JPEG",
+      "ILSVRC2012_val_00040852.JPEG",
+      "ILSVRC2012_val_00003469.JPEG",
+      "ILSVRC2012_val_00036962.JPEG",
+      "ILSVRC2012_val_00010078.JPEG",
+      "ILSVRC2012_val_00039099.JPEG",
+      "ILSVRC2012_val_00023903.JPEG",
+      "ILSVRC2012_val_00046138.JPEG",
+      "ILSVRC2012_val_00032798.JPEG",
+      "ILSVRC2012_val_00021928.JPEG"
+    ],
+    "labels": [
+      1,
+      368,
+      487,
+      418,
+      386,
+      851,
+      502,
+      412,
+      703,
+      330
+    ]
+  },
+  "columns": [
+    {
+      "key": "gradient",
+      "title": "Gradient\noriginal model",
+      "method": "gradient",
+      "params": {
+        "channel_reduction": "sum"
+      },
+      "selected_by": [
+        "fixed"
+      ],
+      "conditioning": "fully live original-model gradients",
+      "provenance": "gradient_provenance.json"
+    },
+    {
+      "key": "d024643fe310",
+      "title": "Grad-CAM (loc)\nblock 9",
+      "method": "gcam",
+      "conditioning": "fully live original-model gradients",
+      "params": {
+        "target_layer_name": "encoder.layers.encoder_layer_8.ln_1"
+      },
+      "selected_by": [
+        "loc"
+      ],
+      "row_label": "gcam__layer-encoder.layers.encoderlayer8.ln1",
+      "campaign": "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_cam_paper_campaign/compact_2026-11-10",
+      "selection_sha256": "414c249f71163448a966ac1063a07bfdcf3ce233b077814750eb03f015938711",
+      "protocol_sha256": "1b526db0f19e944c846775bf89ea635504f69c226e0b727d6ce6162e9d96195b",
+      "cache": "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_cam_paper_campaign/compact_2026-11-10/test/.saliency_cache/gcam__layer-encoder.layers.encoderlayer8.ln1.npz",
+      "cache_sha256": "89f5424bcdaef66081ae63cc8c8032382f1db9454f6445706f049ce4bc822005",
+      "postprocessing": "Canonical library per-image min\u2013max normalization and bilinear resize to 224; distinct from signed nearest-neighbor SplitCAM maps.",
+      "precision": "Canonical float32 model, attribution library and metrics.",
+      "backward_scale_power_semantics": null,
+      "stabilized_stream_scope": null
+    },
+    {
+      "key": "c0a0c4d5e74c",
+      "title": "Grad-CAM (faith)\nblock 12",
+      "method": "gcam",
+      "conditioning": "fully live original-model gradients",
+      "params": {
+        "target_layer_name": "encoder.layers.encoder_layer_11.ln_1"
+      },
+      "selected_by": [
+        "faith"
+      ],
+      "row_label": "gcam__layer-encoder.layers.encoderlayer11.ln1",
+      "campaign": "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_cam_paper_campaign/compact_2026-11-10",
+      "selection_sha256": "414c249f71163448a966ac1063a07bfdcf3ce233b077814750eb03f015938711",
+      "protocol_sha256": "1b526db0f19e944c846775bf89ea635504f69c226e0b727d6ce6162e9d96195b",
+      "cache": "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_cam_paper_campaign/compact_2026-11-10/test/.saliency_cache/gcam__layer-encoder.layers.encoderlayer11.ln1.npz",
+      "cache_sha256": "6de0a7660e1e5245f755352bd0d9646702ce39242ec5fc61bd5891fb73eb9a46",
+      "postprocessing": "Canonical library per-image min\u2013max normalization and bilinear resize to 224; distinct from signed nearest-neighbor SplitCAM maps.",
+      "precision": "Canonical float32 model, attribution library and metrics.",
+      "backward_scale_power_semantics": null,
+      "stabilized_stream_scope": null
+    },
+    {
+      "key": "096166a087bc",
+      "title": "LayerCAM (faith/loc)\nblock 9",
+      "method": "lcam",
+      "conditioning": "fully live original-model gradients",
+      "params": {
+        "target_layer_name": "encoder.layers.encoder_layer_8.ln_1"
+      },
+      "selected_by": [
+        "faith",
+        "loc"
+      ],
+      "row_label": "lcam__layer-encoder.layers.encoderlayer8.ln1",
+      "campaign": "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_cam_paper_campaign/compact_2026-11-10",
+      "selection_sha256": "414c249f71163448a966ac1063a07bfdcf3ce233b077814750eb03f015938711",
+      "protocol_sha256": "1b526db0f19e944c846775bf89ea635504f69c226e0b727d6ce6162e9d96195b",
+      "cache": "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_cam_paper_campaign/compact_2026-11-10/test/.saliency_cache/lcam__layer-encoder.layers.encoderlayer8.ln1.npz",
+      "cache_sha256": "207ed247e677950563ffce501dfbb09c27b1938e16671c0f2497acede3653191",
+      "postprocessing": "Canonical library per-image min\u2013max normalization and bilinear resize to 224; distinct from signed nearest-neighbor SplitCAM maps.",
+      "precision": "Canonical float32 model, attribution library and metrics.",
+      "backward_scale_power_semantics": null,
+      "stabilized_stream_scope": null
+    },
+    {
+      "key": "83ab23704c6e",
+      "title": "SplitCAM (loc)\nfixed attention + LN\nb11, \u03b1=0.45, h\u2212, p=1",
+      "method": "paper_splitcam_fixed_both",
+      "conditioning": "fixed attention + LN",
+      "params": {
+        "alpha": 0.45,
+        "block": 11,
+        "formula": "h_minus",
+        "policy": "fixed_both"
+      },
+      "selected_by": [
+        "loc"
+      ],
+      "row_label": "paper_splitcam_fixed_both__alpha-0.45__block-11__formula-hminus__policy-fixedboth__alphahex_5a0052fa9f06",
+      "campaign": "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_paper_splitcam_campaign/compact_2026-11-10",
+      "selection_sha256": "d1b5e0f726e2d04c2d52006032cc525d2e9ca5575653c694730744f575262ab5",
+      "protocol_sha256": "e581b93322253d5b691f007371c2d023f09baf3c3e0c4001bb2d2cef047e1eb7",
+      "cache": "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_paper_splitcam_campaign/compact_2026-11-10/test/.saliency_cache/paper_splitcam_fixed_both__alpha-0.45__block-11__formula-hminus__policy-fixedboth__alphahex_5a0052fa9f06.npz",
+      "cache_sha256": "7ad53974439899a7fa17903c21098aea6e519e1246f153e11b32b8869fe85f54",
+      "postprocessing": "Signed raw maps, nearest-neighbor resize as released SplitCAM implementation. Thesis bilinear prose discrepancy is recorded; only unchanged metric configurations perform abs/normalization.",
+      "precision": {
+        "attribution": "float64",
+        "canonical_prediction_and_metrics": "float32"
+      },
+      "backward_scale_power_semantics": null,
+      "stabilized_stream_scope": null
+    },
+    {
+      "key": "42bcdf30dbf1",
+      "title": "SplitCAM (faith)\nfixed attention + LN\nb6, \u03b1=0.45, h, p=1",
+      "method": "paper_splitcam_fixed_both",
+      "conditioning": "fixed attention + LN",
+      "params": {
+        "alpha": 0.45,
+        "block": 6,
+        "formula": "h",
+        "policy": "fixed_both"
+      },
+      "selected_by": [
+        "faith"
+      ],
+      "row_label": "paper_splitcam_fixed_both__alpha-0.45__block-6__formula-h__policy-fixedboth__alphahex_5a0052fa9f06",
+      "campaign": "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_paper_splitcam_campaign/compact_2026-11-10",
+      "selection_sha256": "d1b5e0f726e2d04c2d52006032cc525d2e9ca5575653c694730744f575262ab5",
+      "protocol_sha256": "e581b93322253d5b691f007371c2d023f09baf3c3e0c4001bb2d2cef047e1eb7",
+      "cache": "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_paper_splitcam_campaign/compact_2026-11-10/test/.saliency_cache/paper_splitcam_fixed_both__alpha-0.45__block-6__formula-h__policy-fixedboth__alphahex_5a0052fa9f06.npz",
+      "cache_sha256": "86b035e59c6c6ecf5cca56f74d3aad6979e1eb6f6dbffad6aec7c59bbd8ad9a7",
+      "postprocessing": "Signed raw maps, nearest-neighbor resize as released SplitCAM implementation. Thesis bilinear prose discrepancy is recorded; only unchanged metric configurations perform abs/normalization.",
+      "precision": {
+        "attribution": "float64",
+        "canonical_prediction_and_metrics": "float32"
+      },
+      "backward_scale_power_semantics": null,
+      "stabilized_stream_scope": null
+    }
+  ],
+  "pending": [
+    {
+      "campaign": "/home/jzimmermann/code/hidden-monotonicity-live-stability/results/vit_paper_splitcam_campaign/weaker_2026-11-10",
+      "reason": "selection not frozen"
+    }
+  ],
+  "examples": [
+    {
+      "candidate": 1,
+      "test_index": 7,
+      "image_id": "ILSVRC2012_val_00028713.JPEG",
+      "target": 1,
+      "target_class": "goldfish",
+      "prediction": 1,
+      "prediction_class": "goldfish",
+      "correctly_classified": true,
+      "source": {
+        "dataset_index": 7,
+        "image_name": "ILSVRC2012_val_00028713.JPEG",
+        "image_path": "/data/ImageNet-complete/val/n01443537/ILSVRC2012_val_00028713.JPEG",
+        "image_path_sha256": "17acb591fde6649cb7d9235533e4eae7d0325be64a2309c76787594a19bbc044",
+        "mask_path": "/home/jzimmermann/code/dc_decompose/data/imagenet-s/ImageNetS50/validation-segmentation/n01443537/ILSVRC2012_val_00028713.png",
+        "mask_path_sha256": "1d9ba0463b2e1008e886753950bf3c4c8b2db8ddde8ef49f6a0151e5664252ab",
+        "wnid": "n01443537"
+      },
+      "folder": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/01_ILSVRC2012_val_00028713",
+      "maps": {
+        "gradient": {
+          "min": -0.0555422380566597,
+          "max": 0.0647648498415947,
+          "raw_array_sha256": "bdc7bc8b3f0c0d99d243fa12065a7b3174e819030cd07918e844fd3b91835a63"
+        },
+        "d024643fe310": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "fec16069c9230133db021bd67101bb8c69c02785794ef67d149ccfc727fe5fec"
+        },
+        "c0a0c4d5e74c": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "c24fb8ffc54b2c0da3c9010c6499b4f7823e49801f79045e22a819eabfa5b530"
+        },
+        "096166a087bc": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "db37646f4706f0c09d1e342650e5e11c8241bee0aa1629ec18968ad2c7ff894b"
+        },
+        "83ab23704c6e": {
+          "min": -0.04130140319466591,
+          "max": 0.011694202199578285,
+          "raw_array_sha256": "d911848b910317e099e8f3546958ac6815f1ddf10abbda2487fb829297de6d3a"
+        },
+        "42bcdf30dbf1": {
+          "min": -0.011020096950232983,
+          "max": 0.04018346220254898,
+          "raw_array_sha256": "cd36019890d434211cc6fd5f88d39a4c86336a6073102ce6309d5619a3b7ac46"
+        }
+      },
+      "panel": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/candidate_01.png",
+      "panel_sha256": "d543d559a7a4d2585bda285bcea7a60a3625a1de79fa5d274bd1f175cbb90d3e"
+    },
+    {
+      "candidate": 2,
+      "test_index": 158,
+      "image_id": "ILSVRC2012_val_00040852.JPEG",
+      "target": 368,
+      "target_class": "gibbon",
+      "prediction": 368,
+      "prediction_class": "gibbon",
+      "correctly_classified": true,
+      "source": {
+        "dataset_index": 172,
+        "image_name": "ILSVRC2012_val_00040852.JPEG",
+        "image_path": "/data/ImageNet-complete/val/n02483362/ILSVRC2012_val_00040852.JPEG",
+        "image_path_sha256": "c958e7198ff497c1f3dfa4fbbfab2d89a61e562de1127ca4e2d8da14c6671e28",
+        "mask_path": "/home/jzimmermann/code/dc_decompose/data/imagenet-s/ImageNetS50/validation-segmentation/n02483362/ILSVRC2012_val_00040852.png",
+        "mask_path_sha256": "408094ae4dd4f4ccd87fc91394b3b1da6faab7b2c35fa1ab27a81e0eb1f79a75",
+        "wnid": "n02483362"
+      },
+      "folder": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/02_ILSVRC2012_val_00040852",
+      "maps": {
+        "gradient": {
+          "min": -0.04636836424469948,
+          "max": 0.04268422722816467,
+          "raw_array_sha256": "9330005e1f594097190909fc990b4fbe8233bf65bfc97f4d5d55221ebb6695d0"
+        },
+        "d024643fe310": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "1c45b63c3862c202860759102a18cabbfa0e3d7d1d6b61bae2a62a4af55dd7c9"
+        },
+        "c0a0c4d5e74c": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "542ac0d888650b334941d18bfc15492971ac3caefd82d77b3d0a02c246d8f063"
+        },
+        "096166a087bc": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "e83d577006a566b334d134f56410e81c25c95b950a5f23353c002ab467266fd2"
+        },
+        "83ab23704c6e": {
+          "min": -0.016385091468691826,
+          "max": 0.004436689428985119,
+          "raw_array_sha256": "ebe4a3a65b8ce7b05289a6839106c9d7f4966ae624b452a59bb68b23784750f3"
+        },
+        "42bcdf30dbf1": {
+          "min": -0.005797200836241245,
+          "max": 0.05583139881491661,
+          "raw_array_sha256": "9cc1f435e9c4a9a38f3d281ffd294b2f3a17232e9c63aaee7bbb56f7fed26400"
+        }
+      },
+      "panel": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/candidate_02.png",
+      "panel_sha256": "8028ca407ba567378cc11bd157fd63dac5314b4ae0e539650125dfdbbac103f6"
+    },
+    {
+      "candidate": 3,
+      "test_index": 250,
+      "image_id": "ILSVRC2012_val_00003469.JPEG",
+      "target": 487,
+      "target_class": "cellular telephone",
+      "prediction": 487,
+      "prediction_class": "cellular telephone",
+      "correctly_classified": true,
+      "source": {
+        "dataset_index": 272,
+        "image_name": "ILSVRC2012_val_00003469.JPEG",
+        "image_path": "/data/ImageNet-complete/val/n02992529/ILSVRC2012_val_00003469.JPEG",
+        "image_path_sha256": "92b95597f782b6f45c3ec0d93b0cd14bd9be4f41a8f055ae2ee24762f9e9f428",
+        "mask_path": "/home/jzimmermann/code/dc_decompose/data/imagenet-s/ImageNetS50/validation-segmentation/n02992529/ILSVRC2012_val_00003469.png",
+        "mask_path_sha256": "77062ea50be7664f8e8b652a898930b329d5997e62d8cdff91a87f53546c53ae",
+        "wnid": "n02992529"
+      },
+      "folder": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/03_ILSVRC2012_val_00003469",
+      "maps": {
+        "gradient": {
+          "min": -0.28327295184135437,
+          "max": 0.22999629378318787,
+          "raw_array_sha256": "8d0509c6ee137e439bceba99b35848e7eb0e520ac6d4000087c11cbb78767381"
+        },
+        "d024643fe310": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "32151d08d4b4b7fcd04ef1af6cec39dd5c275de8e12cf0484f58fa95950fbc13"
+        },
+        "c0a0c4d5e74c": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "6b7d0600b5289775d3dd3caae2d0836eb66e967092efddea8a89426f313c03f6"
+        },
+        "096166a087bc": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "847a068bc8ef822fa6f0643f7edc4a4502c6c6262a86348e19a558b4c0599ee9"
+        },
+        "83ab23704c6e": {
+          "min": -0.011079072020947933,
+          "max": 0.010838034562766552,
+          "raw_array_sha256": "28a46b659ba3b5f527f7487bf66876df1395a440d15447d55a2555f7fed80f5c"
+        },
+        "42bcdf30dbf1": {
+          "min": -0.00702826539054513,
+          "max": 0.007819085381925106,
+          "raw_array_sha256": "d2dcb61732c3972cc7428ef9d55abef68e8f051cb29c99dec048f529fe3153b7"
+        }
+      },
+      "panel": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/candidate_03.png",
+      "panel_sha256": "4cb0dc9b7afa01671c306257d135d27c836d1a369ddbc9aa1d9f9a4ae8327a10"
+    },
+    {
+      "candidate": 4,
+      "test_index": 214,
+      "image_id": "ILSVRC2012_val_00036962.JPEG",
+      "target": 418,
+      "target_class": "ballpoint",
+      "prediction": 418,
+      "prediction_class": "ballpoint",
+      "correctly_classified": true,
+      "source": {
+        "dataset_index": 233,
+        "image_name": "ILSVRC2012_val_00036962.JPEG",
+        "image_path": "/data/ImageNet-complete/val/n02783161/ILSVRC2012_val_00036962.JPEG",
+        "image_path_sha256": "dae5c1a86eaabc83739a27f8ca57f367e42495c34c153fa9f3c1c55dd9520f22",
+        "mask_path": "/home/jzimmermann/code/dc_decompose/data/imagenet-s/ImageNetS50/validation-segmentation/n02783161/ILSVRC2012_val_00036962.png",
+        "mask_path_sha256": "79a74f8a00114cb4affab62aab9eaee8fe0425e1619eb3a2508fed4125ebd77d",
+        "wnid": "n02783161"
+      },
+      "folder": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/04_ILSVRC2012_val_00036962",
+      "maps": {
+        "gradient": {
+          "min": -0.2479405403137207,
+          "max": 0.19033321738243103,
+          "raw_array_sha256": "4e5e62c4dc72c054fe98c3f8284ceb4ce36b381f8c1ce808415aa9c4dd9cc0dd"
+        },
+        "d024643fe310": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "b6a1209cd2bec6352c3af251e5872e52d3a27070359345361b550b2ce2ab2f9a"
+        },
+        "c0a0c4d5e74c": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "7f746ae57d8bf807eaf8134cebd025ca9bbbccb69ee3f2d53995e5985d1bd716"
+        },
+        "096166a087bc": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "e22a3d4d7fba2be40ecbcd2c5dac1a879e4863e5528f249eaf76e41411396e2b"
+        },
+        "83ab23704c6e": {
+          "min": -0.05825955793261528,
+          "max": 0.007291729096323252,
+          "raw_array_sha256": "a1f41c01c1a7647537b95eabc168a802d2fd1f0f1b81065ba59cac3f9690ce10"
+        },
+        "42bcdf30dbf1": {
+          "min": -0.06418287754058838,
+          "max": 0.0802835151553154,
+          "raw_array_sha256": "d74d228397dddc123c99a4ab8df90468bdf5931e0d28bf5a3a9670ba365203af"
+        }
+      },
+      "panel": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/candidate_04.png",
+      "panel_sha256": "cd79bab48196f38e14f6b2b842d2408cf37e2a731d39bc8d8c3eee7a8a3a4193"
+    },
+    {
+      "candidate": 5,
+      "test_index": 167,
+      "image_id": "ILSVRC2012_val_00010078.JPEG",
+      "target": 386,
+      "target_class": "African elephant",
+      "prediction": 386,
+      "prediction_class": "African elephant",
+      "correctly_classified": true,
+      "source": {
+        "dataset_index": 181,
+        "image_name": "ILSVRC2012_val_00010078.JPEG",
+        "image_path": "/data/ImageNet-complete/val/n02504458/ILSVRC2012_val_00010078.JPEG",
+        "image_path_sha256": "8a73eeb4ca54886d92803611b5761a9295aa77e6659bae4d64b350049ed5b154",
+        "mask_path": "/home/jzimmermann/code/dc_decompose/data/imagenet-s/ImageNetS50/validation-segmentation/n02504458/ILSVRC2012_val_00010078.png",
+        "mask_path_sha256": "959e5ff5d62ffbc1837176552d49435139e36849c68c99f9bd22acf556929885",
+        "wnid": "n02504458"
+      },
+      "folder": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/05_ILSVRC2012_val_00010078",
+      "maps": {
+        "gradient": {
+          "min": -0.035392601042985916,
+          "max": 0.0485910028219223,
+          "raw_array_sha256": "8e8738be8327e63a8ab2a01424e29805c0a3d0f7716a509029956d0c105e864f"
+        },
+        "d024643fe310": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "d0a1b3689fd898d11f6a332057992de47ee76e195b7b20bef39c01d7c791d498"
+        },
+        "c0a0c4d5e74c": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "7ff2168ce48c1bd574980723b1df6743c1e3f096a0ab64c035389b9d6d41ec4d"
+        },
+        "096166a087bc": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "08b2a41e548f7eefe97446ad1cc5dcdee3affaea13d6d9b28eccaf72b1cb9eea"
+        },
+        "83ab23704c6e": {
+          "min": -0.15050305426120758,
+          "max": 0.004566539078950882,
+          "raw_array_sha256": "f6529e435b99cff9e00be6ec80ff7f43a3984f2cce35b3873894e364ffa1988a"
+        },
+        "42bcdf30dbf1": {
+          "min": -0.028474479913711548,
+          "max": 0.02429480105638504,
+          "raw_array_sha256": "6b30ba05e0a0b96af277f169d0967bc7700e0d4319d55b479258d0171905948c"
+        }
+      },
+      "panel": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/candidate_05.png",
+      "panel_sha256": "31ea91a13dc0e88b086a2c3d0b992c189cb150c2fe92cadd8b17f707c3a952bb"
+    },
+    {
+      "candidate": 6,
+      "test_index": 441,
+      "image_id": "ILSVRC2012_val_00039099.JPEG",
+      "target": 851,
+      "target_class": "television",
+      "prediction": 851,
+      "prediction_class": "television",
+      "correctly_classified": true,
+      "source": {
+        "dataset_index": 482,
+        "image_name": "ILSVRC2012_val_00039099.JPEG",
+        "image_path": "/data/ImageNet-complete/val/n04404412/ILSVRC2012_val_00039099.JPEG",
+        "image_path_sha256": "db489f1b9c23a3063213fca76f54a25153ec344a9fd1ba5e6a70c1821007285a",
+        "mask_path": "/home/jzimmermann/code/dc_decompose/data/imagenet-s/ImageNetS50/validation-segmentation/n04404412/ILSVRC2012_val_00039099.png",
+        "mask_path_sha256": "07dd144c8d818c11b23cbb2d607f2ed408c77edff73d70bef071ebd2bdd800ba",
+        "wnid": "n04404412"
+      },
+      "folder": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/06_ILSVRC2012_val_00039099",
+      "maps": {
+        "gradient": {
+          "min": -0.0633859783411026,
+          "max": 0.0616946704685688,
+          "raw_array_sha256": "52236b9d1a03f1393d3a62fcaaaa53dd36fe1ab086aa8e6c1524787bc2a69541"
+        },
+        "d024643fe310": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "81988ce4312b8b68cd0d4219cc4569cc768dc159f881d57e2f5b6623d67fa6e2"
+        },
+        "c0a0c4d5e74c": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "e8cb0258fe6efac011e8a2716aec600b1b0d8196813653744591608c734e4f98"
+        },
+        "096166a087bc": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "deb303d78a62c03822a7fbfc3174548f2d33260e67990067893281e058b9f60e"
+        },
+        "83ab23704c6e": {
+          "min": -0.06573887169361115,
+          "max": 0.005766232497990131,
+          "raw_array_sha256": "c7183beafc5f6677411e39bd0e792ed2d755a4127196743ac1c5c75fe0f9be40"
+        },
+        "42bcdf30dbf1": {
+          "min": -0.017994016408920288,
+          "max": 0.0321706160902977,
+          "raw_array_sha256": "1baa3161377b9f4b35038d38c98bee29cbeac736b33a43c0cdec055eb2803ed0"
+        }
+      },
+      "panel": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/candidate_06.png",
+      "panel_sha256": "289b2efc121017bf5af7f6b681cd1efd4f278a9c78bdc494991910ff5f30f7ee"
+    },
+    {
+      "candidate": 7,
+      "test_index": 276,
+      "image_id": "ILSVRC2012_val_00023903.JPEG",
+      "target": 502,
+      "target_class": "clog",
+      "prediction": 502,
+      "prediction_class": "clog",
+      "correctly_classified": true,
+      "source": {
+        "dataset_index": 300,
+        "image_name": "ILSVRC2012_val_00023903.JPEG",
+        "image_path": "/data/ImageNet-complete/val/n03047690/ILSVRC2012_val_00023903.JPEG",
+        "image_path_sha256": "bb862fe0addeec2c0f2443db40d530fa6a4dd411c63f99864ed847647c291ed3",
+        "mask_path": "/home/jzimmermann/code/dc_decompose/data/imagenet-s/ImageNetS50/validation-segmentation/n03047690/ILSVRC2012_val_00023903.png",
+        "mask_path_sha256": "35d3975c62034be3e396d06bc380f80b15a697d6f1cc1a4f42d90b268b9e7ab1",
+        "wnid": "n03047690"
+      },
+      "folder": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/07_ILSVRC2012_val_00023903",
+      "maps": {
+        "gradient": {
+          "min": -0.23149128258228302,
+          "max": 0.2911815941333771,
+          "raw_array_sha256": "354b95965be94aeed10c33fd181de330dff9286cba839ee76b04f07081d341e0"
+        },
+        "d024643fe310": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "38b014901a4d89779814c8df33a9537add8cc2006310615c8975feb5d8b7b5fe"
+        },
+        "c0a0c4d5e74c": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "3a390f9c267c593dc80b9397da15b1223eb02287c1a049fd8735b1ff65f408db"
+        },
+        "096166a087bc": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "636f4b3344c3b6366eaa870776b03fc5b96b82a002e4887e68f4f0f86ac81871"
+        },
+        "83ab23704c6e": {
+          "min": -0.1176239475607872,
+          "max": 0.005578705575317144,
+          "raw_array_sha256": "822c63f7f3321b4d31fcc7e66dc0acc1e76374247f36329bb5044c0921897478"
+        },
+        "42bcdf30dbf1": {
+          "min": -0.07095932960510254,
+          "max": 0.05541089177131653,
+          "raw_array_sha256": "94dbf6b6919f157ce2ed1634a7efa4f169c94e2b08b8972faa097e8e66b794f4"
+        }
+      },
+      "panel": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/candidate_07.png",
+      "panel_sha256": "2e2f951fc90328e2d3a1a359f8d67eb4f05e35db41f98f4f07a2cc6e07488a15"
+    },
+    {
+      "candidate": 8,
+      "test_index": 207,
+      "image_id": "ILSVRC2012_val_00046138.JPEG",
+      "target": 412,
+      "target_class": "ashcan",
+      "prediction": 412,
+      "prediction_class": "ashcan",
+      "correctly_classified": true,
+      "source": {
+        "dataset_index": 225,
+        "image_name": "ILSVRC2012_val_00046138.JPEG",
+        "image_path": "/data/ImageNet-complete/val/n02747177/ILSVRC2012_val_00046138.JPEG",
+        "image_path_sha256": "52294132a227f65e1cb4aef83ba5dff9d9f7d568a82ecd2c84c0ff3a581eb946",
+        "mask_path": "/home/jzimmermann/code/dc_decompose/data/imagenet-s/ImageNetS50/validation-segmentation/n02747177/ILSVRC2012_val_00046138.png",
+        "mask_path_sha256": "a73dfd6a3f1d3342cabbe741850acfd7ce2ce0b78cb146bdd8d61cd69c1bf8a9",
+        "wnid": "n02747177"
+      },
+      "folder": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/08_ILSVRC2012_val_00046138",
+      "maps": {
+        "gradient": {
+          "min": -0.36532628536224365,
+          "max": 0.32106173038482666,
+          "raw_array_sha256": "4e297e2f6fb85f06d9a8855d77dd1a58fd15e22213dbbf856551a2179d004261"
+        },
+        "d024643fe310": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "f8480219f3b9eb3bf6a9a20c3479d460b0e89ac697442b623ea9a69368a95850"
+        },
+        "c0a0c4d5e74c": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "bbc6bd37af5b51163c0653a32d2b4a2e289c078be74d580aaa6a1d992dc701e1"
+        },
+        "096166a087bc": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "f799194529c34dc20b3db2e70416e7ba4568158449c9f2efc6a6d29b20c380be"
+        },
+        "83ab23704c6e": {
+          "min": -0.017818981781601906,
+          "max": 0.008815339766442776,
+          "raw_array_sha256": "59079331536f4f561cf040b260bd5b972871a2442b403286ddf4939f30b7ab4b"
+        },
+        "42bcdf30dbf1": {
+          "min": -0.01273138914257288,
+          "max": 0.01789596676826477,
+          "raw_array_sha256": "0c215c5407b76d7609f68e06a9fca0daff55687f7487c961be3790ae83780b40"
+        }
+      },
+      "panel": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/candidate_08.png",
+      "panel_sha256": "8f68dab8e28a226330be8a265477156c20a8faa0918b89d0e0b3566d6ec0fcc4"
+    },
+    {
+      "candidate": 9,
+      "test_index": 403,
+      "image_id": "ILSVRC2012_val_00032798.JPEG",
+      "target": 703,
+      "target_class": "park bench",
+      "prediction": 703,
+      "prediction_class": "park bench",
+      "correctly_classified": true,
+      "source": {
+        "dataset_index": 439,
+        "image_name": "ILSVRC2012_val_00032798.JPEG",
+        "image_path": "/data/ImageNet-complete/val/n03891251/ILSVRC2012_val_00032798.JPEG",
+        "image_path_sha256": "ef5e9197dbc495f3bb7ac60c95388a416fc8904ff42b74996ae8c94e64e37f0f",
+        "mask_path": "/home/jzimmermann/code/dc_decompose/data/imagenet-s/ImageNetS50/validation-segmentation/n03891251/ILSVRC2012_val_00032798.png",
+        "mask_path_sha256": "3a6e757ca0ce5c32e18b3e3a1dddefc881a8674bba3e8a94565a24dc9f93ee41",
+        "wnid": "n03891251"
+      },
+      "folder": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/09_ILSVRC2012_val_00032798",
+      "maps": {
+        "gradient": {
+          "min": -0.1503671258687973,
+          "max": 0.14199617505073547,
+          "raw_array_sha256": "e246d26ac826259145d3d38bb722eee351588c78e422ba7c2e231e964e8f68e6"
+        },
+        "d024643fe310": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "8a6f5778c2463e790da6c68cf002c4b155442a0061868df4e53aacb4ebbc99b5"
+        },
+        "c0a0c4d5e74c": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "35ee2ce54a338863be969496d05cef7e266c08bde2b09684b563287669caefd2"
+        },
+        "096166a087bc": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "90940cedb4a0f93f71abd95f2b4d4eb24807cdc05056f93655aeb3405ef4da57"
+        },
+        "83ab23704c6e": {
+          "min": -0.006827447563409805,
+          "max": 0.003033588407561183,
+          "raw_array_sha256": "9f0bc4d290ea1b472daafca3e771e06e8b4473c73f3e5bf25659d13f6ef7accd"
+        },
+        "42bcdf30dbf1": {
+          "min": -0.007024852093309164,
+          "max": 0.007194806821644306,
+          "raw_array_sha256": "9d9f74445b109bcfebed92a8627648d4299dacd68555f5133e0ad1736b818c49"
+        }
+      },
+      "panel": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/candidate_09.png",
+      "panel_sha256": "45fa6f22d3ac860571a2a46e39b75959be2261f7b3a618d37e4efd573d26a259"
+    },
+    {
+      "candidate": 10,
+      "test_index": 119,
+      "image_id": "ILSVRC2012_val_00021928.JPEG",
+      "target": 330,
+      "target_class": "wood rabbit",
+      "prediction": 330,
+      "prediction_class": "wood rabbit",
+      "correctly_classified": true,
+      "source": {
+        "dataset_index": 129,
+        "image_name": "ILSVRC2012_val_00021928.JPEG",
+        "image_path": "/data/ImageNet-complete/val/n02325366/ILSVRC2012_val_00021928.JPEG",
+        "image_path_sha256": "a7e871dd95adf3c87e3be1ca45fffd3b8b58aa0abf8d4c84e9896bd6e79f26ec",
+        "mask_path": "/home/jzimmermann/code/dc_decompose/data/imagenet-s/ImageNetS50/validation-segmentation/n02325366/ILSVRC2012_val_00021928.png",
+        "mask_path_sha256": "d2a85b1613faa07d5cc7fe8c9a60ff9e3a95afadae8a102dd7c4f1039542f9ab",
+        "wnid": "n02325366"
+      },
+      "folder": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/10_ILSVRC2012_val_00021928",
+      "maps": {
+        "gradient": {
+          "min": -0.02850673906505108,
+          "max": 0.03350451588630676,
+          "raw_array_sha256": "50b743c8d8f14f221a186f89a1a31fc65373ec5a95c9cdca725d9b3beae28e67"
+        },
+        "d024643fe310": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "36c13e8ed8b7a1792b4d0a6788eeea07d5c2b9848ae35be589f6f8efa6dde031"
+        },
+        "c0a0c4d5e74c": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "602f6f71acad42ab70985ee1c3182467ea2a495a84e21b873ba6926b3683e62b"
+        },
+        "096166a087bc": {
+          "min": 0.0,
+          "max": 0.9999998807907104,
+          "raw_array_sha256": "a16687e1f64756b57ffc6994b8a7a95b1eae9ddfb0644f01334cb0b7f479c581"
+        },
+        "83ab23704c6e": {
+          "min": -0.057440195232629776,
+          "max": 0.005161892157047987,
+          "raw_array_sha256": "e69e715ff1fb0525d349327cffbb8bb4bfb3b74394ec4e96f0e97c8b4fc32974"
+        },
+        "42bcdf30dbf1": {
+          "min": -0.012268329039216042,
+          "max": 0.019487706944346428,
+          "raw_array_sha256": "d56cb8b980e7927075f083bd7473592968f4dbd52fe9007e152c7f3672cd8424"
+        }
+      },
+      "panel": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/candidate_10.png",
+      "panel_sha256": "39c5a25780b858874cf249fa6f1591f185c4badc2be111f18f8283d94e560869"
+    }
+  ],
+  "display": "Annotated class target in every column. Red: positive; blue: negative. Each sign uses its image-wide 99th percentile (maximum if zero), then clipping.\nLoc/faith denote validation-only selection; black is zero. Display scaling is independent of the quantitative evaluation.",
+  "gradient": {
+    "checkpoint": {
+      "path": "/home/jzimmermann/.cache/torch/hub/checkpoints/vit_b_16-c867db91.pth",
+      "sha256": "c867db91d3e12c6cbadabb610d73c24a546bf82d8c03a9fea34f43a712ddb0e9"
+    },
+    "source_sha256": {
+      "bwgame/evaluation/evaluator.py": "221d5edc16b3b06380280a2aa556acb317ea6e259e9df1bd3f37fc3cab51c073",
+      "bwgame/composite_replacer.py": "a1e61829c9e550f5b1acd12adf9232a33fca948c574f1abc8a805f976d8f1d5e",
+      "bwgame/functional_replacer.py": "32256c95f74b4cfa677fbd9f2e764a60f5cebcdac7c0dc3a37c95c0e54551136",
+      "bwgame/xai/methods/captum_methods.py": "9c3229cf0cbe4905dd189f922002df8915052a4b0ced83bd4d6b69f638a1cfce"
+    },
+    "image_ids": [
+      "ILSVRC2012_val_00028713.JPEG",
+      "ILSVRC2012_val_00040852.JPEG",
+      "ILSVRC2012_val_00003469.JPEG",
+      "ILSVRC2012_val_00036962.JPEG",
+      "ILSVRC2012_val_00010078.JPEG",
+      "ILSVRC2012_val_00039099.JPEG",
+      "ILSVRC2012_val_00023903.JPEG",
+      "ILSVRC2012_val_00046138.JPEG",
+      "ILSVRC2012_val_00032798.JPEG",
+      "ILSVRC2012_val_00021928.JPEG"
+    ],
+    "labels": [
+      1,
+      368,
+      487,
+      418,
+      386,
+      851,
+      502,
+      412,
+      703,
+      330
+    ],
+    "input_sha256": "74a1389e8b6fba234c52dbe5c592c01c248d7cb77f8d6d3f388b7af623ffc829",
+    "semantics": "sum over RGB channels of derivative of annotated-class logit w.r.t. normalized input; no input multiplication, absolute value or clipping",
+    "preparation": "Evaluator.__init__: decomposed explicit attention, module replacement; no frozen attention or LayerNorm",
+    "device": "cpu",
+    "dtype": "float32",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "cache_sha256": "da8478196a566ad8c0e92ed0bc18a646c263d4587ec5a502ec9b92b309b5969d"
+  },
+  "script_sha256": "bceb5aea112f53b39d6387348898ad9d9e3b6dee40efe00060c01eb0a6998c60",
+  "reproduction": {
+    "cwd": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning",
+    "argv": [
+      "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/.venv/bin/python",
+      "scripts/render_vit_extension_candidates.py",
+      "--cam-campaign",
+      "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_cam_paper_campaign/compact_2026-11-10",
+      "--split-campaign",
+      "/home/jzimmermann/code/hidden-monotonicity-transformer-dc/results/vit_paper_splitcam_campaign/compact_2026-11-10",
+      "--split-campaign",
+      "/home/jzimmermann/code/hidden-monotonicity-live-stability/results/vit_paper_splitcam_campaign/weaker_2026-11-10",
+      "--out",
+      "reports/vit-extension/qualitative",
+      "--threads",
+      "2"
+    ]
+  },
+  "render_source_sha256": "7fff103e5a960a76f731ac3b7131d7d7f0e5c2e9915bda3e0e45d89b72f83bfb",
+  "validation": [
+    "frozen selection protocol fingerprints",
+    "identical checkpoint and test population",
+    "identical cached IDs, target labels, selected normalized input tensors and masks",
+    "finite 224x224 native maps",
+    "ten distinct target classes selected without maps or metrics",
+    "ordinary Gradient computed on CPU from canonical original model"
+  ],
+  "artifacts": {
+    "contact_sheet.png": {
+      "path": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/contact_sheet.png",
+      "sha256": "6c4769fbea224e63a1109af69a72746423ecd77a981acfeedddad0c485c51394"
+    },
+    "contact_sheet.pdf": {
+      "path": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/contact_sheet.pdf",
+      "sha256": "89a18b0ef1ad80c3b4db3b410680388991e30d87268d2fa352f8bfe7e55e88bb"
+    },
+    "candidates.pdf": {
+      "path": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/candidates.pdf",
+      "sha256": "dc380acae4173956e77206e343dc7c9b65cb7877f543836b94f6edb8dff4bd71"
+    },
+    "candidate_rows.tex": {
+      "path": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/reports/vit-extension/qualitative/candidate_rows.tex",
+      "sha256": "0ed081977a679c00955db608bb3ca95f9d93a83c81a38eaa215a013fe5be2555"
+    }
+  }
+}

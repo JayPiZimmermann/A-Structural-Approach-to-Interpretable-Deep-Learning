@@ -1,0 +1,68 @@
+ViT extension completion coordinator
+
+Start only after the reviewed baseline publication and coordinator are ready:
+
+  nohup python3 scripts/complete_vit_extension.py --watch --publish > reports/vit-extension/watcher.log 2>&1 &
+
+Read current state:
+
+  cat reports/vit-extension/status.json
+  cat reports/vit-extension/watcher.pid
+  cat reports/vit-extension/latest-artifacts.json
+
+One-shot staging without changing TeX or the published PDF:
+
+  python3 scripts/complete_vit_extension.py
+
+One-shot local publication, including retry after fixing a reported failure:
+
+  python3 scripts/complete_vit_extension.py --publish --retry
+
+Tests (temporary fixtures only; no experiments or real TeX build):
+
+  python3 scripts/test_complete_vit_extension.py
+
+The watcher polls every 60 seconds. Its persistent watcher.lock prevents duplicate
+coordinators. Cooperating manual publication/build scripts should use flock on
+reports/vit-extension/tex-build.lock; neither lock file should be unlinked.
+
+Publication stages are CAM + fixed-attention/fixed-LayerNorm SplitCAM first, then
+the complete weaker-policy campaign. The adapter must admit every requested
+campaign. Every included fresh row needs all eight metrics (565 test images;
+200 for robustness), its confidence intervals, frozen validation selection,
+zero failures, and the 50-image runtime artifact. At least one valid SplitCAM row
+is required. Rejected policies and pending campaigns stay in the external report.
+The combined displayed-family statistics must include copied Gradient and every
+displayed configuration; no earlier campaign's Holm family is reused.
+
+Each completed stage produces an immutable release directory containing the table,
+admission/provenance/statistics, ten class-diverse qualitative candidates, and build
+evidence. The qualitative candidates remain separate from the thesis until the
+user chooses examples. No GPU experiment is launched or modified by this script.
+
+Publication uses an isolated copy of TeX sources and the pinned proof closure.
+The existing publication guard checks the 150-page limit, all LaTeX/Biber warnings,
+internal destinations, exact Lean URLs and proof hashes before installation.
+The extension replaces only the reserved managed span at the end of the experiments chapter
+and its two generated table files. Their prior hashes are checked on every run.
+User edits elsewhere are included in the snapshot; edits during the build cause
+the candidate to be held. Existing PDF, publication receipt and build artifacts
+are also checked immediately before installation. A user-modified managed span
+or generated file is never overwritten.
+
+A durable transaction journal backs up all files before installation, including
+the old PDF and receipt. Failure restores the old publication. Restart recovers an
+interrupted transaction only when its targets still match known before/after
+hashes; subsequent user edits require review. A completed input hash is recorded
+only as part of successful publication. Identical failed inputs wait for review
+rather than repeatedly building. Source/artifact changes trigger a fresh attempt.
+
+The coordinator never commits or pushes. Publication receipts retain prior
+editorial history and separately bind the extension PDF to its actual snapshot,
+admission, statistics and validation evidence. Baseline visual checks are not
+presented as a visual review of the newly extended PDF.
+
+SIGTERM/SIGINT requests a graceful stop after the current operation; the PID file
+is removed on exit. Keep any reported failed release for diagnosis. Runtime state,
+release directories, locks and rollback backups are ignored by Git; scripts and
+stable review evidence remain versionable.

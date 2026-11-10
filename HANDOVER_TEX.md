@@ -104,6 +104,28 @@ unexplained missing citations and continues checking bibliography entries and
 aliases. The source-reference checker and badge synchronizer follow the single active
 source tree. Deliver `docs/thesis.pdf`; all thesis references resolve internally.
 
+### Quantus extension integration
+
+`scripts/complete_vit_extension.py --watch --publish` watches the local CAM and
+SplitCAM campaigns and adds completed results at the reserved marker in
+`tex/chapters/08_experiments.tex`. The extension uses the existing ten-column ViT
+CI layout, copied Gradient values, and freshly computed displayed-family paired
+tests with Holm correction. It first includes fixed-attention/fixed-LayerNorm
+SplitCAM, then the completed adaptive-policy ablations. Incomplete results stay
+out of the thesis. Builds run in an isolated snapshot and must pass the existing
+150-page publication guard before replacing the local PDF; the watcher does not
+commit or push.
+
+Ten class-diverse qualitative candidates are in
+`reports/vit-extension/qualitative/`; they remain outside the thesis pending the
+user's selection. Later releases use the same images and add the completed
+methods. `reports/vit-extension/latest-artifacts.json` points to those updated
+renders after publication. Read `reports/vit-extension/status.json` and
+`watcher.pid` for live state, and `completion-coordinator.txt` for restart and
+retry commands. Cooperating manual builds must take the persistent
+`reports/vit-extension/tex-build.lock`; do not delete lock files. The coordinator
+preserves concurrent edits and records each publication in the main receipt.
+
 ### Independent rendering switches
 
 `tex/preamble/rendering.tex` defines `\RenderTables` and
