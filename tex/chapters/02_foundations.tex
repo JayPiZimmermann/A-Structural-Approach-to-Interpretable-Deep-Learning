@@ -1,6 +1,6 @@
 \chapter{Mathematical Foundations}\label{ch:foundations}
 
-This chapter fixes the notation, definitions, and background theory used throughout. Section~\ref{sec:nn_notation_pwl} fixes the feedforward network notation and recalls the equivalence between \ac{relu} networks and \ac{cpwl} functions. Section~\ref{sec:convex_monotone_foundations} introduces the two structured classes---monotone networks and \acp{icnn}---into which Chapter~\ref{ch:decompositions} splits a general network, together with the Maxout units generalizing \ac{relu}. Section~\ref{sec:game_theory_mdp_foundations} collects the background on \acp{mdp} and zero-sum turn-based games and presents the ReLU Net Game of Gaubert and Vlassopoulos in full, so that Chapter~\ref{ch:game_theory} can state which parts of the framework it inherits and which are new. The activation-level construction from absolute curvature, including smooth activations, is developed with the network decomposition theorem in Section~\ref{sec:dc_splitting_smooth}.
+This chapter establishes the notation and background. Section~\ref{sec:nn_notation_pwl} introduces feedforward networks and their \ac{relu}--\ac{cpwl} equivalence. Section~\ref{sec:convex_monotone_foundations} defines monotone networks, \acp{icnn}, and Maxout units, the building blocks of Chapter~\ref{ch:decompositions}. Section~\ref{sec:game_theory_mdp_foundations} presents \acp{mdp}, zero-sum turn-based games, and the full ReLU Net Game of Gaubert and Vlassopoulos, distinguishing the framework inherited by Chapter~\ref{ch:game_theory} from its extensions. The absolute-curvature construction for smooth activations accompanies the network decomposition theorem in Section~\ref{sec:dc_splitting_smooth}.
 
 \section{Neural Network Notation and PWL Mappings}\label{sec:nn_notation_pwl}
 
@@ -23,9 +23,9 @@ where $\relu(z) \coloneqq \max\{z, 0\}$ acts componentwise, and the output layer
 Layers $1, \ldots, L-1$ are the \emph{hidden layers}. Throughout we fix the boundary convention $\relu'(0) \coloneqq 0$, so that the gate indicator $\1\{\preactl{l}_i > 0\}$ returns $0$ at $\preactl{l}_i = 0$.
 \end{definition}
 
-When a statement concerns the layers $l, \ldots, L$ only, we write $f^{(l)} \colon \RR^{d^{(l)}} \to \RR^{d^{(L)}}$ for the tail map, so that $f = f^{(1)} \circ \bigl(x \mapsto \relu(\Wl{1} x + b^{(1)})\bigr)$ and $f^{(L)}$ is the affine output map. A bias-free formulation is always available by appending an \emph{intercept input} of constant value $1$ and absorbing $b^{(l)}$ into a column of $\Wl{l}$; we use this in some proofs without comment.
+For layers $l, \ldots, L$, write $f^{(l)} \colon \RR^{d^{(l)}} \to \RR^{d^{(L)}}$ for the tail map, with $f = f^{(1)} \circ \bigl(x \mapsto \relu(\Wl{1} x + b^{(1)})\bigr)$ and $f^{(L)}$ the affine output map. Appending a constant \emph{intercept input} $1$ absorbs $b^{(l)}$ into a column of $\Wl{l}$; some proofs use this bias-free formulation implicitly.
 
-The decompositions of Chapter~\ref{ch:decompositions} act on the signs of parameters and inputs, fixed by the following notation.
+Chapter~\ref{ch:decompositions} splits parameters and inputs by sign using the following notation.
 
 \begin{definition}[Positive and negative parts]\label{def:posneg_parts}
 For a scalar $u \in \RR$ we write $u^{+} \coloneqq \max\{u, 0\}$ and $u^{-} \coloneqq \max\{-u, 0\}$, so that $u = u^{+} - u^{-}$ and $\abs{u} = u^{+} + u^{-}$, with $u^+ u^- = 0$. For a matrix or vector $W$ and a sign label $\sigma \in \{+,-\}$, the \emph{entrywise part} $\posneg{W}{\sigma}$ is obtained by applying $u \mapsto u^{\sigma}$ to every entry. For the layer weights and biases of Definition~\ref{def:ffn_relu} we abbreviate
@@ -40,7 +40,7 @@ so that $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$ and $\abs{\Wl{l}} = \Wsig{l}{+} + \
 \end{definition}
 
 \begin{remark}[Pair notation for decomposed activations]\label{rem:pair_notation}
-Superscript sign labels on \emph{activations}, written $\act{l}{\sigma}$ for $\sigma \in \{+,-\}$, are reserved for the two non-negative \emph{streams} of a network decomposition and are defined in Section~\ref{sec:general_decomposition_def}; they do \emph{not} denote the entrywise parts $\posneg{\actl{l}}{\sigma}$ of the original activations. The distinction matters: the decomposed streams carry strictly more information than the sign pattern of $\actl{l}$---the source of the sub-threshold signals exploited in Chapter~\ref{ch:saliency}.
+The activation labels $\act{l}{\sigma}$, $\sigma \in \{+,-\}$, denote the two non-negative \emph{streams} defined in Section~\ref{sec:general_decomposition_def}, distinct from the entrywise parts $\posneg{\actl{l}}{\sigma}$. The streams carry strictly more information than the sign pattern of $\actl{l}$, supplying the sub-threshold signals exploited in Chapter~\ref{ch:saliency}.
 \end{remark}
 
 \subsection*{Continuous piecewise linear functions}
@@ -57,16 +57,16 @@ For example, $\abs{\cdot} \colon \RR \to \RR$ is \ac{cpwl} with the two regions 
 Every feedforward \ac{relu} network represents a \ac{cpwl} function.\end{observation}
 
 \begin{proof}
-Affine maps are \ac{cpwl}, the componentwise $\relu$ is \ac{cpwl}, and the composition of two \ac{cpwl} maps is again \ac{cpwl}: if $f$ is affine on the polyhedra $Q_1, \ldots, Q_N$ covering $\RR^d$ and $g$ is affine on the polyhedra $P_1, \ldots, P_M$ covering the intermediate space, then $g \circ f$ is affine on each of the at most $NM$ polyhedra $Q_r \cap f^{-1}(P_s)$ (preimages of polyhedra under affine maps are polyhedra), these cover $\RR^d$, and continuity is preserved under composition. The claim follows by induction along the recursion \eqref{eq:forward_recursion}.
+Affine maps and componentwise $\relu$ are \ac{cpwl}. Composition preserves this class: if $f$ and $g$ are affine on polyhedral covers $Q_1, \ldots, Q_N$ and $P_1, \ldots, P_M$ of their respective domains, then $g\circ f$ is affine on the cover of at most $NM$ polyhedra $Q_r\cap f^{-1}(P_s)$. These are polyhedra because $f$ is affine on each $Q_r$; composition also preserves continuity. Induction along \eqref{eq:forward_recursion} proves the claim.
 \end{proof}
 
-The converse also holds: \emph{every} \ac{cpwl} function is exactly representable by a \ac{relu} network of bounded depth. This equivalence, with a dimension-dependent depth bound given by \textcite{Arora2018}, is the entry point for the difference-of-convex analysis of Chapter~\ref{ch:decompositions}.
+Conversely, every \ac{cpwl} function has an exact \ac{relu} representation with a dimension-dependent depth bound \parencite{Arora2018}. This equivalence underlies the difference-of-convex analysis of Chapter~\ref{ch:decompositions}.
 
 \begin{theoremenv}[\ac{cpwl}--\ac{relu} equivalence, \parencite{Arora2018}, \LeanResult{thm:cpwl_relu_equivalence}]\label{thm:cpwl_relu_equivalence}
 A function $f \colon \RR^{d} \to \RR$ is \ac{cpwl} if and only if it is representable by a feedforward \ac{relu} network. Moreover, every \ac{cpwl} function on $\RR^d$ is representable by a \ac{relu} network of depth at most $\bigl\lceil \log_2(d+1) \bigr\rceil + 1$.\end{theoremenv}
 
 \begin{proof}
-The ``if'' direction is Observation~\ref{obs:relu_is_cpwl}. For the converse we give the classical construction and refer to \textcite{Arora2018} for the depth bookkeeping. First, every \ac{cpwl} function $f$ admits a \emph{difference-of-convex} representation
+Observation~\ref{obs:relu_is_cpwl} proves the ``if'' direction. For the converse, every \ac{cpwl} function $f$ admits a \emph{difference-of-convex} representation
 \begin{equation}
 	f = g - h,
 	\qquad
@@ -75,14 +75,14 @@ The ``if'' direction is Observation~\ref{obs:relu_is_cpwl}. For the converse we 
 	h = \max_{s \in [N_h]}\, m_s,
 	\label{eq:cpwl_dc_representation}
 \end{equation}
-with finitely many affine functions $\ell_r, m_s \colon \RR^d \to \RR$; this is the piecewise-linear DC theorem of \textcite{Melzer1986_PLasDC} and \textcite{Kripfganz1987_PWAasDC}, and both $g$ and $h$ are convex as finite maxima of affine functions. Second, the maximum of two scalars is a two-layer \ac{relu} computation,
+with finitely many affine functions $\ell_r, m_s \colon \RR^d \to \RR$ \parencite{Melzer1986_PLasDC,Kripfganz1987_PWAasDC}; their finite maxima $g,h$ are convex. The maximum of two scalars is a two-layer \ac{relu} computation,
 \begin{equation}
 	\max\{u, v\}
 	= \frac{u + v}{2} + \frac{\abs{u - v}}{2}
 	= \frac{u + v}{2} + \frac{\relu(u - v) + \relu(v - u)}{2},
 	\label{eq:max_as_relu}
 \end{equation}
-where the affine pre- and post-combinations are absorbed into the surrounding weight matrices. Arranging the $N_g$ affine arguments of $g$ in a balanced binary tree of pairwise maxima realizes $g$ by a \ac{relu} network of depth $\lceil \log_2 N_g \rceil + 1$, and likewise for $h$; a final affine layer forms the difference \eqref{eq:cpwl_dc_representation}. This proves representability. The stated depth bound, which is uniform in the number of affine pieces and depends only on the input dimension $d$, follows from \textcite{Arora2018}, who use the Wang--Sun representation of every \ac{cpwl} function on $\RR^d$ as a signed sum of maxima of at most $d + 1$ affine functions each. These maxima require at most $\lceil \log_2(d+1) \rceil$ hidden layers, followed by a final affine output layer.
+absorbing the affine pre- and post-combinations into surrounding weight matrices. A balanced binary tree of pairwise maxima realizes $g$ at depth $\lceil \log_2 N_g \rceil + 1$, and likewise $h$; a final affine layer forms \eqref{eq:cpwl_dc_representation}, proving representability. For the bound independent of the number of pieces, \textcite{Arora2018} use the Wang--Sun representation of every \ac{cpwl} function on $\RR^d$ as a signed sum of maxima of at most $d+1$ affine functions each. These need at most $\lceil \log_2(d+1) \rceil$ hidden layers and a final affine output layer.
 \end{proof}
 
 \begin{remark}[Expressivity and linear regions]\label{rem:linear_regions}
@@ -91,7 +91,7 @@ Theorem~\ref{thm:cpwl_relu_equivalence} identifies the function \emph{class}, no
 
 \section{Convexity and Monotonicity in Neural Networks}\label{sec:convex_monotone_foundations}
 
-The decompositions of Chapter~\ref{ch:decompositions} split a general network into components from two structured classes with sign-constrained weights. We define both and record the load-bearing facts that they represent monotone and convex functions, respectively.
+Chapter~\ref{ch:decompositions} splits general networks into sign-constrained components. We define the two classes and prove their monotonicity and convexity, respectively.
 
 We order $\RR^d$ coordinatewise: $x \le y$ if and only if $x_i \le y_i$ for all $i \in [d]$. A function $f \colon \RR^d \to \RR^m$ is \emph{monotone} (non-decreasing) if $x \le y$ implies $f(x) \le f(y)$.
 
@@ -105,7 +105,7 @@ Weight-sign constraints are an established device for building monotone models \
 A monotone neural network represents a monotone function; each coordinate function is non-decreasing in every input variable.\end{proposition}
 
 \begin{proof}
-By induction over the layers. The input layer $\actl{0} = x$ is monotone in $x$. Assume $\actl{l-1}$ is monotone in $x$. An affine map with non-negative matrix preserves the coordinatewise order: if $a \le a'$, then $\Wl{l} a + b^{(l)} \le \Wl{l} a' + b^{(l)}$ entrywise, because every entry of $\Wl{l}$ is non-negative. Hence $\preactl{l}$ is monotone in $x$, and applying the monotone activation componentwise preserves monotonicity, so $\actl{l}$ is monotone in $x$. The affine output layer is again order-preserving.
+Induct from the monotone input $\actl{0}=x$. Non-negative weights preserve coordinatewise order: $a\le a'$ implies $\Wl{l}a+b^{(l)}\le\Wl{l}a'+b^{(l)}$. Thus monotonicity of $\actl{l-1}$ implies that of $\preactl{l}$; componentwise monotone activation gives monotonicity of $\actl{l}$. The same order argument covers the affine output.
 \end{proof}
 
 \begin{definition}[\acl{icnn}, \parencite{Amos2017}]\label{def:icnn}
@@ -126,7 +126,7 @@ We use two closure properties of convex functions: (i) a non-negative linear com
 \end{equation*}
 where the first inequality uses convexity of $u$ and monotonicity of $\varphi$, and the second convexity of $\varphi$.
 
-Now induct over layers. Each coordinate of $\preactl{1} = \Wl{1} x + b^{(1)}$ is affine, hence convex, in $x$; applying the convex monotone activation gives convex coordinates of $\actl{1}$ by (ii). Assume all coordinates of $\actl{l-1}$ are convex in $x$. For $l \ge 2$ the weights are non-negative, so each coordinate of $\preactl{l} = \Wl{l} \actl{l-1} + b^{(l)}$ is a non-negative combination of convex functions plus a constant, hence convex by (i), and applying the activation preserves convexity by (ii). The output coordinates $\actl{L} = \preactl{L}$ are convex by the same argument with the identity activation.
+Induct over layers. The affine coordinates of $\preactl{1}=\Wl{1}x+b^{(1)}$ are convex, so (ii) gives convexity of $\actl{1}$. If $\actl{l-1}$ has convex coordinates, the non-negative weights for $l\ge2$ make $\preactl{l}=\Wl{l}\actl{l-1}+b^{(l)}$ convex by (i), and (ii) preserves convexity through the activation. The identity activation covers the affine output $\actl{L}=\preactl{L}$.
 \end{proof}
 
 \begin{remark}[Monotonicity and convexity combine]\label{rem:monotone_convex_combined}
@@ -152,7 +152,7 @@ A \emph{rank-$k$ Maxout network} is a feedforward network whose neurons are rank
 The \ac{relu} activation is the rank-$2$ Maxout unit with parameters $(w_1, \beta_1) = (w, \beta)$ and $(w_2, \beta_2) = (0, 0)$, since $\relu(w^\top x + \beta) = \max\{w^\top x + \beta,\, 0\}$. Max-pooling over a group $J$ of neurons is the rank-$\abs{J}$ Maxout unit whose $j$-th argument is the coordinate projection onto the $j$-th element of $J$. Every rank-$k$ Maxout unit is convex in its input and non-decreasing in each pre-activation argument $w_j^\top x + \beta_j$; hence Maxout qualifies as an admissible activation in Definitions~\ref{def:monotone_network} and \ref{def:icnn}.\end{observation}
 
 \begin{proof}
-The first two claims are immediate from \eqref{eq:maxout_unit}. Convexity holds because a pointwise maximum of affine (hence convex) functions is convex. For monotonicity in the arguments, view the unit as $(u_1, \ldots, u_k) \mapsto \max_j u_j$ with $u_j = w_j^\top x + \beta_j$: if $u_j \le u_j'$ for all $j$, then $\max_j u_j \le \max_j u_j'$.
+The first two claims follow from \eqref{eq:maxout_unit}. A maximum of affine functions is convex. For argument-wise monotonicity, set $u_j=w_j^\top x+\beta_j$: $u_j\le u_j'$ for all $j$ implies $\max_j u_j\le\max_j u_j'$.
 \end{proof}
 
 \begin{remark}\label{rem:maxout_role}
@@ -161,7 +161,7 @@ Maxout networks are the natural piecewise-linear generalization of \ac{relu}: a 
 
 \section{Game Theory and Markov Decision Processes}\label{sec:game_theory_mdp_foundations}
 
-Chapter~\ref{ch:game_theory} interprets the backward pass of a decomposed network as a two-player zero-sum game on the network graph. This section fixes the background: \acp{mdp}, turn-based zero-sum games, and their optimality equations. We restrict to finite state and action spaces, which suffices throughout.
+Chapter~\ref{ch:game_theory} interprets backward propagation as a two-player zero-sum game on the decomposed network graph. We introduce \acp{mdp}, turn-based games, and their optimality equations, restricting throughout to finite state and action spaces.
 
 \begin{definition}[\acl{mdp}]\label{def:mdp}
 A (finite) \emph{\acl{mdp}} (\acs{mdp}) \parencite{Puterman1994mdp,SuttonBarto2018rl} is a tuple $\mathcal{M} = (S, A, \P, R, \gamma)$ consisting of a finite state set $S$, a finite action set $A(s)$ for each $s \in S$, a \emph{transition kernel} $\P(s' \mid s, a) \ge 0$ with $\sum_{s'} \P(s' \mid s, a) = 1$, a bounded \emph{reward function} $R(s, a) \in \RR$, and a \emph{discount factor} $\gamma \in [0, 1)$. A \emph{(stationary) policy} is a map $\pi$ assigning to each state $s$ a probability distribution $\pi(\cdot \mid s)$ over $A(s)$; $\pi$ is \emph{pure} (deterministic) if each $\pi(\cdot \mid s)$ is a point mass. A policy induces, for every start state, a Markov chain on $S$ and hence a distribution over trajectories $(s_0, a_0, s_1, a_1, \ldots)$; the \emph{value function} of $\pi$ is the expected discounted return
@@ -197,12 +197,12 @@ Both claims are standard \parencite{Puterman1994mdp,SuttonBarto2018rl}. The righ
 \end{proof}
 
 \begin{remark}[State-dependent structural discounts]\label{rem:structural_discount}
-The games of this thesis depart from Definition~\ref{def:mdp} in one respect: the discount is \emph{state-dependent}, $\gamma(s) \ge 0$, and may exceed $1$. Here discounts are not impatience parameters but \emph{structural} normalizers---for neuron $i$ in layer $l$ the absolute weight mass
+Our games use \emph{state-dependent} discounts $\gamma(s)\ge0$ that may exceed $1$. These are \emph{structural} normalizers: for neuron $i$ in layer $l$, the absolute weight mass
 \begin{equation}
 	\gamma^{(l)}_i \coloneqq \sum_{j} \bigl( \Wsig{l}{+} + \Wsig{l}{-} \bigr)_{ij} = \sum_j \abs{\Wl{l}_{ij}},
 	\label{eq:structural_discount}
 \end{equation}
-which restores the weight mass after row $i$ of $\abs{\Wl{l}}$ is normalized into transition probabilities. Contraction is then unavailable, but also unnecessary: all games are played on \emph{layered acyclic} graphs, so every trajectory is finite and all value functions are well-defined finite sums. Backward induction gives a unique value and the existence of optimal policies; policies need not be unique when actions tie. The two-player statement follows below.
+restores the mass after normalizing row $i$ of $\abs{\Wl{l}}$ into transition probabilities. Although contraction is unavailable, \emph{layered acyclic} graphs ensure finite trajectories and value sums. Backward induction gives a unique value and optimal policies, possibly nonunique at ties, as the two-player theorem below shows.
 \end{remark}
 
 \subsection*{Zero-sum turn-based games}
@@ -232,14 +232,14 @@ and there exist pure stationary policies $\polstar = (\polstar_{+}, \polstar_{-}
 In particular, $\polstar$ is a Nash equilibrium of every subgame, i.e.\ a subgame perfect equilibrium.\end{theoremenv}
 
 \begin{proof}
-Since the graph is finite and acyclic, its states admit a topological order; we induct backward along it. For terminal states, \eqref{eq:shapley_bellman} fixes $V^{\star}(s) = R(s)$ and \eqref{eq:saddle_point} is trivial. Consider a non-terminal state $s \in S_{+}$ and assume $V^{\star}$ is uniquely defined and \eqref{eq:saddle_point} holds for all states reachable from $s$. The bracket in \eqref{eq:shapley_bellman} is a well-defined finite number for every action, so the maximum exists and is attained by some pure choice $\polstar_{+}(s)$; this defines $V^{\star}(s)$ uniquely. For the saddle-point property, fix any opponent policy $\pi_{-}$ and let $P^{+}$ play $\polstar_{+}$. Conditioning on the first transition from $s$ and using the induction hypothesis (the left inequality of \eqref{eq:saddle_point} at the successor states) together with $\gamma(s) \ge 0$,
+Induct backward along a topological order of the finite acyclic graph. At terminal states, \eqref{eq:shapley_bellman} fixes $V^{\star}(s)=R(s)$ and \eqref{eq:saddle_point} holds. For $s\in S_+$, assume uniqueness and the saddle inequalities at all successors. Each action's bracket in \eqref{eq:shapley_bellman} is finite; maximizing over the finite action set uniquely defines $V^{\star}(s)$ and supplies a pure choice $\polstar_+(s)$. For any opponent policy $\pi_-$, condition on the first transition and apply the successors' left saddle inequality with $\gamma(s)\ge0$:
 \begin{align*}
 	V^{(\polstar_{+}, \pi_{-})}(s)
 	&= R\bigl(s, \polstar_{+}(s)\bigr) + \gamma(s) \sum_{s'} \P\bigl(s' \mid s, \polstar_{+}(s)\bigr)\, V^{(\polstar_{+}, \pi_{-})}(s') \\
 	&\ge R\bigl(s, \polstar_{+}(s)\bigr) + \gamma(s) \sum_{s'} \P\bigl(s' \mid s, \polstar_{+}(s)\bigr)\, V^{\star}(s')
 	\;=\; V^{\star}(s),
 \end{align*}
-where the last equality holds because $\polstar_{+}(s)$ attains the maximum in \eqref{eq:shapley_bellman}. Similarly, if $P^{+}$ plays an arbitrary $\pi_{+}$ against $\polstar_{-}$, then averaging the bracket over $\pi_{+}(\cdot \mid s)$ is at most its maximum, so the same conditioning together with the right inequality at the successors yields $V^{(\pi_{+}, \polstar_{-})}(s) \le V^{\star}(s)$. The argument for $s \in S_{-}$ is symmetric, with $\max$ and $\min$ and the inequality directions exchanged. Evaluating both inequalities of \eqref{eq:saddle_point} at $\pi = \polstar$ gives $V^{\polstar} = V^{\star}$. Since the argument applies verbatim to the subgame rooted at any state, $\polstar$ is subgame perfect.
+The last equality uses the maximizing choice $\polstar_+(s)$. Against $\polstar_-$, any $\pi_+$ averages the bracket to at most its maximum; conditioning and the successors' right saddle inequality give $V^{(\pi_+,\polstar_-)}(s)\le V^{\star}(s)$. For $s\in S_-$, exchange $\max$ with $\min$ and reverse the inequalities. Taking $\pi=\polstar$ in both inequalities gives $V^{\polstar}=V^{\star}$. The argument holds in every rooted subgame, proving subgame perfection.
 \end{proof}
 
 \begin{remark}\label{rem:shapley_history}
@@ -248,7 +248,7 @@ For general discounted stochastic games with cycles, existence of the value and 
 
 \subsection{The ReLU Net Game of Gaubert and Vlassopoulos}\label{subsec:relu_net_game}
 
-\textcite{Gaubert2025} showed that the forward pass of a \ac{relu} network \emph{is} the value of a zero-sum turn-based stopping game played backward on the network graph. We present their construction in full, in our notation, since Chapter~\ref{ch:game_theory} inherits its state space, transition kernel, and stopping structure while changing the payoff bookkeeping. Throughout, fix a network as in Definition~\ref{def:ffn_relu} with scalar output ($d^{(L)} = 1$), fix an input $x \in \RR^{d^{(0)}}$, and assume that no row of any weight matrix vanishes, so that the discounts \eqref{eq:structural_discount} are strictly positive.
+\textcite{Gaubert2025} represent the forward pass of a \ac{relu} network as the value of a zero-sum turn-based stopping game played backward on its graph. We give their full construction in our notation; Chapter~\ref{ch:game_theory} retains its states, transitions, and stopping structure with revised payoff bookkeeping. Fix a network from Definition~\ref{def:ffn_relu} with scalar output ($d^{(L)}=1$), an input $x\in\RR^{d^{(0)}}$, and nonzero weight rows, ensuring strictly positive discounts \eqref{eq:structural_discount}.
 
 Read the identity $\actl{l}_i = \max\bigl\{0,\, \preactl{l}_i\bigr\}$ as a decision: a player at neuron $i$ may \emph{stop}, securing payoff $0$, or \emph{continue}, collecting the bias $b^{(l)}_i$ plus the weighted contributions of the previous layer. Continuing propagates the decision backward through the network; a negative weight flips the sign of its contribution, i.e.\ hands the turn to an adversary facing the mirrored problem. The optimal value at neuron $i$ is exactly the activation $\actl{l}_i$.
 
@@ -292,11 +292,11 @@ and the value function of the game evaluates the network:
 where for $l = 0$ we read $\actl{0}_k = x_k$. The equilibrium is unique up to tie-breaking at neurons with $\preactl{l}_i = 0$, where both actions are optimal; the convention \eqref{eq:rng_equilibrium_policy} stops at ties, matching $\relu'(0) = 0$.\end{theoremenv}
 
 \begin{proof}
-By Theorem~\ref{thm:shapley_bellman} it suffices to verify that the function defined by \eqref{eq:rng_value_identity} satisfies the Shapley--Bellman equations \eqref{eq:shapley_bellman}, with the maximizers and minimizers given by \eqref{eq:rng_equilibrium_policy}. We induct on the layer index.
+By Theorem~\ref{thm:shapley_bellman}, it suffices to check \eqref{eq:rng_value_identity} and policy \eqref{eq:rng_equilibrium_policy} against \eqref{eq:shapley_bellman}. Induct on layers.
 
-\emph{Base case $l = 0$.} Terminal states carry the fixed payoff $R\bigl(s^{(0)}_{k,q}\bigr) = \xi_q\, x_k = \xi_q\, \actl{0}_k$, which is \eqref{eq:rng_value_identity}.
+\emph{Base case $l=0$.} The terminal payoff $R\bigl(s^{(0)}_{k,q}\bigr)=\xi_q x_k=\xi_q\actl{0}_k$ satisfies \eqref{eq:rng_value_identity}.
 
-\emph{Inductive step.} Let $l \ge 1$ and assume \eqref{eq:rng_value_identity} at layer $l - 1$. Consider first a state $s^{(l)}_{i,+} \in S_{+}$. The stop action yields $0 + V^{\star}(\perp) = 0$. The continuation value is, by \eqref{eq:rng_kernel} and the induction hypothesis,
+\emph{Inductive step.} Assume \eqref{eq:rng_value_identity} at layer $l-1$, $l\ge1$. At $s^{(l)}_{i,+}\in S_+$, stopping yields $0+V^{\star}(\perp)=0$; by \eqref{eq:rng_kernel} and induction, continuation yields
 \begin{align}
 	R\bigl(s^{(l)}_{i,+}, \mathrm{cont}\bigr) + \gamma^{(l)}_i \sum_{j, r} \frac{\Wsig{l}{+ \oplus r}_{ij}}{\gamma^{(l)}_i}\, \xi_{r}\, \actl{l-1}_j
 	&= b^{(l)}_i + \sum_{j} \Bigl( \Wsig{l}{+}_{ij}\, \actl{l-1}_j - \Wsig{l}{-}_{ij}\, \actl{l-1}_j \Bigr) \notag\\
@@ -313,7 +313,7 @@ continuing exactly when $\preactl{l}_i > 0$. At the mirrored state $s^{(l)}_{i,-
 	-b^{(l)}_i + \sum_{j} \Bigl( \Wsig{l}{-}_{ij}\, \actl{l-1}_j - \Wsig{l}{+}_{ij}\, \actl{l-1}_j \Bigr)
 	= -\preactl{l}_i .
 \end{equation*}
-The minimizing player $P^{-}$ obtains $V^{\star}\bigl(s^{(l)}_{i,-}\bigr) = \min\{0, -\preactl{l}_i\} = -\relu\bigl(\preactl{l}_i\bigr) = \xi_{-}\, \actl{l}_i$ and prefers to continue exactly when $-\preactl{l}_i < 0$, i.e.\ under the same gate \eqref{eq:rng_equilibrium_policy}. At $\preactl{l}_i = 0$ both actions give value $0$ for either player, which proves the uniqueness-up-to-ties claim. Finally, the output state has the single action $\mathrm{cont}$, and the computation \eqref{eq:rng_cont_value} with $l = L$ yields $V^{\star}\bigl(s^{(L)}\bigr) = \preactl{L} = \actl{L} = f(x)$.
+Thus $P^-$ obtains $V^{\star}\bigl(s^{(l)}_{i,-}\bigr)=\min\{0,-\preactl{l}_i\}=-\relu\bigl(\preactl{l}_i\bigr)=\xi_-\actl{l}_i$, preferring continuation exactly when $-\preactl{l}_i<0$, the gate \eqref{eq:rng_equilibrium_policy}. At $\preactl{l}_i=0$, both actions give either player value $0$, proving uniqueness up to ties. Forced continuation at the affine output gives, by \eqref{eq:rng_cont_value} with $l=L$, $V^{\star}\bigl(s^{(L)}\bigr)=\preactl{L}=\actl{L}=f(x)$.
 \end{proof}
 
 \begin{remark}[Softplus networks from entropy regularization]\label{rem:softplus_game}

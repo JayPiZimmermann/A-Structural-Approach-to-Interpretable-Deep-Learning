@@ -61,6 +61,12 @@ placement; [metadata and source records](reports/recent-literature/metadata.json
 identify ten downloaded PDFs and the GEF paper checked through indexed primary
 excerpts only. Quantus remains briefly embedded in the existing metrics paragraph.
 
+The [prose-concision review](reports/prose-concision/integration.json) records
+roughly 17% shorter prose, with chapter order, displayed equations, citation keys,
+and labels preserved. Independent reviews check proof steps and scientific
+qualifications. The MNIST difference models now explicitly investigate the
+opposing-stream mechanisms exposed by decomposing pretrained networks.
+
 ## Contents
 
 - `tex/`: main thesis (`main.tex`), technical supplement (`supplement.tex`), and figures.

@@ -1,4 +1,4 @@
-# TeX handover for Astra — 9 November 2026
+# TeX handover for Astra — 10 November 2026
 
 The user requested this checkpoint so the thesis can be continued on another
 server. This document is sufficient to start the TeX task independently. The
@@ -29,6 +29,16 @@ indexed primary-source excerpts. The earlier 190-entry audit remains a historica
 record, separate from this update. Quantus is one sentence in the existing metrics
 paragraph, with no separate paragraph or taxonomy catalogue.
 
+The subsequent prose-concision pass reduces main and supplement prose by roughly
+17% while preserving their order, displayed equations, labels, and citation keys.
+The chapter ledgers, independent proof and qualification reviews, source audit,
+and build evidence are in `reports/prose-concision/`. Its baseline includes the
+author's uncommitted introduction edit; the parent commit and exact patch are
+recorded. The MNIST section and introduction now motivate directly trained
+difference models as a study of the opposing-stream mechanisms exposed by
+pretrained-network decomposition. This pass changes proof exposition, not Lean
+source or numerical experiment results.
+
 The generalized convex/monotone DC construction, closed-form activation and
 softmax splits, arbitrary-depth Transformer definition and splitting algorithm,
 and requested review repairs remain. The complete clean Lean gate passed at
@@ -38,8 +48,8 @@ axiom audits**. All 168 commands exited zero. Evidence remains in
 `reports/verification/commit-1f886dd/` and `reports/verification/current/`;
 the previous `0f3cfb0` gate is archived.
 
-The current build contains **134 main-thesis PDF pages** and an
-**85-page technical supplement**, below the 150-page main-document cap. Treat
+The current build contains **123 main-thesis PDF pages** and an
+**80-page technical supplement**, below the 150-page main-document cap. Treat
 `reports/evidence/page-budget/publication-checks.json` and the matching
 `reports/publication-build.json` as authoritative for the final copied PDFs.
 The introductory figure uses a compact layout. Static `tex/main.xmpdata` and

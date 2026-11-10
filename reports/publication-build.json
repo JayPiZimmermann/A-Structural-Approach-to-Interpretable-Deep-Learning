@@ -1,19 +1,19 @@
 {
-  "built_at_utc": "2026-11-10T19:58:47.048526+00:00",
+  "built_at_utc": "2026-11-10T21:50:02.861104+00:00",
   "proof_source_commit": "1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06",
-  "editorial_baseline_commit": "cfc0953b46472060bdc2a7c6974583df941e1852",
+  "editorial_baseline_commit": "4fca2455de262a824829f4e6e89a16727650656a",
   "publication_state": "validated",
   "public_pdf": "docs/thesis.pdf",
-  "pdf_sha256": "ec1c8f317547ae345b211cf85857da2937fa43275f4b2311248a32d153f092a7",
-  "pages": 134,
+  "pdf_sha256": "9fd222ab626b62199042f51926716e8739451a7f1a4f2427c18629e0ffc0c503",
+  "pages": 123,
   "supplement_pdf": "docs/thesis-supplement.pdf",
-  "supplement_pages": 85,
+  "supplement_pages": 80,
   "documents": {
     "thesis.pdf": {
       "path": "docs/thesis.pdf",
-      "sha256": "ec1c8f317547ae345b211cf85857da2937fa43275f4b2311248a32d153f092a7",
+      "sha256": "9fd222ab626b62199042f51926716e8739451a7f1a4f2427c18629e0ffc0c503",
       "matches_compiled_pdf": true,
-      "pages": 134,
+      "pages": 123,
       "overfull_boxes": 0,
       "unresolved_reference_or_citation": false,
       "lean_uri_count": 135,
@@ -22,14 +22,14 @@
     },
     "thesis-supplement.pdf": {
       "path": "docs/thesis-supplement.pdf",
-      "sha256": "351fe70b4f9673935f154c1d69dc4bc1b8fa22fd35aef66ebb97cbb42b3e5257",
+      "sha256": "46ce65f7f4e97b1aca9f5c8b4b06575d4e301c3804d89bfba97bf27a62aebb20",
       "matches_compiled_pdf": true,
-      "pages": 85,
+      "pages": 80,
       "overfull_boxes": 0,
       "unresolved_reference_or_citation": false,
       "lean_uri_count": 59,
       "unique_lean_uris": 40,
-      "remote_link_count": 72
+      "remote_link_count": 71
     }
   },
   "commands": [
@@ -43,7 +43,8 @@
     "python3 scripts/check_paper_references.py --check",
     "python3 scripts/normalize_thesis_terms.py --check",
     "biber --tool --validate-datamodel tex/bibliography/references.bib (temporary output)",
-    "python3 scripts/check_paper_references.py --self-test"
+    "python3 scripts/check_paper_references.py --self-test",
+    "python3 reports/prose-concision/audit_concision.py --baseline-root <frozen working-tree baseline> --output reports/prose-concision/source-audit.json; exact local layout adjustment reviewed in acceptance.json"
   ],
   "checks": {
     "main_pdf_within_150_pages": true,
@@ -98,9 +99,19 @@
     "related_work_citation_keys_preserved": 80,
     "visual_pages_checked": {
       "thesis.pdf": [
-        126,
-        130,
-        131
+        1,
+        5,
+        14,
+        40,
+        81,
+        82,
+        115,
+        119,
+        120
+      ],
+      "thesis-supplement.pdf": [
+        9,
+        15
       ]
     },
     "all_warnings_and_overfull_underfull_counts": {
@@ -130,22 +141,33 @@
     "recent_literature_metadata": "reports/recent-literature/metadata.json",
     "recent_literature_selection": "reports/recent-literature/selection.json",
     "recent_literature_build": "reports/recent-literature/build.json",
-    "final_build_input_files_checked": 70
+    "final_build_input_files_checked": 70,
+    "prose_concision_report": "reports/prose-concision/integration.json",
+    "prose_concision_acceptance": "reports/prose-concision/acceptance.json",
+    "prose_semantic_review": "reports/prose-concision/review-summary.json",
+    "prose_reduction_main_percent": 17.587,
+    "prose_reduction_supplement_percent": 17.156,
+    "prose_reduction_combined_percent": 17.457,
+    "prose_words_removed": 9695,
+    "displayed_math_payloads_preserved": 346,
+    "headings_labels_and_citation_keys_preserved": true,
+    "outstanding_concision_review_findings": [],
+    "local_line_breaking_adjustments_reviewed": 3
   },
   "limitations": "Overall formalization remains partial; the verified closure includes arbitrary-depth Transformer DC and excludes the six routing-history draft modules. Historical experimental artifacts and AI identifiers remain incomplete, with remaining review limitations recorded in resolution-audit.json. The unstabilized Transformer diagnostic is not a stable implementation. Stabilized real-ViT results are saved on the separate local research branch and are not part of the thesis evaluation; accurate reconstruction does not establish improved attribution. Historical compression retention reports apply to their recorded baseline; this revision intentionally removes unused geometry. The completed bibliography audit records full-text access and exact-version limitations explicitly; these are not claimed as fully verified source contents. The DAVE baseline freezes the LayerNorm mean in addition to the scale, unlike the cited published method; its reported values describe that implementation. Current raw sanity-diagnostic artifacts remain unavailable, so the QKV protocol correction is code-verified without rerunning the reported diagnostics. Recent-literature full-text access is separately recorded: the GEF PDF could not be downloaded; its narrow citation claim was checked through indexed primary-paper excerpts. Some downloaded manuscripts are author preprints with journal metadata separately verified.",
   "source_sha256": {
     "tex/bibliography/references.bib": "4ba66fccd73b37a0570f92b160e0fd1c8cca4b4bdae946937a579816fa81e18e",
     "tex/chapters/00_text.tex": "14b5d5ea5fd98274520798144b225e8579f2a8022d5803bb9af213eca4abbb45",
-    "tex/chapters/01_introduction.tex": "62c66fe9258efed679a2f904118719cee66916688eb3ca0007cbf5325f2c65be",
-    "tex/chapters/02_foundations.tex": "5048639bc743addd534a6a744120c1d2c6cad2c22b249482438bb029bbe315c1",
-    "tex/chapters/03_decompositions.tex": "25efac5f3ffe9c45d03f2d270afd5288b5d3e42ad67bce8bea92db48cbf2867c",
-    "tex/chapters/04_game_theory.tex": "7875cd7ade2cace586d63eb80ccbaed89b9095ca96966b84592cf0a4b783f125",
-    "tex/chapters/05_saliency.tex": "9d867f99223e2b9340ef6d54d4e5ef5f4a7057c1f83d53528854dfe8c1e68dc4",
-    "tex/chapters/07_transformers.tex": "4e0827fffa48411e8c22815045e97f4e856e83c7572bf9c0c5e2ea09af8ce143",
-    "tex/chapters/08_experiments.tex": "9c161a71ea3dfc6dd3d6e8d32ddb31235bc4ce19861eafde6fca1d3c52a66d19",
-    "tex/chapters/09_conclusion.tex": "ef7e3c960d9fd14f7c9de560f71c302ca5b150c005fc3b523d2ad4a15c1f8557",
-    "tex/chapters/10_appendix.tex": "715913b1d96696e054c3c24d73e8bb67e08dca9c66a1a0655e4d4b8047a1d241",
-    "tex/chapters/11_trajectory.tex": "05a87757d3bade57d391d9f07bfefd79b3c0291fd9b8a95e6b8df80d9efc8ab3",
+    "tex/chapters/01_introduction.tex": "6ae919127dd002f4be95f9ef5ce25355c828bea5a8c8b78f37f4eae54b731508",
+    "tex/chapters/02_foundations.tex": "bb2eb9bedcd120ac5ff9b69e4145721723f1f1c8d2e1939057ef338cd0fb4039",
+    "tex/chapters/03_decompositions.tex": "b8b1bfa7fb367f1ed62924647b5a80e8ba41b6edee80c7fe04a38a965841085f",
+    "tex/chapters/04_game_theory.tex": "fd546d1d19763fa2f8a19b3fc0d898f9d57fc27a8c1775c0a4920144f4ecd2cc",
+    "tex/chapters/05_saliency.tex": "484a8356493d703fb085b279827ad56b2bc8acb853fb5ca05d168962bec1d940",
+    "tex/chapters/07_transformers.tex": "7b9324d76e44eb105875e3d881714e5b5dcdb9059b4c8b0bb6459564eca528cf",
+    "tex/chapters/08_experiments.tex": "79510fc94c83fadf14b5f258423f2b59c7b4b22411dc7832d439ef3d48e8d56b",
+    "tex/chapters/09_conclusion.tex": "778373bb83e98477c74a74d1e6ec0e1915b10d23e9a7450a18963d3f728109f4",
+    "tex/chapters/10_appendix.tex": "9ac0e7e62affbbb7f0381a689710ca0d23f190380d2258ee42fb5a2c0c910c5e",
+    "tex/chapters/11_trajectory.tex": "5e23a0993bbfca9d13968baa8d2deaf7a65afbd5297062b59e9fc0a23ec02956",
     "tex/figures/decompositions/network_split.png": "33dad7e8c19b8533d487672c933042bf424e8818fd6c43a63896d4581c5deec2",
     "tex/figures/decompositions/split_streams.pdf": "b0fde6494c5dfbeb0a94016feb533cfdf7f835ea3146a7c2045e06d569c17808",
     "tex/figures/experiments/saliency_quality/image_0005_ILSVRC2012_val_00020785.JPEG/hybrid_cam_shift_30_scale_max_winnerTakesItAllMaxpool_f26_cam_g_abs.png": "44767ac910033ce2d87169128ec708bea77ded677452eb31b4ad51bafc5a4dd9",
@@ -345,7 +367,7 @@
     "tex/figures/saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/original.png": "5010f8a54e842183397a8089b86b8143d9f3e41ac16d95df710eee4cba41729f",
     "tex/figures/tropical/imaginative_polytope.png": "d131d733822266c66a8d54913187308a3e94f29767139b9f79343654355f814a",
     "tex/frontmatter/abbreviations_list.tex": "5d217835f512f487c9fb50e4db8a40ee0d13d86d9ffb31d10793fd1d0a8ac46b",
-    "tex/frontmatter/abstract.tex": "dd3d0deefcdc1bcfcefbd1ef562af25c9b6959d2597a11d765c9390781dd2d6c",
+    "tex/frontmatter/abstract.tex": "7793cb750660ffb8af4a4f07024b380d0e71bfff9f9e85e0a7644d611953e7de",
     "tex/frontmatter/acknowledgements.tex": "f7a2198a2d01a12b10d3099c74c557ae4dbd840918b21a9ad64f5f55d8e164ff",
     "tex/frontmatter/cover.tex": "358ab6652b803640d63d1f1b56a487b83eaa3069b16e2c23fc2d5d26744238f8",
     "tex/frontmatter/declaration.tex": "bdfaa665f08c9f33940086b4f2cc5e0f8e1e1806891781806319080658f25b4a",
@@ -361,10 +383,10 @@
     "tex/preamble/nomenclature.tex": "b42ab2dfb931f8fd249c2660e6a8a392522355358df29adbedfee2cab7b58027",
     "tex/preamble/packages.tex": "319f9670375b0f71db1410f73f7cbf4390d142b1850b95317aad530518326303",
     "tex/preamble/paper_v2.tex": "0886201b5fce0b4fa30a732d2f0eb90f64e015dce4dcbd2012ff210923494364",
-    "tex/supplement/attention.tex": "606e90f5e72361c52d4a77b9430969be8a8bdfa4fe6418295614631d32b73190",
-    "tex/supplement/experiments.tex": "cb9bf134433cbe856566988399afac4720bd993abb75c5ad5748b0ea1d739808",
-    "tex/supplement/games.tex": "92ae3fb89f4d661751b4cdf56569d9068cb9ea68200359a047bae5d49d42ab98",
-    "tex/supplement/trajectory.tex": "5a7ce31ec19133d858c2f9a83a4db77668e71e346d73930df0aa4db9702dbc7a",
+    "tex/supplement/attention.tex": "71f1c3c737283df2800b71a60197710bd81032ec50f7a09f3176918c33bc05ff",
+    "tex/supplement/experiments.tex": "d057b16024386d517fc61dcd7cfa415c59e0ea7ae79cac31f3084c5c39824cd5",
+    "tex/supplement/games.tex": "632527e41991b8826dec8059400e60073832f7c507d9e96625972b25eb34c878",
+    "tex/supplement/trajectory.tex": "4375e2ccf22edb6639a1c15781757bccc1edd208bfe3c1a252f24dfb16c0acdc",
     "tex/supplement.tex": "93c919cc469d06d4389bddcbaba62550a3ab51cb23f78b8d454b4a24e2a41e73",
     "tex/tables/alpha_ablation_main.tex": "f9e778dd1f63ed7f720bcc129e69875180d527fc133fc82dc28e97af361a59ab",
     "tex/tables/appendix/alpha_combined.tex": "bd1f45e50617cd3ef5efdd551aca38d0975c0281b2c1acef3d135b66e106979e",
@@ -416,7 +438,7 @@
     "reports/evidence/page-budget/main.log": "016cd243680bebff1cbe6e6d596af351f1888079ea3afc895c5efb1300bba8f9",
     "reports/evidence/page-budget/makeindex.log": "e918d7a12c2e4d60ec06e10f105fdede9eefef44af21e30bd3bbb10438b4d1bf",
     "reports/evidence/page-budget/math-retention.json": "72cb48b41968f1bd673eb88affad63cbda13b3db97abf02f449de0bd591db377",
-    "reports/evidence/page-budget/publication-checks.json": "6e116eca8f98736764887786549ec9dbfca28d91921caa98acce30acfea44823",
+    "reports/evidence/page-budget/publication-checks.json": "f998ff3257eb2e45565cb5ee5ba6a3ae0cc8485cf9a7baaa77f025d487021c20",
     "reports/evidence/page-budget/source-delta.json": "e7dab747b9658f1193818570a9c502b618917a8405f9f4a1f868d333175e3b6c",
     "reports/evidence/page-budget/supplement.log": "2d2abf897b83cc300258acaff184f57828fe662d8917fb6093d29d8155da0ce5",
     "reports/evidence/page-budget/text-retention.json": "a89e3cd430bc5fdb50be11ee71128617265a1fbbba9655983ac42466f9e36bb0",
@@ -521,7 +543,7 @@
     "reports/reference-audit/previous-publication-build.json": "a9e9a3d61826ea0832d87c2058f81472dc62a192897d05a8d2bb71619be20125",
     "reports/reference-audit/references.json": "06356bbbb2fbb539e299339de96a57bf6422460dd8de660a83d3d6a265ea7908",
     "reports/paper-reference-reviewed-corrections.json": "93daf9c7437bdf1f7e5755c18999f99eef27d69c9ad953ce39b3a23e651dc9b1",
-    "reports/paper-reference-coverage.json": "dda6d0ca195afa7585a09779d4cabe9edc8424ea4fa24f4906ef4b8f7767e1e0",
+    "reports/paper-reference-coverage.json": "62d7efda6a60ab0b4070c2f3e80b45720297847427cde0ef0f5258db4270ce09",
     "reports/intro-evaluation-update.json": "2d21cc44f4a937040a88bafcff1636e6821e599e808f6dbd73ec0b024b8d308b",
     "reports/evidence/intro-evaluation/previous-publication-build.json": "028b6e48bfabc72edc7bc7d934165910b0d6a832c455f4c7dd91db1f791a8eba",
     "reports/recent-literature/build.json": "8672c03e173fa3dfc05981d0d2ba6edd178010ec40bb494fd23b0fb48f679044",
@@ -536,7 +558,44 @@
     "reports/recent-literature/previous-publication-build.json": "950a3d4949f28d705dc371d637e458f729dc29f77258b093023ec0bee5a46ff4",
     "reports/recent-literature/selection.json": "7453fb389734cde4747bed2816f7ff6114aa0e07f253807baf1cd6685b335ecf",
     "reports/recent-literature/source_hashes.sha256.json": "a79a31a447dc1cb8e5e60c8d50b6569354510eae36b53fe54ffddb1db9017ef0",
-    "reports/recent-literature/supplement.log": "f36c83a6e7f96ffe2777e50fb60949f6bf0ede46852d182ec8a3c326f398193c"
+    "reports/recent-literature/supplement.log": "f36c83a6e7f96ffe2777e50fb60949f6bf0ede46852d182ec8a3c326f398193c",
+    "reports/prose-concision/acceptance.json": "516e15dba9db874be1f1ddc2c841067b01dea874472e898770795340af4237b6",
+    "reports/prose-concision/audit-selfchecks.json": "5f148ab18e2e034b354e0d98afd2896bf477db3f56756e7bfd70e8f7602493b0",
+    "reports/prose-concision/audit_concision.py": "fe66c348119b1f8fda6bf97cb66fcfb0485e35bce6ee22866be4b710a66549c1",
+    "reports/prose-concision/baseline-manifest.json": "7b852871338a5d99853f7bf4ad58b182aea7731c2b6c2c4e3cac14bc1c886965",
+    "reports/prose-concision/baseline-working-tree.patch": "7145b2b41f6bc153610e3441092754c030bb2cbbe63d2309e2a88f0b28802622",
+    "reports/prose-concision/build.json": "a2a0c01eecf2029428d194b39c7acc0be0c3d5bbf95740bc87a9cd9043a1d479",
+    "reports/prose-concision/integration.json": "ae98279eab203aa92ce34e3782d5f2ffacb70ec03c30e845407e8fa2635dfa46",
+    "reports/prose-concision/inventory-baseline.json": "aaaa422d540a495faa26779b1f81296751c819835c01b4d44baa57b61bbf0323",
+    "reports/prose-concision/main.log": "3680646b01d71a7343a2e1a028241196a2062b7564098067c0b153e0f90720a1",
+    "reports/prose-concision/previous-publication-build.json": "9699f13351d6ccdf22f79f5f4c616eab9ddc8046284fbeae7b3ca99a50b55cba",
+    "reports/prose-concision/proposals/conclusion-frontmatter.json": "71addbd4195b5a582ea20e5808a1632e455593ebde82162bd326a012ad26ca27",
+    "reports/prose-concision/proposals/decompositions.json": "7bde1375c1eacba6e2e42de57c6cb9552ef6856baf5f243a3c06ba1d5d077627",
+    "reports/prose-concision/proposals/experiments.json": "e7b20503d73675344f14d7e9dbed03c6b9a23d49638b9b0fe641e755a45664d4",
+    "reports/prose-concision/proposals/foundations.json": "3c75ca33cacafb82ba9b83c6168f261a46d40a05149211759d28c0a09d5969ee",
+    "reports/prose-concision/proposals/games.json": "5fa806c4673880118beee0943f6502bafa47390d6250d4b0bdf115bb9fad954b",
+    "reports/prose-concision/proposals/intro.json": "01cc8020a1a81c8a0c58c2f25488d37edf1c4e6827d919ad0a064552207a4106",
+    "reports/prose-concision/proposals/saliency.json": "d57384d92160a36eb04fcca8d641b47e14bb9386bfb6c8bf2ecda12ebae24d9d",
+    "reports/prose-concision/proposals/supp-attention-trajectory.json": "c3aa1f29e55b22d2a1c71d9ef278d590cad1b7c9993f4b0a919d175a17d6d0a2",
+    "reports/prose-concision/proposals/supp-games.json": "ae4257480d8dfd744e01b99cf74090f419a09da3ab89567a10b18aed98211f37",
+    "reports/prose-concision/proposals/trajectory.json": "5dcb50341d2ccc01fc0adb19c7e3f1f02f2d16d666c6e8314113604f1bd8f902",
+    "reports/prose-concision/proposals/transformers.json": "51dc00f2fd178e46a8420384c951d9eec310a34d3782025956da7958e849981a",
+    "reports/prose-concision/review-summary.json": "70677588062d9c93423da1e28c061cf9f41359eeb5f38951e3e5ba465e5cad93",
+    "reports/prose-concision/reviews/final-proofs-main.json": "c4e8278d8115273a5f148419a0b70212e7b569bc49b9864cfce4adf24445ec6c",
+    "reports/prose-concision/reviews/final-proofs-supp-resolution.json": "2521dc33a92e14ecd2b3330962d48d0aff173207d16e1cb78b59394155a162be",
+    "reports/prose-concision/reviews/final-proofs-supp.json": "edb47733e0bc7e1859d5e15b6a08c6d1e2244b612bd513dfdf82d1517c73ec3a",
+    "reports/prose-concision/reviews/foundations.json": "11e7fae91aef6ede1d2411afa67dca4fd852c2308050724b48617e7c742469ad",
+    "reports/prose-concision/reviews/intro-resolutions.json": "a27348eca98be1a6c4dca32aa9da5cd1bc095df8c075f70d1e3d340fb4389747",
+    "reports/prose-concision/reviews/intro.json": "c1f5260b09a774af0b8a5c01495334ca0320574279805aa8f7086808bc7fb0e8",
+    "reports/prose-concision/reviews/protected-claims.json": "f239e819b55448a86360c81bc029a31cdabe91e4fbd96e5b4483bbcac447cd4f",
+    "reports/prose-concision/reviews/risk-review.json": "d6420640b9d50b39caf05f02b8ae1cb311f48bd8555d4927159db9919042c857",
+    "reports/prose-concision/reviews/saliency.json": "6d9fd13842b443ac96f7a1142ee466940c69f86969bcecaaac16fffa6bd410a3",
+    "reports/prose-concision/reviews/supp-trajectory-independent.json": "ffeb90d9ac06b7c601f958a623e7a3f8397ccdad56f0aa3dc30415e2e6790fc4",
+    "reports/prose-concision/reviews/trajectory-independent.json": "2f4bd1411a1d339d5a101db6241be13683128d53c77f5b85586d35be8999bcaf",
+    "reports/prose-concision/source-audit.json": "f3632538baa5108925b3674ac60f0cfb9aa919637b1686ba7b9989670ff04f96",
+    "reports/prose-concision/source_hashes.sha256.json": "8a3d555badc8ef1bc46fab6ec8a7fc127e9019826cdafcb4cc5c4dfd7beb997f",
+    "reports/prose-concision/supplement.log": "8050f51fdc52cd2a2308e3a372caed1d768392da56332524341f90250bf22d98",
+    "reports/prose-concision/terminology-followup.json": "ea29f3b8204c4d8418207b569d4b98f475e558667d859936e42c7486c4a84fb7"
   },
   "verification_receipt": "reports/verification/commit-1f886dd/receipt.json",
   "verification_receipt_sha256": "c55bfa1ee24572ed2a8845bb3dd8ef7e889571c4cb25e0fe1982b2f140817c55",
@@ -555,13 +614,13 @@
     "fresh_baseline_maps": 36
   },
   "editorial_update": {
-    "report": "reports/recent-literature/selection.json",
-    "prior_receipt": "reports/recent-literature/previous-publication-build.json",
+    "report": "reports/prose-concision/integration.json",
+    "prior_receipt": "reports/prose-concision/previous-publication-build.json",
     "page_delta": {
-      "main": 1,
-      "supplement": 0
+      "main": -11,
+      "supplement": -5
     },
-    "summary": "Eleven recent references integrated across five chapters with 230 net prose words; ten selected PDFs downloaded, GEF checked through indexed primary excerpts only. Quantus remains briefly embedded in the existing metrics paragraph. Both PDFs warning-free."
+    "summary": "Prose shortened 17.5% overall through local sentence/proof-presentation edits, with source-paper structure and mathematical displays preserved. Independent reviews restored scientific and proof qualifiers. MNIST difference models now investigate mechanisms exposed by pretrained-network DC decomposition. Both PDFs warning-free."
   },
   "editorial_history": [
     {
@@ -617,6 +676,15 @@
         "supplement": 0
       },
       "summary": "Plain-language LLM examples support opening; existing evaluation paragraph briefly names Quantus for metric selection; user prose edits retained. Both PDFs warning-free."
+    },
+    {
+      "report": "reports/recent-literature/selection.json",
+      "prior_receipt": "reports/recent-literature/previous-publication-build.json",
+      "page_delta": {
+        "main": 1,
+        "supplement": 0
+      },
+      "summary": "Eleven recent references integrated across five chapters with 230 net prose words; ten selected PDFs downloaded, GEF checked through indexed primary excerpts only. Quantus remains briefly embedded in the existing metrics paragraph. Both PDFs warning-free."
     }
   ],
   "render_flags": {
@@ -624,7 +692,7 @@
     "RenderQualitativeImageTables": 1
   },
   "validation_scope": {
-    "current": "Final PDF build, warnings, bibliography additions, citation provenance, terminology, source hashes, publication links and page cap checked for this update.",
-    "historical": "Full original 190-entry/405-context citation audit, reference-checker negative tests, rendering matrix, table-adapter comparisons and Lean proof gate retain their earlier evidence; no algorithm, table-data or Lean changes were made in this update."
+    "current": "Both PDF builds, all warnings, word-count reduction, structural/math retention with one explicitly reviewed local layout adjustment, independent semantic and proof reviews, citation provenance, terminology, Lean links, final source hashes and publication links/page cap checked for this update.",
+    "historical": "Original 190-entry/405-context audit and 11-entry literature update, reference-checker negative tests, rendering matrix, table-adapter comparisons and Lean proof gate retain their earlier evidence. No bibliography metadata, algorithm, table-data or Lean source changes in this pass."
   }
 }

@@ -1,37 +1,17 @@
 \appendix
 \chapter{Experimental Protocol and Reproducibility}\label{app:extended_results}
 
-The complete evaluation tables, validation grids, ablations and qualitative examples are collected in the companion supplement, Chapter~\ref{app:supp_experiments}.
+The companion supplement, Chapter~\ref{app:supp_experiments}, collects complete evaluation tables, validation grids, ablations, and qualitative examples.
 
 \section{Split-Method Evaluation}
 
-The split-method campaign explains the model's predicted class, including for misclassified
-images. Its localization metrics compare that attribution with the annotated object mask; when
-the prediction differs from the annotated class, the explanation target and the mask therefore
-refer to different classes. The game-method campaign below instead explains the dataset target
-class. Both retain misclassified images, and their results should be read under these distinct
-target conventions.
+The split-method campaign explains the predicted class, including misclassifications, while localization compares it with the annotated object mask. For misclassified images, target and mask therefore refer to different classes. The game campaign explains the dataset target class. Both retain misclassified images under these distinct target conventions.
 
 \subsection{Artifact Availability and Reproduction Scope}\label{app:hm_artifact_scope}
 
-The Hidden Monotonicity tables retain their published-source provenance. The
-available code checkout does not contain the original per-image evaluation
-outputs, the complete historical evaluation environment, or the six training
-configurations advertised for the MNIST multi-seed campaign. The runnable
-notebook-derived example is a separate example and does not reconstruct those
-missing settings. Consequently, exact reproduction of the historical tables
-cannot be established from the available artifacts alone.
+The Hidden Monotonicity tables retain their published-source provenance. The code checkout lacks original per-image outputs, the complete historical evaluation environment, and six advertised MNIST multi-seed training configurations. The runnable notebook-derived example cannot reconstruct those missing settings, so the available artifacts cannot establish exact reproduction of the historical tables.
 
-The current evaluation implementation has been exercised on deterministic CPU
-fixtures, including double-precision reconstruction, input derivatives, attribution,
-timing, and Pixel Flipping with an independently evaluated initial target score.
-Those checks establish the exercised implementation contracts; the original
-ImageNet campaign has not been rerun, so agreement with its published values is
-unverified. The historical training runner used the test loader during epoch
-validation. The current runner instead reserves a deterministic $10\%$ of the
-training pool for validation and evaluates the test set only after training,
-recording the partition indices and seed. This current protocol does not establish
-which checkpoint-selection procedure generated the historical MNIST figures.
+Deterministic CPU fixtures exercise double-precision reconstruction, input derivatives, attribution, timing, and Pixel Flipping with an independently evaluated initial target score. They establish the tested implementation contracts; agreement with the original ImageNet results remains unverified without a rerun. The historical training runner used the test loader for epoch validation. The current runner reserves a deterministic $10\%$ of training data for validation and evaluates the test set after training, recording partition indices and seed. This does not establish the checkpoint-selection procedure behind the historical MNIST figures.
 
 \section{Evaluation Protocol}\label{ptnb:app:protocol}
 
@@ -65,20 +45,17 @@ vector by $\bar{a}$. All metrics below use $\bar{a}$; faithfulness metrics use r
 softmax) to avoid saturation effects, and perturbations use the Quantus per-sample mean replacement
 baseline.
 
-\paragraph{Attribution localization (AL).} We adapt the inside-total relevance ratio of~\textcite{Kohlbrenner2020}, who sum positive relevance within ground-truth bounding boxes;
-we use absolute attribution mass, pixel masks and a stabilized denominator:
+\paragraph{Attribution localization (AL).} We adapt \textcite{Kohlbrenner2020}'s positive-relevance ratio within ground-truth boxes to absolute mass, pixel masks, and a stabilized denominator:
 \begin{align}
     \text{AL}(a, m) = \frac{\sum_{i=1}^d \bar{a}_i m_i}{\sum_{i=1}^d \bar{a}_i + 10^{-9}}.
 \end{align}
 
-\paragraph{Pointing game (PG).} We use the pointing-game localization criterion of~\textcite{Zhang2018pointinggame}; our configuration
-uses \texttt{abs=true} and no normalization. Let $M(a) \coloneqq \{i \in \{1, \dots, d\} :
-    \bar{a}_i = \max_j \bar{a}_j\}$ be the entire set of maximizers. Then
+\paragraph{Pointing game (PG).} We use the pointing-game criterion of~\textcite{Zhang2018pointinggame}; our configuration applies \texttt{abs=true} without normalization. Let $M(a) \coloneqq \{i \in \{1, \dots, d\} :
+    \bar{a}_i = \max_j \bar{a}_j\}$ contain all maximizers. Then
 \begin{align}
     \text{PG}(a, m) = \1\bigl\{M(a) \cap \{i : m_i = 1\} \neq \varnothing\bigr\}.
 \end{align}
-Our tie convention scores a hit whenever at least one maximizer lies inside the object mask. PG is binary
-per image--class record, so its ImageNet-S test mean is a multiple of $1/565$.
+A tie scores a hit if any maximizer lies inside the mask. PG is binary per image--class record; its ImageNet-S test mean is a multiple of $1/565$.
 
 \paragraph{Top-$k$ intersection (TK).} Following~\textcite{Theiner2021}, with $k = 1000$ and the permutation $\pi$ that sorts
 $\bar{a}$ in descending order:
@@ -106,40 +83,14 @@ For $C=3$ and $H=W=224$, $D=150{,}528$ and $T=96$ steps, giving $K_5=5$ and $K_{
 The curve contains only post-perturbation scores; the original input score is not an additional
 point. Lower is better.
 
-\paragraph{Selectivity (Sel).} Following~\textcite{Montavon2018} and its Quantus implementation~\parencite{Hedstrom2023},
-$\bar{a}$ is summed over square patches of $39{\times}39$ pixels (side
-$\lfloor\sqrt{1568}\rfloor$); non-overlapping patches are removed (replaced by the per-sample mean)
-in decreasing order of their summed attribution, and the target logit is recorded after each
-removal. Sel is the trapezoidal area under this curve, with the fraction of removed patches on the
-abscissa. Lower is better.
+\paragraph{Selectivity (Sel).} Following~\textcite{Montavon2018} and Quantus~\parencite{Hedstrom2023}, sum $\bar{a}$ over square $39{\times}39$ patches (side $\lfloor\sqrt{1568}\rfloor$). Replace non-overlapping patches by the per-sample mean in decreasing attribution order, recording the target logit after each removal. Sel is the trapezoidal area under this curve against the fraction of removed patches. Lower is better.
 
-\paragraph{Max and average sensitivity (MaxS, AvgS).} Using the max-sensitivity of~\textcite{Yeh2019} and its mean analogue, our evaluator regenerates attributions on the same $N_s = 50$
-inputs for both metrics, $x + \xi_k$ with uniform noise $\xi_k \sim \mathcal{U}[-r, r]^{C \times H
-    \times W}$, $r = 0.2$, and reports the maximum (MaxS) or mean (AvgS) over $k$ of
-$\|\psi(a(x+\xi_k)) - \psi(a(x))\|_F / \|\psi(a(x))\|_F$. Lower is better, as it indicates
-stability of the explanation to input noise.
-The noise is seeded per image, so every row sees the same perturbed inputs. MaxS and AvgS are
-computed on a fixed random subset of 200 test images (seed 0) that is identical for all rows and
-models; all other metrics use the full test split.
+\paragraph{Max and average sensitivity (MaxS, AvgS).} Following~\textcite{Yeh2019}'s max-sensitivity and its mean analogue, regenerate attributions for both metrics on the same $N_s = 50$ inputs $x + \xi_k$, with uniform noise $\xi_k \sim \mathcal{U}[-r, r]^{C \times H
+    \times W}$, $r = 0.2$. Report the maximum (MaxS) or mean (AvgS) over $k$ of $\|\psi(a(x+\xi_k)) - \psi(a(x))\|_F / \|\psi(a(x))\|_F$; lower values indicate greater stability to input noise. Per-image seeds give every row identical perturbations. Both metrics use the same fixed random subset of 200 test images (seed 0) across rows and models; all other metrics use the full test split.
 
 \subsection{Selection}\label{ptnb:app:selection}
 
-For every tunable method, baselines and ours alike, two configurations are selected on the
-validation split: \texttt{loc} minimizes the rank-sum over $\{\text{AL}, \text{PG}, \text{TK}\}$
-and \texttt{faith} the rank-sum over $\{\text{PF}_5, \text{PF}_{20}, \text{Sel}\}$. Ranks are
-computed within each method's grid, respecting metric directions; ties are broken in favor of the
-default (for \ac{rg}, the anchor), then of fewer non-default parameters, then of grid order. A
-configuration is admissible only if its map is non-zero and every metric is defined on every
-validation image; inadmissible configurations are excluded before ranking (5 of the 40 \ac{sg}
-configurations on VGG-16, all with strong risk aversion and the deterministic gate, whose maps
-vanish on some images; no other configuration). MaxS and AvgS are not used for selection because
-each evaluation re-explains every image $2N_s$ times. The \texttt{loc} row is the one reported in
-the main tables, and the \texttt{faith} row of every method is reported alongside
-(Section~\ref{ptnb:app:results}): localization is a natural target because the analytical modes are
-designed to control routing focus, because mask localization has an external ground truth whereas
-perturbation metrics evaluate off-distribution inputs, and because comparing \ac{lrp} rule choices
-by object localization has precedent, there with bounding boxes~\parencite{Kohlbrenner2020};
-localization is not faithfulness, so both rows are reported and the trade-off stays visible.
+Every tunable method, including baselines, selects two configurations on validation: \texttt{loc} minimizes rank-sum over $\{\text{AL}, \text{PG}, \text{TK}\}$, and \texttt{faith} over $\{\text{PF}_5, \text{PF}_{20}, \text{Sel}\}$. Ranks are within-method and respect metric directions. Ties favor the default (the anchor for \ac{rg}), then fewer non-default parameters, then grid order. Admission requires non-zero maps and defined metrics on every validation image. Before ranking, we exclude 5 of the 40 VGG-16 \ac{sg} configurations, all with strong risk aversion and deterministic gates, whose maps vanish on some images; all others qualify. MaxS and AvgS are excluded from selection because each evaluation re-explains every image $2N_s$ times. Main tables report \texttt{loc}; Section~\ref{ptnb:app:results} reports both selections. Localization suits modes controlling routing focus, has external mask ground truth, and has precedent for comparing \ac{lrp} rules using bounding boxes~\parencite{Kohlbrenner2020}. Perturbation metrics evaluate off-distribution inputs. Reporting both selections preserves the distinction and trade-off between localization and faithfulness.
 
 \subsection{Statistics}\label{ptnb:app:stats}
 
@@ -178,39 +129,21 @@ without corresponding confidence intervals.
 
 \section{Formal Verification and Mathematical Audit}\label{app:lean}
 
-The accompanying \href{https://github.com/JayPiZimmermann/A-Structural-Approach-to-Interpretable-Deep-Learning}{thesis repository}
-contains the TeX sources, pinned links to both official code repositories, and a
-Lean~4 project with mathlib pinned to version~4.35.0. The formalization makes the
-assumptions of each checked statement explicit. It remains partial: a related
-lemma does not certify an entire theorem or either paper.
+The \href{https://github.com/JayPiZimmermann/A-Structural-Approach-to-Interpretable-Deep-Learning}{thesis repository} contains TeX sources, pinned links to both official code repositories, and a Lean~4 project with mathlib pinned to~4.35.0. Checked statements have explicit assumptions. Formalization remains partial: a related lemma cannot certify an entire theorem or paper.
 
-Numbered \texttt{Lean\_1}, \texttt{Lean\_2}, \ldots{} references appear in the brackets of theorem and lemma headings, following the convention of the planar-features paper. Each links to the checked declaration or components of the corresponding statement; the coverage map distinguishes these cases.
-The exact assumptions and remaining parts are recorded by source label in
-\texttt{formalization/coverage\_map.json}. Selected equation numbers also link to
-their checked identities or definitions. All links identify a fixed Git commit
-and the actual declaration line, following the TeX-linking approach of
-\href{https://arxiv.org/abs/2610.01728}{arXiv:2610.01728}; subsequent edits to the
-default branch cannot move these targets.
+Numbered \texttt{Lean\_1}, \texttt{Lean\_2}, \ldots{} links in theorem and lemma headings follow the planar-features paper's convention. Each targets the corresponding checked declaration or components, distinguished in \texttt{formalization/coverage\_map.json}, which records exact assumptions and remaining parts by source label. Selected equation numbers link to checked identities or definitions. Following \href{https://arxiv.org/abs/2610.01728}{arXiv:2610.01728}, links pin the Git commit and declaration line, keeping targets stable under default-branch edits.
 
-Further details of the checked developments and mathematical audit are given in the companion supplement, Section~\ref{app:lean_details}.
+The companion supplement, Section~\ref{app:lean_details}, details the checked developments and mathematical audit.
 
 \chapter{Publication Provenance and Tool Use}\label{app:publication_provenance}
 
-The results and experiments integrated in this thesis originate in two coauthored works: \emph{Hidden Monotonicity}, published at CVPR 2026 and selected as a Highlight~\parencite{hiddenMono}, and the \emph{Playing the Network Backward} preprint~\parencite{playingBackward2026}, in its revised version arXiv:2605.06212v2. The thesis author is first author of both works. The game paper is presented here as a preprint, without a claim of AISTATS acceptance. Their technical content is organized by the shared decomposition framework rather than reproduced as two separate papers. The model-evaluation outputs and reported point estimates are reused. VOC confidence intervals and paired comparisons are recomputed from those outputs by resampling whole images, as specified in Section~\ref{ptnb:app:stats}. The thesis adds common definitions, mathematical extensions and connections between the constructions, and Lean formalization.
+This thesis integrates two coauthored works: \emph{Hidden Monotonicity}, published at CVPR 2026 as a Highlight~\parencite{hiddenMono}, and the revised \emph{Playing the Network Backward} preprint, arXiv:2605.06212v2~\parencite{playingBackward2026}. The thesis author is first author of both. The game paper retains preprint status, without a claim of AISTATS acceptance. A shared decomposition framework organizes their technical content. Model-evaluation outputs and point estimates are reused; VOC intervals and paired comparisons are recomputed by whole-image resampling (Section~\ref{ptnb:app:stats}). The thesis adds common definitions, mathematical extensions, connections between constructions, and Lean formalization.
 
 \section{Author's Contribution}\label{app:author_contribution}
 
-My principal contributions to \emph{Hidden Monotonicity} and \emph{Playing the
-Network Backward} were the development of the theory, the development and
-execution of the experiments, and the writing of all appendices and most of
-the paper text outside the introductions. The papers are collaborative works with the coauthors identified
-in Section~\ref{sec:motivation}; this account specifies my responsibilities
-within those collaborations.
+My principal contributions to \emph{Hidden Monotonicity} and \emph{Playing the Network Backward} were developing the theory, developing and running experiments, and writing all appendices and most paper text outside the introductions. These responsibilities were part of collaborations with the coauthors identified in Section~\ref{sec:motivation}.
 
-The thesis brings the two works into a common mathematical exposition, connects
-their decomposition constructions, and adds the accompanying Lean formalization.
-The tool-use disclosure below distinguishes the preparation of the original
-papers from the subsequent thesis integration, formalization, and revision.
+The thesis unifies their mathematical exposition, connects their decompositions, and adds Lean formalization. The following disclosure distinguishes original-paper preparation from later thesis integration, formalization, and revision.
 
 \section{Disclosure in the Revised Game Paper}
 The revised game paper contains the following AI-use statement, reproduced here as a statement about the preparation of that publication:
@@ -229,15 +162,6 @@ produced with the aid of generative AI.
 \end{quote}
 
 \section{AI Assistance in the Thesis Revision}
-The November 2026 thesis revision used OpenAI Codex, supplied by OpenAI, for
-mathematical exploration and proof development, Lean implementation and checking,
-code review and repair, statistical reaggregation, and drafting and editing the
-thesis. The mathematical assistance included developing and checking extensions
-of the convex, monotone stream construction. These activities are distinct from
-the preparation of the original paper described above; its historical statement
-about theorem and proof development does not describe this later thesis work.
+The November 2026 thesis revision used OpenAI Codex, supplied by OpenAI, for mathematical exploration and proof development, Lean implementation and checking, code review and repair, statistical reaggregation, and thesis drafting and editing. Mathematical assistance included developing and checking extensions of the convex, monotone stream construction. The original paper's historical statement about theorem and proof development applies to its preparation, excluding this later thesis work.
 
-The formalization repository records reviewed theorem types, proof-checking
-receipts, and remaining coverage limits. Successful Lean checking certifies the
-stated formal propositions; source correspondence still requires mathematical
-review, and the kernel checks do not certify the empirical experiments.
+The formalization repository records reviewed theorem types, proof-checking receipts, and coverage limits. Lean certifies the stated formal propositions; source correspondence requires mathematical review, and kernel checks do not certify experiments.

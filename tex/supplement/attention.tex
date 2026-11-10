@@ -1,57 +1,50 @@
 \chapter{Extended Attention-Routing Derivations}\label{app:supp_attention}
 
-The target rule, stream masses and zero-mass convention are defined in
-Section~\ref{ptnb:app:attention-target-rule} of the thesis. We retain that notation throughout.
+We use the target rule, stream masses, zero-mass convention and notation of
+Section~\ref{ptnb:app:attention-target-rule} of the thesis.
 
 \section{State space}\label{ptnb:app:attention-state-space}
 
-We embed the attention block into the routing-graph state space of \S\ref{ptnb:app:routing-formal} using
-the tuple-superscript notation $s_\bullet^{(\mathrm{att},\,\mathrm{Side},\,\mathrm{type})}$
-throughout, where $\mathrm{Side} \in \{\mathrm{O}, \mathrm{val}, \mathrm{X}\}$ identifies the
-activation slot inside the attention block and $\mathrm{type} \in \{\mathrm{act}, \mathrm{lin}\}$
-matches state types of \S\ref{ptnb:app:routing-formal}. The state indices encode the tensor structure of
-the AV mixing and the Value projection, with $t,k \in \{1,\dots,S\}$ ranging over output/key tokens
-(sequence axis), $d \in \{1,\dots,d_h\}$ over the within-head feature axis of the focused head
-(i.e.\ the head index $h$ is fixed and $d$ runs over that head's $d_h$ feature dimensions), and $e
-    \in \{1,\dots,D\}$ over the per-token input embedding dimensions.
+We embed attention into the routing graph of \S\ref{ptnb:app:routing-formal}, writing
+$s_\bullet^{(\mathrm{att},\,\mathrm{Side},\,\mathrm{type})}$, where
+$\mathrm{Side} \in \{\mathrm{O}, \mathrm{val}, \mathrm{X}\}$ identifies the activation slot and
+$\mathrm{type} \in \{\mathrm{act}, \mathrm{lin}\}$ the state type of \S\ref{ptnb:app:routing-formal}.
+For AV mixing and the Value projection, $t,k \in \{1,\dots,S\}$ index output/key tokens,
+$d \in \{1,\dots,d_h\}$ indexes features within a fixed head $h$, and
+$e \in \{1,\dots,D\}$ indexes per-token input embedding dimensions.
 
-\paragraph{States for the composite $Av{+}W_v$ block.} The explanatory walk through the attention block visits three state types beyond the
-surrounding ReLU-network's; all are parametrized by the player label in turn.
+\paragraph{States for the composite $Av{+}W_v$ block.} The explanatory walk adds three state types to the surrounding ReLU-network's,
+all indexed by the player in turn.
 \begin{itemize}
     \item \textbf{Output activation states} $s_{t,d,p}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}$ at the
         head's output entry $O_{t,d}$, indexed by output token $t \in \{1,\dots,S\}$, within-head feature
-        dim $d \in \{1,\dots,d_h\}$, and player $p \in \{+,-\}$. These are the entry points of the
-        explanatory walk: the surrounding linear-layer recursion of \S\ref{ptnb:app:routing-attribution}
-        delivers occupation mass to $\{s_{t,d,p}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}\}_{t,d,p}$
+        dim $d \in \{1,\dots,d_h\}$, and player $p \in \{+,-\}$. The surrounding linear-layer recursion of \S\ref{ptnb:app:routing-attribution}
+        delivers occupation mass to these entry states $\{s_{t,d,p}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}\}_{t,d,p}$
         from the layer behind the head.
     \item \textbf{Output sign-branch (linear) states}
         $s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}$, indexed by $(t, d, p, \kappa)$.
         These mirror the linear routing states $s_{j,q,\kappa}^{(l,\mathrm{lin})}$ of
-        Definition~\ref{ptnb:def:routing-recursion} for the AV mixing at output entry $(t, d)$: \emph{this is
-        where the QK logits enter the routing} via the reference $\bar\pi_t = A_{t,\cdot}$. The active
-        player picks a key token $k$ by a mixed action $\pi_{t,d,\kappa}^\star \in \Delta(\{1,\dots,S\})$
+        Definition~\ref{ptnb:def:routing-recursion} for AV mixing at $(t, d)$.
+        QK logits enter through the reference $\bar\pi_t = A_{t,\cdot}$: the active
+        player picks key $k$ using a mixed action $\pi_{t,d,\kappa}^\star \in \Delta(\{1,\dots,S\})$
         that combines the AV reference $\bar\pi_t$ with the $\kappa$-stream Value mass
         $\tilde{v}_{k,d}^\kappa$.
     \item \textbf{Value-projection linear states}
         $s_{(k,d),p,\kappa}^{(\mathrm{att},\,\mathrm{val},\,\mathrm{lin})}$, indexed by key token $k$,
-        within-head feature dim $d$, player $p$, and sign $\kappa$. These are the linear-routing states of
-        the per-token Value projection: the player picks an input dimension $e$ (or the bias node) and the
-        game value satisfies
+        within-head feature dim $d$, player $p$, and sign $\kappa$. Here the player routes through the per-token Value projection to input dimension $e$
+        (or the bias node), with game value
         $V_p\!\bigl(s_{(k,d),p,\kappa}^{(\mathrm{att},\,\mathrm{val},\,\mathrm{lin})}\bigr) =
             \ell(\tilde{v}_{k,d}^\kappa)$ with $\tilde{v}_{k,d}^\kappa$ from~\eqref{ptnb:eq:attn-Z-def}.
     \item \textbf{Input activation states} $s_{(k,e),p}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}$ at the
-        input embedding entry $X_{k,e}$, indexed by token--embedding-dim pair $(k,e)$ and player $p$. $X$
-        lives upstream of the Value projection and carries the input-embedding axis $e$; the within-head
-        feature axis $d$ enters first at the Value projection's output downstream. They are the exit points
-        of the attention block: the surrounding network's recursion resumes from the per-player occupation
-        on $\{s_{(k,e),p}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}\}_{(k,e),p}$.
+        input embedding entry $X_{k,e}$, indexed by token--embedding-dim pair $(k,e)$ and player $p$. These exit states lie upstream of the Value projection, indexed by embedding dimension $e$;
+        the head-feature axis $d$ enters at its output. The surrounding recursion resumes from
+        their per-player occupation on $\{s_{(k,e),p}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}\}_{(k,e),p}$.
 \end{itemize}
 
-\paragraph{Transitions.} The trajectory through the attention block has three steps; all transitions inside the block carry
-trajectory discount $1$ except the sign-oracle split, which uses the same $\{2\alpha, 2\beta\}$ as
-a ReLU activation state of Definition~\ref{ptnb:def:routing-recursion}. There is only \emph{one}
-sign-oracle split per output entry $(t,d)$, since $A_{t,k} \ge 0$ absorbs the AV mixing into the
-$W_v$ sign split.
+\paragraph{Transitions.} The three-step trajectory has discount $1$ except at the sign-oracle split,
+which uses $\{2\alpha, 2\beta\}$ as at ReLU activation states in
+Definition~\ref{ptnb:def:routing-recursion}. Each output $(t,d)$ has \emph{one} sign-oracle split:
+$A_{t,k} \ge 0$ absorbs AV mixing into the $W_v$ sign split.
 \begin{enumerate}
     \item \emph{Sign-oracle split (output activation $\to$ output sign-branch, fixed $(t,d)$).} At
         $s_{t,d,p}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}$ an unobserved Oracle transitions uniformly
@@ -67,11 +60,9 @@ $W_v$ sign split.
             \;=\; \frac{A_{t,k}\, \tilde{v}_{k,d}^\kappa}{Z_{t,d}^\kappa},
         \end{align}
         derived in \S\ref{ptnb:app:attention-value-routing} as the equilibrium of a KL-regularized log-payoff
-        problem against the reference $\bar\pi_t = A_{t,\cdot}$. The trajectory transitions to
-        $s_{(k,d),p,\kappa}^{(\mathrm{att},\,\mathrm{val},\,\mathrm{lin})}$ \emph{with the player label,
-        the sign $\kappa$, and the within-head feature dim $d$ preserved}; the only thing changing is the
-        sequence-axis index from output token $t$ to key token $k$. The trajectory-discount on this
-        transition is $1$.
+        problem against the reference $\bar\pi_t = A_{t,\cdot}$. The transition to
+        $s_{(k,d),p,\kappa}^{(\mathrm{att},\,\mathrm{val},\,\mathrm{lin})}$ preserves player,
+        sign $\kappa$ and feature $d$, changing only the token index $t$ to $k$, with discount $1$.
     \item \emph{Value-projection routing (Value-projection linear $\to$ input activation).} At
         $s_{(k,d),p,\kappa}^{(\mathrm{att},\,\mathrm{val},\,\mathrm{lin})}$ the active player picks an
         input dim $e$ by the standard linear-state Gibbs policy of Definition~\ref{ptnb:def:routing-recursion}
@@ -84,15 +75,14 @@ $W_v$ sign split.
         The trajectory transitions to $s_{(k,e),p}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}$ with the
         player label preserved and trajectory-discount factor $1$.
 \end{enumerate}
-The discounted occupation measure $\Gamma_x(\,\cdot\,)$ of \S\ref{ptnb:app:routing-attribution} is
-evaluated at all four state types along the explanatory walk. The recovery theorem of
-\S\ref{ptnb:app:attention-recovery} then compares the per-input-neuron player-difference of $\Gamma_x$
-at the input activation states with the target rule~\eqref{ptnb:eq:attn-target-input}.
+We evaluate the discounted occupation measure $\Gamma_x(\,\cdot\,)$ of
+\S\ref{ptnb:app:routing-attribution} at all four state types.
+The recovery theorem of \S\ref{ptnb:app:attention-recovery} compares its input-neuron
+player-differences with the target rule~\eqref{ptnb:eq:attn-target-input}.
 
 \section{Legendre--Fenchel transform of the KL divergence}\label{ptnb:app:kl-legendre-fenchel}
 
-The Value-routing equilibrium below is a direct corollary of the convex-conjugate identity for the
-KL divergence; we record it as a stand-alone Lemma to make the inheritance explicit.
+The Value-routing equilibrium follows from the KL convex-conjugate identity:
 
 \begin{lemmaenv}[Legendre--Fenchel transform of KL divergence, \LeanResult{ptnb:lem:kl-legendre-fenchel}]\label{ptnb:lem:kl-legendre-fenchel}
 Let $\mathcal{X}$ be a finite set, $\bar\pi \in \Delta(\mathcal{X})$ a reference distribution with
@@ -102,7 +92,7 @@ KL-regularized linear maximization
     F(r;\bar\pi) \;\coloneqq\; \max_{\pi \in \Delta(\mathcal{X})}
     \Bigl\{ \E_\pi[r] \;-\; \mathrm{KL}(\pi \,\|\, \bar\pi) \Bigr\}
 \end{align}
-has the following optimizer and optimum:
+has optimizer and optimum:
 \begin{align}\label{ptnb:eq:kl-lf-optimizer}
     \pi_r^\star(x) \;=\; \frac{\bar\pi(x)\,\exp\!\bigl(r(x)\bigr)}{Z(r;\bar\pi)},
     \qquad
@@ -110,18 +100,17 @@ has the following optimizer and optimum:
     \bar\pi(x)\,\exp\!\bigl(r(x)\bigr).
 \end{align}\end{lemmaenv}
 
-Two specializations are central below. When $r(x) = \ell(u(x))$ for some non-negative $u :
-    \mathcal{X} \to \RR_{\geq 0}$ (so $\exp(r(x)) = u(x)$ with the convention $\exp(-\infty) \coloneqq
-    0$), the value collapses to the $\bar\pi$-weighted linear sum and the optimizer becomes the
-$\bar\pi$-tilted normalization of $u$:
+Two specializations are used below. For $r(x) = \ell(u(x))$, with
+$u : \mathcal{X} \to \RR_{\geq 0}$ and $\exp(-\infty) \coloneqq 0$, we have $\exp(r(x)) = u(x)$.
+The value is the logarithm of the $\bar\pi$-weighted sum, and the optimizer its tilted normalization:
 \begin{align}\label{ptnb:eq:kl-lf-linearized}
     F\bigl(\ell(u);\,\bar\pi\bigr) \;=\; \ell\!\Bigl(\sum_{x}\bar\pi(x)\,u(x)\Bigr),
     \qquad
     \pi_{\ell(u)}^\star(x) \;=\; \frac{\bar\pi(x)\,u(x)}{\sum_{x'}\bar\pi(x')\,u(x')}.
 \end{align}
 When $\bar\pi$ is uniform on $\mathcal{X}$, $\mathrm{KL}(\pi\,\|\,\mathrm{Unif}_\mathcal{X}) =
-    \log|\mathcal{X}| - \mathcal{H}(\pi)$, so subtracting the KL penalty in~\eqref{ptnb:eq:kl-lf-objective}
-flips into a $+\mathcal{H}$ entropy bonus:
+    \log|\mathcal{X}| - \mathcal{H}(\pi)$, so the KL penalty in~\eqref{ptnb:eq:kl-lf-objective}
+becomes an entropy bonus:
 \begin{align}
     \E_\pi[r] \;-\; \mathrm{KL}\!\bigl(\pi\,\|\,\mathrm{Unif}_\mathcal{X}\bigr)
     \;=\; \E_\pi[r] \;+\; \mathcal{H}(\pi) \;-\; \log|\mathcal{X}|.
@@ -139,8 +128,7 @@ maximal, with value $\log Z(r;\bar\pi)$, exactly at $\pi = \pi_r^\star$.
 \section{Value-routing equilibrium}\label{ptnb:app:attention-value-routing}
 
 Fix an output entry $(t, d)$, a sign $\kappa \in \{+,-\}$, and the reference $\bar\pi_t =
-    A_{t,\cdot}$ from \S\ref{ptnb:app:attention-state-space} (the \emph{same} $\bar\pi_t$ for every $d$,
-since the AV mixing reuses one row across all feature dims). At the output sign-branch state
+    A_{t,\cdot}$ from \S\ref{ptnb:app:attention-state-space} (shared across feature dimensions $d$ by AV mixing). At the output sign-branch state
 $s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}$ the active player $p$ solves the
 KL-regularized log-payoff maximization
 \begin{align}\label{ptnb:eq:attn-value-routing}
@@ -159,13 +147,11 @@ payoff $\ell(\tilde{v}_{k,d}^\kappa)$ on action $k$ is the active-player value o
 Value-projection linear state,
 $V_p(s_{(k,d),p,\kappa}^{(\mathrm{att},\,\mathrm{val},\,\mathrm{lin})}) =
     \ell(\tilde{v}_{k,d}^\kappa)$, so combining with the AV log-weight $\ell(A_{t,k})$ gives composite
-payoff $\ell(A_{t,k}\, \tilde{v}_{k,d}^\kappa)$ at the $(t,d)$-output. Define the per-output-entry
-$\bar\pi_t$-weighted Value mass
+payoff $\ell(A_{t,k}\, \tilde{v}_{k,d}^\kappa)$ at the $(t,d)$-output. Define the $\bar\pi_t$-weighted Value mass at each output:
 \begin{align}\label{ptnb:eq:attn-z-def}
     Z_{t,d}^\kappa \;\coloneqq\; \sum_{m=1}^S \bar\pi_t(m)\, \tilde{v}_{m,d}^\kappa.
 \end{align}
-The dependence on $d$ enters only through $\tilde{v}_{m,d}^\kappa$; the AV reference $\bar\pi_t$ is
-shared across all feature dims.
+Only $\tilde{v}_{m,d}^\kappa$ depends on $d$.
 
 \begin{proposition}[Value-side optimal policy, \LeanResult{ptnb:prop:attn-value-policy}]\label{ptnb:prop:attn-value-policy}
 If $Z_{t,d}^\kappa > 0$, the unique optimizer of~\eqref{ptnb:eq:attn-value-routing} is
@@ -179,14 +165,13 @@ with active-player value $V_p(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\
 $V_{p'}(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}) = -\infty$ as in
 Definition~\ref{ptnb:def:routing-recursion}. If $Z_{t,d}^\kappa = 0$, no key contributes mass on stream
 $\kappa$ and $V_p(s_{(t,d),p,\kappa}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{lin})}) = -\infty$. All key policies then have value $-\infty$;
-there is no unique maximizing key distribution. We use the cemetery completion stated above.\end{proposition}
+the maximizer is nonunique. We use the cemetery completion above.\end{proposition}
 
 \begin{proof}
-Apply the logit specialization~\eqref{ptnb:eq:kl-lf-linearized} of Lemma~\ref{ptnb:lem:kl-legendre-fenchel}
-with $\mathcal{X} = \{1,\dots,S\}$, $\bar\pi = \bar\pi_t$, and $u(k) = \tilde{v}_{k,d}^\kappa$, so
-that the payoff $r(k) = \ell(\tilde{v}_{k,d}^\kappa)$ has $\exp r(k) = \tilde{v}_{k,d}^\kappa$.
-Equation~\eqref{ptnb:eq:kl-lf-linearized} immediately gives the optimizer $\pi_{t,d,\kappa}^\star$
-of~\eqref{ptnb:eq:attn-value-policy} and value $\ell(Z_{t,d}^\kappa)$ when $Z_{t,d}^\kappa > 0$. The
+Apply~\eqref{ptnb:eq:kl-lf-linearized} of Lemma~\ref{ptnb:lem:kl-legendre-fenchel}
+with $\mathcal{X} = \{1,\dots,S\}$, $\bar\pi = \bar\pi_t$ and $u(k) = \tilde{v}_{k,d}^\kappa$.
+Then $r(k) = \ell(\tilde{v}_{k,d}^\kappa)$ gives $\exp r(k) = \tilde{v}_{k,d}^\kappa$,
+yielding~\eqref{ptnb:eq:attn-value-policy} and value $\ell(Z_{t,d}^\kappa)$ for $Z_{t,d}^\kappa > 0$. The
 inactive-player value $-\infty$ is the Routing-Game convention of
 Definition~\ref{ptnb:def:routing-recursion}, inherited from the $r = q'$ branch
 of~\eqref{ptnb:eq:routing-linear-action}. If $Z_{t,d}^\kappa = 0$ then
@@ -205,26 +190,23 @@ per-$(t,d,\kappa)$ policies used in the \ac{rg}'s backward walk through the atte
 \end{align}
 when $Z_{t,d}^\kappa>0$. When $Z_{t,d}^\kappa=0$, set all these key probabilities to zero
 and the cemetery probability to one. Here $Z_{t,d}^\kappa = \sum_m A_{t,m}\, \tilde{v}_{m,d}^\kappa$
-is defined in~\eqref{ptnb:eq:attn-z-def}. The
-numerical specification $\bar\pi_t = A_{t,\cdot}$ does not require the oracle interpretation of
-\S\ref{ptnb:app:attention-oracle}; it is enough that the cached softmax row is treated as a fixed input
-to~\eqref{ptnb:eq:attn-value-routing}.
+is defined in~\eqref{ptnb:eq:attn-z-def}. Using the cached softmax row $\bar\pi_t = A_{t,\cdot}$ as a fixed input
+to~\eqref{ptnb:eq:attn-value-routing} suffices; the oracle interpretation of
+\S\ref{ptnb:app:attention-oracle} is optional.
 
 \section{\texorpdfstring{$\alpha\beta$-\ac{lrp}}{alpha-beta-LRP} recovery for the attention block}\label{ptnb:app:attention-recovery}
 
-We now show that, under the trajectory through the four state types of
-\S\ref{ptnb:app:attention-state-space} and the trajectory discount of~\eqref{ptnb:eq:routing-edge-discount},
-the player-difference of $\Gamma_x$ at the \emph{input activation states} (the predecessors of the
-Value-projection linear states, where the $W_v$ weights actually fire) recovers exactly the target
-rule~\eqref{ptnb:eq:attn-target-input} of \S\ref{ptnb:app:attention-target-rule}. We keep the game side and
-the attribution side strictly separate:
+For the four-state trajectory of \S\ref{ptnb:app:attention-state-space}, discounted
+by~\eqref{ptnb:eq:routing-edge-discount}, the player-difference of $\Gamma_x$ at the
+\emph{input activation states} recovers the target rule~\eqref{ptnb:eq:attn-target-input} of
+\S\ref{ptnb:app:attention-target-rule}. These states precede the Value-projection linear states,
+where $W_v$ acts. The two objects are:
 \begin{itemize}
     \item the \emph{game-side} object is the discounted occupation measure $\Gamma_x(\,\cdot\,)$ of
         \S\ref{ptnb:app:routing-attribution} evaluated at the four attention-block state types of
-        \S\ref{ptnb:app:attention-state-space}. Following the per-neuron difference
-        convention~\eqref{ptnb:eq:routing-Gamma-pair} of the surrounding Routing-Game recursion, we form the
-        per-output-entry difference $\Gamma^{O}_{t,d}$ at the entry point (defined
-        in~\eqref{ptnb:eq:attn-Gamma-O} below) and the per-input-neuron difference at the exit
+        \S\ref{ptnb:app:attention-state-space}. Following~\eqref{ptnb:eq:routing-Gamma-pair}, we form the output difference
+        $\Gamma^{O}_{t,d}$ at entry (defined in~\eqref{ptnb:eq:attn-Gamma-O})
+        and the input-neuron difference at exit
         \begin{align}\label{ptnb:eq:attn-Gamma-X}
             \Gamma^{X}_{k,e} \;\coloneqq\;
             \Gamma_x\!\bigl(s_{(k,e),+}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}\bigr) -
@@ -270,29 +252,25 @@ the bias node at fixed $(k,d)$ collects the relevance routed through the Value e
 recovering the per-Value-entry formula~\eqref{ptnb:eq:attn-target-rule}.\end{theoremenv}
 
 \begin{proof}
-The statement is block-local: by hypothesis the surrounding recursion delivers the output-side
-per-entry differences $\Gamma^{O}_{t,d} = R^{O}_{t,d}$ at every output position $(t,d)$.
+By hypothesis, the surrounding recursion supplies $\Gamma^{O}_{t,d} = R^{O}_{t,d}$ at every
+output $(t,d)$; the proof is block-local.
 
 \textbf{Per-state recursion at the input activation states.} Fix an input embedding $(k,e)$ and a
 player label $r \in \{+,-\}$. A trajectory reaches
 $s_{(k,e),r}^{(\mathrm{att},\,\mathrm{X},\,\mathrm{act})}$ from an output activation
-$s_{t,d,p}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}$ in three stages, with all transitions
-inside the attention block carrying their discounts and player-label switches as in the kernel of
-\S\ref{ptnb:app:attention-state-space}. The path goes through one specific within-head feature dim $d
-    \in \{1,\dots,d_h\}$ (an index along the focused head's $d_h$-wide feature axis): the sign-oracle
-is per $(t,d)$, the Value-routing policy $\pi_{t,d,\kappa}^\star$ depends on $d$ via
-$\tilde{v}_{k,d}^\kappa$, and the Value-projection routing $\pi_{\mathrm{val},k,d,\kappa}^\star$
-also depends on $d$. The $d$ index is dropped at the final transition into $X$, where the input
-embedding $X_{k,e}$ has indices $(k,e)$ and the within-head feature axis $d$ enters downstream at
-the Value projection's output.
+$s_{t,d,p}^{(\mathrm{att},\,\mathrm{O},\,\mathrm{act})}$ in three stages, with the discounts and player switches of
+\S\ref{ptnb:app:attention-state-space}. Each path fixes $d \in \{1,\dots,d_h\}$:
+the oracle acts at $(t,d)$, $\pi_{t,d,\kappa}^\star$ depends on $d$ through
+$\tilde{v}_{k,d}^\kappa$, and $\pi_{\mathrm{val},k,d,\kappa}^\star$ also depends on $d$.
+The final transition drops $d$, reaching $X_{k,e}$ indexed by $(k,e)$;
+the head-feature axis occurs downstream at the Value projection's output.
 \begin{itemize}
     \item \emph{$\kappa = +$ branch (per $(t,d)$).} Sign-oracle takes $s_{t,d,p}^{(\mathrm{O},\mathrm{act})}
             \to s_{(t,d),p,+}^{(\mathrm{O},\mathrm{lin})}$ with probability $\tfrac12$ and trajectory discount
         $2\alpha$ (player retained). The Value-routing policy $\pi_{t,d,+}^\star(k)$ takes the trajectory
         to $s_{(k,d),p,+}^{(\mathrm{val},\mathrm{lin})}$ (player, sign, $d$ preserved, discount $1$). The
         Value-projection routing $\pi_{\mathrm{val},k,d,+}^\star(e)$ takes the trajectory to
-        $s_{(k,e),p}^{(\mathrm{X},\mathrm{act})}$ (player preserved, $d$ dropped, discount $1$). The
-        composite per-$(t,d)$ contribution to $\Gamma_x(s_{(k,e),r}^{(\mathrm{X},\mathrm{act})})$ is
+        $s_{(k,e),p}^{(\mathrm{X},\mathrm{act})}$ (player preserved, $d$ dropped, discount $1$). The resulting contribution from $(t,d)$ to $\Gamma_x(s_{(k,e),r}^{(\mathrm{X},\mathrm{act})})$ is
         \begin{align}
             \tfrac12 (2\alpha)\, \pi_{t,d,+}^\star(k)\, \pi_{\mathrm{val},k,d,+}^\star(e)\,
             \Gamma_x\!\bigl(s_{t,d,r}^{(\mathrm{O},\mathrm{act})}\bigr)
@@ -340,8 +318,8 @@ and the opposite $-\Gamma^{O}_{t,d}$ in the $-$ branch (player switched):
 \end{align}
 which is~\eqref{ptnb:eq:attn-ab-recovery}.
 
-\textbf{Target-rule identification.} The right-hand side matches~\eqref{ptnb:eq:attn-target-input}
-verbatim. Since $\Gamma^{O}_{t,d} = R^{O}_{t,d}$, $\Gamma^{X}_{k,e} = R^{X}_{k,e}$. Aggregating
+\textbf{Target-rule identification.} With $\Gamma^{O}_{t,d} = R^{O}_{t,d}$, the preceding identity
+matches~\eqref{ptnb:eq:attn-target-input}, giving $\Gamma^{X}_{k,e} = R^{X}_{k,e}$. Aggregating
 over $e$ and the bias node at fixed $(k,d)$ uses $\sum_e [X_{k,e} W_{v,e,d}]^\kappa +
     [b_{v,d}]^\kappa = \tilde{v}_{k,d}^\kappa$, giving~\eqref{ptnb:eq:attn-Gamma-V-corollary}, which
 matches~\eqref{ptnb:eq:attn-target-rule}.

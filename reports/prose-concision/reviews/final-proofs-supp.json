@@ -1,0 +1,61 @@
+{
+  "reviewed_utc": "2026-11-10T21:41:58.824616+00:00",
+  "review_scope": "Final independent frozen-baseline comparison of changed proof/definition prose and nearby conditions only; displayed formulas were already mechanically verified by the parent. Excludes pre-existing mathematical issues and style preferences. No source edits or builds by this reviewer.",
+  "baseline_root": "/home/jzimmermann/.cache/thesis-concision/2026-11-10-pass1/baseline",
+  "verdict": "accepted",
+  "files": [
+    {
+      "file": "tex/supplement/games.tex",
+      "baseline_sha256": "92ae3fb89f4d661751b4cdf56569d9068cb9ea68200359a047bae5d49d42ab98",
+      "current_sha256": "632527e41991b8826dec8059400e60073832f7c507d9e96625972b25eb34c878",
+      "verdict": "accepted",
+      "manual_checks": [
+        "Changed path-induction prose retains parity, predecessor gates, gate exclusion at the current layer, and zero-weight cases.",
+        "Stopping definitions retain terminal boundary interpretation, zero-fan-in cemetery routing, pure policy domains, and tie conventions.",
+        "Occupation and recovery proofs retain fixed-input induction, oracle discounts, signed branch subtraction, fused first-layer masses, and root normalization.",
+        "Routing definitions retain the extended-log zero-probability convention, empty-stream absorption, finite-score restriction, and non-negative activation scope.",
+        "Softplus and noisy-gate changes preserve entropy allocation, conditional local interpretation, and exactness qualifications."
+      ]
+    },
+    {
+      "file": "tex/supplement/attention.tex",
+      "baseline_sha256": "606e90f5e72361c52d4a77b9430969be8a8bdfa4fe6418295614631d32b73190",
+      "current_sha256": "71f1c3c737283df2800b71a60197710bd81032ec50f7a09f3176918c33bc05ff",
+      "verdict": "accepted",
+      "manual_checks": [
+        "Changed state definitions retain index and domain conditions.",
+        "KL specialization and value-policy proof retain dependencies.",
+        "Positive- and zero-mass cases and recovery proof remain intact."
+      ]
+    },
+    {
+      "file": "tex/supplement/trajectory.tex",
+      "baseline_sha256": "5a7ce31ec19133d858c2f9a83a4db77668e71e346d73930df0aa4db9702dbc7a",
+      "current_sha256": "4375e2ccf22edb6639a1c15781757bccc1edd208bfe3c1a252f24dfb16c0acdc",
+      "verdict": "accepted",
+      "manual_checks": [
+        "Changed proofs retain induction dependencies and terminal-state grouping.",
+        "Positive survival conditioning and alive-row leakage qualifications remain explicit.",
+        "Refined absorption histories remain distinguished from collapsed act-only trajectories."
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "file": "tex/supplement/games.tex",
+      "line": 912,
+      "status": "resolved_and_verified",
+      "severity": "qualifier_regression",
+      "location": "Definition ptnb:def:routing-recursion, following ptnb:eq:routing-activation-value",
+      "baseline_condition": "If continuing is selected, the opponent\u2019s continuation value is -infinity.",
+      "issue": "The compressed sentence dropped the selection condition and could assert that the opponent receives -infinity for the continuation action generally. When D_p<0, off-policy continuation instead gives the opponent ell(-D_p), which is finite. Restoring the qualifier removes the stronger reading.",
+      "exact_minimal_fix": {
+        "old": "The opponent receives\n$-\\infty$ under continuation, and both players do under stopping.",
+        "new": "When continuation is selected, the opponent receives $-\\infty$; both players do under stopping."
+      },
+      "source_edit_applied_by_reviewer": false,
+      "resolution": "Parent restored the qualifier during this review; corrected text verified before final hashing."
+    }
+  ],
+  "outstanding_findings": []
+}
