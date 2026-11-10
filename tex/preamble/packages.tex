@@ -1,6 +1,7 @@
 %------------------------------
 % DOCUMENT AND ENCODING
 %------------------------------
+\RequirePackage{fix-cm}
 \usepackage[
 	ngerman,					% modern German for the declaration page and its date
 	english,					% english language (DEFAULT)
@@ -17,11 +18,11 @@
 	kerning=true,			% activates extended kerning for the font
 	factor=1100,				% factor by which the characters will be protruded
 	final,					% final document mode
-	spacing=true,			% activates variable space between words
 	stretch=10,				% stretch faktor
 	shrink=10,				% factor for font shrinking
 	tracking=true,			% systematically change the tracking of the fonts
 ]{microtype}					% This package might improve the look of the PDF by minimally stretching or extending fonts, etc.
+\SetExtraSpacing[name=nonfrench-ts1,context=nonfrench]{encoding=TS1}{}
 \usepackage{morewrites}		% allows TeX to write to more than 16 files
 \usepackage{pdfpages}
 \usepackage[
@@ -29,6 +30,7 @@
     ilines 					% separation line ragged left ausrichten
 ]{scrlayer-scrpage}
 \usepackage{textcomp}		% supports the Text Companion fonts
+\setlength{\marginparwidth}{2.1cm}
 \usepackage[
 	colorinlistoftodos,		% adds a small color square
 	\languagename,			% sets the localization of the package based on babel
@@ -80,10 +82,16 @@
 \usepackage{upgreek}			% upright greek symbols
 \usepackage{bbold}			% double-struck symbols (from paper)
 \usepackage{mathrsfs}		% script mathematical symbols (from paper)
+\InputIfFileExists{Ubbold.fd}{}{}
+\InputIfFileExists{ursfs.fd}{}{}
+\DeclareFontShape{U}{bbold}{m}{n}{<-> bbold10}{}
+\DeclareFontShape{U}{rsfs}{m}{n}{<-> rsfs10}{}
 \usepackage{dsfont}			% additional double-struck fonts for indicators
 %------------------------------
 % TEXT
 %------------------------------
+\usepackage{scrhack}			% adapt legacy float interfaces for KOMA-Script
+\usepackage{ragged2e}			% hyphenating ragged-right table columns
 \usepackage[
 	algochapter,				% counter includes the chapter
 	ruled,					% rules are added

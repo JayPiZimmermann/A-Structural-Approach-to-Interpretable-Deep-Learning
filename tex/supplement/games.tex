@@ -19,13 +19,14 @@ We reserve the word \emph{trajectory} for sequences of game states $\zeta = (\ze
 \begin{table}[H]
     \centering
     \footnotesize
+    \captionsetup{justification=raggedright}
     \caption[Notation for games and trajectories]{Notation. Each symbol has one meaning throughout the game and trajectory chapters, except the local
     attention symbols $Q_t, K_k, e_{tk}, s_{tk}, m, s, c, T_n$ and the token index $t$, defined in
     Section~\ref{ptnb:app:vit-extension}.}\label{ptnb:tab:notation}
 \TableContent{
     \setlength{\tabcolsep}{4pt}
     \renewcommand{\arraystretch}{1.12}
-    \begin{tabularx}{\textwidth}{@{}l X l X@{}}
+    \begin{tabularx}{\textwidth}{@{}l >{\raggedright\arraybackslash}X l >{\raggedright\arraybackslash}X@{}}
         \toprule
         \textbf{Symbol} & \textbf{Meaning} & \textbf{Symbol} & \textbf{Meaning} \\
         \midrule
@@ -41,35 +42,35 @@ We reserve the word \emph{trajectory} for sequences of game states $\zeta = (\ze
         $p, q, r$; $p'$ & players / turns in $\{+,-\}$; opponent & $\kappa \in \{+,-\}$ & stream sign of a
         linear routing state \\
         $s^{(l,\mathrm{act})}_{j,q}$, $s^{(0)}_{k,q}$ & activation state ($q$ in turn); input terminal &
-        $s^{(l,\mathrm{lin})}_{j,q,\kappa}$ & \ac{rg} linear routing state \\
+        $s^{(l,\mathrm{lin})}_{j,q,\kappa}$ & \acs{rg} linear routing state \\
         $\dagger$ & cemetery (absorbing) state & $\perp_{\mathrm{lin}}$ & outside action (log-payoff
         $\log\varepsilon$) \\
         $r_p(s,a)$ & payoff of player $p$ & $\pi$, $\pi^\star$ & policy; equilibrium (SPNE) policy \\
-        $\tilde V_p(s)$, $\tilde Q_p(s,a)$ & \ac{sg} player-specific value, action value & $V_p(s)$ & game
+        $\tilde V_p(s)$, $\tilde Q_p(s,a)$ & \acs{sg} player-specific value, action value & $V_p(s)$ & game
         value (player $p$ minus $p'$) \\
-        $Q_r(s,i)$ & \ac{rg} log-gain of routing to predecessor $i$ & $\Sigma^{(l,\kappa)}_j$ & $\sum_i
+        $Q_r(s,i)$ & \acs{rg} log-gain of routing to predecessor $i$ & $\Sigma^{(l,\kappa)}_j$ & $\sum_i
             [a^{(l-1)}_i W^{(l)}_{ij}]^\kappa + [b^{(l)}_j]^\kappa$ \\
-        $\gamma^{(l)}_j$ & \ac{sg} discount $\sum_i |W^{(l)}_{ij}|$ & $\gamma_{\mathrm{O}}$ & Oracle
+        $\gamma^{(l)}_j$ & \acs{sg} discount $\sum_i |W^{(l)}_{ij}|$ & $\gamma_{\mathrm{O}}$ & Oracle
         discount ($2$ add./branch, $1$ max-pool) \\
-        $\gamma(s)$ & per-state discount: \ac{sg} $\gamma^{(l)}_j$ or $\gamma_{\mathrm{O}}$; \ac{rg} $\in
+        $\gamma(s)$ & per-state discount: \acs{sg} $\gamma^{(l)}_j$ or $\gamma_{\mathrm{O}}$; \acs{rg} $\in
             \{2\alpha, 2\beta, 1\}$ & $\zeta$ & trajectory $(\zeta_0, \zeta_1, \dots)$ \\
         $\Pi_x$ & equilibrium trajectory law at input $x$ & $d_t(\zeta)$ & cumulative trajectory discount
         \\
         $\Gamma_x(s)$ & discounted occupation measure of state $s$ & $\mathcal{H}$, $\mathcal{H}_\theta$ &
         Shannon entropy; binary form \\
         \midrule
-        $\tau$ & \ac{rg} temperature (entropy weight) & $\alpha$, $\beta$ & $\alpha\beta$-\ac{lrp} weights,
+        $\tau$ & \acs{rg} temperature (entropy weight) & $\alpha$, $\beta$ & $\alpha\beta$-\acs{lrp} weights,
         $\alpha - \beta = 1$ \\
-        $\varepsilon$ & \ac{lrp} stabilizer & $R^{(l)}_i$ & \ac{lrp} relevance \\
+        $\varepsilon$ & \acs{lrp} stabilizer & $R^{(l)}_i$ & \acs{lrp} relevance \\
         $A$ & attention matrix (held fixed) & $v$, $W_v$ & Value vectors, projection (sup.\ ``val'') \\
         $n_h$ & number of attention heads & $N$ & equivariant-averaging samples \\
         \midrule
         $\lambda$ & activation-side risk aversion ($\lambda \le 0$) & $\lambda_{\mathrm{sm}}$ &
         attention-logit risk aversion \\
-        $\mu$, $\sigma$, $\sigma^2$ & \ac{ptnbADF} mean, std.; input variance & $\lambda_{\mathrm{ent}}$ &
+        $\mu$, $\sigma$, $\sigma^2$ & \acs{ptnbADF} mean, std.; input variance & $\lambda_{\mathrm{ent}}$ &
         fan-in entropy-bias mode \\
         $\mathrm{sp}_\theta$, $\mathrm{sp}'_\theta$ & Softplus $\theta\log(1 {+} e^{z/\theta})$; its gate &
-        $\Phi$, $\phi$ & normal \ac{ptnbCDF}, density \\
+        $\Phi$, $\phi$ & normal \acs{ptnbCDF}, density \\
         $\theta$; $\tilde\Phi$ & Softplus temperature; soft gate $\Phi(\mu/\sigma+\lambda)$ &
         $\mathcal{R}_\Phi$ & probit regularizer $\phi(\Phi^{-1}(\pi))$ \\
         \midrule

@@ -54,8 +54,23 @@ def present(filename: str, text: str) -> tuple[str, list[dict]]:
             changes.append({"action": "omit_unmeasured_columns", "columns": [header[i] for i in drop],
                             "data_rows": len(rows)})
         if r"\hspace{2.5pt}" in lines[0]:
-            lines[0] = lines[0].replace(r"\hspace{2.5pt}", r"\hspace{2pt}")
-            changes.append({"action": "fit_thesis_width", "intercolumn_space_pt": 2})
+            lines[0] = lines[0].replace(r"\hspace{2.5pt}", r"\hspace{1.5pt}")
+            changes.append({"action": "fit_thesis_width", "intercolumn_space_pt": 1.5})
+        elif r"\hspace{2pt}" in lines[0]:
+            lines[0] = lines[0].replace(r"\hspace{2pt}", r"\hspace{1.5pt}")
+            changes.append({"action": "fit_thesis_width", "intercolumn_space_pt": 1.5})
+        right_column = r">{\setlength{\RaggedRightRightskip}{0pt plus 1fil}\RaggedRight\arraybackslash}p{2.7cm}"
+        plain_column = r">{\raggedright\arraybackslash}p{2.7cm}"
+        if plain_column in lines[0]:
+            lines[0] = lines[0].replace(
+                plain_column, right_column,
+            )
+            changes.append({"action": "hyphenating_ragged_config_column"})
+        elif "p{2.7cm}" in lines[0]:
+            lines[0] = lines[0].replace(
+                "p{2.7cm}", right_column
+            )
+            changes.append({"action": "hyphenating_ragged_config_column"})
     for n, line in enumerate(lines):
         row = cells(line)
         if not row:

@@ -16,16 +16,19 @@ and unfinished drafts. The current repair and Transformer revision is local only
 Its complete clean proof gate passed at
 `1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`: 167 modules, 490 reviewed exact
 contracts and 3,640 imported theorem axiom audits, with all 168 commands successful.
-The 216 proof-source mappings are pinned to that revision and distributed between
-the **139-page main thesis** and **85-page technical supplement**. The main document
+The 216 proof-source mappings are pinned to that revision; 194 remain in the
+main thesis and technical supplement after removal of unused geometry exposition.
+The other 22 are explicitly retired from the TeX while their verified Lean proofs
+remain available. The main document
 stays within its hard 150-page cap. Detailed proofs and full supporting experiments
 moved to the supplement while the substantive improvements remain. See the
 handovers and [publication receipt](reports/publication-build.json) for validation
 and experiment details.
 
-Independent mathematical, empirical and [text-retention audits](reports/evidence/page-budget/text-retention.json)
-account for all 804 original content blocks and preserve all 314 displayed formulas.
-No lost substantive information was found across the main thesis and supplement.
+The earlier compression was checked by independent mathematical, empirical and
+[text-retention audits](reports/evidence/page-budget/text-retention.json). The later
+editorial revision deliberately removes the unused tropical/polyhedral background;
+the decomposition, game, Transformer, and experimental arguments remain intact.
 
 ## Academic reviews
 
@@ -229,9 +232,12 @@ python3 scripts/check_paper_references.py --check
 ```
 
 This follows the active TeX input trees, verifies explicit citation aliases, and
-checks that every source reference is cited across the main thesis and technical
-supplement and present in their bibliographies. The current report has no missing references (74 source keys from
-Hidden Monotonicity, including appendix aliases, and 72 from the revised game paper).
+checks source citations across the main thesis and technical supplement, including
+their bibliography records. The current report retains 68 of 74 Hidden Monotonicity
+source keys (including appendix aliases) and all 72 game-paper keys. Six source keys
+refer to three background works intentionally omitted with the unused geometry
+section; [the editorial record](reports/paper-reference-editorial-omissions.json)
+identifies them. No unexplained missing references remain.
 Publication and named-method titles retain their official wording.
 
 The trajectory chapter also compares the thesis with Xiong et al.’s

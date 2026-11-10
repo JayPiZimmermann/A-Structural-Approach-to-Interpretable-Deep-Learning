@@ -7,16 +7,6 @@
 %------------------------------
 % SPECIFY METADATA FOR PDF
 %------------------------------
-\begin{filecontents*}[overwrite]{\jobname.xmpdata}
- \Title{\mytitle}
- \Author{\autor}
- \Keywords{\englishkeywords; \germankeywords}
- \Subject{\mydocumenttype}
- \Language{English; German}
- \Copyright{CC BY 4.0}
- \CopyrightURL{https://creativecommons.org/licenses/by/4.0/}
- \pdfxEnableCommands{\def\utext#1{#1,}}
-\end{filecontents*}
 %------------------------------
 % LOAD DOCUMENTCLASS
 %------------------------------
@@ -24,7 +14,7 @@
 	appendixprefix=true,
 	BCOR=5mm,
 	bibliography=totoc,
-    DIV=17,
+    DIV=calc,
     draft=false,
     fontsize=11pt,
     headinclude=true,
@@ -51,7 +41,11 @@
 \input{preamble/abbreviations_def}
 \input{preamble/code_languages}
 \addbibresource{bibliography/references.bib}
-\KOMAoptions{DIV=last}
+% Preserve the previously checked text block while avoiding a DIV heuristic warning.
+\KOMAoptions{areasetadvanced=true}
+\areaset[current]{480.34956pt}{701.20031pt}
+\setlength{\topmargin}{-22.56136pt}
+\setlength{\marginparwidth}{2cm}
 \setcounter{tocdepth}{1}
 \IfFileExists{supplement.aux}{%
     \externaldocument[][nocite]{supplement}[thesis-supplement.pdf]%

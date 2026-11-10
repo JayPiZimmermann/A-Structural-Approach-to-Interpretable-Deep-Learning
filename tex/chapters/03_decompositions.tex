@@ -248,7 +248,7 @@ with $\act{L}{\pm}=\preact{L}{\pm}$ at the final affine readout. Theorem~\ref{th
 
 \begin{figure}[htbp]
 	\centering
-	\includegraphics[width=.75\linewidth]{figures/decompositions/split_streams.pdf}
+	\includegraphics[width=.35\linewidth]{figures/decompositions/split_streams.pdf}
 	\caption[Monotone, convex split streams and a standard ReLU layer]{The monotone, convex split streams (top) versus a standard \ac{relu} layer (bottom). The negative weight part transitions positive input to negative pre-activation and vice versa, while the positive part maps positive to positive and negative to negative.}
 	\label{fig:splitstreams}
 \end{figure}
@@ -443,7 +443,7 @@ The activation pairs have the properties required by Theorem~\ref{thm:general_dc
 The same layer-wise induction also permits different qualifying activations or profile choices at different hidden layers, because each step uses only the properties of that layer's pair. The network theorem above states the uniform-activation case used in the formal network interface.
 
 \begin{remark}[Scope of the smooth extension]\label{rem:smooth_pointer}
-The extension above is an exact structural theorem about the scalar activations and their composition into feedforward networks. It does not establish empirical attribution quality for these smooth networks, nor does it by itself extend the ReLU-specific tropical polytope representation, hard-gate games, or numerical stabilization formulas. The experiments later in the thesis evaluate the architectures and methods described in their protocols; the new smooth formulas are not additional experimental results.
+The extension above is an exact structural theorem about the scalar activations and their composition into feedforward networks. It does not establish empirical attribution quality for these smooth networks, nor does it by itself extend the ReLU-specific hard-gate games or numerical stabilization formulas. The experiments later in the thesis evaluate the architectures and methods described in their protocols; the new smooth formulas are not additional experimental results.
 \end{remark}
 
 \subsection{Multivariate activations and softmax}\label{sec:multivariate_dc_softmax}
@@ -886,15 +886,13 @@ We show the claim for $g^{(l)}$ by induction on $l$; $h^{(l)}$ is analogous and 
 	&= \Wsig{l+1}{-} a^{(+)} + \Wsig{l+1}{+} a^{(-)} + \bigl| \Wl{l+1} \bigr|\, c,
 \end{align*}
 since $\bigl(\Wsig{l+1}{+} + \Wsig{l+1}{-}\bigr) c = \bigl|\Wl{l+1}\bigr| c$ enters both arguments of the maximum and factors out. At the final affine layer $l+1=L$, both stream activations equal their respective pre-activations, and non-negative linearity gives the same common shift $|\Wl{L}|c$ directly, without a maximum. Applying the induction hypothesis at layer $l+1$ with the shift $\bigl|\Wl{l+1}\bigr| c$,
-\begin{equation*}
-\begin{aligned}
+\begin{align*}
 g^{(l)}\bigl( a^{(+)} + c,\, a^{(-)} + c \bigr)
     &= g^{(l+1)}\Bigl( \act{l+1}{+} + \bigl|\Wl{l+1}\bigr| c,\,
         \act{l+1}{-} + \bigl|\Wl{l+1}\bigr| c \Bigr)\\
     &= g^{(l)}\bigl( a^{(+)},\, a^{(-)} \bigr)
         + W_{\mathrm{abs}}^{[l, \rightarrow]}\, c. \qedhere
-\end{aligned}
-\end{equation*}
+\end{align*}
 \end{proof}
 
 Theorem~\ref{thm:shift_forward} licenses \emph{re-centering}: whenever the common magnitude of a pair explodes, we subtract a common shift without altering the represented function. The canonical choice

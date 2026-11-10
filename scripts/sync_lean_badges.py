@@ -3,12 +3,14 @@
 
 This does not establish coverage: it uses the explicit scope/status assigned by
 mathematical review. The Lean audit verifies that the referenced declarations exist.
-Equation mappings in tex_links.json are preserved.
+Equation mappings and explicitly retired editorial labels in tex_links.json are
+preserved, so removing exposition does not rewrite the verified proof snapshot.
 """
 import argparse
 import json
 import re
 from pathlib import Path
+from tex_lean_inventory import retired_labels
 
 ROOT = Path(__file__).resolve().parents[1]
 PATTERN = r'\\begin\{(theorem(?:env)?|lemma(?:env)?|proposition(?:env)?|corollary(?:env)?|definition(?:env)?|claim|remark|observation)\}(.*?)\\end\{\1\}'
@@ -20,12 +22,16 @@ def main():
     coverage=json.loads((ROOT/'formalization/coverage_map.json').read_text())
     config=ROOT/'formalization/tex_links.json'
     previous=json.loads(config.read_text()) if config.exists() else {}
-    links={k:v for k,v in previous.items() if v.get('equation')}
+    retired=retired_labels(previous)
+    links={k:v for k,v in previous.items() if v.get('equation') or k in retired}
     changed=[]
     paths = [path for directory in ['tex/chapters', 'tex/supplement']
              for path in (ROOT/directory).rglob('*.tex')]
     for path in sorted(paths):
         original=path.read_text()
+        reintroduced=retired & set(re.findall(r'\\label\{([^}]+)\}', original))
+        if reintroduced:
+            raise SystemExit('Retired Lean labels still appear in TeX: '+', '.join(sorted(reintroduced)))
         def annotate(match):
             env,body=match.group(1),match.group(2)
             body=re.sub(r'\n\\hfill\\LeanResult\{[^}]+\}\s*$', '', body)

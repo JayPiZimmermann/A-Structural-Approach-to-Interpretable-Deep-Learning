@@ -6,53 +6,61 @@ mathematical continuation has a separate [Lean handover](HANDOVER_LEAN.md).
 
 ## Current local revision and verification boundary
 
-The user explicitly requested publication of the current TeX revision, followed
-by independent rendering switches for tables and qualitative image grids and a
-cover-logo repair. The previous checkpoint `7c8e3f5` is on `origin/main`. The
-current follow-up is authorized for publication after its local checks pass;
-both rendering switches must be enabled in the published PDFs.
+The last published checkpoint is `0277033` on `origin/main`. The current
+10 November revision tightens the author's new introduction, removes pasted chat
+text and duplicate drafts, reduces the contribution list to an overview, and
+removes roughly 4,000 words of unused tropical/polyhedral background. The
+Transformer DC algorithm is stated briefly in the existing DC contribution.
+The user has authorized publication; the next push waits for the final local
+build and warning checks. Both rendering switches must remain enabled.
 
-The new source includes the generalized convex/monotone DC construction,
-closed-form activation and softmax splits, an explicit arbitrary-depth
-Transformer definition and splitting algorithm, and the requested review repairs.
-The complete clean Lean gate passed at source commit
-`1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`: **167 modules, 490 independently
-reviewed exact contracts and 3,640 imported project theorem axiom audits**.
-All 168 commands exited zero and the bound source snapshot remained fixed.
-Evidence is in `reports/verification/commit-1f886dd/` and
-`reports/verification/current/`. The 216 generated source links are checked and
-pinned to that commit. The previous `0f3cfb0` gate remains archived.
+The generalized convex/monotone DC construction, closed-form activation and
+softmax splits, arbitrary-depth Transformer definition and splitting algorithm,
+and requested review repairs remain. The complete clean Lean gate passed at
+source commit `1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`: **167 modules,
+490 independently reviewed exact contracts and 3,640 imported project theorem
+axiom audits**. All 168 commands exited zero. Evidence remains in
+`reports/verification/commit-1f886dd/` and `reports/verification/current/`;
+the previous `0f3cfb0` gate is archived.
 
-The main thesis is **139 total PDF pages**, within the hard 150-page cap; its
-separate technical supplement is **85 pages**. This compact presentation retains
-the substantive mathematical and empirical improvements: detailed proofs and
-full supporting experiments have moved to the supplement. The page-budget audit
-preserves all 50 full captions and gives 48 entries shorter list titles.
+The current build contains **133 main-thesis PDF pages** and an
+**85-page technical supplement**, below the 150-page main-document cap. Treat
+`reports/evidence/page-budget/publication-checks.json` and the matching
+`reports/publication-build.json` as authoritative for the final copied PDFs.
+The introductory figure uses a compact layout. Static `tex/main.xmpdata` and
+`tex/supplement.xmpdata` supply PDF metadata for reproducible builds without
+metadata-generation warnings.
 
-There are 157 Lean annotations in the main PDF and 59 in the supplement:
-216 combined occurrences covering 135 unique targets. All 80 main-to-supplement
-and 72 supplement-to-main links resolve. All 176 files bound by the proof receipt
-still match the verified source hashes. Both final logs have no overfull boxes
-or unresolved references/citations, and both PDFs are copied to `docs/`.
-`reports/evidence/page-budget/publication-checks.json` records the passed guard;
-`reports/evidence/page-budget/final-editorial-audit.json` records the editorial
-checks. The Lean source gate is unchanged by this editorial reorganization.
+The unused geometry section has no downstream technical dependencies. Its
+22 mapped statement/equation labels are explicitly retired in
+`tex/preamble/lean_links_retired.json`; the checked Lean library, pinned mapping,
+and stable badge numbers are retained. The published documents now have
+**194 active Lean link occurrences covering 123 unique targets**. Active and
+retired labels together account for all 216 pinned mappings. The publication
+guard checks the exact active PDF link occurrences and cross-document targets,
+while all **176 proof-bound files** must still match the verified source hashes.
+No Lean source or proof-bound metadata was changed by this editorial removal.
 
-The strengthened retention checks compare against the pre-compression commit
-`91d4d27`: all 804 original content blocks are accounted for, and all 314 displayed
-formulas are preserved exactly. Independent mathematical and empirical reviews
-found no lost substantive information. Their crosswalks are
-`reports/evidence/page-budget/{text,math,evidence}-retention.json`.
+The earlier compression audit against `91d4d27` remains historical evidence:
+that revision accounted for all 804 original content blocks and preserved all
+314 displayed formulas, with no substantive loss found by independent reviewers.
+Its crosswalks remain under
+`reports/evidence/page-budget/{text,math,evidence}-retention.json`. Those claims
+must not be read as a retention assertion for this later, explicitly requested
+removal of unused geometry exposition and formulas.
 
 Build both `tex/main.tex` and `tex/supplement.tex`. Detailed game, attention and
-trajectory proofs and full experimental material live under `tex/supplement/`.
-The main document retains the central definitions, results, evidence and narrative.
-The original 74 HM and 72 game-paper reference keys are preserved across the
-**main thesis and supplement together**; they need not all appear in the main
-bibliography. Proof links are likewise distributed across both documents.
-The source-reference checker and badge synchronizer now inspect both source roots.
-Deliver `docs/thesis.pdf` and `docs/thesis-supplement.pdf` together so their relative
-cross-document links can resolve.
+trajectory proofs and full experimental material remain under `tex/supplement/`.
+Reference coverage now reports **68 of 74 HM source labels retained** (63 unique
+references), with six labels for three geometry-background references
+intentionally omitted: Brandenburg2024b, Haase2023 and Ziegler1995. Their
+bibliography records remain; the reasons are recorded in
+`reports/paper-reference-editorial-omissions.json`. All **72 game-paper source
+references** remain. The checker distinguishes these reviewed omissions from
+unexplained missing citations and continues checking bibliography entries and
+aliases. The source-reference checker and badge synchronizer inspect both source
+roots. Deliver `docs/thesis.pdf` and `docs/thesis-supplement.pdf` together so their
+relative cross-document links resolve.
 
 ### Independent rendering switches
 

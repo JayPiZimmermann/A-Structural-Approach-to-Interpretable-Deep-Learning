@@ -5,7 +5,8 @@ The checker follows recursive TeX input/include files (including the generated
 longtable helpers), strips TeX comments before collecting commands, applies only
 the explicit aliases recorded in reports/*-citation-aliases.json, and checks
 both active thesis citations and bibliography records. It is offline and writes
-a deterministic JSON report.
+a deterministic JSON report. Explicit editorial omissions are reported separately
+and waive only the active-citation requirement, never bibliography or alias checks.
 
 Run from any directory with:
     python3 scripts/check_paper_references.py --check
@@ -27,6 +28,7 @@ ROOT = Path(__file__).resolve().parent.parent
 REPORT = ROOT / "reports" / "paper-reference-coverage.json"
 PTNB_ALIAS_FILE = ROOT / "reports" / "paper-v2-citation-aliases.json"
 HM_ALIAS_FILE = ROOT / "reports" / "hidden-monotonicity-citation-aliases.json"
+EDITORIAL_OMISSIONS_FILE = ROOT / "reports" / "paper-reference-editorial-omissions.json"
 
 PAPERS = {
     "hidden_monotonicity": {
@@ -398,12 +400,23 @@ def build_report() -> tuple[dict[str, Any], bool]:
     # The thesis may have a stale BBL after a citation is restored; raw .bib is
     # authoritative for availability, while the cached BBL is reported only.
     thesis_canonical_cites = set(thesis_refs)
+    editorial_record = json.loads(EDITORIAL_OMISSIONS_FILE.read_text())
+    editorial_omissions = {}
+    if not editorial_record.get("reason") or not editorial_record.get("editorial_source_commit"):
+        raise ValueError("Editorial citation omissions require a reason and source commit")
+    for omission in editorial_record["omissions"]:
+        key = (omission["paper"], omission["canonical_thesis_key"])
+        if key in editorial_omissions or key[0] not in PAPERS or not omission.get("reason"):
+            raise ValueError("Invalid or duplicate editorial citation omission: " + str(key))
+        editorial_omissions[key] = omission
+    seen_editorial_omissions = set()
 
     paper_reports: dict[str, Any] = {}
     all_missing: list[dict[str, str]] = []
+    intentional_omissions: list[dict[str, Any]] = []
     title_review: list[dict[str, Any]] = []
     unverified_aliases: list[dict[str, Any]] = []
-    hash_paths: set[Path] = {THESIS_BIB, THESIS_ROOT}
+    hash_paths: set[Path] = {THESIS_BIB, THESIS_ROOT, EDITORIAL_OMISSIONS_FILE}
     hash_paths.update(thesis_files)
     all_checks_pass = not thesis_unresolved
 
@@ -425,6 +438,10 @@ def build_report() -> tuple[dict[str, Any], bool]:
             thesis_title = thesis_bib.get(canonical, {}).get("title")
             source_title = item["source_title"]
             title_ok = title_matches(source_title, thesis_title)
+            omission = editorial_omissions.get((name, canonical)) if not thesis_cited else None
+            if omission:
+                seen_editorial_omissions.add((name, canonical))
+                intentional_omissions.append({**omission, "source_key": source_key})
             # App bibliography text may include author/venue as well as title;
             # require the canonical database title to be present in that actual
             # entry, rather than treating a display label as title metadata.
@@ -440,6 +457,9 @@ def build_report() -> tuple[dict[str, Any], bool]:
                 "source_locations": sorted({x["file"] for x in item["source_occurrences"]}),
                 "source_bibliography_item": item["source_bibliography_item"],
                 "thesis_cited": thesis_cited,
+                "citation_status": ("retained" if thesis_cited else
+                                    "intentionally_omitted" if omission else "missing"),
+                "editorial_omission_reason": omission["reason"] if omission else None,
                 "thesis_bibliography_entry": thesis_has_bib,
                 "source_title": source_title,
                 "thesis_bibliography_title": thesis_title,
@@ -448,7 +468,7 @@ def build_report() -> tuple[dict[str, Any], bool]:
             }
             rows.append(row)
             failures = []
-            if not thesis_cited:
+            if not thesis_cited and not omission:
                 failures.append("not_cited_in_thesis")
             if not thesis_has_bib:
                 failures.append("missing_thesis_bibliography_entry")
@@ -478,6 +498,10 @@ def build_report() -> tuple[dict[str, Any], bool]:
             "unresolved_includes": unresolved,
             "active_source_citation_key_count": len(source_citation_keys),
             "source_reference_count": len(rows),
+            "retained_source_reference_count": sum(row["thesis_cited"] for row in rows),
+            "retained_unique_reference_count": len({row["canonical_thesis_key"] for row in rows if row["thesis_cited"]}),
+            "intentionally_omitted_source_reference_count": sum(row["citation_status"] == "intentionally_omitted" for row in rows),
+            "intentionally_omitted_unique_reference_count": len({row["canonical_thesis_key"] for row in rows if row["citation_status"] == "intentionally_omitted"}),
             "source_bibliography_item_count": sum(bool(row["source_bibliography_item"]) for row in rows),
             "alias_file": relpath(paper["alias_file"]),
             "reference_checks": rows,
@@ -489,9 +513,8 @@ def build_report() -> tuple[dict[str, Any], bool]:
         if unresolved:
             all_checks_pass = False
 
-    # Confirm the historic HM citation not cited inline in the body is still
-    # present through its declared main-file nocite; this naturally appears in
-    # source citation occurrences and is checked like every other citation.
+    # Retain the dedicated source-provenance check for the historic HM polytope
+    # reference, distinguishing editorial omission from accidental loss.
     hm_ziegler = next(
         (row for row in paper_reports["hidden_monotonicity"]["reference_checks"] if row["canonical_thesis_key"] == "Ziegler1995"),
         None,
@@ -501,9 +524,16 @@ def build_report() -> tuple[dict[str, Any], bool]:
         all_checks_pass = False
     if unverified_aliases:
         all_checks_pass = False
+    omission_errors = [
+        {"paper": paper, "canonical_thesis_key": canonical,
+         "error": "Omission does not match an uncited source reference"}
+        for paper, canonical in sorted(set(editorial_omissions) - seen_editorial_omissions)
+    ]
+    if omission_errors:
+        all_checks_pass = False
     bbl_path = ROOT / "tex/main.bbl"
     report = {
-        "schema_version": 1,
+        "schema_version": 2,
         "title": "Active paper reference coverage against thesis and technical supplement",
         "offline": True,
         "source_projects": ["Hidden Monotonicity", "Playing the Network Backward v2"],
@@ -528,11 +558,17 @@ def build_report() -> tuple[dict[str, Any], bool]:
         "source_hashes_sha256": {relpath(path): sha256(path) for path in sorted(hash_paths) if path.is_file()},
         "genuinely_missing_references": all_missing,
         "missing_count": len(all_missing),
+        "editorial_omissions_file": relpath(EDITORIAL_OMISSIONS_FILE),
+        "intentionally_omitted_references": intentional_omissions,
+        "intentional_omission_source_reference_count": len(intentional_omissions),
+        "intentional_omission_unique_reference_count": len({row["canonical_thesis_key"] for row in intentional_omissions}),
+        "editorial_omission_errors": omission_errors,
         "hm_ziegler1995_check": {
             "canonical_key": "Ziegler1995",
             "source_key_present": hm_ziegler is not None,
             "source_commands": hm_ziegler["source_commands"] if hm_ziegler else [],
             "thesis_cited": hm_ziegler["thesis_cited"] if hm_ziegler else False,
+            "citation_status": hm_ziegler["citation_status"] if hm_ziegler else "absent_from_source",
             "thesis_bibliography_entry": hm_ziegler["thesis_bibliography_entry"] if hm_ziegler else False,
         },
         "check_passed": all_checks_pass,
@@ -555,6 +591,11 @@ def main() -> int:
           f"PTNB v2 references: {report['papers']['playing_the_network_backward_v2']['source_reference_count']} "
           f"({report['papers']['playing_the_network_backward_v2'].get('source_bbl_item_count', 0)} source BBL items)")
     print(f"Genuinely missing references: {report['missing_count']}")
+    for name, paper in report["papers"].items():
+        print(f"{name}: retained {paper['retained_source_reference_count']}/{paper['source_reference_count']} source labels "
+              f"({paper['retained_unique_reference_count']} unique references); intentionally omitted "
+              f"{paper['intentionally_omitted_source_reference_count']} source labels "
+              f"({paper['intentionally_omitted_unique_reference_count']} unique references)")
     if report["hm_ziegler1995_check"]["source_key_present"]:
         z = report["hm_ziegler1995_check"]
         print(f"HM Ziegler1995: cited via {', '.join(z['source_commands'])}; thesis cited={z['thesis_cited']}, bibliography={z['thesis_bibliography_entry']}")
@@ -563,6 +604,8 @@ def main() -> int:
             print(f"MISSING {item['paper']} {item['source_key']} -> {item['canonical_thesis_key']}: {', '.join(item['failures'])}", file=sys.stderr)
         for item in report["unverified_aliases"]:
             print(f"UNVERIFIED ALIAS {item['paper']} {item['source_key']} -> {item['canonical_thesis_key']}: bibliography titles differ", file=sys.stderr)
+        for item in report["editorial_omission_errors"]:
+            print(f"INVALID OMISSION {item['paper']} {item['canonical_thesis_key']}: {item['error']}", file=sys.stderr)
         return 1 if args.check else 0
     return 0
 

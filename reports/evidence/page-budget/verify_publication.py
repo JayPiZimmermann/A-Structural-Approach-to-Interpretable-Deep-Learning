@@ -2,12 +2,16 @@
 """Check the two published PDFs, their cross-links, and the unchanged proof closure."""
 import hashlib
 import json
+from collections import Counter
 from pathlib import Path
 import re
 import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[3]
 OUT = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT / "scripts"))
+from tex_lean_inventory import published_link_inventory
 
 
 def command(*args):
@@ -61,8 +65,15 @@ def main():
               if link["file"] not in destinations
               or link["destination"] not in destinations[link["file"]]]
     generated = (ROOT / "tex/preamble/lean_links_generated.tex").read_text()
-    expected = {uri.replace(r"\#", "#") for uri in
-                re.findall(r"\\DeclareLeanResult\{[^}]+\}\{([^}]+)\}", generated)}
+    config = json.loads((ROOT / "formalization/tex_links.json").read_text())
+    uses, retired = published_link_inventory(config)
+    urls = {label: uri.replace(r"\#", "#") for label, uri in
+            re.findall(r"\\DeclareLeanResult\{([^}]+)\}\{([^}]+)\}", generated)}
+    if set(urls) != set(config):
+        raise ValueError("Generated Lean declarations do not match the pinned link map")
+    expected = Counter()
+    for label, count in uses.items():
+        expected[urls[label]] += count
     receipt = json.loads((ROOT / "reports/verification/current/receipt.json").read_text())
     changed = [name for name, digest in receipt["source"]["sha256"].items()
                if sha(ROOT / name) != digest]
@@ -78,7 +89,11 @@ def main():
         "broken_remote_links": broken,
         "combined_lean_uri_count": len(all_lean),
         "combined_unique_lean_uris": len(set(all_lean)),
-        "all_expected_lean_uris_present": set(all_lean) == expected,
+        "expected_published_lean_link_count": sum(expected.values()),
+        "published_lean_labels": len(uses),
+        "retired_lean_labels": sorted(retired),
+        "all_expected_lean_uris_present": set(all_lean) == set(expected),
+        "all_expected_lean_link_occurrences_present": Counter(all_lean) == expected,
         "all_lean_uris_at_verified_revision": all(
             "/blob/" + receipt["source"]["commit"] + "/" in uri for uri in all_lean),
         "verified_proof_files_checked": len(receipt["source"]["sha256"]),
@@ -87,7 +102,7 @@ def main():
     passed = (checks["main_pdf_within_150_pages"] and checks["both_logs_clean"]
               and checks["both_published_pdfs_match_builds"]
               and checks["both_documents_have_remote_links"]
-              and not broken and len(all_lean) == 216
+              and not broken and checks["all_expected_lean_link_occurrences_present"]
               and checks["all_expected_lean_uris_present"]
               and checks["all_lean_uris_at_verified_revision"] and not changed)
     result = {"status": "passed" if passed else "failed", "documents": documents,
