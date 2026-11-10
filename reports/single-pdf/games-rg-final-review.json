@@ -1,0 +1,33 @@
+{
+  "review": "games-rg-final-review",
+  "scope": "Read-only comparison of current merged Routing Game section and signed-affine extension against b43bc24 main-plus-supplement union; no builds or source edits.",
+  "baseline_commit": "b43bc24",
+  "baseline_sha256": {
+    "tex/chapters/04_game_theory.tex": "fd546d1d19763fa2f8a19b3fc0d898f9d57fc27a8c1775c0a4920144f4ecd2cc",
+    "tex/supplement/games.tex": "632527e41991b8826dec8059400e60073832f7c507d9e96625972b25eb34c878"
+  },
+  "reviewed_file": "tex/chapters/04_game_theory.tex",
+  "reviewed_sha256": "f8e34968b9517bc2154aa44b8940e90e8bf2120ef1892ee3092ac9ec493d1f69",
+  "status": "minimal_fix_required",
+  "findings": [
+    {
+      "line": 483,
+      "kind": "lost player and forward-anchor conditions",
+      "explanation": "The addition formula is indexed by arbitrary player r, but only the active player has log activation value; the opponent value is -infinity. Network-activation equivalence also needs the tau=1 anchor (or an explicit hypothesis that operand values recover their activations), present in the baseline.",
+      "replace": "For non-negative operand activations these equal",
+      "with": "At $\\tau=1$, for the active player and non-negative operand activations, these equal"
+    }
+  ],
+  "verified": [
+    "Canonical Gibbs equilibrium and finite-score/empty-support cases; stop at every nonpositive-mass log tie.",
+    "Both epsilon shifts cancel at activation nodes; bias/outside shares absorb.",
+    "Fused signed-input masses and 0/0 convention preserved.",
+    "Uniform-addition inactive-operand counterexample is correct; gated recurrence repairs residual case while ungated equality is restricted to positive arrivals or affine/ReLU chains.",
+    "Addition/pooling edge occupations separate parent contributions.",
+    "Signed affine seed scales the nonnegative occupation difference; zero-logit output-seeded relevance vanishes while unit-seeded maps may remain nonzero.",
+    "Myopic temperature deformation distinguished from globally re-solved tau equilibrium."
+  ],
+  "independent_review": "Second reviewer independently identified the same sole condition loss.",
+  "source_edits": false,
+  "builds_run": false
+}

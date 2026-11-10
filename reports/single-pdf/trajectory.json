@@ -1,0 +1,177 @@
+{
+  "baseline_commit": "b43bc24",
+  "status": "integrated_independent_review_passed",
+  "scope": "Consolidate all trajectory supplement mathematics into Chapter 11; retire detached supplement content. No font or spacing reductions.",
+  "sources": [
+    "tex/chapters/11_trajectory.tex",
+    "tex/supplement/trajectory.tex"
+  ],
+  "destination": "tex/chapters/11_trajectory.tex",
+  "source_sha256": {
+    "tex/chapters/11_trajectory.tex": "5e23a0993bbfca9d13968baa8d2deaf7a65afbd5297062b59e9fc0a23ec02956",
+    "tex/supplement/trajectory.tex": "4375e2ccf22edb6639a1c15781757bccc1edd208bfe3c1a252f24dfb16c0acdc"
+  },
+  "destination_sha256": "d8dfb64089e9842163a74ff37f45488baa06d98aa92d6340c91577a53b1bcb42",
+  "texcount": {
+    "command": "texcount -utf8 -brief -sum=1,1,1,0,0,0,0",
+    "main_before": 3416,
+    "supplement_before": 2251,
+    "combined_before": 5667,
+    "combined_after": 4285,
+    "removed_words": 1382,
+    "reduction_percent": 24.387
+  },
+  "math_display_groups": {
+    "before": 55,
+    "after": 25
+  },
+  "proof_environments": {
+    "before": 8,
+    "after": 8
+  },
+  "mechanical_checks": {
+    "missing_labels": [],
+    "added_labels": [],
+    "original_label_count": 80,
+    "merged_label_count": 80,
+    "lean_badge_multiset_preserved": true,
+    "lean_badge_count": 9,
+    "citation_multiset_preserved": true,
+    "citations_removed": {},
+    "citations_added": {},
+    "companion_wording_remaining": [],
+    "aliases": [
+      [
+        "app:supp_trajectory",
+        "ch:trajectory"
+      ],
+      [
+        "ptnb:eq:lmp-alpha-boundary",
+        "ptnb:eq:lmp-alpha"
+      ],
+      [
+        "ptnb:sec:lmp-per-pixel",
+        "ptnb:sec:lmp-disagreement"
+      ]
+    ]
+  },
+  "deletion_to_canonical_mapping": [
+    {
+      "removed": "Separate Extended Trajectory Derivations chapter and companion pointers",
+      "canonical": "ch:trajectory; app:supp_trajectory aliases this chapter"
+    },
+    {
+      "removed": "Repeated brief Markov setup in main plus expanded supplement definitions",
+      "canonical": "ptnb:sec:lmp: finite layered state graph, cemetery, kernels, trajectories and initial state"
+    },
+    {
+      "removed": "Separate marginal definition and boundary displays",
+      "canonical": "ptnb:eq:lmp-alpha and ptnb:eq:lmp-alpha-recursion; boundary aliases definition display"
+    },
+    {
+      "removed": "Separate positive/negative SG and RG transition rows",
+      "canonical": "ptnb:eq:adf-T and ptnb:eq:rg-T-act: indexed sign kappa retains/switches player"
+    },
+    {
+      "removed": "Repeated early Hellinger definition and divergence comparison",
+      "canonical": "ptnb:sec:lmp-bc and ptnb:app:why-hellinger"
+    },
+    {
+      "removed": "Expanded chain-rule proof repeating both sides of statement",
+      "canonical": "ptnb:lem:bc-chain-rule proof uses nonnegative product factorization"
+    },
+    {
+      "removed": "Expanded prefix-overlap and induction displays",
+      "canonical": "prefix-overlap recurrence between chain-rule and monotonicity lemmas; ptnb:lem:hellinger-backward-correctness"
+    },
+    {
+      "removed": "Repeated per-pixel headings and statement prose; separate supplement proof chapter",
+      "canonical": "ptnb:sec:lmp-disagreement and ptnb:thm:per-pixel with proof immediately following"
+    },
+    {
+      "removed": "Multi-display per-pixel expansion",
+      "canonical": "terminal-fibre sum of squared square-root differences proves positivity and decomposition directly"
+    },
+    {
+      "removed": "Main survival summary plus separate supplement theorem/proof and implementation list",
+      "canonical": "ptnb:thm:conditioned-survival: compact single theorem, telescoping proof, conditioned map and numerical note"
+    },
+    {
+      "removed": "Detached Randomization Bounds supplement section and main proof pointer",
+      "canonical": "ptnb:sec:lmp-randomization: alive-mismatch lemma, SG/RG bounds and cemetery-floor remark"
+    }
+  ],
+  "proof_simplifications": [
+    "Chain rule: substitute Markov factorization and distribute square root.",
+    "Monotonicity: sum prefix-overlap recurrence against sub-stochastic row masses.",
+    "DP correctness: downward induction follows the already-derived recurrence; terminal map follows from the per-pixel theorem.",
+    "Per-pixel theorem: group squared-root differences by terminal fibre; no repeated nested-sum expansions.",
+    "Survival theorem: one-step conditioning, telescoping Doob factors, Bayes rule, and existing chain/per-pixel results.",
+    "Randomization: one-step ordinary-overlap contraction iterated across affected layers, with explicit hypotheses."
+  ],
+  "precision_repairs": [
+    "Alive/dead mismatch only annihilates full overlap if the alive row has no cemetery leakage.",
+    "Per-pixel zero-contribution condition explicitly includes two zero terminal masses; strict conditional-law comparison requires both terminal masses positive.",
+    "Ordinary-state disagreement is not obtained by merely rescaling its total into a conditioned Hellinger map.",
+    {
+      "issue": "Original conditional probability at unreachable states was undefined as an event-conditioned ratio.",
+      "resolution": "Interpret survival probability through the transition kernel started at the state, including unreachable states."
+    },
+    {
+      "issue": "Original Doob law product was asserted over all surviving paths although kernel rows only defined for positive survival.",
+      "resolution": "Complete zero-survival rows arbitrarily as probability distributions; they are unreachable under the conditioned law."
+    },
+    {
+      "issue": "Original conditioned geometric kernel ratio lacked a positive-denominator qualification.",
+      "resolution": "State the ratio only on jointly positive survival rows; entrywise geometric mean of completed kernels remains defined elsewhere."
+    },
+    "CNN/Transformer randomization reduction explicitly requires the same stated hypotheses; indicator-weighted survival distance is zero off its positive-survival event."
+  ],
+  "preserved": "All 80 labels (three canonical aliases), 9 Lean links, all citation occurrences, 8 proofs, mathematical conclusions and hypotheses, probability versus signed-occupation distinction, full versus survival-conditioned laws, refined absorption histories, all empirical results and protocol caveats.",
+  "assembly_changes": [
+    {
+      "old_start": "The cascading-randomization sanity check",
+      "description": "Moves metric definitions/properties and historical citations to canonical Hellinger definition below; keeps sanity-check question and projection distinction."
+    },
+    {
+      "old_start": "Under cascading randomization (layers",
+      "description": "Deduplicates cemetery explanation now given in full remark and empirical baseline; all headline results preserved."
+    },
+    {
+      "old_start": "We compare two layered Markov processes",
+      "description": "Replaces duplicated motivation with integrated roadmap; alternative-divergence distinctions retained in Properties paragraph."
+    },
+    {
+      "old_start": "The formal foundations and proofs are given",
+      "old_end": "\\subsection{Bhattacharyya Coefficient",
+      "description": "Replaces brief repeated setup and companion pointer by compact full Markov foundations, marginal pass, and both game kernels."
+    },
+    {
+      "old_start": "The chain rule (Lemma",
+      "description": "Removes duplicate recurrence definitions now immediately established by chain rule/monotonicity proof."
+    },
+    {
+      "old_start": "\\subsection{Per-Pixel Disagreement Map}",
+      "old_end": "\\begin{theoremenv}[Per-pixel decomposition",
+      "description": "Merges nested duplicate per-pixel headings and introductions; old subsubsection label aliases canonical subsection."
+    },
+    {
+      "old_start": "\\paragraph{The disagreement map.}",
+      "old_end": "\\subsubsection{Conditioning on Survival",
+      "description": "Retains full-vs-ordinary totals, player/stream tags, pixel aggregation, marginal lower bound and strictness; replaces repeated theorem descriptions."
+    },
+    {
+      "old_start": "\\subsubsection{Conditioning on Survival",
+      "old_end": "\\subsection{Experiments}",
+      "description": "Integrates complete conditioned law/Doob theorem/proof/map, merging main summary and supplement derivation."
+    },
+    {
+      "old_start": "The Stopping-Game contraction bound assumes",
+      "old_end": "The discounted occupation measures at the input layer",
+      "description": "Replaces forward proof pointer with alive-mismatch lemma, both contraction theorems/proofs, and cemetery-floor remark."
+    }
+  ],
+  "no_build_performed": true,
+  "independent_review": "reports/single-pdf/trajectory-proof-review.json",
+  "independent_review_sha256": "72d92af04bdcd0eabeeeb2ec8ca73cd810a474da88d6b455a1eb2adb1f75caa9"
+}

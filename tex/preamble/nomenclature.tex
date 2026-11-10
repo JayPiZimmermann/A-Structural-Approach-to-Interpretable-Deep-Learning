@@ -1,15 +1,16 @@
 \setnomtableformat{@{}cp{0.6\textwidth}l@{}r@{}l@{}}
+\newif\ifnomtablehead
+\nomtableheadtrue
 \newcommand{\nomgroupX}[5]{
-	\\[1.5ex]
+	\ifnomtablehead\else\\[1.5ex]\fi
 	\item & \multicolumn{5}{@{}l@{}}{\sffamily\Large\bfseries #1} \\[0.1ex]%
-	\item & \bfseries #2 & \bfseries #3 & \bfseries #4 & \bfseries #5 \\
+	\ifnomtablehead
+	\item & \global\nomtableheadfalse\bfseries #2 & \bfseries #3 & \bfseries #4 & \bfseries Definition \\
+	\fi
 	\bottomrule
 }
 \iflanguage{english}{
 	\renewcommand\nomgroup[1]{%
-  		\ifx#1L\relax
-    	\nomgroupX{Latin Symbols}{Symbol}{Description}{}{Unit}
-  		\fi
   		\ifx#1G\relax
     	\nomgroupX{Greek Symbols}{Symbol}{Description}{}{Unit}
   		\fi
@@ -17,14 +18,11 @@
 		\nomgroupX{Operators}{Symbol}{Description}{}{Definition}
   		\fi
   		\ifx#1I\relax
-		\nomgroupX{Indices}{Symbol}{Description}{}{}
+		\nomgroupX{Latin Symbols and Indices}{Symbol}{Description}{}{}
   		\fi
 	}
 }{\iflanguage{ngerman}{
 	\renewcommand\nomgroup[1]{%
-  		\ifx#1L\relax
-    	\nomgroupX{Lateinische Symbole}{Symbol}{Beschreibung}{}{Einheit}
-  		\fi
   		\ifx#1G\relax
     	\nomgroupX{Griechische Symbole}{Symbol}{Beschreibung}{}{Einheit}
   		\fi
@@ -32,7 +30,7 @@
 		\nomgroupX{Operatoren}{Symbol}{Beschreibung}{}{Definition}
 		\fi
   		\ifx#1I\relax
-		\nomgroupX{Indizes}{Symbol}{Beschreibung}{}{}
+		\nomgroupX{Lateinische Symbole und Indizes}{Symbol}{Beschreibung}{}{}
   		\fi
 		}
 	}{}

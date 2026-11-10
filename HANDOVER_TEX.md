@@ -1,4 +1,4 @@
-# TeX handover for Astra — 10 November 2026
+# TeX handover for Astra — 11 November 2026
 
 The user requested this checkpoint so the thesis can be continued on another
 server. This document is sufficient to start the TeX task independently. The
@@ -6,8 +6,8 @@ mathematical continuation has a separate [Lean handover](HANDOVER_LEAN.md).
 
 ## Current local revision and verification boundary
 
-The condensed thesis and cover checkpoint is published as `61d4d90` on
-`origin/main`. That 10 November revision tightens the author's new introduction, removes pasted chat
+The single-PDF consolidation starts from `b43bc24`. The earlier thesis and cover
+checkpoint, `61d4d90`, tightens the author's new introduction, removes pasted chat
 text and duplicate drafts, reduces the contribution list to an overview, and
 removes roughly 4,000 words of unused tropical/polyhedral background. The
 Transformer DC algorithm is stated briefly in the existing DC contribution.
@@ -48,23 +48,24 @@ axiom audits**. All 168 commands exited zero. Evidence remains in
 `reports/verification/commit-1f886dd/` and `reports/verification/current/`;
 the previous `0f3cfb0` gate is archived.
 
-The current build contains **123 main-thesis PDF pages** and an
-**80-page technical supplement**, below the 150-page main-document cap. Treat
-`reports/evidence/page-budget/publication-checks.json` and the matching
-`reports/publication-build.json` as authoritative for the final copied PDFs.
-The introductory figure uses a compact layout. Static `tex/main.xmpdata` and
-`tex/supplement.xmpdata` supply PDF metadata for reproducible builds without
+The current revision merges the former 123-page thesis and 80-page supplement
+into **one 147-page PDF**, with proofs in their chapters and extended experiments
+in appendices. The target remains 150 pages. Treat
+`reports/single-pdf/publication-checks.json` and the matching
+`reports/publication-build.json` as authoritative for the final copied PDF.
+The introductory figure uses a compact layout. Static `tex/main.xmpdata` supplies PDF metadata for reproducible builds without
 metadata-generation warnings.
 
 The unused geometry section has no downstream technical dependencies. Its
 22 mapped statement/equation labels are explicitly retired in
 `tex/preamble/lean_links_retired.json`; the checked Lean library, pinned mapping,
-and stable badge numbers are retained. The published documents now have
-**194 active Lean link occurrences covering 123 unique targets**. Active and
+and stable badge numbers are retained. Before consolidation the two PDFs contained
+194 active Lean link occurrences covering 123 unique targets; the current
+publication guard records retained targets and deduplicated occurrences. Active and
 retired labels together account for all 216 pinned mappings. The publication
-guard checks the exact active PDF link occurrences and cross-document targets,
+guard checks the exact active PDF link occurrences and internal reference targets,
 while all **176 proof-bound files** must still match the verified source hashes.
-No Lean source or proof-bound metadata was changed by this editorial removal.
+No Lean source or proof-bound metadata was changed by this editorial work.
 
 The earlier compression audit against `91d4d27` remains historical evidence:
 that revision accounted for all 804 original content blocks and preserved all
@@ -74,8 +75,23 @@ Its crosswalks remain under
 must not be read as a retention assertion for this later, explicitly requested
 removal of unused geometry exposition and formulas.
 
-Build both `tex/main.tex` and `tex/supplement.tex`. Detailed game, attention and
-trajectory proofs and full experimental material remain under `tex/supplement/`.
+Build only `tex/main.tex`. Detailed game, attention, and trajectory proofs are
+integrated into their chapters; extended experiments are included as appendices.
+The separate supplement root is retired. `reports/single-pdf/` records the
+consolidations and independent retention reviews. Compact tables belong beside
+their discussion; only extensive matrices and sweeps remain in appendices.
+The complete ViT comparison is printed once in the main results chapter.
+The consolidation reduces counted chapter, appendix and abstract prose by 23.8%
+against `b43bc24`; the count excludes separately input table/figure text and the
+bibliography. All 618 original label names, 153 citation keys and 194 figure assets
+remain. Repeated statements use canonical labels and reviewed aliases. The RG
+recovery claim was also corrected: ungated $\alpha\beta$-LRP recovery covers the
+stated affine/ReLU-chain or positive-support cases; the residual extension uses
+explicit activation gates. Its forward addition identity retains unit temperature
+and the active-player condition. See `reports/single-pdf/integration.json` for the
+source-bound retention evidence and this intentional mathematical correction.
+`python3 reports/single-pdf/build_experiment_views.py --check` verifies the
+merged duplicate rows and the cross-model validation-rank matrix.
 Reference coverage now reports **67 of 74 HM source labels retained**, with
 six labels for three removed geometry-background references and one unsupported
 biological-plausibility citation intentionally omitted. Their bibliography
@@ -85,9 +101,8 @@ records remain. The reasons are recorded in
 references** remain. The corrected ImageNet-S citations use one canonical key,
 `gao2022luss`, so that the bibliography contains one entry for that work. The checker distinguishes these reviewed omissions from
 unexplained missing citations and continues checking bibliography entries and
-aliases. The source-reference checker and badge synchronizer inspect both source
-roots. Deliver `docs/thesis.pdf` and `docs/thesis-supplement.pdf` together so their
-relative cross-document links resolve.
+aliases. The source-reference checker and badge synchronizer follow the single active
+source tree. Deliver `docs/thesis.pdf`; all thesis references resolve internally.
 
 ### Independent rendering switches
 
@@ -95,9 +110,9 @@ relative cross-document links resolve.
 `\RenderQualitativeImageTables`, both defaulting to `1` (enabled). Set either to
 `0` to omit its content while retaining a compact placeholder, the full caption,
 the list entry and the label. The first controls regular tables, including the
-result longtables and the unnumbered VOC partition table. The second controls
+result longtables. The second controls
 the six qualitative image grids; ordinary diagrams, plots and acronym lists are
-unaffected. The switches apply to both documents independently of each other.
+unaffected. The switches apply independently throughout the complete thesis.
 
 For a temporary command-line override, use an isolated build directory with the
 TeX source subdirectories linked into it, then invoke, for example:
@@ -107,22 +122,21 @@ pdflatex -interaction=nonstopmode -halt-on-error -jobname=main \
   '\def\RenderTables{0}\def\RenderQualitativeImageTables{1}\input{/absolute/path/to/tex/main.tex}'
 ```
 
-Use the same settings for the companion supplement and settle both documents'
-cross-references. Keep draft auxiliary files and PDFs separate from the normal
-publication build. All four switch combinations are covered by the evidence in
+Settle the single document's cross-references. Keep draft auxiliary files and
+PDFs separate from the normal publication build. All four switch combinations are covered by the evidence in
 `reports/evidence/rendering-switches/`; the final publication settings remain
 `\RenderTables=1` and `\RenderQualitativeImageTables=1`.
 
-After copying both compiled PDFs, run from the repository root:
+After copying the compiled PDF, run from the repository root:
 
 ```sh
 python3 reports/evidence/page-budget/verify_publication.py
 ```
 
-This checks the 150-page cap, both final logs, PDF/source equality, combined Lean
-URIs, cross-document destinations and the unchanged proof-bound source hashes.
-The final result belongs in `reports/publication-build.json` and the page-budget
-evidence directory.
+This checks the 150-page target, final log, PDF/source equality, Lean
+URIs, internal destinations, and unchanged proof-bound source hashes.
+The final result belongs in `reports/publication-build.json` and the single-PDF
+evidence directory. Earlier page-budget reports document the historical layout.
 
 The two revised source papers already compile independently: Hidden Monotonicity
 has 38 pages and Playing the Network Backward has 83 pages. References and
@@ -294,15 +308,13 @@ TeX Live installation is the least complicated option. Build from `tex/`:
 cd tex
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 makeindex main.nlo -s nomencl.ist -o main.nls
-latexmk -pdf -interaction=nonstopmode -halt-on-error supplement.tex
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
-latexmk -pdf -interaction=nonstopmode -halt-on-error supplement.tex
 ```
 
 The public cover deliberately has an empty `\mymatriculationnumber` in
 `tex/preamble/meta.tex`. Do not replace it with metadata or a PDF from the old
-private workspace. `docs/thesis.pdf` and `docs/thesis-supplement.pdf` are built from this public
-source tree. Rebuild both after moving labels or changing cross-document references.
+private workspace. `docs/thesis.pdf` is built from this public source tree. Rebuild after moving
+labels or changing references.
 
 ## User requirements that remain binding
 
@@ -312,12 +324,13 @@ source tree. Rebuild both after moving labels or changing cross-document referen
   intended evidence; targeted correction follows diagnosis and needs separate
   validation. Preserve original paper formulations wherever possible;
   do not paraphrase sentences merely to restate them. Avoid duplicate material.
-- Keep the main document at or below 150 PDF pages; use the separate technical
-  supplement for detailed proofs and full experimental material. Do not meet the
-  cap by silently deleting scientific content.
+- Deliver ONE PDF containing all substantive material. Integrate proofs into
+  the current chapters and extended experiments into appendices; remove duplicate
+  exposition and simplify proofs. Aim at or below 150 pages without silently
+  deleting scientific content or shrinking typography.
 - Preserve every source-paper reference, experiment, figure, table, and substantive
-  point across the main document and supplement. Source corrections and a common notation are intentional exceptions to
-  verbatim preservation. The reference checker assesses the combined source roots and preserves all 74
+  point in the integrated thesis. Source corrections and a common notation are intentional exceptions to
+  verbatim preservation. The reference checker assesses the active source tree and preserves all 74
   Hidden Monotonicity and all 72 revised game-paper source keys.
 - Use **interpretability** in authored prose in place of XAI/explainability.
   Retain official publication/method titles, quotations, URLs, and code identifiers.
@@ -435,8 +448,9 @@ the table review alone.
 Theorem/lemma/definition headings contain numbered `Lean_1`, `Lean_2`, … links
 inside their heading brackets, following the style of arXiv 2610.01728v2.
 Equation numbers link directly to declarations. The verified source has
-**216 mappings**, now distributed across the main document and technical
-supplement; PDF occurrence counts must be checked for their combined outputs.
+**216 mappings**. Check the current active/retired/aliased inventory and
+PDF occurrences against the single document; duplicate source formulations
+may share a canonical statement and label alias.
 The links target the clean verified source commit `1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`. These new commit URLs will be
 publicly resolvable only after the local source commit is published.
 
@@ -462,15 +476,14 @@ python3 scripts/generate_lean_links.py --revision VERIFIED_COMMIT --check
    Report any additional mathematical correction before editing source papers.
 3. Retain the recently restored original wording; review any new changes for
    accidental loss of hypotheses, citations, table values, or definitions.
-4. Check both PDFs have no unresolved `??`, citations/references, or private
+4. Check the PDF has no unresolved `??`, citations/references, or private
    registration number, and the main PDF stays within the 150-page cap. Verify all PDF Lean URIs use the new repository and the
    intended commit/lines. `pdftotext`, `pdfinfo`, `pdftoppm`, and `mutool show` are
    sufficient; no PyMuPDF dependency is required.
-5. Copy the checked builds to `docs/thesis.pdf` and `docs/thesis-supplement.pdf`,
-   update the combined build receipt, and
-   commit reviewed changes locally. Keep this revision local as requested; do not
-   push based on earlier checkpoint authorization. Coordinate source commits so
-   HEAD and bound files remain fixed while the clean proof gate runs.
+5. Copy the checked build to `docs/thesis.pdf`, update the build receipt, and
+   commit reviewed changes. Follow the user's current publication instructions;
+   the earlier local-only checkpoint note is obsolete. Keep the proof source pin
+   fixed unless a new complete proof gate validates a replacement.
 
 Do not claim that all mathematics is formalized. That remains the independent
 Lean task, whose pending work is listed in `HANDOVER_LEAN.md`.

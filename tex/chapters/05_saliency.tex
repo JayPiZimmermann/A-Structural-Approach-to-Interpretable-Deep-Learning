@@ -19,11 +19,7 @@ and we write $g\coloneqq g^{(0)}$, $h\coloneqq h^{(0)}$ with balanced input spli
 A \ac{relu} gate transmits positive pre-activations and otherwise returns zero, erasing their negative magnitude and blocking the local gradient. This \emph{subthreshold signal loss} hides the suppressed pre-activation from the output through that gate and from backward rules retaining its ordinary derivative. Ordinary input gradients can therefore exhibit exact regional blindness.
 
 \begin{proposition}[Regional blindness of the input gradient, \LeanResult{prop:gradient_blindness}]\label{prop:gradient_blindness}
-Let $f$ be as above and $x_0$ an input with no zero pre-activations. If every path from input coordinate $i$ to the output passes through a neuron inactive at $x_0$, there is an open neighborhood $U\ni x_0$ with
-\begin{equation*}
-	\frac{\partial f}{\partial x_i} \equiv 0 \quad \text{on } U,
-\end{equation*}
-even if $f$ depends on $x_i$ elsewhere.\end{proposition}
+Let $f$ be as above and $x_0$ an input with no zero pre-activations. If every path from input coordinate $i$ to the output passes through a neuron inactive at $x_0$, then $\partial f/\partial x_i\equiv0$ on some open neighborhood $U\ni x_0$, even if $f$ depends on $x_i$ elsewhere.\end{proposition}
 
 \begin{proof}
 Set $M^{(l,+)}\coloneqq\diag\bigl(\1\{\preactl{l}>0\}\bigr)$, $M^{(l,-)}\coloneqq\diag\bigl(\1\{\preactl{l}\leq0\}\bigr)$ and $\Wl{l,x}\coloneqq M^{(l,+)}\Wl{l}$ for hidden layers $1\leq l<L$. The affine logit readout is ungated and may be negative, so $\Wl{L,x}\coloneqq\Wl{L}=\partial f/\partial\actl{L-1}$. Continuity and nonzero hidden pre-activations at $x_0$ give an open $U\ni x_0$ with constant masks and affine $f$. Iterating the chain rule on $U$ yields
@@ -64,17 +60,7 @@ Recall from Section~\ref{sec:dc_splitting_relu} how the split-pair processes a \
 a rank-2 Maxout unit in the $g$-stream and identity in the $h$-stream. Their difference reproduces $\relu(\preactl{l})$. At an inactive neuron, both activations equal $\preact{l}{-}$: the suppressed signal's magnitude remains in their common level. The backward pass likewise retains subthreshold information.
 
 \begin{definition}[Local sensitivities]\label{def:local_sensitivities}
-For $s \in \{g, h\}$, $\sigma \in \{+, -\}$ and $0 \leq l \leq L$, the \emph{local sensitivities} of the split-pair at layer $l$ are the row vectors
-\begin{equation*}
-	\delta^{(l, \sigma, s)} \coloneqq \frac{\partial s^{(l)}}{\partial \act{l}{\sigma}} \in \RR^{1 \times d^{(l)}},
-\end{equation*}
-the derivatives of the stream outputs with respect to the positive and negative split activations of layer $l$. We further abbreviate the original-network sensitivity by $\delta^{(l)} \coloneqq \partial f^{(l)} / \partial \actl{l}$ and define the \emph{absolute weight product}
-\begin{equation*}
-	W_{\mathrm{abs}}^{[l]} \coloneqq \abs{\Wl{L}} \, \abs{\Wl{L-1}} \cdots \abs{\Wl{l+1}} \in \RR^{1 \times d^{(l)}},
-	\qquad
-	W_{\mathrm{abs}}^{[L]} \coloneqq \1^{\top},
-\end{equation*}
-where $\abs{\cdot}$ acts entrywise. The scalar output makes $W_{\mathrm{abs}}^{[l]}$ a row vector whose $i$-th entry sums absolute weight products over all paths from layer-$l$ neuron $i$ to the output, active or inactive.
+Use the row sensitivities $\delta^{(l,\sigma,s)}$ of \eqref{eq:local_sensitivities}, for $s\in\{g,h\}$, $\sigma\in\{+,-\}$ and $0\le l\le L$, and write $\delta^{(l)}\coloneqq\partial f^{(l)}/\partial\actl{l}$. Abbreviate the absolute-weight product \eqref{eq:w_abs} by $W_{\mathrm{abs}}^{[l]}$, with $W_{\mathrm{abs}}^{[L]}=\1^\top$. For our scalar output, its $i$-th entry sums absolute weight products over all paths from layer-$l$ neuron $i$ to the output, active or inactive.
 \end{definition}
 
 The four local sensitivities obey coupled backward recursions, the split analogue of backpropagation underlying this chapter's methods.
@@ -93,7 +79,7 @@ With the activation masks $M^{(l,\pm)}$ of Proposition~\ref{prop:gradient_blindn
 \end{align}
 with base case $\delta^{(L, +, g)} = \delta^{(L, -, h)} = \1^{\top}$ and $\delta^{(L, -, g)} = \delta^{(L, +, h)} = 0$.\end{lemmaenv}
 
-These chain-rule recursions follow from the split forward equations of Section~\ref{sec:dc_splitting_relu} (derivation in Section~\ref{subsec:backward_stabilization}): the maximum in \eqref{eq:split_maxout_gate} selects $\preact{l+1}{+}$ exactly when the original neuron is active, giving $M^{(l+1,+)}$. They imply that total sensitivity mass is independent of the activation pattern.
+The block Jacobians \eqref{eq:split_layer_jacobians} give these recursions: the maximum selects $\preact{l+1}{+}$ exactly at active neurons. Adding the recursions eliminates the complementary masks.
 
 \begin{proposition}[Sensitivity mass conservation, \LeanResult{prop:sensitivity_mass}]\label{prop:sensitivity_mass}
 For every $0 \leq l \leq L$ and both streams $s \in \{g, h\}$,
@@ -103,13 +89,7 @@ For every $0 \leq l \leq L$ and both streams $s \in \{g, h\}$,
 \end{equation}\end{proposition}
 
 \begin{proof}
-Induction on $l = L, \dots, 0$. The base case is $\1^{\top} + 0 = W_{\mathrm{abs}}^{[L]}$. For the step, add \eqref{eq:delta_plus_recursion} and \eqref{eq:delta_minus_recursion}: the mask terms combine via $M^{(l+1,+)} + M^{(l+1,-)} = I$ into
-\begin{equation*}
-	\delta^{(l, +, s)} + \delta^{(l, -, s)}
-	= \bigl( \delta^{(l+1, +, s)} + \delta^{(l+1, -, s)} \bigr) \bigl( \Wsig{l+1}{+} + \Wsig{l+1}{-} \bigr)
-	= \bigl( \delta^{(l+1, +, s)} + \delta^{(l+1, -, s)} \bigr) \abs{\Wl{l+1}},
-\end{equation*}
-since $\Wsig{l+1}{+} + \Wsig{l+1}{-} = \abs{\Wl{l+1}}$ for the entrywise weight split. The induction hypothesis turns the right-hand side into $W_{\mathrm{abs}}^{[l+1]} \abs{\Wl{l+1}} = W_{\mathrm{abs}}^{[l]}$.
+Write $S^{(l)}=\delta^{(l,+,s)}+\delta^{(l,-,s)}$. Adding \eqref{eq:delta_plus_recursion} and \eqref{eq:delta_minus_recursion} gives $S^{(l)}=S^{(l+1)}|\Wl{l+1}|$, since $M^{(l+1,+)}+M^{(l+1,-)}=I$ and $\Wsig{l+1}{+}+\Wsig{l+1}{-}=|\Wl{l+1}|$. Backward induction from $S^{(L)}=\1^\top$ yields $S^{(l)}=W_{\mathrm{abs}}^{[l]}$.
 \end{proof}
 
 Differentiating split correctness recovers the original gradient.
@@ -127,14 +107,10 @@ For every $0 \leq l \leq L$,
 Differentiate the correctness identity \eqref{eq:split_correctness_recall} with respect to $a^{+}$ and $a^{-}$, respectively, and subtract the two resulting identities.
 \end{proof}
 
-Proposition~\ref{prop:sensitivity_mass} fixes the sum of partial sensitivities at input-independent $W_{\mathrm{abs}}^{[l]}$; Corollary~\ref{cor:backward_invariant} recovers the original gradient from stream differences. Define $\delta^{(l,s)}\coloneqq\tfrac{1}{2}\bigl(\delta^{(l,+,s)}-\delta^{(l,-,s)}\bigr)$. Then $\delta^{(l,g)}-\delta^{(l,h)}=\delta^{(l)}$, so regional blindness (Proposition~\ref{prop:gradient_blindness}) means equal combined stream gradients, possibly both zero. Individual partial sensitivities $\delta^{(l,\pm,s)}$ can differ from $\tfrac{1}{2}W_{\mathrm{abs}}^{[l]}$; these deviations record routing at active and inactive \ac{relu} gates. A path of nonzero weights from the feature to the output guarantees at least one positive partial sensitivity per head, but does not guarantee nonzero partial differences, combined gradients, or attribution. For example, with $f(x)=\relu(\relu(x)+\relu(-x)-10)$ and balanced input split, both heads equal $10$ locally near $x=1$, and both combined gradients vanish.
+For the combined gradients \eqref{eq:unified_split_gradients}, Corollary~\ref{cor:backward_invariant} gives $\delta^{(l,g)}-\delta^{(l,h)}=\delta^{(l)}$: regional blindness means equal combined stream gradients, possibly both zero. Partial sensitivities can differ from $\tfrac12W_{\mathrm{abs}}^{[l]}$, recording routing at active and inactive \ac{relu} gates. Proposition~\ref{prop:sensitivity_mass} guarantees a positive partial sensitivity per head for each feature connected to the output by a nonzero-weight path, without guaranteeing nonzero partial differences, combined gradients or attribution. For example, with $f(x)=\relu(\relu(x)+\relu(-x)-10)$ and balanced input split, both heads equal $10$ locally near $x=1$, and both combined gradients vanish.
 
 \begin{remark}[The counterexample, revisited]\label{rem:counterexample_split}
-Split the network \eqref{eq:ig_counterexample} with the balanced input split $\act{0}{\pm} = \pm x/2$. A short computation along Section~\ref{sec:dc_splitting_relu} gives, for $x > 1$,
-\begin{equation*}
-	g(x) = \frac{x}{2} + 1, \qquad h(x) = \frac{x}{2}, \qquad g(x) - h(x) = 1 = f(x),
-\end{equation*}
-so at $x=2$ both stream gradients equal $\tfrac{1}{2}$, while $f'(2)=\tfrac{1}{2}-\tfrac{1}{2}=0$. Thus the heads supply a nonzero signal consistent with $f(2)\neq f(0)$, even where their difference is constant. This example with $x'=0$ does not establish Definition~\ref{def:sensitivity} for arbitrary attribution rules or baselines. The following methods turn the pair-valued signal into scalar maps; the shifted combinations of Section~\ref{sec:split_grad} avoid exact cancellation here and assign positive attribution for every $\alpha<\tfrac{1}{2}$.
+For \eqref{eq:ig_counterexample} with balanced split $\act{0}{\pm}=\pm x/2$, Section~\ref{sec:dc_splitting_relu} gives $g(x)=x/2+1$, $h(x)=x/2$ and $g(x)-h(x)=1=f(x)$ for $x>1$. At $x=2$ both stream gradients equal $\tfrac{1}{2}$, while $f'(2)=\tfrac{1}{2}-\tfrac{1}{2}=0$. Thus the heads supply a nonzero signal consistent with $f(2)\neq f(0)$, even where their difference is constant. This example with $x'=0$ does not establish Definition~\ref{def:sensitivity} for arbitrary attribution rules or baselines. The following methods turn the pair-valued signal into scalar maps; the shifted combinations of Section~\ref{sec:split_grad} avoid exact cancellation here and assign positive attribution for every $\alpha<\tfrac{1}{2}$.
 \end{remark}
 
 Non-negative weights let each neuron only \emph{add} evidence, a structure long associated with interpretability~\parencite{ayinde2018nonnegativity,lee1999nmf}. The split-pair gives an arbitrary pretrained network this structure by doubling its width; the following methods exploit its signal flow.
@@ -161,7 +137,7 @@ Fix shift parameters $\alpha^{(l)} \in [0, \tfrac{1}{2}]$. For $s \in \{g, h\}$ 
 \end{equation}
 \end{definition}
 
-Both signs receive the \emph{same} shift, so the informative differences are preserved layer by layer, while by Proposition~\ref{prop:sensitivity_mass} the subtracted direction is the pattern-independent bulk $\delta_{\mathrm{int}}^{(l, +, s)} + \delta_{\mathrm{int}}^{(l, -, s)} = \bigl[\prod_{i=l+1}^{L}(1-2\alpha^{(i)})\bigr] W_{\mathrm{abs}}^{[l]}$ (the empty product at $l=L$ is $1$); the factor $\tfrac{1}{2}$ in the combined sensitivity $\delta_{\mathrm{shift}}^{(l, s)}$ matches the balanced input split. Unless stated otherwise all $\alpha^{(l)} \equiv \alpha$. For $\alpha = 0$ the shifted sensitivities are the raw ones; for $\alpha = \tfrac{1}{2}$ they collapse onto multiples of the original gradient (Chapter~\ref{ch:decompositions}, Theorem~\ref{thm:closed_formula_shift}), so the informative regime is $0 < \alpha < \tfrac{1}{2}$, where the split signal survives with a controlled, layer-dependent damping.
+The common shift preserves sensitivity differences. By \eqref{eq:claim_bulk}, its intermediate bulk is $\delta_{\mathrm{int}}^{(l,+,s)}+\delta_{\mathrm{int}}^{(l,-,s)}=\bigl[\prod_{i=l+1}^L(1-2\alpha^{(i)})\bigr]W_{\mathrm{abs}}^{[l]}$, with empty product $1$; the factor $\tfrac12$ matches the balanced input split \eqref{eq:unified_split_gradients}. We use $\alpha^{(l)}\equiv\alpha$ unless stated otherwise. Theorem~\ref{thm:closed_formula_shift} gives raw sensitivities at $\alpha=0$, multiples of the original gradient at $\alpha=\tfrac12$, and controlled layer-dependent damping of the split signal for $0<\alpha<\tfrac12$.
 
 \paragraph{The SplitCAM attribution.}\label{subsec:splitcam_definition}
 \begin{definition}[SplitCAM]\label{def:splitcam}
@@ -227,7 +203,7 @@ The parameter-randomization sanity check of \textcite{Adebayo2018sanity} differe
 
 \subsection{SplitGrad}\label{sec:split_grad}
 
-SplitGrad uses stabilized stream gradients directly. For the paired-input streams, fix the balanced embedding $\act{0}{\pm}=\pm x/2$ and write $\tilde{g}^{(l)}(a)\coloneqq g^{(l)}\bigl(\tfrac{a}{2},-\tfrac{a}{2}\bigr)$, and $\tilde{h}^{(l)}$ analogously. The chain rule (Section~\ref{subsec:backward_stabilization}) gives $\partial\tilde{s}^{(l)}/\partial a=\bigl(\delta^{(l,+,s)}-\delta^{(l,-,s)}\bigr)/2$, explaining the factor $\tfrac{1}{2}$ in \eqref{eq:shift_definition}. The combined shifted sensitivities $\delta_{\mathrm{shift}}^{(l,g)},\delta_{\mathrm{shift}}^{(l,h)}$ are stabilized gradients of convex $\tilde{g}^{(l)},\tilde{h}^{(l)}$; their difference recovers the exact original gradient because the common shift cancels sign-wise.
+SplitGrad uses the stabilized combined gradients of \eqref{eq:unified_split_gradients} directly. The balanced embedding $\act{0}{\pm}=\pm x/2$ gives the factor $\tfrac12$ in \eqref{eq:shift_definition}; Theorem~\ref{thm:closed_formula_shift} shows that the difference of the stabilized sensitivities of the two convex heads recovers the exact original gradient.
 
 \begin{definition}[SplitGrad]\label{def:splitgrad}
 For a layer $l$ and stream $s \in \{g, h\}$, the SplitGrad attribution map is the channel mean of the combined shifted sensitivity,
@@ -239,7 +215,7 @@ where $C^{(l)}$ is the number of channels of layer $l$; the default configuratio
 \end{definition}
 
 \paragraph{What SplitGrad measures.}\label{subsec:closed_formulas}
-Chapter~\ref{ch:decompositions} computes these stabilized gradients in closed form: by Theorem~\ref{thm:closed_formula_shift}, the input-level stream gradients have original-gradient terms $\delta/2$ and $-\delta/2$, respectively, where $\delta \coloneqq \partial f/\partial x$, and share a subtracted, geometrically damped sum of \emph{subthreshold probe-gradients} --- one per layer, each carrying the signal routed through the \emph{inactive} neurons whose loss causes the blindness of Proposition~\ref{prop:gradient_blindness}. Both streams contain this probe sum with the same sign, so it cancels in their difference, which reproduces $\delta$ exactly. The probe sum can itself vanish; the decomposition makes subthreshold contributions available without guaranteeing a nonzero attribution for every input. SplitGrad therefore recovers the feature the plain gradient misses: in the counterexample of Remark~\ref{rem:counterexample_split}, $\delta = 0$ while the probe term is non-zero, so the feature is attributed correctly for every $\alpha < \tfrac{1}{2}$. The layer-wise damping factors $\overline{\alpha}_j$ of Theorem~\ref{thm:closed_formula_shift} both counteract the rapid growth of the probe-gradient norms toward the input and let $\alpha$ interpolate between fidelity to the original gradient ($\alpha = \tfrac{1}{2}$) and full exposure of the split information ($\alpha = 0$); the sweep over $\alpha$ in Chapter~\ref{ch:experiments} supports a metric- and configuration-dependent choice. For the two main-text configurations, localization optima occur at $\alpha=0.35$ or $0.4$, while Maximum Sensitivity is lowest at $\alpha=0$; the full ablation is reported in Section~\ref{app:ablation}.
+Theorem~\ref{thm:closed_formula_shift} gives original-gradient terms $\delta/2$ and $-\delta/2$, where $\delta=\partial f/\partial x$, minus a shared, geometrically damped sum of layer-wise \emph{subthreshold probe-gradients} through inactive neurons. The shared sum cancels in the difference, recovering $\delta$. It can itself vanish, so subthreshold contributions need not yield nonzero attribution. In Remark~\ref{rem:counterexample_split}, however, $\delta=0$ and the probe term is nonzero, correctly attributing the feature for every $\alpha<\tfrac12$. The factors $\overline\alpha_j$ counteract probe-gradient growth toward the input, interpolating between full split information ($\alpha=0$) and signed halves of the original gradient ($\alpha=\tfrac12$). The sweep in Chapter~\ref{ch:experiments} supports metric- and configuration-dependent choices: the two main-text configurations have localization optima at $\alpha=0.35$ or $0.4$, and lowest Maximum Sensitivity at $\alpha=0$ (full ablation: Section~\ref{app:ablation}).
 
 The three methods share one pipeline: a stabilized split forward pass caching the original activations, a stabilized backward pass --- relevance-based for SplitLRP (initialized at the class-specific $\act{L}{+}$ and propagated by the $\varepsilon$-rule), sensitivity-based otherwise (the shifted recursions of \eqref{eq:shift_definition}) --- and a method-specific readout, with the resulting map bilinearly upsampled to the input resolution. The network can be split once per model. In the reported implementation, SplitCAM takes approximately 14--29 times as long per image as the corresponding ordinary Grad-CAM and LayerCAM configurations; SplitGrad also takes substantially longer. Their timings are of the same order as the row labeled Guided Grad-CAM, but the released VGG-16 configuration dispatches Guided LayerCAM, limiting identification of that baseline. Section~\ref{app:p1_timing} details this ambiguity and the measurement scope.
 
@@ -250,21 +226,17 @@ To study mechanisms exposed by the \ac{dc} decomposition of pretrained networks 
 
 \paragraph{Architecture and training.}\label{subsec:dcinn_architecture}
 
-An \ac{icnn}~\parencite{Amos2017} has convex, monotone activations and non-negative weights except possibly in its first layer, and represents a convex function (Section~\ref{sec:convex_monotone_foundations}). Monotone activations with all weights non-negative give a monotone function. We view \acp{icnn} as monotone networks composed with the affine transformation of an unconstrained first layer.
+Use the \ac{icnn} and monotone-network definitions from Section~\ref{sec:convex_monotone_foundations}. An \ac{icnn}~\parencite{Amos2017} is a convex, monotone network acting on an unconstrained affine first layer (Definition~\ref{def:icnn}); constraining that layer too gives monotonicity in the original input (Propositions~\ref{prop:icnn_convex} and~\ref{prop:monotone_represents}).
 
 \begin{definition}[DCINN and difference-of-monotone models]\label{def:dcinn}
-Fix a base architecture. A \emph{DCINN} (in short: DIC model) is the function
-\begin{equation*}
-	f_{\mathrm{DIC}} \coloneqq g - h,
-\end{equation*}
-where $g$ and $h$ are two \acp{icnn} of the base architecture with independent parameters, trained \emph{jointly} by standard empirical risk minimization on the difference. The \emph{DM model} is defined analogously with both streams monotone networks. The \emph{inverted-input} variants DICIN and DMIN feed the $h$-stream the complemented input $\1 - x$ (for inputs normalized to $[0,1]^d$) instead of $x$.
+For a fixed base architecture, a \emph{DCINN} (DIC model) is $f_{\mathrm{DIC}}=g-h$, where $g,h$ are independently parameterized \acp{icnn}, trained jointly by empirical risk minimization on their difference. A \emph{DM model} instead uses two monotone networks. The \emph{inverted-input} variants DICIN and DMIN feed $h$ the complement $\1-x$ for inputs in $[0,1]^d$.
 \end{definition}
 
-As in the split-pair, two non-negative streams define the model by their difference. Here they learn convex (respectively monotone) functions directly: the difference structure is a training-time inductive bias. Related convex difference neural networks (CDiNN) address optimal control~\parencite{Sankaranarayanan2021CDINN}, with recurrent extensions for safety-critical model predictive control~\parencite{Chen2025_RCDiNN}; we study their interpretability. A monotone $h$-stream accumulates evidence from input mass, so feeding it $\1-x$ lets it respond to missing mass.
+The two non-negative streams learn convex (respectively monotone) functions, making their difference a training-time inductive bias. Related CDiNN architectures address optimal control~\parencite{Sankaranarayanan2021CDINN}, with recurrent extensions for safety-critical model predictive control~\parencite{Chen2025_RCDiNN}; we study interpretability. Feeding a monotone $h$-stream $\1-x$ makes it accumulate evidence from missing input mass.
 
 Three implementation choices matter in practice.
 \begin{itemize}
-	\item \emph{Activations.} Both streams use rank-2 Maxout units~\parencite{Goodfellow2013Maxout}, which are convex and monotone as required, and which consistently outperformed \ac{relu} streams in the difference setting. This aligns the trained models exactly with the hypothesis class of Section~\ref{sec:dc_splitting_relu}: the split-streams obtained there \emph{are} rank-2 Maxout networks with non-negative weights, so training DIC and DM models searches the very class into which the splitting maps.
+	\item \emph{Activations.} Both streams use convex, monotone rank-2 Maxout units~\parencite{Goodfellow2013Maxout}, which consistently outperformed \ac{relu} streams in the difference setting. Their constrained layers use the same non-negative-weight Maxout building blocks as the split-stream construction in Section~\ref{sec:dc_splitting_relu}.
 	\item \emph{Non-negativity.} Constrained weights are parameterized as $p(\tilde{W})$ with free parameters $\tilde{W}$ and a positivity transform $p$; among softplus, exponential and squaring, $p = \relu$ with absolute-value-of-Gaussian initialization gave the best test accuracy. The transform is also applied to biases and to the scale and shift parameters of batch-normalization layers.
 	\item \emph{Regularization.} Since non-negative weights preclude cancellation, activations can grow quickly; a small initialization scale and a weight decay of $10^{-3}$ keep the streams stable during training.
 \end{itemize}
@@ -273,12 +245,7 @@ The empirical study uses two MNIST base architectures: \texttt{cnn\_maxout}, a \
 
 \paragraph{Stream sensitivities and candidate counterfactual features.}\label{subsec:counterfactual_features}
 
-The by-design route exposes the \emph{plain input gradients} of the trained streams without shifting, relevance rules, or probe networks. For an inverted-input DIC class logit $f(x)=g(x)-h(\1-x)$, the two gradients describe complementary local sensitivities:
-\begin{itemize}
-	\item the $g$-stream gradient $\nabla g(x)$ describes the sensitivity of the contribution $g(x)$ to changes in the input;
-	\item the $h$-stream gradient $(\nabla h)(\1-x)$ describes the sensitivity of the contribution $-h(\1-x)$ to increasing the original input: the input complement and the subtraction cancel the two minus signs in the chain rule.
-\end{itemize}
-At differentiable inputs, the complete model gradient is therefore
+The directly trained streams expose \emph{plain input gradients} without shifting, relevance rules or probe networks. For an inverted-input DIC class logit $f(x)=g(x)-h(\1-x)$, $\nabla g(x)$ measures the sensitivity of $g(x)$, while $(\nabla h)(\1-x)$ measures that of $-h(\1-x)$ to increases in the original input: complement and subtraction cancel the two chain-rule signs. At differentiable inputs, the complete model gradient is
 \begin{equation*}
 	\nabla f(x)=\nabla g(x)+(\nabla h)(\1-x).
 \end{equation*}
@@ -378,14 +345,14 @@ The first affine layer of an \ac{icnn} is unconstrained, so convexity of the str
 		\end{minipage}
 	\end{minipage}
 	}%
-\caption[Second example of inverted-input DIC stream gradients]{Second example of stream gradients of the inverted-input DIC model (\texttt{cnn\_maxout} DICIN) on a correctly classified MNIST test digit ``3'', thresholded and overlaid per class logit. The $g$-stream gradient (red) highlights sensitivities on present strokes, while the $h$-stream gradient (blue) highlights sensitivities at candidate missing-stroke locations. These stream-local maps do not by themselves establish the effect of adding pixels on the complete model. Left: the original digit.}
+\caption[Second example of inverted-input DIC stream gradients]{Second correctly classified MNIST test ``3'', using the model, per-class thresholded overlays and color convention of Figure~\ref{fig:mnist_split_ic_saliency}. Left: input. These stream-local maps do not by themselves establish the effect of adding pixels on the complete model.}
 	\label{fig:mnist_split_ic_saliency_second}
 \end{figure}
 
 Figure~\ref{fig:mnist_split_ic_saliency} overlays both gradients for each class logit of a test ``3''. The $g$-gradient best traces strokes for the ground-truth logit; for competing ``6'', ``8'' and ``9'', $h$-gradients concentrate \emph{between the arches}, where added pixels would geometrically close loops. A second correctly classified ``3'' (Figure~\ref{fig:mnist_split_ic_saliency_second}) shows the same qualitative pattern. The single \texttt{cnn\_maxout} IC model's gradients are mostly positive on strokes and negative on background, with less class-dependent directional variation. These examples suggest a role for the difference structure without establishing general disentanglement.
 
 \paragraph{Qualitative comparison with a single input-convex model.}
-Figure~\ref{fig:mnist_ic_saliency} reproduces the source paper's ten-class input-gradient comparison for the single \texttt{cnn\_maxout} IC model: positive local logit sensitivities mostly follow strokes, negative sensitivities the background, with little class-dependent directional variation. The DICIN maps (Figures~\ref{fig:mnist_split_ic_saliency},~\ref{fig:mnist_split_ic_saliency_second}) instead show class-dependent stream patterns, with $h$ highlighting candidate missing strokes. This motivates a factual/counterfactual reading, without establishing finite-intervention effects or separation across all inputs and models.
+Figure~\ref{fig:mnist_ic_saliency} reproduces the source paper's ten-class input-gradient comparison for the single \texttt{cnn\_maxout} IC model, showing the stroke/background sign pattern described above. Together with the class-dependent DICIN maps (Figures~\ref{fig:mnist_split_ic_saliency},~\ref{fig:mnist_split_ic_saliency_second}), it motivates a factual/counterfactual reading; finite-intervention effects and separation across all inputs and models require further tests.
 
 \begin{figure}[t]
 \QualitativeImageContent{
@@ -484,12 +451,12 @@ Figure~\ref{fig:mnist_ic_saliency} reproduces the source paper's ten-class input
 Architectural constraints can reduce expressivity~\parencite{Sill1997_MonotonicNetworks,Liu2020CertifiedMonotone}, but for the difference-of-two construction the accuracy cost is small on the convolutional base model and even negative on the \ac{mlp}, where every difference-of-two variant outperforms the unconstrained baseline; the full accuracy table across ten seeds and all eight variants is reported in Chapter~\ref{ch:experiments}.
 
 \begin{remark}[Post-hoc and by-design, reconciled]\label{rem:posthoc_bydesign}
-Both routes test whether difference-of-monotone representations make sensitivities more legible. The MNIST study shows that directly trained differences of constrained networks achieve competitive accuracy and exhibit class-dependent stream sensitivities on present and candidate missing strokes. These qualitative examples establish neither faithful counterfactuals nor general explanatory-role separation for the trained models or pretrained VGG-16/ResNet-18 split-pairs. Complete-model interventions and larger-architecture tests remain open (Chapter~\ref{ch:conclusion}).
+The MNIST study probes the same opposing-stream mechanism as post hoc decomposition: directly trained differences reach competitive accuracy and show class-dependent sensitivities on present and candidate missing strokes. Establishing faithful counterfactuals or general explanatory-role separation for these models and pretrained VGG-16/ResNet-18 split-pairs requires complete-model interventions and larger-architecture tests (Chapter~\ref{ch:conclusion}).
 \end{remark}
 
 \section{Game-Based Attribution: Modes and Technicalities}\label{sec:game_based_attribution}
 
-Chapter~\ref{ch:game_theory} offers a complementary route to the fixed \ac{dc} readouts: the per-neuron difference of the players' discounted occupation measures under equilibrium trajectories defines attribution. It recovers gradients in the \ac{sg} and the full $\alpha\beta$-\ac{lrp} family in the \ac{rg} at $\tau=1$ (Theorem~\ref{thm:lrp_recovery}). With these equivalences stated there and proved in the companion supplement, we turn to \emph{modes} that deform the games and input-side \emph{technicalities} that improve their maps.
+The game route attributes by the per-neuron difference of players' discounted equilibrium occupation measures. It recovers gradients in the \ac{sg} (Theorem~\ref{ptnb:thm:gradient}) and the full $\alpha\beta$-\ac{lrp} family in the \ac{rg} at $\tau=1$ (Theorem~\ref{thm:lrp_recovery}). Here we collect tunable \emph{modes} and input-side \emph{technicalities}.
 
 \subsection{Attribution Modes}\label{subsec:attribution_modes}
 

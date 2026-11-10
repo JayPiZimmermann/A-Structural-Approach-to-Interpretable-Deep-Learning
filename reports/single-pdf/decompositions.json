@@ -1,0 +1,385 @@
+{
+  "scope": "Single-PDF integration; direct edits only to tex/chapters/03_decompositions.tex. No build or commit by this agent.",
+  "baseline_commit": "b43bc24f3aa0cf715979ce30024d0ee4434d6fe5",
+  "baseline_sha256": "b8b1bfa7fb367f1ed62924647b5a80e8ba41b6edee80c7fe04a38a965841085f",
+  "final_sha256": "b859752756c88ef99e887ac2f9e83c11dd8426cf1e9237f65875afc9d3253e1f",
+  "texcount": {
+    "command": "texcount -utf8 -brief -sum=1,1,1,0,0,0,0",
+    "before": 7270,
+    "after": 6216,
+    "reduction": 1054,
+    "percent": 14.5,
+    "note": "TeXcount includes the seven new AliasLabel macro arguments in the after count."
+  },
+  "source_lines": {
+    "before": 1147,
+    "after": 1012
+  },
+  "display_blocks": {
+    "before": 88,
+    "after": 69,
+    "note": "Count outer equation/align/gather/multline environments, excluding nested aligned/gathered. Formula equivalence reviewed independently."
+  },
+  "preservation_checks": {
+    "labels": {
+      "before": 132,
+      "after": 132,
+      "lost": [],
+      "added": [],
+      "original_order_retained": true
+    },
+    "Lean_badges": {
+      "before": 32,
+      "after": 33,
+      "lost": [],
+      "added": [
+        "ptnb:lem:parity-path"
+      ],
+      "original_order_retained": true
+    },
+    "headings": {
+      "before": 26,
+      "after": 26,
+      "lost": [],
+      "added": [],
+      "original_order_retained": true
+    },
+    "citation_keys": {
+      "before": 17,
+      "after": 17,
+      "lost": [],
+      "added": [],
+      "original_order_retained": true
+    }
+  },
+  "aliases": {
+    "ptnb:eq:split-pos": "eq:split_pos",
+    "ptnb:eq:split-neg": "eq:split_neg",
+    "ptnb:eq:stop-relu": "eq:fstop_def",
+    "ptnb:eq:parity-plus": "eq:parity_path_sums",
+    "ptnb:eq:parity-minus": "eq:parity_path_sums",
+    "ptnb:lem:parity-path": "lem:parity_path",
+    "ptnb:eq:softplus-decomp": "eq:fsoft_def"
+  },
+  "retained_canonical_items": [
+    "All scalar activation profiles and closed-form pairs (ReLU, Softplus, sigmoid, exact Gaussian GELU, Swish), other activation examples and their hypotheses.",
+    "General convex/monotone lift, finite global curvature necessity versus bounded-domain construction, componentwise-convex input pullback and ungated affine output.",
+    "Mixing endpoint and counterexample; exact stopping support, inactive-neuron mass distinction, gate ties, all parity cases including zero weights and bias stubs.",
+    "Softplus entropy allocation, off-kink zero-temperature limit, negative-stream derivative threshold, Gaussian/probit conjugate versus GELU distinction and singular-curvature caveat.",
+    "eq:local_sensitivities, eq:w_abs, eq:split_layer_jacobians, eq:unified_split_gradients, eq:claim_bulk, thm:closed_formula_shift remain canonical for cross-chapter references.",
+    "Shift versus rescaling/correction distinction, detachment, valid-domain and strict-gate scopes, numerical-error measurement requirements, alpha endpoints and half-half factor.",
+    "CNN/chunk support, residuals/pooling/batchnorm/dropout conventions, fixed inference versus training distinctions and limits of monotonicity/convexity after recentering."
+  ],
+  "proof_count": {
+    "before": 30,
+    "after": 30,
+    "changed": 21
+  },
+  "exact_proof_changes": [
+    {
+      "proof_index": 1,
+      "result_label": "prop:validity_recovery",
+      "before": "\\begin{proof}\nSubtracting~\\eqref{eq:split_neg} from~\\eqref{eq:split_pos} and regrouping by predecessor $j$,\n\\begin{equation*}\n\t\\preact{l}{+}_i - \\preact{l}{-}_i\n\t= b_i^{(l,+)} - b_i^{(l,-)} + \\sum_j \\bigl( \\Wsig{l}{+}_{ij} - \\Wsig{l}{-}_{ij} \\bigr) \\bigl( \\act{l-1}{+}_j - \\act{l-1}{-}_j \\bigr)\n\t= b_i^{(l)} + \\sum_j \\Wl{l}_{ij}\\, \\actl{l-1}_j\n\t= \\preactl{l}_i,\n\\end{equation*}\nThe second equality uses $\\Wl{l} = \\Wsig{l}{+} - \\Wsig{l}{-}$, $b^{(l)} = b^{(l,+)} - b^{(l,-)}$, and validity at layer $l-1$, proving~\\eqref{eq:preactivation_difference}. At layer $L$, validity gives $\\act{L}{+} - \\act{L}{-} = \\varrho_L\\bigl(\\preactl{L}\\bigr) = \\preactl{L} = f(x)$, proving~\\eqref{eq:output_recovery}.\n\\end{proof}",
+      "after": "\\begin{proof}\nSubtracting~\\eqref{eq:split_neg} from~\\eqref{eq:split_pos} gives\n$\\preact{l}{+}-\\preact{l}{-}=\\Wl{l}(\\act{l-1}{+}-\\act{l-1}{-})+b^{(l)}=\\Wl{l}\\actl{l-1}+b^{(l)}=\\preactl{l}$.\nValidity at the ungated output then gives $\\act{L}{+}-\\act{L}{-}=\\preactl{L}=f(x)$.\n\\end{proof}"
+    },
+    {
+      "proof_index": 2,
+      "result_label": "prop:dc_profile_lift",
+      "before": "\\begin{proof}\nAffine precomposition and affine addition preserve convexity; restriction to $y=0$ gives the converse. Increasing $x$ gives the lower bound in~\\eqref{eq:dc_profile_increments}; increasing $y$ by $v-u$ changes the argument from $v$ to $u$, giving the upper bound. These inequalities also imply coordinatewise monotonicity. Difference quotients and the mean value theorem give the derivative criterion. The common $Ly$ cancels in $F_+-F_-$. On the non-negative quadrant, monotonicity gives $F_\\pm(x,y)\\ge F_\\pm(0,0)$; evaluation at the origin proves necessity.\n\\end{proof}",
+      "after": "\\begin{proof}\nAffine precomposition and affine addition preserve convexity; restriction to $y=0$ proves the converse. Increasing $x$ gives the lower increment bound; increasing $y$ gives the upper bound. These conditions also suffice. Difference quotients and the mean value theorem give the derivative criterion. The common $Ly$ cancels, and monotonicity makes the origin values the minima on the non-negative quadrant.\n\\end{proof}"
+    },
+    {
+      "proof_index": 3,
+      "result_label": "thm:general_dc_network",
+      "before": "\\begin{proof}\nThe initial doubled coordinates are affine and non-decreasing. Non-negative affine combinations preserve convexity and coordinatewise monotonicity, as does composition with each convex, coordinatewise non-decreasing pair component. The final affine layer retains both properties. Induction proves the structural assertions for the network and every tail.\n\nSubtracting each affine pair recovers the original affine map (Proposition~\\ref{prop:validity_recovery}); each hidden pair gives $F_+(z^+,z^-)-F_-(z^+,z^-)=\\varrho(z^+-z^-)$. The final identity pair gives the ungated pre-activation difference. Induction proves~\\eqref{eq:general_network_dc_recovery}, including negative logits. Origin normalization and monotonicity preserve non-negativity at hidden layers, and canonical affine maps preserve it throughout. Composing a convex non-decreasing function with convex components proves the convex input-split assertion \\parencite{Amos2017}.\n\\end{proof}",
+      "after": "\\begin{proof}\nNon-negative affine combinations and convex coordinatewise non-decreasing activation components preserve convexity and monotonicity; they also preserve non-negativity on the quadrant by origin normalization. Induction from the doubled input coordinates proves these properties for every layer and tail. Applying the same composition rule to a convex input split proves convexity of its pullbacks \\parencite{Amos2017}.\n\nProposition~\\ref{prop:validity_recovery} recovers each affine difference, and~\\eqref{eq:general_dc_pair} recovers each hidden activation. The final identity pair preserves the ungated difference, proving~\\eqref{eq:general_network_dc_recovery}, including negative logits.\n\\end{proof}"
+    },
+    {
+      "proof_index": 5,
+      "result_label": "cor:local_curvature_split",
+      "before": "\\begin{proof}\nExtend $f$ by its tangent affine functions at $a$ and $b$. The extension is continuously differentiable, its derivative is locally absolutely continuous, and its curvature vanishes outside $[a,b]$. Apply Theorem~\\ref{thm:absolute_curvature_split} to this extension.\n\\end{proof}",
+      "after": "\\begin{proof}\nExtend $f$ by its endpoint tangents. The extension is $C^1$, has locally absolutely continuous derivative, and curvature supported in $[a,b]$. Apply Theorem~\\ref{thm:absolute_curvature_split}.\n\\end{proof}"
+    },
+    {
+      "proof_index": 6,
+      "result_label": "prop:stream_properties",
+      "before": "\\begin{proof}\nApply Theorem~\\ref{thm:general_dc_network} to each tail network using the pair $(\\max\\{a,b\\},b)$ from~\\eqref{eq:splitting_identity}. The final pair is the identity, so the same argument includes the ungated affine head.\n\\end{proof}",
+      "after": "\\begin{proof}\nApply Theorem~\\ref{thm:general_dc_network} to each tail, with the ReLU pair~\\eqref{eq:splitting_identity} and identity output pair.\n\\end{proof}"
+    },
+    {
+      "proof_index": 7,
+      "result_label": "thm:split_correct",
+      "before": "\\begin{proof}\nApply Theorem~\\ref{thm:general_dc_network} to each tail. Hidden-pair subtraction gives $\\relu(z^+-z^-)$ by~\\eqref{eq:splitting_identity}, and final-pair subtraction gives $z^+-z^-$ since $\\varrho_L=\\mathrm{id}$. The identity tail at $l=L$ and recursion~\\eqref{eq:stream_recursion} give~\\eqref{eq:split_correctness} at every layer.\n\\end{proof}",
+      "after": "\\begin{proof}\nThis is the recovery assertion of Theorem~\\ref{thm:general_dc_network} for each ReLU tail, including the identity tail at $l=L$.\n\\end{proof}"
+    },
+    {
+      "proof_index": 10,
+      "result_label": "cor:smooth_dc_networks",
+      "before": "\\begin{proof}\nThe activation pairs have the properties required by Theorem~\\ref{thm:general_dc_network}, by Corollaries~\\ref{cor:closed_form_dc_activations} and~\\ref{cor:modern_activations}; apply that theorem with the identity pair at the output.\n\\end{proof}",
+      "after": "\\begin{proof}\nApply Theorem~\\ref{thm:general_dc_network} with the activation pairs from Corollaries~\\ref{cor:closed_form_dc_activations} and~\\ref{cor:modern_activations}, and the identity output pair.\n\\end{proof}"
+    },
+    {
+      "proof_index": 11,
+      "result_label": "prop:multivariate_dc_lift",
+      "before": "\\begin{proof}\nAffine precomposition preserves convexity; restriction to $y=0$ gives the converse. The derivatives $\\partial_{x_j}T=\\partial_jC$ and $\\partial_{y_j}T=\\ell_j-\\partial_jC$ give the monotonicity criterion. The common affine term cancels, and monotonicity bounds values on the non-negative orthant by their origin values.\n\\end{proof}",
+      "after": "\\begin{proof}\nUse the scalar proof of Proposition~\\ref{prop:dc_profile_lift}, replacing its coordinate derivatives by $\\partial_{x_j}T=\\partial_jC$ and $\\partial_{y_j}T=\\ell_j-\\partial_jC$. Restriction to $y=0$, cancellation, and the origin-minimum argument are unchanged.\n\\end{proof}"
+    },
+    {
+      "proof_index": 13,
+      "result_label": "thm:smooth_dc_split",
+      "before": "\\begin{proof}\n\\emph{Well-definedness.}\nFor $x \\le y$ we have $\\abs{f'(y) - f'(x)} \\le \\int_x^y \\abs{f''(u)} \\diff u$, which tends to $0$ as $x, y \\to -\\infty$ because $f'' \\in L^1(\\RR)$; by the Cauchy criterion the limit $s_-$ exists. Consequently $\\abs{f'(x)} \\le \\abs{s_-} + \\norm{f''}_{L^1(\\RR)}$ for all $x$, so the boundedness of $f'$ is automatic and need not be assumed. Since $0 \\le P, N \\le \\abs{f''}$, both $P$ and $N$ lie in $L^1(\\RR)$, the inner integrals in \\eqref{eq:curvature_antiderivatives} are well-defined, non-decreasing in $t$, and bounded by $\\norm{P}_{L^1(\\RR)}$ and $\\norm{N}_{L^1(\\RR)}$ respectively. Hence $C_1, C_2$ are well-defined with locally absolutely continuous derivatives\n\\begin{equation*}\n\tC_1'(x) = s_- + \\int_{-\\infty}^{x} P(u) \\,\\diff u,\n\t\\qquad\n\tC_2'(x) = \\int_{-\\infty}^{x} N(u) \\,\\diff u,\n\\end{equation*}\nand $\\abs{C_1'} \\le \\abs{s_-} + \\norm{P}_{L^1(\\RR)}$, $\\abs{C_2'} \\le \\norm{N}_{L^1(\\RR)}$, so $M < \\infty$.\n\n\\emph{Exactness.}\nFor almost every $x$,\n\\begin{equation*}\n\tC_1'(x) - C_2'(x) = s_- + \\int_{-\\infty}^{x} \\bigl( P(u) - N(u) \\bigr) \\diff u = s_- + \\int_{-\\infty}^{x} f''(u) \\,\\diff u = f'(x),\n\\end{equation*}\nIntegrating from $0$, with $C_1(0)-C_2(0)=f(0)$, gives $C_1-C_2=f$ on $\\RR$. The common tilt cancels, proving~\\eqref{eq:smooth_splitting_identity} at $x=a-b$.\n\n\\emph{Convexity.}\nSince $P,N\\ge0$, their (shifted) antiderivatives $C_1',C_2'$ are non-decreasing, so $C_1,C_2$ are convex. Linear precomposition by $(a,b)\\mapsto a-b$ and addition of $M(a+b)$ preserve convexity, giving convex $g,h$ on $\\RR^2$. When $f''$ is continuous, the Hessian of $C_1(a-b)$ has eigenvalues $0$ and $2C_1''(a-b)=2P(a-b)\\ge0$.\n\n\\emph{Monotonicity.}\nBy the choice of $M$,\n\\begin{equation*}\n\t\\frac{\\partial g}{\\partial a}(a,b) = C_1'(a-b) + M \\ge 0,\n\t\\qquad\n\t\\frac{\\partial g}{\\partial b}(a,b) = -C_1'(a-b) + M \\ge 0,\n\\end{equation*}\nand analogously for $h$ with $C_2'$ in place of $C_1'$. Hence $g$ and $h$ are non-decreasing in each argument.\n\\end{proof}",
+      "after": "\\begin{proof}\nTheorem~\\ref{thm:absolute_curvature_split} establishes $s_-$, bounded $f'$, and $P,N\\in L^1(\\RR)$. Differentiating~\\eqref{eq:curvature_antiderivatives} gives locally absolutely continuous, bounded, non-decreasing derivatives\n\\[\n    C_1'(x)=s_-+\\int_{-\\infty}^x P(u)\\,\\diff u,\n    \\qquad C_2'(x)=\\int_{-\\infty}^x N(u)\\,\\diff u.\n\\]\nThus $C_1,C_2$ are convex and $M<\\infty$. Since $C_1'-C_2'=f'$ and $C_1(0)-C_2(0)=f(0)$, integration gives $C_1-C_2=f$. Affine precomposition and the common tilt preserve convexity and the difference; their coordinate derivatives $M\\pm C_j'(a-b)$ are non-negative by definition of $M$. If $f''$ is continuous, the Hessian of $C_1(a-b)$ equivalently has eigenvalues $0$ and $2P(a-b)\\ge0$.\n\\end{proof}"
+    },
+    {
+      "proof_index": 15,
+      "result_label": "thm:mixing_recovery",
+      "before": "\\begin{proof}\nInduct on $l$.\n\n\\emph{Base case $l = 0$.} By the input convention~\\eqref{eq:input_split_convention}, $a_{\\mathrm{mix},k}^{(0,+,\\eta)} - a_{\\mathrm{mix},k}^{(0,-,\\eta)} = x_k^+ - x_k^- = x_k = \\actl{0}_k$.\n\n\\emph{Inductive step.} Assuming~\\eqref{eq:mixing_recovery} at $l-1$, Proposition~\\ref{prop:validity_recovery} gives $\\preact{l}{+}_i - \\preact{l}{-}_i = \\preactl{l}_i$, proving recovery at the affine output. At a hidden layer, write $u = \\preact{l}{+}_i$, $v = \\preact{l}{-}_i$. Definition~\\eqref{eq:fmix_def} gives\n\\begin{equation*}\n\ta_{\\mathrm{mix},i}^{(l,+,\\eta)} - a_{\\mathrm{mix},i}^{(l,-,\\eta)}\n\t= \\eta \\bigl( \\max\\{u,v\\} - v \\bigr) + (1-\\eta) \\bigl( u - \\min\\{u,v\\} \\bigr)\n\t= \\relu(u - v)\n\t= \\relu\\bigl(\\preactl{l}_i\\bigr)\n\t= \\actl{l}_i,\n\\end{equation*}\nusing the identities $\\max\\{u,v\\} - v = \\max\\{u - v, 0\\}$ and $u - \\min\\{u,v\\} = \\max\\{u - v, 0\\}$.\n\\end{proof}",
+      "after": "\\begin{proof}\nFor any $u,v$, both $\\max\\{u,v\\}-v$ and $u-\\min\\{u,v\\}$ equal $\\relu(u-v)$, so their convex combination in~\\eqref{eq:fmix_def} does too. Starting from~\\eqref{eq:input_split_convention}, Proposition~\\ref{prop:validity_recovery} propagates this identity inductively through the hidden layers and the final identity pair.\n\\end{proof}"
+    },
+    {
+      "proof_index": 18,
+      "result_label": "thm:stopping_validity",
+      "before": "\\begin{proof}\nInduction on $l$. The base case $l = 0$ is the input convention, and the final affine step follows directly from Proposition~\\ref{prop:validity_recovery}. For a hidden-layer step, assume~\\eqref{eq:stopping_recovery} at $l-1$; Proposition~\\ref{prop:validity_recovery} gives $\\preact{l}{+}_i - \\preact{l}{-}_i = \\preactl{l}_i$. Since both components of~\\eqref{eq:fstop_def} carry the \\emph{same} gate $\\1\\bigl[\\preactl{l}_i > 0\\bigr]$,\n\\begin{equation*}\n\ta_{\\mathrm{stop},i}^{(l,+)} - a_{\\mathrm{stop},i}^{(l,-)}\n\t= \\1\\bigl[\\preactl{l}_i > 0\\bigr] \\bigl( \\preact{l}{+}_i - \\preact{l}{-}_i \\bigr)\n\t= \\1\\bigl[\\preactl{l}_i > 0\\bigr]\\, \\preactl{l}_i\n\t= \\relu\\bigl(\\preactl{l}_i\\bigr)\n\t= \\actl{l}_i. \\qedhere\n\\end{equation*}\n\\end{proof}",
+      "after": "\\begin{proof}\nThe shared gate in~\\eqref{eq:fstop_def} gives the local difference $\\1[z^+-z^->0](z^+-z^-)=\\relu(z^+-z^-)$. Proposition~\\ref{prop:validity_recovery} propagates this identity from~\\eqref{eq:input_split_convention} through every hidden layer and the final affine readout.\n\\end{proof}"
+    },
+    {
+      "proof_index": 19,
+      "result_label": "lem:stop_monotone",
+      "before": "\\begin{proof}\nInduction on $l$. At $l = 0$, $a_{\\mathrm{stop},k}^{(0,\\pm)} = x_k^\\pm$ is a coordinate of $(x^+, x^-)$. At $l \\ge 1$, the map \\eqref{eq:split_pos}--\\eqref{eq:split_neg} has $\\Wsig{l}{\\pm}, b^{(l,\\pm)} \\ge 0$, so $\\preact{l}{\\pm}_i$ is non-negative-linear in the layer-$(l-1)$ activations and, by the hypothesis, in $(x^+, x^-)$. On the linear region the gate $\\1\\bigl[\\preactl{l}_i > 0\\bigr]$ is constant, so $a_{\\mathrm{stop},i}^{(l,\\pm)} = \\1\\bigl[\\preactl{l}_i > 0\\bigr]\\, \\preact{l}{\\pm}_i$ stays non-negative-linear.\n\\end{proof}",
+      "after": "\\begin{proof}\nThe input pair consists of coordinate functions. On a fixed linear region, every hidden gate is a constant $0$ or $1$; composing these gates with the canonical affine maps~\\eqref{eq:split_pos}--\\eqref{eq:split_neg}, whose weights and biases are non-negative, preserves non-negative affine coefficients through the final ungated readout.\n\\end{proof}"
+    },
+    {
+      "proof_index": 20,
+      "result_label": "lem:parity_path",
+      "before": "\\begin{proof}\nInduction on $l$.\n\n\\emph{Base case $l = 1$.} By~\\eqref{eq:split_pos}, $\\preact{1}{+}_i = \\sum_k \\bigl( \\Wsig{1}{+}_{ik} x_k^+ + \\Wsig{1}{-}_{ik} x_k^- \\bigr)$. Paths with $P_1 = i$, $P_0 = k$ biject with predecessors $k$, each with $\\abs{w}(P) = \\bigl|\\Wl{1}_{ik}\\bigr|$, $G_{<1}(P) = 1$, and $\\operatorname{sgn}(P) = +$ iff $\\Wl{1}_{ik} \\ge 0$. If $\\Wl{1}_{ik} > 0$, only $\\Wsig{1}{+}_{ik}$ contributes, giving $\\abs{w}(P)\\, x_k^+$ with $\\operatorname{sgn}(P) = +$; if $\\Wl{1}_{ik} < 0$, only $\\Wsig{1}{-}_{ik}$ contributes, giving $\\abs{w}(P)\\, x_k^-$ with $\\operatorname{sgn}(P) = -$. A zero-weight edge has zero contribution regardless of its parity label. Both nonzero cases match~\\eqref{eq:parity_path_sums}; $\\preact{1}{-}_i$ is identical with the parity swapped.\n\n\\emph{Inductive step $l \\ge 2$.} The recursion~\\eqref{eq:split_pos} takes stopping activations from layer $l-1$ as inputs,\n\\begin{equation*}\n\t\\preact{l}{+}_i = \\sum_j \\Bigl( \\Wsig{l}{+}_{ij}\\, a_{\\mathrm{stop},j}^{(l-1,+)} + \\Wsig{l}{-}_{ij}\\, a_{\\mathrm{stop},j}^{(l-1,-)} \\Bigr),\n\t\\qquad\n\ta_{\\mathrm{stop},j}^{(l-1,\\pm)} = \\1\\bigl[\\preactl{l-1}_j > 0\\bigr]\\, \\preact{l-1}{\\pm}_j.\n\\end{equation*}\nEach path $P$ through predecessor $j$ uniquely prepends $i$ to a sub-path $P'$. The edge multiplies its absolute weight by $\\bigl|\\Wl{l}_{ij}\\bigr|$; the gate at $j$ extends $G_{<l-1}(P')$ to $G_{\\le l-1}(P')=G_{<l}(P)$. If $\\Wl{l}_{ij}>0$, only $\\Wsig{l}{+}_{ij}\\,a_{\\mathrm{stop},j}^{(l-1,+)}$ contributes to $\\preact{l}{+}_i$, preserving $\\operatorname{sgn}(P)=\\operatorname{sgn}(P')$. The induction hypothesis therefore gives the terms of~\\eqref{eq:parity_path_sums} carrying $x_{P_0}^{\\operatorname{sgn}(P)}$. If $\\Wl{l}_{ij}<0$, only $\\Wsig{l}{-}_{ij}\\,a_{\\mathrm{stop},j}^{(l-1,-)}$ contributes and parity flips; the hypothesis for $\\preact{l-1}{-}_j$ gives the same required terms through $x_{P'_0}^{\\operatorname{sgn}(P')'}=x_{P_0}^{\\operatorname{sgn}(P)}$. Zero-weight edges contribute nothing. Summing over $j$ proves the positive-stream formula; swapping streams proves the negative one. Biases add stub paths terminating at intermediate layers with the same parity rule.\n\\end{proof}",
+      "after": "\\begin{proof}\nExpand~\\eqref{eq:split_pos}--\\eqref{eq:split_neg} recursively, substituting $a_{\\mathrm{stop},j}^{(t,\\pm)}=\\1[\\preactl{t}_j>0]\\preact{t}{\\pm}_j$ at each hidden predecessor. Each term selects a unique path $P$ and accumulates the factor $G_{<l}(P)\\abs{w}(P)$; for $l=1$, the gate product is empty. Positive edges preserve stream membership, negative edges swap it, and zero-weight edges contribute zero. Thus the positive output stream takes $x_{P_0}^{\\operatorname{sgn}(P)}$, and the negative stream takes the opposite input sign, proving~\\eqref{eq:parity_path_sums}. Biases add stub paths ending at intermediate layers with the same parity rule.\n\\end{proof}"
+    },
+    {
+      "proof_index": 21,
+      "result_label": "thm:freg_validity",
+      "before": "\\begin{proof}\n\\emph{Recovery.} Induction on $l$. The base case is the input convention. Assume~\\eqref{eq:freg_recovery} at $l-1$ for the network with activation $\\Omega^*$; Proposition~\\ref{prop:validity_recovery}---whose proof uses only the difference identity---gives $\\Delta_i \\coloneqq \\preact{l}{+}_i - \\preact{l}{-}_i = \\preactl{l}_i$. Subtracting the components of~\\eqref{eq:freg_def},\n\\begin{equation*}\n\t\\act{l}{+}_i - \\act{l}{-}_i\n\t= \\pi_\\Omega(\\Delta_i)\\, \\bigl( \\preact{l}{+}_i - \\preact{l}{-}_i \\bigr) - \\Omega\\bigl(\\pi_\\Omega(\\Delta_i)\\bigr)\n\t= \\pi_\\Omega(\\Delta_i)\\, \\Delta_i - \\Omega\\bigl(\\pi_\\Omega(\\Delta_i)\\bigr)\n\t= \\Omega^*\\bigl(\\preactl{l}_i\\bigr),\n\\end{equation*}\nwhere the last step evaluates~\\eqref{eq:regularized_gate} at its maximizer (Fenchel--Young).\n\n\\emph{Properties of $\\Omega^*$.} As a supremum of affine functions $\\Delta \\mapsto \\pi \\Delta - \\Omega(\\pi)$ with slopes $\\pi \\in [0,1]$, $\\Omega^*$ is convex with subgradients in $[0,1]$, hence non-decreasing and $1$-Lipschitz. At a point of differentiability the subdifferential is $\\{(\\Omega^*)'(\\Delta)\\}$, and by Fenchel--Young every maximizer $\\pi_\\Omega(\\Delta)$ is a subgradient; thus $\\pi_\\Omega(\\Delta) = (\\Omega^*)'(\\Delta)$.\n\\end{proof}",
+      "after": "\\begin{proof}\n\\emph{Recovery.} At a hidden neuron, subtraction in~\\eqref{eq:freg_def} gives $\\pi_\\Omega(\\Delta)\\Delta-\\Omega(\\pi_\\Omega(\\Delta))=\\Omega^*(\\Delta)$ by optimality in~\\eqref{eq:regularized_gate} (Fenchel--Young). Proposition~\\ref{prop:validity_recovery} propagates this difference identity from~\\eqref{eq:input_split_convention} through the hidden layers and final affine readout.\n\n\\emph{Properties.} The supremum of affine functions with slopes $\\pi\\in[0,1]$ is convex with subgradients in $[0,1]$, hence non-decreasing and $1$-Lipschitz. Fenchel--Young makes every maximizer $\\pi_\\Omega(\\Delta)$ a subgradient; wherever $\\Omega^*$ is differentiable, that subgradient equals $(\\Omega^*)'(\\Delta)$.\n\\end{proof}"
+    },
+    {
+      "proof_index": 23,
+      "result_label": "cor:fsoft",
+      "before": "\\begin{proof}\nThe objective $\\pi \\Delta + \\theta H(\\pi)$ is strictly concave on $(0,1)$ with derivative $\\Delta - \\theta \\log\\frac{\\pi}{1-\\pi}$; the first-order condition gives the unique maximizer $\\pi = \\sigma'_\\theta(\\Delta)$. Substituting back, with $\\log \\sigma'_\\theta(\\Delta) = \\Delta/\\theta - \\log(1 + e^{\\Delta/\\theta})$ and $\\log(1 - \\sigma'_\\theta(\\Delta)) = -\\log(1 + e^{\\Delta/\\theta})$, yields the optimal value\n\\begin{equation}\n\t\\sigma'_\\theta(\\Delta)\\, \\Delta + \\theta H\\bigl(\\sigma'_\\theta(\\Delta)\\bigr) = \\theta \\log\\bigl( 1 + e^{\\Delta/\\theta} \\bigr) = \\sigma_\\theta(\\Delta),\n\t\\label{eq:legendre_fenchel_softplus}\n\\end{equation}\nthe Legendre--Fenchel form of the binary log-sum-exp at temperature $\\theta$ over $\\{0, \\Delta\\}$. Then~\\eqref{eq:fsoft_def} is~\\eqref{eq:freg_def} with $-\\Omega_\\theta(\\pi_{\\Omega_\\theta}(\\Delta)) = \\theta H(\\sigma'_\\theta(\\Delta))$, and validity is Theorem~\\ref{thm:freg_validity} with $\\Omega^*_\\theta = \\sigma_\\theta$. For the limit, $\\sigma'_\\theta(\\Delta) \\to \\1[\\Delta > 0]$ and $\\theta H(\\sigma'_\\theta(\\Delta)) = \\sigma_\\theta(\\Delta) - \\sigma'_\\theta(\\Delta) \\Delta \\to 0$ as $\\theta \\to 0$ for $\\Delta \\neq 0$.\n\\end{proof}",
+      "after": "\\begin{proof}\nThe objective $\\pi \\Delta + \\theta H(\\pi)$ is strictly concave on $(0,1)$ with derivative $\\Delta - \\theta \\log\\frac{\\pi}{1-\\pi}$; the first-order condition gives the unique maximizer $\\pi = \\sigma'_\\theta(\\Delta)$. Substituting back, with $\\log \\sigma'_\\theta(\\Delta) = \\Delta/\\theta - \\log(1 + e^{\\Delta/\\theta})$ and $\\log(1 - \\sigma'_\\theta(\\Delta)) = -\\log(1 + e^{\\Delta/\\theta})$, yields the optimal value\n\\begin{equation}\n\t\\sigma'_\\theta(\\Delta)\\, \\Delta + \\theta H\\bigl(\\sigma'_\\theta(\\Delta)\\bigr) = \\theta \\log\\bigl( 1 + e^{\\Delta/\\theta} \\bigr) = \\sigma_\\theta(\\Delta),\n\t\\label{eq:legendre_fenchel_softplus}\n\\end{equation}\nthe Legendre--Fenchel form of binary log-sum-exp over $\\{0,\\Delta\\}$ at temperature $\\theta$. Substituting $-\\Omega_\\theta=\\theta H$ into~\\eqref{eq:freg_def} gives~\\eqref{eq:fsoft_def} and validity by Theorem~\\ref{thm:freg_validity}. For $\\Delta\\neq0$, as $\\theta\\to0$, the gate tends to $\\1[\\Delta>0]$ and its bonus $\\theta H(\\sigma'_\\theta(\\Delta))=\\sigma_\\theta(\\Delta)-\\sigma'_\\theta(\\Delta)\\Delta$ tends to zero.\n\\end{proof}"
+    },
+    {
+      "proof_index": 24,
+      "result_label": "thm:shift_forward",
+      "before": "\\begin{proof}\nInduct backward on $l$ for $g^{(l)}$; $h^{(l)}$ follows analogously, then subtract. At $l = L$, $W_{\\mathrm{abs}}^{[L, \\rightarrow]} = I$ and $g^{(L)}$ is a projection. For $0 \\le l < L$, the stream connections swap $\\Wsig{l+1}{+}$ and $\\Wsig{l+1}{-}$ (Figure~\\ref{fig:splitstreams}), propagating a common shift to the next pair. At a hidden layer $l+1<L$,\n\\begin{align*}\n\t\\act{l+1}{+}\\big|_{+c}\n\t&= \\max\\bigl\\{ \\Wsig{l+1}{+} a^{(+)} + \\Wsig{l+1}{-} a^{(-)},\\; \\Wsig{l+1}{-} a^{(+)} + \\Wsig{l+1}{+} a^{(-)} \\bigr\\} + \\bigl| \\Wl{l+1} \\bigr|\\, c, \\\\\n\t\\act{l+1}{-}\\big|_{+c}\n\t&= \\Wsig{l+1}{-} a^{(+)} + \\Wsig{l+1}{+} a^{(-)} + \\bigl| \\Wl{l+1} \\bigr|\\, c,\n\\end{align*}\nsince $\\bigl(\\Wsig{l+1}{+} + \\Wsig{l+1}{-}\\bigr) c = \\bigl|\\Wl{l+1}\\bigr| c$ factors out of the maximum. At the ungated affine readout $l+1=L$, non-negative linearity gives the common shift $|\\Wl{L}|c$. Applying the hypothesis at $l+1$ with shift $\\bigl|\\Wl{l+1}\\bigr| c$,\n\\begin{align*}\ng^{(l)}\\bigl( a^{(+)} + c,\\, a^{(-)} + c \\bigr)\n    &= g^{(l+1)}\\Bigl( \\act{l+1}{+} + \\bigl|\\Wl{l+1}\\bigr| c,\\,\n        \\act{l+1}{-} + \\bigl|\\Wl{l+1}\\bigr| c \\Bigr)\\\\\n    &= g^{(l)}\\bigl( a^{(+)},\\, a^{(-)} \\bigr)\n        + W_{\\mathrm{abs}}^{[l, \\rightarrow]}\\, c. \\qedhere\n\\end{align*}\n\\end{proof}",
+      "after": "\\begin{proof}\nA common shift $c$ at layer $l$ shifts both pre-activations at $l+1$ by $(\\Wsig{l+1}{+}+\\Wsig{l+1}{-})c=|\\Wl{l+1}|c$ (Figure~\\ref{fig:splitstreams}). The identity $\\max\\{u+d,v+d\\}=\\max\\{u,v\\}+d$ propagates this shift through the hidden Maxout/identity pair; the ungated affine readout propagates it by linearity. Backward induction from the output projections, where $W_{\\mathrm{abs}}^{[L,\\rightarrow]}=I$, therefore gives the common output shift $W_{\\mathrm{abs}}^{[l,\\rightarrow]}c$. Subtraction proves the difference statement.\n\\end{proof}"
+    },
+    {
+      "proof_index": 25,
+      "result_label": "thm:delta_connection",
+      "before": "\\begin{proof}\nFor a coordinate direction $e_j$, $j \\in \\{1, \\dots, d^{(l)}\\}$, Theorem~\\ref{thm:shift_forward} with $c = \\epsilon\\, e_j$ gives $g^{(l)}\\bigl(\\act{l}{+} + \\epsilon e_j,\\, \\act{l}{-}\\bigr) = g^{(l)}\\bigl(\\act{l}{+},\\, \\act{l}{-} - \\epsilon e_j\\bigr) + \\epsilon\\, W_{\\mathrm{abs}}^{[l, \\rightarrow]} e_j$. Subtracting $g^{(l)}\\bigl(\\act{l}{+}, \\act{l}{-}\\bigr)$, dividing by $\\epsilon$, and letting $\\epsilon \\to 0$ yields $\\delta_j^{(l,+,g)} = W_{\\mathrm{abs}}^{[l, \\rightarrow]} e_j - \\delta_j^{(l,-,g)}$. The claim for $h$ follows analogously.\n\\end{proof}",
+      "after": "\\begin{proof}\nFor each coordinate $j$, differentiate~\\eqref{eq:shift_forward} along $c=t e_j$ at $t=0^+$, keeping shifted pairs non-negative. The chain rule gives $\\delta^{(l,+,s)}+\\delta^{(l,-,s)}=W_{\\mathrm{abs}}^{[l,\\rightarrow]}$ for $s\\in\\{g,h\\}$, which rearranges to~\\eqref{eq:delta_complementarity}.\n\\end{proof}"
+    },
+    {
+      "proof_index": 26,
+      "result_label": "thm:closed_formula_shift",
+      "before": "\\begin{proof}\nWe record two auxiliary identities.\n\n\\emph{Claim 1 (bulk of the shifted sensitivities).} For every $l$,\n\\begin{equation}\n\t\\delta_{\\mathrm{shift}}^{(l,+,g)} + \\delta_{\\mathrm{shift}}^{(l,-,g)} = \\prod_{l \\le j \\le L} \\bigl( 1 - 2\\alpha^{(j)} \\bigr)\\, W_{\\mathrm{abs}}^{[l, \\rightarrow]} = \\overline{\\alpha}_l\\, W_{\\mathrm{abs}}^{[l, \\rightarrow]}.\n\t\\label{eq:claim_bulk}\n\\end{equation}\nAt $l = L$, $\\delta^{(L,+,g)} + \\delta^{(L,-,g)} = I = W_{\\mathrm{abs}}^{[L,\\rightarrow]}$, and the shift multiplies the sum by $(1 - 2\\alpha^{(L)})$, since subtracting $\\alpha^{(L)}$ times the sum from \\emph{each} component subtracts $2\\alpha^{(L)}$ times it from the sum. For the step, adding \\eqref{eq:delta_int_pos}, \\eqref{eq:delta_int_neg} and using $M^{(l+1,+)} + M^{(l+1,-)} = I$, $\\Wsig{l+1}{+} + \\Wsig{l+1}{-} = \\bigl|\\Wl{l+1}\\bigr|$,\n\\begin{equation*}\n\t\\delta_{\\mathrm{int}}^{(l,+,g)} + \\delta_{\\mathrm{int}}^{(l,-,g)}\n\t= \\bigl( \\delta_{\\mathrm{shift}}^{(l+1,+,g)} + \\delta_{\\mathrm{shift}}^{(l+1,-,g)} \\bigr) \\bigl| \\Wl{l+1} \\bigr|\n\t= \\overline{\\alpha}_{l+1}\\, W_{\\mathrm{abs}}^{[l+1, \\rightarrow]} \\bigl| \\Wl{l+1} \\bigr|\n\t= \\overline{\\alpha}_{l+1}\\, W_{\\mathrm{abs}}^{[l, \\rightarrow]}\n\\end{equation*}\nby induction, and the shift~\\eqref{eq:delta_shift_def} multiplies this by $(1 - 2\\alpha^{(l)})$, giving $\\overline{\\alpha}_l\\, W_{\\mathrm{abs}}^{[l, \\rightarrow]}$.\n\n\\emph{Claim 2 (recursion of the stabilized difference).} Subtracting \\eqref{eq:delta_int_neg} from \\eqref{eq:delta_int_pos}---the shift cancels in the difference---and regrouping with $M^{(l+1,+)} - M^{(l+1,-)}$ applied to $\\Wl{l+1} = \\Wsig{l+1}{+} - \\Wsig{l+1}{-}$,\n\\begin{align}\n\t2\\, \\delta_{\\mathrm{shift}}^{(l,g)}\n\t&= \\bigl( \\delta_{\\mathrm{shift}}^{(l+1,+,g)} - \\delta_{\\mathrm{shift}}^{(l+1,-,g)} \\bigr) M^{(l+1,+)} \\Wl{l+1}\n\t- \\bigl( \\delta_{\\mathrm{shift}}^{(l+1,+,g)} + \\delta_{\\mathrm{shift}}^{(l+1,-,g)} \\bigr) M^{(l+1,-)} \\Wl{l+1} \\notag\\\\\n\t&= 2\\, \\delta_{\\mathrm{shift}}^{(l+1,g)}\\, W^{(l+1,x)} - \\overline{\\alpha}_{l+1}\\, W_{\\mathrm{abs}}^{[l+1, \\rightarrow]} M^{(l+1,-)} \\Wl{l+1},\n\t\\label{eq:shifted_recursion}\n\\end{align}\nThe first equality groups terms using $M^{(l+1,+)} + M^{(l+1,-)} = I$; the second uses Claim~1 at $l+1$.\n\n\\emph{Induction.} At the base $l = L$ of \\eqref{eq:closed_formula_g}, the initial shift cancels in the difference, so $\\delta_{\\mathrm{shift}}^{(L,g)} = \\bigl( \\delta^{(L,+,g)} - \\delta^{(L,-,g)} \\bigr)/2 = I/2 = \\delta^{(L)}/2$ with empty correction sum. For the step, unfolding~\\eqref{eq:shifted_recursion} with the hypothesis at $l+1$,\n\\begin{align*}\n\t2\\, \\delta_{\\mathrm{shift}}^{(l,g)}\n\t&= \\Bigl[ \\delta^{(l+1)} - \\sum_{l+1 \\le j < L} \\overline{\\alpha}_{j+1} W_{\\mathrm{abs}}^{[j+1, \\rightarrow]} \\bigl( M^{(j+1,-)} \\Wl{j+1} \\bigr) \\prod_{i = (j-1), \\dots, l+1} W^{(i+1,x)} \\Bigr] W^{(l+1,x)} \\\\\n\t&\\qquad - \\overline{\\alpha}_{l+1}\\, W_{\\mathrm{abs}}^{[l+1, \\rightarrow]} M^{(l+1,-)} \\Wl{l+1} \\\\\n\t&= \\delta^{(l)} - \\sum_{l \\le j < L} \\overline{\\alpha}_{j+1}\\, W_{\\mathrm{abs}}^{[j+1, \\rightarrow]} \\bigl( M^{(j+1,-)} \\Wl{j+1} \\bigr) \\prod_{i = (j-1), \\dots, l} W^{(i+1,x)},\n\\end{align*}\nusing $\\delta^{(l+1)} W^{(l+1,x)} = \\delta^{(l)}$ and absorbing the extra term as summand $j = l$. Equation~\\eqref{eq:closed_formula_h} is identical up to the sign flip $\\delta_{\\mathrm{shift}}^{(L,h)} = -I/2$. Subtracting \\eqref{eq:closed_formula_h} from \\eqref{eq:closed_formula_g} cancels the correction sums, giving the backward invariant $\\delta_{\\mathrm{shift}}^{(l,g)} - \\delta_{\\mathrm{shift}}^{(l,h)} = \\delta^{(l)}$; the cases $\\alpha \\equiv 0$, $1/2$ are immediate from $\\overline{\\alpha}_j$.\n\\end{proof}",
+      "after": "\\begin{proof}\n\\emph{Claim 1 (bulk of the shifted sensitivities).} For every $l$,\n\\begin{equation}\n\t\\delta_{\\mathrm{shift}}^{(l,+,g)} + \\delta_{\\mathrm{shift}}^{(l,-,g)} = \\prod_{l \\le j \\le L} \\bigl( 1 - 2\\alpha^{(j)} \\bigr)\\, W_{\\mathrm{abs}}^{[l, \\rightarrow]} = \\overline{\\alpha}_l\\, W_{\\mathrm{abs}}^{[l, \\rightarrow]}.\n\t\\label{eq:claim_bulk}\n\\end{equation}\nAt $l=L$, the unshifted sum is $I$. Each shift multiplies its pair sum by $1-2\\alpha^{(l)}$. Adding~\\eqref{eq:delta_int_pos} and~\\eqref{eq:delta_int_neg} multiplies the next layer's sum by $|\\Wl{l+1}|$, since $M^{(l+1,+)}+M^{(l+1,-)}=I$. Backward induction proves~\\eqref{eq:claim_bulk}, equally for $h$.\n\n\\emph{Claim 2 (recursion of the stabilized difference).} The common shift cancels when subtracting~\\eqref{eq:delta_int_neg} from~\\eqref{eq:delta_int_pos}. Using $\\Wl{l+1}=\\Wsig{l+1}{+}-\\Wsig{l+1}{-}$ gives\n\\begin{align}\n\t2\\, \\delta_{\\mathrm{shift}}^{(l,g)}\n\t&= \\bigl( \\delta_{\\mathrm{shift}}^{(l+1,+,g)} - \\delta_{\\mathrm{shift}}^{(l+1,-,g)} \\bigr) M^{(l+1,+)} \\Wl{l+1}\n\t- \\bigl( \\delta_{\\mathrm{shift}}^{(l+1,+,g)} + \\delta_{\\mathrm{shift}}^{(l+1,-,g)} \\bigr) M^{(l+1,-)} \\Wl{l+1} \\notag\\\\\n\t&= 2\\, \\delta_{\\mathrm{shift}}^{(l+1,g)}\\, W^{(l+1,x)} - \\overline{\\alpha}_{l+1}\\, W_{\\mathrm{abs}}^{[l+1, \\rightarrow]} M^{(l+1,-)} \\Wl{l+1},\n\t\\label{eq:shifted_recursion}\n\\end{align}\nThe first equality groups terms using $M^{(l+1,+)} + M^{(l+1,-)} = I$; the second uses Claim~1 at $l+1$.\n\n\\emph{Induction.} At $l=L$, the initial common shift cancels, giving $\\delta_{\\mathrm{shift}}^{(L,g)}=I/2$ and $\\delta_{\\mathrm{shift}}^{(L,h)}=-I/2$. Unroll~\\eqref{eq:shifted_recursion} backward: multiplying the hypothesis at $l+1$ by $W^{(l+1,x)}$ extends every prefix product and gives $\\delta^{(l+1)}W^{(l+1,x)}=\\delta^{(l)}$; the remaining term supplies $j=l$. This proves~\\eqref{eq:closed_formula_g}. The same recurrence with initial value $-I/2$ proves~\\eqref{eq:closed_formula_h}. Subtracting cancels the common correction sum and gives the backward invariant. The endpoint cases follow from $\\overline{\\alpha}_j$.\n\\end{proof}"
+    },
+    {
+      "proof_index": 27,
+      "result_label": "prop:conv_correct",
+      "before": "\\begin{proof}\nNon-negative kernels and biases make $v^\\pm$ affine maps with non-negative coefficients in $(u^+,u^-)$, hence convex and coordinatewise non-decreasing, with $v^\\pm\\ge0$ for $u^\\pm\\ge0$. Linearity of $*$ gives\n\\begin{equation*}\n\tv^+ - v^- = \\bigl( \\posneg{K}{+} - \\posneg{K}{-} \\bigr) * u^+ - \\bigl( \\posneg{K}{+} - \\posneg{K}{-} \\bigr) * u^- + \\posneg{b}{+} - \\posneg{b}{-} = K * (u^+ - u^-) + b. \\qedhere\n\\end{equation*}\n\\end{proof}",
+      "after": "\\begin{proof}\nCross-correlation is a linear map; after the entrywise parameter split, its two affine components have non-negative coefficients and biases. They therefore preserve non-negativity, convexity and monotonicity. Subtraction recovers $K*(u^+-u^-)+b$ by linearity, exactly as in Proposition~\\ref{prop:validity_recovery}.\n\\end{proof}"
+    },
+    {
+      "proof_index": 28,
+      "result_label": "lem:linear_chunk",
+      "before": "\\begin{proof}\nIdentical to Proposition~\\ref{prop:conv_correct}: the coefficients $\\posneg{A}{\\pm}, \\posneg{c}{\\pm}$ are non-negative, and subtracting the two lines gives $(\\posneg{A}{+} - \\posneg{A}{-})(u^+ - u^-) + \\posneg{c}{+} - \\posneg{c}{-} = A(u^+ - u^-) + c$.\n\\end{proof}",
+      "after": "\\begin{proof}\nThe proof of Proposition~\\ref{prop:conv_correct} applies to any matrix $A$: non-negative split coefficients give the structural properties, and subtraction gives $A(u^+-u^-)+c$.\n\\end{proof}"
+    },
+    {
+      "proof_index": 30,
+      "result_label": "thm:cnn_split_correct",
+      "before": "\\begin{proof}\nInduction over the topological order of $\\mathcal{G}$. At the input node the invariant is the input convention, non-negativity holds by assumption, and $x^\\pm_k$ are affine, convex, non-decreasing. For the step, assume all predecessors of $C_m$ satisfy the three properties. Lemma~\\ref{lem:linear_chunk} (linear chunks), Proposition~\\ref{prop:maxpool_correct} (max-pool), and Corollary~\\ref{cor:dc_split_endpoint} with~\\eqref{eq:splitting_identity} (the \\ac{relu} gate) establish for every type that (i) non-negative pairs map to non-negative pairs, (ii) the output difference equals the original operation on the input difference---by the invariant the activation $v_m$---and (iii) each output component is convex and non-decreasing, being built from non-negative linear combinations and entrywise maxima whose compositions preserve both properties \\parencite{Amos2017}. Re-centering subtracts a common shift, preserving the invariant and non-negativity (Theorem~\\ref{thm:shift_forward}); it is omitted when convexity and coordinatewise monotonicity are required, since these properties need not survive the subtraction. Already re-centering the pair $(\\max\\{p,n\\},n)$ gives $(\\relu(p-n),0)$, whose first component decreases when $n$ increases with $p$ fixed. The output claim is the invariant at $C_M$.\n\\end{proof}",
+      "after": "\\begin{proof}\nInduct in topological order from the non-negative affine input coordinates. Lemma~\\ref{lem:linear_chunk}, Proposition~\\ref{prop:maxpool_correct}, and Corollary~\\ref{cor:dc_split_endpoint} with~\\eqref{eq:splitting_identity} give non-negativity and recovery for each chunk. Convexity and monotonicity propagate by composition of convex coordinatewise non-decreasing maps~\\parencite{Amos2017}, as in Theorem~\\ref{thm:general_dc_network}. Re-centering preserves non-negativity and the difference (Theorem~\\ref{thm:shift_forward}), but can destroy monotonicity: $(\\max\\{p,n\\},n)$ becomes $(\\relu(p-n),0)$, whose first component decreases with $n$. Hence re-centering is excluded from the structural conclusion, along with winner-takes-it-all pooling. The invariant at $C_M$ proves output recovery.\n\\end{proof}"
+    }
+  ],
+  "additional_consolidations": [
+    "Merged four closed-form activation displays into one align with all four original equation labels.",
+    "Replaced four split-layer Jacobian equations by equivalent 2x2 block matrix; retained canonical label.",
+    "Indexed four local sensitivity definitions by sign and tail; retained canonical label and differentiability scope.",
+    "Inlined simple quadratic quadrant counterexample and auxiliary scalar definition; removed repeated linear splitting/shift expansions already established in canonical statements.",
+    "Transferred seven former game/supplement labels with AliasLabel and retained an additional parity Lean badge."
+  ],
+  "independent_reviews": {
+    "early": {
+      "scope": "Independent mathematical equivalence review of early chapter03 second compression pass; no TeX edited or build run.",
+      "baseline_sha256": "dd340ff06e528963e34773b9e78a3828aa9e2afae11cefd815e912304b41cc4f",
+      "reviewed_sha256": "20290c78121161b5e920abe88b64b21e103802c30782b1dc211871a8b1823cb7",
+      "status": "approved_after_required_precision_fix",
+      "structural_checks": {
+        "labels": {
+          "before": 69,
+          "after": 69,
+          "same_sequence": true
+        },
+        "lean_badges": {
+          "before": 13,
+          "after": 13,
+          "same_sequence": true
+        },
+        "citations": {
+          "before": 6,
+          "after": 6,
+          "same_sequence": true
+        },
+        "headings": {
+          "before": 12,
+          "after": 12,
+          "same_sequence": true
+        }
+      },
+      "mathematical_checks": [
+        {
+          "topic": "Vectorized validity recovery",
+          "verdict": "approved",
+          "reason": "Canonical signed matrix and bias split gives the same per-coordinate identity; validity and the ungated output still recover f."
+        },
+        {
+          "topic": "Profile lift criterion",
+          "verdict": "approved",
+          "reason": "Coordinate increment necessity/sufficiency, derivative equivalence, affine convexity, and origin-normalization necessity/sufficiency remain explicit."
+        },
+        {
+          "topic": "Network composition",
+          "verdict": "approved",
+          "reason": "Nonnegative affine maps and convex monotone activation components preserve structural properties; origin normalization covers the quadrant; differences and ungated output are still checked. Every tail and convex input pullback remain covered."
+        },
+        {
+          "topic": "Global curvature necessity",
+          "verdict": "approve_after_precision_fix",
+          "reason": "The half-line restrictions and finite slope bounds preserve the argument. The variation must refer to the curvature measure, not the function f. The nonnegative-quadrant counterexample remains algebraically exact and has monotone convex right-hand components."
+        },
+        {
+          "topic": "Combined activation formula display",
+          "verdict": "approved",
+          "reason": "Softplus, sigmoid, exact Gaussian GELU and Swish formulas are algebraically identical to the four original equations. d=x-y is defined, all four labels remain, and the softplus ReLU limit and shifted log-sum-exp implementation note remain."
+        },
+        {
+          "topic": "Symmetric tilt proof and dependency direction",
+          "verdict": "approved",
+          "reason": "The earlier absolute-curvature theorem establishes finite endpoint limits and bounded derivative through p′-q′=f′, and P,N integrability follows from |f′′|. Its proof does not depend on the symmetric theorem or later minimality proposition. Displayed C1′,C2′ are locally absolutely continuous, bounded and nondecreasing. Normalization recovers f; nonnegative M±Cj′ proves monotonicity. The continuous-curvature Hessian observation survives."
+        },
+        {
+          "topic": "ReLU tail and smooth network corollaries",
+          "verdict": "approved",
+          "reason": "Their shorter proofs apply earlier general network theorem, including identity output and identity tail; no independent step requiring repetition was removed."
+        },
+        {
+          "topic": "Forward minimality reference",
+          "verdict": "approved",
+          "reason": "Pointwise curvature minimality is moved to the later proposition, whose proof is independent. Separate optimal-slope and bivariate/network-size scope statements remain."
+        }
+      ],
+      "proposed_fixes": [
+        {
+          "priority": "required",
+          "old": "Their differences equal $f(t)$, so their positive curvature measures bound its total variation, giving $\\int_\\RR|f''|<\\infty$.",
+          "new": "Their differences equal $f(t)$, so the sum of their positive curvature measures bounds the total variation of its curvature measure, giving $\\int_\\RR|f''|<\\infty$.",
+          "reason": "Avoid changing finite total curvature into false finite variation of f."
+        },
+        {
+          "priority": "clarity",
+          "old": "The quadrant alone permits non-integrable curvature: $(x-y)^2=(2x^2+2y^2)-(x+y)^2$ is a convex, coordinatewise non-decreasing pair there.",
+          "new": "The quadrant alone permits non-integrable curvature: $(x-y)^2=(2x^2+2y^2)-(x+y)^2$, whose two right-hand terms are convex and coordinatewise non-decreasing there.",
+          "reason": "Identify the pair components explicitly; the difference itself is not coordinatewise monotone."
+        }
+      ],
+      "lost_hypotheses": [],
+      "lost_claims": [],
+      "circular_dependencies": [],
+      "display_changes_reviewed": "Unlabelled expanded validity algebra and quadratic/s_beta displays moved inline; four labelled activation formulas consolidated into one align with labels retained; repeated symmetric proof equations compressed to derivative display plus inline argument.",
+      "required_fixes_applied": [
+        {
+          "priority": "required",
+          "old": "Their differences equal $f(t)$, so their positive curvature measures bound its total variation, giving $\\int_\\RR|f''|<\\infty$.",
+          "new": "Their differences equal $f(t)$, so the sum of their positive curvature measures bounds the total variation of its curvature measure, giving $\\int_\\RR|f''|<\\infty$.",
+          "reason": "Avoid changing finite total curvature into false finite variation of f."
+        },
+        {
+          "priority": "clarity",
+          "old": "The quadrant alone permits non-integrable curvature: $(x-y)^2=(2x^2+2y^2)-(x+y)^2$ is a convex, coordinatewise non-decreasing pair there.",
+          "new": "The quadrant alone permits non-integrable curvature: $(x-y)^2=(2x^2+2y^2)-(x+y)^2$, whose two right-hand terms are convex and coordinatewise non-decreasing there.",
+          "reason": "Identify the pair components explicitly; the difference itself is not coordinatewise monotone."
+        }
+      ],
+      "status_after_integration": "approved; both precise replacements applied verbatim, only aliases otherwise added"
+    },
+    "middle": {
+      "status": "accepted",
+      "reviewer": "independent proof_review subagent",
+      "baseline_sha256": "36142d6c06e0562629d6429ab11f42d5ba5748ad88a83be5cae54296703f46fe",
+      "candidate_sha256": "e9ca727d2e2fe48a0f2a479b18dd8e189d7b54441afa9b825934b968de321b59",
+      "checks": {
+        "labels_preserved": 34,
+        "Lean_badges_preserved": 12,
+        "citation_commands_identical": true,
+        "headings_identical": true,
+        "all_labeled_display_blocks_byte_identical": 13,
+        "display_blocks_before": 20,
+        "display_blocks_after": 15
+      },
+      "findings": [],
+      "proof_review": [
+        {
+          "proof": "mixing recovery",
+          "assessment": "Both endpoint differences are explicitly ReLU; convex combination and canonical affine-layer recovery give the layer induction, with input convention and final identity pair explicit."
+        },
+        {
+          "proof": "eta=1 convex characterization",
+          "assessment": "Removed duplicate display is replaced by the earlier identical maximum/identity update; componentwise convex input hypothesis, affine output and DC conclusion remain."
+        },
+        {
+          "proof": "stopping recovery",
+          "assessment": "Local shared-gate difference identity and the cited affine propagation proposition close hidden-layer induction; input and final affine cases are stated."
+        },
+        {
+          "proof": "stopping monotonicity on regions",
+          "assessment": "Finite composition of nonnegative affine maps and fixed 0/1 gates proves the same claim; final ungated output is now explicitly covered."
+        },
+        {
+          "proof": "parity path expansion",
+          "assessment": "Recursive substitution supplies a unique term per path, absolute edge-weight product, gates only at hidden predecessors, empty gate product at depth1, positive preservation/negative swap, zero-edge cancellation, opposite output-stream input sign and bias stubs."
+        },
+        {
+          "proof": "regularized recovery and properties",
+          "assessment": "Optimality yields local difference Omega*; canonical propagation, initialization and affine output remain explicit. Supremum of slopes in [0,1] and Fenchel-Young retain all structural and differentiability claims."
+        },
+        {
+          "remarks": "soft monotonicity and probit/GELU",
+          "assessment": "Derivative threshold, failure of inherited monotone/convex guarantees, exact regularized recovery, Gaussian threshold interpretation and the +phi distinction remain."
+        }
+      ],
+      "scope": "Read-only comparison; no candidate or repository modifications.",
+      "final_pass_review": {
+        "status": "accepted",
+        "findings": [],
+        "DC_endpoint": "Canonical equation references retain weight splitting and componentwise updates; input/output conventions and convex input hypothesis remain.",
+        "integrable_curvature": "Derivative identity implies differentiability; slope endpoint limits, local absolute continuity hypothesis, nonnegative weak curvature of total mass1, C2/strict positive curvature sufficient condition, singular-curvature caveat and exact decomposition parameters are retained.",
+        "softplus": "General regularized validity plus already proved conjugate identity justifies substitution; both gate and entropy-bonus limits and Delta!=0 restriction remain.",
+        "intro": "Pairwise nature remains immediately in definition; no loss."
+      }
+    },
+    "late": {
+      "agent": "review_single_pdf",
+      "verdict": "Core proof compression sound; equivalent block Jacobian; necessary induction steps retained. Suggested feasible one-sided shift differentiation and explicit h bulk argument applied."
+    }
+  },
+  "validation": {
+    "git_diff_check": "passed",
+    "build": "delegated to root sole builder",
+    "fonts_and_figure_sizes_changed": false
+  },
+  "remaining_uncertainties": [
+    "Final combined activation align and block Jacobian line widths require the root build; no claim is made here about rendered page savings."
+  ]
+}

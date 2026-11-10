@@ -1,11 +1,11 @@
 \appendix
 \chapter{Experimental Protocol and Reproducibility}\label{app:extended_results}
 
-The companion supplement, Chapter~\ref{app:supp_experiments}, collects complete evaluation tables, validation grids, ablations, and qualitative examples.
+This appendix specifies the evaluation and reproduction protocols. Appendix~\ref{app:supp_experiments} contains the complete results, validation selections, ablations and qualitative examples.
 
 \section{Split-Method Evaluation}
 
-The split-method campaign explains the predicted class, including misclassifications, while localization compares it with the annotated object mask. For misclassified images, target and mask therefore refer to different classes. The game campaign explains the dataset target class. Both retain misclassified images under these distinct target conventions.
+The campaigns retain the distinct attribution targets described in Section~\ref{sec:experimental_setup}. In the split campaign, misclassified images therefore pair the predicted-class attribution with another class's annotated mask.
 
 \subsection{Artifact Availability and Reproduction Scope}\label{app:hm_artifact_scope}
 
@@ -90,7 +90,7 @@ point. Lower is better.
 
 \subsection{Selection}\label{ptnb:app:selection}
 
-Every tunable method, including baselines, selects two configurations on validation: \texttt{loc} minimizes rank-sum over $\{\text{AL}, \text{PG}, \text{TK}\}$, and \texttt{faith} over $\{\text{PF}_5, \text{PF}_{20}, \text{Sel}\}$. Ranks are within-method and respect metric directions. Ties favor the default (the anchor for \ac{rg}), then fewer non-default parameters, then grid order. Admission requires non-zero maps and defined metrics on every validation image. Before ranking, we exclude 5 of the 40 VGG-16 \ac{sg} configurations, all with strong risk aversion and deterministic gates, whose maps vanish on some images; all others qualify. MaxS and AvgS are excluded from selection because each evaluation re-explains every image $2N_s$ times. Main tables report \texttt{loc}; Section~\ref{ptnb:app:results} reports both selections. Localization suits modes controlling routing focus, has external mask ground truth, and has precedent for comparing \ac{lrp} rules using bounding boxes~\parencite{Kohlbrenner2020}. Perturbation metrics evaluate off-distribution inputs. Reporting both selections preserves the distinction and trade-off between localization and faithfulness.
+Every tunable method, including baselines, selects two configurations on validation: \texttt{loc} minimizes rank-sum over $\{\text{AL}, \text{PG}, \text{TK}\}$, and \texttt{faith} over $\{\text{PF}_5, \text{PF}_{20}, \text{Sel}\}$. Ranks are within-method and respect metric directions. Ties favor the default (the anchor for \ac{rg}), then fewer non-default parameters, then grid order. Admission requires non-zero maps and defined metrics on every validation image. Before ranking, we exclude 5 of the 40 VGG-16 \ac{sg} configurations, all with strong risk aversion and deterministic gates, whose maps vanish on some images; all others qualify. MaxS and AvgS are excluded from selection because each evaluation re-explains every image $2N_s$ times. The main discussion uses \texttt{loc}; Section~\ref{ptnb:app:results} reports both selections. Localization suits modes controlling routing focus, has external mask ground truth, and has precedent for comparing \ac{lrp} rules using bounding boxes~\parencite{Kohlbrenner2020}. Perturbation metrics evaluate off-distribution inputs. Reporting both selections preserves the distinction and trade-off between localization and faithfulness.
 
 \subsection{Statistics}\label{ptnb:app:stats}
 
@@ -117,7 +117,7 @@ differences $\Delta_b^*$, its finite-resample $p$-value is
         \geq\lvert\widehat\Delta\rvert\}}{B+1}.
 \end{align}
 
-For the main and full test tables, Holm correction~\parencite{Holm1979} is applied to all unordered
+For the original localization-selected comparison and the full test tables, Holm correction~\parencite{Holm1979} is applied to all unordered
 pairs of eligible rows within each metric and reported table, before extracting comparisons with
 the observed best row or declaring a row ahead of every baseline. The observed winner therefore
 does not determine the comparison family. A difference is called significant at adjusted
@@ -127,26 +127,168 @@ configurations and realized attribution evaluations; they do not quantify traini
 configuration-selection variability. The split-method tables report the source point estimates
 without corresponding confidence intervals.
 
-\section{Formal Verification and Mathematical Audit}\label{app:lean}
+\section{Implementation and Evaluation Details}\label{app:extended_protocol}
+
+\paragraph{Backbone and dataset provenance.}
+All game-based experiments use the pretrained checkpoints shipped with the evaluation release of torchvision: VGG-16 uses \path{VGG16_Weights.IMAGENET1K_V1}
+(\url{https://download.pytorch.org/models/vgg16-397923af.pth}; recipe
+\url{https://github.com/pytorch/vision/tree/main/references/classification#alexnet-and-vgg}),
+ResNet-50 uses \path{ResNet50_Weights.IMAGENET1K_V2}
+(\url{https://download.pytorch.org/models/resnet50-11ad3fa6.pth}; recipe
+\url{https://github.com/pytorch/vision/issues/3995#issuecomment-1013906621}), and ViT-B/16 uses
+\path{ViT_B_16_Weights.IMAGENET1K_V1}
+(\url{https://download.pytorch.org/models/vit_b_16-c867db91.pth}; recipe
+\url{https://github.com/pytorch/vision/tree/main/references/classification#vit_b_16}). These ImageNet-1K classifiers were trained on ImageNet / ILSVRC~\parencite{Deng2009,Russakovsky2015ilsvrc} and scored with Quantus~\parencite{Hedstrom2023}.
+
+\paragraph{Licenses.}\label{ptnb:app:licences}
+ImageNet images~\parencite{Deng2009} are used under the ImageNet terms of access (non-commercial research and
+educational use)\footnote{\url{https://www.image-net.org/download-images.php}.}. The ImageNet-S mask release~\parencite{gao2022luss} does not state a separate mask license\footnote{Authors' release: \url{https://github.com/LUSSeg/ImageNet-S}.}; its images are ImageNet images and fall under the same
+terms. The Pascal VOC 2012 images are subject to the Flickr terms of use,
+as stated by the dataset providers\footnote{\url{https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2012/}, Database Rights.}. The checkpoints are distributed with torchvision
+and were trained on ImageNet-1K. Libraries: PyTorch and torchvision (BSD-3-Clause), Quantus
+(GPL-3.0), zennit (GPL-3.0/LGPL-3.0), lxt, captum and scikit-image (BSD-3-Clause), pytorch-grad-cam
+(MIT); the reference code of \acs{ptnbTIBAV} and \acs{ptnbGAE} (MIT) is included with its license notice.
+
+\subsection{Methods}\label{ptnb:app:baselines}\label{app:baselines}
+
+Baselines use lxt, zennit, captum, pytorch-grad-cam, and the authors' TIBAV/GAE code, with reference settings and the declared grids~\parencite{Achtibat2024AttnLRP,Anders2021Zennit,kokhlikyan2020captum,Gildenblat2021gradcam,Chefer2021GenericAttention,Chefer2021ICCV}.
+
+\paragraph{Gradient-based block.}
+\textbf{Gradient} is raw input-gradient saliency~\parencite{Simonyan2014}: the maximum absolute gradient over color channels. \textbf{SmGrad} averages noisy gradient maps (SmoothGrad)~\parencite{Smilkov2017}. \textbf{IntGrad} uses Integrated Gradients~\parencite{Sundararajan2017} with a black-image baseline. \textbf{DeepLIFT} propagates activation differences from a reference input using the Rescale rule~\parencite{Shrikumar2017} (CNNs only). \textbf{DAVE} is the distribution-aware ViT gradient decomposition of \textcite{Wrobel2024}; our implementation additionally freezes the LayerNorm mean, whereas published DAVE differentiates through mean-centering. \textbf{SG}, our \ac{sg}, belongs here because its occupation measure recovers the gradient (Theorem~\ref{ptnb:thm:deriv-occ}).
+
+\paragraph{LRP / relevance-propagation block.}
+\textbf{LRP-$\varepsilon$} is stabilized Layer-wise Relevance Propagation~\parencite{Bach2015}; \textbf{LRP-$\gamma$} amplifies positive weights~\parencite{Montavon_2022_gammaLRP}. \textbf{AttnLRP} propagates transformer relevance through softmax, the bilinear attention product and the Value path~\parencite{Achtibat2024AttnLRP}. \textbf{RG} is our \ac{rg}; \textbf{RG+Eq} adds equivariant Reynolds averaging, mainly to suppress ViT tokenization-grid artifacts. \textbf{TIBAV}~\parencite{Chefer2021GenericAttention}, \textbf{GAE}~\parencite{Chefer2021ICCV} and Attention Rollout (\textbf{AR}) are transformer attention-map baselines.
+
+\paragraph{CAM block.}
+\textbf{GCAM}, \textbf{GCAM++} and \textbf{LCAM} denote Grad-CAM~\parencite{Selvaraju2017}, Grad-CAM++~\parencite{Chattopadhay2018} and LayerCAM~\parencite{Jiang2021LayerCAM}, respectively. LayerCAM weights class-activation evidence per location. All three use the CNNs' last convolutional block and bilinear upsampling.
+
+\paragraph{Perturbation block.}
+\textbf{LIME} is Local Interpretable Model-agnostic Explanations~\parencite{Ribeiro2016}; \textbf{KernelSHAP} estimates SHAP values by model-agnostic weighted regression~\parencite{LundbergLee2017}. Both perturb SLIC superpixels~\parencite{Achanta2012slic} and fit local surrogates, distinguishing them from the backward-propagation methods.
+
+\subsection{Declared validation grids}\label{ptnb:app:grids}
+
+Table~\ref{ptnb:tab:main-search-grid} lists every method's grid. Functionally duplicate rows (e.g.\ different $\sigma^2$ when $\lambda = \lambda_{\mathrm{sm}} = 0$) are evaluated once, yielding \nValGrid{} configurations. On ViT-B/16, activation-side $\lambda$ is fixed to $0$, keeping GELU gates conditioned (Section~\ref{ptnb:sec:attention}). At attention--Value products, \ac{rg} applies $\alpha\beta$-\ac{lrp}-$\varepsilon$ to the composite attention-product/Value-projection map (Theorem~\ref{ptnb:thm:attn-ab-recovery}; Section~\ref{ptnb:app:vit-implementation}). Baselines without grids use their reference implementations' settings.
+
+\begin{table}[H]
+    \centering
+    \caption[Per-method validation grids]{Per-method validation grids (all architectures unless stated). Symbols:
+    Section~\ref{ptnb:app:config-symbols}.}
+    \label{ptnb:tab:main-search-grid}
+\TableContent{
+    \small
+    \renewcommand{\arraystretch}{1.15}
+    \begin{tabularx}{\linewidth}{@{}l >{\raggedright\arraybackslash}X@{}}
+        \toprule
+        Method & Grid \\
+        \midrule
+        Gradient & single config \\
+        SmGrad & $N{=}50$, noise level $\sigma/(x_{\max}{-}x_{\min}) \in \{0.1, 0.15, 0.2\}$, mean
+        aggregation \quad (3 configs) \\
+        IntGrad & black-image baseline, $N_{\text{steps}} \in \{20, 50, 100, 300\}$ \quad (4 configs) \\
+        DeepLIFT & Rescale rule, single config \quad (CNNs only) \\
+        DAVE & $N \in \{25, 50\} \times \theta_{\max} \in \{0, 10, 20\} \times s_{\max} \in \{0, 0.05,
+            0.1\} \times t_{\max} \in \{0, 0.25, 0.5\}$, horizontal flips with probability $0.5$, averaged
+        effective map multiplied by the input \quad (54 configs; ViT-B/16 only) \\
+        SG & $\lambda \in \{-5, -2, -1, -0.3, 0\} \times \sigma^2 \in \{1, 2, 5, 10\} \times$ noisy gate
+        $\tilde\Phi \in \{\text{off}, \text{on}\}$ \quad (40 configs; VGG-16 only) \\
+        LRP-$\varepsilon$ & $\varepsilon \in \{0.01, 0.05, 0.1, 0.25, 0.5, 1, 2\}$ \quad (7 configs) \\
+        LRP-$\gamma$ & $(\varepsilon, \gamma) \in \{0.1, 0.25, 0.5\}\times\{0.1, 0.25, 0.5, 1, 2\}$;
+        ViT-B/16: $\gamma$ on all Linear layers (15 configs); CNNs: both zennit's EpsilonGammaBox composite
+        ($z^{\mathcal{B}}$ input layer, $\gamma$ on convolutions, $\varepsilon$ on dense layers) and
+        $\gamma$ on all layers (30 configs) \\
+        AttnLRP & $\gamma$-composite of~\textcite{Achtibat2024AttnLRP}: reference setting
+        $(\gamma_{\text{conv}}, \gamma_{\text{lin}}, \varepsilon_{\text{attn}}){=}(0.25, 0.05, 10^{-6})$ +
+        univariate sweeps $\gamma_{\text{lin}}\in\{0.01, 0.025, 0.1, 0.25\}$,
+        $\gamma_{\text{conv}}\in\{0.1, 0.5, 1\}$, $\varepsilon_{\text{attn}}\in\{0.01, 0.05,
+            0.25\}$ \quad (11 configs; ViT-B/16 only) \\
+        TIBAV & single config \quad (ViT-B/16 only) \\
+        GAE & single config \quad (ViT-B/16 only) \\
+        AR & residual weight $w_r \in \{0, 0.25, 0.5, 0.75\}$ \quad (4 configs; ViT-B/16 only) \\
+        RG & $\tau \in \{0.3, 0.4, \ldots, 1.0\}$, $(\alpha,\beta){=}(2,1)$, $\sigma^2 \in \{1, 2, 5,
+            10\}$, $\varepsilon \in \{0.1, 0.25, 0.5, 1\}$; ViT-B/16: $\lambda{=}0$, $\lambda_{\mathrm{sm}} \in
+            \{-50, -10, -5, -2, -1, 0\}$, composite Value rule of Theorem~\ref{ptnb:thm:attn-ab-recovery} (672
+        configs); CNNs: $\lambda \in \{-5, -2, -1, -0.3, 0\}$ (544 configs) \\
+        RG+Eq & $\tau \in \{0.3, 0.4, \ldots, 1.0\} \times \lambda_{\mathrm{sm}} \in \{0, -10\}$,
+        $\sigma^2{=}2$, $\varepsilon{=}0.5$, $N{=}50$, composite Value rule \quad (16 configs; ViT-B/16
+        only) \\
+        GCAM, GCAM++, LCAM & last convolutional block (VGG-16: \texttt{features.29}, ResNet-50:
+        \texttt{layer4}), single config \quad (CNNs only) \\
+        LIME & 80 SLIC superpixels, $N{=}1000$, ridge surrogate, exponential kernel of width $0.25$ on the
+        cosine distance of the binary superpixel vectors, removed superpixels filled with their mean color;
+        fixed reference row \\
+        KernelSHAP & 80 SLIC superpixels, $N{=}2M{+}2048$ for $M$ superpixels, removed superpixels filled with
+        the image mean; fixed reference row \\
+        Anchor & $\alpha\beta$-\ac{lrp} anchor $(\alpha,\beta,\varepsilon,\tau){=}(2,1,0.5,1)$ of \ac{rg}
+        and \ac{rg}+Eq, reported as the theorem-driven reference row (not selected) \\
+        \bottomrule
+    \end{tabularx}
+}%
+\end{table}
+
+\subsection{Compute resources}\label{ptnb:app:compute-resources}
+
+Evaluation is inference-only; repeated backward passes across validation/test grids dominate its cost, including equivariant-Reynolds and noise averaging. Runtime was measured on one NVIDIA A100-SXM4-40GB at batch size 1. Sweeps used several GPUs of that type, with up to two processes per GPU. The full pipeline (validation, test, robustness, Pascal VOC, ablations and randomization diagnostics) required about 450 GPU-hours.
+
+\subsection{\texorpdfstring{\ch{Code and correctness tests}}{Code and correctness tests}}\label{ptnb:app:code-tests}
+
+\begingroup\emergencystretch=3em
+\ch{The code (\coderepo) tests the thesis's backward rules. In float64, \texttt{tests/\allowbreak test\_attention\_ab\_recovery.py} compares \ac{rg} at $\tau=1$ with an independent $\alpha\beta$-\ac{lrp}-$\varepsilon$ implementation of $X\mapsto A(XW_v^\top+b_v)$ (Theorem~\ref{ptnb:thm:attn-ab-recovery}, \eqref{ptnb:eq:attn-target-input}). Single-head and \texttt{nn.MultiheadAttention}-layout blocks use signed inputs, Value bias and $\varepsilon>0$. The test also distinguishes the sequential variant of Section~\ref{ptnb:app:attention-target-rule}, unavailable in the release (\texttt{av\_rule} accepts only \texttt{'merged'}).
+\texttt{tests/test\_hellinger\_merged\_attention.py} enumerates every backward trajectory of a small attention block under two models at $\tau\in\{0.5,1,2\}$, checking the Hellinger pass's per-input, Bhattacharyya and cemetery masses (Section~\ref{ptnb:app:path-divergence}). A pre-norm residual \texttt{nn.MultiheadAttention} block must match the distance obtained with its attention matrix supplied as a constant.}
+\par\medskip
+\endgroup
+
+\section{Formal Verification and Mathematical Audit}\label{app:lean}\label{app:lean_details}
 
 The \href{https://github.com/JayPiZimmermann/A-Structural-Approach-to-Interpretable-Deep-Learning}{thesis repository} contains TeX sources, pinned links to both official code repositories, and a Lean~4 project with mathlib pinned to~4.35.0. Checked statements have explicit assumptions. Formalization remains partial: a related lemma cannot certify an entire theorem or paper.
 
 Numbered \texttt{Lean\_1}, \texttt{Lean\_2}, \ldots{} links in theorem and lemma headings follow the planar-features paper's convention. Each targets the corresponding checked declaration or components, distinguished in \texttt{formalization/coverage\_map.json}, which records exact assumptions and remaining parts by source label. Selected equation numbers link to checked identities or definitions. Following \href{https://arxiv.org/abs/2610.01728}{arXiv:2610.01728}, links pin the Git commit and declaration line, keeping targets stable under default-branch edits.
 
-The companion supplement, Section~\ref{app:lean_details}, details the checked developments and mathematical audit.
+Both papers share a finite, varying-width Lean MLP definition: an identity output or an affine layer followed by a smaller network, evaluated with ordinary or paired activations. Local difference preservation suffices algebraically for paired activations; induction proves complete-network recovery. This definition supports ReLU, mixing and Softplus, with a separate affine readout for ungated target logits.
+
+The Transformer development defines signed projections, actual masked Query--Key products, coupled softmax, attention--Value products, input-dependent LayerNorm, residual additions and the feedforward subnetwork. Finite block lists allow arbitrary depth, including zero, an optional final LayerNorm and signed affine readout. Compilation to an explicit expression language equals the ordinary evaluator. Recursive two-stream evaluation proves Theorem~\ref{thm:transformer_dc}: exact reconstruction and convex, monotone, non-negative components on non-negative doubled inputs. The positive/negative raw-input lift gives global convexity, without asserting raw-input monotonicity. The proofs derive structural properties from the closed-form softmax and normalization constructions, with positive $\varepsilon$ and nonempty allowed-key sets. They use exact real arithmetic; Section~\ref{app:transformer_dc_numeric} diagnoses direct evaluation's limits.
+
+A forward trace records actual gates. Each sensitivity row maps an input perturbation linearly to its scalar output change; paired rows describe partial sensitivities to both input streams. Their half-difference is the derivative along the balanced lift $(x/2,-x/2)$. At strict gate comparisons, the recursive Jacobian equals the complete network's Fr\'echet derivative.
+
+The layer-wise shifted backward algorithm equals its closed formula for arbitrary widths and shifts. Source terms are derivatives of explicit $Q$-networks with the original prefix, one minimum and a bias-free linear absolute-weight tail. Checked identities cover shift-coefficient suffix products, sensitivity mass, separate cross-head partials and original-gradient reconstruction. Shifted algorithmic sensitivities remain distinct from derivatives through input-dependent forward re-centering; classical derivatives at gate ties are not asserted.
+
+The game developments define finite sign-labeled paths, probabilities, discounts and occupation sums. Under the stated policies, discounted stopping occupations recover the actual MLP gradient; routing occupations recover the full $\alpha\beta$ recurrence from network contributions. The smooth case includes the full Softplus derivative. Attention uses a fixed matrix and the complete composite Value projection, including its bias; backward recovery alone asserts neither Query/Key differentiation nor global equilibrium. Generic finite layered-game saddle bounds and Bellman uniqueness are checked separately for actual randomized policies.
+
+The trajectory module checks finite path normalization, dynamic-programming identities, geometric-mean overlap, terminal-state disagreement and positive survival conditioning. Hellinger probability laws remain distinct from discounted occupation measures. The regularization module checks the finite Gibbs variational maximum, attaining policy, binary stop/continue optimizer and actual Softplus derivatives.
+
+The audit exposed a missing $1/2$ in the four-partial backward invariant, a shift-product index error, an omitted weight matrix, and overclaims about differentiability, multiplicative convexity, re-centering and nonzero combined gradients. Corrections and counterexamples are in \nolinkurl{reports/mathematical-corrections.md}; nonzero raw sensitivity mass need not yield a nonzero balanced head gradient.
+
+The source inventory lists statements outside the checked scope. Proofs and corrections certify neither Python implementations nor experiments. Independently, the table adapter regenerates thirteen outputs from the revised game's published summaries and checks them against the thesis. Diagnostic and hidden-monotonicity tables lacking raw summaries retain source provenance. Reproduce mathematical checks with \texttt{lake build} in \texttt{formalization/} and its explicit axiom audit; the README gives complete commands.
+
+\subsection{Numerical Diagnostic of the Transformer DC Construction}\label{app:transformer_dc_numeric}
+
+The deterministic \texttt{scripts/transformer\_dc\_demo.py} tests Section~\ref{sec:transformer_dc}'s construction on a three-token, width-three Transformer: one causal head, two post-residual LayerNorms, a width-four exact Gaussian-GELU MLP, mean pooling and two signed logits. An independent ordinary PyTorch computation uses identical parameters. The diagnostic runs on CPU in float64, without recentering, clipping or reference-activation substitution.
+
+With random seed $23$, the sweep combines
+$\varepsilon\in\{1,10^{-2},10^{-5}\}$, weight scales
+$\{0.01,0.1,0.5\}$, and input scales $\{0.1,1\}$.
+Two additional cases add common input-stream offsets of $1$ and $10$ to the
+$\varepsilon=1$, weight-scale-$0.01$, input-scale-$0.1$ case.
+All twenty cases, including failures, are retained in
+\texttt{reports/evidence/transformer-dc/numeric.json}, together with the
+environment, source hash, per-stage reconstruction error, and stream magnitudes.
+Run \texttt{python}\ \nolinkurl{scripts/transformer_dc_demo.py}\ \texttt{--output RESULT.json}.
+
+The benign case reconstructs logits within $2.78\times10^{-17}$; fifteen of twenty cases exceed $10^{-8}$ final maximum absolute error. Every tested $\varepsilon=10^{-5}$ case loses output accuracy, with streams reaching $5.95\times10^{111}$. Separate primitive and zero-variance LayerNorm checks pass. These finite checks diagnose implementation, without proving convexity or numerical stability. Catastrophic cancellation affects floating-point evaluation of even this small construction; a stable practical implementation remains open.
+
+\input{appendices/experiments}
 
 \chapter{Publication Provenance and Tool Use}\label{app:publication_provenance}
 
-This thesis integrates two coauthored works: \emph{Hidden Monotonicity}, published at CVPR 2026 as a Highlight~\parencite{hiddenMono}, and the revised \emph{Playing the Network Backward} preprint, arXiv:2605.06212v2~\parencite{playingBackward2026}. The thesis author is first author of both. The game paper retains preprint status, without a claim of AISTATS acceptance. A shared decomposition framework organizes their technical content. Model-evaluation outputs and point estimates are reused; VOC intervals and paired comparisons are recomputed by whole-image resampling (Section~\ref{ptnb:app:stats}). The thesis adds common definitions, mathematical extensions, connections between constructions, and Lean formalization.
+This thesis integrates two coauthored works with the thesis author as first author: \emph{Hidden Monotonicity}, a CVPR 2026 Highlight~\parencite{hiddenMono}, and the revised \emph{Playing the Network Backward} preprint, arXiv:2605.06212v2~\parencite{playingBackward2026}, without a claim of AISTATS acceptance. It reuses their model-evaluation outputs and point estimates, recomputing VOC intervals and paired comparisons by whole-image resampling (Section~\ref{ptnb:app:stats}). A shared decomposition framework adds common definitions, mathematical extensions, connections and Lean formalization.
 
 \section{Author's Contribution}\label{app:author_contribution}
 
-My principal contributions to \emph{Hidden Monotonicity} and \emph{Playing the Network Backward} were developing the theory, developing and running experiments, and writing all appendices and most paper text outside the introductions. These responsibilities were part of collaborations with the coauthors identified in Section~\ref{sec:motivation}.
+For both papers, I developed the theory and experiments, ran the experiments, and wrote all appendices and most text outside the introductions, collaborating with the coauthors listed in Section~\ref{sec:motivation}.
 
-The thesis unifies their mathematical exposition, connects their decompositions, and adds Lean formalization. The following disclosure distinguishes original-paper preparation from later thesis integration, formalization, and revision.
+The following disclosures distinguish original-paper preparation from later thesis work.
 
 \section{Disclosure in the Revised Game Paper}
-The revised game paper contains the following AI-use statement, reproduced here as a statement about the preparation of that publication:
+The revised game paper discloses the following for its preparation:
 \begin{quote}
 In this work, we used generative AI tools for implementing standard baseline methods and evaluation
 code, for producing plots and tables of results, for drafting parts of the text, and for editing
@@ -162,6 +304,6 @@ produced with the aid of generative AI.
 \end{quote}
 
 \section{AI Assistance in the Thesis Revision}
-The November 2026 thesis revision used OpenAI Codex, supplied by OpenAI, for mathematical exploration and proof development, Lean implementation and checking, code review and repair, statistical reaggregation, and thesis drafting and editing. Mathematical assistance included developing and checking extensions of the convex, monotone stream construction. The original paper's historical statement about theorem and proof development applies to its preparation, excluding this later thesis work.
+The November 2026 thesis revision used OpenAI's Codex for mathematical exploration, proof development, Lean implementation and checking, code review and repair, statistical reaggregation, and drafting and editing. Mathematical assistance developed and checked convex, monotone stream extensions. The quoted historical statement about theorem and proof development concerns the original paper, excluding this later thesis work.
 
-The formalization repository records reviewed theorem types, proof-checking receipts, and coverage limits. Lean certifies the stated formal propositions; source correspondence requires mathematical review, and kernel checks do not certify experiments.
+The formalization repository records reviewed theorem types, proof-checking receipts and coverage limits. Lean certifies the stated propositions; source correspondence requires mathematical review, and kernel checks do not certify experiments.

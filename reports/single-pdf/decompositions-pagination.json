@@ -1,0 +1,256 @@
+{
+  "scope": "Chapter 03 pagination pass after single-PDF reintegration; no fonts, figure sizes, spacing settings or scalar/softmax mathematical content changed.",
+  "baseline_sha256": "b859752756c88ef99e887ac2f9e83c11dd8426cf1e9237f65875afc9d3253e1f",
+  "final_sha256": "d126d53832ff4ea3f37b543f3df5cf60997da64be11b2282863ceb1af6ddf48f",
+  "source_lines": {
+    "before": 1012,
+    "after": 961
+  },
+  "display_blocks": {
+    "before": 74,
+    "after": 70
+  },
+  "texcount": {
+    "command": "texcount -utf8 -brief -sum=1,1,1,0,0,0,0",
+    "before": 6216,
+    "after": 6004
+  },
+  "proofs": {
+    "before": 30,
+    "after": 27,
+    "note": "Three duplicate proof pairs consolidated into one proof each; all original claims and Lean badges remain."
+  },
+  "canonical_aliases_added": [
+    [
+      "prop:stream_properties",
+      "thm:split_correct"
+    ],
+    [
+      "eq:delta_int_neg",
+      "eq:delta_int_pos"
+    ],
+    [
+      "prop:conv_correct",
+      "lem:linear_chunk"
+    ],
+    [
+      "cor:dc_split_endpoint",
+      "thm:mixing_convex_extreme"
+    ],
+    [
+      "eq:closed_formula_h",
+      "eq:closed_formula_g"
+    ]
+  ],
+  "protected_items": [
+    "All scalar activation profiles, derivatives, curvature conditions and formula catalogues unchanged.",
+    "Softmax construction/proof unchanged.",
+    "Global structural domains versus quadrant recovery domains remain distinct.",
+    "Mixing eta=0 counterexample, normalization/gating caveats and all final-affine conventions retained.",
+    "Backward correction sum, half-half factor, alpha endpoints, strict-gate scope and detached corrections retained.",
+    "CNN max-pooling/ReLU identities, recentering counterexample and WTA exclusion retained.",
+    "Seven earlier cross-chapter stopping/Softplus aliases unchanged."
+  ],
+  "exact_edits": [
+    {
+      "reason": "Inline max-pooling algebra; retain structural justification and exact max-minus-common-term proof.",
+      "before": "For~\\eqref{eq:maxpool_identity}, add and subtract $u_j^-$ for each $j \\in [q]$:\n\\begin{equation*}\n\tu_j^+ + \\sum_{i \\neq j} u_i^- = \\bigl( u_j^+ - u_j^- \\bigr) + \\sum_{i \\in [q]} u_i^-,\n\\end{equation*}\nThe second summand is independent of $j$, so maximizing and subtracting $v^- = \\sum_i u_i^-$ yields $\\max_j \\bigl( u_j^+ - u_j^- \\bigr)$.",
+      "after": "Each candidate equals $(u_j^+-u_j^-)+v^-$. Maximizing and subtracting the common $v^-$ proves~\\eqref{eq:maxpool_identity}."
+    },
+    {
+      "reason": "Inline short CNN invariant to remove a display interruption near the chapter end.",
+      "before": "the split pass produces non-negative pairs satisfying the difference invariant\n\\begin{equation*}\n\tv_m^+ - v_m^- = v_m \\qquad \\text{for every chunk } C_m,\n\\end{equation*}\nwhere $v_m$ is the original activation, hence",
+      "after": "the split pass produces non-negative pairs satisfying $v_m^+-v_m^-=v_m$ at every chunk $C_m$, where $v_m$ is the original activation; hence"
+    },
+    {
+      "reason": "Consolidate generic affine and convolution correctness, retaining explicit convolution formula and both Lean targets.",
+      "before": "\\begin{proposition}[Correctness of split convolution, \\LeanResult{prop:conv_correct}]\\label{prop:conv_correct}\nThe chunk~\\eqref{eq:conv_split} maps non-negative pairs to non-negative pairs, each output component is a non-negative linear (affine) function of $(u^+, u^-)$---hence convex and non-decreasing in each coordinate---and\n\\begin{equation*}\n\tv^+ - v^- = K * (u^+ - u^-) + b.\n\\end{equation*}\\end{proposition}\n\n\\begin{proof}\nCross-correlation is a linear map; after the entrywise parameter split, its two affine components have non-negative coefficients and biases. They therefore preserve non-negativity, convexity and monotonicity. Subtraction recovers $K*(u^+-u^-)+b$ by linearity, exactly as in Proposition~\\ref{prop:validity_recovery}.\n\\end{proof}\n\nConvolution followed by a \\ac{relu} chunk---the entrywise Maxout gate~\\eqref{eq:dc_split_activations}---is covered by the argument of Theorem~\\ref{thm:split_correct}, a convolution being a dense layer with a sparse, weight-shared matrix. The same entrywise weight split handles every linear chunk at once.\n\n\\begin{lemmaenv}[Non-negative linear chunks preserve the invariants, \\LeanResult{lem:linear_chunk}]\\label{lem:linear_chunk}\nFor a real affine map $u\\mapsto Au+c$, use the entrywise parameter split\n\\begin{equation*}\n\tv^+ \\coloneqq \\posneg{A}{+} u^+ + \\posneg{A}{-} u^- + \\posneg{c}{+},\n\t\\qquad\n\tv^- \\coloneqq \\posneg{A}{-} u^+ + \\posneg{A}{+} u^- + \\posneg{c}{-}.\n\\end{equation*}\nThe chunk preserves non-negativity; each component is affine with non-negative coefficients, hence convex and coordinatewise non-decreasing, and $v^+ - v^- = A(u^+ - u^-) + c$.\\end{lemmaenv}\n\n\\begin{proof}\nThe proof of Proposition~\\ref{prop:conv_correct} applies to any matrix $A$: non-negative split coefficients give the structural properties, and subtraction gives $A(u^+-u^-)+c$.\n\\end{proof}\n\n",
+      "after": "\\begin{lemmaenv}[Affine chunks and convolution, \\LeanResult{lem:linear_chunk}, \\LeanResult{prop:conv_correct}]\\label{lem:linear_chunk}\nFor any real affine map $u\\mapsto Au+c$, the canonical parameter split~\\eqref{eq:split_pos}--\\eqref{eq:split_neg}, with $W=A$ and $b=c$, maps non-negative pairs to non-negative pairs. Each component is affine with non-negative coefficients, hence convex and coordinatewise non-decreasing, and $v^+-v^-=A(u^+-u^-)+c$. In particular, \\eqref{eq:conv_split} recovers $K*(u^+-u^-)+b$.\n\\end{lemmaenv}\n\\AliasLabel{prop:conv_correct}{lem:linear_chunk}\n\\begin{proof}\nNon-negative split coefficients give the structural properties; subtraction gives recovery as in Proposition~\\ref{prop:validity_recovery}. Convolution is a sparse, weight-shared affine map, so the same argument applies. Composing it with~\\eqref{eq:dc_split_activations} also recovers convolution followed by ReLU.\n\\end{proof}\n\n"
+    },
+    {
+      "reason": "Remove repeated split-pass recipe, already given in the definition and immediately before the figure.",
+      "before": "The \\ac{mlp} split pass starts from $\\bigl(\\act{0}{+},\\act{0}{-}\\bigr)=(x^+,x^-)$, then applies the affine pair \\eqref{eq:split_pos}--\\eqref{eq:split_neg} and the maximum/identity update~\\eqref{eq:dc_split_activations} for $l=1,\\dots,L-1$. The final layer uses only the affine pair, allowing negative reconstructed logits.",
+      "after": ""
+    },
+    {
+      "reason": "Merge the ReLU tail structural and recovery specializations with one proof; retain distinct global and quadrant domains and citation.",
+      "before": "Non-negative affine maps followed by Maxout gates and projections form monotone networks with convex, monotone activations. The composition principles of Section~\\ref{sec:convex_monotone_foundations} \\parencite{Amos2017} give:\n\n\\begin{proposition}[Monotonicity and convexity of the split streams, \\LeanResult{prop:stream_properties}]\\label{prop:stream_properties}\nFor every $0 \\le l \\le L$, the stream functions $g^{(l)}$ and $h^{(l)}$ of~\\eqref{eq:stream_functions} are convex and non-decreasing in each coordinate of the pair $(x^+, x^-) \\in \\RR^{d^{(l)}} \\times \\RR^{d^{(l)}}$.\\end{proposition}\n\n\\begin{proof}\nApply Theorem~\\ref{thm:general_dc_network} to each tail, with the ReLU pair~\\eqref{eq:splitting_identity} and identity output pair.\n\\end{proof}\n\nAt every layer, stream differences recover the tail network at the input difference.\n\n\\begin{theoremenv}[Correctness of the split forward pass, \\LeanResult{thm:split_correct}]\\label{thm:split_correct}\nFor every $0 \\le l \\le L$ and all $x^+, x^- \\in \\RR^{d^{(l)}}_{\\ge 0}$,\n\\begin{equation}\n\tf^{(l)}\\bigl( x^+ - x^- \\bigr)\n\t= \\bigl( g^{(l)} - h^{(l)} \\bigr)(x^+, x^-).\n\t\\label{eq:split_correctness}\n\\end{equation}\\end{theoremenv}\n\n\\begin{proof}\nThis is the recovery assertion of Theorem~\\ref{thm:general_dc_network} for each ReLU tail, including the identity tail at $l=L$.\n\\end{proof}\n\n",
+      "after": "\\begin{theoremenv}[Structure and correctness of the split streams, \\LeanResult{prop:stream_properties}, \\LeanResult{thm:split_correct}]\\label{thm:split_correct}\nFor every $0\\le l\\le L$, the streams $g^{(l)},h^{(l)}$ of~\\eqref{eq:stream_functions} are convex and coordinatewise non-decreasing on $\\RR^{d^{(l)}}\\times\\RR^{d^{(l)}}$. For all $x^+,x^-\\in\\RR^{d^{(l)}}_{\\ge0}$,\n\\begin{equation}\n\tf^{(l)}\\bigl(x^+-x^-\\bigr)=\\bigl(g^{(l)}-h^{(l)}\\bigr)(x^+,x^-).\n\t\\label{eq:split_correctness}\n\\end{equation}\n\\end{theoremenv}\n\\AliasLabel{prop:stream_properties}{thm:split_correct}\n\\begin{proof}\nApply Theorem~\\ref{thm:general_dc_network} to each ReLU tail, using~\\eqref{eq:splitting_identity} and the identity output pair, including the identity tail at $l=L$. The convex-monotone composition principle is recalled in Section~\\ref{sec:convex_monotone_foundations} \\parencite{Amos2017}.\n\\end{proof}\n\n"
+    },
+    {
+      "reason": "Merge the duplicated eta=1 convex theorem and endpoint corollary; retain recipe, input hypothesis, affine output and both Lean badges.",
+      "before": "\\begin{theoremenv}[$\\eta = 1$ convex characterization of the Mixing Decomposition, \\LeanResult{thm:mixing_convex_extreme}]\\label{thm:mixing_convex_extreme}\nUnder~\\eqref{eq:input_split_convention}, assume each $x_k^\\pm$ is convex in $x$, as for $x^\\pm=\\posneg{x}{\\pm}$ or any affine split. Then the $\\eta=1$ activations, given by the maximum/identity update~\\eqref{eq:dc_split_activations}, are convex at every hidden neuron. The final non-negative affine combinations remain convex. Consequently $\\actl{l}_i = a_{\\mathrm{mix},i}^{(l,+,1)} - a_{\\mathrm{mix},i}^{(l,-,1)}$ is a difference of convex functions, the standard \\ac{dc} representation of the \\ac{cpwl} function computed by the network \\parencite{Arora2018,hiddenMono}.\\end{theoremenv}\n\n\\begin{proof}\nFor $\\eta=1$, the activation pair is $(\\max\\{z^+,z^-\\},z^-)$, so Theorem~\\ref{thm:general_dc_network} applies. Its final assertion gives convexity after any componentwise convex input split, and its identity output pair includes the final affine readout.\n\\end{proof}\n\n",
+      "after": "\\begin{theoremenv}[$\\eta=1$: the convex DC endpoint, \\LeanResult{thm:mixing_convex_extreme}, \\LeanResult{cor:dc_split_endpoint}]\\label{thm:mixing_convex_extreme}\nSetting $\\eta=1$ in Definition~\\ref{def:fmix} gives the valid \\emph{\\ac{dc} split}, with $\\act{l}{\\pm}\\coloneqq a_{\\mathrm{mix}}^{(l,\\pm,1)}$: canonical affine maps~\\eqref{eq:split_pos}--\\eqref{eq:split_neg}, input~\\eqref{eq:input_split_convention}, hidden update~\\eqref{eq:dc_split_activations}, and final identity $\\act{L}{\\pm}=\\preact{L}{\\pm}$. If every input component $x_k^\\pm$ is convex in $x$, as for $x^\\pm=\\posneg{x}{\\pm}$ or any admissible affine split, every activation is convex, including the final non-negative affine combinations. Thus $\\actl{l}_i=a_{\\mathrm{mix},i}^{(l,+,1)}-a_{\\mathrm{mix},i}^{(l,-,1)}$ is a DC representation of the network's \\ac{cpwl} computation \\parencite{Arora2018,hiddenMono}.\n\\end{theoremenv}\n\\AliasLabel{cor:dc_split_endpoint}{thm:mixing_convex_extreme}\n\\begin{proof}\nAt $\\eta=1$, \\eqref{eq:fmix_def} is the maximum/identity pair~\\eqref{eq:splitting_identity}. Proposition~\\ref{prop:dc_profile_lift} and Theorem~\\ref{thm:general_dc_network} give validity and convexity, including the convex input pullback and affine readout.\n\\end{proof}\n\n"
+    },
+    {
+      "reason": "Remove the now-consolidated endpoint corollary and its repeated proof after the unchanged eta=0 counterexample.",
+      "before": "Only the $\\eta=1$ endpoint inherits per-layer convexity: it is the maximum/identity DC split of Section~\\ref{sec:dc_splitting_relu}, with $\\eta=0$ its arithmetic dual.\n\n\\begin{corollary}[DC split as the $\\eta = 1$ mixing endpoint, \\LeanResult{cor:dc_split_endpoint}]\\label{cor:dc_split_endpoint}\nSetting $\\eta=1$ in Definition~\\ref{def:fmix} and writing $\\act{l}{\\pm}\\coloneqq a_{\\mathrm{mix}}^{(l,\\pm,1)}$ gives the valid \\emph{\\ac{dc} split}: canonical pre-activations~\\eqref{eq:split_pos}--\\eqref{eq:split_neg}, input $x=x^+-x^-$, update~\\eqref{eq:dc_split_activations} for $1\\le l<L$, and final identity $\\act{L}{\\pm}=\\preact{L}{\\pm}$. Its activations are convex under the input convention of Theorem~\\ref{thm:mixing_convex_extreme}.\\end{corollary}\n\n\\begin{proof}\nAt $\\eta=1$, \\eqref{eq:fmix_def} equals~\\eqref{eq:splitting_identity}; Proposition~\\ref{prop:dc_profile_lift} and Theorem~\\ref{thm:general_dc_network} give its properties and network recovery.\n\\end{proof}\n\n",
+      "after": ""
+    },
+    {
+      "reason": "Index identical g/h shift identities by s; retain all domain and depth quantifiers.",
+      "before": "For any $0 \\le l \\le L$ and any $c, a^{(+)}, a^{(-)} \\in \\RR^{d^{(l)}}$ with $a^{(\\pm)}, a^{(\\pm)} + c \\ge 0$,\n\\begin{equation}\n\\begin{aligned}\ng^{(l)}\\bigl( a^{(+)} + c,\\, a^{(-)} + c \\bigr)\n    &= g^{(l)}\\bigl( a^{(+)},\\, a^{(-)} \\bigr) + W_{\\mathrm{abs}}^{[l, \\rightarrow]}\\, c,\\\\\nh^{(l)}\\bigl( a^{(+)} + c,\\, a^{(-)} + c \\bigr)\n    &= h^{(l)}\\bigl( a^{(+)},\\, a^{(-)} \\bigr) + W_{\\mathrm{abs}}^{[l, \\rightarrow]}\\, c.\n\\end{aligned}\n\t\\label{eq:shift_forward}\n\\end{equation}",
+      "after": "For $0\\le l\\le L$, $s\\in\\{g,h\\}$, and $c,a^{(+)},a^{(-)}\\in\\RR^{d^{(l)}}$ with $a^{(\\pm)},a^{(\\pm)}+c\\ge0$,\n\\begin{equation}\ns^{(l)}\\bigl(a^{(+)}+c,a^{(-)}+c\\bigr)\n=s^{(l)}\\bigl(a^{(+)},a^{(-)}\\bigr)+W_{\\mathrm{abs}}^{[l,\\rightarrow]}c.\n\\label{eq:shift_forward}\n\\end{equation}"
+    },
+    {
+      "reason": "Name the existing exact block Jacobian for reuse by the chain-rule algorithm.",
+      "before": "&\\frac{\\partial(\\act{l+1}{+},\\act{l+1}{-})}{\\partial(\\act{l}{+},\\act{l}{-})}",
+      "after": "&J^{(l+1)}\\coloneqq\\frac{\\partial(\\act{l+1}{+},\\act{l+1}{-})}{\\partial(\\act{l}{+},\\act{l}{-})}"
+    },
+    {
+      "reason": "Reuse explicit block Jacobian instead of duplicating its rows; one indexed equation covers both tails.",
+      "before": "\\begin{align}\n\t\\delta_{\\mathrm{int}}^{(l,+,g)} &\\coloneqq \\delta_{\\mathrm{shift}}^{(l+1,+,g)} \\bigl( M^{(l+1,+)} \\Wsig{l+1}{+} + M^{(l+1,-)} \\Wsig{l+1}{-} \\bigr) + \\delta_{\\mathrm{shift}}^{(l+1,-,g)}\\, \\Wsig{l+1}{-},\n\t\\label{eq:delta_int_pos}\\\\\n\t\\delta_{\\mathrm{int}}^{(l,-,g)} &\\coloneqq \\delta_{\\mathrm{shift}}^{(l+1,+,g)} \\bigl( M^{(l+1,+)} \\Wsig{l+1}{-} + M^{(l+1,-)} \\Wsig{l+1}{+} \\bigr) + \\delta_{\\mathrm{shift}}^{(l+1,-,g)}\\, \\Wsig{l+1}{+},\n\t\\label{eq:delta_int_neg}\n\\end{align}\n",
+      "after": "\\begin{equation}\n\\bigl(\\delta_{\\mathrm{int}}^{(l,+,s)},\\delta_{\\mathrm{int}}^{(l,-,s)}\\bigr)\n=\\bigl(\\delta_{\\mathrm{shift}}^{(l+1,+,s)},\\delta_{\\mathrm{shift}}^{(l+1,-,s)}\\bigr)J^{(l+1)},\n\\label{eq:delta_int_pos}\n\\end{equation}\n\\AliasLabel{eq:delta_int_neg}{eq:delta_int_pos}\n"
+    },
+    {
+      "reason": "Introduce the shared tail index for the vectorized backward algorithm.",
+      "before": "and analogously for $h$, the \\emph{stabilized backward pass} iterates",
+      "after": "and analogously for $h$, the \\emph{stabilized backward pass}, for $s\\in\\{g,h\\}$, iterates"
+    },
+    {
+      "reason": "Use the same tail index in the common-shift update.",
+      "before": "\\delta_{\\mathrm{shift}}^{(l,\\pm,g)} \\coloneqq \\delta_{\\mathrm{int}}^{(l,\\pm,g)} - \\alpha^{(l)} \\bigl( \\delta_{\\mathrm{int}}^{(l,+,g)} + \\delta_{\\mathrm{int}}^{(l,-,g)} \\bigr),",
+      "after": "\\delta_{\\mathrm{shift}}^{(l,\\pm,s)} \\coloneqq \\delta_{\\mathrm{int}}^{(l,\\pm,s)} - \\alpha^{(l)} \\bigl( \\delta_{\\mathrm{int}}^{(l,+,s)} + \\delta_{\\mathrm{int}}^{(l,-,s)} \\bigr),"
+    },
+    {
+      "reason": "Remove the now-redundant second-tail instruction.",
+      "before": "with the same scheme for $h$. The Maxout gates",
+      "after": "The Maxout gates"
+    },
+    {
+      "reason": "Update canonical reference after vectorization.",
+      "before": "the chain-rule recursions~\\eqref{eq:delta_int_pos}--\\eqref{eq:delta_int_neg}",
+      "after": "the chain-rule recursion~\\eqref{eq:delta_int_pos}"
+    },
+    {
+      "reason": "Index identical unified-gradient and stabilized-gradient definitions; retain factor one half and input-direction meaning.",
+      "before": "Express the split gradients with respect to a unified input. Define $\\tilde{g}^{(l)}(\\actl{l}) \\coloneqq g^{(l)}\\bigl( \\actl{l}/2,\\, -\\actl{l}/2 \\bigr)$, the head on the half--half split, and analogously $\\tilde{h}^{(l)}$; by the chain rule\n\\begin{equation}\n\t\\delta^{(l,g)} \\coloneqq \\frac{\\partial \\tilde{g}^{(l)}}{\\partial \\actl{l}} = \\frac{\\delta^{(l,+,g)} - \\delta^{(l,-,g)}}{2},\n\t\\qquad\n\t\\delta^{(l,h)} \\coloneqq \\frac{\\partial \\tilde{h}^{(l)}}{\\partial \\actl{l}} = \\frac{\\delta^{(l,+,h)} - \\delta^{(l,-,h)}}{2},\n\t\\label{eq:unified_split_gradients}\n\\end{equation}\nand write $\\delta_{\\mathrm{shift}}^{(l,g)} \\coloneqq \\bigl( \\delta_{\\mathrm{shift}}^{(l,+,g)} - \\delta_{\\mathrm{shift}}^{(l,-,g)} \\bigr)/2$, $\\delta_{\\mathrm{shift}}^{(l,h)} \\coloneqq \\bigl( \\delta_{\\mathrm{shift}}^{(l,+,h)} - \\delta_{\\mathrm{shift}}^{(l,-,h)} \\bigr)/2$ for their stabilized counterparts, with $\\delta^g_{\\mathrm{shift}} \\coloneqq \\delta_{\\mathrm{shift}}^{(0,g)}$, $\\delta^h_{\\mathrm{shift}} \\coloneqq \\delta_{\\mathrm{shift}}^{(0,h)}$. ",
+      "after": "For $s\\in\\{g,h\\}$ define the head on the half--half split by $\\tilde s^{(l)}(\\actl{l})\\coloneqq s^{(l)}(\\actl{l}/2,-\\actl{l}/2)$. The chain rule gives the unified-input gradient\n\\begin{equation}\n\\delta^{(l,s)}\\coloneqq\\frac{\\partial\\tilde s^{(l)}}{\\partial\\actl{l}}\n=\\frac{\\delta^{(l,+,s)}-\\delta^{(l,-,s)}}2.\n\\label{eq:unified_split_gradients}\n\\end{equation}\nDefine $\\delta_{\\mathrm{shift}}^{(l,s)}\\coloneqq(\\delta_{\\mathrm{shift}}^{(l,+,s)}-\\delta_{\\mathrm{shift}}^{(l,-,s)})/2$ and $\\delta^s_{\\mathrm{shift}}\\coloneqq\\delta_{\\mathrm{shift}}^{(0,s)}$. "
+    },
+    {
+      "reason": "One signed-tail closed formula replaces duplicate correction sums; all products and endpoint cases retained.",
+      "before": "With $\\overline{\\alpha}_j \\coloneqq \\prod_{j \\le i \\le L} \\bigl( 1 - 2 \\alpha^{(i)} \\bigr)$, the stabilized backward pass \\eqref{eq:delta_int_pos}--\\eqref{eq:delta_shift_def} computes, for every $0 \\le l \\le L$,\n\\begin{align}\n\t\\delta_{\\mathrm{shift}}^{(l,g)}\n\t&= \\frac{1}{2} \\Bigl[ \\delta^{(l)} - \\sum_{l \\le j < L} \\overline{\\alpha}_{j+1}\\; W_{\\mathrm{abs}}^{[j+1, \\rightarrow]} \\bigl( M^{(j+1,-)} \\Wl{j+1} \\bigr) \\prod_{i = (j-1), \\dots, l} W^{(i+1,x)} \\Bigr],\n\t\\label{eq:closed_formula_g}\\\\\n\t\\delta_{\\mathrm{shift}}^{(l,h)}\n\t&= -\\frac{1}{2} \\Bigl[ \\delta^{(l)} + \\sum_{l \\le j < L} \\overline{\\alpha}_{j+1}\\; W_{\\mathrm{abs}}^{[j+1, \\rightarrow]} \\bigl( M^{(j+1,-)} \\Wl{j+1} \\bigr) \\prod_{i = (j-1), \\dots, l} W^{(i+1,x)} \\Bigr].\n\t\\label{eq:closed_formula_h}\n\\end{align}\n",
+      "after": "With $\\overline{\\alpha}_j\\coloneqq\\prod_{j\\le i\\le L}(1-2\\alpha^{(i)})$, $\\varepsilon_g=1$, and $\\varepsilon_h=-1$, the pass~\\eqref{eq:delta_int_pos}--\\eqref{eq:delta_shift_def} computes, for $0\\le l\\le L$ and $s\\in\\{g,h\\}$,\n\\begin{equation}\n\\delta_{\\mathrm{shift}}^{(l,s)}\n=\\frac12\\Bigl[\\varepsilon_s\\delta^{(l)}-\\sum_{l\\le j<L}\\overline{\\alpha}_{j+1}\\,W_{\\mathrm{abs}}^{[j+1,\\rightarrow]}\\bigl(M^{(j+1,-)}\\Wl{j+1}\\bigr)\\prod_{i=(j-1),\\dots,l}W^{(i+1,x)}\\Bigr].\n\\label{eq:closed_formula_g}\n\\end{equation}\n\\AliasLabel{eq:closed_formula_h}{eq:closed_formula_g}\n"
+    },
+    {
+      "reason": "Update bulk proof to vector equation components.",
+      "before": "Adding~\\eqref{eq:delta_int_pos} and~\\eqref{eq:delta_int_neg} multiplies",
+      "after": "Adding the two components of~\\eqref{eq:delta_int_pos} multiplies"
+    },
+    {
+      "reason": "Update difference proof to vector equation components.",
+      "before": "The common shift cancels when subtracting~\\eqref{eq:delta_int_neg} from~\\eqref{eq:delta_int_pos}.",
+      "after": "The common shift cancels when subtracting the two components of~\\eqref{eq:delta_int_pos}."
+    },
+    {
+      "reason": "Update reference type for consolidated result",
+      "before": "Proposition~\\ref{prop:stream_properties}",
+      "after": "Theorem~\\ref{prop:stream_properties}",
+      "count": 1
+    },
+    {
+      "reason": "Update reference type for consolidated result",
+      "before": "Corollary~\\ref{cor:dc_split_endpoint}",
+      "after": "Theorem~\\ref{cor:dc_split_endpoint}",
+      "count": 3
+    }
+  ],
+  "final_proof_wording_adjustment": "Updated the common closed-form proof to identify s=g and s=h cases explicitly.",
+  "validation": {
+    "git_diff_check": "passed",
+    "build": "not run; delegated to root sole builder",
+    "status": "Frozen after independent review; no pending source changes."
+  },
+  "independent_review": {
+    "reviewer": "/root/concise_decompositions/pagination_proof_review",
+    "status": "accepted",
+    "scope": "Read-only independent mathematical equivalence review of Chapter 03 pagination consolidation; no source edits or build.",
+    "baseline_sha256": "b859752756c88ef99e887ac2f9e83c11dd8426cf1e9237f65875afc9d3253e1f",
+    "candidate_sha256": "d126d53832ff4ea3f37b543f3df5cf60997da64be11b2282863ceb1af6ddf48f",
+    "structural_checks": {
+      "labels_before": 132,
+      "labels_after": 127,
+      "aliases_before": 7,
+      "aliases_after": 12,
+      "lost_labels_without_alias": [],
+      "duplicate_label_or_alias_names": [],
+      "unresolved_alias_targets": [],
+      "Lean_badges_before": 33,
+      "Lean_badges_after": 33,
+      "lost_Lean_badges": [],
+      "duplicate_Lean_badges": [],
+      "new_aliases": {
+        "prop:stream_properties": "thm:split_correct",
+        "cor:dc_split_endpoint": "thm:mixing_convex_extreme",
+        "eq:delta_int_neg": "eq:delta_int_pos",
+        "eq:closed_formula_h": "eq:closed_formula_g",
+        "prop:conv_correct": "lem:linear_chunk"
+      },
+      "citation_commands_preserved": true
+    },
+    "mathematical_checks": [
+      {
+        "result": "Merged ReLU tail structure and correctness",
+        "assessment": "Accepted. Convexity and coordinatewise monotonicity remain on all doubled real space, recovery retains its non-negative-input quantifier, every depth including identity tail is explicit. One application of the same prior network theorem establishes both former results."
+      },
+      {
+        "result": "Merged eta=1 mixing endpoint",
+        "assessment": "Accepted. Canonical affine maps, input convention, hidden max/identity update and ungated final readout survive. Componentwise convex input hypothesis and its pullback consequence remain; the eta=0 counterexample is unchanged."
+      },
+      {
+        "result": "Merged affine chunks and convolution",
+        "assessment": "Accepted. Canonical split equations are referenced instead of repeated. They imply non-negative values, non-negative affine coefficients, convexity, coordinatewise monotonicity and exact affine difference. Explicit convolution formula and difference are retained; ReLU composition remains justified."
+      },
+      {
+        "result": "Indexed shift equivariance",
+        "assessment": "Accepted. The index s in {g,h} exactly represents both prior equations, with every depth and both shifted/unshifted non-negative-domain requirements unchanged."
+      },
+      {
+        "result": "Vectorized backward update",
+        "assessment": "Accepted. Left multiplication of J^(l+1) by the pair of next-layer row sensitivities expands to both former recursions with identical matrix orientation and layer indices. Common shift, initialization, strict-gate scope and ungated-output convention remain. Proof references now correctly describe component sums and differences."
+      },
+      {
+        "result": "Indexed unified gradients",
+        "assessment": "Accepted. Chain rule for (a/2,-a/2) retains the factor one half for both tails and their stabilized variants."
+      },
+      {
+        "result": "Signed-tail closed formula",
+        "assessment": "Accepted. epsilon_g=1 yields (delta-sum)/2; epsilon_h=-1 yields -(delta+sum)/2. Every correction factor and product is unchanged. Final-readout zero term, exact difference, alpha=0, alpha=1/2 and both terminal signs remain. The original recurrence proof covers both specializations."
+      },
+      {
+        "result": "Inline max-pooling proof and CNN invariant",
+        "assessment": "Accepted. Candidate=(u_j^+-u_j^-)+v^- is exactly the removed displayed identity; removing the common term after maximum proves recovery. Non-negativity/convexity/monotonicity justification remains. CNN theorem retains all chunks, non-negative input, and exclusions for winner-takes-all and input-dependent recentering."
+      }
+    ],
+    "Lean_link_observation": {
+      "equation_alias": "eq:delta_int_neg",
+      "target": "HiddenMonotonicity.actual_negative_pullback",
+      "status": "The alias preserves the equation reference; its distinct Lean target remains linked by live eq:delta_minus_recursion in tex/chapters/05_saliency.tex. The closed-form h alias shares its Lean target with g.",
+      "merged_statement_badges": "Both distinct result badges remain at each merged ReLU, mixing and affine/convolution statement."
+    },
+    "findings": [],
+    "required_fixes": [],
+    "limitations": [
+      "No LaTeX build or PDF pagination review performed."
+    ]
+  },
+  "pagination_claim": "CNN end now removes two short standalone displays; predicted page savings require the root build.",
+  "labels": {
+    "before": 139,
+    "after": 139,
+    "lost": [],
+    "added": []
+  },
+  "Lean_badges": {
+    "before": 33,
+    "after": 33,
+    "lost": [],
+    "added": []
+  },
+  "citations": {
+    "before": 17,
+    "after": 17,
+    "lost": [],
+    "added": []
+  }
+}

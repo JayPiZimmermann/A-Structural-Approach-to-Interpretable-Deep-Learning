@@ -4,7 +4,7 @@ This chapter evaluates two design choices: exposing split streams to attribution
 
 \section{Experimental Setup}\label{sec:experimental_setup}\label{sec:quantus_evaluation}
 
-The split campaign evaluates pretrained VGG-16 and ResNet-18 on a custom 50-class ImageNet-S subset at $224\times224$ resolution. The source paper reports 50 validation images (one per class) for layer--formula selection and 566 test images. Its released loader selects locally available image--mask pairs without the game campaign's label-agreement filter; these counts alone cannot recover historical sample membership. Explanations target the predicted class, including for misclassified images; localization uses the annotated object mask. Baselines use Captum, Zennit for $\gamma$-LRP, and separate Grad-CAM++ and LayerCAM implementations. Each method retains localization-selected and Pixel-Flipping-selected configurations (full settings and results: Section~\ref{app:saliency} of the supplement).
+The split campaign evaluates pretrained VGG-16 and ResNet-18 on a custom 50-class ImageNet-S subset at $224\times224$ resolution. The source paper reports 50 validation images (one per class) for layer--formula selection and 566 test images. Its released loader selects locally available image--mask pairs without the game campaign's label-agreement filter; these counts alone cannot recover historical sample membership. Explanations target the predicted class, including for misclassified images; localization uses the annotated object mask. Baselines use Captum, Zennit for $\gamma$-LRP, and separate Grad-CAM++ and LayerCAM implementations. Each method retains localization-selected and Pixel-Flipping-selected configurations (full settings and results: Section~\ref{app:saliency}).
 
 The split tables report Pixel Flipping as score-drop AUC (PF$^{\mathrm{drop}}_5$, PF$^{\mathrm{drop}}_{20}$; $\uparrow$), perturbing 112 scalar input features per step, and Maximum Sensitivity with 25 perturbations. The revised game campaign reports remaining-logit AUC (PF$_5$, PF$_{20}$; $\downarrow$), with 1,568 scalar features per step, and sensitivity with 50 perturbations on a common 200-image test subset. Both Pixel-Flipping implementations broadcast spatial attribution over color channels, indexing the flattened $C\times H\times W$ input: $150{,}528$ features for RGB images at this resolution. Quantus measures Selectivity, Attribution Localization and Pointing Game. Both campaigns include VGG-16; their ResNet-18 and ResNet-50 scores are not interchangeable. Table abbreviations are AL (Attribution Localization), PG (Pointing Game), Sel (Selectivity), MaxS (Maximum Sensitivity), AvgS (Average Sensitivity), GCAM (Grad-CAM), GCAM++ (Grad-CAM++), LCAM (LayerCAM), IntGrad (Integrated Gradients), and SmGrad (SmoothGrad); Guided GCAM denotes Guided Grad-CAM. Dark blue shading and bold type mark the best values within each caption's comparison; n/r means unreported in the source paper, and n/a means inapplicable.
 
@@ -13,96 +13,79 @@ The split tables report Pixel Flipping as score-drop AUC (PF$^{\mathrm{drop}}_5$
 \input{figures/experiments/vgg_saliency_comparison_main}
 
 \paragraph{Qualitative analysis.}
-Figure~\ref{fig:vgg_saliency_comparison_main} compares split and baseline saliency maps at their best-performing layers. Mid-layer SplitCAM resembles earlier-layer classical $\gamma$-\ac{lrp}. Against same-layer LayerCAM, it gives more weight across object pixels while emphasizing key features, balancing interpretability and focus (low entropy). For $\alpha \ll 0.5$, SplitGrad yields less focused, finely aligned gradients following image details. We attribute this to Maxout retaining pre-activation information that ReLU discards at inactive neurons. Further examples appear in Section~\ref{app:saliency} of the supplement.
-
-\input{tables/eval_vgg_main}
+Figure~\ref{fig:vgg_saliency_comparison_main} compares split and baseline saliency maps at their best-performing layers. Mid-layer SplitCAM resembles earlier-layer classical $\gamma$-\ac{lrp}. Against same-layer LayerCAM, it gives more weight across object pixels while emphasizing key features, balancing interpretability and focus (low entropy). For $\alpha \ll 0.5$, SplitGrad yields less focused, finely aligned gradients following image details. We attribute this to Maxout retaining pre-activation information that ReLU discards at inactive neurons. Further examples appear in Section~\ref{app:saliency}.
 
 \paragraph{Quantitative analysis.}
-Tables~\ref{tab:eval_vgg_main} and~\ref{tab:eval_res_main} compare selected VGG-16 and ResNet-18 configurations on five Quantus metrics: Selectivity, Attribution Localization, Pointing Game accuracy, Pixel Flipping (score-drop AUC, PF$^{\mathrm{drop}}_5$ and PF$^{\mathrm{drop}}_{20}$), and Maximum Sensitivity. \emph{Abs} indicates absolute saliency values before Quantus evaluation. Full results, explanations, layers and parameter configurations appear in Section~\ref{app:saliency} of the supplement.
+Tables~\ref{tab:eval_vgg_main} and~\ref{tab:eval_res_main} give the complete selected VGG-16 and ResNet-18 configurations; \emph{Abs} indicates absolute saliency before Quantus evaluation. Section~\ref{app:saliency} specifies layers and parameters.
 
-The backpropagation-based methods depend strongly on layer choice (ablations: Section~\ref{app:ablation} of the supplement).
+The backpropagation-based methods depend strongly on layer choice (ablations: Section~\ref{app:ablation}).
 
 VGG-16 gains depend on metric and configuration. Table~\ref{tab:eval_vgg_main} gives SplitCAM Pointing Game $0.938$ versus Guided Backprop's $0.887$, Attribution Localization $0.651$ versus Guided Backprop's $0.632$, and Selectivity $2.727$ versus LayerCAM's $2.792$, from different SplitCAM layers. LayerCAM has the highest displayed Pixel Flipping score-drop AUCs, $0.317$ and $2.474$, versus SplitCAM's $0.300$ and $2.404$. SplitLRP has the lowest Maximum Sensitivity, $0.282$, versus Guided Backprop's $0.375$, and higher Pointing Game but lower Attribution Localization and Pixel Flipping scores than the displayed classical $\gamma$-\ac{lrp} configurations.
 
 \section{Split Methods: ResNet-18}\label{sec:results_resnet}
 
-\input{tables/eval_res_main}
+On ResNet-18 (Table~\ref{tab:eval_res_main}), SplitCAM has the lowest reported Selectivity, $3.503$, versus $3.517$ for the strongest baseline, Guided Backprop: a difference of $0.014$. SplitCAM and SplitGrad reach Pointing Game $0.972$ versus LayerCAM's $0.971$. Attribution Localization is $0.673$ for SplitCAM and $0.664$ for LayerCAM; Guided Grad-CAM leads the full comparison at $0.742$ (Table~\ref{tab:xai_eval_comprehensive_res}). Baselines retain the best Pixel Flipping and Maximum Sensitivity scores: the gains are metric-specific.
 
-Table~\ref{tab:eval_res_main} reports selected ResNet-18 configurations on the same five metrics, with \emph{Abs} indicating absolute saliency before evaluation (full tables: Section~\ref{app:saliency} of the supplement). SplitCAM has the lowest reported Selectivity, $3.503$, versus $3.517$ for the strongest baseline, Guided Backprop: a difference of $0.014$. SplitCAM and SplitGrad reach Pointing Game $0.972$ versus LayerCAM's $0.971$. Attribution Localization is $0.673$ for SplitCAM and $0.664$ for LayerCAM; Guided Grad-CAM leads the full comparison at $0.742$ (Table~\ref{tab:xai_eval_comprehensive_res}). Baselines retain the best Pixel Flipping and Maximum Sensitivity scores: the gains are metric-specific.
+\section{Split-Method Sanity and Runtime Checks}
+
+\subsection{Randomization Sanity Check}\label{app:p1_sanity}
+
+The model-randomization sanity check~\parencite{Adebayo2018sanity} tests dependence on learned parameters versus input patterns surviving model corruption. For each method, maps from trained VGG-16 are compared with maps after Gaussian reinitialization of the last three feedforward layers; parameter-sensitive methods should show a substantial similarity drop. Given the shortcomings of top-down randomization discussed by \textcite{Binder2022shortcomings}, this complements the primary trajectory-space diagnostic of Section~\ref{subsec:hellinger_randomization}. Similarity measures are (i)~HOG similarity (Pearson correlation of histograms of oriented gradients), (ii)~signed Spearman rank correlation, and (iii)~SSIM; lower similarity indicates stronger parameter dependence.
+
+\input{tables/appendix/randomization_sanity_check}
+
+In Table~\ref{tab:randomization_sanity_check}, every reported SplitCAM and SplitGrad configuration has lower SSIM than every listed baseline; HOG and Spearman comparisons are mixed. This shows responses to the tested randomization without isolating stabilization's effect on numerical gradient growth. SplitLRP retains high HOG and Spearman similarity (approximately $0.99$ and $1.00$), while SSIM falls to $0.45$--$0.56$. Attenuation by the $\epsilon$-\ac{lrp} rule could explain this behavior; the comparison alone does not identify its cause.
+
+\subsection{Computational Efficiency}\label{app:p1_timing}
+
+Table~\ref{tab:timing_comparison} reports mean attribution times on the custom 50-image ImageNet-S validation subset for ResNet-18 and VGG-16. Splitting times, averaged separately over 20 setups, are 0.033\,s and 0.030\,s, respectively. SplitCAM and SplitGrad take 0.33--0.44\,s per image, versus 0.28--0.31\,s for the row labeled Guided Grad-CAM. SplitCAM takes approximately 14--29 times as long as the corresponding ordinary Grad-CAM and LayerCAM rows; the split methods are much faster than the reported Feature Ablation and Occlusion configurations.
+
+The released evaluator splits the model once per configuration and reuses it across images. The per-image timer covers attribution, helper postprocessing, copying and cleanup, excluding image/model loading, initial device transfer, target prediction and splitting. The helper computes maps for all spatial layer chunks from cached activations and gradients before selecting the output; this extra computation is timed. The shifting parameter $\alpha$ changes the backward rule; its runtime effect was not measured separately.
+
+The historical timing artifacts lack hardware, precision and exact configuration IDs. The released VGG-16 \texttt{guided\_grad\_cam} configuration dispatches Guided LayerCAM, whereas the source table labels it Guided Grad-CAM. We retain the reported label and numbers, with this baseline identity unresolved. These timings describe the source implementation and do not bound other implementations' overhead.
+
+\input{tables/appendix/timing_comparison}
+
+\FloatBarrier
+
 
 \section{Split-Method Stabilization Ablations}\label{sec:ablations}
 \subsection{Backward-Pass Stabilization of the Split Methods}\label{subsec:alpha_ablation}
 
-\input{tables/alpha_ablation_main}
+Two configurations in Table~\ref{tab:alpha_ablation_main} illustrate the effect of the shift $\alpha$ on SplitGrad and SplitCAM on the custom ImageNet-S test split. As in Section~\ref{sec:stabilization_dc}, $\alpha = 0$ leaves the backward pass unstabilized; $\alpha = 0.5$ gives local sensitivities resembling scaled original-network gradients. Reducing $\alpha$ from $0.5$ to $0.4$ improves both configurations' Pointing Game and Attribution Localization, while SplitCAM's PF$^{\mathrm{drop}}_{20}$ falls from $1.607$ to $1.585$. SplitGrad peaks in PF$^{\mathrm{drop}}_{20}$ at $\alpha = 0.4$ and localization at $\alpha = 0.35$; SplitCAM's Pointing Game and Attribution Localization peak at $0.4$ and $0.35$, respectively. Both minimize Maximum Sensitivity at $\alpha = 0$. The sweep supports metric-dependent $\alpha$ choices; numerical stabilization and attribution-rule changes remain confounded. Section~\ref{app:ablation} (Table~\ref{tab:alpha_comparison_by_method}) gives the full grid and compares convex with winner-takes-it-all max-pooling.
 
-Table~\ref{tab:alpha_ablation_main} varies the shift $\alpha$ for two selected SplitGrad and SplitCAM configurations on the custom ImageNet-S test split. As in Section~\ref{sec:stabilization_dc}, $\alpha = 0$ leaves the backward pass unstabilized; $\alpha = 0.5$ gives local sensitivities resembling scaled original-network gradients. Reducing $\alpha$ from $0.5$ to $0.4$ improves both configurations' Pointing Game and Attribution Localization, while SplitCAM's PF$^{\mathrm{drop}}_{20}$ falls from $1.607$ to $1.585$. SplitGrad peaks in PF$^{\mathrm{drop}}_{20}$ at $\alpha = 0.4$ and localization at $\alpha = 0.35$; SplitCAM's Pointing Game and Attribution Localization peak at $0.4$ and $0.35$, respectively. Both minimize Maximum Sensitivity at $\alpha = 0$. The sweep supports metric-dependent $\alpha$ choices; numerical stabilization and attribution-rule changes remain confounded. Section~\ref{app:ablation} of the supplement (Table~\ref{tab:alpha_comparison_by_method}) gives the full grid and compares convex with winner-takes-it-all max-pooling.
+The unresolved source-table discrepancy for this SplitCAM configuration is documented in Section~\ref{app:backward_ablation}.
 
-For the same SplitCAM configuration, Tables~\ref{tab:eval_vgg_main} and~\ref{tab:alpha_ablation_main} retain conflicting source values: PF$^{\mathrm{drop}}_{20}=1.590$ versus $1.585$ and MaxS$=0.456$ versus $0.457$. Resolving this discrepancy requires unavailable per-image results.
+\subsection{Forward-Pass Stabilization}\label{app:forward_ablation}
 
-\paragraph{Forward-pass stabilization.}
-Without forward stabilization (Section~\ref{sec:stabilization_dc}), late VGG-16 split activations grow to order $10^{18}$, producing errors of order $10^{9}$; SplitLRP produces nearly uniform maps. Scaling outperforms shifting on every reported metric in the two early-layer SplitLRP configurations. At later layers, shifting gives higher Attribution Localization and Pixel-Flipping score-drop AUC, scaling lowers Maximum Sensitivity, and Pointing Game depends on configuration (supplement Table~\ref{tab:lrp_scale_shift_comparison}; unstabilized and shift-stabilized SplitCAM grids: Tables~\ref{tab:alpha_comparison_none} and~\ref{tab:alpha_comparison_shift}).
+We assess forward stabilization for framework-selected SplitLRP layers and manually selected SplitCAM layers. The shifting baseline sets positive-neuron activations to half the original activation and negative-neuron activations to its negative half. Without forward stabilization, late VGG-16 SplitCAM activations reach the order of $10^{18}$, with numerical errors of order $10^{9}$ despite per-layer correction. Unstabilized SplitLRP produced nearly white maps with small, random, semantically meaningless artifacts; no quantitative metrics were computed.
+
+Tables~\ref{tab:alpha_comparison_none} and~\ref{tab:alpha_comparison_shift} report SplitCAM without forward stabilization and with shifting, respectively, using the configurations of Table~\ref{tab:alpha_comparison_by_method}. Table~\ref{tab:lrp_scale_shift_comparison} compares SplitLRP shifting and scaling. Scaling improves all reported metrics for both layer-7 configurations. At later layers, shifting gives higher Attribution Localization and Pixel-Flipping score-drop AUC; scaling lowers Maximum Sensitivity. Pointing Game rankings reverse between configurations, supporting a configuration-dependent trade-off.
+
+\input{tables/appendix/lrp_scale_shift}
+
+
 
 \section{Game-Based Case Study}\label{sec:results_vit}\label{sec:saliency_results}\label{ptnb:sec:experiments}\label{ptnb:sec:case-study}
 
 
 
 \paragraph{Setup.}
-We evaluate \ac{rg} and \ac{sg} against standard backward baselines (Section~\ref{ptnb:app:baselines})
-on VGG-16~\parencite{Simonyan2015}, ResNet-50~\parencite{He2016resnet}, and
-ViT-B/16~\parencite{Dosovitskiy2021vit}, using PyTorch~\parencite{Paszke2019PyTorch} and torchvision ImageNet-1K
-checkpoints~\parencite{Deng2009,Russakovsky2015ilsvrc}\footnote{Checkpoint documentation: \url{https://docs.pytorch.org/vision/stable/models.html}; the weight identifiers used here are listed in Section~\ref{app:extended_protocol}.}, on a 50-class
-ImageNet-S subset~\parencite{gao2022luss} at $224{\times}224$ (50-image validation split, 565-image
-test split), and on Pascal VOC 2012~\parencite{Everingham2010voc}\footnote{Release documentation: \url{https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2012/}.}. For the game campaign, the $752$ released ImageNet-S50 annotation records are filtered to $616$ whose class agrees with the official ILSVRC2012 label; one image per class is selected for validation with seed $42$, and one of the remaining $566$ test images is excluded because its object mask is outside the center crop. The explanation target is the dataset class, including on misclassified images (Section~\ref{ptnb:app:protocol}). ImageNet-S provides the pixel masks
-required by the localization metrics; ImageNet boxes over-credit mass anywhere inside the box. All
-metrics are computed through Quantus~\parencite{Hedstrom2023} (definitions in
-Section~\ref{ptnb:app:metrics}): localization (\ac{ptnbAttrLoc}, \ac{ptnbPG}, Top-$k$ Intersection (TK);
-$\uparrow$), faithfulness (Pixel Flipping area under the remaining-logit curve over the first 5\% and 20\% of flips
-(PF$_5$, PF$_{20}$), \ac{ptnbSel}; $\downarrow$), robustness (Maximum Sensitivity (MaxS), Average
-Sensitivity (AvgS); $\downarrow$). Baselines run in their reference implementations (lxt, zennit,
-captum, pytorch-grad-cam, and the authors' code for \acs{ptnbTIBAV} and \acs{ptnbGAE}) at the authors'
-settings, plus declared grids~\parencite{Achtibat2024AttnLRP,Anders2021Zennit,kokhlikyan2020captum,Gildenblat2021gradcam,Chefer2021GenericAttention,Chefer2021ICCV}. \ac{rg} analytical modes are
-reported alongside each configuration: temperature $\tau$, risk aversion $\lambda$ (softmax-shift
-variant $\lambda_{\mathrm{sm}}$ on \ac{vit} attention logits), \ac{lrp} stabilizer $\varepsilon$,
-equivariant-Reynolds sample count $N$.
+We evaluate \ac{rg} and \ac{sg} against standard backward baselines (Section~\ref{ptnb:app:baselines}) on VGG-16~\parencite{Simonyan2015}, ResNet-50~\parencite{He2016resnet}, and ViT-B/16~\parencite{Dosovitskiy2021vit}, using PyTorch~\parencite{Paszke2019PyTorch} and torchvision ImageNet-1K checkpoints~\parencite{Deng2009,Russakovsky2015ilsvrc}\footnote{Checkpoint documentation: \url{https://docs.pytorch.org/vision/stable/models.html}; identifiers: Section~\ref{app:extended_protocol}.}. ImageNet-S~\parencite{gao2022luss} supplies 50 validation and 565 test images at $224{\times}224$; Pascal VOC 2012~\parencite{Everingham2010voc} tests cross-dataset transfer. The data filters, annotated-class targets and pixel-mask protocol are specified in Section~\ref{ptnb:app:protocol}. Quantus~\parencite{Hedstrom2023} measures localization (AL, PG, TK; $\uparrow$), faithfulness (PF$_5$, PF$_{20}$, Sel; $\downarrow$), and robustness (MaxS, AvgS; $\downarrow$). Baseline implementations and settings, mode parameters, and metric definitions appear in Sections~\ref{ptnb:app:baselines}, \ref{ptnb:app:config-symbols} and~\ref{ptnb:app:metrics}.
 
 \paragraph{Protocol.}
-Methods are evaluated under a two-stage protocol that treats baselines and our games alike. Stage~1
-runs a grid search on the validation split (one image per class) for every method with tunable
-parameters, including DAVE (Section~\ref{ptnb:app:grids}, Table~\ref{ptnb:tab:main-search-grid}; \nValGrid{}
-configurations in total). Stage~2 picks, for each method, the \emph{loc} configuration with the
-best localization rank-sum over $\{\text{AL}, \text{PG}, \text{TK}\}$ and, independently, the
-\emph{faith} configuration with the best faithfulness rank-sum over $\{\text{PF}_5, \text{PF}_{20},
-    \text{Sel}\}$, and evaluates both once on the test split, with 95\% percentile-bootstrap confidence
-intervals~\parencite{Efron1993bootstrap} and Holm-corrected~\parencite{Holm1979} paired tests against the
-best row of each metric (Section~\ref{ptnb:app:stats}); for \ac{rg} / \ac{rg}+Eq we additionally show
-the $\alpha\beta$-\ac{lrp} anchor $(\alpha,\beta,\varepsilon,\tau){=}(2,1,0.5,1)$ as a
-theorem-driven reference (Theorem~\ref{ptnb:thm:lrp-recovery}). Localization is a natural target for
-modes designed to control routing focus, and object annotations provide external ground truth:
-\textcite{Kohlbrenner2020} compare \ac{lrp} rule composites by the share of positive relevance inside
-ground-truth bounding boxes; we use absolute attribution mass and pixel masks. The main table reports the loc row of every
-method; since mask agreement is not faithfulness, the faith rows of all methods are reported in
-Section~\ref{ptnb:app:results}.
+Every tunable method, including baselines and DAVE, uses the same validation search: \nValGrid{} configurations in the declared grids (Table~\ref{ptnb:tab:main-search-grid}). Independent localization and faithfulness rank-sums select two configurations per method; both are evaluated once on test data. Confidence intervals and Holm-corrected paired comparisons follow Section~\ref{ptnb:app:stats}. The \ac{rg}/\ac{rg}+Eq anchors additionally represent $\alpha\beta$-\ac{lrp} exactly (Theorem~\ref{ptnb:thm:lrp-recovery}). Table~\ref{ptnb:tab:test-ci-vit} gives both selections and intervals; the comparison below uses localization-selected rows and retains their original testing family. Reporting faithfulness-selected rows separately preserves the distinction between mask agreement and faithfulness.
 
-\begin{table}[H]
-    \centering
-    \caption[ViT-B/16 on the ImageNet-S test split]{ViT-B/16 on the ImageNet-S test split ($n{=}565$; MaxS/AvgS on a fixed random subset of
-    200 test images). \textbf{Bold}, dark shading: best in column; $^{\approx}$, light shading: not
-    significantly different from the best (paired bootstrap / McNemar, Holm-corrected, $p\ge0.05$);
-    small numbers: 95\% percentile-bootstrap confidence intervals over test images
-    (Section~\ref{ptnb:app:stats}). One row per method, selected on the validation split by the
-    localization rank-sum (faithfulness-selected rows and further baselines:
-    Section~\ref{ptnb:app:results}); the RG anchor is the exact $\alpha\beta$-\ac{lrp} representation
-    (Theorem~\ref{ptnb:thm:lrp-recovery}). $t$/img: seconds per image on one GPU. Config: SmoothGrad
-    averages $N$ samples at noise level $\sigma$ relative to the input range; LRP-$\gamma$ has
-    stabilizer $\varepsilon$ and positive-weight boost $\gamma$; AttnLRP has layer-type parameters
-    $\gamma_{\mathrm{conv}}, \gamma_{\mathrm{lin}}, \varepsilon_{\mathrm{attn}}$; KernelSHAP draws $N$
-    samples for $M$ superpixels; \ac{rg} modes as in Table~\ref{ptnb:tab:modes}.\PrelimTag}
-    \label{ptnb:tab:eval-vit}\label{tab:eval-vit}
-\TableContent{
-    \scriptsize
-    \resizebox{\textwidth}{!}{\input{tables/ptnb_v2/generated/main_vit_tabular}}
-}%
-\end{table}
+\appneedspace{8\baselineskip}
+\begin{center}
+    \captionsetup{hypcap=false}
+    \captionof{table}[ViT-B/16: full ImageNet-S results with confidence intervals]{ViT-B/16, ImageNet-S test split: all rows with 95\% bootstrap confidence
+    intervals (MaxS/AvgS: the fixed 200-image subset). Metrics: Section~\ref{ptnb:app:metrics}; configuration symbols and row labels:
+    Section~\ref{ptnb:app:config-symbols}. Bold/dark shading marks the best row; $^{\approx}$/light shading marks no significant difference from it under the full-table comparison (Section~\ref{ptnb:app:stats}).}
+    \label{ptnb:tab:test-ci-vit}\label{ptnb:tab:eval-vit}\label{tab:eval-vit}
+\end{center}
+\captionsetup{hypcap=true}
+\appinputgenci{tables/ptnb_v2/generated/test_vit_b16_ci_longtable}
 
 \paragraph{ViT-B/16 (Table~\ref{ptnb:tab:eval-vit}).}
 Under the localization-selected protocol, the \ac{rg} family beats every baseline on attribution
@@ -120,15 +103,29 @@ Among the localization-selected rows, faithfulness favors the \ac{lrp} rules: At
 Sel (PF$_{20}$ \vitBestBasePFtwenty{} versus \vitRGlocPFtwenty{} for \ac{rg}), and the
 faithfulness-selected \ac{rg} row narrows but does not close the gap (PF$_{20}$
 \vitRGfaithPFtwenty{}). Across both selection objectives, faithfulness-selected AttnLRP has the lowest PF$_5$, PF$_{20}$ and Selectivity, at $7.64$, $6.12$ and $4.441$, respectively. The two anchors are the most robust rows (MaxS \vitRGanchorMaxS{} and
-\vitRGEqanchorMaxS{} versus \vitBestBaseMaxS{} for \vitBestBaseMaxSname{}), whereas the
+\vitRGEqanchorMaxS{} versus \vitBestBaseMaxS{} for \vitBestBaseMaxSname{}), with no Holm-significant MaxS difference between the two anchors. The
 localization-selected mode reaches MaxS \vitRGlocMaxS{}: sharper routing trades robustness and
 faithfulness for localization. \ac{ptnbADF} adds modest overhead (\ac{rg}: \vitRGlocTime\,s vs.\
 \vitRGanchorTime\,s base), still below sampling baselines like SmoothGrad or IntGrad; Reynolds
 averaging is the only expensive variant (\vitRGEqTime\,s), exceeding even the perturbation method
 KernelSHAP (\vitSHAPTime\,s).
 
+\paragraph{ViT-B/16 attribution runtime.} For the localization-selected or fixed configurations in Table~\ref{ptnb:tab:test-ci-vit}, seconds per image on one GPU were: Gradient $0.02$, SmoothGrad $1.12$, LRP-$\gamma$ $0.08$, AttnLRP $0.10$, TIBAV $0.15$, GAE $0.03$, KernelSHAP $6.71$, RG anchor $0.10$, RG $0.17$, RG+Eq anchor $4.93$, and RG+Eq $8.66$. The anchors are the exact $\alpha\beta$-\ac{lrp} representations of Theorem~\ref{ptnb:thm:lrp-recovery}; hardware and timing scope are specified in Section~\ref{ptnb:app:compute-resources}.
+
 \paragraph{Higher $\tau$ spreads attribution into context.}
 Localization-optimal modes concentrate mass on the few patches aligning with the mask. Increasing $\tau$ spreads equilibrium routing over more predecessors: the displayed examples retain object focus while extending attribution into context, without establishing which contextual features the model uses. Around the selected ViT-B/16 setting, AL decreases monotonically from $0.723$ at $\tau{=}0.3$ to $0.461$ at $\tau{=}1$; faithfulness is non-monotonic. High $\tau$ shows how localization scores favor concentrated maps within the same game. User-perceived informativeness remains untested.
+
+\begin{table}[htbp]
+    \centering
+    \caption[ViT-B/16 Routing Game attention rule ablation]{\ac{vit}-B/16, \ac{rg}: attention ablation on 565 ImageNet-S test images at the anchor and validation-selected settings. Cells: gradient fallback above; composite Value rule (Theorem~\ref{ptnb:thm:attn-ab-recovery}, gray) below. Configurations: Section~\ref{ptnb:app:config-symbols}. $^{\dagger}$: paired bootstrap (McNemar for PG), Holm-corrected over the table, $p<0.05$.}
+    \label{ptnb:tab:abl-gradient-fallback}
+\TableContent{
+    \setlength{\tabcolsep}{2pt}
+    \renewcommand{\arraystretch}{0.9}
+    \small
+    \appfitgen{tables/ptnb_v2/generated/attention_rule_vit_b16_tabular}
+}%
+\end{table}
 
 \paragraph{Cross-dataset transfer (Pascal VOC).}
 A natural worry with validation-tuned modes is that the chosen $\tau$, $\lambda_{\mathrm{sm}}$ and
@@ -149,4 +146,10 @@ On CNNs, where \ac{lrp}-type rules are strong, localization-selected \ac{rg} lea
 
 \subsection{Game-Method Ablations}\label{subsec:mode_ablation}
 
-Section~\ref{ptnb:app:abl-one-factor} varies one mode around each validation-selected configuration on 565 test images; these diagnostics do not affect selection. Section~\ref{ptnb:app:pg-granularity} controls Pointing Game for map granularity, and Section~\ref{ptnb:app:abl-gradient-fallback} compares composite Value-routing attention with a gradient fallback. The analyses reveal trade-offs among mask agreement, perturbation faithfulness and robustness.
+One-factor mode ablations around validation-selected configurations (Section~\ref{ptnb:app:abl-one-factor}; 565 test images), granularity-controlled Pointing Game (Section~\ref{ptnb:app:pg-granularity}), and attention-rule comparisons (Table~\ref{ptnb:tab:abl-gradient-fallback}) expose trade-offs among localization, perturbation faithfulness and robustness. These diagnostics do not affect selection.
+
+\paragraph{Gradient-fallback attention.}\label{ptnb:app:abl-gradient-fallback}
+
+Conditioned \ac{rg} routes only through Values, with zero $Q$, $K$ gradients, as in CP-LRP~\parencite{Ali2022AttnLRP} (Section~\ref{ptnb:app:vit-implementation}). Gradient fallback uses pure autograd through attention, recovering zennit-style $\varepsilon$-\ac{lrp}; Value-routing risk $\lambda_\text{sm}$ is inactive. Fallback lowers all three localization metrics in every configuration (AL and TK significantly throughout) and worsens every PF$_5$, PF$_{20}$ and Sel cell, significantly in four of nine.
+
+% VIT_EXTENSION_INSERT_HERE

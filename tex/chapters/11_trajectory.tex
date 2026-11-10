@@ -1,4 +1,5 @@
 \chapter{The Trajectory Distribution View}\label{ch:trajectory}
+\AliasLabel{app:supp_trajectory}{ch:trajectory}
 
 Chapter~\ref{ch:saliency} turns internal signals and backward routing choices into attribution maps; Chapter~\ref{ch:experiments} evaluates them. Their use in interventions also requires examining the underlying calculation. The equilibrium policies of Chapter~\ref{ch:game_theory} induce backward-trajectory distributions, enabling comparison before projection onto input pixels. We study their Hellinger distance, its exact per-input-state disagreement map, and complete versus survival-conditioned laws. Spectral analysis diagnoses amplification and target discrimination through the attribution redistribution operator's singular spectrum at a fixed input~\parencite{Maess2026Spectral}; our experiments compare normalized routing under input noise and parameter randomization.
 
@@ -14,10 +15,7 @@ Symbolic XAI scores logical feature queries by selecting signed terms from a mul
 
 \section{Trajectory Sanity Check}\label{ptnb:sec:hellinger-sanity}\label{ptnb:sec:hellinger}
 
-The cascading-randomization sanity check of~\textcite{Adebayo2018sanity} tests explanations' dependence on learned parameters by comparing pixel-space maps. Here we examine normalized backward routing: a trajectory distribution $\Pi$ whose model-dependent signed discounted occupation projection recovers attribution.
-The \textbf{Hellinger distance}~\parencite{Hellinger1909} $\mathrm{H}(\Pi_A, \Pi_B) = (1 -
-    \mathrm{BC})^{1/2}$, with Bhattacharyya coefficient~\parencite{Bhattacharyya1943} $\mathrm{BC} =
-    \sum_\zeta \sqrt{\Pi_A(\zeta)\,\Pi_B(\zeta)}$, directly compares routing. We test whether parameter randomization moves $\Pi$ even when attribution maps remain stable. The metric satisfies $\mathrm{H}=0$ iff $\Pi_A = \Pi_B$ and $\mathrm{H}=1$ iff their supports are disjoint. It remains finite when routes open or close, unlike KL-type divergences. For layered Markov laws on the same graph, BC factorizes: one backward pass computes $\mathrm{H}$ exactly in edge-linear time, and $\mathrm{H}^2$ decomposes into per-input-state contributions (Section~\ref{ptnb:app:path-divergence}).
+The cascading-randomization test of~\textcite{Adebayo2018sanity} asks whether explanations depend on learned parameters. We compare normalized backward-trajectory laws $\Pi$ through Hellinger distance, before their model-dependent signed discounted occupation projection into pixel maps. This tests whether randomization changes routing even when the displayed attribution remains stable. Section~\ref{ptnb:app:path-divergence} derives an exact edge-linear computation and per-input-state decomposition.
 
 \subsection{Trajectories change, maps need not}\label{ptnb:sec:hellinger-cascading}
 
@@ -35,40 +33,76 @@ The \textbf{Hellinger distance}~\parencite{Hellinger1909} $\mathrm{H}(\Pi_A, \Pi
     \label{ptnb:fig:hellinger-sanity}
 \end{figure}
 
-Under cascading randomization (layers cumulatively re-initialized output$\to$input), \ac{sg} and \ac{rg} diverge from the first randomized layer and plateau near the double-random reference (Table~\ref{ptnb:tab:double-random-hellinger}, Figure~\ref{ptnb:fig:hellinger-sanity}). This reference lies below $\mathrm{H}=1$ because models randomized over the tested layers still share short trajectories: both may stop at structurally dead neurons and enter the common cemetery. Such paths coincide more readily than full input-reaching trajectories. Conditioning on survival removes shared cemetery mass, yielding $\mathrm{H}_{\mathrm{surv}} \approx 1$. Trajectory and map readouts have weak observed per-image rank association (Spearman $|\rho|\le \perImageCrossMax$ between $\mathrm{H}$ and pixel-level Gradient or $\alpha\beta$-\ac{lrp} similarity): similar maps need not imply similar calculations. Section~\ref{ptnb:app:sanity-check} details per-game values, conditioning, the floor mechanism, and per-image analysis.
+Under cascading randomization (layers cumulatively re-initialized output$\to$input), \ac{sg} and \ac{rg} diverge from the first randomized layer and plateau near the double-random reference (Table~\ref{ptnb:tab:double-random-hellinger}, Figure~\ref{ptnb:fig:hellinger-sanity}). Shared short absorbing paths keep plain $\mathrm H$ below one; removing cemetery mass gives $\mathrm H_{\mathrm{surv}}\approx1$. Trajectory and map readouts have weak per-image rank association (Spearman $|\rho|\le\perImageCrossMax$ between $\mathrm H$ and pixel-level Gradient or $\alpha\beta$-\ac{lrp} similarity). Section~\ref{ptnb:app:sanity-check} develops the floor mechanism, per-game values, and per-image analysis.
 
 \paragraph{What the map hides.}\label{ptnb:sec:pixel-sanity}
 Map-level checks under parameter randomization reproduce~\textcite{Adebayo2018sanity} and \textcite{sixt2020whenexplanationslie}: some methods retain structure at the cascade endpoint. On ViT-B/16, the \ac{rg} anchor retains Spearman $|\rho| = \sanityVitRGanchorRho$, highest among all methods, and HOG $r = \sanityVitRGanchorHOG$; VGG-16 LRP-$\varepsilon$ retains $\sanityVggLRPepsRho$ and $\sanityVggLRPepsHOG$ (Table~\ref{tab:sanity-check}). Localization-selected \ac{rg} modes are slightly more model sensitive than the anchor on all three models. \ch{In Figure~\ref{ptnb:fig:hellinger-sanity}, $\mathrm{H}$ reaches the double-random reference while maps retain structure. The map-level failure remains; $\mathrm{H}$ detects routing changes obscured by the map. Since discounted occupation projections also vary across models, this discrepancy does not isolate loss under a fixed projection.}
 \section{Hellinger Distance and Disagreement Map}\label{ptnb:app:path-divergence}
 
-We compare two layered Markov processes on a common state graph and seek both a scalar divergence
-of the trajectory distributions and an exact per-pixel decomposition of this divergence at the
-input layer.  We use the squared Hellinger distance because the geometric mean $\sqrt{PQ}$
-preserves the multiplicative structure of Markov trajectory distributions and yields an exact
-linear-time dynamic program.  Unlike Jeffreys divergence, it remains finite under support mismatch;
-unlike Jensen--Shannon, it admits an exact recursion on the layered graph.  Later, we decompose the
-squared Hellinger distance as a sum of non-negative per-pixel contributions over all input-layer
-states, giving a disagreement map at the input layer (Theorem~\ref{ptnb:thm:per-pixel}).
+We compare two laws on a common layered graph. The geometric mean $\sqrt{PQ}$ preserves trajectory factorization, yielding an exact edge-linear Hellinger pass and a non-negative input-state disagreement map. We first define the processes, then derive the recursion, decomposition, and survival-conditioned form.
 
-The formal foundations and proofs are given in companion Chapter~\ref{app:supp_trajectory}.
-We compare two processes on a common finite layered state graph with a shared deterministic
-starting state $s_0$. At layer $l$, $\mathcal S^{(l)}_+=\mathcal S^{(l)}\cup\{\dagger\}$
-contains the ordinary states and an absorbing cemetery state; $T_M^{(l)}$ is the transition
-kernel from layer $l$ to $l-1$, and $m_M^{(l)}(s)$ is the marginal probability of visiting $s$.
-The full trajectory law is $\Pi_M=\Pi_M^{(0)}$.
-For the \ac{rg}, full-law diagnostics retain the gate, branch, and routing substeps; only
-ordinary surviving paths admit exact act-only elimination
-(Remark~\ref{ptnb:rem:rg-natural-equivalence}).
+\subsection{Layered Markov Processes with Cemetery}\label{ptnb:sec:lmp-foundations}\label{subsec:trajectory_measures}\label{ptnb:sec:lmp}
+
+Fix $L\ge1$, finite ordinary-state sets $\mathcal S^{(l)}$, and an absorbing cemetery $\dagger$ at each layer, writing $\mathcal S^{(l)}_+=\mathcal S^{(l)}\cup\{\dagger\}$. The disjoint union of these layer-tagged sets is the state graph. Backward kernels $T_M^{(l)}:\mathcal S^{(l)}_+\to\Delta(\mathcal S^{(l-1)}_+)$, $M\in\{A,B\}$, satisfy
+\begin{equation}\label{ptnb:eq:cemetery-absorbing}
+ T_M^{(l)}(\dagger\to\dagger)=1,
+ \qquad T_M^{(l)}(\dagger\to s')=0\quad(s'\in\mathcal S^{(l-1)}).
+\end{equation}
+Ordinary states either move to an ordinary predecessor or stop at $\dagger$. Both processes share a deterministic start $s_0\in\mathcal S^{(L)}$; their weights, inputs, or both may differ. For layer-indexed trajectories $\zeta=(\zeta_L,\ldots,\zeta_0)\in\prod_{l=0}^L\mathcal S^{(l)}_+$,
+\begin{equation}\label{ptnb:eq:path-measure}
+ \Pi_M(\zeta)=\mathbf1\{\zeta_L=s_0\}\prod_{k=1}^L T_M^{(k)}(\zeta_k\to\zeta_{k-1}).
+\end{equation}
+The prefix law $\Pi_M^{(l)}$ marginalizes the trailing coordinates; $\Pi_M=\Pi_M^{(0)}$. Input-layer states are called pixels, with the full terminal set including the cemetery.
+
+\paragraph{Marginal occupations.}\label{ptnb:sec:lmp-marginals}
+The visitation marginals and their backward recursion are
+\begin{align}
+ m_M^{(l)}(s)&=\sum_{\zeta:\zeta_l=s}\Pi_M^{(l)}(\zeta),
+ &m_M^{(L)}(s)&=\mathbf1\{s=s_0\},\label{ptnb:eq:lmp-alpha}\\
+ m_M^{(l-1)}(s')&=\sum_{s\in\mathcal S^{(l)}_+}m_M^{(l)}(s)T_M^{(l)}(s\to s').\label{ptnb:eq:lmp-alpha-recursion}
+\end{align}
+\AliasLabel{ptnb:eq:lmp-alpha-boundary}{ptnb:eq:lmp-alpha}
+This marginal pass gives ordinary terminal probabilities $m_M^{(0)}(s)$ and absorbed mass $m_M^{(0)}(\dagger)$.
+
+\subsection{How the Two Games Fit This Abstraction}\label{ptnb:sec:games-fit}
+
+Use the state notation and SPNE policies of Sections~\ref{ptnb:app:relu-net-game} and~\ref{ptnb:app:routing-formal}, with the forward theorems~\ref{ptnb:thm:forward-stopping} and~\ref{ptnb:thm:routing-forward}. Diagnostics use $\tau=1$, hence deterministic activation gates, and $\varepsilon=0$ for \ac{rg}. The natural \ac{rg} includes intermediate linear-routing states. We index gate, branch, and routing substeps as refined layers and read diagnostics at activation boundaries; collapsing them preserves ordinary surviving paths but can lose absorption histories (Remark~\ref{ptnb:rem:rg-natural-equivalence}).
+
+\paragraph{Stopping Game.}
+Ordinary states are $s^{(l,\mathrm{act})}_{j,p}$ for $l\ge1$, with start $s_0=s^{(L,\mathrm{act})}_{u,+}$; input terminals $s^{(0)}_{i,q}$ carry the arriving player. Identifying $p,\kappa\in\{+,-\}$ with signs, for $2\le l\le L$ the natural \ac{sg} kernel is
+\begin{equation}\label{ptnb:eq:adf-T}
+ T_M^{(l)}(s^{(l,\mathrm{act})}_{j,p}\to s^{(l-1,\mathrm{act})}_{i,\kappa p})
+ =\frac{W_M^{(l,\kappa)}[i,j]}{\gamma^{(l)}_{M,j}}\,\1\{z_j^{(l)}>0\},
+ \qquad \gamma^{(l)}_{M,j}=\sum_i|W_M^{(l)}[i,j]|.
+\end{equation}
+At $l=1$, the destination is $s^{(0)}_{i,\kappa p}$. Positive weights retain the player; negative weights switch it. With $0/0\coloneqq0$, the cemetery probability is $1-\1\{z_j^{(l)}>0\}\1\{\gamma^{(l)}_{M,j}>0\}$.
+
+\paragraph{Routing Game.}
+The start and activation states are the same; input terminals $s^{(0)}_{i,\kappa}$ instead carry the layer-$1$ routing-edge stream. Composing the gate and uniform stream choice gives
+\begin{align}
+ T_M^{(l)}(s^{(l,\mathrm{act})}_{j,p}\to s^{(l-1,\mathrm{act})}_{i,\kappa p})
+ &=\tfrac12\pi^{(l)}_{M,\kappa}(i\mid j)\,\1\{z_j^{(l)}>0\},\quad 2\le l\le L,\label{ptnb:eq:rg-T-act}\\
+ T_M^{(1)}(s^{(1,\mathrm{act})}_{j,p}\to s^{(0)}_{i,\kappa})
+ &=\tfrac12\pi^{(1)}_{M,\kappa}(i\mid j)\,\1\{z_j^{(1)}>0\}.\label{ptnb:eq:rg-T-pixel}
+\end{align}
+The cemetery receives the residual row mass. A nonempty branch uses the temperature-$\tau$ Gibbs policy
+\begin{equation}\label{ptnb:eq:rg-T}
+ \pi^{(l)}_{M,\kappa}(i\mid j)\propto
+ [a^{(l-1)}_{M,i}W^{(l,\kappa)}_{M,ij}]^{1/\tau},\qquad i\in\mathrm{Pred}_j^{(l)}.
+\end{equation}
+At $l=1$, replace the bracket by $[x_iW^{(1)}_{M,ij}]^\kappa$. An empty stream (all scores $-\infty$) has zero ordinary mass, so its whole $1/2$ share is absorbed even at a live source. For $\varepsilon>0$, each continuing branch additionally sends $\tfrac12\varepsilon^{1/\tau}/Z^{(l)}_{j,\kappa}$ to the cemetery.
+
+The diagnostic process retains the original gates but omits the bias action and renormalizes each remaining branch. This differs from the bias-inclusive attribution game when bias carries mass: $a=W=b=1$, $\varepsilon=0$ gives positive-route probability $1/4$ with bias and $1/2$ without. State elimination within one process does not identify these kernels. Full overlap uses the refined gate/branch/routing process; the displayed act-only kernels suffice for ordinary surviving-path overlap.
 
 \subsection{Bhattacharyya Coefficient and the Geometric-Mean Kernel}\label{ptnb:sec:lmp-bc}
 
 \paragraph{Definitions.}
 For two probability distributions $P, Q$ on a common finite set, the \emph{Bhattacharyya
-coefficient} is the geometric overlap
+coefficient}~\parencite{Bhattacharyya1943} is the geometric overlap
 \begin{align}\label{ptnb:eq:bc-def}
     \mathrm{BC}(P, Q) \;\coloneqq\; \sum_{y} \sqrt{P(y)\, Q(y)} \;\in\; [0, 1],
 \end{align}
-and the \emph{squared Hellinger distance} is
+and the \emph{squared Hellinger distance}~\parencite{Hellinger1909} is
 \begin{align}\label{ptnb:eq:hellinger-def}
     \mathrm{H}^2(P, Q) \;\coloneqq\; \tfrac{1}{2} \sum_y \bigl(\sqrt{P(y)} - \sqrt{Q(y)}\bigr)^2 \;=\;
     1 - \mathrm{BC}(P, Q) \;\in\; [0, 1].
@@ -77,6 +111,12 @@ The Hellinger distance $\mathrm{H}(P,Q) = \sqrt{1 - \mathrm{BC}(P,Q)}$ is a true
     \mathrm{H} \leq 1$, with $\mathrm{H} = 0$ iff $P = Q$ and $\mathrm{H} = 1$ iff $P$ and $Q$ have
 disjoint supports.  Crucially, $\sqrt{0 \cdot Q(y)} = 0$, so mismatched supports cause no
 infinity---only a smaller overlap.
+
+\paragraph{Properties and alternatives.}\label{ptnb:sec:lmp-hellinger-distance}\label{subsec:hellinger_definition}\label{ptnb:app:why-hellinger}
+With half-$L^1$ total variation $d_{\mathrm{TV}}(P,Q)=\tfrac12\sum_y|P(y)-Q(y)|$ and KL in nats,
+$\mathrm H^2\le d_{\mathrm{TV}}\le\sqrt2\,\mathrm H$ and $\mathrm H^2\le\tfrac12\mathrm{KL}$; unnormalized $L^1$ distance is $2d_{\mathrm{TV}}$. Thus small Hellinger controls TV, and small KL controls Hellinger. An alive/dead mismatch gives zero ordinary overlap; its full row vanishes when the alive state has no cemetery leakage (Lemma~\ref{ptnb:lem:alive-mismatch}).
+
+KL and Jeffreys obey Markov chain rules but are unbounded and can become infinite when routes open or close. Jensen--Shannon stays bounded, but its mixture $\tfrac12(\Pi_A+\Pi_B)$ is generally non-Markov, preventing this exact local recursion. Wasserstein requires a noncanonical ground cost across layers, signs, and permuted neurons and has no corresponding local recursion. Hellinger's factorization gives an edge-linear pass and a non-negative per-state decomposition. It compares the undiscounted routing law: parameters entering only through discounts $d_t$, such as path weights $(\alpha,\beta)$ and \ac{sg} magnitudes $\gamma_j^{(l)}$, leave $\mathrm H$ unchanged.
 
 \paragraph{Geometric-mean kernel.}
 For each layer $l \geq 1$ and pair of states $(s, s') \in \mathcal{S}^{(l)}_+ \times
@@ -93,122 +133,153 @@ satisfies $0 \leq \widetilde{R}^{(l)}(s) \leq 1$ by Cauchy--Schwarz, with equali
     \dagger) = T^{(l)}_B(\dagger \to \dagger) = 1$, so $\widetilde{T}^{(l)}(\dagger, \dagger) = 1$ and
 $\widetilde{R}^{(l)}(\dagger) = 1$.
 
+\paragraph{Trajectory factorization.}\label{ptnb:sec:lmp-chain-rule}
+\begin{lemmaenv}[Trajectory overlap and backward pass, \LeanResult{ptnb:lem:bc-chain-rule}, \LeanResult{ptnb:lem:bc-monotone}, \LeanResult{ptnb:lem:hellinger-backward-correctness}]\label{ptnb:lem:bc-chain-rule}
+For every $0\le l\le L$,
+\begin{equation}\label{ptnb:eq:bc-chain-rule}
+ \mathrm{BC}(\Pi_A^{(l)},\Pi_B^{(l)})=
+ \sum_{(\zeta_L,\ldots,\zeta_l)}\1\{\zeta_L=s_0\}
+ \prod_{k=l+1}^L\widetilde T^{(k)}(\zeta_k,\zeta_{k-1}).
+\end{equation}
+Restricting this sum to prefixes ending at $s$ defines $g^{(l)}(s)$, with
+\begin{equation}\label{ptnb:eq:overlap-recursion}
+ g^{(L)}(s)=\1\{s=s_0\},\qquad
+ g^{(l-1)}(s')=\sum_s g^{(l)}(s)\widetilde T^{(l)}(s,s'),\qquad
+ \mathrm{BC}^{(l)}=\sum_s g^{(l)}(s).
+\end{equation}
+
+As $l$ decreases, $1=\mathrm{BC}^{(L)}\ge\cdots\ge\mathrm{BC}^{(0)}\ge0$; equivalently, $\mathrm H_{(l)}^2=1-\mathrm{BC}^{(l)}$ is non-decreasing.
+Algorithm~\ref{ptnb:alg:hellinger} computes these quantities and every terminal disagreement $\mathrm H^2(s)$ exactly in edge-linear time; the latter sum to $\mathrm H_{(0)}^2$.
+\end{lemmaenv}
+\AliasLabel{ptnb:lem:bc-monotone}{ptnb:lem:bc-chain-rule}
+\AliasLabel{ptnb:lem:hellinger-backward-correctness}{ptnb:lem:bc-chain-rule}
+\begin{proof}
+Substitute~\eqref{ptnb:eq:path-measure} into~\eqref{ptnb:eq:bc-def} and distribute the square root over non-negative factors. Grouping by the penultimate state gives the recursion, which Algorithm~\ref{ptnb:alg:hellinger} computes by downward induction. The shared start gives $\mathrm{BC}^{(L)}=1$; $0\le\widetilde R^{(l)}(s)\le1$ gives
+$\mathrm{BC}^{(l-1)}=\sum_sg^{(l)}(s)\widetilde R^{(l)}(s)\le\sum_sg^{(l)}(s)=\mathrm{BC}^{(l)}$.
+At layer $0$, $g^{(0)}(s)$ sums $\sqrt{\Pi_A\Pi_B}$ over paths ending at $s$; Theorem~\ref{ptnb:thm:per-pixel} gives the disagreement and its total. Each pass visits every edge once.
+\end{proof}
+
 \subsection{Hellinger backward pass}\label{ptnb:sec:lmp-hellinger-backward}
 
-The chain rule (Lemma~\ref{ptnb:lem:bc-chain-rule}) yields a backward DP that propagates the per-state
-cumulative $\widetilde{T}$-mass $g^{(l)}(s)$ from the start state $s_0$ down through the layers.
-The prefix Bhattacharyya coefficient at each layer is the row sum $\mathrm{BC}^{(l)} = \sum_{s}
-    g^{(l)}(s)$, the prefix Hellinger distance is $\mathrm{H}^{(l)} = \sqrt{1 - \mathrm{BC}^{(l)}}$,
-and the per-terminal-state disagreement map is read off at $l = 0$ from~\eqref{ptnb:eq:per-pixel-h2}.
-The map is defined on the full terminal set $\mathcal{S}^{(0)}_+ = \mathcal{S}^{(0)} \cup
-    \{\dagger\}$; the visualized pixel attribution map is its restriction to ordinary pixels
-$\mathcal{S}^{(0)}$, and its sum is therefore $\mathrm{H}^2_{\mathrm{ord}} = \mathrm{H}^2 -
-    \mathrm{H}^2(\dagger)$, not the full $\mathrm{H}^2$ (Theorem~\ref{ptnb:thm:per-pixel}(iii)).
+The backward pass includes the cemetery; visualization restricts its output to ordinary pixels (Theorem~\ref{ptnb:thm:per-pixel}).
 
 \begin{algorithm}[H]
     \caption{Hellinger backward pass (with per-terminal-state disagreement map)}
     \label{ptnb:alg:hellinger}\label{ptnb:alg:hellinger-backward}
-    Initialize the occupation marginals $m_M^{(L)}$ and overlap mass $g^{(L)}$ at the target output.\;
-For $l=L,L-1,\ldots,1$, propagate each model's marginals with its kernel and propagate overlap by
-$g^{(l-1)}(s')=\sum_s g^{(l)}(s)\sqrt{T_A^{(l)}(s,s')T_B^{(l)}(s,s')}$.\;
-At each layer compute $\mathrm{BC}^{(l)}=\sum_s g^{(l)}(s)$ and
-$\mathrm{H}^{(l)}=\sqrt{1-\mathrm{BC}^{(l)}}$.\;
-At every terminal state return
-$\mathrm{H}^2(s)=\tfrac12(m_A^{(0)}(s)+m_B^{(0)}(s))-g^{(0)}(s)$.
-The pixel disagreement map restricts this output to ordinary input states.
+Initialize $m_M^{(L)}$ and $g^{(L)}$ at the target output. For $l=L,\ldots,1$, propagate $m_M$ with its kernel and $g$ by~\eqref{ptnb:eq:overlap-recursion}. At each layer return $\mathrm{BC}^{(l)}=\sum_sg^{(l)}(s)$ and $\mathrm H^{(l)}=\sqrt{1-\mathrm{BC}^{(l)}}$; at every terminal state return~\eqref{ptnb:eq:per-pixel-h2}. Restrict to ordinary input states for visualization.
 
 \end{algorithm}
 
+\begin{remark}[Routing-state elimination and absorption histories, \LeanResult{ptnb:rem:rg-natural-equivalence}]\label{ptnb:rem:rg-natural-equivalence}
+The refined diagnostic process separates gate, uniform $\kappa$-branch, and routing steps: dead activations stop at the gate; empty branches or outside options may absorb later. The Hellinger pass retains these histories, padding the cemetery after absorption and reading at activation boundaries.
+
+Deleting intermediate routing states is bijective on ordinary surviving trajectories: adjacent activation states determine neuron and player, and player retention/switching (or the input stream tag) determines $\kappa$. Their path probabilities and Bhattacharyya overlap therefore agree with the act-only process, also after conditioning on survival. Absorbing paths may merge gate and later routing stops. Full-law equality requires recoverable absorption histories, as when no alive branch leaks to the cemetery; generally, finite-fibre Cauchy--Schwarz gives
+\[
+ \mathrm{BC}_{\mathrm{refined}}\le\mathrm{BC}_{\mathrm{act\text{-}only}},\qquad
+ \mathrm H_{\mathrm{refined}}\ge\mathrm H_{\mathrm{act\text{-}only}}.
+\]
+For $x=W=1$, model $A$ with bias $0$ continues and absorbs its empty negative branch with probability $1/2$, while model $B$ with bias $-2$ stops at the gate. Refined supports are disjoint ($\mathrm{BC}=0$); merging the absorption steps gives act-only overlap $1/\sqrt2$.
+\end{remark}
+
+
 \subsection{Per-Pixel Disagreement Map}\label{ptnb:sec:lmp-disagreement}
-
-The squared Hellinger distance $\mathrm{H}^2$ admits an exact non-negative decomposition over
-input-layer states: each input pixel carries a calibrated share of the total trajectory
-disagreement (Theorem~\ref{ptnb:thm:per-pixel}), giving a disagreement \emph{map} that is itself an
-attribution of the trajectory mismatch back to the input. The conditioned-on-survival variant
-removes the cemetery contribution that otherwise bounds plain $\mathrm{H}$ from below on randomized
-models.
-
-\subsubsection{Per-Pixel Decomposition: The Disagreement Map}\label{ptnb:sec:lmp-per-pixel}
-
-The squared Hellinger distance at layer~$0$ decomposes exactly over terminal pixels.
+\AliasLabel{ptnb:sec:lmp-per-pixel}{ptnb:sec:lmp-disagreement}
 
 \begin{theoremenv}[Per-pixel decomposition, \LeanResult{ptnb:thm:per-pixel}]\label{ptnb:thm:per-pixel}
-Let $\mathrm{H}^2 \coloneqq \mathrm{H}^2\!\bigl(\Pi^{(0)}_A,\, \Pi^{(0)}_B\bigr)$.  For $s \in
-    \mathcal{S}^{(0)}_+$, define
-\begin{align}\label{ptnb:eq:per-pixel-h2}
-    \mathrm{H}^2(s) \;\coloneqq\; \tfrac{1}{2}\bigl(m^{(0)}_A(s) + m^{(0)}_B(s)\bigr) \;-\; g^{(0)}(s),
+Let $\mathrm H^2=\mathrm H^2(\Pi_A^{(0)},\Pi_B^{(0)})$. The cumulative overlap $g^{(0)}(s)$ gives a non-negative decomposition over terminal states:
+\begin{align}
+ \mathrm H^2(s)&\coloneqq\tfrac12\bigl(m_A^{(0)}(s)+m_B^{(0)}(s)\bigr)-g^{(0)}(s)\ge0,
+ \qquad s\in\mathcal S_+^{(0)},\label{ptnb:eq:per-pixel-h2}\\
+ \mathrm H^2&=\sum_{s\in\mathcal S_+^{(0)}}\mathrm H^2(s),\label{ptnb:eq:per-pixel-sum}\\
+ \mathrm H^2_{\mathrm{ord}}&\coloneqq\sum_{s\in\mathcal S^{(0)}}\mathrm H^2(s)=\mathrm H^2-\mathrm H^2(\dagger).\label{ptnb:eq:ordinary-h2}
 \end{align}
-where $g^{(0)}(s)$ is the cumulative $\widetilde{T}$-mass at $s$.  Then:
-\begin{enumerate}
-    \item[(i)] $\mathrm{H}^2(s) \geq 0$ for every $s \in \mathcal{S}^{(0)}_+$.
-    \item[(ii)]
-        \begin{align}\label{ptnb:eq:per-pixel-sum}
-            \mathrm{H}^2 \;=\; \sum_{s \in \mathcal{S}^{(0)}_+} \mathrm{H}^2(s).
-        \end{align}
-    \item[(iii)]
-        \begin{align}\label{ptnb:eq:ordinary-h2}
-            \mathrm{H}^2_{\mathrm{ord}} \;\coloneqq\; \sum_{s \in \mathcal{S}^{(0)}} \mathrm{H}^2(s) \;=\;
-            \mathrm{H}^2 - \mathrm{H}^2(\dagger)
-        \end{align}
-\end{enumerate}\end{theoremenv}
+\end{theoremenv}
 
-Proofs of the backward pass and the decomposition are given in companion Chapter~\ref{app:supp_trajectory}.
+\begin{proof}
+Group trajectories by their terminal state and expand the square:
+\[
+ \mathrm H^2(s)=\tfrac12\sum_{\zeta:\zeta_0=s}
+ \bigl(\sqrt{\Pi_A(\zeta)}-\sqrt{\Pi_B(\zeta)}\bigr)^2\ge0.
+\]
+The definitions of $m_M^{(0)}$ and $g^{(0)}$ give the identity; summing over terminal states and removing $\dagger$ give the two totals. Cauchy--Schwarz and AM--GM also give
+$g^{(0)}(s)\le\sqrt{m_A^{(0)}(s)m_B^{(0)}(s)}\le\tfrac12(m_A^{(0)}(s)+m_B^{(0)}(s))$.
+The contribution vanishes exactly when the two restricted path measures agree: either both terminal masses are zero, or their positive masses and conditional path laws coincide.
+\end{proof}
+
 
 \paragraph{The disagreement map.}
-Theorem~\ref{ptnb:thm:per-pixel} defines $\mathrm{H}^2(\cdot)$ on the full terminal set
-$\mathcal{S}^{(0)}_+ = \mathcal{S}^{(0)} \cup \{\dagger\}$: this is the \emph{full terminal-state
-decomposition}, with $\sum_{s \in \mathcal{S}^{(0)}_+} \mathrm{H}^2(s) = \mathrm{H}^2_{(0)}$, and
-the cemetery contribution $\mathrm{H}^2(\dagger)$ is part of it. The \emph{Hellinger disagreement
-map} is the ordinary-pixel restriction $s \mapsto \mathrm{H}^2(s)$ on $\mathcal{S}^{(0)}$, which is
-the quantity we visualize. It is non-negative, sums to $\mathrm{H}^2_{\mathrm{ord}}$ over ordinary
-pixels, and is computed from $g^{(0)}, m_A^{(0)}, m_B^{(0)}$.  The quantity
-$\mathrm{H}^2_{\mathrm{ord}}$ is an unnormalized ordinary-state subsum; the conditioned-on-survival
-Hellinger distance that normalizes it is introduced below. Recall from Section~\ref{ptnb:sec:games-fit}
-that layer-$0$ ordinary states of the two games are \emph{tagged} pixel pairs $s^{(0)}_{j,\pm}$,
-tagged by the player $q$ for the \ac{sg} and by the stream sign $\kappa$ for the \ac{rg}; the
-per-pixel attribution displayed in figures aggregates the two tags,
+The visualized map restricts $\mathrm H^2(s)$ to ordinary input states, so its total $\mathrm H^2_{\mathrm{ord}}$ excludes the cemetery and is unnormalized. Layer-$0$ states carry player tags for \ac{sg} and stream tags for \ac{rg}; summing them gives
+\[
+ \mathrm H^2_{\mathrm{pixel}}(j)=\mathrm H^2(s^{(0)}_{j,+})+\mathrm H^2(s^{(0)}_{j,-}),
+ \qquad \sum_j\mathrm H^2_{\mathrm{pixel}}(j)=\mathrm H^2_{\mathrm{ord}}.
+\]
+Cauchy--Schwarz bounds each contribution below by
+$\tfrac12(m_A^{(0)}(s)+m_B^{(0)}(s))-\sqrt{m_A^{(0)}(s)m_B^{(0)}(s)}$,
+the squared-Hellinger contribution of the endpoint marginals. With both terminal masses positive, differing conditional path laws make the trajectory contribution strictly larger. This map therefore retains information lost in endpoint marginals. Survival conditioning below separately normalizes the two path laws; it is not merely rescaling this ordinary-state map.
+
+\subsubsection{Conditioning on Survival to the Ordinary Input Layer}\label{ptnb:sec:lmp-conditioned-survival}
+
+Conditioning on reaching an ordinary input state separates surviving routes from cemetery absorption. The conditioned process remains Markov through a Doob $h$-transform, with the remaining survival probability as $h$.
+
+\begin{theoremenv}[Conditioned-survival laws and Hellinger distance, \LeanResult{ptnb:thm:conditioned-survival}]\label{ptnb:thm:conditioned-survival}
+Let $\mathsf{Surv}=\{\zeta:\zeta_0\in\mathcal S^{(0)}\}$, equivalently the event of never entering $\dagger$. For $M\in\{A,B\}$, $0\le l\le L$, and $s\in\mathcal S_+^{(l)}$, define survival through the kernel continued from $s$, including unreachable states:
 \begin{align}
-    \mathrm{H}^2_{\mathrm{pixel}}(j) \;=\; \mathrm{H}^2\bigl(s^{(0)}_{j,+}\bigr) +
-    \mathrm{H}^2\bigl(s^{(0)}_{j,-}\bigr),
+ \psi_M^{(l)}(s)&=\mathbb P_M(\mathsf{Surv}\mid\zeta_l=s),
+ \label{ptnb:eq:survival-function}\\
+ \psi_M^{(0)}(s)&=\1\{s\in\mathcal S^{(0)}\},
+ \label{ptnb:eq:survival-boundary}\\
+ \psi_M^{(l)}(s)&=\sum_{s'\in\mathcal S^{(l-1)}}T_M^{(l)}(s\to s')\psi_M^{(l-1)}(s'),\qquad l\ge1,
+ \label{ptnb:eq:survival-recursion}\\
+ Z_M&=\mathbb P_M(\mathsf{Surv})=\psi_M^{(L)}(s_0)
+ =\sum_{s\in\mathcal S^{(0)}}m_M^{(0)}(s)=1-m_M^{(0)}(\dagger).
+ \label{ptnb:eq:survival-mass}
 \end{align}
-which remains non-negative and sums to $\mathrm{H}^2_{\mathrm{ord}}$ over pixels.  By the
-Cauchy--Schwarz step in the proof of Theorem~\ref{ptnb:thm:per-pixel}(i), $g^{(0)}(s) \leq
-    \sqrt{m^{(0)}_A(s)\,m^{(0)}_B(s)}$, so $\mathrm{H}^2(s)$ is bounded below by the marginal surrogate
-$\tfrac{1}{2}\bigl(m^{(0)}_A(s) + m^{(0)}_B(s)\bigr) - \sqrt{m^{(0)}_A(s)\,m^{(0)}_B(s)}$, the
-per-pixel squared Hellinger distance between the layer-0 marginal occupations; the trajectory map
-is strictly larger whenever the conditional distributions of trajectories reaching pixel~$s$ differ
-between models.
+The cemetery has $\psi_M^{(l)}(\dagger)=0$ at every layer, so its term may be included in the recursion without effect.
 
-\subsubsection{Conditioning on Survival to the Ordinary Input
-Layer}\label{ptnb:sec:lmp-conditioned-survival}
-
-When the cemetery absorbs a large fraction of trajectory mass, the total Hellinger distance mixes
-two effects: disagreement about \emph{whether} a trajectory survives and disagreement about
-\emph{where surviving trajectories go}.  To isolate the second effect, we condition each model's
-trajectory law on the event that the trajectory reaches an ordinary input-layer state.  The
-resulting scalar compares the two \emph{surviving} trajectory distributions directly and removes
-the common cemetery floor.  Because survival to the input layer factorizes along the layered graph,
-this conditioning remains Markov and is implemented by a per-state Doob $h$-transform (with $h =
-    \psi_M$, the remaining survival probability).
-
-Let $\mathsf{Surv}$ denote this event and assume that both survival masses are positive. With
-\[
- Z_M=\mathbb P_M(\mathsf{Surv})
-     =\sum_{s\in\mathcal S^{(0)}}m_M^{(0)}(s)>0,
- \qquad
- \mathrm{BC}_{\mathrm{ord}}^{(0)}=\sum_{s\in\mathcal S^{(0)}}g^{(0)}(s),
-\]
-the conditioned-survival Hellinger distance is
-\[
+Assume $Z_A,Z_B>0$. On ordinary states with $\psi_M^{(l)}(s)>0$, the Doob kernel is row-stochastic; complete zero-survival rows arbitrarily as probability distributions, since the conditioned process never reaches them. Its law $\Pi_{M,\mathrm{surv}}=\Pi_M(\cdot\mid\mathsf{Surv})$ on $\mathsf{Surv}$ and ordinary-state marginals satisfy
+\begin{align}
+ T_{M,\mathrm{surv}}^{(l)}(s\to s')
+ &=\frac{T_M^{(l)}(s\to s')\psi_M^{(l-1)}(s')}{\psi_M^{(l)}(s)},
+ \label{ptnb:eq:conditioned-kernel}\\
+ \Pi_{M,\mathrm{surv}}(\zeta)
+ &=\frac{\Pi_M(\zeta)}{Z_M},\qquad \zeta\in\mathsf{Surv},
+ \label{ptnb:eq:conditioned-path-measure}\\
+ m_{M,\mathrm{surv}}^{(l)}(s)
+ &=\frac{m_M^{(l)}(s)\psi_M^{(l)}(s)}{Z_M}.
+ \label{ptnb:eq:conditioned-alpha}
+\end{align}
+Thus~\eqref{ptnb:eq:path-measure} holds with the conditioned kernels.
+{\setlength{\emergencystretch}{4em}%
+Let $\widetilde T_{\mathrm{surv}}^{(l)}$ be the conditioned kernels' entrywise geometric mean. Write $\mathrm{BC}_{\mathrm{surv}}$ for their path-law overlap. On rows with $\psi_A^{(l)}(s)\psi_B^{(l)}(s)>0$,\par}
+\begin{align}
+ \widetilde T_{\mathrm{surv}}^{(l)}(s,s')
+ &=\frac{\widetilde T^{(l)}(s,s')\sqrt{\psi_A^{(l-1)}(s')\psi_B^{(l-1)}(s')}}
+ {\sqrt{\psi_A^{(l)}(s)\psi_B^{(l)}(s)}}.
+ \label{ptnb:eq:conditioned-geom-kernel}
+\end{align}
+The chain rule~\eqref{ptnb:eq:bc-chain-rule} applies to these conditioned kernels. Normalization gives
+\begin{align}
+ \mathrm{BC}_{\mathrm{ord}}^{(0)}
+ &=\sum_{s\in\mathcal S^{(0)}}g^{(0)}(s)
+ =\sum_{\zeta\in\mathsf{Surv}}\sqrt{\Pi_A(\zeta)\Pi_B(\zeta)},
+ \label{ptnb:eq:ordinary-bc}\\
+ \mathrm{BC}_{\mathrm{surv}}&=\frac{\mathrm{BC}_{\mathrm{ord}}^{(0)}}{\sqrt{Z_AZ_B}},
+ \label{ptnb:eq:conditioned-bc-posthoc}\\
  \mathrm H_{\mathrm{surv}}^2
- =\mathrm H^2\!\bigl(\Pi_A(\,\cdot\mid\mathsf{Surv}),
-                         \Pi_B(\,\cdot\mid\mathsf{Surv})\bigr)
- =1-\frac{\mathrm{BC}_{\mathrm{ord}}^{(0)}}{\sqrt{Z_A Z_B}}.
-\]
-Theorem~\ref{ptnb:thm:conditioned-survival} gives the conditioned kernels and the proof;
-Equation~\eqref{ptnb:eq:conditioned-per-pixel-h2} gives the corresponding non-negative map.
-Post-hoc normalization becomes numerically infeasible for deep networks when either
-survival probability gets too small; the conditioned-kernel computation avoids this final division.
+ &=\mathrm H^2(\Pi_{A,\mathrm{surv}},\Pi_{B,\mathrm{surv}})
+ =1-\frac{\mathrm{BC}_{\mathrm{ord}}^{(0)}}{\sqrt{Z_AZ_B}}.
+ \label{ptnb:eq:conditioned-h2}
+\end{align}
+Algorithm~\ref{ptnb:alg:hellinger} on the conditioned ordinary-state graph gives $g_{\mathrm{surv}}^{(0)}$ and the non-negative map~\eqref{ptnb:eq:per-pixel-h2} with conditioned marginals and overlap; its sum is $\mathrm H_{\mathrm{surv}}^2$.
+\end{theoremenv}
+\AliasLabel{ptnb:eq:conditioned-bc-kernel}{ptnb:eq:bc-chain-rule}
+\AliasLabel{ptnb:eq:conditioned-per-pixel-h2}{ptnb:eq:per-pixel-h2}
+
+\begin{proof}
+The terminal boundary and one-step conditioning give the survival recursion; absorption makes every cemetery term zero. Summing the terminal marginals gives $Z_M$. Dividing the recursion by $\psi_M^{(l)}(s)>0$ proves row-stochasticity, and transitions to zero-survival states have zero conditioned probability. Along any positive-probability surviving path, the Doob factors telescope to $\psi_M^{(0)}(\zeta_0)/\psi_M^{(L)}(s_0)=1/Z_M$, proving the conditional path law; zero-probability paths contribute zero under either law. Bayes' rule gives the marginals. Taking geometric means gives the conditioned kernel, and Lemma~\ref{ptnb:lem:bc-chain-rule} gives its overlap pass. Normalizing each surviving path by $Z_M$ extracts $1/\sqrt{Z_AZ_B}$ from the overlap sum; grouping by its terminal state gives $\mathrm{BC}_{\mathrm{ord}}^{(0)}$. Finally, $\mathrm H^2=1-\mathrm{BC}$ and Theorem~\ref{ptnb:thm:per-pixel} give the distance and map.
+\end{proof}
+
+Kernel-side conditioning exposes the surviving law and computes its distance and map directly. Post-hoc normalization of the original pass is cheaper for the scalar alone, but can become numerically infeasible in deep networks when either $Z_M$ is too small; conditioned kernels avoid the final division by $\sqrt{Z_AZ_B}$.
 
 \subsection{Experiments}\label{ptnb:sec:lmp-experiments}
 
@@ -238,7 +309,7 @@ Class separation depends on architecture and kernel (Table~\ref{ptnb:tab:helling
 \end{itemize}
 Random-vs-random is lowest in every nonconstant column. Clean-vs-random is highest in each plain-$\mathrm{H}$ column except ResNet-50 \ac{sg} ($0.269$ vs.\ intraclass $0.272$) and saturated VGG-16 \ac{rg}, consistent with different routing for Gaussian and in-distribution inputs. Conditioned $\mathrm{H}_{\mathrm{surv}}$ is at least $0.99$ throughout VGG-16, ResNet-50, and ViT-B/16 \ac{rg}, providing no class-separability signal. ViT-B/16 \ac{sg} separates random-vs-random ($0.852$) from clean rows ($0.957$--$0.968$), but neither intraclass from interclass ($0.963$ vs.\ $0.968$) nor clean-vs-random ($0.957$) from clean pairs.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \TableContent{
     \centering\small
     \setlength{\tabcolsep}{4pt}
@@ -256,17 +327,94 @@ Random-vs-random is lowest in every nonconstant column. Clean-vs-random is highe
 \par\medskip
 \section{Randomization Sanity Checks}\label{ptnb:app:sanity-check}\label{subsec:hellinger_randomization}
 
-This section supports the cascading-randomization experiments of Section~\ref{ptnb:sec:hellinger-sanity}: \S\ref{ptnb:sec:lmp-randomization} extends the protocol of~\textcite{Adebayo2018sanity} to trajectory Hellinger diagnostics (Section~\ref{ptnb:app:path-divergence}); \S\ref{ptnb:app:sanity-heatmap} tests main-paper attribution maps; \S\ref{ptnb:sec:lmp-rand-double-random} gives the double-random reference; and \S\ref{ptnb:sec:per-image-orthogonality} compares trajectory and map diagnostics per image.
+We extend~\textcite{Adebayo2018sanity}'s cascading randomization to trajectory laws, compare attribution maps, and establish double-random and per-image references for Section~\ref{ptnb:sec:hellinger-sanity}.
 
 \subsection{Cascading Randomization in Trajectory Space}\label{ptnb:sec:lmp-randomization}
 
-Replacing a weight matrix in the randomization test of~\textcite{Adebayo2018sanity} yields two kernels on the same graph; the Hellinger pass of Section~\ref{ptnb:app:path-divergence} quantifies their trajectory-space change. With its geometric-mean kernel $\widetilde{T}^{(l)}$ and overlap mass $g^{(l)}(s)$, $\mathrm{BC}^{(l)} = \sum_{s \in \mathcal{S}^{(l)}_+} g^{(l)}(s)$; $\mathrm{BC}^{(l)}_{\mathrm{ord}}$ restricts this sum to ordinary states $s \in \mathcal{S}^{(l)}$.
+Replacing a weight matrix yields two kernels on the same graph. The Hellinger pass quantifies their change; write $\mathrm{BC}^{(l)}_{\mathrm{ord}}=\sum_{s\in\mathcal S^{(l)}}g^{(l)}(s)$ for ordinary overlap.
 
-The Stopping-Game contraction bound assumes a conditional alive probability bounded
-away from one; the Routing-Game bound assumes a uniform row-overlap bound strictly below one.
-The precise hypotheses and proofs are in Theorems~\ref{ptnb:thm:rand-adf}
-and~\ref{ptnb:thm:rand-routing}; the cemetery-floor analysis is in
-Remark~\ref{ptnb:rem:adf-cemetery-floor}.
+\paragraph{Randomization bounds.}
+\begin{lemmaenv}[Alive-set mismatch, \LeanResult{ptnb:lem:alive-mismatch}]\label{ptnb:lem:alive-mismatch}
+If dead states send all mass to the cemetery, an alive/dead mismatch has
+$\sum_{s'\in\mathcal S^{(l-1)}}\widetilde T^{(l)}(s_i,s')=0$.
+Its full geometric-mean row also vanishes when the alive state has no cemetery leakage,
+as in the nondegenerate Stopping-Game kernel.
+\end{lemmaenv}
+\begin{proof}
+The dead row is zero on ordinary successors; the alive row, when nonleaking, is zero at the cemetery. Every corresponding geometric mean therefore vanishes.
+\end{proof}
+
+Fix a ReLU MLP of hidden widths $n_1,\ldots,n_L$, input $x$, and target start $s_0$.
+Model $B$ replaces $W^{(l^*)}$ by i.i.d.\ entries from a continuous law symmetric about zero.
+For each $l\ge l^*$ and neuron $i$, assume
+$\mathbb P_B(i\in\mathrm{alive}^{(l)}_B\mid\text{kernels above }l)\le1-\delta$,
+where $\delta\in(0,\tfrac12]$; set $\eta=1-\delta\in[\tfrac12,1)$ and $N=L-l^*+1$.
+Kernels below $l^*$ agree; row weights and possibly alive sets change at $l^*$,
+with activation changes propagating above it. CNN and Transformer blocks admit the same
+reduction as single \ac{ptnbLMP} layers when these hypotheses hold.
+
+\begin{theoremenv}[Randomization in the Stopping Game, \LeanResult{ptnb:thm:rand-adf}]\label{ptnb:thm:rand-adf}\label{thm:rand_stopping}
+$\mathbb E_B[\mathrm{BC}^{(0)}_{\mathrm{ord}}(\Pi_A,\Pi_B)]\le\eta^N$.
+For every $z>0$,
+\[
+\begin{aligned}
+\mathbb E_B[\mathrm H^2_{\mathrm{surv}}\,\1\{Z_AZ_B\ge z\}]
+&\ge\mathbb P_B(Z_AZ_B\ge z)-\eta^N/\sqrt z,\\
+\mathrm H^2&=1-\mathrm{BC}^{(0)}_{\mathrm{ord}}-g^{(0)}(\dagger),
+\end{aligned}
+\]
+where the indicator-weighted term is zero off its event.
+\end{theoremenv}
+\begin{proof}
+Dead-in-both mass enters the cemetery; alive mismatches contribute no ordinary overlap
+(Lemma~\ref{ptnb:lem:alive-mismatch}); jointly alive rows have mass at most one by Cauchy--Schwarz. Thus
+$\mathrm{BC}^{(l-1)}_{\mathrm{ord}}\le\sum_s g^{(l)}(s)\1\{s\in\mathrm{alive}^{(l)}_B\}$.
+Since $g^{(l)}$ depends only on kernels above $l$, conditional expectation contracts ordinary
+overlap by $\eta$. Iterate over $N$ layers from $\mathrm{BC}^{(L)}_{\mathrm{ord}}=1$;
+subsequent layers cannot increase it. On $Z_AZ_B\ge z$, apply
+$\mathrm H^2_{\mathrm{surv}}=1-\mathrm{BC}^{(0)}_{\mathrm{ord}}/\sqrt{Z_AZ_B}$
+(Theorem~\ref{ptnb:thm:conditioned-survival}). Splitting full overlap into ordinary and cemetery terms gives the final identity.
+\end{proof}
+
+\begin{remark}[Cemetery floor]\label{ptnb:rem:adf-cemetery-floor}
+For the nonleaking Stopping kernel, shared dead states accumulate permanent cemetery overlap beyond the ordinary-overlap bound:
+\[
+g^{(l-1)}(\dagger)=g^{(l)}(\dagger)+
+\sum_{s\in\mathrm{dead}^{(l)}_A\cap\mathrm{dead}^{(l)}_B}g^{(l)}(s).
+\]
+Positive accumulated mass keeps plain $\mathrm H$ below one. A mean-field model with uniform
+$A$-dead fraction $q$ and $B$-alive probability $p$ contracts ordinary overlap by $(1-q)p$
+and absorbs fraction $q(1-p)$ per layer, giving
+$g^{(0)}(\dagger)\to q(1-p)/(1-(1-q)p)$ as $N\to\infty$.
+The illustration $q=0.2$, $p=\tfrac12$ gives $\mathrm H\approx0.91$, comparable to
+$\drFloorMin$--$\drFloorMax$ (Table~\ref{ptnb:tab:double-random-hellinger}).
+Conditioning removes this floor: for fixed $z>0$ with $\mathbb P_B(Z_AZ_B\ge z)$ bounded away
+from zero, $\mathbb E_B[\mathrm H^2_{\mathrm{surv}}\mid Z_AZ_B\ge z]\to1$.
+Activation-weighted Routing-Game kernels concentrate overlap on large $|aW|$ contributions,
+rarely shared dead neurons, explaining the observed practical proximity of $\mathrm H$ and $\mathrm H_{\mathrm{surv}}$.
+\end{remark}
+
+\begin{theoremenv}[Randomization in the Routing Game, \LeanResult{ptnb:thm:rand-routing}]\label{ptnb:thm:rand-routing}\label{thm:rand_routing}
+In the same setup, replace the alive-set assumption by a uniform bound
+$\sum_{s'}\widetilde T^{(l)}(s,s')\le\bar b<1$, $\bar b\ge0$, on every jointly alive row
+at $l\ge l^*$, using temperature $\tau>0$. Then
+$\mathrm{BC}^{(0)}_{\mathrm{ord}}(\Pi_A,\Pi_B)\le\bar b^N$.
+\end{theoremenv}
+\begin{proof}
+The Gibbs policy~\eqref{ptnb:eq:rg-T} assigns zero mass to dead predecessors because their activations vanish.
+Thus intermediate overlap is supported on jointly alive states; a non-jointly-alive start
+sends no ordinary overlap onward. The row bound gives
+$\mathrm{BC}^{(l-1)}_{\mathrm{ord}}\le\bar b\,\mathrm{BC}^{(l)}_{\mathrm{ord}}$;
+iterate as above. No additional alive-set factor is needed: successor mismatches already reduce row overlap.
+
+Each act-to-act row factors into the source-alive indicator, uniform $\kappa$-branch factor
+$\tfrac12$, and Gibbs policy proportional to $(a^{(l-1)}_{M,i}W^{(l,\kappa)}_{M,ij})^{1/\tau}$.
+At $l^*$ the models share predecessor activations but may differ in weights; above it, both
+factors may differ. Continuous randomization alone does not ensure distinct normalized rows:
+a sole positive-mass route in each sign branch remains unchanged under sign-preserving weight changes.
+The uniform $\bar b<1$ bound requires an architecture- and randomization-specific argument or
+empirical assessment; Cauchy--Schwarz gives strict contraction when completed normalized rows differ.
+\end{proof}
 
 The discounted occupation measures at the input layer recover gradient and $\alpha\beta$-\ac{lrp} maps (Theorems~\ref{ptnb:thm:deriv-occ} and~\ref{ptnb:thm:ab-recovery}). The undiscounted endpoint marginal $m^{(0)}_M$ is generally different: Hellinger compares the trajectory routing laws and does not include the path discounts. Under their respective contraction hypotheses, Theorems~\ref{ptnb:thm:rand-adf}--\ref{ptnb:thm:rand-routing} show that $\Pi_M$ changes drastically under randomization, while Table~\ref{tab:sanity-check} shows that the resulting attribution maps can remain similar. \ch{The two
 diagnostics therefore detect different aspects of parameter sensitivity: the map-level test
@@ -306,37 +454,16 @@ For each architecture, $R = 500$ independent rounds comprise: \emph{(i)} copy th
     \small
     \input{tables/ptnb_v2/generated/double_random_tabular}
     }%
-\caption[Hellinger trajectory distance at the double-random baseline]{Hellinger trajectory distance between two copies of the
-    same architecture with independently randomized convolutional and linear layers and the remaining
-    pretrained parameters retained, averaged over $R = 500$ rounds (one fresh ImageNet-S test image per round).
-    Plain $\mathrm{H}$ concentrates at an architecture-dependent cemetery floor of
-    $\drFloorMin$--$\drFloorMax$; conditioned-survival $\mathrm{H}_{\mathrm{surv}}$ saturates at unity.
-    The VGG-16 Routing Game cell is the one case in which the plain distance also saturates at
-    $1.000$.}
+\caption[Hellinger trajectory distance at the double-random baseline]{Double-random Hellinger distances, mean $\pm$ standard deviation over $R=500$ rounds. Each round pairs independently randomized copies of the architecture on one sampled ImageNet-S test image, retaining the pretrained parameter groups specified above.}
     \label{ptnb:tab:double-random-hellinger}
 \end{table}
 
 \paragraph{Interpretation.}
-Plain $\mathrm{H}$ concentrates at a model-dependent floor of $\drFloorMin$--$\drFloorMax$,
-matching the cemetery-floor prediction of Remark~\ref{ptnb:rem:adf-cemetery-floor}: once both random
-kernels produce uncorrelated dead masks, the shared dead-in-both coincidence rate bounds
-$\mathrm{BC}^{(0)}$ below by a strictly positive constant and plain $\mathrm{H}$ cannot reach
-unity.  The conditioned-survival distance removes the cemetery floor by renormalizing on survival
-and reports the two randomized trajectory laws as essentially support-disjoint on
-ordinary input states ($\mathrm{H}_{\mathrm{surv}} \approx 1$ throughout).  The
-pretrained-vs-randomized Hellinger distance that the cascading sanity check reports should
-therefore be read against this architecture-specific empirical reference: values close to the
-double-random baseline indicate a trajectory distance comparable to that between two copies
-independently randomized over the same layers.
+Plain $\mathrm H$ concentrates at $\drFloorMin$--$\drFloorMax$, consistent with shared dead-mask overlap and the cemetery floor of Remark~\ref{ptnb:rem:adf-cemetery-floor}; only VGG-16 \ac{rg} saturates at $1.000$. Conditioning removes this floor: $\mathrm H_{\mathrm{surv}}\approx1$ indicates essentially disjoint surviving path laws throughout. Pretrained-versus-randomized distances near this architecture-specific reference are comparable to those between two copies independently randomized over the same layers.
 
 \subsection{Per-Image Association Between Trajectory and Map Diagnostics}\label{ptnb:sec:per-image-orthogonality}
 
-Theorems~\ref{ptnb:thm:rand-adf}--\ref{ptnb:thm:rand-routing} and the double-random baseline of
-Table~\ref{ptnb:tab:double-random-hellinger} bound the \emph{aggregate} behavior of the Hellinger
-trajectory distance and the pixel-level attribution-map similarity.  A complementary question, motivated by the
-argument of \S\ref{ptnb:sec:lmp-randomization}, is whether the two diagnostics agree \emph{per
-image}: at fixed randomization depth, does a larger displacement of an image's trajectory
-distribution correspond to a more dissimilar attribution map?  Table~\ref{ptnb:tab:per-image-corr} tests this directly.
+Beyond the aggregate randomization bounds and double-random reference, Table~\ref{ptnb:tab:per-image-corr} asks whether greater trajectory displacement corresponds to a more dissimilar attribution map \emph{per image}, at fixed randomization depth.
 
 \paragraph{Protocol.}
 For each architecture we pick a cascading step at the same network depth in the Hellinger
@@ -346,13 +473,7 @@ encoder block on ViT-B/16, where the Hellinger cascade re-initializes the MLP an
 projection of the block and the attribution cascade additionally its $Q$, $K$ and $V$ projections.
 The interventions therefore match on the CNNs; on ViT-B/16, the comparison also reflects this
 difference in the randomized operators.
-The mean $\mathrm{H}$ / $\mathrm{H}_{\mathrm{surv}}$ at these steps can be read off
-Figure~\ref{ptnb:fig:hellinger-sanity}.  For each of the $\perImageN$ ImageNet-S test images we then
-record four Hellinger scalars ($\mathrm{H}$ plain/surv for the Stopping and Routing Games) and four
-attribution-map scalars (Spearman $\rho(|a|)$ and HOG, each computed between the pretrained and
-partially-randomized model, for Gradient and for the $\alpha\beta$-\ac{rg} anchor at $\tau{=}1$;
-these are the attribution methods whose marginal laws line up with the Hellinger game kernels).
-Table~\ref{ptnb:tab:per-image-corr} reports Spearman rank correlations across the $\perImageN$ images.
+Figure~\ref{ptnb:fig:hellinger-sanity} gives mean $\mathrm H$ and $\mathrm H_{\mathrm{surv}}$ at these steps. For each of the $\perImageN$ test images, we record both distances for each game and Spearman $\rho(|a|)$ and HOG map similarity between pretrained and partially randomized models, using Gradient and the $\alpha\beta$-\ac{rg} anchor at $\tau=1$ as the respective game counterparts. Table~\ref{ptnb:tab:per-image-corr} correlates these eight scalars across images by Spearman rank.
 
 \begin{table}[H]
 \TableContent{
@@ -367,8 +488,7 @@ Table~\ref{ptnb:tab:per-image-corr} reports Spearman rank correlations across th
     within-Hellinger cross-correlations of the plain ($\mathrm{H}_{\cdot,\mathrm{pl}}$) and
     survival-conditioned ($\mathrm{H}_{\cdot,\mathrm{surv}}$) distances under the \ac{rg} and \ac{sg}
     kernels (self-entries shown as $-$; trivially $+1$).  Right block: Hellinger-vs-map
-    cross-correlations.  The Hellinger-vs-map block is uniformly $|\rho| \leq \perImageCrossMax$:
-    per-image Hellinger and per-image attribution-map similarity have weak observed rank association.}
+    cross-correlations.}
     \label{ptnb:tab:per-image-corr}
 \end{table}
 
@@ -377,7 +497,7 @@ The Hellinger-vs-map block of Table~\ref{ptnb:tab:per-image-corr} is uniformly n
 
 Within Hellinger, per-image $\mathrm{H}$ gives a stable ordering. When little mass reaches the cemetery, plain and conditioned distances rank images almost identically: $\rho = +0.96$ (\ac{rg}) and $+0.99$ (\ac{sg}) on ViT-B/16. VGG-16 \ac{rg} gives identical values because it never routes to dead-neuron states. For \ac{sg} on \ac{relu} backbones, the normalizations decouple ($\rho = -0.30$ VGG-16, $+0.16$ ResNet-50): image-dependent dead masks change the cemetery share, which renormalization by $1/\sqrt{Z_A Z_B}$ removes. The two games' conditioned distances agree strongly on \ac{relu} backbones ($\rho = +0.85$ VGG-16, $+0.89$ ResNet-50), but weakly on ViT-B/16 ($+0.28$), where the kernels capture partly different per-image structure.
 
-Within an attribution method, Spearman $\rho(|a|)$ and HOG agree well ($\rho = 0.65$--$0.82$, from the same per-image joins), whereas Gradient and $\alpha\beta$-\ac{rg} similarities agree weakly across images ($\rho$ from $-0.10$ to $+0.30$, depending on architecture and metric). Together with the near-zero Hellinger-vs-map block, this supports \S\ref{ptnb:sec:lmp-randomization}: trajectory and pixel diagnostics yield weakly associated per-image rankings here, and the attribution method changes which images a pixel-level sanity check flags.
+Within a method, Spearman $\rho(|a|)$ and HOG agree well ($\rho=0.65$--$0.82$ from the same per-image joins); Gradient and $\alpha\beta$-\ac{rg} similarities agree weakly ($-0.10$ to $+0.30$, depending on architecture and metric). Alongside the weak trajectory--map association, this shows that the attribution method changes which images a pixel-level sanity check flags.
 \par\medskip
 \providecommand{\nValGrid}{\textcolor{red}{??}}%
 

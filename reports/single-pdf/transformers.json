@@ -1,0 +1,203 @@
+{
+  "baseline_commit": "b43bc24",
+  "edited_files": [
+    "tex/chapters/07_transformers.tex",
+    "tex/supplement/attention.tex"
+  ],
+  "scope": "All attention-supplement material integrated into the Transformer chapter; original multiplicative and full Transformer DC construction preserved.",
+  "counts": {
+    "command": "texcount -utf8 -brief -sum=1,1,1,0,0,0,0",
+    "main_before": 3741,
+    "attention_supplement_before": 1389,
+    "combined_before": 5130,
+    "combined_after": 3663,
+    "removed_words": 1467,
+    "reduction_percent": 28.596491228070175,
+    "page_estimate": "Not built by this agent; root owns final rendering."
+  },
+  "integration": [
+    {
+      "old": "attention supplement: state space",
+      "new": "Attention via a detached-logit oracle / KL routing and the attention game / State space",
+      "change": "Four state families abbreviated once; transitions retain player switch, discounts, indices and bias absorption."
+    },
+    {
+      "old": "KL Legendre–Fenchel lemma and specializations",
+      "new": "KL routing and the attention game",
+      "change": "Retain Gibbs-KL identity proof; extend zero-mass payoffs by support restriction and recover uniform-reference entropy specialization."
+    },
+    {
+      "old": "Value routing equilibrium and three duplicate policy displays",
+      "new": "Value-side optimal policy proposition",
+      "change": "One kappa-indexed policy display with all reference aliases; preserve values, uniqueness for positive mass, zero-mass cemetery convention and SPNE existence."
+    },
+    {
+      "old": "Informal attention theorem plus full recovery theorem and long proof",
+      "new": "Occupation-measure recovery",
+      "change": "One theorem with all aliases. Proof retains probability products, positive cancellation, zero cases, sign-oracle discount cancellation, player subtraction, target identification, bias aggregation and real-seed linearity."
+    },
+    {
+      "old": "Risk-averse attention via ADF",
+      "new": "Subsection after QK oracle",
+      "change": "Retain proxy definition, logit shift, backward-only application, monotone expected proxy score, entropy caveat and distinction from activation-side utility."
+    },
+    {
+      "old": "Repeated main/supplement target formulas and implementation explanations",
+      "new": "Canonical conditioned-map and target-rule subsection plus concise operator list",
+      "change": "Preserve composite versus sequential LRP distinction, Q/K exclusion, fixed mean/scale difference, GELU implementation and test-reference evidence."
+    }
+  ],
+  "deduplications": [
+    {
+      "labels": [
+        "ptnb:eq:attn-z-def"
+      ],
+      "canonical": "ptnb:eq:attn-Z-def",
+      "reason": "Same weighted Value mass."
+    },
+    {
+      "labels": [
+        "ptnb:eq:attn-V-routing-policy-O",
+        "ptnb:eq:attn-branch-policy"
+      ],
+      "canonical": "ptnb:eq:attn-value-policy",
+      "reason": "Same policy with bar-pi=A; kappa covers both signs."
+    },
+    {
+      "labels": [
+        "ptnb:thm:attention",
+        "thm:attention_ab_recovery"
+      ],
+      "canonical": "ptnb:thm:attn-ab-recovery",
+      "reason": "Informal recovery is subsumed by full theorem; actual aliases share theorem counter."
+    },
+    {
+      "labels": [
+        "app:supp_attention"
+      ],
+      "canonical": "sec:attention_routing_game",
+      "reason": "Former supplement chapter now integrated section."
+    },
+    {
+      "labels": [
+        "ptnb:eq:attn-Gamma-V-corollary"
+      ],
+      "canonical": "ptnb:eq:attn-Gamma-V-corollary",
+      "reason": "Retain short explicit occupation/relevance equality, referring to canonical full Value formula instead of repeating it."
+    }
+  ],
+  "semantic_precision_repairs": [
+    {
+      "issue": "A negative real seed scales player differences, not unsigned occupation measures.",
+      "resolution": "Explicitly state occupation differences."
+    },
+    {
+      "issue": "Eliminating informal theorem could remove SPNE existence assertion.",
+      "resolution": "State backward-induction SPNE construction after local optimal-policy proof."
+    },
+    {
+      "issue": "Real-payoff full-support KL lemma needs zero-mass and masked-reference extension.",
+      "resolution": "Specify positive-mass support and admissibility on reference support; zero total mass uses cemetery completion."
+    },
+    {
+      "issue": "Zero-mass optimizer is not necessarily nonunique for singleton support.",
+      "resolution": "State every admissible policy has value minus infinity without universal nonuniqueness claim."
+    },
+    {
+      "issue": "Risk score is a proxy, not actual QK-logit standard deviation.",
+      "resolution": "Describe tilt toward smaller proxy scores, retaining no entropy direction guarantee."
+    }
+  ],
+  "independent_review": {
+    "agent": "/root/concise_transformers/attention_merge_review",
+    "status": "passed after two requested precision fixes",
+    "fixes_applied": [
+      "occupation differences wording",
+      "SPNE existence sentence"
+    ],
+    "review_scope": "Union of prior chapter and supplement versus merged chapter; all proof steps, assumptions, unique claims, labels, citations and Lean badges."
+  },
+  "validation": {
+    "original_label_count": 75,
+    "actual_label_count": 71,
+    "aliases": {
+      "ptnb:eq:attn-z-def": "ptnb:eq:attn-Z-def",
+      "ptnb:app:attention-value-routing": "ptnb:app:kl-legendre-fenchel",
+      "ptnb:eq:attn-V-routing-policy-O": "ptnb:eq:attn-value-policy",
+      "ptnb:eq:attn-branch-policy": "ptnb:eq:attn-value-policy"
+    },
+    "missing_labels": [],
+    "duplicate_actual_labels": [],
+    "missing_citation_keys": [],
+    "explicit_lean_links_before": 9,
+    "explicit_lean_links_after": 9,
+    "explicit_lean_links_preserved": true,
+    "mapped_labels_before": [
+      "def:prenorm_transformer",
+      "eq:convex_square_pair",
+      "eq:layernorm_dc_definition",
+      "eq:maxout_split_identity",
+      "eq:pair_product_rule",
+      "eq:polarized_product_pair",
+      "eq:reciprocal_sqrt_extension",
+      "eq:reciprocal_sqrt_pair",
+      "eq:transformer_dc_recovery",
+      "eq:transformer_raw_dc",
+      "prop:convex_product_pair",
+      "prop:posynomial_representation",
+      "prop:reciprocal_sqrt_pair",
+      "ptnb:eq:attn-V-routing-policy-O",
+      "ptnb:eq:attn-branch-policy",
+      "ptnb:eq:attn-qk-oracle",
+      "ptnb:eq:attn-value-policy",
+      "ptnb:eq:attn-value-routing",
+      "ptnb:eq:kl-lf-linearized",
+      "ptnb:eq:kl-lf-objective",
+      "ptnb:eq:kl-lf-optimizer",
+      "ptnb:lem:kl-legendre-fenchel",
+      "ptnb:prop:attn-value-policy",
+      "ptnb:thm:attn-ab-recovery",
+      "thm:multiplicative_split",
+      "thm:transformer_dc"
+    ],
+    "mapped_labels_after": [
+      "def:prenorm_transformer",
+      "eq:convex_square_pair",
+      "eq:layernorm_dc_definition",
+      "eq:maxout_split_identity",
+      "eq:pair_product_rule",
+      "eq:polarized_product_pair",
+      "eq:reciprocal_sqrt_extension",
+      "eq:reciprocal_sqrt_pair",
+      "eq:transformer_dc_recovery",
+      "eq:transformer_raw_dc",
+      "prop:convex_product_pair",
+      "prop:posynomial_representation",
+      "prop:reciprocal_sqrt_pair",
+      "ptnb:eq:attn-V-routing-policy-O",
+      "ptnb:eq:attn-branch-policy",
+      "ptnb:eq:attn-qk-oracle",
+      "ptnb:eq:attn-value-policy",
+      "ptnb:eq:attn-value-routing",
+      "ptnb:eq:kl-lf-linearized",
+      "ptnb:eq:kl-lf-objective",
+      "ptnb:eq:kl-lf-optimizer",
+      "ptnb:lem:kl-legendre-fenchel",
+      "ptnb:prop:attn-value-policy",
+      "ptnb:thm:attn-ab-recovery",
+      "thm:multiplicative_split",
+      "thm:transformer_dc"
+    ],
+    "all_mapped_labels_preserved": true,
+    "all_alias_targets_present": true,
+    "dc_prefix_preserved_except_companion_wording": true,
+    "brace_balance": 0,
+    "no_companion_supplement_wording": true
+  },
+  "source_sha256": {
+    "tex/chapters/07_transformers.tex": "6f8845a74e4c770b92141dd961ec9555e0a063cab4194a41046964a9be62a832",
+    "tex/supplement/attention.tex": "a0126d7e6839d9e01939c17f008510bb5188b7d53bfe48212bb5c55a50ddd0e0"
+  },
+  "build_performed": false,
+  "commit_performed": false
+}

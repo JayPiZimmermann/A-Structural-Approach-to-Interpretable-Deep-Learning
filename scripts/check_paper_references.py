@@ -51,7 +51,6 @@ PAPERS = {
 }
 
 THESIS_ROOT = ROOT / "tex/main.tex"
-SUPPLEMENT_ROOT = ROOT / "tex/supplement.tex"
 THESIS_BIB = ROOT / "tex/bibliography/references.bib"
 
 CITATION_COMMANDS = {
@@ -59,7 +58,7 @@ CITATION_COMMANDS = {
     "citeyear", "citeyearpar", "textcite", "parencite", "autocite",
     "nocite", "citeapp", "citepapp", "citetapp",
 }
-INCLUDE_COMMANDS = {"input", "include", "appinputgen", "appinputgenlt", "appinputgenci"}
+INCLUDE_COMMANDS = {"input", "include", "appinputgen", "appinputgenlt", "appinputgenci", "appfitgen"}
 
 
 def relpath(path: Path) -> str:
@@ -454,11 +453,6 @@ def balanced_group(text: str, open_pos: int) -> tuple[str | None, int]:
 def build_report() -> tuple[dict[str, Any], bool]:
     thesis_files, thesis_unresolved = tex_closure(THESIS_ROOT, ROOT / "tex")
     main_files = list(thesis_files)
-    supplement_files: list[Path] = []
-    if SUPPLEMENT_ROOT.is_file():
-        supplement_files, supplement_unresolved = tex_closure(SUPPLEMENT_ROOT, ROOT / "tex")
-        thesis_files = list(dict.fromkeys(thesis_files + supplement_files))
-        thesis_unresolved.extend(supplement_unresolved)
     thesis_refs = tex_include_manifest(thesis_files)
     thesis_bib = bib_entries(THESIS_BIB)
     thesis_keys = set(thesis_bib)
@@ -627,15 +621,14 @@ def build_report() -> tuple[dict[str, Any], bool]:
         all_checks_pass = False
     bbl_path = ROOT / "tex/main.bbl"
     report = {
-        "schema_version": 3,
-        "title": "Active paper reference coverage against thesis and technical supplement",
+        "schema_version": 4,
+        "title": "Active paper reference coverage against the single thesis document",
         "offline": True,
         "source_projects": ["Hidden Monotonicity", "Playing the Network Backward v2"],
         "thesis_tex_root": relpath(THESIS_ROOT),
-        "companion_tex_root": relpath(SUPPLEMENT_ROOT) if supplement_files else None,
-        "reference_scope": "Main thesis and companion technical supplement together",
+        "active_tex_roots": [relpath(THESIS_ROOT)],
+        "reference_scope": "Recursive inputs of tex/main.tex only; orphan TeX files do not contribute",
         "main_cited_key_count": len(tex_include_manifest(main_files)),
-        "supplement_cited_key_count": len(tex_include_manifest(supplement_files)),
         "thesis_active_tex_files": [relpath(path) for path in thesis_files],
         "thesis_unresolved_includes": thesis_unresolved,
         "thesis_cited_key_count": len(thesis_canonical_cites),

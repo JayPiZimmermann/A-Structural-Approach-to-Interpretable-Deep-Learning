@@ -26,6 +26,8 @@
 \setlist[myList]{leftmargin=0.0cm,nosep,label={}}
 \renewcommand{\topfraction}{0.98}
 \renewcommand{\bottomfraction}{0.98}
+% Shared comparison cell used in main-text and appendix tables.
+\providecommand{\absval}[2]{\begin{tabular}[c]{@{}c@{}}#1\\\textcolor{gray!70}{\scriptsize #2}\end{tabular}}
 %------------------------------
 % DEDICATION
 %------------------------------
@@ -530,3 +532,10 @@ urlseen = {last access},
 % OWN COMMANDS
 %------------------------------
 % You can use this area for additional own commands
+\makeatletter
+% Retain references to consolidated statements without printing them twice.
+\newcommand{\AliasLabel}[2]{%
+  \@ifundefined{r@#2}{}{%
+    \protected@write\@auxout{}{\string\newlabel{#1}{\csname r@#2\endcsname}}}%
+}
+\makeatother

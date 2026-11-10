@@ -1,0 +1,426 @@
+{
+  "created_utc": "2026-11-10T22:59:24.619893+00:00",
+  "baseline_commit": "b43bc24",
+  "status": "integrated_pending_publication_build",
+  "owned_files": [
+    "tex/chapters/04_game_theory.tex",
+    "tex/supplement/games.tex"
+  ],
+  "canonical_destination": "tex/chapters/04_game_theory.tex",
+  "word_count": {
+    "tool": "texcount -utf8 -brief -sum=1,1,1,0,0,0,0",
+    "before_main": 2028,
+    "before_supplement": 6167,
+    "before_combined": 8195,
+    "after": 4614,
+    "reduction_percent": 43.697
+  },
+  "display_count": {
+    "before_combined": 110,
+    "after": 43
+  },
+  "line_count": {
+    "before_combined": 2025,
+    "after": 829
+  },
+  "structure": [
+    "Related Work and one backward-attribution setup",
+    "Compact conventions and game overview replace duplicated notation table/setup",
+    "Canonical Stopping Game with concise forward and gradient proofs",
+    "Canonical Routing Game with concise SPNE, forward and relevance proofs",
+    "Signed affine output extension",
+    "Merged modes/defaults/costs table and derivations",
+    "Softplus/probit extension and gradient recovery"
+  ],
+  "deduplications": [
+    "One canonical weight/sign split, stopping function and parity-path theorem in Chapter03, referenced with transposed matrix orientation and explicit scalar-ReLU-output specialization.",
+    "Main SG gradient theorem merged into detailed occupation theorem with both Lean targets retained.",
+    "Main RG overview equations and recovery statement merged into canonical detailed RG definitions and theorem.",
+    "One LRP recursion and Sigma normalizer in background; old duplicate labels alias this display.",
+    "Notation table removed: operational definitions retain all symbols, player/sign algebra and boundary conventions remain locally.",
+    "Duplicate modes tables consolidated into one table containing all original defaults,effects,costs.",
+    "General Shannon variational identity stated once in RG and referenced for Softplus; scalarSoftpluspair aliases canonical Chapter03 formula."
+  ],
+  "cross_file_label_transfers": {
+    "ptnb:eq:split-pos": "eq:split_pos",
+    "ptnb:eq:split-neg": "eq:split_neg",
+    "ptnb:eq:stop-relu": "eq:fstop_def",
+    "ptnb:eq:parity-plus": "eq:parity_path_sums",
+    "ptnb:eq:parity-minus": "eq:parity_path_sums",
+    "ptnb:lem:parity-path": "lem:parity_path",
+    "ptnb:eq:softplus-decomp": "eq:fsoft_def"
+  },
+  "local_label_aliases": {
+    "ptnb:eq:lrp-eps-recursion": "ptnb:eq:lrp-ab",
+    "ptnb:eq:routing-sigma-def": "ptnb:eq:lrp-ab",
+    "ptnb:tab:notation": "ptnb:app:notation",
+    "ptnb:eq:q-value": "ptnb:eq:routing-linear-action",
+    "ptnb:eq:soft-bellman": "ptnb:eq:routing-linear-value",
+    "ptnb:eq:routing-spne-stop": "ptnb:eq:routing-activation-value",
+    "ptnb:eq:gibbs-policy": "ptnb:eq:routing-spne-linear",
+    "ptnb:eq:routing-discount": "ptnb:eq:routing-edge-discount",
+    "ptnb:tab:mode-guide": "ptnb:tab:modes",
+    "ptnb:eq:legendre-fenchel-app": "ptnb:eq:gibbs-lse"
+  },
+  "label_accounting": {
+    "original_unique": 137,
+    "canonical_local": 120,
+    "local_aliases": 10,
+    "chapter03_aliases": 7,
+    "missing": []
+  },
+  "lean_accounting": {
+    "original_badges": [
+      "ptnb:thm:gradient",
+      "ptnb:thm:lrp-recovery",
+      "ptnb:thm:decomp-recovery",
+      "ptnb:lem:parity-path",
+      "ptnb:thm:forward-stopping",
+      "ptnb:prop:addition-equivalence",
+      "ptnb:prop:maxpool-equivalence",
+      "ptnb:def:trajectory-distribution",
+      "ptnb:def:occupation",
+      "ptnb:thm:deriv-occ",
+      "ptnb:thm:routing-forward",
+      "ptnb:thm:ab-recovery",
+      "ptnb:thm:softplus-forward",
+      "ptnb:thm:softplus-gradient"
+    ],
+    "canonical_local_badges": [
+      "ptnb:thm:decomp-recovery",
+      "ptnb:thm:forward-stopping",
+      "ptnb:prop:addition-equivalence",
+      "ptnb:prop:maxpool-equivalence",
+      "ptnb:def:trajectory-distribution",
+      "ptnb:def:occupation",
+      "ptnb:thm:deriv-occ",
+      "ptnb:thm:gradient",
+      "ptnb:thm:routing-forward",
+      "ptnb:thm:ab-recovery",
+      "ptnb:thm:lrp-recovery",
+      "ptnb:thm:softplus-forward",
+      "ptnb:thm:softplus-gradient"
+    ],
+    "chapter03_transferred_badge": "ptnb:lem:parity-path",
+    "new_lean_claims": false
+  },
+  "proof_reviews": {
+    "stopping": {
+      "agent": "/root/concise_games/review_games_concision/sg_math_review",
+      "verdict": "No lost mathematical content or proof gaps found.",
+      "fixes_applied": [
+        "Restored two missing mathrm backslashes in final proof.",
+        "Qualified global nonconvexity as lack of guarantee.",
+        "Parent review: explicitly label parity sums as pre-activation sums, whose gate product excludes the starting gate."
+      ]
+    },
+    "modes": {
+      "agent": "/root/concise_games/integrate_modes/review_modes_merge",
+      "initial_verdict": "All unique content retained, with precision fixes requested.",
+      "fixes_applied": [
+        "GELU occupation recursion recovers gradient of conditioned map",
+        "D includes xi and layer order explicit",
+        "fan-in denominator restrictions explicit"
+      ]
+    },
+    "routing": {
+      "initial_independent_review": "Inherited positive-activation-support gap identified; core formulas and boundary cases otherwise retained.",
+      "repair_verification": "Final gated-residual/ungated-supported distinction checked by RG worker against RoutingSupport.source_alpha_beta_output_seed, supported-seed condition, and explicitly gated RoutingBackward.lrpLayer.",
+      "final_independent_confirmation": "Pending reviewer initialization; does not claim completed independent verification of the repair."
+    }
+  },
+  "scope_correction": {
+    "issue": "Inherited ungated alpha-beta recovery claim was too broad for uniform residual Oracles feeding inactive activations.",
+    "corrected_statement": "Ungated recovery on affine/ReLU chains or alive support; general residual graph inserts activation gates in local recurrence. Addition/pooling edge identities remain unconditional.",
+    "counterexample": "f=ReLU(x1-2*x2)+1 at x=(1,1), alpha=2,beta=1,eps=0,unit output source. Uniform addition sends1/2toinactive branch; RG absorbs, ungated alpha-beta gives(1,-1/2).",
+    "lean_evidence": [
+      "formalization/Thesis/RoutingBackward.lean: lrpLayer explicitly gates by positive preactivation; Network has sequential layer/output constructors.",
+      "formalization/Thesis/RoutingSupport.lean: sourceLRP_eq_lrp requires supported output seed; source_alpha_beta_output_seed establishes sequential-network ungated bridge."
+    ],
+    "implementation_evidence": "code/playing_backward/bwgame/xai/methods/routing_game.py:_install_relu_hooks leaves ordinary autograd ReLU indicator in force when no risk deformation.",
+    "source_code_changes": false
+  },
+  "protected_information": [
+    "Every theorem/result and finite-horizon proof dependency retained or referenced at its exact canonical statement.",
+    "ReLU gate and pooling ties; zero weights; empty streams; arbitrary signed inputs and affine output logits; nonnegative occupations and signed seeds.",
+    "Canonical input pair versus arbitrary doubledinput, finalReLU versus signedaffine head, biasparitypaths.",
+    "SGvalue/discount versus RGlogvalue/trajectorydiscount and additionallocation conventions.",
+    "Exactanchor versus myopictemperature/risk/probit deformation; outsideepsilonimplementation and averagepool/BNlimits.",
+    "FiniteSoftplus/probit variational identities, zero-faninforward/gradientcases, selectedpooling, conditionedGELU versus fullderivative.",
+    "All28unique bibliographykeys retained in samechapter."
+  ],
+  "validation": {
+    "brace_balance": true,
+    "duplicate_labels": [],
+    "unique_citation_keys_retained": 28,
+    "build_run": false,
+    "lean_or_paper_archive_or_experiment_changes": false,
+    "chapter03_transfers_verified": true
+  },
+  "source_sha256": {
+    "tex/chapters/04_game_theory.tex": "e7e7c62ab83df02cbc81c68a0793334757aad8c7fe0bca0ef54eac700493a00e",
+    "tex/supplement/games.tex": "b16ebc299626b8402d4e610f50b85b0fb6cdeec40e0fdf2861efa147a8767481"
+  },
+  "component_ledgers": {
+    "sg": {
+      "baseline_commit": "b43bc24",
+      "scope": "Replace main Stopping Game summary and supplement Stopping Game section through the Routing Game boundary with one canonical detailed section.",
+      "proposal": "/home/jzimmermann/.cache/thesis-single-pdf/games/sg.tex",
+      "proposal_sha256": "add6bb3d7ad7c4d70520737ae4e97b99341ed3a89d3d82ab26b1cdcd651db82a",
+      "counts": {
+        "supplement_baseline": 2200,
+        "main_summary_baseline": 210,
+        "proposal": 1121,
+        "combined_baseline": 2410,
+        "reduction_percent": 53.48547717842324
+      },
+      "display_count": {
+        "baseline_combined": 48,
+        "proposal": 13
+      },
+      "cross_file_aliases": {
+        "ptnb:eq:split-pos": "eq:split_pos",
+        "ptnb:eq:split-neg": "eq:split_neg",
+        "ptnb:eq:stop-relu": "eq:fstop_def",
+        "ptnb:eq:parity-plus": "eq:parity_path_sums",
+        "ptnb:eq:parity-minus": "eq:parity_path_sums",
+        "ptnb:lem:parity-path": "lem:parity_path"
+      },
+      "alias_instructions": "Add \\AliasLabel{old}{canonical} after the canonical equation/theorem environment. Do not place multiple equation labels within one amsmath row.",
+      "parity_badge": "Retain both \\LeanResult{lem:parity_path} and \\LeanResult{ptnb:lem:parity-path} at canonical Chapter03 parity lemma; distinct mapped declarations remain explicit.",
+      "main_labels_folded": {
+        "ptnb:sec:stopping": "canonical SG section",
+        "sec:stopping_game_reinterpretation": "canonical SG section",
+        "ptnb:thm:gradient": "canonical detailed gradient/occupation theorem; both original Lean badges retained",
+        "ptnb:eq:attribution": "canonical formal discounted-occupation equation"
+      },
+      "deduplication": [
+        "Canonical sign-split affine recurrences and shared stopping function referenced from Chapter03, with matrix-index orientation stated explicitly.",
+        "Generic fixed-region monotonicity and parity proof referenced from Chapter03; game recap retains canonical input split, gates excluded at starting neuron, zero edges, signed recovery, and bias-stub extension.",
+        "Layer-wise recovery retained as a short corollary with explicit last-ReLU convention; Chapter03 has affine final output and therefore cannot be blindly aliased.",
+        "Forward equivalence proof reduced to terminal base case, continuation-advantage identity, policy choice, stream-value substitution, and signed recovery.",
+        "Addition and max-pooling proofs reduced to matching Bellman probability-discount products and winner choice.",
+        "Gradient proof matches derivative and occupation recursions once over the finite graph, then derives scalar gradient by positive-component variation.",
+        "Main gradient overview statement merged with detailed occupation theorem and output-root specialization; no duplicate theorem/proof."
+      ],
+      "protected_cases": [
+        "Canonical x positive/negative pair; arbitrary signed real input; scalar ReLU output versus separate signed affine logits.",
+        "Bias continuation rewards, terminal payoffs, cemetery behavior, zero incoming weights and vanishing derivative.",
+        "Stop-at-zero theorem convention versus pinned code continuing at exact zero; smallest-index pooling ties.",
+        "Classical derivatives only on strict gate/winner cells; selected quantities at ties and possible stopping-stream discontinuity.",
+        "Nonnegative player payoffs and occupations versus signed advantages and gradient difference.",
+        "Uniform addition split versus arbitrary interior rho with branch discounts; trajectory/Hellinger law changes; no RG allocation invariance claim.",
+        "Nonnegative pooling operands, chosen winner, unit discount.",
+        "Ground-set trajectories beyond closed gates carry zero equilibrium probability.",
+        "Bias parity stubs use l-t edges above bias node, gates t through l-1, absolute bias and bias-sign parity."
+      ],
+      "figure": "ptnb:fig:Stopping-Game-illustration retained at full width with concise caption retaining all numerical example probabilities/payoffs and stopping logic.",
+      "independent_review": {
+        "agent": "/root/concise_games/review_games_concision/sg_math_review",
+        "verdict": "No lost mathematical content or proof gaps found.",
+        "fixes_applied": [
+          "Restored two missing mathrm backslashes in final proof.",
+          "Qualified global nonconvexity as lack of guarantee.",
+          "Parent review: explicitly label parity sums as pre-activation sums, whose gate product excludes the starting gate."
+        ]
+      },
+      "validation": {
+        "all_baseline_labels_accounted_for": true,
+        "all_baseline_badges_accounted_for": true,
+        "citations_retained": [
+          "Arora2018",
+          "hiddenMono",
+          "Gaubert2025"
+        ],
+        "repository_edits": false,
+        "build_run": false
+      },
+      "integration_notes": [
+        "Canonical SG is written as section with subsections; parent may adjust heading levels consistently.",
+        "Notation identities p,q,r,opponent,XOR,xi must precede this section.",
+        "Parent keeps generic game Bellman equation ptnb:eq:bellman; remove earlier main occupation display to avoid duplicate ptnb:eq:attribution.",
+        "Final assembled chapter requires normal build/warning checks; page reduction not yet measured."
+      ]
+    },
+    "rg": {
+      "scope": "Consolidates main RG overview and supplement RG definition, SPNE/forward proof, graph operations, relevance proof, and temperature section. Cache proposal only.",
+      "baseline_commit": "b43bc24",
+      "source_files": [
+        "tex/chapters/04_game_theory.tex",
+        "tex/supplement/games.tex"
+      ],
+      "proposal": "/home/jzimmermann/.cache/thesis-single-pdf/games/rg.tex",
+      "sha256": "d541758d69ac187762d00f984bc7f0ecc0fff39a746226a653a746d1335746eb",
+      "texcount": {
+        "before": 2796,
+        "after": 1310,
+        "removed": 1486,
+        "reduction_percent": 53.15
+      },
+      "labels": {
+        "original_unique": 41,
+        "retained_local": 39,
+        "external_aliases_required": {
+          "ptnb:eq:lrp-eps-recursion": "ptnb:eq:lrp-ab",
+          "ptnb:eq:routing-sigma-def": "ptnb:eq:lrp-ab"
+        },
+        "local_aliases": {
+          "ptnb:eq:q-value": "ptnb:eq:routing-linear-action",
+          "ptnb:eq:soft-bellman": "ptnb:eq:routing-linear-value",
+          "ptnb:eq:routing-spne-stop": "ptnb:eq:routing-activation-value",
+          "ptnb:eq:gibbs-policy": "ptnb:eq:routing-spne-linear",
+          "ptnb:eq:routing-discount": "ptnb:eq:routing-edge-discount"
+        },
+        "missing": []
+      },
+      "lean_badges": [
+        "ptnb:thm:routing-forward",
+        "ptnb:thm:ab-recovery",
+        "ptnb:thm:lrp-recovery"
+      ],
+      "consolidation": [
+        "One entropy identity and one canonical state/value definition replace summary and appendix repetitions.",
+        "Canonical all-temperature SPNE/anchor-forward theorem retains both proof arguments in two paragraphs; empty finite-score support and activation log ties remain explicit.",
+        "Main LRP-recovery theorem aliases the canonical recovery theorem, with both Lean badges retained.",
+        "Shared affine LRP recurrence and Sigma definition remain in background, with equation aliases rather than duplicated formulas.",
+        "Relevance proof now uses one per-player recursion and subtraction instead of repeated four-line expansions; signed input, bias/outside absorption, addition edge accounting and max-pool winners retained.",
+        "Starting-player and signed-discount remarks merged; all temperature and implementation qualifications retained.",
+        "Worked RG figure retained with shortened caption, all numeric examples and omission conventions."
+      ],
+      "scope_correction": {
+        "issue": "Inherited ungated alpha-beta recovery claim was too broad for uniform residual Oracles feeding inactive activations.",
+        "corrected_statement": "Ungated recovery on affine/ReLU chains or alive support; general residual graph inserts activation gates in local recurrence. Addition/pooling edge identities remain unconditional.",
+        "counterexample": "f=ReLU(x1-2*x2)+1 at x=(1,1), alpha=2,beta=1,eps=0,unit output source. Uniform addition sends1/2toinactive branch; RG absorbs, ungated alpha-beta gives(1,-1/2).",
+        "lean_evidence": [
+          "formalization/Thesis/RoutingBackward.lean: lrpLayer explicitly gates by positive preactivation; Network has sequential layer/output constructors.",
+          "formalization/Thesis/RoutingSupport.lean: sourceLRP_eq_lrp requires supported output seed; source_alpha_beta_output_seed establishes sequential-network ungated bridge."
+        ],
+        "implementation_evidence": "code/playing_backward/bwgame/xai/methods/routing_game.py:_install_relu_hooks leaves ordinary autograd ReLU indicator in force when no risk deformation.",
+        "source_code_changes": false
+      },
+      "proof_retention": [
+        "tau>0/epsilon>=0",
+        "signed first-layer inputs",
+        "zero and wrong-sign actions",
+        "zero-probability -infinity convention",
+        "all-infinite-score absorption",
+        "positive/negative player switch",
+        "distinct game-value and entered-state trajectory discounts",
+        "canonical stop at every log tie",
+        "bias and epsilon absorption",
+        "zero output with output seed",
+        "other-parent contributions via edge occupation",
+        "arbitrary real seed on positive root",
+        "myopic anchored values vs re-solved tau",
+        "outside epsilon not raised in implementation",
+        "uniform average pool and merged BN implementation distinctions",
+        "Nonempty Shannon-identity action set n>=1, now explicit rather than ambiguous N."
+      ],
+      "validation": {
+        "brace_balance": true,
+        "unique_labels": true,
+        "all_original_labels_accounted_for": true,
+        "no_build_or_repo_mutation": true,
+        "all_unique_citations_retained": true
+      }
+    },
+    "modes": {
+      "status": "ready_for_parent_integration",
+      "created_utc": "2026-11-10T22:58:16.244321+00:00",
+      "sources": [
+        "tex/chapters/04_game_theory.tex: Game-Theoretic Modes through before Signed affine output logits",
+        "tex/supplement/games.tex: Analytical Modes through EOF"
+      ],
+      "baseline_commit": "b43bc24",
+      "proposal": "/home/jzimmermann/.cache/thesis-single-pdf/games/modes.tex",
+      "proposal_sha256": "fe6b362001c0244006b1d06ea160fe456ad1f9817c4e7a3bad2683fedb1da967",
+      "prose_counts": {
+        "method": "texcount -utf8 -brief -sum=1,1,1,0,0,0,0",
+        "before": 1683,
+        "after": 991,
+        "reduction_percent": 41.12
+      },
+      "display_blocks": {
+        "before": 13,
+        "after": 8
+      },
+      "canonical_structure": [
+        "Game-Theoretic Modes, defaults/costs table and order of use",
+        "Focus/exact modes, risk aversion, probit gate, GELU conditioning, fan-in entropy",
+        "Softplus game: referenced entropy identity, forward recovery proof, gradient recovery proof, probit analog, Dombrowski comparison"
+      ],
+      "deduplications": [
+        {
+          "content": "Two modes tables",
+          "canonical_label": "ptnb:tab:modes",
+          "aliases": [
+            "ptnb:tab:mode-guide"
+          ],
+          "retained": "All defaults, game effects, A100/batch1 timing scope, numerical costs, added fan-in mode row; table uses same small font as sources."
+        },
+        {
+          "content": "Softplus decomposition equation repeated from chapter03",
+          "canonical_label": "eq:fsoft_def",
+          "aliases": [
+            "ptnb:eq:softplus-decomp"
+          ],
+          "retained": "Forward theorem identifies sp_theta=sigma_theta and defines H_theta; game entropy bonus and bias-only case remain."
+        },
+        {
+          "content": "General Shannon variational identity repeated from Routing Game",
+          "canonical_label": "ptnb:eq:gibbs-lse",
+          "aliases": [
+            "ptnb:eq:legendre-fenchel-app"
+          ],
+          "retained": "Temperature theta identification and binary link eq:legendre_fenchel_softplus; Boyd citation retained at canonical RG identity."
+        },
+        {
+          "content": "Repeated risk, smoothing, focus, cost and GELU exposition",
+          "canonical_destination": "Single treatment beside relevant mode and references from Softplus analog paragraph",
+          "retained": "ADF exact mean and implementation-specific approximate variance; unchanged linear routing; myopic anchor values; current-layer ReLU deformation; independent perceived noise versus deterministic payoff; full GELU versus conditioned derivative."
+        }
+      ],
+      "proof_changes": [
+        "Probit optimizer uses inverse-CDF first derivative and strict negative second derivative, then Gaussian expectation identity; general positive-sigma scaling retained.",
+        "Softplus forward proof uses affine split induction, binary entropy identity and active-only bonus; zero fan-in reduces continuation to bias parts; SPNE follows finite-horizon induction/strict concavity.",
+        "Softplus gradient proof explicitly defines xi-oriented occupation difference, proves player-independence by induction and obtains scalar chain-rule recursion; base delta, zero fan-in, addition and selected max-pooling retained."
+      ],
+      "label_inventory": {
+        "old_count": 31,
+        "direct_count": 28,
+        "aliases": {
+          "ptnb:tab:mode-guide": "ptnb:tab:modes",
+          "ptnb:eq:legendre-fenchel-app": "ptnb:eq:gibbs-lse",
+          "ptnb:eq:softplus-decomp": "eq:fsoft_def"
+        },
+        "all_old_labels_retained": true,
+        "lean_badges": [
+          "ptnb:thm:softplus-forward",
+          "ptnb:thm:softplus-gradient"
+        ],
+        "unique_citation_keys_preserved_in_combined_chapter": true,
+        "citation_deduplication": "Repeated Gast/Auer/Zhang/Dombrowski occurrences merged; Boyd remains at canonical RG entropy identity."
+      },
+      "scope_clarifications": [
+        "Requested canonical RG entropy identity n>=1, avoiding empty simplex.",
+        "Fan-in entropy formula explicitly assumes n_j>1 and gamma_j>0; sources left degenerate denominators undefined, so no unverified zero-case convention is invented.",
+        "Probit rescaling explicitly assumes sigma>0; zero-sigma behavior is not silently specified.",
+        "Softplus gradient theorem explicitly states l<=m and selected pooling interpretation at ties."
+      ],
+      "independent_review": {
+        "agent": "/root/concise_games/integrate_modes/review_modes_merge",
+        "initial_verdict": "All unique content retained, with precision fixes requested.",
+        "fixes_applied": [
+          "GELU occupation recursion recovers gradient of conditioned map",
+          "D includes xi and layer order explicit",
+          "fan-in denominator restrictions explicit"
+        ]
+      },
+      "limitations": [
+        "No standalone TeX build; parent owns merged build.",
+        "Projected page reduction requires final chapter layout."
+      ],
+      "repository_edited": false
+    }
+  }
+}

@@ -53,7 +53,7 @@ def normalize(text):
 
 def main():
     ap=argparse.ArgumentParser();ap.add_argument('--check',action='store_true');args=ap.parse_args()
-    paths=[p for folder in ['chapters','frontmatter','figures','tables'] for p in (ROOT/'tex'/folder).rglob('*.tex')]
+    paths=[p for folder in ['chapters','appendices','frontmatter','figures','tables'] for p in (ROOT/'tex'/folder).rglob('*.tex')]
     paths += [ROOT/'tex/preamble/paper_v2.tex',ROOT/'tex/preamble/abbreviations_def.tex']
     report={}
     for p in sorted(set(paths)):

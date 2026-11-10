@@ -1,29 +1,22 @@
 \chapter{Mathematical Foundations}\label{ch:foundations}
 
-This chapter establishes the notation and background. Section~\ref{sec:nn_notation_pwl} introduces feedforward networks and their \ac{relu}--\ac{cpwl} equivalence. Section~\ref{sec:convex_monotone_foundations} defines monotone networks, \acp{icnn}, and Maxout units, the building blocks of Chapter~\ref{ch:decompositions}. Section~\ref{sec:game_theory_mdp_foundations} presents \acp{mdp}, zero-sum turn-based games, and the full ReLU Net Game of Gaubert and Vlassopoulos, distinguishing the framework inherited by Chapter~\ref{ch:game_theory} from its extensions. The absolute-curvature construction for smooth activations accompanies the network decomposition theorem in Section~\ref{sec:dc_splitting_smooth}.
+We establish network notation and the \ac{relu}--\ac{cpwl} equivalence (Section~\ref{sec:nn_notation_pwl}); monotone networks, \acp{icnn}, and Maxout units (Section~\ref{sec:convex_monotone_foundations}); and \acp{mdp}, zero-sum games, and the ReLU Net Game of Gaubert and Vlassopoulos (Section~\ref{sec:game_theory_mdp_foundations}). These underpin Chapters~\ref{ch:decompositions} and~\ref{ch:game_theory}; the absolute-curvature construction for smooth activations accompanies the decomposition theorem in Section~\ref{sec:dc_splitting_smooth}.
 
 \section{Neural Network Notation and PWL Mappings}\label{sec:nn_notation_pwl}
 
 The standard feedforward architecture serves as the reference model throughout; convolutional and attention-based architectures are treated in Section~\ref{sec:cnn_decompositions} and Chapter~\ref{ch:transformers} as structured special cases and extensions.
 
 \begin{definition}[Feedforward \ac{relu} network]\label{def:ffn_relu}
-Let $L \in \NN$ and let $d^{(0)}, d^{(1)}, \ldots, d^{(L)} \in \NN$ denote the \emph{layer widths}, with input dimension $d^{(0)}$ and output dimension $d^{(L)}$. A \emph{feedforward \ac{relu} network} of depth $L$ is given by weight matrices $\Wl{l} \in \RR^{d^{(l)} \times d^{(l-1)}}$ and bias vectors $b^{(l)} \in \RR^{d^{(l)}}$ for $l = 1, \ldots, L$. On an input $x \in \RR^{d^{(0)}}$ it computes the recursion
+A \emph{feedforward \ac{relu} network} of depth $L\in\NN$ has \emph{layer widths} $d^{(0)},\ldots,d^{(L)}\in\NN$, weights $\Wl{l}\in\RR^{d^{(l)}\times d^{(l-1)}}$, and biases $b^{(l)}\in\RR^{d^{(l)}}$. For input $\actl{0}=x\in\RR^{d^{(0)}}$, its \emph{pre-activations} $\preactl{l}$, \emph{activations} $\actl{l}$, and function $f:\RR^{d^{(0)}}\to\RR^{d^{(L)}}$ satisfy
 \begin{align}
-	\actl{0} &\coloneqq x, \notag\\
-	\preactl{l} &\coloneqq \Wl{l} \actl{l-1} + b^{(l)}, && l = 1, \ldots, L, \label{eq:forward_recursion}\\
-	\actl{l} &\coloneqq \relu\bigl(\preactl{l}\bigr), && l = 1, \ldots, L-1, \notag
+	\preactl{l} &\coloneqq \Wl{l}\actl{l-1}+b^{(l)}, && l=1,\ldots,L, \label{eq:forward_recursion}\\
+	\actl{l} &\coloneqq \relu\bigl(\preactl{l}\bigr), && l=1,\ldots,L-1, \notag\\
+	f(x) &= \actl{L}\coloneqq\preactl{L}. \label{eq:network_function}
 \end{align}
-where $\relu(z) \coloneqq \max\{z, 0\}$ acts componentwise, and the output layer is affine, $\actl{L} \coloneqq \preactl{L}$. We call $\preactl{l}$ the \emph{pre-activation} and $\actl{l}$ the \emph{(post-)activation} of layer $l$, and denote the \emph{network function} by
-\begin{equation}
-	f \colon \RR^{d^{(0)}} \longrightarrow \RR^{d^{(L)}},
-	\qquad
-	f(x) \coloneqq \actl{L}.
-	\label{eq:network_function}
-\end{equation}
-Layers $1, \ldots, L-1$ are the \emph{hidden layers}. Throughout we fix the boundary convention $\relu'(0) \coloneqq 0$, so that the gate indicator $\1\{\preactl{l}_i > 0\}$ returns $0$ at $\preactl{l}_i = 0$.
+Here $\relu(z)=\max\{z,0\}$ acts componentwise on the hidden layers $1,\ldots,L-1$; the output is affine. We use $\relu'(0)=0$, so gates $\1\{\preactl{l}_i>0\}$ are closed at zero.
 \end{definition}
 
-For layers $l, \ldots, L$, write $f^{(l)} \colon \RR^{d^{(l)}} \to \RR^{d^{(L)}}$ for the tail map, with $f = f^{(1)} \circ \bigl(x \mapsto \relu(\Wl{1} x + b^{(1)})\bigr)$ and $f^{(L)}$ the affine output map. Appending a constant \emph{intercept input} $1$ absorbs $b^{(l)}$ into a column of $\Wl{l}$; some proofs use this bias-free formulation implicitly.
+Write $f^{(l)}:\RR^{d^{(l)}}\to\RR^{d^{(L)}}$ for the tail after layer $l$: thus $f^{(0)}=f$, $f^{(L-1)}$ is the affine output map, and $f^{(L)}$ is the identity. Appending a constant \emph{intercept input} $1$ absorbs $b^{(l)}$ into a column of $\Wl{l}$; some proofs use this bias-free formulation implicitly.
 
 Chapter~\ref{ch:decompositions} splits parameters and inputs by sign using the following notation.
 
@@ -118,19 +111,17 @@ Definition~\ref{def:icnn} covers the plain feedforward core of the architecture 
 An \ac{icnn} represents a convex function; each coordinate of every activation $\actl{l}$, $l \ge 1$, is a convex function of the input $x$.\end{proposition}
 
 \begin{proof}
-We use two closure properties of convex functions: (i) a non-negative linear combination of convex functions plus a constant is convex; (ii) if $\varphi \colon \RR \to \RR$ is convex and non-decreasing and $u \colon \RR^d \to \RR$ is convex, then $\varphi \circ u$ is convex, since for $\lambda \in [0,1]$,
-\begin{equation*}
-	\varphi\bigl(u(\lambda x + (1-\lambda) y)\bigr)
-	\le \varphi\bigl(\lambda u(x) + (1-\lambda) u(y)\bigr)
-	\le \lambda\, \varphi(u(x)) + (1-\lambda)\, \varphi(u(y)),
-\end{equation*}
-where the first inequality uses convexity of $u$ and monotonicity of $\varphi$, and the second convexity of $\varphi$.
-
-Induct over layers. The affine coordinates of $\preactl{1}=\Wl{1}x+b^{(1)}$ are convex, so (ii) gives convexity of $\actl{1}$. If $\actl{l-1}$ has convex coordinates, the non-negative weights for $l\ge2$ make $\preactl{l}=\Wl{l}\actl{l-1}+b^{(l)}$ convex by (i), and (ii) preserves convexity through the activation. The identity activation covers the affine output $\actl{L}=\preactl{L}$.
+Non-negative linear combinations plus constants preserve convexity. So does composition with a convex non-decreasing scalar function $\varphi$: for convex $u$ and $\lambda\in[0,1]$,
+\[
+\varphi\bigl(u(\lambda x+(1-\lambda)y)\bigr)
+\le\varphi\bigl(\lambda u(x)+(1-\lambda)u(y)\bigr)
+\le\lambda\varphi(u(x))+(1-\lambda)\varphi(u(y)).
+\]
+The first inequality uses convexity of $u$ and monotonicity of $\varphi$; the second uses convexity of $\varphi$. Starting from the affine $\preactl{1}$, these two closure rules give convex coordinates at every layer by induction, including the affine output.
 \end{proof}
 
 \begin{remark}[Monotonicity and convexity combine]\label{rem:monotone_convex_combined}
-If, in addition, $\Wl{1} \ge 0$ in Definition~\ref{def:icnn}, the network is simultaneously monotone and input-convex, hence non-decreasing \emph{and} convex by Propositions~\ref{prop:monotone_represents} and \ref{prop:icnn_convex}. Both $\relu$ and Maxout (below) are convex and monotone, so non-negative-weight \ac{relu} networks are of exactly this type. These are the building blocks of the DC splitting of Section~\ref{sec:dc_splitting_relu}: the streams $g$ and $h$ are computed by monotone networks acting on a signed embedding of the input, and are input-convex in the original input. The sign constraint also \emph{limits} expressivity---a weight-constrained \ac{relu} network represents only convex functions, precisely Proposition~\ref{prop:icnn_convex}, which is why monotone architectures add concave counterparts of the activation \parencite{Runje_2023}. The decompositions of this thesis turn the limitation into a feature: the difference of two such networks recovers full generality by Theorem~\ref{thm:cpwl_relu_equivalence} and \eqref{eq:cpwl_dc_representation}.
+With $\Wl{1}\ge0$, an \ac{icnn} is both monotone and convex by Propositions~\ref{prop:monotone_represents} and~\ref{prop:icnn_convex}. ReLU and Maxout meet both activation conditions. Section~\ref{sec:dc_splitting_relu} therefore constructs $g,h$ as monotone networks on a signed input embedding, convex in the original input. Non-negative-weight ReLU networks represent only convex functions; broader monotone architectures add concave activation counterparts \parencite{Runje_2023}. Taking differences instead recovers every \ac{cpwl} function by Theorem~\ref{thm:cpwl_relu_equivalence} and~\eqref{eq:cpwl_dc_representation}.
 \end{remark}
 
 \subsection*{Maxout units}
@@ -164,7 +155,7 @@ Maxout networks are the natural piecewise-linear generalization of \ac{relu}: a 
 Chapter~\ref{ch:game_theory} interprets backward propagation as a two-player zero-sum game on the decomposed network graph. We introduce \acp{mdp}, turn-based games, and their optimality equations, restricting throughout to finite state and action spaces.
 
 \begin{definition}[\acl{mdp}]\label{def:mdp}
-A (finite) \emph{\acl{mdp}} (\acs{mdp}) \parencite{Puterman1994mdp,SuttonBarto2018rl} is a tuple $\mathcal{M} = (S, A, \P, R, \gamma)$ consisting of a finite state set $S$, a finite action set $A(s)$ for each $s \in S$, a \emph{transition kernel} $\P(s' \mid s, a) \ge 0$ with $\sum_{s'} \P(s' \mid s, a) = 1$, a bounded \emph{reward function} $R(s, a) \in \RR$, and a \emph{discount factor} $\gamma \in [0, 1)$. A \emph{(stationary) policy} is a map $\pi$ assigning to each state $s$ a probability distribution $\pi(\cdot \mid s)$ over $A(s)$; $\pi$ is \emph{pure} (deterministic) if each $\pi(\cdot \mid s)$ is a point mass. A policy induces, for every start state, a Markov chain on $S$ and hence a distribution over trajectories $(s_0, a_0, s_1, a_1, \ldots)$; the \emph{value function} of $\pi$ is the expected discounted return
+A (finite) \emph{\acl{mdp}} (\acs{mdp}) \parencite{Puterman1994mdp,SuttonBarto2018rl} is a tuple $\mathcal{M} = (S, A, \P, R, \gamma)$ consisting of a finite state set $S$, a finite nonempty action set $A(s)$ for each $s \in S$, a \emph{transition kernel} $\P(s' \mid s, a) \ge 0$ with $\sum_{s'} \P(s' \mid s, a) = 1$, a bounded \emph{reward function} $R(s, a) \in \RR$, and a \emph{discount factor} $\gamma \in [0, 1)$. A \emph{(stationary) policy} is a map $\pi$ assigning to each state $s$ a probability distribution $\pi(\cdot \mid s)$ over $A(s)$; $\pi$ is \emph{pure} (deterministic) if each $\pi(\cdot \mid s)$ is a point mass. A policy induces, for every start state, a Markov chain on $S$ and hence a distribution over trajectories $(s_0, a_0, s_1, a_1, \ldots)$; the \emph{value function} of $\pi$ is the expected discounted return
 \begin{equation}
 	V^{\pi}(s) \coloneqq \E^{\pi}\Bigl[ \textstyle\sum_{t=0}^{\infty} \gamma^{t}\, R(s_t, a_t) \,\Big|\, s_0 = s \Bigr],
 	\label{eq:mdp_value}
@@ -175,25 +166,20 @@ and the \emph{optimal value function} is $V^{\star}(s) \coloneqq \max_{\pi} V^{\
 Fixing an enumeration of $S$, a pure policy $\pi$ turns the kernel into a row-stochastic \emph{transition matrix} $P^{\pi} \in \RR^{S \times S}$ with $P^{\pi}_{s s'} = \P(s' \mid s, \pi(s))$ and the reward into a vector $R^{\pi}$, and \eqref{eq:mdp_value} becomes the Neumann series $V^{\pi} = \sum_{t \ge 0} \gamma^t (P^{\pi})^t R^{\pi}$. This matrix picture recurs in Chapter~\ref{ch:game_theory}, where the (sub)stochastic matrices are built from the normalized weight parts $\Wsig{l}{\sigma}$ of Definition~\ref{def:posneg_parts}.
 
 \begin{proposition}[Bellman equations, \LeanResult{prop:bellman}]\label{prop:bellman}
-Let $\mathcal{M}$ be a finite \ac{mdp} with $\gamma \in [0,1)$. Then:
-\begin{enumerate}
-	\item $V^{\pi}$ is the unique solution of the linear system
-	\begin{equation}
-		V(s) = \sum_{a \in A(s)} \pi(a \mid s) \Bigl[ R(s,a) + \gamma \sum_{s'} \P(s' \mid s, a)\, V(s') \Bigr],
-		\qquad s \in S.
-		\label{eq:bellman_evaluation}
-	\end{equation}
-	\item $V^{\star}$ is the unique solution of the \emph{Bellman optimality equation}
-	\begin{equation}
-		V(s) = \max_{a \in A(s)} \Bigl\{ R(s, a) + \gamma \sum_{s'} \P(s' \mid s, a)\, V(s') \Bigr\},
-		\qquad s \in S,
-		\label{eq:bellman_optimality}
-	\end{equation}
-	and any pure policy $\polstar$ that selects, in every state, an action attaining the maximum in \eqref{eq:bellman_optimality} is optimal: $V^{\polstar} = V^{\star}$.
-\end{enumerate}\end{proposition}
+For a finite \ac{mdp} with $\gamma\in[0,1)$, define
+\[
+Q_V(s,a)\coloneqq R(s,a)+\gamma\sum_{s'}\P(s'\mid s,a)V(s').
+\]
+Then $V^{\pi}$ and $V^{\star}$ uniquely solve, respectively,
+\begin{align}
+V(s)&=\sum_{a\in A(s)}\pi(a\mid s)Q_V(s,a), &&s\in S, \label{eq:bellman_evaluation}\\
+V(s)&=\max_{a\in A(s)}Q_V(s,a), &&s\in S. \label{eq:bellman_optimality}
+\end{align}
+The first is a linear system; the second is the \emph{Bellman optimality equation}. Any pure policy $\polstar$ selecting a maximizer of $Q_{V^{\star}}$ in each state is optimal: $V^{\polstar}=V^{\star}$.
+\end{proposition}
 
 \begin{proof}
-Both claims are standard \parencite{Puterman1994mdp,SuttonBarto2018rl}. The right-hand sides of \eqref{eq:bellman_evaluation} and \eqref{eq:bellman_optimality} define $\gamma$-contractions on $\bigl(\RR^{S}, \norm{\cdot}_{\infty}\bigr)$, so each has a unique fixed point by the Banach fixed-point theorem; conditioning \eqref{eq:mdp_value} on the first transition identifies these fixed points as $V^{\pi}$ and $V^{\star}$, and any policy greedy for $V^{\star}$ is optimal. The acyclic games below make even the contraction argument unnecessary (Remark~\ref{rem:structural_discount}).
+Both right-hand sides are $\gamma$-contractions in $\norm{\cdot}_\infty$, hence have unique fixed points. Conditioning \eqref{eq:mdp_value} on the first transition identifies them as $V^{\pi}$ and $V^{\star}$; a policy greedy for $V^{\star}$ attains its value \parencite{Puterman1994mdp,SuttonBarto2018rl}. Acyclic games instead admit backward induction (Remark~\ref{rem:structural_discount}).
 \end{proof}
 
 \begin{remark}[State-dependent structural discounts]\label{rem:structural_discount}
@@ -214,15 +200,15 @@ A (finite) \emph{zero-sum turn-based game} is a tuple $\mathcal{G} = (S_{+}, S_{
 \end{definition}
 
 \begin{theoremenv}[Shapley--Bellman optimality on layered games, \LeanResult{thm:shapley_bellman}]\label{thm:shapley_bellman}
-Let $\mathcal{G}$ be a finite zero-sum turn-based game whose transition graph is acyclic. Then $\mathcal{G}$ has a \emph{value}: there is a unique function $V^{\star} \colon S \to \RR$ satisfying the \emph{Shapley--Bellman optimality equations}
+Let $\mathcal{G}$ be a finite zero-sum turn-based game with acyclic transition graph. Use $Q_V$ from Proposition~\ref{prop:bellman}, replacing $\gamma$ by $\gamma(s)\ge0$. Its unique \emph{value} $V^{\star}:S\to\RR$ satisfies the \emph{Shapley--Bellman equations}
 \begin{equation}
-	V^{\star}(s) =
-	\begin{cases}
-		\displaystyle \max_{a \in A(s)} \Bigl\{ R(s,a) + \gamma(s) \sum_{s'} \P(s' \mid s, a)\, V^{\star}(s') \Bigr\}, & s \in S_{+}, \\[1.2em]
-		\displaystyle \min_{a \in A(s)} \Bigl\{ R(s,a) + \gamma(s) \sum_{s'} \P(s' \mid s, a)\, V^{\star}(s') \Bigr\}, & s \in S_{-}, \\[1.2em]
-		R(s), & s \in S_{\mathrm{ter}},
-	\end{cases}
-	\label{eq:shapley_bellman}
+V^{\star}(s)=
+\begin{cases}
+\max_{a\in A(s)}Q_{V^{\star}}(s,a),&s\in S_+,\\
+\min_{a\in A(s)}Q_{V^{\star}}(s,a),&s\in S_-,\\
+R(s),&s\in S_{\mathrm{ter}}.
+\end{cases}
+\label{eq:shapley_bellman}
 \end{equation}
 and there exist pure stationary policies $\polstar = (\polstar_{+}, \polstar_{-})$, obtained by selecting maximizing respectively minimizing actions in \eqref{eq:shapley_bellman}, such that for all $s \in S$ and all policies $\pi_{+}, \pi_{-}$,
 \begin{equation}
@@ -232,14 +218,9 @@ and there exist pure stationary policies $\polstar = (\polstar_{+}, \polstar_{-}
 In particular, $\polstar$ is a Nash equilibrium of every subgame, i.e.\ a subgame perfect equilibrium.\end{theoremenv}
 
 \begin{proof}
-Induct backward along a topological order of the finite acyclic graph. At terminal states, \eqref{eq:shapley_bellman} fixes $V^{\star}(s)=R(s)$ and \eqref{eq:saddle_point} holds. For $s\in S_+$, assume uniqueness and the saddle inequalities at all successors. Each action's bracket in \eqref{eq:shapley_bellman} is finite; maximizing over the finite action set uniquely defines $V^{\star}(s)$ and supplies a pure choice $\polstar_+(s)$. For any opponent policy $\pi_-$, condition on the first transition and apply the successors' left saddle inequality with $\gamma(s)\ge0$:
-\begin{align*}
-	V^{(\polstar_{+}, \pi_{-})}(s)
-	&= R\bigl(s, \polstar_{+}(s)\bigr) + \gamma(s) \sum_{s'} \P\bigl(s' \mid s, \polstar_{+}(s)\bigr)\, V^{(\polstar_{+}, \pi_{-})}(s') \\
-	&\ge R\bigl(s, \polstar_{+}(s)\bigr) + \gamma(s) \sum_{s'} \P\bigl(s' \mid s, \polstar_{+}(s)\bigr)\, V^{\star}(s')
-	\;=\; V^{\star}(s),
-\end{align*}
-The last equality uses the maximizing choice $\polstar_+(s)$. Against $\polstar_-$, any $\pi_+$ averages the bracket to at most its maximum; conditioning and the successors' right saddle inequality give $V^{(\pi_+,\polstar_-)}(s)\le V^{\star}(s)$. For $s\in S_-$, exchange $\max$ with $\min$ and reverse the inequalities. Taking $\pi=\polstar$ in both inequalities gives $V^{\polstar}=V^{\star}$. The argument holds in every rooted subgame, proving subgame perfection.
+Backward induction on the finite acyclic graph starts from $V^{\star}(s)=R(s)$ at terminal states. At each remaining state, the known successor values determine $Q_{V^{\star}}$; its finite nonempty action set has an attained maximum or minimum, uniquely determining the value and a pure optimal choice.
+
+For the saddle inequalities, induct in the same order. At $s\in S_+$, playing the maximizing action against any $\pi_-$ gives at least $V^{\star}(s)$ by the successors' left inequality and $\gamma(s)\ge0$. Conversely, any $\pi_+$ against $\polstar_-$ gives at most the average of $Q_{V^{\star}}(s,\cdot)$, hence at most its maximum $V^{\star}(s)$, by the successors' right inequality. At $s\in S_-$ the argument exchanges maximum and minimum. With both players optimal, the inequalities give $V^{\polstar}=V^{\star}$. Since this holds at every state, the equilibrium is subgame perfect.
 \end{proof}
 
 \begin{remark}\label{rem:shapley_history}
@@ -255,7 +236,7 @@ Read the identity $\actl{l}_i = \max\bigl\{0,\, \preactl{l}_i\bigr\}$ as a decis
 \begin{definition}[ReLU Net Game, following \parencite{Gaubert2025}]\label{def:relu_net_game}
 The \emph{ReLU Net Game} on the network $f$ at input $x$ is the zero-sum turn-based game with the following components.
 \begin{itemize}
-	\item \textbf{States.} For every hidden layer $l \in \{1, \ldots, L-1\}$, every neuron $i \in [d^{(l)}]$, and every turn label $q \in \{+,-\}$ there is an \emph{activation state} $s^{(l)}_{i,q}$, controlled by player $P^{q}$, so that $S_q = \bigl\{ s^{(l)}_{i,q} : l \in [L-1],\, i \in [d^{(l)}] \bigr\}$. For every input coordinate $k \in [d^{(0)}]$ and every $q \in \{+,-\}$ there is a \emph{terminal state} $s^{(0)}_{k,q}$, and there is one absorbing \emph{cemetery state} $\perp$ with zero payoff. Finally, there is a single \emph{output state} $s^{(L)}$ at the affine output neuron, at which no decision is taken.
+	\item \textbf{States.} Each hidden neuron $i\in[d^{(l)}]$, $l\in[L-1]$, has activation states $s^{(l)}_{i,q}$ controlled by $P^q$, $q\in\{+,-\}$. The affine output state $s^{(L)}$ is assigned to $P^+$ with no choice of action. Terminal states are $s^{(0)}_{k,q}$ for $k\in[d^{(0)}]$, $q\in\{+,-\}$, and a zero-payoff \emph{cemetery} $\perp$; play ends upon reaching any terminal state.
 	\item \textbf{Actions.} At every activation state the player in turn chooses an action from $\{\mathrm{stop}, \mathrm{cont}\}$. The output state has the single action $\mathrm{cont}$.
 	\item \textbf{Transitions.} Stopping moves deterministically to the cemetery, $\P(\perp \mid s^{(l)}_{i,q}, \mathrm{stop}) = 1$. Continuation at $s^{(l)}_{i,q}$ moves one layer backward, to neuron $j$ of layer $l-1$ with probability proportional to the absolute weight, keeping the turn on positive weights and passing it to the opponent on negative weights:
 	\begin{equation}
@@ -271,7 +252,7 @@ The \emph{ReLU Net Game} on the network $f$ at input $x$ is the zero-sum turn-ba
 Player $P^{+}$ maximizes and $P^{-}$ minimizes the expected discounted total payoff, as in Definition~\ref{def:turn_based_game}.
 \end{definition}
 
-The game graph is layered and acyclic---every transition strictly decreases the layer index or ends in the cemetery---so Theorem~\ref{thm:shapley_bellman} applies despite the discounts $\gamma^{(l)}_i$ being arbitrary positive numbers. Normalization and discounting cancel: the product of the transition probability \eqref{eq:rng_kernel} and the discount $\gamma^{(l)}_i$ is exactly the absolute weight $\abs{\Wl{l}_{ij}}$, so the Shapley--Bellman recursion reproduces the affine algebra of the forward pass.
+Each transition decreases the layer index or terminates, so Theorem~\ref{thm:shapley_bellman} applies for arbitrary positive structural discounts. Multiplying \eqref{eq:rng_kernel} by $\gamma^{(l)}_i$ restores the sign-selected weight $\Wsig{l}{q\oplus r}_{ij}$; summing signed successor values recovers the forward affine calculation.
 
 \begin{theoremenv}[Forward pass as game value, \parencite{Gaubert2025}, \LeanResult{thm:relu_net_game_value}]\label{thm:relu_net_game_value}
 The ReLU Net Game of Definition~\ref{def:relu_net_game} admits the subgame perfect equilibrium $\polstar = (\polstar_{+}, \polstar_{-})$ in which both players use the same pure stopping rule,
@@ -292,28 +273,14 @@ and the value function of the game evaluates the network:
 where for $l = 0$ we read $\actl{0}_k = x_k$. The equilibrium is unique up to tie-breaking at neurons with $\preactl{l}_i = 0$, where both actions are optimal; the convention \eqref{eq:rng_equilibrium_policy} stops at ties, matching $\relu'(0) = 0$.\end{theoremenv}
 
 \begin{proof}
-By Theorem~\ref{thm:shapley_bellman}, it suffices to check \eqref{eq:rng_value_identity} and policy \eqref{eq:rng_equilibrium_policy} against \eqref{eq:shapley_bellman}. Induct on layers.
-
-\emph{Base case $l=0$.} The terminal payoff $R\bigl(s^{(0)}_{k,q}\bigr)=\xi_q x_k=\xi_q\actl{0}_k$ satisfies \eqref{eq:rng_value_identity}.
-
-\emph{Inductive step.} Assume \eqref{eq:rng_value_identity} at layer $l-1$, $l\ge1$. At $s^{(l)}_{i,+}\in S_+$, stopping yields $0+V^{\star}(\perp)=0$; by \eqref{eq:rng_kernel} and induction, continuation yields
-\begin{align}
-	R\bigl(s^{(l)}_{i,+}, \mathrm{cont}\bigr) + \gamma^{(l)}_i \sum_{j, r} \frac{\Wsig{l}{+ \oplus r}_{ij}}{\gamma^{(l)}_i}\, \xi_{r}\, \actl{l-1}_j
-	&= b^{(l)}_i + \sum_{j} \Bigl( \Wsig{l}{+}_{ij}\, \actl{l-1}_j - \Wsig{l}{-}_{ij}\, \actl{l-1}_j \Bigr) \notag\\
-	&= b^{(l)}_i + \sum_j \Wl{l}_{ij}\, \actl{l-1}_j
-	\;=\; \preactl{l}_i,
-	\label{eq:rng_cont_value}
-\end{align}
-using $+ \oplus r = r$, $\xi_{+} = 1$, $\xi_{-} = -1$, and $\Wl{l} = \Wsig{l}{+} - \Wsig{l}{-}$. The maximizing player $P^{+}$ therefore obtains
-\begin{equation*}
-	V^{\star}\bigl(s^{(l)}_{i,+}\bigr) = \max\bigl\{ 0,\, \preactl{l}_i \bigr\} = \relu\bigl(\preactl{l}_i\bigr) = \actl{l}_i = \xi_{+}\, \actl{l}_i,
-\end{equation*}
-continuing exactly when $\preactl{l}_i > 0$. At the mirrored state $s^{(l)}_{i,-} \in S_{-}$ the continuation payoff is $\xi_{-} b^{(l)}_i = -b^{(l)}_i$, and the kernel labels satisfy $- \oplus r = \opp{r}$, so the computation \eqref{eq:rng_cont_value} returns the continuation value
-\begin{equation*}
-	-b^{(l)}_i + \sum_{j} \Bigl( \Wsig{l}{-}_{ij}\, \actl{l-1}_j - \Wsig{l}{+}_{ij}\, \actl{l-1}_j \Bigr)
-	= -\preactl{l}_i .
-\end{equation*}
-Thus $P^-$ obtains $V^{\star}\bigl(s^{(l)}_{i,-}\bigr)=\min\{0,-\preactl{l}_i\}=-\relu\bigl(\preactl{l}_i\bigr)=\xi_-\actl{l}_i$, preferring continuation exactly when $-\preactl{l}_i<0$, the gate \eqref{eq:rng_equilibrium_policy}. At $\preactl{l}_i=0$, both actions give either player value $0$, proving uniqueness up to ties. Forced continuation at the affine output gives, by \eqref{eq:rng_cont_value} with $l=L$, $V^{\star}\bigl(s^{(L)}\bigr)=\preactl{L}=\actl{L}=f(x)$.
+Induct from the terminal values $R(s^{(0)}_{k,q})=\xi_qx_k$. If \eqref{eq:rng_value_identity} holds at layer $l-1$, continuation at either turn $q$ has value
+\begin{equation}
+Q_{V^{\star}}\bigl(s^{(l)}_{i,q},\mathrm{cont}\bigr)
+=\xi_q b^{(l)}_i+\sum_{j,r}\Wsig{l}{q\oplus r}_{ij}\xi_r\actl{l-1}_j
+=\xi_q\preactl{l}_i,
+\label{eq:rng_cont_value}
+\end{equation}
+since $\sum_r\xi_r\Wsig{l}{q\oplus r}_{ij}=\xi_q\Wl{l}_{ij}$. Stopping yields zero. Thus $P^+$ obtains $\max\{0,\preactl{l}_i\}=\actl{l}_i$, while $P^-$ obtains $\min\{0,-\preactl{l}_i\}=-\actl{l}_i$. Both continue precisely for positive pre-activation, with either action optimal at zero and our convention choosing stop. This proves the value and uniqueness up to ties by Theorem~\ref{thm:shapley_bellman}. Forced continuation at the affine output gives $V^{\star}(s^{(L)})=\preactl{L}=f(x)$ by the same calculation with $l=L$, $q=+$.
 \end{proof}
 
 \begin{remark}[Softplus networks from entropy regularization]\label{rem:softplus_game}
@@ -329,5 +296,5 @@ with the Gibbs distribution $\nu^{\star}_i \propto e^{r_i/\theta}$ as unique max
 \end{remark}
 
 \begin{remark}[What Chapter~\ref{ch:game_theory} inherits and what it changes]\label{rem:inherited_vs_new}
-The \ac{sg} of Chapter~\ref{ch:game_theory} keeps the structural skeleton of Definition~\ref{def:relu_net_game}: per-neuron $\pm$ states, stop-versus-continue actions, the bias as continuation payoff and the input as final payoff, the transition kernel \eqref{eq:rng_kernel} driven by the weight parts $\Wsig{l}{\sigma}$, the cemetery state, and the structural discounts $\gamma^{(l)}_i$. Two changes are load-bearing for attribution. First, the original tracks only the single signed value \eqref{eq:rng_value_identity}; Chapter~\ref{ch:game_theory} additionally maintains a \emph{non-negative payoff per player}, identifying the pair of player-specific values $\Vp{p}{s}$, $p \in \{+,-\}$, with the two streams of the Stopping Decomposition of Section~\ref{sec:stopping_decomposition} and recovering \eqref{eq:rng_value_identity} as their difference. Second, the signed terminal payoffs $\xi_q\, x_k$ become the non-negative pair $(x_k^{+}, x_k^{-})$ of Definition~\ref{def:posneg_parts}, keeping every player-specific quantity non-negative and exposing the parity structure of backward trajectories. Chapter~\ref{ch:game_theory} further extends the graph to skip connections and max-pooling and adds risk aversion and regularized policies, none of which appear in the original game.
+The \ac{sg} retains Definition~\ref{def:relu_net_game}'s per-neuron $\pm$ states, stop/continue actions, bias and terminal input payoffs, weight-part kernel \eqref{eq:rng_kernel}, cemetery, and structural discounts $\gamma^{(l)}_i$. Chapter~\ref{ch:game_theory} adds \emph{non-negative player payoffs}: the values $\Vp{p}{s}$, $p\in\{+,-\}$, equal the Stopping Decomposition streams (Section~\ref{sec:stopping_decomposition}), whose difference recovers the original signed value \eqref{eq:rng_value_identity}. Replacing signed terminal payoffs $\xi_qx_k$ by $(x_k^+,x_k^-)$ (Definition~\ref{def:posneg_parts}) keeps all player-specific quantities non-negative and exposes backward-trajectory parity. The chapter also adds skip connections, max-pooling, risk aversion, and regularized policies, absent from the original game.
 \end{remark}

@@ -1,0 +1,95 @@
+{
+  "status": "accepted",
+  "reviewer": "/root/concise_saliency/saliency_proof_scope",
+  "reviewed_utc": "2026-11-10T22:52:20.703160+00:00",
+  "baseline_commit": "b43bc24",
+  "source": "tex/chapters/05_saliency.tex",
+  "baseline_sha256": "484a8356493d703fb085b279827ad56b2bc8acb853fb5ca05d168962bec1d940",
+  "current_sha256": "74f2db113f41c03224151cd2790bace21cceab8fec6d7dbbb147ba96aa67426e",
+  "scope": "Independent comparison of the saliency chapter against b43bc24, including exact earlier references, proof completeness, signed-input scope, raw/shifted sensitivities and empirical qualifications. No build performed.",
+  "invariants": {
+    "labels_unchanged": true,
+    "labels": 50,
+    "lean_badges_unchanged": true,
+    "lean_badges": 5,
+    "citation_keys_unchanged": true,
+    "citation_keys": 38,
+    "all_numbered_displays_unchanged": true,
+    "numbered_displays": 14,
+    "display_count_before": 21,
+    "display_count_after": 17,
+    "figures_byte_identical": true,
+    "figures": 3
+  },
+  "new_reference_targets_present": [
+    "def:icnn",
+    "eq:claim_bulk",
+    "eq:local_sensitivities",
+    "eq:split_layer_jacobians",
+    "eq:unified_split_gradients",
+    "eq:w_abs",
+    "prop:icnn_convex",
+    "prop:monotone_represents",
+    "ptnb:thm:gradient"
+  ],
+  "proof_reviews": [
+    {
+      "statement": "prop:gradient_blindness",
+      "verdict": "unchanged",
+      "reason": "Strict nonzero pre-activation hypothesis, local mask constancy, unmasked affine output and zero path-product argument remain."
+    },
+    {
+      "statement": "lem:split_backward_recursion",
+      "verdict": "accepted",
+      "reason": "Earlier eq:split_layer_jacobians gives the same four blocks; the final affine layer uses M+=I,M-=0. Earlier and current gate tie conventions differ, but the chapter restricts derivative claims to differentiability points; no new tie claim is made."
+    },
+    {
+      "statement": "prop:sensitivity_mass",
+      "verdict": "accepted",
+      "reason": "The shortened proof defines S(l), obtains S(l)=S(l+1)|W(l+1)| by complementary masks and the weight split, and uses S(L)=1 for backward induction. It does not rely on the earlier nonnegative-domain shift theorem, so no extra restriction on the signed balanced embedding is introduced."
+    },
+    {
+      "statement": "cor:backward_invariant",
+      "verdict": "unchanged",
+      "reason": "Differentiation of exact split correctness in the two inputs and subtraction is retained."
+    }
+  ],
+  "removed_display_reviews": [
+    {
+      "content": "Local partial sensitivity definition",
+      "replacement": "eq:local_sensitivities, with s/sigma/l ranges and row convention retained."
+    },
+    {
+      "content": "Absolute-weight product",
+      "replacement": "eq:w_abs, with shortened symbol explicitly identified, scalar path interpretation and empty product retained."
+    },
+    {
+      "content": "Expanded mass-conservation induction identity",
+      "replacement": "Equivalent inline S(l) recurrence and base case; all required algebraic ingredients remain."
+    },
+    {
+      "content": "f_DIC=g-h display",
+      "replacement": "Inline defining equality; independent parametrization, joint empirical-risk training, base architecture, DM and inverted-input variants remain."
+    }
+  ],
+  "scope_preserved": [
+    "All six signed SplitCAM formulas, absence of positive-gradient clipping and outer ReLU, and shifted-versus-raw distinction.",
+    "Zero combined-gradient counterexample and limits of partial-sensitivity positivity.",
+    "User-requested directly trained MNIST mechanism study and distinction from post-hoc decomposition.",
+    "Unconstrained ICNN first layer and complete-model intervention requirement; no finite counterfactual or class-change certification.",
+    "All three figures and captions, unique present/missing-stroke observations, ten seeds/eight variants and accuracy comparisons.",
+    "Numerical/runtime and baseline-identification qualifications; no new empirical results."
+  ],
+  "precision_fixes_applied": [
+    {
+      "issue": "At alpha=1/2 each shifted head gives a signed half, not the entire original gradient.",
+      "resolution": "Changed endpoint wording to signed halves of the original gradient."
+    },
+    {
+      "issue": "The DIC first layer can be unconstrained, so a claim of the same wholly nonnegative-weight function class was too strong.",
+      "resolution": "Limited the correspondence to constrained layers using the same nonnegative-weight Maxout building blocks."
+    }
+  ],
+  "remaining_concerns": [],
+  "reviewer_source_edits": false
+}

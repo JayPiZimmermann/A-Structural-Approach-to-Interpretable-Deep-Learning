@@ -1,0 +1,288 @@
+\chapter{Extended Experimental Results}\label{app:supp_experiments}
+
+The tables and figures below give the complete results for both campaigns. Protocols, metric definitions, validation grids, statistical tests and implementation details appear in Appendix~\ref{app:extended_results}.
+
+\section{Full Evaluation Results for the Split Methods}\label{app:saliency}
+
+This section reports all methods evaluated in the split-method setup of Section~\ref{sec:experimental_setup}.
+
+\subsection{VGG-16 Qualitative Saliency Map Comparison}\label{app:vgg_qualitative}
+
+Figure~\ref{fig:vgg_saliency_comparison} extends Figure~\ref{fig:vgg_saliency_comparison_main}. SplitCAM at layer 26 again covers classified objects more fully than LayerCAM at that layer. SplitGrad at layer 0 detects too many input edges to explain the decision usefully, especially amid background details such as the rubble in the wood rabbit image. This agrees with the performance peaks of both methods in deeper layers.
+
+\input{figures/experiments/vgg_saliency_comparison_appendix}
+
+\subsection{Quantitative Analysis on VGG-16}\label{app:vgg_split}
+
+Table~\ref{tab:xai_eval_comprehensive_vgg} contains the complete VGG-16 comparison discussed in Section~\ref{sec:results_vgg}. Selected rows can differ in layer and absolute-value convention; the controlled $\alpha$ sweeps below isolate these choices more directly.
+
+\input{tables/appendix/xai_eval_vgg_full}
+
+\subsection{Quantitative Analysis on ResNet-18}\label{app:resnet_split}
+
+Table~\ref{tab:xai_eval_comprehensive_res} reports all ResNet-18 split configurations, baselines and classical methods.
+
+\input{tables/appendix/xai_eval_res_full}
+
+\section{Stabilization Ablations for the Split Methods}\label{app:ablation}
+
+These ablations examine forward/backward stabilization and the max-pooling implementation (Section~\ref{sec:stabilization_dc}).
+
+\subsection{Backward-Pass Stabilization}\label{app:backward_ablation}
+
+Table~\ref{tab:alpha_comparison_by_method} gives the full $\alpha$ grid underlying Section~\ref{subsec:alpha_ablation}. Layer-14 configurations show smaller or adverse changes in some metrics. Convex and winner-takes-it-all max-pooling differ little near $\alpha=0.5$ and more at lower values; their ranking depends on configuration and metric.
+
+\paragraph{Unresolved source-table discrepancy.}
+For SplitCAM with scaling, $\alpha=0.4$, winner-takes-it-all pooling and absolute-value configuration $(26,+,g)$, Table~\ref{tab:xai_eval_comprehensive_vgg} reports PF$^{\mathrm{drop}}_{20}=1.590$ and MaxS$=0.456$, versus $1.5849$ and $0.4573$ in Table~\ref{tab:alpha_comparison_by_method}. These source-table values remain unchanged: the per-image results needed to resolve their discrepancy are unavailable, leaving its cause unknown.
+
+\input{tables/appendix/alpha_combined}
+
+\subsection{Forward-stabilization grids}
+
+Tables~\ref{tab:alpha_comparison_none} and~\ref{tab:alpha_comparison_shift} give the full unstabilized and shift-stabilized SplitCAM grids discussed in Section~\ref{app:forward_ablation}.
+
+\input{tables/appendix/alpha_none}
+\input{tables/appendix/alpha_shift}
+
+\section{Additional Results}\label{ptnb:app:results}
+
+One pipeline generates the validation, test and VOC tables from the declared grids and selection rules of Section~\ref{ptnb:app:protocol}.
+
+\paragraph{Configuration symbols.}\label{ptnb:app:config-symbols}
+Parameter grids and baseline recipes appear in Table~\ref{ptnb:tab:main-search-grid}. For \ac{rg}, \ac{rg}+Eq and \ac{sg}, $\tau$ is temperature; $\lambda$ and $\lambda_{\mathrm{sm}}$ are activation-side and attention-logit risk aversion; $\sigma^2$ is \ac{ptnbADF} input variance; $\varepsilon$ is the \ac{lrp} stabilizer; $(\alpha,\beta)$ are stream weights; $\tilde\Phi$ is the noisy-observation gate; and $N$ counts transformed inputs averaged by \ac{rg}+Eq. For SmoothGrad, $N$ counts noisy samples and $\sigma/\mathrm{range}$ is noise standard deviation relative to input range; $N_{\mathrm{steps}}$ counts Integrated Gradients steps. DAVE averages $N$ inputs with rotations up to $\theta_{\max}$ degrees, shifts up to $s_{\max}$ of image extent, and variance-preserving Gaussian-noise interpolation weight up to $t_{\max}$. AttnLRP uses $\gamma$-rule parameters $\gamma_{\mathrm{conv}}$, $\gamma_{\mathrm{lin}}$ for convolutional and linear layers, and attention stabilizer $\varepsilon_{\mathrm{attn}}$. For LIME and KernelSHAP, $N$ counts perturbations. Parenthesized row labels give the selection criterion (\texttt{loc}, \texttt{faith}); fixed methods have none.
+
+\subsection{Validation selections}\label{ptnb:app:val-selection}
+
+Table~\ref{ptnb:tab:val-selection-all} gives both rank-sums for each validation choice on the 50-image split. The full test tables identify the selected configurations.
+
+\begin{table}[htbp]
+    \centering
+    \caption[Validation selection on ViT-B/16, VGG-16 and ResNet-50]{ViT-B/16, VGG-16 and ResNet-50: validation rank-sums within each method, lower is better. Each pair reports localization and faithfulness rank-sums for the row selected by the named criterion (Section~\ref{ptnb:app:selection}); anchors are fixed reference configurations.}
+    \label{ptnb:tab:val-selection-all}
+\TableContent{
+    \small
+    \setlength{\tabcolsep}{3pt}
+    \input{tables/integrated/validation_rank_matrix_tabular}
+}%
+\end{table}
+\AliasLabel{ptnb:tab:val-selection-vit}{ptnb:tab:val-selection-all}
+\AliasLabel{ptnb:tab:val-selection-vgg}{ptnb:tab:val-selection-all}
+\AliasLabel{ptnb:tab:val-selection-resnet}{ptnb:tab:val-selection-all}
+
+\subsection{Test results with confidence intervals}\label{ptnb:app:test-ci}
+
+Table~\ref{ptnb:tab:test-ci-vit} and Tables~\ref{ptnb:tab:test-ci-vgg}--\ref{ptnb:tab:test-ci-resnet} report all 565-image test rows: \texttt{loc}/\texttt{faith} selections, anchors and fixed configurations. Confidence intervals and highlighting follow Table~\ref{ptnb:tab:test-ci-vit}; ViT-B/16 runtimes appear in Section~\ref{sec:results_vit}.
+
+\appneedspace{8\baselineskip}
+\begin{center}
+    \captionsetup{hypcap=false}
+    \captionof{table}[VGG-16: full ImageNet-S results with confidence intervals]{VGG-16, ImageNet-S test split: all rows with 95\% bootstrap confidence intervals,
+    as in Table~\ref{ptnb:tab:test-ci-vit}.}
+    \label{ptnb:tab:test-ci-vgg}
+\end{center}
+\captionsetup{hypcap=true}
+\appinputgenci{tables/ptnb_v2/generated/test_vgg16_ci_longtable}
+
+\appneedspace{8\baselineskip}
+\begin{center}
+    \captionsetup{hypcap=false}
+    \captionof{table}[ResNet-50: full ImageNet-S results with confidence intervals]{ResNet-50, ImageNet-S test split: all rows with 95\% bootstrap confidence
+    intervals, as in Table~\ref{ptnb:tab:test-ci-vit}.}
+    \label{ptnb:tab:test-ci-resnet}
+\end{center}
+\captionsetup{hypcap=true}
+\appinputgenci{tables/ptnb_v2/generated/test_resnet50_ci_longtable}
+
+\subsection{Cross-Dataset Evaluation: Pascal VOC 2012}\label{ptnb:app:voc-cross-data}\label{app:voc-cross-data}
+Table~\ref{ptnb:tab:eval-vit-voc} gives all rows underlying the transfer comparison in Section~\ref{ptnb:sec:experiments}.
+
+\paragraph{Dataset.}
+We use Pascal VOC 2012~\parencite{Everingham2010voc} segmentation annotations\footnote{Release statistics: \url{https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2012/dbstats.html}.}: the trainval pool of
+$2{,}913$ images with pixel-accurate \texttt{Seg\-mentationClass} masks across $20$ foreground
+classes plus background. Each image is expanded to one (image, foreground-class) sample per
+distinct VOC class label present in its mask, yielding $3{,}422$ total samples after dropping the
+\texttt{person} class (no faithful ImageNet-1K target exists for it) and discarding sliver masks
+whose pixel area on the \emph{original} (pre-resize) annotation is below $64$ pixels. Each (image,
+class) sample carries the same input image and an explanation target equal to the most semantically
+central ImageNet-1K index for that VOC class (e.g.\ \texttt{horse}$\,\to\,$\textsc{n02389026
+sorrel}; \texttt{tvmonitor}$\,\to\,$\textsc{n03782006 monitor}); the curated mapping is part of the
+released code.
+
+\paragraph{Per-image disjoint val/test split.} The trainval pool is partitioned randomly with seed $42$ at the \emph{image} level (not the (image,
+class) level) into a $1{:}5$ val/test split: the trainval stems are shuffled deterministically and
+the first $1/6$ is assigned to val. All (image, class) samples for a given image stay in the same
+partition, preventing the same image from appearing in both tuning and test sets. As on
+ImageNet-S, samples whose object mask lies entirely outside the $224{\times}224$ center crop are
+excluded after the split (18 val and 105 test samples). The validation split contains $460$ images and $556$ image--class samples; the test split contains $2{,}293$ images and $2{,}743$ samples.
+
+\paragraph{Pixel masks for localization.} \ac{ptnbAttrLoc}, \ac{ptnbPG}, and Top-$k$ Intersection use each image--class sample's binary VOC2012 segmentation mask, rewarding only foreground pixels rather than background within a bounding box. NEAREST resizing and $224{\times}224$ center-cropping match the input pipeline (\texttt{Resize(256)$\,\to\,$CenterCrop(224)}); Quantus~\parencite{Hedstrom2023} receives this mask unchanged alongside the attribution map.
+
+\paragraph{Tuning protocol.}
+Every ViT-B/16 baseline configuration in Table~\ref{ptnb:tab:main-search-grid} is evaluated on the $556$-sample VOC validation pool; the \texttt{loc} and \texttt{faith} criteria of Section~\ref{ptnb:app:selection} select rows for the $2{,}743$-sample test pool. \ac{rg} and \ac{rg}+Eq transfer their ImageNet-S anchors and both selected configurations unchanged. To save compute, VOC evaluates only localization and faithfulness, omitting MaxS, AvgS and runtime. Per-metric tests (Section~\ref{ptnb:app:stats}) count significant wins, losses and undetected differences; the last category does not establish equivalence.
+
+\appneedspace{8\baselineskip}
+\begin{center}
+    \captionsetup{hypcap=false}
+    \captionof{table}[ViT-B/16 on the Pascal VOC 2012 test pool]{ViT-B/16 on Pascal VOC 2012: all $2{,}743$ test image--class records from $2{,}293$ images, with record-weighted means and 95\% image-cluster bootstrap confidence intervals. The transfer and baseline-selection protocol is specified above; only localization and faithfulness were evaluated. Metrics: Table~\ref{ptnb:tab:eval-vit}; configuration symbols and row labels: Section~\ref{ptnb:app:config-symbols}.}
+    \label{ptnb:tab:eval-vit-voc}
+\end{center}
+\captionsetup{hypcap=true}
+\IfFileExists{tables/ptnb_v2/generated/test_voc_vit_b16_ci_longtable.tex}{\appinputgenci{tables/ptnb_v2/generated/test_voc_vit_b16_ci_longtable}}{%
+\begin{center}\textcolor{red}{To be generated by the cluster run.}\end{center}}
+
+\providecommand{\absval}[2]{
+\begin{tabular}[c]{@{}c@{}}#1\\\textcolor{gray!70}{\scriptsize #2}\end{tabular}}
+
+\subsection{One-factor ablations}\label{ptnb:app:abl-one-factor}\label{ptnb:app:tradeoff-sweeps}\label{ptnb:app:dual-sweeps}\label{app:dual-sweeps}
+
+Tables~\ref{ptnb:tab:ablations-vit}--\ref{ptnb:tab:ablations-resnet} vary one parameter over its declared grid around each validation-selected \ac{rg}, \ac{rg}+Eq and \ac{sg} configuration (each selected center shown once in bold), fixing the others. The notes retain every selected factor value. Localization and faithfulness are evaluated on the 565-image test split without feeding back into selection. On ViT-B/16, ``+Eq'' applies \ac{rg}+Eq at the selected \ac{rg} parameters. Validation-inadmissible configurations (Section~\ref{ptnb:app:selection}) are excluded.
+
+\appneedspace{8\baselineskip}
+\begin{center}
+    \captionsetup{hypcap=false}
+    \captionof{table}[ViT-B/16: one-factor ablations on ImageNet-S]{ViT-B/16, ImageNet-S test split: one-factor ablations around the selected
+    configurations. Center: the selected configuration (criterion in parentheses); Factor and Value give the varied parameter and its value, with other parameters fixed. Symbols: Section~\ref{ptnb:app:config-symbols}.}
+    \label{ptnb:tab:ablations-vit}
+\end{center}
+\captionsetup{hypcap=true}
+{\small\appinputgenlt{tables/integrated/ablations_vit_b16_longtable}}
+
+\appneedspace{8\baselineskip}
+\begin{center}
+    \captionsetup{hypcap=false}
+    \captionof{table}[VGG-16: one-factor ablations on ImageNet-S]{VGG-16, ImageNet-S test split: one-factor ablations around the selected
+    configurations, as in Table~\ref{ptnb:tab:ablations-vit}.}
+    \label{ptnb:tab:ablations-vgg}
+\end{center}
+\captionsetup{hypcap=true}
+{\small\appinputgenlt{tables/integrated/ablations_vgg16_longtable}}
+
+\appneedspace{8\baselineskip}
+\begin{center}
+    \captionsetup{hypcap=false}
+    \captionof{table}[ResNet-50: one-factor ablations on ImageNet-S]{ResNet-50, ImageNet-S test split: one-factor ablations around the selected
+    configurations, as in Table~\ref{ptnb:tab:ablations-vit}.}
+    \label{ptnb:tab:ablations-resnet}
+\end{center}
+\captionsetup{hypcap=true}
+{\small\appinputgenlt{tables/integrated/ablations_resnet50_longtable}}
+
+\subsection{Pointing game at matched granularity}\label{ptnb:app:pg-granularity}
+
+Quantus Pointing Game counts a hit if any maximum-attribution pixel lies in the mask. A piecewise-constant maximum spans hundreds to thousands of pixels for superpixel and $14{\times}14$ attention maps, versus usually one for pixel-level maps. Table~\ref{ptnb:tab:pg-granularity} reports the median maximum-set size, the expected hit rate of a uniformly drawn maximum pixel (PG$_{1\mathrm{px}}$), and Pointing Game after average-pooling all maps to a common $16{\times}16$-pixel grid (PG$_{16\mathrm{px}}$). Single-pixel sampling removes most of LIME's and KernelSHAP's advantage. At common granularity, leaders move closer: LRP-$\gamma$ and AttnLRP lead on ViT-B/16; localization-selected \ac{sg} and faithfulness-selected \ac{rg} are not significantly below Grad-CAM++, the best VGG-16 baseline; Grad-CAM, LayerCAM and LRP-$\gamma$ lead on ResNet-50 (McNemar tests against the best baseline).
+
+\begin{table}[tbp]
+    \centering
+    \caption[Pointing game: Quantus tie rule and matched granularity]{Pointing game under the Quantus tie rule (PG, as in the main tables) and at matched
+    granularity, ImageNet-S test split. max.\ set: median number of pixels attaining the map maximum;
+    PG$_{1\mathrm{px}}$: expected hit rate of one pixel drawn uniformly from that set;
+    PG$_{16\mathrm{px}}$: PG after average-pooling the map to $16{\times}16$-pixel cells. Rows: the
+    \texttt{loc}-selected or fixed configuration of every method, plus the \texttt{faith} rows of our
+    games. \textbf{Bold}: best per model and column.}
+    \label{ptnb:tab:pg-granularity}
+\TableContent{
+    \small
+    \appfitgen{tables/ptnb_v2/generated/pg_granularity_tabular}
+}%
+\end{table}
+
+\subsection{Qualitative comparison}\label{ptnb:app:qualitative}\label{app:qualitative}
+Figure~\ref{ptnb:fig:qualitative} uses the ViT-B/16 \texttt{loc}-selected configurations of Table~\ref{ptnb:tab:test-ci-vit}, with fixed Gradient and TIBAV configurations. Both games use the composite attention--Value rule of Theorem~\ref{ptnb:thm:attn-ab-recovery}, treating the conditioned block as one map $X\mapsto O$. Every map explains the ImageNet-S label; all examples are classified correctly except the kuvasz (predicted: English setter). The first image is from test, the other five from the 50-image validation split used for selection. Maps precede the absolute value and max-abs normalization of Section~\ref{ptnb:app:metrics}; TIBAV's $14{\times}14$ map uses nearest-neighbor upsampling, as in evaluation.
+
+\begin{figure}[htbp]
+\QualitativeImageContent{
+    \centering
+    \setlength{\tabcolsep}{0.6pt}
+    \renewcommand{\arraystretch}{0.3}
+    \resizebox{\textwidth}{!}{
+    \begin{tabular}{@{}r *{11}{c}@{}}
+        & {\scriptsize Orig.}
+        & {\scriptsize Mask}
+        & {\scriptsize RG (loc)}
+        & {\scriptsize RG+Eq (loc)}
+        & {\scriptsize Grad}
+        & {\scriptsize SmGrad}
+        & {\scriptsize IntGrad}
+        & {\scriptsize DAVE}
+        & {\scriptsize LRP-$\gamma$}
+        & {\scriptsize AttnLRP}
+        & {\scriptsize TIBAV} \\[2pt]
+        \rotatebox{90}{\scriptsize\hspace{2pt}Red fox (snow)}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/original.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/mask.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/rg_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/rgeq_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/gradient.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/smooth_grad.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/integrated_gradients.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/dave.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/lrp_gamma.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/attn_lrp.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox_snow/tibav.png} \\[1pt]
+        \rotatebox{90}{\scriptsize\hspace{6pt}Red fox}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/original.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/mask.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/rg_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/rgeq_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/gradient.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/smooth_grad.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/integrated_gradients.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/dave.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/lrp_gamma.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/attn_lrp.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/red_fox/tibav.png} \\[1pt]
+        \rotatebox{90}{\scriptsize\hspace{9pt}Kuvasz}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/original.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/mask.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/rg_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/rgeq_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/gradient.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/smooth_grad.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/integrated_gradients.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/dave.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/lrp_gamma.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/attn_lrp.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/kuvasz/tibav.png} \\[1pt]
+        \rotatebox{90}{\scriptsize\hspace{7pt}Wild boar}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/original.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/mask.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/rg_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/rgeq_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/gradient.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/smooth_grad.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/integrated_gradients.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/dave.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/lrp_gamma.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/attn_lrp.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/wild_boar/tibav.png} \\[1pt]
+        \rotatebox{90}{\scriptsize\hspace{5pt}Black bear}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/original.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/mask.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/rg_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/rgeq_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/gradient.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/smooth_grad.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/integrated_gradients.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/dave.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/lrp_gamma.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/attn_lrp.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/american_black_bear/tibav.png} \\[1pt]
+        \rotatebox{90}{\scriptsize\hspace{9pt}Airliner}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/original.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/mask.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/rg_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/rgeq_loc.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/gradient.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/smooth_grad.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/integrated_gradients.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/dave.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/lrp_gamma.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/attn_lrp.png}
+        & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/tibav.png} \\
+    \end{tabular}
+    }
+    }%
+\caption[ViT-B/16 qualitative comparison on six ImageNet-S examples]{Six ImageNet-S examples, ViT-B/16, at the configurations specified above. Red and blue show positive and negative attribution. Each sign is divided by its image-wide 99th percentile and clipped, saturating the top 1\% so concentrated maps remain legible; every method uses this display transform.}
+    \label{ptnb:fig:qualitative}
+\end{figure}
+\par\medskip

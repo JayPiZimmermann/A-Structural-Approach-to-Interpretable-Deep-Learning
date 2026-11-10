@@ -1,7 +1,7 @@
 # A Structural Approach to Interpretable Deep Learning
 
 Master's thesis by Jakob Zimmermann: **From DC Decompositions to Two-Player Games**.
-This repository contains the thesis and technical-supplement TeX, the two paper
+This repository contains the unified thesis TeX, the two paper
 sources, a shared Lean
 formalization, and adapters for reproducing the thesis tables from the official code.
 
@@ -11,18 +11,18 @@ The thesis brings together **Hidden Monotonicity**, a [CVPR 2026 Highlight](http
 
 Read [HANDOVER_TEX.md](HANDOVER_TEX.md) for the independent TeX task and
 [HANDOVER_LEAN.md](HANDOVER_LEAN.md) for the independent Astra proof task.
-They distinguish the clean verified root, frozen extensions awaiting integration,
-and unfinished drafts. The condensed TeX and cover revision is published at
-`61d4d90`; the citation-audit follow-up is recorded separately below.
+They distinguish the verified proof source, integrated thesis content, and
+unfinished experiments. The single-PDF consolidation starts from `b43bc24`;
+earlier editorial and citation audits remain separately recorded below.
 The complete clean proof gate passed at
 `1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`: 167 modules, 490 reviewed exact
 contracts and 3,640 imported theorem axiom audits, with all 168 commands successful.
-The 216 proof-source mappings are pinned to that revision; 194 remain in the
-main thesis and technical supplement after removal of unused geometry exposition.
-The other 22 are explicitly retired from the TeX while their verified Lean proofs
-remain available. The main document
-stays within its hard 150-page cap. Detailed proofs and full supporting experiments
-moved to the supplement while the substantive improvements remain. See the
+The 216 proof-source mappings are pinned to that revision. Of these, 194 remain
+represented by canonical statements and reviewed aliases; 22 unused geometry
+mappings are retired from the TeX while their verified Lean proofs remain available. The current revision integrates the detailed proofs into their chapters and the
+full supporting experiments into appendices of one **147-page PDF**. Duplicate
+statements and summaries are consolidated; the page target remains 150. Compact tables sit
+with their discussion, and only extensive results and grids remain in appendices. See the
 handovers and [publication receipt](reports/publication-build.json) for validation
 and experiment details.
 
@@ -67,11 +67,19 @@ and labels preserved. Independent reviews check proof steps and scientific
 qualifications. The MNIST difference models now explicitly investigate the
 opposing-stream mechanisms exposed by decomposing pretrained networks.
 
+The subsequent [single-PDF consolidation](reports/single-pdf/integration.json)
+merges the former supplement into the thesis and removes repeated statements,
+proof steps and table summaries. Its prose count falls a further 23.8%, with
+all citation keys, figure assets and original label names retained through
+canonical statements and aliases. Independent reviews check mathematical scope
+and experimental qualifications; structural checks do not establish semantic
+equivalence by themselves. The residual-network Routing Game claim is explicitly
+restricted to its gated convention.
+
 ## Contents
 
-- `tex/`: main thesis (`main.tex`), technical supplement (`supplement.tex`), and figures.
-- `docs/thesis.pdf`: main thesis, at most 150 PDF pages.
-- `docs/thesis-supplement.pdf`: companion proofs and detailed experiments. Keep both PDFs together for cross-document links.
+- `tex/`: thesis (`main.tex`), integrated appendices, and figures.
+- `docs/thesis.pdf`: the complete thesis, including proofs and extended experiments.
 - `arxive/hiddenMonotonicity/`: Hidden Monotonicity paper sources, with reported mathematical corrections.
 - `arxive/playingTheNetworkBackward/`: preprint revised for AISTATS, arXiv 2605.06212v2, with reported mathematical corrections and explicit routing-game tie conventions.
 - `arxive/downloads/`: unchanged arXiv PDF/source download and checksums.
@@ -176,7 +184,7 @@ definitions, theorem coverage, and assumptions.
 
 The verification workflow follows the six downloaded formalization/exposition skills from the [planar-features repository](https://anonymous.4open.science/r/Removing-spurious-minima-for-planar-features-by-skip-connections-35F8/README.md). `skills/upstream-planar-features/provenance.json` records their source URLs and checksums. Independent adversarial reviews, executable counterexamples and repair evidence are retained under `reports/`.
 
-## Build the thesis and technical supplement
+## Build the thesis
 
 With TeX Live, `latexmk`, and Biber installed:
 
@@ -184,24 +192,22 @@ With TeX Live, `latexmk`, and Biber installed:
 cd tex
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
 makeindex main.nlo -s nomencl.ist -o main.nls
-latexmk -pdf -interaction=nonstopmode -halt-on-error supplement.tex
 latexmk -pdf -interaction=nonstopmode -halt-on-error main.tex
-latexmk -pdf -interaction=nonstopmode -halt-on-error supplement.tex
 ```
 
-Build both roots so their external labels resolve, and copy both PDFs together
-as `docs/thesis.pdf` and `docs/thesis-supplement.pdf`. Then run from the repository
-root:
+Build the single root until references settle, then copy `tex/main.pdf` to
+`docs/thesis.pdf`. Run from the repository root:
 
 ```sh
 python3 reports/evidence/page-budget/verify_publication.py
 ```
 
-The guard checks the main 150-page cap, final logs, both PDF copies, combined
-proof links, cross-document destinations and the unchanged verified proof source. The
-current [publication checks](reports/evidence/page-budget/publication-checks.json)
-and [editorial audit](reports/evidence/page-budget/final-editorial-audit.json)
-record the validated two-document layout. The public cover omits the student registration number. It can be set privately
+The guard checks the 150-page target, the final log, the published PDF,
+internal destinations, proof links, and the unchanged verified proof source. The
+current [publication checks](reports/single-pdf/publication-checks.json)
+and [consolidation receipt](reports/single-pdf/integration.json)
+record the single-PDF layout. Earlier page-budget and prose-concision audits
+apply to their recorded revisions. The public cover omits the student registration number. It can be set privately
 in `tex/preamble/meta.tex`.
 
 ## Reproduce the thesis tables
@@ -211,6 +217,7 @@ Python environment, then from this repository root run:
 
 ```sh
 python3 scripts/generate_thesis_tables.py --python /path/to/environment/bin/python --check
+python3 reports/single-pdf/build_experiment_views.py --check
 ```
 
 This invokes the official CPU table writer on its shipped summaries. It runs no
@@ -220,7 +227,11 @@ and row order are preserved. VOC uncertainty was recomputed with image-level
 cluster resampling, and full-pair Holm adjustment changes ten ImageNet comparison
 markers; the corresponding prose and archived-paper tables were updated together.
 The adapter itself standardizes labels and colors, removes entirely
-unmeasured metric columns, and makes non-applicable configurations explicit.
+unmeasured metric columns, and makes non-applicable configurations explicit. The single-PDF
+presentation additionally merges identical selection/ablation rows and presents
+validation ranks in one matrix; its generator verifies every original rank and
+configuration against the canonical tables. Compact comparisons appear beside
+their discussion, with extensive matrices and grids in the appendices.
 The check includes the main/CI tables, validation selections, ablations, attention
 rule comparison, VOC transfer, and macros for numbers in the prose.
 `reports/table-reproduction.json` retains the original raw-output check;
@@ -257,12 +268,13 @@ python3 scripts/check_paper_references.py --check
 ```
 
 This follows the active TeX input trees, verifies explicit citation aliases, and
-checks source citations across the main thesis and technical supplement, including
-their bibliography records. The current report retains 68 of 74 Hidden Monotonicity
-source keys (including appendix aliases) and all 72 game-paper keys. Six source keys
-refer to three background works intentionally omitted with the unused geometry
-section; [the editorial record](reports/paper-reference-editorial-omissions.json)
-identifies them. No unexplained missing references remain.
+checks source citations across the thesis and its appendices, including
+their bibliography records. The current report retains 67 of 74 Hidden Monotonicity
+source labels (including appendix aliases) and all 72 game-paper labels. Six omitted
+labels refer to three unused geometry-background works; a seventh accompanied an
+unsupported biological-plausibility claim. The [editorial omissions](reports/paper-reference-editorial-omissions.json)
+and [reviewed corrections](reports/paper-reference-reviewed-corrections.json)
+record these decisions. No unexplained missing references remain.
 Publication and named-method titles retain their official wording.
 
 The trajectory chapter also compares the thesis with Xiong et al.’s
@@ -273,7 +285,7 @@ from arXiv; it is not redistributed here.
 
 ## Stable links from TeX to Lean
 
-Statements in the main thesis and supplement use numbered `Lean_1`, `Lean_2`, … references inside their
+Statements in the thesis use numbered `Lean_1`, `Lean_2`, … references inside their
 heading brackets, via `\LeanResult{source-label}`; selected equation numbers
 link directly to their declarations too. The design follows the TeX commands in arXiv:2610.01728v2, with links
 pinned to a commit instead of the moving default branch.
