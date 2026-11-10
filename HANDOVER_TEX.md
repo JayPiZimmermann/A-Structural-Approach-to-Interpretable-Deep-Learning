@@ -6,10 +6,11 @@ mathematical continuation has a separate [Lean handover](HANDOVER_LEAN.md).
 
 ## Current local revision and verification boundary
 
-The revision after checkpoint `afcbb42` is being completed **locally**. The user
-asked for changes and execution in the local thesis and official code checkouts
-first. No current repair commits have been pushed. Earlier publication approval
-does not authorize silently publishing this revision.
+The user explicitly requested publication of the current TeX revision, followed
+by independent rendering switches for tables and qualitative image grids and a
+cover-logo repair. The previous checkpoint `7c8e3f5` is on `origin/main`. The
+current follow-up is authorized for publication after its local checks pass;
+both rendering switches must be enabled in the published PDFs.
 
 The new source includes the generalized convex/monotone DC construction,
 closed-form activation and softmax splits, an explicit arbitrary-depth
@@ -52,6 +53,31 @@ bibliography. Proof links are likewise distributed across both documents.
 The source-reference checker and badge synchronizer now inspect both source roots.
 Deliver `docs/thesis.pdf` and `docs/thesis-supplement.pdf` together so their relative
 cross-document links can resolve.
+
+### Independent rendering switches
+
+`tex/preamble/rendering.tex` defines `\RenderTables` and
+`\RenderQualitativeImageTables`, both defaulting to `1` (enabled). Set either to
+`0` to omit its content while retaining a compact placeholder, the full caption,
+the list entry and the label. The first controls regular tables, including the
+result longtables and the unnumbered VOC partition table. The second controls
+the six qualitative image grids; ordinary diagrams, plots and acronym lists are
+unaffected. The switches apply to both documents independently of each other.
+
+For a temporary command-line override, use an isolated build directory with the
+TeX source subdirectories linked into it, then invoke, for example:
+
+```sh
+pdflatex -interaction=nonstopmode -halt-on-error -jobname=main \
+  '\def\RenderTables{0}\def\RenderQualitativeImageTables{1}\input{/absolute/path/to/tex/main.tex}'
+```
+
+Use the same settings for the companion supplement and settle both documents'
+cross-references. Keep draft auxiliary files and PDFs separate from the normal
+publication build. All four switch combinations are covered by the evidence in
+`reports/evidence/rendering-switches/`; the final publication settings remain
+`\RenderTables=1` and `\RenderQualitativeImageTables=1`.
+
 After copying both compiled PDFs, run from the repository root:
 
 ```sh

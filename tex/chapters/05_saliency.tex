@@ -283,6 +283,7 @@ At differentiable inputs, the complete model gradient is therefore
 The first affine layer of an \ac{icnn} is unconstrained, so convexity of the streams does not make either gradient non-negative in the original input coordinates. A positive entry of one stream gradient can be outweighed by a negative entry of the other. Even a positive entry of the complete gradient only establishes an increase for sufficiently small feasible increases in that coordinate at a differentiable input; it does not establish a necessary feature or a change in the predicted class. Finite counterfactual claims require evaluating the complete model under the proposed intervention. The displayed maps are thus stream-local sensitivities; their concentration on present and candidate missing strokes motivates a factual/counterfactual interpretation to be tested by interventions.
 
 \begin{figure}[t]
+\QualitativeImageContent{
 	\centering
 	\begin{minipage}[c]{0.15\linewidth}
 		\centering
@@ -325,11 +326,13 @@ The first affine layer of an \ac{icnn} is unconstrained, so convexity of the str
 			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_9_bright.png}\\[-1pt]{\scriptsize Logit 9}
 		\end{minipage}
 	\end{minipage}
-	\caption[Stream gradients of the inverted-input DIC model]{Stream gradients of the inverted-input DIC model (\texttt{cnn\_maxout} DICIN) on a correctly classified MNIST test digit ``3'', thresholded and overlaid per class logit. The $g$-stream gradient (red) highlights sensitivities on present strokes, while the $h$-stream gradient (blue) highlights sensitivities at candidate missing-stroke locations. These stream-local maps do not by themselves establish the effect of adding pixels on the complete model. Left: the original digit.}
+	}%
+\caption[Stream gradients of the inverted-input DIC model]{Stream gradients of the inverted-input DIC model (\texttt{cnn\_maxout} DICIN) on a correctly classified MNIST test digit ``3'', thresholded and overlaid per class logit. The $g$-stream gradient (red) highlights sensitivities on present strokes, while the $h$-stream gradient (blue) highlights sensitivities at candidate missing-stroke locations. These stream-local maps do not by themselves establish the effect of adding pixels on the complete model. Left: the original digit.}
 	\label{fig:mnist_split_ic_saliency}
 \end{figure}
 
 \begin{figure}[t]
+\QualitativeImageContent{
 	\centering
 	\begin{minipage}[c]{0.15\linewidth}
 		\centering
@@ -372,7 +375,8 @@ The first affine layer of an \ac{icnn} is unconstrained, so convexity of the str
 			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_9_bright.png}\\[-1pt]{\scriptsize Logit 9}
 		\end{minipage}
 	\end{minipage}
-	\caption[Second example of inverted-input DIC stream gradients]{Second example of stream gradients of the inverted-input DIC model (\texttt{cnn\_maxout} DICIN) on a correctly classified MNIST test digit ``3'', thresholded and overlaid per class logit. The $g$-stream gradient (red) highlights sensitivities on present strokes, while the $h$-stream gradient (blue) highlights sensitivities at candidate missing-stroke locations. These stream-local maps do not by themselves establish the effect of adding pixels on the complete model. Left: the original digit.}
+	}%
+\caption[Second example of inverted-input DIC stream gradients]{Second example of stream gradients of the inverted-input DIC model (\texttt{cnn\_maxout} DICIN) on a correctly classified MNIST test digit ``3'', thresholded and overlaid per class logit. The $g$-stream gradient (red) highlights sensitivities on present strokes, while the $h$-stream gradient (blue) highlights sensitivities at candidate missing-stroke locations. These stream-local maps do not by themselves establish the effect of adding pixels on the complete model. Left: the original digit.}
 	\label{fig:mnist_split_ic_saliency_second}
 \end{figure}
 
@@ -382,6 +386,7 @@ Figure~\ref{fig:mnist_split_ic_saliency} overlays both gradients, per class logi
 Figure~\ref{fig:mnist_ic_saliency} reproduces the source paper's ten-class input-gradient comparison for the single \texttt{cnn\_maxout} IC model. Its gradients mostly mark positive local logit sensitivities on digit strokes and negative sensitivities on the background. The maps follow the input structure, but show little class-dependent directional variation. By contrast, the DICIN maps in Figures~\ref{fig:mnist_split_ic_saliency} and~\ref{fig:mnist_split_ic_saliency_second} show different stream-sensitivity patterns for competing class logits: the $h$-stream highlights locations of candidate missing strokes. These visual examples motivate the factual/counterfactual reading of the two streams; they establish neither the effect of a finite intervention nor a separation that holds for all inputs or models.
 
 \begin{figure}[t]
+\QualitativeImageContent{
     \centering
     \begin{minipage}[b]{0.09\linewidth}\centering
         \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_0_bright.png}
@@ -466,7 +471,8 @@ Figure~\ref{fig:mnist_ic_saliency} reproduces the source paper's ten-class input
         \scriptsize Label 9
     \end{minipage}%
 
-    \caption[Input-gradient visualizations for ten MNIST digits]{Input-gradient visualizations of the \texttt{cnn\_maxout} IC model for ten MNIST digits, each with respect to its ground-truth label. Top: saliency maps; bottom: input images. As in the source figure, positive and negative gradient values above threshold 0.2 are colored red and blue, with ranking colorized using exponential decay.}
+    }%
+\caption[Input-gradient visualizations for ten MNIST digits]{Input-gradient visualizations of the \texttt{cnn\_maxout} IC model for ten MNIST digits, each with respect to its ground-truth label. Top: saliency maps; bottom: input images. As in the source figure, positive and negative gradient values above threshold 0.2 are colored red and blue, with ranking colorized using exponential decay.}
     \label{fig:mnist_ic_saliency}
 \end{figure}
 

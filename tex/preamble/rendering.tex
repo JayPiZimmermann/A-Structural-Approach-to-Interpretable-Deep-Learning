@@ -1,0 +1,46 @@
+% Independent rendering switches: 1 = render, 0 = show a compact placeholder.
+% Both stay enabled in the published thesis and supplement. Defining either
+% variable before \input{main} or \input{supplement} overrides this default.
+\providecommand{\RenderTables}{1}
+\providecommand{\RenderQualitativeImageTables}{1}
+
+\ExplSyntaxOn
+\cs_new_protected:Npn \thesis_check_render_flag:N #1
+  {
+    \str_case_e:nnF {#1} { {0} {} {1} {} }
+      { \PackageError{thesis-rendering}{\token_to_str:N #1~must~be~0~or~1}
+          {Use~0~to~omit~the~content~or~1~to~render~it.} }
+  }
+\thesis_check_render_flag:N \RenderTables
+\thesis_check_render_flag:N \RenderQualitativeImageTables
+\ExplSyntaxOff
+
+\makeatletter
+\newcommand{\TableRenderingPlaceholder}{%
+  \par\noindent\textit{Table content omitted by the rendering switch.}\par}
+\newcommand{\QualitativeRenderingPlaceholder}{%
+  \par\noindent\textit{Qualitative image grid omitted by the rendering switch.}\par}
+% Select an argument before expanding its contents. This also safely skips
+% conditionals, generated inputs and image-loading commands in omitted bodies.
+\NewDocumentCommand{\TableContent}{+m}{%
+  \ifnum\RenderTables=1\relax
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi{#1}{\TableRenderingPlaceholder}}
+\NewDocumentCommand{\QualitativeImageContent}{+m}{%
+  \ifnum\RenderQualitativeImageTables=1\relax
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi{#1}{\QualitativeRenderingPlaceholder}}
+% A captioned longtable needs its caption inside the alignment when enabled.
+% Keep its metadata in one place and render the same caption/label when omitted.
+\NewDocumentCommand{\LongTableContent}{+m +m}{%
+  \ifnum\RenderTables=1\relax
+    \expandafter\@firstoftwo
+  \else
+    \expandafter\@secondoftwo
+  \fi{\begingroup\def\TableHeading{#1}#2\endgroup}%
+     {\begin{table}[htbp]\centering #1\TableRenderingPlaceholder\end{table}}}
+\makeatother

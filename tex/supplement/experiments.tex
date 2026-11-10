@@ -156,6 +156,7 @@ of their reference implementations.
     \caption[Per-method validation grids]{Per-method validation grids (all architectures unless stated). Symbols:
     Section~\ref{ptnb:app:config-symbols}.}
     \label{ptnb:tab:main-search-grid}
+\TableContent{
     \small
     \renewcommand{\arraystretch}{1.15}
     \begin{tabularx}{\linewidth}{@{}l >{\raggedright\arraybackslash}X@{}}
@@ -203,6 +204,7 @@ of their reference implementations.
         and \ac{rg}+Eq, reported as the theorem-driven reference row (not selected) \\
         \bottomrule
     \end{tabularx}
+}%
 \end{table}
 
 \subsection{Compute resources}\label{ptnb:app:compute-resources}
@@ -274,8 +276,10 @@ criteria of Section~\ref{ptnb:app:selection}, together with both validation rank
     configurations of one method, lower is better; the number of configurations is given after the
     method name). Symbols: Section~\ref{ptnb:app:config-symbols}.}
     \label{ptnb:tab:val-selection-vit}
+\TableContent{
     \small
     \appfitgen{tables/ptnb_v2/generated/val_selection_vit_b16_tabular}
+}%
 \end{table}
 
 \begin{table}[H]
@@ -283,8 +287,10 @@ criteria of Section~\ref{ptnb:app:selection}, together with both validation rank
     \caption[VGG-16: validation-selected configurations]{VGG-16: validation-selected configurations per method and criterion, as in
     Table~\ref{ptnb:tab:val-selection-vit}.}
     \label{ptnb:tab:val-selection-vgg}
+\TableContent{
     \small
     \appfitgen{tables/ptnb_v2/generated/val_selection_vgg16_tabular}
+}%
 \end{table}
 
 \begin{table}[H]
@@ -292,8 +298,10 @@ criteria of Section~\ref{ptnb:app:selection}, together with both validation rank
     \caption[ResNet-50: validation-selected configurations]{ResNet-50: validation-selected configurations per method and criterion, as in
     Table~\ref{ptnb:tab:val-selection-vit}.}
     \label{ptnb:tab:val-selection-resnet}
+\TableContent{
     \small
     \appfitgen{tables/ptnb_v2/generated/val_selection_resnet50_tabular}
+}%
 \end{table}
 
 \subsection{Test results with confidence intervals}\label{ptnb:app:test-ci}
@@ -362,6 +370,7 @@ the first $1/6$ is assigned to val. All (image, class) samples for a given image
 partition, preventing the same image from appearing in both tuning and test sets. As on
 ImageNet-S, samples whose object mask lies entirely outside the $224{\times}224$ center crop are
 excluded after the split (18 val and 105 test samples). The resulting partitions:
+\TableContent{%
 \begin{center}
     \begin{tabular}{lcc}
         \toprule
@@ -371,7 +380,8 @@ excluded after the split (18 val and 105 test samples). The resulting partitions
         test (eval)   & $2{,}293$ & $2{,}743$ \\
         \bottomrule
     \end{tabular}
-\end{center}
+\end{center}%
+}
 
 \paragraph{Pixel masks for localization.} \ac{ptnbAttrLoc}, \ac{ptnbPG}, and Top-$k$ Intersection are computed against the per-(image, class)
 \emph{binary VOC2012 segmentation pixel mask} for that class, not bounding boxes. The mask is
@@ -474,8 +484,10 @@ below the best baseline (Grad-CAM++), and on ResNet-50 Grad-CAM, LayerCAM and LR
     \texttt{loc}-selected or fixed configuration of every method, plus the \texttt{faith} rows of our
     games. \textbf{Bold}: best per model and column.}
     \label{ptnb:tab:pg-granularity}
+\TableContent{
     \small
     \appfitgen{tables/ptnb_v2/generated/pg_granularity_tabular}
+}%
 \end{table}
 
 \subsection{Gradient-fallback attention}\label{ptnb:app:abl-gradient-fallback}
@@ -501,10 +513,12 @@ PF$_{20}$ and Sel are worse in every cell, significantly so in four of the nine.
     configuration symbols: Section~\ref{ptnb:app:config-symbols}; $^{\dagger}$: paired difference
     significant (paired bootstrap / McNemar for PG, Holm-corrected over the table, $p<0.05$).}
     \label{ptnb:tab:abl-gradient-fallback}
+\TableContent{
     \setlength{\tabcolsep}{2pt}
     \renewcommand{\arraystretch}{0.9}
     \small
     \appfitgen{tables/ptnb_v2/generated/attention_rule_vit_b16_tabular}
+}%
 \end{table}
 
 \subsection{Qualitative comparison}\label{ptnb:app:qualitative}\label{app:qualitative}
@@ -531,6 +545,7 @@ percentile over the image and clipped, so the top 1\% of pixels saturate and con
 legible in print; the same display transform is used for every method.
 
 \begin{figure}[H]
+\QualitativeImageContent{
     \centering
     \setlength{\tabcolsep}{0.6pt}
     \renewcommand{\arraystretch}{0.3}
@@ -621,7 +636,8 @@ legible in print; the same display transform is used for every method.
         & \includegraphics[width=0.085\textwidth]{figures/ptnb_v2/qualitative/butterfly/airliner/tibav.png} \\
     \end{tabular}
     }
-    \caption[ViT-B/16 qualitative comparison on six ImageNet-S examples]{Dense qualitative comparison on six ImageNet-S examples (ViT-B/16). Columns: Original;
+    }%
+\caption[ViT-B/16 qualitative comparison on six ImageNet-S examples]{Dense qualitative comparison on six ImageNet-S examples (ViT-B/16). Columns: Original;
     ImageNet-S pixel Mask; \ac{rg} and \ac{rg}+Eq (merged attention--Value rule); Gradient, SmoothGrad,
     Integrated Gradients, DAVE, LRP-$\gamma$, AttnLRP and TIBAV. Every method is shown at its
     \texttt{loc}-selected configuration, Gradient and TIBAV at their fixed configurations (values in

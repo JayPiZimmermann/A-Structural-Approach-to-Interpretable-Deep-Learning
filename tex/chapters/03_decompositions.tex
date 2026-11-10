@@ -313,6 +313,7 @@ For $f(z)=z\Phi(z)$ (GELU), $f(z)=z\sigma(\beta z)$ (Swish), $f=\sigma$ (sigmoid
 \end{corollary}
 
 \begin{table}[htbp]
+\TableContent{
 \centering
 \small
 \setlength{\tabcolsep}{5pt}
@@ -326,6 +327,7 @@ Sigmoid & $\tfrac12(s_1(z)+\sigma(z))$ & $\tfrac12(s_1(z)-\sigma(z))$ & $\tfrac1
 Softplus & $s_{1/\theta}(z)$ & $0$ & $1$ \\
 \bottomrule
 \end{tabularx}
+}%
 \caption[Closed scalar profiles for smooth activations]{Closed scalar profiles for the lift~\eqref{eq:asymmetric_dc_pair}, with $\beta,\theta>0$. These smooth profiles prioritize a short expression; the GELU, Swish, and sigmoid rows use more curvature than the canonical split. GELU means the exact Gaussian activation, not its tanh approximation; SiLU is the case $\beta=1$ of Swish.}
 \label{tab:closed_form_dc_profiles}
 \end{table}
@@ -1080,6 +1082,7 @@ Split convolution~\eqref{eq:conv_split} is the instance $A = K*(\cdot)$; the rem
 	\centering
 	\caption[Linear CNN chunks]{Linear \ac{cnn} chunks as instances of Lemma~\ref{lem:linear_chunk}.}
 	\label{tab:linear_chunks}
+\TableContent{
 	\begin{tabular}{lll}
 		\toprule
 		Chunk & Affine map & Notes \\
@@ -1090,6 +1093,7 @@ Split convolution~\eqref{eq:conv_split} is the instance $A = K*(\cdot)$; the rem
 		Residual add & $A = I$ plus split branch & streamwise sum with branch $(F^+, F^-)$ \\
 		\bottomrule
 	\end{tabular}
+}%
 \end{table}
 
 Two instances deserve a comment. Evaluation-mode batch normalization has a per-channel scale $c_{\mathrm{bn}} = \gamma/\sqrt{\sigma^2 + \epsilon}$ that may carry either sign \parencite{Guillemot2020BreakingBN,Hui2019BNDecomposition}; in practice we merge it into an adjacent convolution before splitting. Training-mode batch normalization, whose statistics depend on the batch, is genuinely multiplicative and requires the techniques of Chapter~\ref{ch:transformers}. Training-mode dropout uses the \emph{same} realised mask $m$ on both streams and on $u = u^+ - u^-$, so the split network drops exactly the units the original does.
