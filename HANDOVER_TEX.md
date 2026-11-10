@@ -21,6 +21,14 @@ quarantined in the audit ledger. The source-paper archives remain unchanged.
 The audit follow-up has passed the final build, warning, citation-provenance
 and publication checks recorded in `reports/publication-build.json`. Both rendering switches must remain enabled.
 
+The subsequent literature update adds eleven references with short, scoped
+comparisons across five chapters. Selection, placement, metadata, and source
+access are recorded in `reports/recent-literature/`. Ten selected PDFs are stored
+locally; GEF remains unavailable as a local full text and was checked through
+indexed primary-source excerpts. The earlier 190-entry audit remains a historical
+record, separate from this update. Quantus is one sentence in the existing metrics
+paragraph, with no separate paragraph or taxonomy catalogue.
+
 The generalized convex/monotone DC construction, closed-form activation and
 softmax splits, arbitrary-depth Transformer definition and splitting algorithm,
 and requested review repairs remain. The complete clean Lean gate passed at
@@ -30,7 +38,7 @@ axiom audits**. All 168 commands exited zero. Evidence remains in
 `reports/verification/commit-1f886dd/` and `reports/verification/current/`;
 the previous `0f3cfb0` gate is archived.
 
-The current build contains **133 main-thesis PDF pages** and an
+The current build contains **134 main-thesis PDF pages** and an
 **85-page technical supplement**, below the 150-page main-document cap. Treat
 `reports/evidence/page-budget/publication-checks.json` and the matching
 `reports/publication-build.json` as authoritative for the final copied PDFs.

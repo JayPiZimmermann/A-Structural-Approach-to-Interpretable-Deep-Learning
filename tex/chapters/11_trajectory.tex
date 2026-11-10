@@ -1,6 +1,6 @@
 \chapter{The Trajectory Distribution View}\label{ch:trajectory}
 
-The attribution methods of Chapter~\ref{ch:saliency} turn internal signals and backward routing choices into maps, and Chapter~\ref{ch:experiments} evaluates those maps. For the intervention-oriented motivation of this thesis, we also need to examine the calculation producing them. The equilibrium policies of Chapter~\ref{ch:game_theory} induce distributions over backward trajectories, making such a comparison possible before projection onto input pixels. This chapter studies their Hellinger distance, its exact per-input-state disagreement map, and the distinction between complete and survival-conditioned laws. It then evaluates these diagnostics under input noise and parameter randomization.
+The attribution methods of Chapter~\ref{ch:saliency} turn internal signals and backward routing choices into maps, and Chapter~\ref{ch:experiments} evaluates those maps. For the intervention-oriented motivation of this thesis, we also need to examine the calculation producing them. The equilibrium policies of Chapter~\ref{ch:game_theory} induce distributions over backward trajectories, making such a comparison possible before projection onto input pixels. This chapter studies their Hellinger distance, its exact per-input-state disagreement map, and the distinction between complete and survival-conditioned laws. Spectral analysis diagnoses amplification and target discrimination through the attribution redistribution operator's singular spectrum at a fixed input~\parencite{Maess2026Spectral}; our experiments compare changes in normalized routing under input noise and parameter randomization.
 
 \section{Comparison with Normalized Relevance Measures}\label{sec:nrm_comparison}
 
@@ -39,13 +39,16 @@ laws; it does not apply directly to arbitrary signed relevance measures.
 Conditioning $\Pi$ on a concept requires a positive-probability event, whereas
 signed relevance can have zero total through cancellation of nonzero terms.
 
-The two perspectives suggest a useful extension: query the game trajectories
-through selected concepts, retaining the signs and discounts when computing
-their attributions, and compare the resulting trajectory laws across inputs or
-models. Establishing when those quantities coincide with a particular
-\ac{nrm}/CRP construction requires matching the propagation rules, normalization,
-and absorption conventions. This is a proposed connection, not an equivalence
-proved in this thesis.
+Symbolic XAI scores logical feature queries by selecting signed contributions
+from a decomposition of predictions into terms of multiple orders~\parencite{Schnake2025SymbolicXAI}.
+SemanticLens combines component attributions with semantic embeddings to audit
+alignment with expected and spurious visual concepts~\parencite{Dreyer2025SemanticLens}.
+These query scores and semantic similarities address feature relationships and human
+interpretation; our trajectory probabilities describe normalized routing.
+We propose querying game trajectories through selected concepts, retaining signs
+and discounts for attributions, and comparing their laws across inputs or models.
+Equivalence with a particular \ac{nrm}/CRP construction would require matching
+propagation rules, normalization, and absorption conventions; it remains unproved here.
 
 \section{Trajectory Sanity Check}\label{ptnb:sec:hellinger-sanity}\label{ptnb:sec:hellinger}
 
@@ -297,6 +300,10 @@ games on all three architectures. On VGG-16 the \ac{rg} $\mathrm{H}$ and
 $\mathrm{H}_{\mathrm{surv}}$ are equal, as the kernel routes no trajectories to states belonging to
 dead neurons. On ResNet-50 and ViT-B/16, skip connections route trajectories to dead-neuron states,
 and on ViT-B/16 the GELU gate also sends some trajectories to the cemetery at every state.
+Generalised Explanation Faithfulness (GEF) correlates explanation distortion with model-output
+distortion along perturbation paths~\parencite{Hedstrom2025GEF}, anchoring explanation changes to
+the model's response. Our increasing Hellinger curves measure routing sensitivity alone and do
+not establish this alignment or explanation faithfulness.
 
 \begin{figure}[H]
     \centering

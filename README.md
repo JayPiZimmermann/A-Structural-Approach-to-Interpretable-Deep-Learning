@@ -53,6 +53,14 @@ the primary source, downloaded version and local file under
 full texts are explicitly distinguished from checked full papers. Downloaded
 third-party texts stay local; source URLs and audit records are versioned.
 
+A subsequent literature update adds eleven references from Samek, Müller, and
+related groups, with short comparisons across the introduction, split methods,
+Transformers, trajectory diagnostics, and conclusion. The
+[selection report](reports/recent-literature/selection.json) explains their
+placement; [metadata and source records](reports/recent-literature/metadata.json)
+identify ten downloaded PDFs and the GEF paper checked through indexed primary
+excerpts only. Quantus remains briefly embedded in the existing metrics paragraph.
+
 ## Contents
 
 - `tex/`: main thesis (`main.tex`), technical supplement (`supplement.tex`), and figures.
