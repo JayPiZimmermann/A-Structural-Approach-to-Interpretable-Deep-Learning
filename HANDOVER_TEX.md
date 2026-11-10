@@ -246,8 +246,10 @@ source tree. Rebuild both after moving labels or changing cross-document referen
 ## User requirements that remain binding
 
 - Merge the motivation, insights, and content of both papers. The central
-  motivation is interpretability moving from post hoc analysis toward improving
-  and controlling models. Preserve original paper formulations wherever possible;
+  motivation is reliable inspection of vision models and shared visual grounding
+  with human perception. Attribution helps assess whether predictions rely on
+  intended evidence; targeted correction follows diagnosis and needs separate
+  validation. Preserve original paper formulations wherever possible;
   do not paraphrase sentences merely to restate them. Avoid duplicate material.
 - Keep the main document at or below 150 PDF pages; use the separate technical
   supplement for detailed proofs and full experimental material. Do not meet the
