@@ -75,16 +75,16 @@ $\mathrm{H}^2$ decomposes into per-input-state contributions (Section~\ref{ptnb:
     $0.7$) against the number of cascadingly re-initialized layers, output to input (horizontal axis;
     $\mathrm{H}=0$ before the first layer is randomized). Solid: plain $\mathrm{H}$; dotted:
     $\mathrm{H}_{\mathrm{surv}}$, conditioned on survival to an ordinary input-layer state. Thin
-    horizontal reference lines mark the fully-random-model values from
+    horizontal reference lines mark the double-random baseline values from
     Table~\ref{ptnb:tab:double-random-hellinger} (solid: plain $\mathrm{H}$; dotted:
     $\mathrm{H}_{\mathrm{surv}}$), in the color of the corresponding game.}
     \label{ptnb:fig:hellinger-sanity}
 \end{figure}
 
 Under cascading randomization (layers cumulatively re-initialized output$\to$input), both \ac{sg}
-and \ac{rg} diverge from the first randomized layer and plateau near the fully-random-model
+and \ac{rg} diverge from the first randomized layer and plateau near the double-random
 reference of Table~\ref{ptnb:tab:double-random-hellinger} (Figure~\ref{ptnb:fig:hellinger-sanity}). The
-reference itself sits below the ceiling $\mathrm{H}=1$ because two fully randomized models still
+reference itself sits below the ceiling $\mathrm{H}=1$ because two models randomized over the tested layers still
 share some short trajectories: both may stop early at structurally dead neurons and route mass to
 the common cemetery state. Such short paths have a higher chance of coinciding across models than
 full trajectories reaching the input layer. Conditioning on survival removes this shared cemetery
@@ -95,13 +95,13 @@ need not have similar calculations. Per-game values, the conditioning, the floor
 per-image analysis are in Section~\ref{ptnb:app:sanity-check}.
 
 \paragraph{What the map hides.}\label{ptnb:sec:pixel-sanity}
-Cascading randomization on the maps reproduces~\textcite{Adebayo2018sanity} and \textcite{sixt2020whenexplanationslie}: some methods retain map structure under full randomization. On
+Cascading randomization on the maps reproduces~\textcite{Adebayo2018sanity} and \textcite{sixt2020whenexplanationslie}: some methods retain map structure at the cascade endpoint. On
 ViT-B/16, the \ac{rg} anchor itself retains Spearman $|\rho| = \sanityVitRGanchorRho$, the highest
 of all methods, and HOG $r = \sanityVitRGanchorHOG$; on VGG-16, LRP-$\varepsilon$ retains
 $\sanityVggLRPepsRho$ and $\sanityVggLRPepsHOG$ (Table~\ref{tab:sanity-check}). The
 localization-selected \ac{rg} modes are slightly more model sensitive than the anchor on all three
 models. \ch{Read against Figure~\ref{ptnb:fig:hellinger-sanity}, the two readouts disagree: $\mathrm{H}$ sits at
-the fully random reference while the attribution map retains structure. The map-level failure stands;
+the double-random reference while the attribution map retains structure. The map-level failure stands;
 $\mathrm{H}$ reveals changes in normalized routing that are not apparent in the map. The discounted
 occupation projection can also change across models, so this discrepancy does not isolate a loss
 under one fixed projection.}
@@ -356,7 +356,7 @@ experiments of Section~\ref{ptnb:sec:hellinger-sanity}.  \S\ref{ptnb:sec:lmp-ran
 protocol of~\textcite{Adebayo2018sanity} over to the trajectory-space Hellinger diagnostic of
 Section~\ref{ptnb:app:path-divergence}; \S\ref{ptnb:app:sanity-heatmap} is the pixel-level
 heatmap-similarity sanity check on the main-paper attribution methods;
-\S\ref{ptnb:sec:lmp-rand-double-random} gives the fully random reference;
+\S\ref{ptnb:sec:lmp-rand-double-random} gives the double-random reference;
 \S\ref{ptnb:sec:per-image-orthogonality} compares trajectory and map diagnostics per image.
 
 \subsection{Cascading Randomization in Trajectory Space}\label{ptnb:sec:lmp-randomization}
@@ -383,20 +383,21 @@ the first while its routing passes the second; this discrepancy does not isolate
 loss, since the discounts can also change across models, and it does not make such a
 map adequate for model debugging~\parencite{Adebayo2018sanity,sixt2020whenexplanationslie}.}
 
-\subsection{Heatmap similarity at full randomization}\label{ptnb:app:sanity-heatmap}
+\subsection{Heatmap similarity at the cascade endpoint}\label{ptnb:app:sanity-heatmap}
 
-We apply the cascading parameter randomization test of \textcite{Adebayo2018sanity} to the attribution
+We adapt the cascading parameter randomization test of \textcite{Adebayo2018sanity} to the attribution
 methods of Table~\ref{tab:sanity-check}. Starting from a pretrained network, we cumulatively
 re-initialize the convolutional and linear layers from the output toward the input (weights Kaiming
 normal~\parencite{He2015delving}, biases $\mathcal{N}(0, 0.01^2)$); BatchNorm (ResNet-50) and
-LayerNorm, the packed query/key/value projection of the attention, the positional embedding and the
-class token (ViT-B/16) keep their pretrained values, here and in the Hellinger cascade of
-Section~\ref{ptnb:sec:hellinger-cascading}. At each randomization depth we compute the attribution for
+LayerNorm, the positional embedding and the class token (ViT-B/16) keep their pretrained values.
+The ViT attribution cascade includes the decomposed query/key/value linear projections; the
+Hellinger cascade of Section~\ref{ptnb:sec:hellinger-cascading} retains the packed query/key/value
+parameters. At each randomization depth we compute the attribution for
 every test image under both the original and the (partially) randomized model, then measure the
-similarity between the two attribution maps. A method that genuinely reflects the learned
-parameters should produce increasingly dissimilar maps as more layers are randomized; a method that
-merely responds to low-level input structure (edges, textures) will show high similarity even at
-full randomization.
+similarity between the two attribution maps. The test asks whether attribution maps change as
+learned parameters are randomized; it does not require similarity to decrease monotonically with
+randomization depth. Persistent similarity can indicate dependence on input structure or
+architectural properties.
 
 \paragraph{Metrics.}
 We report two complementary similarity measures between attribution maps:
@@ -409,25 +410,26 @@ We report two complementary similarity measures between attribution maps:
         descriptors~\parencite{Dalal2005hog} extracted from the attribution maps, capturing structural
         similarity at the level of local gradient orientations.
 \end{itemize}
-We intentionally do \emph{not} report SSIM here: \textcite{Binder2022shortcomings} show that
-randomization-based similarity scores can remain deceptively high because input-dependent structure
-and activation scales survive top-down randomization.
+We do not report SSIM here. The remaining similarity scores are complementary diagnostics:
+\textcite{Binder2022shortcomings} show that input-dependent structure and activation scales can
+survive top-down randomization, and that low similarity can also reflect noise. Their noise
+critique also applies to Spearman correlation, including ranks of absolute attribution values.
 All values are averaged over the 565-image test split of ImageNet-S (50 classes); a map that is
-constant over the image (LIME and KernelSHAP on the fully randomized ResNet-50, whose output no
+constant over the image (LIME and KernelSHAP on ResNet-50 at the cascade endpoint, whose output no
 longer depends on the superpixels) has similarity $0$ by convention. Table~\ref{tab:sanity-check}
-reports the similarity at \emph{full randomization} (all convolutional and linear layers
-re-initialized).
+reports the similarity at the \emph{cascade endpoint} (all tested convolutional and linear layers
+re-initialized, with the pretrained parameter groups listed above retained).
 
 \paragraph{Discussion.}
 Several patterns emerge. First, Gradient and Grad-CAM stay closest to zero on the \acp{cnn} (and
-LayerCAM on VGG-16), and Gradient, SmoothGrad and \ac{ptnbGAE} on ViT-B/16: they are sensitive to the
-parameters, though this does not imply that they are faithful. Second, LRP-$\varepsilon$ keeps the
+LayerCAM on VGG-16), and Gradient, SmoothGrad and \ac{ptnbGAE} on ViT-B/16: these scores record map
+changes under the tested parameter intervention, but do not establish faithfulness. Second, LRP-$\varepsilon$ keeps the
 most rank structure on VGG-16 ($\sanityVggLRPepsRho$); on ResNet-50 the \ac{lrp} rules
 (LRP-$\gamma$ $\sanityResLRPgammaRho$, LRP-$\varepsilon$ $\sanityResLRPepsRho$) are close to
 Integrated Gradients and LayerCAM, which keep the most there. Third, LIME and KernelSHAP keep a HOG
 correlation of about $0.86$ on VGG-16 and ViT-B/16 at low Spearman correlation: their superpixels
-are computed from the input image, so the maps inherit its edge structure; on ResNet-50 the fully
-randomized model's output no longer depends on the superpixels and their maps are constant
+are computed from the input image, so the maps inherit its edge structure; on ResNet-50 the model's
+output at the cascade endpoint no longer depends on the superpixels and their maps are constant
 ($^{\ddagger}$). Fourth, the \ac{rg} rows lie between Gradient and LRP-$\varepsilon$ on VGG-16,
 slightly below the \ac{lrp} rules on ResNet-50, and keep the highest Spearman correlation of all
 methods on ViT-B/16 ($\sanityVitRGanchorRho$ for the anchor, $\sanityVitRGlocRho$ for the selected
@@ -439,11 +441,10 @@ divergence of the underlying trajectory distributions rather than pixel-level ma
 
 \subsection{Double-Random Empirical Baseline}\label{ptnb:sec:lmp-rand-double-random}
 
-To calibrate the asymptotic value that Theorems~\ref{ptnb:thm:rand-adf}--\ref{ptnb:thm:rand-routing} approach
-under \emph{full} randomization, we compare two \emph{independently random-initialized} copies of
-each architecture.  This endpoint matches the deepest step of the cascading test
-of~\textcite{Adebayo2018sanity} while eliminating any residual correlation with the pretrained
-weights.
+As an empirical reference for the endpoint of our cascade, we compare two copies of each
+architecture with independently randomized convolutional and linear layers. This two-random-model
+baseline differs from the trained-versus-randomized comparison of~\textcite{Adebayo2018sanity}.
+Both copies retain the pretrained parameter groups specified below.
 
 \paragraph{Protocol.}
 For each architecture we run $R = 500$ independent rounds.  Each round: \emph{(i)} instantiate two
@@ -467,8 +468,9 @@ round-to-round variance mixes two sources (image choice and the random-pair real
     \small
     \input{tables/ptnb_v2/generated/double_random_tabular}
     }%
-\caption[Hellinger trajectory distance between random initializations]{Hellinger trajectory distance between two independently random-initialized copies of the
-    same architecture, averaged over $R = 500$ rounds (one fresh ImageNet-S test image per round).
+\caption[Hellinger trajectory distance at the double-random baseline]{Hellinger trajectory distance between two copies of the
+    same architecture with independently randomized convolutional and linear layers and the remaining
+    pretrained parameters retained, averaged over $R = 500$ rounds (one fresh ImageNet-S test image per round).
     Plain $\mathrm{H}$ concentrates at an architecture-dependent cemetery floor of
     $\drFloorMin$--$\drFloorMax$; conditioned-survival $\mathrm{H}_{\mathrm{surv}}$ saturates at unity.
     The VGG-16 Routing Game cell is the one case in which the plain distance also saturates at
@@ -482,12 +484,12 @@ matching the cemetery-floor prediction of Remark~\ref{ptnb:rem:adf-cemetery-floo
 kernels produce uncorrelated dead masks, the shared dead-in-both coincidence rate bounds
 $\mathrm{BC}^{(0)}$ below by a strictly positive constant and plain $\mathrm{H}$ cannot reach
 unity.  The conditioned-survival distance removes the cemetery floor by renormalizing on survival
-and correctly reports the two independent random trajectory laws as essentially support-disjoint on
+and reports the two randomized trajectory laws as essentially support-disjoint on
 ordinary input states ($\mathrm{H}_{\mathrm{surv}} \approx 1$ throughout).  The
 pretrained-vs-randomized Hellinger distance that the cascading sanity check reports should
-therefore be read against this architecture-specific asymptote rather than against unity: values
-close to the double-random baseline already indicate that the game-theoretic trajectory law has
-become fully decoupled from the pretrained one.
+therefore be read against this architecture-specific empirical reference: values close to the
+double-random baseline indicate a trajectory distance comparable to that between two copies
+independently randomized over the same layers.
 
 \subsection{Per-Image Association Between Trajectory and Map Diagnostics}\label{ptnb:sec:per-image-orthogonality}
 

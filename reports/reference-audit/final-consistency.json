@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "generated_utc": "2026-11-10T17:18:36.624567+00:00",
+  "scope": "Final citation canonicalization after bibliography identity repair and local DAVE baseline-implementation clarification; supplements original claim reports without editing them.",
+  "resolutions": [
+    {
+      "key": "Gao2022imagenets",
+      "file": "tex/chapters/01_introduction.tex",
+      "original_line": 83,
+      "initial_verdict": "mismatched",
+      "canonical_citation_key": "gao2022luss",
+      "decision": "canonicalized_citation_after_bibliographic_source_correction",
+      "supersedes_report": "reports/reference-audit/claims-intro.json",
+      "supersedes_json_pointer": "/35",
+      "before_citation": "\\parencite{Gao2022imagenets}",
+      "after_citation": "\\parencite{gao2022luss}",
+      "reason": "Both retained keys now identify Gao et al., Large-Scale Unsupervised Semantic Segmentation. The sole introduction citation uses the already-active gao2022luss key, preventing duplicate bibliography entries for the same work. The surrounding sentence is unchanged; both BibTeX records and their audit dispositions remain retained.",
+      "identity_evidence": {
+        "doi": "10.1109/TPAMI.2022.3218275",
+        "alias_doi": "10.1109/TPAMI.2022.3218275",
+        "source": "https://doi.org/10.1109/TPAMI.2022.3218275",
+        "both_keys_retained": true
+      },
+      "support_context_preservation": "Only the citation key changes. Co-cited supported assertions, if any, remain intact.",
+      "previous_file_sha256": "634a2c1f24560c4320738eda635745f0ab5c7c65ec0fcde29f199bd38565ef8c",
+      "current_file_sha256": "72129b0296c808a8de7a97c61f445df8fad6446d268613bd483b545f3231c973"
+    }
+  ],
+  "expected_current_cited_keys_in_audited_sources": 142,
+  "bibliography_entries_unchanged": 186,
+  "additional_corrections": [
+    {
+      "key": "Wrobel2024",
+      "file": "tex/chapters/08_experiments.tex",
+      "original_context_line": 117,
+      "initial_verdict": "supported",
+      "decision": "clarified_local_baseline_implementation_scope",
+      "before": "DAVE~\\parencite{Wrobel2024},",
+      "after": "our DAVE implementation~\\parencite{Wrobel2024} (Section~\\ref{ptnb:app:baselines}),",
+      "reason": "The source correctly identifies DAVE, but the evaluated rows use the repository implementation with additionally frozen LayerNorm mean. Distinguishing that implementation from published DAVE closes the baseline provenance gap without changing data, formulas, or results.",
+      "support_context_preservation": "Other co-cited methods and their supported claims are unchanged; this is a local implementation qualification.",
+      "previous_file_sha256": "f4f89768e43ab537215d658664d7e22e62f8167d971af7585bcf4efb8dfa9726",
+      "current_file_sha256": "9c161a71ea3dfc6dd3d6e8d32ddb31235bc4ce19861eafde6fca1d3c52a66d19",
+      "evidence": {
+        "local_code": "code/playing_backward/bwgame/xai/methods/dave.py",
+        "local_code_lines": [
+          157,
+          166
+        ],
+        "local_code_sha256": "01a177a23f71c2f5e5e268f9a7088b047aa69b93b149c463307b87f0f729d059",
+        "local_behavior": "The LayerNorm hook computes mean and variance from c=x.detach(), then forms (x-mean)/sqrt(var+epsilon); both statistics are fixed in the backward pass.",
+        "published_behavior": "DAVE Appendix A.1.4 retains differentiable linear mean-centering C=I-11^T/d and detaches the normalization scale.",
+        "audit_source": "reports/reference-audit/batches/batch_01.json",
+        "official_implementation_url": "https://raw.githubusercontent.com/a-vrobell/DAVE/main/core/utils/detach_mode.py",
+        "official_paper_url": "https://raw.githubusercontent.com/mlresearch/v306/main/assets/wrobel26a/wrobel26a.pdf"
+      }
+    },
+    {
+      "key": "Wrobel2024",
+      "file": "tex/supplement/experiments.tex",
+      "original_context_line": 116,
+      "initial_verdict": "supported",
+      "decision": "clarified_local_baseline_implementation_scope",
+      "before": "decomposition of~\\textcite{Wrobel2024}. \\textbf{SG}",
+      "after": "decomposition of~\\textcite{Wrobel2024}. The rows labeled DAVE use our implementation, which additionally freezes the LayerNorm mean; published DAVE retains differentiation through mean-centering. \\textbf{SG}",
+      "reason": "The source correctly identifies DAVE, but the evaluated rows use the repository implementation with additionally frozen LayerNorm mean. Distinguishing that implementation from published DAVE closes the baseline provenance gap without changing data, formulas, or results.",
+      "support_context_preservation": "Other co-cited methods and their supported claims are unchanged; this is a local implementation qualification.",
+      "previous_file_sha256": "92ca5685e27c6d10462d56a0779f077329225d7631fa21bb2ac8e46b636da156",
+      "current_file_sha256": "cb9bf134433cbe856566988399afac4720bd993abb75c5ad5748b0ea1d739808",
+      "evidence": {
+        "local_code": "code/playing_backward/bwgame/xai/methods/dave.py",
+        "local_code_lines": [
+          157,
+          166
+        ],
+        "local_code_sha256": "01a177a23f71c2f5e5e268f9a7088b047aa69b93b149c463307b87f0f729d059",
+        "local_behavior": "The LayerNorm hook computes mean and variance from c=x.detach(), then forms (x-mean)/sqrt(var+epsilon); both statistics are fixed in the backward pass.",
+        "published_behavior": "DAVE Appendix A.1.4 retains differentiable linear mean-centering C=I-11^T/d and detaches the normalization scale.",
+        "audit_source": "reports/reference-audit/batches/batch_01.json",
+        "official_implementation_url": "https://raw.githubusercontent.com/a-vrobell/DAVE/main/core/utils/detach_mode.py",
+        "official_paper_url": "https://raw.githubusercontent.com/mlresearch/v306/main/assets/wrobel26a/wrobel26a.pdf"
+      }
+    }
+  ],
+  "updated_utc": "2026-11-10T17:20:29.199802+00:00",
+  "experimental_results_changed": false,
+  "experiments_rerun": false
+}

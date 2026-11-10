@@ -6,13 +6,20 @@ mathematical continuation has a separate [Lean handover](HANDOVER_LEAN.md).
 
 ## Current local revision and verification boundary
 
-The last published checkpoint is `0277033` on `origin/main`. The current
-10 November revision tightens the author's new introduction, removes pasted chat
+The condensed thesis and cover checkpoint is published as `61d4d90` on
+`origin/main`. That 10 November revision tightens the author's new introduction, removes pasted chat
 text and duplicate drafts, reduces the contribution list to an overview, and
 removes roughly 4,000 words of unused tropical/polyhedral background. The
 Transformer DC algorithm is stated briefly in the existing DC contribution.
-The user has authorized publication; the next push waits for the final local
-build and warning checks. Both rendering switches must remain enabled.
+The subsequent reference audit checks all 190 original bibliography entries and
+405 citation contexts. Its portable evidence, corrected source identities,
+claim resolutions, and full-text access limits are in `reports/reference-audit/`.
+The retained BibTeX entries link to primary sources and checksum-identified local
+files in the ignored `literature/references/` directory; full texts are not
+redistributed through Git. Four unverified records with wrong identifiers are
+quarantined in the audit ledger. The source-paper archives remain unchanged.
+The audit follow-up has passed the final build, warning, citation-provenance
+and publication checks recorded in `reports/publication-build.json`. Both rendering switches must remain enabled.
 
 The generalized convex/monotone DC construction, closed-form activation and
 softmax splits, arbitrary-depth Transformer definition and splitting algorithm,
@@ -51,12 +58,14 @@ removal of unused geometry exposition and formulas.
 
 Build both `tex/main.tex` and `tex/supplement.tex`. Detailed game, attention and
 trajectory proofs and full experimental material remain under `tex/supplement/`.
-Reference coverage now reports **68 of 74 HM source labels retained** (63 unique
-references), with six labels for three geometry-background references
-intentionally omitted: Brandenburg2024b, Haase2023 and Ziegler1995. Their
-bibliography records remain; the reasons are recorded in
-`reports/paper-reference-editorial-omissions.json`. All **72 game-paper source
-references** remain. The checker distinguishes these reviewed omissions from
+Reference coverage now reports **67 of 74 HM source labels retained**, with
+six labels for three removed geometry-background references and one unsupported
+biological-plausibility citation intentionally omitted. Their bibliography
+records remain. The reasons are recorded in
+`reports/paper-reference-editorial-omissions.json` and
+`reports/paper-reference-reviewed-corrections.json`. All **72 game-paper source
+references** remain. The corrected ImageNet-S citations use one canonical key,
+`gao2022luss`, so that the bibliography contains one entry for that work. The checker distinguishes these reviewed omissions from
 unexplained missing citations and continues checking bibliography entries and
 aliases. The source-reference checker and badge synchronizer inspect both source
 roots. Deliver `docs/thesis.pdf` and `docs/thesis-supplement.pdf` together so their

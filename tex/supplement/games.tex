@@ -1521,9 +1521,9 @@ the protocol picks per model and criterion.
 The activation-side risk-aversion mode replaces the deterministic activation $a_i^{(l)} =
     \relu(z_i^{(l)})$ that the player observes by a mean--variance confidence bound $V_\lambda = \mu +
     \lambda\sigma$ ($\lambda \le 0$) computed from an \ac{ptnbADF} variance propagation
-pass~\parencite{gast2018lightweight}. We propagate the exact mean $\E[\relu(X)]$ and the variance
-approximation $\sigma^2\Phi(\mu/\sigma)$ of $\mathrm{Var}[\relu(X)]$ for $X \sim \mathcal{N}(\mu,
-    \sigma^2)$~\parencite{gast2018lightweight}.
+pass~\parencite{gast2018lightweight}. We propagate the exact mean $\E[\relu(X)]$ for
+$X \sim \mathcal{N}(\mu,\sigma^2)$~\parencite{gast2018lightweight}; our implementation approximates
+$\mathrm{Var}[\relu(X)]$ by $\sigma^2\Phi(\mu/\sigma)$.
 
 The propagated variance is initialized at the input by the scale $\sigma^2$ at every input neuron.
 Negative $\lambda$ shifts the player's observed game value at stopping layers (not linear layers!)
@@ -1804,11 +1804,10 @@ $a = \Phi(z^{\mathrm{fwd}})\, z$, not the \acs{ptnbGELU} gradient $\Phi(z) + z\p
 \paragraph{Relation to the curvature-based defense of Dombrowski et
 al.}\label{ptnb:app:softplus-dombrowski}
 \textcite{Dombrowski2020} train Softplus networks from scratch as a defense against
-gradient-explanation manipulation. Their argument bounds the Frobenius norm of the network Hessian:
-replacing $\mathrm{ReLU}$, whose distributional second derivative $\delta(z)$ leaves $\Vert
-    \nabla^2 f \Vert_F$ unbounded, by $\mathrm{sp}_\theta$ with $|\mathrm{sp}_\theta''(z)| \le
-    1/(4\theta)$ yields a uniform bound on $\Vert \nabla^2 f \Vert_F$, and the gradient theorem then
-bounds the maximal change of the gradient explanation under input perturbations.
+gradient-explanation manipulation. Their argument bounds the Frobenius norm of the network Hessian
+in terms of the weight norms and activation derivatives: the bound diverges in the ReLU limit,
+whereas $|\mathrm{sp}_\theta''(z)| \le 1/(4\theta)$ gives a finite uniform bound for fixed weights,
+and the gradient theorem then bounds changes in the gradient explanation under input perturbations.
 Theorems~\ref{ptnb:thm:softplus-forward}--\ref{ptnb:thm:softplus-gradient} place this Softplus replacement
 inside our framework as a single change in the game: entropy-regularizing the activation-state
 stop/continue policy at temperature $\theta$. Whether the Hellinger response of the resulting

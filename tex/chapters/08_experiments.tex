@@ -56,10 +56,10 @@ In the forward-stabilization experiment of Section~\ref{sec:stabilization_dc}, t
 \paragraph{Setup.}
 We evaluate \ac{rg} and \ac{sg} against standard backward baselines (Section~\ref{ptnb:app:baselines})
 on VGG-16~\parencite{Simonyan2015}, ResNet-50~\parencite{He2016resnet}, and
-ViT-B/16~\parencite{Dosovitskiy2021vit} with torchvision ImageNet-1K
-checkpoints~\parencite{Paszke2019PyTorch,Deng2009,Russakovsky2015ilsvrc}, on a 50-class
+ViT-B/16~\parencite{Dosovitskiy2021vit}, using PyTorch~\parencite{Paszke2019PyTorch} and torchvision ImageNet-1K
+checkpoints~\parencite{Deng2009,Russakovsky2015ilsvrc}\footnote{Checkpoint documentation: \url{https://docs.pytorch.org/vision/stable/models.html}; the weight identifiers used here are listed in Section~\ref{app:extended_protocol}.}, on a 50-class
 ImageNet-S subset~\parencite{gao2022luss} at $224{\times}224$ (50-image validation split, 565-image
-test split), and on Pascal VOC 2012~\parencite{Everingham2010voc}. For the game campaign, the $752$ released ImageNet-S50 annotation records are filtered to $616$ whose class agrees with the official ILSVRC2012 label; one image per class is selected for validation with seed $42$, and one of the remaining $566$ test images is excluded because its object mask is outside the center crop. The explanation target is the dataset class, including on misclassified images (Section~\ref{ptnb:app:protocol}). ImageNet-S provides the pixel masks
+test split), and on Pascal VOC 2012~\parencite{Everingham2010voc}\footnote{Release documentation: \url{https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2012/}.}. For the game campaign, the $752$ released ImageNet-S50 annotation records are filtered to $616$ whose class agrees with the official ILSVRC2012 label; one image per class is selected for validation with seed $42$, and one of the remaining $566$ test images is excluded because its object mask is outside the center crop. The explanation target is the dataset class, including on misclassified images (Section~\ref{ptnb:app:protocol}). ImageNet-S provides the pixel masks
 required by the localization metrics; ImageNet boxes over-credit mass anywhere inside the box. All
 metrics are computed through Quantus~\parencite{Hedstrom2023} (definitions in
 Section~\ref{ptnb:app:metrics}): localization (\ac{ptnbAttrLoc}, \ac{ptnbPG}, Top-$k$ Intersection (TK);
@@ -85,8 +85,8 @@ best row of each metric (Section~\ref{ptnb:app:stats}); for \ac{rg} / \ac{rg}+Eq
 the $\alpha\beta$-\ac{lrp} anchor $(\alpha,\beta,\varepsilon,\tau){=}(2,1,0.5,1)$ as a
 theorem-driven reference (Theorem~\ref{ptnb:thm:lrp-recovery}). Localization is a natural target for
 modes designed to control routing focus, and object annotations provide external ground truth:
-\textcite{Kohlbrenner2020} compare \ac{lrp} rule composites by the share of relevance inside
-ground-truth bounding boxes, and we use pixel masks. The main table reports the loc row of every
+\textcite{Kohlbrenner2020} compare \ac{lrp} rule composites by the share of positive relevance inside
+ground-truth bounding boxes; we use absolute attribution mass and pixel masks. The main table reports the loc row of every
 method; since mask agreement is not faithfulness, the faith rows of all methods are reported in
 Section~\ref{ptnb:app:results}.
 
@@ -114,7 +114,7 @@ Section~\ref{ptnb:app:results}.
 \paragraph{ViT-B/16 (Table~\ref{ptnb:tab:eval-vit}).}
 Under the localization-selected protocol, the \ac{rg} family beats every baseline on attribution
 localization, including the prior transformer-specific backward methods
-AttnLRP~\parencite{Achtibat2024AttnLRP}, DAVE~\parencite{Wrobel2024},
+AttnLRP~\parencite{Achtibat2024AttnLRP}, our DAVE implementation~\parencite{Wrobel2024} (Section~\ref{ptnb:app:baselines}),
 \ac{ptnbTIBAV}~\parencite{Chefer2021GenericAttention} and \ac{ptnbGAE}~\parencite{Chefer2021ICCV}: the selected mode
 reaches AL \vitRGlocAL{} against \vitBestBaseAL{} for the best baseline (\vitBestBaseALname), and
 \ac{rg}+Eq \vitRGEqlocAL{}, both significantly ahead of every baseline row after Holm correction.

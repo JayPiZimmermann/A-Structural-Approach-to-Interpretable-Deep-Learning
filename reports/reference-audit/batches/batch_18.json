@@ -1,0 +1,618 @@
+[
+  {
+    "key": "Sundararajan2017",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Axiomatic Attribution for Deep Networks",
+      "authors": [
+        "Mukund Sundararajan",
+        "Ankur Taly",
+        "Qiqi Yan"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "Proceedings of the 34th International Conference on Machine Learning, PMLR 70",
+      "year": "2017",
+      "doi": null,
+      "url": "https://proceedings.mlr.press/v70/sundararajan17a.html"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://proceedings.mlr.press/v70/sundararajan17a.html",
+        "supports": "Exact title, ordered authors, ICML 2017, volume 70 and pages 3319–3328."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Sundararajan2017.pdf",
+      "format": "pdf",
+      "source_url": "https://proceedings.mlr.press/v70/sundararajan17a/sundararajan17a.pdf",
+      "sha256": "b17d267e7b8f7c5e9198030932ef184d93d6c2dd90e47ab996ed395fd673443f",
+      "identity_verified": true,
+      "version_note": "Official ICML 2017 proceedings PDF; title and all authors checked on p. 1."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 97,
+        "verdict": "supported",
+        "evidence": "Sections 2–3 develop Sensitivity and Implementation Invariance as axioms and derive Integrated Gradients; the attribution-family description is accurate.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/05_saliency.tex",
+        "line": 7,
+        "verdict": "overstated",
+        "evidence": "Sections 2.1 and 3 (PDF pp. 2–3) confirm IG is axiomatic but explicitly explain how baseline/discrete-gradient methods and IG overcome local saturation. Thus the paragraph's claim of structural loss for every backward-pass method is broader than the cited evidence.",
+        "proposed_replacement": "This section identifies a structural information loss that the original graph inflicts on ordinary local-gradient attribution, and shows that the split-pair representation of Section~\\ref{sec:dc_splitting_relu} removes it."
+      },
+      {
+        "file": "tex/chapters/05_saliency.tex",
+        "line": 39,
+        "verdict": "overstated",
+        "evidence": "Section 2.1 (PDF p. 2) gives exactly f(x)=1−ReLU(1−x), x=2, baseline 0, and zero ordinary-gradient attribution. It does not establish zero attribution for every local backward rule: the same section discusses DeepLIFT's discrete-gradient remedy.",
+        "proposed_replacement": "The prediction changes, $f(2) - f(0) = 1 - 0 = 1$, so the single feature is plainly relevant; yet $f$ is constant on $x \\geq 1$, so the gradient at $x = 2$ --- and with it Input$\\times$Gradient and backward rules that retain the original local ReLU derivatives --- assigns exactly zero attribution."
+      },
+      {
+        "file": "tex/chapters/05_saliency.tex",
+        "line": 47,
+        "verdict": "supported",
+        "evidence": "Section 2.1 states Sensitivity(a): if input and baseline differ in one feature and prediction, that feature must receive nonzero attribution. The following thesis definition matches this axiom.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/supplement/experiments.tex",
+        "line": 113,
+        "verdict": "supported",
+        "evidence": "Section 3 defines the straight-line gradient integral relative to a baseline; Section 6.1 (PDF p. 6) uses a black image with all pixel intensities zero. This supports the described IntGrad baseline, while actual experiment settings remain the thesis's implementation claim.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "Nearby uncited sentence in 05_saliency.tex describing subthreshold loss as affecting every attribution method on the original graph is also too broad. DeepLIFT and IG are counterexamples to this universal formulation; scope the claim to ordinary input gradients or methods that preserve the local ReLU derivative."
+    ]
+  },
+  {
+    "key": "Dosovitskiy2021vit",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale",
+      "authors": [
+        "Alexey Dosovitskiy",
+        "Lucas Beyer",
+        "Alexander Kolesnikov",
+        "Dirk Weissenborn",
+        "Xiaohua Zhai",
+        "Thomas Unterthiner",
+        "Mostafa Dehghani",
+        "Matthias Minderer",
+        "Georg Heigold",
+        "Sylvain Gelly",
+        "Jakob Uszkoreit",
+        "Neil Houlsby"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "International Conference on Learning Representations (ICLR)",
+      "year": "2021",
+      "doi": null,
+      "url": "https://openreview.net/forum?id=YicbFdNTTy"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://arxiv.org/abs/2010.11929",
+        "supports": "Exact title, all 12 ordered authors, identifier and camera-ready version statement."
+      },
+      {
+        "url": "https://iclr.cc/Downloads/2021",
+        "supports": "Official ICLR 2021 listing includes this paper."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Dosovitskiy2021vit.pdf",
+      "format": "pdf",
+      "source_url": "https://arxiv.org/pdf/2010.11929",
+      "sha256": "8ce7b83971a14508ca711a27c875c9b6914c4f6767cf3150fb1ca6c07aa056d6",
+      "identity_verified": true,
+      "version_note": "arXiv:2010.11929v2 (3 June 2021), identified by arXiv as the ICLR camera-ready version with two small corrections; PDF p. 1 explicitly says published at ICLR 2021."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 11,
+        "verdict": "supported",
+        "evidence": "Sections 3.1 and 4 (PDF pp. 3–5) describe non-overlapping patch tokens and the /16 size notation. This reference supports the ViT architecture clause; grid-artifact findings belong to the co-cited DAVE paper.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/05_saliency.tex",
+        "line": 500,
+        "verdict": "supported",
+        "evidence": "Section 3.1, Inductive bias (PDF p. 4), contrasts CNN translation equivariance with ViT; Section 4 explains /16 means 16×16 input patches. The grid-artifact attribution is supplied by the adjacent Wrobel2024 citation, rather than demonstrated here.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/08_experiments.tex",
+        "line": 59,
+        "verdict": "supported",
+        "evidence": "Section 4/Table 1 (PDF p. 5), and the Appendix B results identify the ViT-Base architecture and ViT-B/16 variant. This establishes the backbone identity; checkpoint and dataset details are separate experiment provenance.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/09_conclusion.tex",
+        "line": 13,
+        "verdict": "supported",
+        "evidence": "Section 4/Table 1 (PDF p. 5) and Appendix B describe ViT-Base and the /16 patch variant, supporting the named evaluated architecture; the conditioned game is the thesis's own method.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "The original paper supports patch tokenization, variant names and lack of CNN-style translation equivariance. It does not itself study attribution-grid artifacts; that portion of the mixed citation must be supported by Wrobel2024. ViTs in general need not use 16×16 patches; this is correct for the evaluated ViT-B/16."
+    ]
+  },
+  {
+    "key": "Kahardipraja2025Atlas",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "The Atlas of In-Context Learning: How Attention Heads Shape In-Context Retrieval Augmentation",
+      "authors": [
+        "Patrick Kahardipraja",
+        "Reduan Achtibat",
+        "Thomas Wiegand",
+        "Wojciech Samek",
+        "Sebastian Lapuschkin"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "Advances in Neural Information Processing Systems 38 (NeurIPS 2025)",
+      "year": "2025",
+      "doi": "10.52202/085713-3940",
+      "url": "https://proceedings.nips.cc/paper_files/paper/2025/hash/ab49f5e61eadbe979373c133232a96a0-Abstract-Conference.html"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://proceedings.nips.cc/paper_files/paper/2025/hash/ab49f5e61eadbe979373c133232a96a0-Abstract-Conference.html",
+        "supports": "Official proceedings establish ordered authors, exact title, NeurIPS 2025 volume 38 and DOI."
+      },
+      {
+        "url": "https://arxiv.org/abs/2505.15807",
+        "supports": "Matching preprint identity, arXiv:2505.15807."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Kahardipraja2025Atlas.pdf",
+      "format": "pdf",
+      "source_url": "https://proceedings.nips.cc/paper_files/paper/2025/file/ab49f5e61eadbe979373c133232a96a0-Paper-Conference.pdf",
+      "sha256": "f0614f1e308d3651a4db85f064e100a911ba97f133a6a21a309dc717c4255735",
+      "identity_verified": true,
+      "version_note": "Official NeurIPS 2025 proceedings PDF, 45 pages, with matching title and all five authors on p. 1."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 11,
+        "verdict": "supported",
+        "evidence": "Sections 5–6 (pp. 5–9) use AttnLRP to distinguish in-context and parametric heads, further separate task and retrieval heads, and validate functional roles through ablation, function vectors and attention-weight interventions.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 100,
+        "verdict": "supported",
+        "evidence": "Sections 5–6 localize attention-head roles using relevance scores and intervene on identified heads; this supports attribution-based head identification and downstream control. The final statement about unstable attributions is a thesis inference, not an empirical result claimed by this paper.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 11,
+        "verdict": "supported",
+        "evidence": "Sections 5–6 identify heads from attribution and show effects of targeted ablations, function-vector insertion and attention-weight changes on answer generation; the head-identification/control claim is supported.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "Existing abbreviated NeurIPS venue and year are correct; the verified metadata above supplies the official proceedings URL and DOI if enrichment is desired."
+    ]
+  },
+  {
+    "key": "Anders2020ClArC",
+    "metadata_status": "correction_proposed",
+    "verified_metadata": {
+      "title": "Finding and removing Clever Hans: Using explanation methods to debug and improve deep models",
+      "authors": [
+        "Christopher J. Anders",
+        "Leander Weber",
+        "David Neumann",
+        "Wojciech Samek",
+        "Klaus-Robert Müller",
+        "Sebastian Lapuschkin"
+      ],
+      "entry_type": "article",
+      "venue": "Information Fusion 77, 261–295",
+      "year": "2022",
+      "doi": "10.1016/j.inffus.2021.07.015",
+      "url": "https://www.sciencedirect.com/science/article/pii/S1566253521001573"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://www.sciencedirect.com/science/article/pii/S1566253521001573",
+        "supports": "Publisher search-indexed record confirms exact authors, journal, volume, January 2022 pages and DOI."
+      },
+      {
+        "url": "https://pure.korea.ac.kr/en/publications/finding-and-removing-clever-hans-using-explanation-methods-to-deb/",
+        "supports": "Author institution confirms complete citation and publication date."
+      },
+      {
+        "url": "https://arxiv.org/abs/1912.11425",
+        "supports": "Matching title/authors and downloaded preprint version."
+      }
+    ],
+    "suggested_bibtex": "@article{Anders2020ClArC,\n  author = {Christopher J. Anders and Leander Weber and David Neumann and Wojciech Samek and Klaus-Robert Müller and Sebastian Lapuschkin},\n  title = {Finding and removing Clever Hans: Using explanation methods to debug and improve deep models},\n  journal = {Information Fusion},\n  volume = {77},\n  pages = {261--295},\n  year = {2022},\n  doi = {10.1016/j.inffus.2021.07.015},\n  url = {https://www.sciencedirect.com/science/article/pii/S1566253521001573}\n}",
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Anders2020ClArC.pdf",
+      "format": "pdf",
+      "source_url": "https://arxiv.org/pdf/1912.11425",
+      "sha256": "b2352ca82b14fff7ec164ebb687e8bb83176ea5f3d5c8df23128361c0f3aa53b",
+      "identity_verified": true,
+      "version_note": "arXiv:1912.11425v2, December 2020 preprint; matching title and ordered authors verified on p. 1. Publication record separately confirms Information Fusion 77 (January 2022), 261–295. Author-hosted July 2021 manuscript was discoverable but local download failed TLS validation."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 5,
+        "verdict": "supported",
+        "evidence": "Introduction and Section 2.5 (preprint pp. 9–13), plus correction experiments in Section 4, define an explanation-driven workflow for detecting artifacts and changing models using augmentative or projective Class Artifact Compensation.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 11,
+        "verdict": "supported",
+        "evidence": "Section 2.5, Projective Class Artifact Compensation (preprint pp. 12–13, equations 27–31), fixes activation components along an estimated artifact direction using a projection while preserving orthogonal components. The thesis's suppression description is accurate.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "The existing year 2022 is correct despite the 2020 citation key. Proposed metadata change only normalizes the DOI field from a resolver URL to a bare DOI."
+    ]
+  },
+  {
+    "key": "Russakovsky2015ilsvrc",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "ImageNet Large Scale Visual Recognition Challenge",
+      "authors": [
+        "Olga Russakovsky",
+        "Jia Deng",
+        "Hao Su",
+        "Jonathan Krause",
+        "Sanjeev Satheesh",
+        "Sean Ma",
+        "Zhiheng Huang",
+        "Andrej Karpathy",
+        "Aditya Khosla",
+        "Michael Bernstein",
+        "Alexander C. Berg",
+        "Li Fei-Fei"
+      ],
+      "entry_type": "article",
+      "venue": "International Journal of Computer Vision 115(3), 211–252",
+      "year": "2015",
+      "doi": "10.1007/s11263-015-0816-y",
+      "url": "https://link.springer.com/article/10.1007/s11263-015-0816-y"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://link.springer.com/article/10.1007/s11263-015-0816-y",
+        "supports": "Publisher confirms full ordered author list, title, publication date 11 April 2015, journal volume/pages and DOI."
+      },
+      {
+        "url": "https://dspace.mit.edu/entities/publication/3322b8c9-6e61-43af-b613-fbabfcbd17b5",
+        "supports": "Institutional record corroborates final citation and issue 115(3)."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Russakovsky2015ilsvrc.pdf",
+      "format": "pdf",
+      "source_url": "https://hci.stanford.edu/publications/2015/scenegraphs/imagenet-challenge.pdf",
+      "sha256": "b8643541df1b287cdb35bc70741fa7c330c3be517e48f6b20eba7e995ddc8199",
+      "identity_verified": true,
+      "version_note": "Legitimate Stanford author-hosted manuscript, arXiv:1409.0575v3 dated 30 January 2015. Exact title and 12 authors verified. Publisher separately confirms final 2015 journal publication; manuscript pagination is used in evidence."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/08_experiments.tex",
+        "line": 60,
+        "verdict": "supported",
+        "evidence": "Sections 1–3 describe ILSVRC as an ImageNet-derived large-scale visual-recognition benchmark; Section 3.1/Table 2 (manuscript pp. 7–9) give the 1,000-class classification dataset. The citation supports ImageNet-1K provenance.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/supplement/experiments.tex",
+        "line": 94,
+        "verdict": "supported",
+        "evidence": "Section 3.1 and Table 2 (manuscript pp. 7–9) document the 1,000-class ILSVRC image-classification task and dataset sizes. This supports the benchmark provenance; the exact torchvision training/checkpoint selection is supplied separately.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "This reference establishes benchmark provenance, not the specific torchvision checkpoints. The supplement supplies direct checkpoint and training-recipe links for that separate claim."
+    ]
+  },
+  {
+    "key": "Geirhos2020Shortcut",
+    "metadata_status": "correction_proposed",
+    "verified_metadata": {
+      "title": "Shortcut learning in deep neural networks",
+      "authors": [
+        "Robert Geirhos",
+        "Jörn-Henrik Jacobsen",
+        "Claudio Michaelis",
+        "Richard Zemel",
+        "Wieland Brendel",
+        "Matthias Bethge",
+        "Felix A. Wichmann"
+      ],
+      "entry_type": "article",
+      "venue": "Nature Machine Intelligence 2(11), 665–673",
+      "year": "2020",
+      "doi": "10.1038/s42256-020-00257-z",
+      "url": "https://www.nature.com/articles/s42256-020-00257-z"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://doi.org/10.1038/s42256-020-00257-z",
+        "supports": "Publisher record gives exact title, seven authors, November 2020 publication, volume 2 and pages 665–673."
+      },
+      {
+        "url": "https://publikationen.uni-tuebingen.de/xmlui/handle/10900/115490",
+        "supports": "Author institution confirms volume 2, issue 11 and pages 665–673."
+      },
+      {
+        "url": "https://arxiv.org/abs/2004.07780",
+        "supports": "Ordered authors, preprint identifier/version and relation to the Nature publication."
+      }
+    ],
+    "suggested_bibtex": "@article{Geirhos2020Shortcut,\n  author = {Robert Geirhos and Jörn-Henrik Jacobsen and Claudio Michaelis and Richard Zemel and Wieland Brendel and Matthias Bethge and Felix A. Wichmann},\n  title = {Shortcut learning in deep neural networks},\n  journal = {Nature Machine Intelligence},\n  year = {2020},\n  volume = {2},\n  number = {11},\n  pages = {665--673},\n  doi = {10.1038/s42256-020-00257-z},\n  url = {https://www.nature.com/articles/s42256-020-00257-z}\n}",
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Geirhos2020Shortcut.pdf",
+      "format": "pdf",
+      "source_url": "https://arxiv.org/pdf/2004.07780",
+      "sha256": "da93a1633b56f6590836afaf3794c6131d38d53629e2cf9d219deb274d91ec15",
+      "identity_verified": true,
+      "version_note": "arXiv:2004.07780v5 (21 November 2023), explicitly marked a preprint of the published Nature Machine Intelligence article. Title and ordered authors match; cited content is verified in this later author version, not the typeset journal pagination."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 9,
+        "verdict": "supported",
+        "evidence": "Sections 3–5, especially the discussion of shortcut features and distribution shifts (preprint pp. 5–10), explain that predictive correlations can fail outside the training distribution; background changes are given as a vision example.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "Identity metadata is correct; proposed BibTeX fixes the doubled TeX backslash in the current Jörn-Henrik author accent and fills verified issue/pages."
+    ]
+  },
+  {
+    "key": "Gupta2016MonotoneLattice",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Monotonic Calibrated Interpolated Look-Up Tables",
+      "authors": [
+        "Maya Gupta",
+        "Andrew Cotter",
+        "Jan Pfeifer",
+        "Konstantin Voevodski",
+        "Kevin Canini",
+        "Alexander Mangylov",
+        "Wojciech Moczydlowski",
+        "Alexander van Esbroeck"
+      ],
+      "entry_type": "article",
+      "venue": "Journal of Machine Learning Research 17(109), 1–47",
+      "year": "2016",
+      "doi": null,
+      "url": "https://jmlr.org/papers/v17/15-243.html"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://jmlr.org/papers/v17/15-243.html",
+        "supports": "Exact title, all eight authors, volume 17, article 109, pages 1–47, year 2016."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Gupta2016MonotoneLattice.pdf",
+      "format": "pdf",
+      "source_url": "https://jmlr.org/papers/volume17/15-243/15-243.pdf",
+      "sha256": "135eedc9c8159bc10e5ed727f9d7b54db3c726cdb04d52a196135ae637e7c272",
+      "identity_verified": true,
+      "version_note": "Official JMLR published PDF, July 2016. Exact title and all eight ordered authors verified on p. 1."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 94,
+        "verdict": "supported",
+        "evidence": "Sections 1 and 4, especially Section 4.1/Lemma 1 (p. 12), explain interpretable monotonic lattice models with linear inequalities on neighboring lattice values. This supports the lattice-based monotone-model part of the historical overview.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": []
+  },
+  {
+    "key": "Tao1997_DCProgramming",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Convex Analysis Approach to D. C. Programming: Theory, Algorithms and Applications",
+      "authors": [
+        "Pham Dinh Tao",
+        "Le Thi Hoai An"
+      ],
+      "entry_type": "article",
+      "venue": "Acta Mathematica Vietnamica",
+      "year": "1997",
+      "doi": null,
+      "url": "https://math.ac.vn/uploads/files/9701289.pdf"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://math.ac.vn/uploads/files/9701289.pdf",
+        "supports": "Official journal PDF first page confirms full ordered authors, title, Acta Mathematica Vietnamica 22(1), 1997, pp. 289–355."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Tao1997_DCProgramming.pdf",
+      "format": "pdf",
+      "source_url": "https://math.ac.vn/uploads/files/9701289.pdf",
+      "sha256": "0527197dec65d08605027828125706e285d2b5ffb9aa0acc55d709983c7f9596",
+      "identity_verified": true,
+      "version_note": "Official published article; 67 pages, printed pp. 289–355. Title and author list read from extracted first page."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 94,
+        "verdict": "supported",
+        "evidence": "Section 2, pp. 294–297, develops DC functions and closure under linear combinations and finite maxima; p. 296 explicitly gives the positive-part split max(g,h)-h for f=g-h. These facts supply classical background for a recursive ReLU DC split. The article studies DC optimization rather than neural attribution.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "No DOI shown in the official journal record or PDF. The paper discusses numerical stability of DCA choices (e.g. p. 291), but not cancellation instability in the neural-network split referred to by the thesis."
+    ]
+  },
+  {
+    "key": "Arras2016ACLNLP",
+    "metadata_status": "correction_proposed",
+    "verified_metadata": {
+      "title": "Explaining Predictions of Non-Linear Classifiers in NLP",
+      "authors": [
+        "Leila Arras",
+        "Franziska Horn",
+        "Grégoire Montavon",
+        "Klaus-Robert Müller",
+        "Wojciech Samek"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "Proceedings of the 1st Workshop on Representation Learning for NLP",
+      "year": "2016",
+      "doi": "10.18653/v1/W16-1601",
+      "url": "https://aclanthology.org/W16-1601/"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://aclanthology.org/W16-1601/",
+        "supports": "Official ACL proceedings metadata: ordered authors, exact title, RepL4NLP workshop, August 2016, pp. 1–7, DOI."
+      },
+      {
+        "url": "https://aclanthology.org/W16-1601.bib",
+        "supports": "Official publisher BibTeX agrees with supplied publication information."
+      }
+    ],
+    "suggested_bibtex": "@inproceedings{Arras2016ACLNLP,\n  title = {Explaining Predictions of Non-Linear Classifiers in {NLP}},\n  author = {Leila Arras and Franziska Horn and Grégoire Montavon and Klaus-Robert Müller and Wojciech Samek},\n  booktitle = {Proceedings of the 1st Workshop on Representation Learning for {NLP}},\n  pages = {1--7},\n  year = {2016},\n  month = aug,\n  publisher = {Association for Computational Linguistics},\n  address = {Berlin, Germany},\n  doi = {10.18653/v1/W16-1601},\n  url = {https://aclanthology.org/W16-1601/}\n}",
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Arras2016ACLNLP.pdf",
+      "format": "pdf",
+      "source_url": "https://aclanthology.org/W16-1601.pdf",
+      "sha256": "18a9e14b43bf2561a4562c187c99575b97fb250e35a2c4d855845c6b1a652055",
+      "identity_verified": true,
+      "version_note": "Official seven-page proceedings PDF. First page confirms all five authors, title, workshop name and August 11, 2016 publication footer."
+    },
+    "contexts": [],
+    "notes": [
+      "Uncited in supplied active thesis sources; metadata and artifact identity audited.",
+      "The author field has doubled backslashes in TeX accent commands for Grégoire and Müller. Replace with Unicode names or correctly escaped single-backslash commands; publication information itself matches ACL."
+    ]
+  },
+  {
+    "key": "Daems_2003",
+    "metadata_status": "correction_proposed",
+    "verified_metadata": {
+      "title": "Simulation-based generation of posynomial performance models for the sizing of analog integrated circuits",
+      "authors": [
+        "Walter Daems",
+        "Georges Gielen",
+        "Willy Sansen"
+      ],
+      "entry_type": "article",
+      "venue": "IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems",
+      "year": "2003",
+      "doi": "10.1109/TCAD.2003.810742",
+      "url": "https://doi.org/10.1109/TCAD.2003.810742"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://micas.esat.kuleuven.be/publications?page=25",
+        "supports": "Authors’ KU Leuven laboratory publication record lists Walter Daems, Georges Gielen, Willy Sansen; exact title; 2003; IEEE TCAD 22(5), pp. 517–534."
+      },
+      {
+        "url": "https://api.crossref.org/works/10.1109/TCAD.2003.810742",
+        "supports": "Publisher-deposited DOI record confirms May 2003 publication, title, ordered author initials, volume 22, issue 5, pp. 517–534; links IEEE article 1196196."
+      },
+      {
+        "url": "https://www.researchgate.net/publication/3224986_Simulation-based_generation_of_posynomial_performance_models_for_the_sizing_of_analog_integrated_circuits",
+        "supports": "Identifies full text as uploaded by coauthor Walter Daems on 13 December 2017; PDF first page confirms full author names, title and 2003 journal attribution."
+      }
+    ],
+    "suggested_bibtex": "@article{Daems_2003,\n  author = {Walter Daems and Georges Gielen and Willy Sansen},\n  title = {Simulation-based generation of posynomial performance models for the sizing of analog integrated circuits},\n  journal = {IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems},\n  volume = {22},\n  number = {5},\n  pages = {517--534},\n  year = {2003},\n  month = may,\n  doi = {10.1109/TCAD.2003.810742},\n  url = {https://doi.org/10.1109/TCAD.2003.810742}\n}",
+    "artifact": {
+      "path": null,
+      "format": "none",
+      "source_url": "https://www.researchgate.net/profile/Walter-Daems/publication/3224986_Simulation-based_generation_of_posynomial_performance_models_for_the_sizing_of_analog_integrated_circuits/links/5a310b77a6fdccbf7ef19c85/Simulation-based-generation-of-posynomial-performance-models-for-the-sizing-of-analog-integrated-circuits.pdf",
+      "sha256": null,
+      "identity_verified": false,
+      "version_note": "The coauthor-uploaded 17-page manuscript was accessible and read through the browser PDF parser; its first page identifies the matching 2003 IEEE TCAD paper. Direct PDF download returned HTTP 403, so no local full-paper artifact was saved. Publisher version is 18 journal pages (517–534)."
+    },
+    "contexts": [],
+    "notes": [
+      "Correct year from 2006 to 2003 and month from November to May; remove erroneous issue_date = November 2006.",
+      "Uncited in supplied active thesis sources; metadata and browser-visible paper identity audited. Local-download absence is distinguished from browser full-text access."
+    ]
+  },
+  {
+    "key": "You2017DLN",
+    "metadata_status": "correction_proposed",
+    "verified_metadata": {
+      "title": "Deep Lattice Networks and Partial Monotonic Functions",
+      "authors": [
+        "Seungil You",
+        "David Ding",
+        "Kevin Canini",
+        "Jan Pfeifer",
+        "Maya R. Gupta"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "Advances in Neural Information Processing Systems 30 (NIPS 2017)",
+      "year": "2017",
+      "doi": null,
+      "url": "https://proceedings.neurips.cc/paper/2017/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://proceedings.neurips.cc/paper/2017/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html",
+        "supports": "Exact title, ordered authors and Advances in Neural Information Processing Systems 30 (NIPS 2017)."
+      },
+      {
+        "url": "https://proceedings.neurips.cc/paper/2017/file/464d828b85b0bed98e80ade0a5c43b0f-Paper.pdf",
+        "supports": "First page supplies the Maya R. Gupta middle initial and NIPS 2017 imprint."
+      }
+    ],
+    "suggested_bibtex": "@inproceedings{You2017DLN,\n  author = {Seungil You and David Ding and Kevin Canini and Jan Pfeifer and Maya R. Gupta},\n  title = {Deep Lattice Networks and Partial Monotonic Functions},\n  booktitle = {Advances in Neural Information Processing Systems},\n  volume = {30},\n  year = {2017},\n  url = {https://proceedings.neurips.cc/paper/2017/hash/464d828b85b0bed98e80ade0a5c43b0f-Abstract.html}\n}",
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/You2017DLN.pdf",
+      "format": "pdf",
+      "source_url": "https://proceedings.neurips.cc/paper/2017/file/464d828b85b0bed98e80ade0a5c43b0f-Paper.pdf",
+      "sha256": "2118697cce302f92e73c73d0747287dafa1353e030a05a14c61e14140173bcce",
+      "identity_verified": true,
+      "version_note": "Official NIPS 2017 proceedings paper. PDF p. 1 confirms all five authors including Maya R. Gupta and conference/year."
+    },
+    "contexts": [],
+    "notes": [
+      "Uncited in the supplied active sources. Existing identity is correct. Proposed bibliographic cleanup removes the anachronistic parenthetical NeurIPS label for the 2017 proceedings, supplies volume 30 and uses the official stable URL."
+    ]
+  }
+]

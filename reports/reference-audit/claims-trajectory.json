@@ -1,0 +1,110 @@
+{
+  "agent": "citation_claims_trajectory",
+  "status": "applied",
+  "files": [
+    {
+      "path": "tex/chapters/11_trajectory.tex",
+      "original_sha256": "95e19ecfdbf75afc6378aa850820dfd4e93d659054f1b2fe2d455f9a7d9673a5",
+      "applied_sha256": "a87197c1201b0984564ac74fdbe95ca12fcb0cefc2c0824233a2142e0eacbb37"
+    },
+    {
+      "path": "tex/tables/ptnb_v2/sanity_check.tex",
+      "original_sha256": "ee87295863ed3e2c72403ff17584f433d93d693fcd10e43bb98f9502dabff666",
+      "applied_sha256": "0f6fff2a0f3b2385eb95b68f905d2e35d9425f353c1cb678937901ea88238bd2"
+    }
+  ],
+  "resolutions": [
+    {
+      "key": "Adebayo2018sanity",
+      "batch": "batch_02.json",
+      "file": "tex/chapters/11_trajectory.tex",
+      "line": 388,
+      "audit_verdict": "overstated",
+      "resolution": "Corrected the test description to sensitivity without monotonic decline; identified local implementation as an adaptation.",
+      "evidence": "Original paper Sections 2.2 and 3\u20133.1, pp. 2\u20135: compares trained and randomized explanations; no monotonic requirement.",
+      "source": "https://proceedings.neurips.cc/paper/2018/file/294a8ed24b1ad22ec2e7efea049b8737-Paper.pdf"
+    },
+    {
+      "key": "Adebayo2018sanity",
+      "batch": "batch_02.json",
+      "file": "tex/chapters/11_trajectory.tex",
+      "line": 445,
+      "audit_verdict": "overstated",
+      "resolution": "Distinguished the local double-random empirical baseline from the original trained-versus-randomized comparator; retained exact randomized/retained parameter groups; replaced related whole-model randomization and complete-decoupling language.",
+      "evidence": "Original paper Section 3, p. 4 explicitly keeps the original trained model as comparator. Local Hellinger/double-random protocol retains normalization, packed QKV, and embeddings.",
+      "source": "https://proceedings.neurips.cc/paper/2018/file/294a8ed24b1ad22ec2e7efea049b8737-Paper.pdf"
+    },
+    {
+      "key": "Adebayo2018sanity",
+      "batch": "batch_02.json",
+      "file": "tex/tables/ptnb_v2/sanity_check.tex",
+      "line": 4,
+      "audit_verdict": "overstated",
+      "resolution": "Described randomization over tested convolutional/linear layers and called it the cascade endpoint; preserved all data and clarified QKV inclusion from the experiment code, while normalization and embedding parameters remain pretrained.",
+      "evidence": "Original Figure 2 describes randomized trainable variables; the local caption explicitly retains parameter groups.",
+      "source": "https://proceedings.neurips.cc/paper/2018/file/294a8ed24b1ad22ec2e7efea049b8737-Paper.pdf"
+    },
+    {
+      "key": "Binder2022shortcomings",
+      "batch": "batch_08.json",
+      "file": "tex/chapters/11_trajectory.tex",
+      "line": 412,
+      "audit_verdict": "overstated",
+      "resolution": "Separated SSIM omission from the cited critique; stated retained structure/scales and noise confounds, explicitly including absolute-value Spearman; removed related inference that near-zero scores alone establish parameter sensitivity.",
+      "evidence": "Main paper Sections 3\u20135, especially printed p. 16145; supplement Section C, Theorem 3, p. 2 extends the noise critique to Spearman including absolute-value ranks.",
+      "source": "https://openaccess.thecvf.com/content/CVPR2023/papers/Binder_Shortcomings_of_Top-Down_Randomization-Based_Sanity_Checks_for_Evaluations_of_Deep_CVPR_2023_paper.pdf"
+    },
+    {
+      "key": "local_protocol_consistency",
+      "file": "tex/chapters/11_trajectory.tex",
+      "original_lines": [
+        392,
+        505,
+        526
+      ],
+      "status": "resolved",
+      "resolution": "Corrected the global heatmap paragraph and its table caption: the attribution cascade randomizes decomposed Q/K/V linear projections, while Hellinger and double-random baselines retain packed Q/K/V. The existing per-image protocol and caption already expressed this distinction correctly.",
+      "evidence_files": [
+        {
+          "path": "code/playing_backward/experiments/sanity_check_randomization/run.py",
+          "line": 140,
+          "supports": "Decomposes attention before discovering randomized layers."
+        },
+        {
+          "path": "code/playing_backward/bwgame/composite_replacer.py",
+          "line": 61,
+          "supports": "Creates Q/K/V as nn.Linear modules; packed attention replacement occurs at line 352."
+        },
+        {
+          "path": "code/playing_backward/bwgame/evaluation/metrics/sanity_check.py",
+          "line": 39,
+          "supports": "Randomization selects nn.Linear and nn.Conv2d modules."
+        },
+        {
+          "path": "code/playing_backward/experiments/hellinger_randomization/run.py",
+          "line": 108,
+          "supports": "Builds raw torchvision model, retaining packed Q/K/V during linear/convolutional randomization."
+        },
+        {
+          "path": "code/playing_backward/reproduce/diagnostic_figures.py",
+          "line": 51,
+          "supports": "Explicit ViT pairing: Hellinger out_proj versus attribution q_proj, with comment documenting extra Q/K/V randomization."
+        }
+      ],
+      "provenance_limit": "The table manifest records that current 565-image diagnostic raw data are not shipped. Older dc_decompose 566-image saved runs corroborate 74 attribution versus 38 Hellinger randomized ViT layers, but do not match the current numerical cells and are not used to claim verification of those cells."
+    }
+  ],
+  "unchanged_files": [
+    {
+      "path": "tex/supplement/trajectory.tex",
+      "reason": "No reported citation issue in batch_01 through batch_19 and no matching randomization terminology requiring correction."
+    }
+  ],
+  "preserved": "No experiment execution/code, numerical results, generated tables, citation keys, labels, mathematical statements, or bibliography entries were changed.",
+  "verification": [
+    "git diff --check passes for both changed TeX files.",
+    "Numeric-token, label-definition, and citation-key multisets equal the pre-edit versions in both changed TeX files.",
+    "No changes to tex/supplement/trajectory.tex: no reported citation issue in assigned audit batches.",
+    "A second independent source review confirmed Adebayo/Binder interpretations and the QKV code-path distinction."
+  ]
+}

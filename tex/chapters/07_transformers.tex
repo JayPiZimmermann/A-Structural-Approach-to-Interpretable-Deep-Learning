@@ -6,9 +6,9 @@ Two features separate a Transformer \parencite{Vaswani2017} from the pointwise-a
 
 \section{Related Work: Interpretability in Transformers}\label{sec:related_work_transformers}
 
-Attribution research on Transformers began at the attention weights themselves: since the rows of an attention matrix are distributions over tokens, early analyses of head roles and pruning read them directly as explanations \parencite{Voita2019}. \textcite{Abnar2020attention} objected that single-layer weights ignore propagation through depth, and proposed \emph{attention rollout} --- multiplying the residual-corrected attention matrices across layers --- and \emph{attention flow}, a max-flow computation on the layered attention graph. Both commit to a routing view: attention matrices are transition kernels of a walk on tokens, and an explanation states where that walk deposits its mass. What they omit is everything outside the attention weights --- value magnitudes, the \acp{mlp}, the sign structure of the projections --- so rollout can assign high relevance to tokens whose values contribute nothing.
+Early analyses of Transformer head roles combined attention patterns with LRP-based importance estimates and pruning experiments \parencite{Voita2019}. \textcite{Abnar2020attention} objected that single-layer weights ignore propagation through depth, and proposed \emph{attention rollout} --- multiplying the residual-corrected attention matrices across layers --- and \emph{attention flow}, a max-flow computation on the layered attention graph. Both use a routing graph: rollout treats attention matrices as transition kernels of a walk on tokens, whereas attention flow treats their entries as edge capacities. What they omit is everything outside the attention weights --- value magnitudes, the \acp{mlp}, the sign structure of the projections --- so rollout can assign high relevance to tokens whose values contribute nothing.
 
-A second line adapts \ac{lrp} \parencite{Bach2015} to the Transformer. \textcite{Chefer2021ICCV} combined \ac{lrp}-style relevance with attention gradients to propagate class-specific relevance through self-attention, later generalized to co-attention and encoder--decoder architectures \parencite{Chefer2021GenericAttention}. \textcite{Ali2022AttnLRP} made the structural point that shapes this chapter: naive gradient propagation through softmax and layer normalization \emph{violates conservation}, since both route relevance through data-dependent normalizers, whereas propagating through a locally linearized map with those outputs and statistics held constant (``detached'') restores it. AttnLRP \parencite{Achtibat2024AttnLRP} systematized this into dedicated rules for the bilinear products and non-linearities, scaling to \acp{llm}, with concept-level \parencite{Achtibat2023CRP} and sign-aware \parencite{vukadin2024abslrp} extensions. On the vision side, DAVE \parencite{Wrobel2024} traced grid artifacts to the $16{\times}16$ patch tokenization of \acp{vit} \parencite{Dosovitskiy2021vit} --- related to the artifact tokens of \textcite{darcet2024vision} --- and countered them with \emph{conditioned} (detached) operators and attribution averaging over random spatial transformations. At \ac{llm} scale, gradient approximations of activation patching \parencite{Syed2024AttributionPatching,Kramar2024AtPStar} localize circuits against interventions \parencite{Hanna2024Faithfulness}, and attribution increasingly acts as a control signal for head identification and guided decoding \parencite{Kahardipraja2025Atlas,Komorowski2026AGD}.
+A second line adapts \ac{lrp} \parencite{Bach2015} to the Transformer. \textcite{Chefer2021GenericAttention} combined \ac{lrp}-style relevance with attention gradients to propagate class-specific relevance through self-attention, later generalized to co-attention and encoder--decoder architectures \parencite{Chefer2021ICCV}. \textcite{Ali2022AttnLRP} showed that naive gradient propagation through attention and layer normalization can \emph{violate conservation}; holding the attention matrix and LayerNorm denominator constant (``detached''), while retaining linear centering, gives conservative local rules. AttnLRP \parencite{Achtibat2024AttnLRP} introduced dedicated rules for the bilinear products and non-linearities, scaling to \acp{llm}. Related LRP variants provide concept-level \parencite{Achtibat2023CRP} and magnitude-aware \parencite{vukadin2024abslrp} explanations. On the vision side, DAVE \parencite{Wrobel2024} targeted patch-grid attribution artifacts in \acp{vit} \parencite{Dosovitskiy2021vit} with \emph{conditioned} operators and spatial averaging. Separately, \textcite{darcet2024vision} mitigated high-norm artifact tokens with registers. At \ac{llm} scale, gradient approximations of activation patching \parencite{Syed2024AttributionPatching,Kramar2024AtPStar} localize circuits against interventions \parencite{Hanna2024Faithfulness}, and attribution increasingly acts as a control signal for head identification and guided decoding \parencite{Kahardipraja2025Atlas,Komorowski2026AGD}.
 
 These approaches motivate two separate questions. The structural question asks whether the full forward map, including the attention-generating operations, admits explicit convex streams; Sections~\ref{sec:multiplicative_splits} and~\ref{sec:transformer_dc} develop the relevant product and normalization rules. The attribution question asks how relevance travels through the Value routes when the realized attention matrix is fixed. Section~\ref{sec:attention_routing_game} formulates that conditioned question as a KL-regularized routing game and recovers the conservative attention-block rule of \textcite{Ali2022AttnLRP}. This gives a precise interpretation of a routing calculation of the kind motivated by \textcite{Abnar2020attention}, with the conditioning assumptions stated explicitly.
 
@@ -254,9 +254,9 @@ The construction retains the full input dependence of Queries, Keys, Values, sof
 
 \section{Attention via a detached-logit oracle}\label{ptnb:sec:attention}
 
-Two \ac{vit} subtleties break conservative transport: \ch{LayerNorm's input-dependent statistics}
-and the data-dependent QK-softmax. LayerNorm statistics are detached so the layer becomes a pointwise linear
-map~\parencite{Ali2022AttnLRP,Wrobel2024}; the QK-softmax block is replaced by an \emph{oracle game} emitting
+For conditioned transport, our LayerNorm rule fixes both mean and scale, giving a pointwise affine
+map. CP-LRP and DAVE instead retain linear centering while fixing the scale~\parencite{Ali2022AttnLRP,Wrobel2024}.
+The QK-softmax block is replaced by an \emph{oracle game} emitting
 a detached reference policy, the softmax row $A_{t\cdot}$, with occupation-measure trajectories
 flowing only through the Value route. \ch{Like conservative propagation~\parencite{Ali2022AttnLRP}, this explains the network conditioned on its
 realized attention pattern.}
@@ -432,19 +432,18 @@ player; its states carry no occupation mass, so no relevance flows through $Q$ o
 \subsection{Implementation details}\label{ptnb:app:vit-implementation}\label{sec:vit_implementation}
 
 The forward and backward passes \ch{of the \ac{rg} on ViT-B/16} share four operator-level conventions
-that together preserve \ac{lrp} conservation through the non-linearities of the ViT and align the
-explanatory walk with the state-space construction of \S\ref{ptnb:app:attention-state-space}. We refer to this collectively as
-the DAVE-style \emph{conditioned forward pass}~\parencite{Wrobel2024}, augmented with the QK gradient
-detachment that the QK oracle of \S\ref{ptnb:app:attention-oracle} requires.
+that align the explanatory walk with the state-space construction of \S\ref{ptnb:app:attention-state-space}.
+They define a \emph{conditioned forward pass} inspired by DAVE~\parencite{Wrobel2024}, with the LayerNorm
+mean additionally frozen. Conservation concerns the game's routing rule, including bias and stabilizer absorption.
 
 \paragraph{LayerNorm detachment.}\label{ptnb:app:dave-conditioned}
 Standard backpropagation through $\text{LN}(x) = w_{\mathrm{LN}} \odot (x - m(x))/s(x) +
     b_{\mathrm{LN}}$ routes gradients through the data-dependent statistics $m(x), s(x)$, which \ch{couple the
 feature coordinates of each token (LayerNorm acts per token; it does not mix tokens)} and
-violate \ac{lrp} conservation~\parencite{Ali2022AttnLRP}. Following the detached-operator
-construction of~\textcite{Wrobel2024}, we compute $m, s$ from a detached copy $c = x.\text{detach}()$,
-so the backward pass sees only the pointwise map $x \mapsto w_{\mathrm{LN}} \odot (x - m(c))/s(c) +
-    b_{\mathrm{LN}}$ and conservation is preserved.
+can violate \ac{lrp} conservation~\parencite{Ali2022AttnLRP}. Our conditioned rule computes
+$m, s$ from a detached copy $c = x.\text{detach}()$, giving the pointwise affine map
+$x \mapsto w_{\mathrm{LN}} \odot (x - m(c))/s(c) + b_{\mathrm{LN}}$.
+This freezes the mean as well as the scale, unlike CP-LRP and DAVE.
 
 \paragraph{GELU gate detachment.}
 GELU gates are conditioned analogously: the gate is implemented as $x \cdot \Phi(c)$ with $c =
@@ -472,16 +471,15 @@ variant of \S\ref{ptnb:app:attention-target-rule} was not used for any reported 
 tests of Section~\ref{ptnb:app:code-tests} check the implementation against an independent reference
 of~\eqref{ptnb:eq:attn-target-input}.}
 
-\ch{Together the four conventions realize the detached-operator semantics of~\textcite{Wrobel2024} for the
-\ac{rg} backward pass, so that its explanatory mass flows only through the linear effective
-transformation. They implement the explanation question of \S\ref{ptnb:app:attention-target-rule}
+\ch{Together these conventions implement our conditioned \ac{rg} backward pass and the
+explanation question of \S\ref{ptnb:app:attention-target-rule}
 (Value-only attribution conditioned on the realized attention matrix, as in
 CP-LRP~\parencite{Ali2022AttnLRP}) and are not the rules of AttnLRP~\parencite{Achtibat2024AttnLRP}, which
 propagates relevance through the softmax and the QK product as well.}
 
 \subsection{Equivariant Spatial Averaging}\label{ptnb:app:equivariant}
 
-The $16{\times}16$ patch tokenization breaks translation equivariance. Following DAVE's
+The $16{\times}16$ patch tokenization breaks translation equivariance. Adapting DAVE's
 transform-averaging strategy~\parencite{Wrobel2024}, \ac{rg}+Eq computes explanations on transformed
 inputs, maps each explanation back to the original image coordinates, and averages the aligned maps
 (a Monte-Carlo Reynolds average),

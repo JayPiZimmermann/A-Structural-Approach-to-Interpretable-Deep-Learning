@@ -5,8 +5,9 @@ The checker follows recursive TeX input/include files (including the generated
 longtable helpers), strips TeX comments before collecting commands, applies only
 the explicit aliases recorded in reports/*-citation-aliases.json, and checks
 both active thesis citations and bibliography records. It is offline and writes
-a deterministic JSON report. Explicit editorial omissions are reported separately
-and waive only the active-citation requirement, never bibliography or alias checks.
+a deterministic JSON report. Explicit editorial omissions waive only active
+citation requirements. Reviewed corrections pin exact old source titles and new
+bibliography identity fields; withdrawals must be absent from active citations.
 
 Run from any directory with:
     python3 scripts/check_paper_references.py --check
@@ -29,6 +30,8 @@ REPORT = ROOT / "reports" / "paper-reference-coverage.json"
 PTNB_ALIAS_FILE = ROOT / "reports" / "paper-v2-citation-aliases.json"
 HM_ALIAS_FILE = ROOT / "reports" / "hidden-monotonicity-citation-aliases.json"
 EDITORIAL_OMISSIONS_FILE = ROOT / "reports" / "paper-reference-editorial-omissions.json"
+CORRECTIONS_FILE = ROOT / "reports" / "paper-reference-reviewed-corrections.json"
+IDENTITY_FIELDS = ("title", "doi", "url", "eprint")
 
 PAPERS = {
     "hidden_monotonicity": {
@@ -300,6 +303,9 @@ def normalize_title(value: str | None) -> str | None:
     if value is None:
         return None
     value = re.sub(r",?\s*(?:19|20)\d{2}[.]?\s*$", "", value)
+    # TeX accents and Unicode accents must have the same word boundaries.
+    value = re.sub(r'''\\["'`^~=.]\s*(?:\{([^{}]*)\}|([A-Za-z]))''',
+                   lambda m: m.group(1) or m.group(2), value)
     # BibTeX braces protect capitalization and often split a word into pieces;
     # they are not title word boundaries. Keep command arguments (e.g. accents)
     # while discarding formatting commands.
@@ -318,8 +324,67 @@ def title_matches(source_title: str | None, thesis_title: str | None) -> bool | 
     return a == b
 
 
+def manual_reference_title(reference: str) -> str | None:
+    """Extract the title sentence from the archived HM appbibitem format.
+
+    These entries have author, title, then optional venue sentences. A single
+    capital before a period is an author initial, not the end of the authors.
+    The title-only comparison prevents an arbitrary substring from matching.
+    """
+    sentences = re.split(r"(?<!\b[A-Z])\.\s+", reference, maxsplit=2)
+    return sentences[1] if len(sentences) > 1 else None
+
+
 def load_aliases(path: Path) -> dict[str, str]:
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def load_json(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def reviewed_corrections(thesis_bib: dict[str, dict[str, str]], thesis_cites: set[str]) -> tuple[dict[str, Any], dict[tuple[str, str], str], list[dict[str, str]]]:
+    """Validate exact reviewed identities, without granting general exemptions."""
+    ledger = load_json(CORRECTIONS_FILE)
+    if ledger.get("schema_version") != 1 or not ledger.get("source_checkpoint"):
+        raise ValueError("Reviewed corrections require schema version 1 and a source checkpoint")
+    records = ledger["records"]
+    source_index: dict[tuple[str, str], str] = {}
+    errors: list[dict[str, str]] = []
+    for key, record in records.items():
+        action = record.get("action")
+        if (action not in {"bibliography_correction", "bibliography_withdrawal", "citation_withdrawal"}
+                or not record.get("reason") or not record.get("old_identity", {}).get("title")
+                or not record.get("audit_record") or not record.get("evidence_sources")):
+            raise ValueError("Incomplete reviewed correction: " + key)
+        expected = record.get("new_identity")
+        if action == "bibliography_withdrawal":
+            if expected is not None or record.get("source_references"):
+                raise ValueError("Bibliography withdrawals cannot waive inherited references: " + key)
+            if key in thesis_bib:
+                errors.append({"key": key, "error": "Withdrawn bibliography entry is present"})
+        else:
+            if not isinstance(expected, dict) or set(expected) != set(IDENTITY_FIELDS) or not expected["title"]:
+                raise ValueError("Reviewed identity requires exact title, DOI, URL and eprint values: " + key)
+            actual = thesis_bib.get(key)
+            if actual is None:
+                errors.append({"key": key, "error": "Reviewed bibliography entry is missing"})
+            else:
+                changed = [field for field in IDENTITY_FIELDS if actual.get(field) != expected[field]]
+                if changed:
+                    errors.append({"key": key, "error": "Reviewed identity changed: " + ", ".join(changed)})
+        if action.endswith("withdrawal") and key in thesis_cites:
+            errors.append({"key": key, "error": "Withdrawn reference is actively cited"})
+        replacement = record.get("replacement_citation")
+        if replacement and (replacement not in thesis_bib or replacement not in thesis_cites):
+            errors.append({"key": key, "error": "Reviewed replacement citation is missing: " + replacement})
+        for source in record.get("source_references", []):
+            pair = (source["paper"], source["source_key"])
+            if (action not in {"bibliography_correction", "citation_withdrawal"} or pair[0] not in PAPERS
+                    or pair in source_index or not source.get("old_title")):
+                raise ValueError("Invalid or duplicate reviewed source correction: " + str(pair))
+            source_index[pair] = key
+    return records, source_index, errors
 
 
 def source_refs_for_paper(name: str, paper: dict[str, Any], tex_files: list[Path], tex_refs: dict[str, list[dict[str, Any]]]) -> tuple[dict[str, dict[str, Any]], dict[str, str]]:
@@ -400,7 +465,7 @@ def build_report() -> tuple[dict[str, Any], bool]:
     # The thesis may have a stale BBL after a citation is restored; raw .bib is
     # authoritative for availability, while the cached BBL is reported only.
     thesis_canonical_cites = set(thesis_refs)
-    editorial_record = json.loads(EDITORIAL_OMISSIONS_FILE.read_text())
+    editorial_record = load_json(EDITORIAL_OMISSIONS_FILE)
     editorial_omissions = {}
     if not editorial_record.get("reason") or not editorial_record.get("editorial_source_commit"):
         raise ValueError("Editorial citation omissions require a reason and source commit")
@@ -410,13 +475,21 @@ def build_report() -> tuple[dict[str, Any], bool]:
             raise ValueError("Invalid or duplicate editorial citation omission: " + str(key))
         editorial_omissions[key] = omission
     seen_editorial_omissions = set()
+    corrections, correction_sources, correction_errors = reviewed_corrections(thesis_bib, thesis_canonical_cites)
+    seen_correction_sources: set[tuple[str, str]] = set()
+    invalid_corrections = {error["key"] for error in correction_errors}
+    missing_active_bib = [
+        {"key": key, "locations": sorted({item["file"] for item in thesis_refs[key]})}
+        for key in sorted(thesis_canonical_cites - thesis_keys)
+    ]
 
     paper_reports: dict[str, Any] = {}
     all_missing: list[dict[str, str]] = []
     intentional_omissions: list[dict[str, Any]] = []
     title_review: list[dict[str, Any]] = []
+    applied_corrections: list[dict[str, str]] = []
     unverified_aliases: list[dict[str, Any]] = []
-    hash_paths: set[Path] = {THESIS_BIB, THESIS_ROOT, EDITORIAL_OMISSIONS_FILE}
+    hash_paths: set[Path] = {THESIS_BIB, THESIS_ROOT, EDITORIAL_OMISSIONS_FILE, CORRECTIONS_FILE}
     hash_paths.update(thesis_files)
     all_checks_pass = not thesis_unresolved
 
@@ -442,13 +515,26 @@ def build_report() -> tuple[dict[str, Any], bool]:
             if omission:
                 seen_editorial_omissions.add((name, canonical))
                 intentional_omissions.append({**omission, "source_key": source_key})
-            # App bibliography text may include author/venue as well as title;
-            # require the canonical database title to be present in that actual
-            # entry, rather than treating a display label as title metadata.
+            # Compare the complete title sentence in manual appendix entries.
             if source_key.startswith("App") and source_title and thesis_title:
-                s_norm = normalize_title(source_title) or ""
-                t_norm = normalize_title(thesis_title) or ""
-                title_ok = bool(t_norm and t_norm in s_norm)
+                title_ok = title_matches(manual_reference_title(source_title), thesis_title)
+            correction_key = correction_sources.get((name, source_key))
+            correction_ok = False
+            if correction_key:
+                seen_correction_sources.add((name, source_key))
+                expected_source = next(source for source in corrections[correction_key]["source_references"]
+                                       if (source["paper"], source["source_key"]) == (name, source_key))
+                if canonical != correction_key or source_title != expected_source["old_title"]:
+                    correction_errors.append({"key": correction_key, "error": "Archived source identity or alias changed: " + name + "/" + source_key})
+                elif correction_key not in invalid_corrections:
+                    correction_ok = True
+                    reviewed = corrections[correction_key]
+                    applied_corrections.append({"paper": name, "source_key": source_key, "canonical_thesis_key": canonical,
+                                                "action": reviewed["action"]})
+                    if reviewed["action"] == "citation_withdrawal" and not thesis_cited:
+                        omission = {"paper": name, "canonical_thesis_key": canonical,
+                                    "reason": reviewed["reason"], "reviewed_correction_key": correction_key}
+                        intentional_omissions.append({**omission, "source_key": source_key})
             row = {
                 "source_key": source_key,
                 "canonical_thesis_key": canonical,
@@ -464,6 +550,9 @@ def build_report() -> tuple[dict[str, Any], bool]:
                 "source_title": source_title,
                 "thesis_bibliography_title": thesis_title,
                 "title_match": title_ok,
+                "title_status": ("matched" if title_ok else
+                                 "reviewed_correction" if correction_ok else "unverified"),
+                "reviewed_correction_key": correction_key,
                 "title_verification_source": item["source_title_location"],
             }
             rows.append(row)
@@ -477,7 +566,7 @@ def build_report() -> tuple[dict[str, Any], bool]:
             if failures:
                 missing = {"paper": name, "source_key": source_key, "canonical_thesis_key": canonical, "failures": failures}
                 all_missing.append(missing)
-            if title_ok is False:
+            if title_ok is not True and not correction_ok:
                 review = {
                     "paper": name,
                     "source_key": source_key,
@@ -520,9 +609,14 @@ def build_report() -> tuple[dict[str, Any], bool]:
         None,
     )
 
-    for row in all_missing:
+    if all_missing or missing_active_bib or title_review:
         all_checks_pass = False
-    if unverified_aliases:
+    correction_errors.extend(
+        {"key": correction_sources[(paper, source_key)],
+         "error": "Reviewed source reference is no longer present: " + paper + "/" + source_key}
+        for paper, source_key in sorted(set(correction_sources) - seen_correction_sources)
+    )
+    if correction_errors:
         all_checks_pass = False
     omission_errors = [
         {"paper": paper, "canonical_thesis_key": canonical,
@@ -533,7 +627,7 @@ def build_report() -> tuple[dict[str, Any], bool]:
         all_checks_pass = False
     bbl_path = ROOT / "tex/main.bbl"
     report = {
-        "schema_version": 2,
+        "schema_version": 3,
         "title": "Active paper reference coverage against thesis and technical supplement",
         "offline": True,
         "source_projects": ["Hidden Monotonicity", "Playing the Network Backward v2"],
@@ -546,6 +640,7 @@ def build_report() -> tuple[dict[str, Any], bool]:
         "thesis_unresolved_includes": thesis_unresolved,
         "thesis_cited_key_count": len(thesis_canonical_cites),
         "thesis_bibliography_entry_count": len(thesis_keys),
+        "active_citations_missing_bibliography": missing_active_bib,
         "cached_thesis_bbl": {
             "path": relpath(bbl_path),
             "present": bbl_path.is_file(),
@@ -555,6 +650,11 @@ def build_report() -> tuple[dict[str, Any], bool]:
         "papers": paper_reports,
         "bibliography_title_review": title_review,
         "unverified_aliases": unverified_aliases,
+        "reviewed_corrections_file": relpath(CORRECTIONS_FILE),
+        "reviewed_source_corrections": applied_corrections,
+        "reviewed_bibliography_withdrawals": sorted(key for key, item in corrections.items() if item["action"] == "bibliography_withdrawal"),
+        "reviewed_citation_withdrawals": sorted(key for key, item in corrections.items() if item["action"] == "citation_withdrawal"),
+        "reviewed_correction_errors": correction_errors,
         "source_hashes_sha256": {relpath(path): sha256(path) for path in sorted(hash_paths) if path.is_file()},
         "genuinely_missing_references": all_missing,
         "missing_count": len(all_missing),
@@ -576,11 +676,99 @@ def build_report() -> tuple[dict[str, Any], bool]:
     return report, all_checks_pass
 
 
+def self_test() -> None:
+    """Exercise rejection paths in memory; never mutate the thesis or report."""
+    from copy import deepcopy
+    from unittest.mock import patch
+
+    baseline, passed = build_report()
+    if not passed:
+        raise AssertionError("The unmodified repository must pass before running negative checks")
+    module = sys.modules[__name__]
+    original_bib_entries = bib_entries
+    original_load_json = load_json
+    bibliography = bib_entries(THESIS_BIB)
+    ledger = load_json(CORRECTIONS_FILE)
+    checks: list[str] = []
+
+    def reject_bib_change(label: str, changed: dict[str, dict[str, str]], error_field: str) -> None:
+        def substituted(path: Path) -> dict[str, dict[str, str]]:
+            return changed if path == THESIS_BIB else original_bib_entries(path)
+        with patch.object(module, "bib_entries", side_effect=substituted):
+            report, passed = build_report()
+        if passed or not report[error_field]:
+            raise AssertionError("Mutation escaped detection: " + label)
+        checks.append(label)
+
+    changed = deepcopy(bibliography)
+    changed["Amos2017"]["title"] = "An unexpected replacement title"
+    reject_bib_change("unexpected same-key source title", changed, "bibliography_title_review")
+    changed = deepcopy(bibliography)
+    changed["hertrich2025neuralnetworksvirtualextended"]["title"] = "Neural"
+    reject_bib_change("truncated manual appendix title", changed, "bibliography_title_review")
+
+    inherited = {row["canonical_thesis_key"] for paper in baseline["papers"].values()
+                 for row in paper["reference_checks"]}
+    active_files = [ROOT / name for name in baseline["thesis_active_tex_files"]]
+    independent_key = sorted(set(tex_include_manifest(active_files)) - inherited)[0]
+    changed = deepcopy(bibliography)
+    del changed[independent_key]
+    reject_bib_change("missing active bibliography outside inherited sources", changed, "active_citations_missing_bibliography")
+
+    changed = deepcopy(bibliography)
+    changed["gao2022luss"]["title"] = "A different dataset paper"
+    reject_bib_change("reviewed title changed again", changed, "reviewed_correction_errors")
+    changed = deepcopy(bibliography)
+    changed["gao2022luss"]["doi"] = "10.0000/unreviewed"
+    reject_bib_change("reviewed source identifier changed", changed, "reviewed_correction_errors")
+    changed = deepcopy(bibliography)
+    del changed["gao2022luss"]
+    reject_bib_change("reviewed correction has no bibliography entry", changed, "active_citations_missing_bibliography")
+
+    changed = deepcopy(bibliography)
+    changed["Misiakos2022"] = {field: value for field, value in ledger["records"]["Misiakos2022"]["old_identity"].items() if value}
+    reject_bib_change("withdrawn bibliography record restored", changed, "reviewed_correction_errors")
+
+    omissions = deepcopy(load_json(EDITORIAL_OMISSIONS_FILE))
+    omissions["omissions"][0]["canonical_thesis_key"] = "Amos2017"
+    with patch.object(module, "load_json", side_effect=lambda path: omissions if path == EDITORIAL_OMISSIONS_FILE else original_load_json(path)):
+        report, passed = build_report()
+    if passed or not report["editorial_omission_errors"]:
+        raise AssertionError("A stale editorial omission escaped detection")
+    checks.append("stale editorial omission")
+
+    changed_ledger = deepcopy(ledger)
+    changed_ledger["records"]["gao2022luss"]["source_references"][0]["old_title"] = "An unreviewed archived title"
+    with patch.object(module, "load_json", side_effect=lambda path: changed_ledger if path == CORRECTIONS_FILE else original_load_json(path)):
+        report, passed = build_report()
+    if passed or not report["reviewed_correction_errors"]:
+        raise AssertionError("An unmatched archived source title escaped detection")
+    checks.append("review no longer matches archived source title")
+
+    original_manifest = tex_include_manifest
+    def recited(paths: list[Path]) -> dict[str, list[dict[str, Any]]]:
+        manifest = original_manifest(paths)
+        if THESIS_ROOT in paths:
+            manifest["Dayan2001_TheoreticalNeuroscience"] = [{"file": relpath(THESIS_ROOT), "command": "cite"}]
+        return manifest
+    with patch.object(module, "tex_include_manifest", side_effect=recited):
+        report, passed = build_report()
+    if passed or not report["reviewed_correction_errors"]:
+        raise AssertionError("A stale reviewed citation withdrawal escaped detection")
+    checks.append("reviewed citation withdrawal is cited again")
+    print(f"Passed baseline and {len(checks)} negative checks: " + "; ".join(checks))
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--check", action="store_true", help="write the deterministic report and exit nonzero on missing references or unresolved active inputs")
     parser.add_argument("--report", type=Path, default=REPORT, help="report path (default: reports/paper-reference-coverage.json)")
+    parser.add_argument("--self-test", action="store_true", help="run in-memory negative checks without writing files")
     args = parser.parse_args()
+
+    if args.self_test:
+        self_test()
+        return 0
 
     report, passed = build_report()
     output = args.report if args.report.is_absolute() else ROOT / args.report
@@ -600,10 +788,16 @@ def main() -> int:
         z = report["hm_ziegler1995_check"]
         print(f"HM Ziegler1995: cited via {', '.join(z['source_commands'])}; thesis cited={z['thesis_cited']}, bibliography={z['thesis_bibliography_entry']}")
     if not passed:
+        for item in report["active_citations_missing_bibliography"]:
+            print(f"MISSING ACTIVE BIBLIOGRAPHY {item['key']}", file=sys.stderr)
         for item in report["genuinely_missing_references"]:
             print(f"MISSING {item['paper']} {item['source_key']} -> {item['canonical_thesis_key']}: {', '.join(item['failures'])}", file=sys.stderr)
         for item in report["unverified_aliases"]:
             print(f"UNVERIFIED ALIAS {item['paper']} {item['source_key']} -> {item['canonical_thesis_key']}: bibliography titles differ", file=sys.stderr)
+        for item in report["bibliography_title_review"]:
+            print(f"UNREVIEWED TITLE {item['paper']} {item['source_key']} -> {item['canonical_thesis_key']}", file=sys.stderr)
+        for item in report["reviewed_correction_errors"]:
+            print(f"INVALID CORRECTION {item['key']}: {item['error']}", file=sys.stderr)
         for item in report["editorial_omission_errors"]:
             print(f"INVALID OMISSION {item['paper']} {item['canonical_thesis_key']}: {item['error']}", file=sys.stderr)
         return 1 if args.check else 0

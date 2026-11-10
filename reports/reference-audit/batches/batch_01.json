@@ -1,0 +1,616 @@
+[
+  {
+    "key": "Wrobel2024",
+    "metadata_status": "correction_proposed",
+    "verified_metadata": {
+      "title": "DAVE: Distribution-Aware Attribution via ViT Gradient Decomposition",
+      "authors": [
+        "Adam Wróbel",
+        "Siddhartha Gairola",
+        "Jacek Tabor",
+        "Bernt Schiele",
+        "Bartosz Michał Zieliński",
+        "Dawid Damian Rymarczyk"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "Proceedings of the 43rd International Conference on Machine Learning, PMLR 306:135468–135511",
+      "year": "2026",
+      "doi": null,
+      "url": "https://proceedings.mlr.press/v306/wrobel26a.html"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://proceedings.mlr.press/v306/wrobel26a.html",
+        "supports": "Published ICML proceedings, title, full ordered author names, year, volume, pages and official PDF."
+      },
+      {
+        "url": "https://arxiv.org/abs/2602.06613",
+        "supports": "Matching February 2026 preprint; arXiv still says under review, superseded by official proceedings."
+      },
+      {
+        "url": "https://raw.githubusercontent.com/a-vrobell/DAVE/main/core/utils/detach_mode.py",
+        "supports": "Official software confirms fixed differentiable centering and detached inverse standard deviation; attention already detached."
+      }
+    ],
+    "suggested_bibtex": "@inproceedings{Wrobel2024,\n  title = {{DAVE}: Distribution-Aware Attribution via {ViT} Gradient Decomposition},\n  author = {Wróbel, Adam and Gairola, Siddhartha and Tabor, Jacek and Schiele, Bernt and Zieliński, Bartosz Michał and Rymarczyk, Dawid Damian},\n  booktitle = {Proceedings of the 43rd International Conference on Machine Learning},\n  series = {Proceedings of Machine Learning Research},\n  volume = {306},\n  pages = {135468--135511},\n  publisher = {PMLR},\n  year = {2026},\n  eprint = {2602.06613},\n  archivePrefix = {arXiv},\n  primaryClass = {cs.CV},\n  url = {https://proceedings.mlr.press/v306/wrobel26a.html}\n}",
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Wrobel2024.pdf",
+      "format": "pdf",
+      "source_url": "https://raw.githubusercontent.com/mlresearch/v306/main/assets/wrobel26a/wrobel26a.pdf",
+      "sha256": "c0e3a76a4ebc1a5845fae40961df3a2cd389cad2b739b4bd0713b423a561353d",
+      "identity_verified": true,
+      "version_note": "44-page published ICML 2026 paper. Title, ordered authors and proceedings footer read. Proceedings spells out two middle names omitted on the PDF. Matching arXiv v1 retained as Wrobel2024_arxiv.pdf."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 100,
+        "verdict": "supported",
+        "evidence": "Sections 3–5 present artifact suppression through effective operators and transformed-input averaging.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/04_game_theory.tex",
+        "line": 51,
+        "verdict": "overstated",
+        "evidence": "Section 3.2 and Appendix A.3 justify suppression, not universal removal, of transform-dependent artifacts.",
+        "proposed_replacement": "Replace “removes the same grid artifact that DAVE targets” with “suppresses the same kind of grid artifact that DAVE targets”."
+      },
+      {
+        "file": "tex/chapters/04_game_theory.tex",
+        "line": 92,
+        "verdict": "mismatched",
+        "evidence": "Appendix A.1.4 retains linear mean-centering; attention weights and normalization scale are conditioned.",
+        "proposed_replacement": "Conservative propagation~\\parencite{Ali2022AttnLRP} holds $A$ and the LayerNorm statistics fixed; DAVE~\\parencite{Wrobel2024} also fixes $A$, but retains linear mean-centering while fixing the normalization scale. Both use the Value path through attention."
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 11,
+        "verdict": "supported",
+        "evidence": "Sections 3.1–3.3 describe conditioned operators, patch-grid artifacts and spatial averaging; register mitigation is complementary.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 75,
+        "verdict": "supported",
+        "evidence": "Appendix A.1.2 and Algorithm 1 freeze attention and preserve the Value/output projections.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 259,
+        "verdict": "mismatched",
+        "evidence": "Appendix A.1.4 uses coupled linear centering, not the thesis pointwise map with frozen mean.",
+        "proposed_replacement": "For our conditioned transport, both LayerNorm statistics are detached, making the layer pointwise affine; this differs from DAVE, which retains linear mean-centering while fixing the normalization scale~\\parencite{Wrobel2024}."
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 272,
+        "verdict": "supported",
+        "evidence": "Section 3.2 supports optional transform averaging to suppress grid artifacts; the numerical comparison is thesis evidence.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 320,
+        "verdict": "supported",
+        "evidence": "Section 3.1 and Appendix A.1.2 support the qualified resemblance to conditioned Value-only attribution.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 437,
+        "verdict": "mismatched",
+        "evidence": "DAVE already detaches attention; its LayerNorm mean-centering differs from the thesis convention (Appendix A.1).",
+        "proposed_replacement": "We call this a conditioned forward pass inspired by DAVE~\\parencite{Wrobel2024}, with the LayerNorm mean also frozen as specified below."
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 445,
+        "verdict": "mismatched",
+        "evidence": "Appendix A.1.4, p. 15, and official make_centering_layer_norm retain centering; only inverse standard deviation is detached.",
+        "proposed_replacement": "For our conditioned attribution, we compute $m,s$ from a detached copy $c=x.\\mathrm{detach}()$, giving the pointwise affine map $x\\mapsto w_{\\mathrm{LN}}\\odot(x-m(c))/s(c)+b_{\\mathrm{LN}}$. This differs from DAVE~\\parencite{Wrobel2024}, which retains linear mean-centering and freezes only the normalization scale."
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 475,
+        "verdict": "mismatched",
+        "evidence": "The four rules adapt DAVE; they do not exactly reproduce its LayerNorm operator (Appendix A.1.4).",
+        "proposed_replacement": "Replace “realize the detached-operator semantics of~\\textcite{Wrobel2024}” with “implement conditioned attribution inspired by~\\textcite{Wrobel2024}, with the LayerNorm mean additionally frozen,”."
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 485,
+        "verdict": "supported",
+        "evidence": "Section 3.2 and Algorithm 2 support aligned averaging; thesis explicitly labels its different ranges/no-noise mode.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/05_saliency.tex",
+        "line": 500,
+        "verdict": "supported",
+        "evidence": "Sections 3.1–3.2 link patch-grid artifacts to the effective transformation and transformed-input averaging.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/05_saliency.tex",
+        "line": 502,
+        "verdict": "overstated",
+        "evidence": "Appendix A.3 distinguishes exact Haar projection from local averaging, which suppresses non-equivariant components.",
+        "proposed_replacement": "Replace “This classical Reynolds-operator construction cancels architecture-specific, transform-dependent noise while preserving” with “This Reynolds-inspired averaging can suppress architecture-specific, transform-dependent artifacts while retaining”."
+      },
+      {
+        "file": "tex/chapters/05_saliency.tex",
+        "line": 504,
+        "verdict": "mismatched",
+        "evidence": "Appendix A.1.4 preserves centering; Appendix E does not claim completeness for biased ViTs.",
+        "proposed_replacement": "The averaging pairs naturally with a conditioned forward pass inspired by DAVE~\\parencite{Wrobel2024}. Our game implementation fixes both LayerNorm statistics, the GELU gate and the softmax row; DAVE instead retains linear mean-centering while fixing the normalization scale. Conservation here concerns the game’s conditioned propagation rule, including its bias accounting."
+      },
+      {
+        "file": "tex/chapters/08_experiments.tex",
+        "line": 117,
+        "verdict": "supported",
+        "evidence": "DAVE is correctly identified as a transformer attribution baseline; the reported comparative numbers are thesis results.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/supplement/experiments.tex",
+        "line": 116,
+        "verdict": "supported",
+        "evidence": "Sections 3.1–3.4 establish the described distribution-aware ViT gradient decomposition.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "The legacy key Wrobel2024 is retained, but this DAVE paper is from 2026, now published at ICML.",
+      "Main substantive correction: DAVE Appendix A.1.4 retains mean-centering as C=I−11ᵀ/d and freezes inverse standard deviation. Freezing both mean and standard deviation, as the thesis implements, is a different conditioned operator.",
+      "DAVE already freezes attention weights, so QK gradient detachment is not an addition to DAVE.",
+      "Appendix E explicitly distinguishes effective-transformation attribution from strict completeness for biased standard ViTs. Conservation of the thesis routing rule requires its own argument and bias accounting.",
+      "DAVE averages effective operators and multiplies the result by the original input (Algorithm 2), with additional noise. The thesis may adopt a different no-noise smoothing mode, but should call it an adaptation.",
+      "Official code saved as papers/Wrobel2024_detach_mode.py. No thesis experiments were reproduced in this reference audit."
+    ]
+  },
+  {
+    "key": "Simonyan2014",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Deep Inside Convolutional Networks: Visualising Image Classification Models and Saliency Maps",
+      "authors": [
+        "Karen Simonyan",
+        "Andrea Vedaldi",
+        "Andrew Zisserman"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "Workshop at International Conference on Learning Representations (ICLR)",
+      "year": "2014",
+      "doi": null,
+      "url": "https://www.robots.ox.ac.uk/~vgg/publications/2014/Simonyan14a/"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://www.robots.ox.ac.uk/~vgg/publications/2014/Simonyan14a/",
+        "supports": "Author institution explicitly lists ICLR 2014 workshop and supplies BibTeX, title and ordered full names."
+      },
+      {
+        "url": "https://arxiv.org/abs/1312.6034",
+        "supports": "Matching original preprint and April 2014 v2."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Simonyan2014.pdf",
+      "format": "pdf",
+      "source_url": "https://arxiv.org/pdf/1312.6034",
+      "sha256": "fa812c1af4df881c4ddd94d5435f740d0695eb9e6ebc0f378adde48f3d7a7f65",
+      "identity_verified": true,
+      "version_note": "arXiv:1312.6034v2, 19 April 2014. Title and all three authors match the author-institution ICLR workshop record."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 97,
+        "verdict": "supported",
+        "evidence": "Section 3.1, p. 4, computes class-score input gradients and takes maximum absolute magnitude across color channels.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/05_saliency.tex",
+        "line": 7,
+        "verdict": "supported",
+        "evidence": "Section 3.1, p. 4, computes class-score input gradients and takes maximum absolute magnitude across color channels.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/supplement/experiments.tex",
+        "line": 110,
+        "verdict": "supported",
+        "evidence": "Section 3.1, p. 4, computes class-score input gradients and takes maximum absolute magnitude across color channels.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "The 2013 arXiv identifier is not a venue-year error: workshop publication is 2014."
+    ]
+  },
+  {
+    "key": "huchette2025deeplearningmeetspolyhedral",
+    "metadata_status": "correction_proposed",
+    "verified_metadata": {
+      "title": "When Deep Learning Meets Polyhedral Theory: A Survey",
+      "authors": [
+        "Joey Huchette",
+        "Gonzalo Muñoz",
+        "Thiago Serra",
+        "Calvin Tsay"
+      ],
+      "entry_type": "article",
+      "venue": "INFORMS Journal on Computing (Articles in Advance)",
+      "year": "2026",
+      "doi": "10.1287/ijoc.2024.0902",
+      "url": "https://pubsonline.informs.org/doi/10.1287/ijoc.2024.0902"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://pubsonline.informs.org/doi/10.1287/ijoc.2024.0902",
+        "supports": "Official author order, title, journal, DOI, online publication 12 March 2026; still Articles in Advance, no assigned volume/pages."
+      },
+      {
+        "url": "https://arxiv.org/abs/2305.00241",
+        "supports": "Matching preprint v4 revised September 2025."
+      }
+    ],
+    "suggested_bibtex": "@article{huchette2025deeplearningmeetspolyhedral,\n  title = {When Deep Learning Meets Polyhedral Theory: A Survey},\n  author = {Huchette, Joey and Muñoz, Gonzalo and Serra, Thiago and Tsay, Calvin},\n  journal = {INFORMS Journal on Computing},\n  year = {2026},\n  note = {Articles in Advance},\n  doi = {10.1287/ijoc.2024.0902},\n  eprint = {2305.00241},\n  archivePrefix = {arXiv},\n  primaryClass = {math.OC},\n  url = {https://pubsonline.informs.org/doi/10.1287/ijoc.2024.0902}\n}",
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/huchette2025deeplearningmeetspolyhedral.pdf",
+      "format": "pdf",
+      "source_url": "https://arxiv.org/pdf/2305.00241",
+      "sha256": "8d97da2e38b109554111a774f0215c4725420466ee4f78fc5ef2c52b2031c2c8",
+      "identity_verified": true,
+      "version_note": "Matching September 2025 arXiv v4, title/authors read; publisher version is 2026 Articles in Advance and its PDF redirects to access page. An author-deposited Optimization Online copy was also checked, but has unresolved reference placeholders and is retained separately."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 94,
+        "verdict": "supported",
+        "evidence": "Sections 2–3 survey the CPWL representation and polyhedral linear regions; Section 3.4 also discusses tropical methods.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/02_foundations.tex",
+        "line": 89,
+        "verdict": "supported",
+        "evidence": "Section 3.1, pp. 11–13, constructs exponential region growth; Sections 3.4–3.5 discuss depth/width bounds.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "Published journal venue/year supersedes the 2025 preprint citation. No invented volume, issue, or pages: publisher currently gives placeholder 0(0)."
+    ]
+  },
+  {
+    "key": "Efron1993bootstrap",
+    "metadata_status": "correction_proposed",
+    "verified_metadata": {
+      "title": "An Introduction to the Bootstrap",
+      "authors": [
+        "Bradley Efron",
+        "Robert J. Tibshirani"
+      ],
+      "entry_type": "book",
+      "venue": "Chapman & Hall; Monographs on Statistics and Applied Probability, volume 57",
+      "year": "1993",
+      "doi": "10.1007/978-1-4899-4541-9",
+      "url": "https://www.routledge.com/An-Introduction-to-the-Bootstrap/Efron-Tibshirani/p/book/9780429246593"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://api.pageplace.de/preview/DT0400.9781000064988_A38593564/preview-9781000064988_A38593564.pdf",
+        "supports": "Title page, ordered authors, series volume 57, 1993 first-publication listing, later 1994 copyright, and section 1.1 description of percentile confidence limits."
+      },
+      {
+        "url": "https://www.routledge.com/An-Introduction-to-the-Bootstrap/Efron-Tibshirani/p/book/9780429246593",
+        "supports": "Current publisher record confirms title, authors, book type and Chapman & Hall imprint; the listed 1994 date belongs to the reprint."
+      },
+      {
+        "url": "https://api.crossref.org/works/10.1007/978-1-4899-4541-9",
+        "supports": "Publisher-deposited original 1993 book metadata and DOI; hardcover ISBN 9780412042317."
+      },
+      {
+        "url": "https://api.crossref.org/works/10.1201/9780429246593",
+        "supports": "Distinct 1994 Chapman and Hall/CRC reprint DOI, explaining the present publisher preview date."
+      }
+    ],
+    "suggested_bibtex": "@book{Efron1993bootstrap,\n  title = {An Introduction to the Bootstrap},\n  author = {Efron, Bradley and Tibshirani, Robert J.},\n  year = {1993},\n  publisher = {Chapman \\& Hall},\n  series = {Monographs on Statistics and Applied Probability},\n  volume = {57},\n  doi = {10.1007/978-1-4899-4541-9},\n  isbn = {9780412042317}\n}",
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Efron1993bootstrap.pdf",
+      "format": "pdf",
+      "source_url": "https://api.pageplace.de/preview/DT0400.9781000064988_A38593564/preview-9781000064988_A38593564.pdf",
+      "sha256": "9e48f6074b30006608d31c87bfecc3b023546d81d4f6ac985ee3323c5d4ad7e7",
+      "identity_verified": true,
+      "version_note": "Legitimate 46-page publisher/distributor preview of the 1994 reprint, including title/copyright, contents, and introductory chapters. The series listing identifies the original 1993 publication. Full book and Chapter 13 were not accessible."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/08_experiments.tex",
+        "line": 83,
+        "verdict": "supported",
+        "evidence": "Section 1.1, printed p. 7 (available in the publisher preview), explains that the percentile method defines confidence limits from bootstrap-distribution percentiles and points to Chapter 13; the contents identify section 13.3 on p. 170. This supports the method citation, with full Chapter 13 unavailable. The 95% level and experimental choices are the thesis protocol.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/10_appendix.tex",
+        "line": 147,
+        "verdict": "supported",
+        "evidence": "Section 1.1, printed p. 7 (available in the publisher preview), explains that the percentile method defines confidence limits from bootstrap-distribution percentiles and points to Chapter 13; the contents identify section 13.3 on p. 170. This supports the method citation, with full Chapter 13 unavailable. The 95% level and experimental choices are the thesis protocol.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "Change @misc to @book, remove explicit emphasis from title, and put publisher/series into proper fields. The original 1993 year is valid; do not silently change it to the 1994 reprint year.",
+      "The original DOI is verified in publisher-deposited Crossref metadata but its current Springer landing page returns 404. The current reprint DOI is 10.1201/9780429246593.",
+      "The citations refer to the general percentile-bootstrap method. They do not claim the book validates the thesis implementation, seed, number of resamples, image sampling unit, or selected-method comparisons. Detailed resampling/test implementation was not audited here."
+    ],
+    "recovery_status": "no_complete_legitimate_copy_found",
+    "access_attempts": [
+      {
+        "url": "https://link.springer.com/content/pdf/10.1007/978-1-4899-4541-9.pdf",
+        "result": "HTTP 404, zero bytes; historical publisher full-book endpoint unavailable."
+      },
+      {
+        "url": "https://www.routledge.com/An-Introduction-to-the-Bootstrap/Efron-Tibshirani/p/book/9780412042317/",
+        "result": "Official publisher listing offers preview and institutional purchase; no open full book."
+      },
+      {
+        "url": "https://efron.ckirby.su.domains/",
+        "result": "Official author website accessible by requests; no full-book download."
+      },
+      {
+        "url": "https://efron.ckirby.su.domains/papers/",
+        "result": "Official author papers index inspected; no full-book download."
+      },
+      {
+        "url": "https://tibshirani.su.domains/research.html",
+        "result": "Official author Books, Publications, and Talks page links An Introduction to the Bootstrap to an Amazon commercial listing, not an open PDF."
+      }
+    ],
+    "recovery_note": "No complete copy on author or publisher site was found in this additional search. No pirated mirrors, account creation, or paywall bypass used. Do not treat differently titled Efron papers or books as a replacement for this citation.",
+    "recovery_date": "2026-11-10"
+  },
+  {
+    "key": "hertrich2025neuralnetworksvirtualextended",
+    "metadata_status": "correction_proposed",
+    "verified_metadata": {
+      "title": "Neural Networks and (Virtual) Extended Formulations",
+      "authors": [
+        "Christoph Hertrich",
+        "Georg Loho"
+      ],
+      "entry_type": "article",
+      "venue": "SIAM Journal on Mathematics of Data Science 8(4):1350–1369",
+      "year": "2026",
+      "doi": "10.1137/25M180130X",
+      "url": "https://epubs.siam.org/doi/10.1137/25M180130X"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://epubs.siam.org/doi/10.1137/25M180130X",
+        "supports": "Official title/authors, journal, volume 8 issue 4, pp. 1350–1369, online 9 November 2026, DOI."
+      },
+      {
+        "url": "https://arxiv.org/abs/2411.03006",
+        "supports": "Matching preprint v4, 28 May 2026."
+      }
+    ],
+    "suggested_bibtex": "@article{hertrich2025neuralnetworksvirtualextended,\n  title = {Neural Networks and (Virtual) Extended Formulations},\n  author = {Hertrich, Christoph and Loho, Georg},\n  journal = {SIAM Journal on Mathematics of Data Science},\n  volume = {8},\n  number = {4},\n  pages = {1350--1369},\n  year = {2026},\n  doi = {10.1137/25M180130X},\n  eprint = {2411.03006},\n  archivePrefix = {arXiv},\n  primaryClass = {math.CO},\n  url = {https://epubs.siam.org/doi/10.1137/25M180130X}\n}",
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/hertrich2025neuralnetworksvirtualextended.pdf",
+      "format": "pdf",
+      "source_url": "https://arxiv.org/pdf/2411.03006",
+      "sha256": "da48d5e41e90c4d002f29bd943b37989443aae1d41b177fdb0b62be3063fffb0",
+      "identity_verified": true,
+      "version_note": "Matching arXiv v4, 28 May 2026; title/authors read. Publisher full text requires access; article appeared online 9 November 2026, assigned December issue."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 67,
+        "verdict": "supported",
+        "evidence": "Proposition 4.2, pp. 12–13 of arXiv v4, decomposes maxout networks by topological sign splitting. The thesis explicitly extends this argument.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "The cited topological maxout decomposition is in Proposition 4.2. Multiplication/posynomial extensions are the thesis construction and are not results of this paper."
+    ]
+  },
+  {
+    "key": "Wang2020ShapeFairness",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Deontological Ethics By Monotonicity Shape Constraints",
+      "authors": [
+        "Serena Wang",
+        "Maya Gupta"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "Proceedings of the Twenty Third International Conference on Artificial Intelligence and Statistics; PMLR 108:2043–2054",
+      "year": "2020",
+      "doi": null,
+      "url": "https://proceedings.mlr.press/v108/wang20e.html"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://proceedings.mlr.press/v108/wang20e.html",
+        "supports": "Official proceedings title, ordered authors, conference, year, volume, pages and BibTeX; no DOI assigned on the publisher record."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Wang2020ShapeFairness.pdf",
+      "format": "pdf",
+      "source_url": "https://proceedings.mlr.press/v108/wang20e/wang20e.pdf",
+      "sha256": "ef8e69ee4d5c87d5cd2b994701ab49a670a23dfe52e959d0122b578639f14987",
+      "identity_verified": true,
+      "version_note": "Official PMLR proceedings PDF, full 12-page paper; title and ordered authors match."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 21,
+        "verdict": "supported",
+        "evidence": "Sections 3–4 (PDF pp. 2–3) formulate monotonic responses to chosen protected inputs, with examples encoding ethical policies. Section 7.1 (PDF pp. 4–5) explicitly shows monotonicity need not guarantee one-sided statistical parity. The thesis qualification is accurate.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "All existing substantive metadata agree with PMLR, including the unusual month field exported by PMLR."
+    ]
+  },
+  {
+    "key": "Arras2019GRU",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Evaluating Recurrent Neural Network Explanations",
+      "authors": [
+        "Leila Arras",
+        "Ahmed Osman",
+        "Klaus-Robert Müller",
+        "Wojciech Samek"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "Proceedings of the 2019 ACL Workshop BlackboxNLP: Analyzing and Interpreting Neural Networks for NLP",
+      "year": "2019",
+      "doi": "10.18653/v1/W19-4813",
+      "url": "https://aclanthology.org/W19-4813/"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://aclanthology.org/W19-4813/",
+        "supports": "Official ACL record confirms exact title, ordered authors, venue, year, pages 113–126, publisher ACL and DOI."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Arras2019GRU.pdf",
+      "format": "pdf",
+      "source_url": "https://aclanthology.org/W19-4813.pdf",
+      "sha256": "718e1d0934cb210be73b210aeb69e45a9eeca32e72950224d8f43c11eada835d",
+      "identity_verified": true,
+      "version_note": "Official ACL proceedings PDF, full 14-page paper; front page confirms ordered author list and title."
+    },
+    "contexts": [],
+    "notes": [
+      "Uncited in provided active sources. The key suffix GRU does not establish model identity; the paper principally studies LSTMs. No key change is needed.",
+      "Existing metadata are correct. DOI and URL can be added as enrichment, but no correction is required."
+    ]
+  },
+  {
+    "key": "Eberle2022BiLRP",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Building and Interpreting Deep Similarity Models",
+      "authors": [
+        "Oliver Eberle",
+        "Jochen Büttner",
+        "Florian Kräutli",
+        "Klaus-Robert Müller",
+        "Matteo Valleriani",
+        "Grégoire Montavon"
+      ],
+      "entry_type": "article",
+      "venue": "IEEE Transactions on Pattern Analysis and Machine Intelligence 44(3):1149–1161",
+      "year": "2022",
+      "doi": "10.1109/TPAMI.2020.3020738",
+      "url": "https://doi.org/10.1109/TPAMI.2020.3020738"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://research.google/pubs/building-and-interpreting-deep-similarity-models/",
+        "supports": "Author/institution publication record confirms ordered authors, TPAMI volume 44 issue 3, pages 1149–1161 and 2022 year."
+      },
+      {
+        "url": "https://arxiv.org/abs/2003.05431",
+        "supports": "Author-deposited preprint title, ordered authors, v1 submission 11 March 2020 and explicit link to the TPAMI DOI."
+      },
+      {
+        "url": "https://api.crossref.org/works/10.1109/TPAMI.2020.3020738",
+        "supports": "Publisher-deposited record confirms 2022 journal issue and pages."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Eberle2022BiLRP.pdf",
+      "format": "pdf",
+      "source_url": "https://arxiv.org/pdf/2003.05431",
+      "sha256": "57f786e1e49e2906d81433c2e6ebc453303a41b1cd92d5c6f4d0c8c9bb50808c",
+      "identity_verified": true,
+      "version_note": "Author-deposited 12-page arXiv:2003.05431v1 preprint dated 11 March 2020; matched title and six authors. Citation metadata intentionally describe the later 2022 TPAMI publication (13 published pages); no claim that the downloaded file is the final paginated version."
+    },
+    "contexts": [],
+    "notes": [
+      "Uncited in provided active sources. Existing journal-year metadata are correct; the 2020 DOI/early-publication date is not a reason to change the 2022 issue year."
+    ]
+  },
+  {
+    "key": "Ziegler1995",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Lectures on Polytopes",
+      "authors": [
+        "Günter M. Ziegler"
+      ],
+      "entry_type": "book",
+      "venue": "Springer, New York; Graduate Texts in Mathematics, volume 152",
+      "year": "1995",
+      "doi": "10.1007/978-1-4613-8431-1",
+      "url": "https://link.springer.com/book/10.1007/978-1-4613-8431-1"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://link.springer.com/book/10.1007/978-1-4613-8431-1",
+        "supports": "Publisher confirms title, sole author, GTM volume 152, New York publisher and 1995 copyright/first-edition designation."
+      },
+      {
+        "url": "https://www.mi.fu-berlin.de/math/groups/discgeom/ziegler/Publikationen/index.html",
+        "supports": "Author bibliography identifies Lectures on Polytopes as Springer-Verlag, New York, 1995."
+      },
+      {
+        "url": "https://link.springer.com/content/pdf/bfm:978-1-4613-8431-1/1",
+        "supports": "Official front matter confirms title/author and identifies the available electronic text as the updated seventh printing of the first edition, corrected in 2007."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Ziegler1995.pdf",
+      "format": "pdf",
+      "source_url": "https://link.springer.com/content/pdf/bfm:978-1-4613-8431-1/1",
+      "sha256": "3d7fb882e87b1171dbd90e89cf27e5b8b583d0720dfbd5a71e27edf5eca77b61",
+      "identity_verified": true,
+      "version_note": "Official 14-page front matter only, for the updated seventh printing of the first edition (2007 printing, 1995 copyright; 2012 eBook). Full book is subscription content and was not accessed."
+    },
+    "contexts": [],
+    "notes": [
+      "Uncited in provided active sources. Existing 1995 book entry is correct; the publisher lists a November 1994 print release date but labels the edition/copyright 1995, consistent with the author bibliography.",
+      "No full-text mathematical claims were assessed. DOI can be added as enrichment; no mandatory correction."
+    ],
+    "recovery_status": "subscription_full_text_unavailable",
+    "access_attempts": [
+      {
+        "url": "https://link.springer.com/content/pdf/10.1007/978-1-4613-8431-1.pdf",
+        "result": "HTTP 200 after redirect to https://link.springer.com/book/10.1007/978-1-4613-8431-1; HTML, not PDF. Book page explicitly identifies subscription content."
+      },
+      {
+        "url": "https://www.mi.fu-berlin.de/math/groups/discgeom/ziegler/Publikationen/index.html",
+        "result": "Official author bibliography identifies the 1995 book and links only to Springer; no full-book download."
+      },
+      {
+        "url": "https://www.mi.fu-berlin.de/math/groups/discgeom/ziegler/Publikationen_old/lectures_on_polytopes/index.html",
+        "result": "Official author record confirms title, author, publisher, place, and year; no full-book download."
+      }
+    ],
+    "recovery_note": "Open author papers Lectures on 0/1-Polytopes and Polytopal Geometry course notes are distinct works, not this book. Search surfaced third-party copies, but no author/publisher authorization was established; none used. No paywall bypass or account creation used.",
+    "recovery_date": "2026-11-10"
+  }
+]

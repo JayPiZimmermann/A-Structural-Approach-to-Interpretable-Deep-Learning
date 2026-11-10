@@ -12,8 +12,9 @@ The thesis brings together **Hidden Monotonicity**, a [CVPR 2026 Highlight](http
 Read [HANDOVER_TEX.md](HANDOVER_TEX.md) for the independent TeX task and
 [HANDOVER_LEAN.md](HANDOVER_LEAN.md) for the independent Astra proof task.
 They distinguish the clean verified root, frozen extensions awaiting integration,
-and unfinished drafts. The current repair and Transformer revision is local only.
-Its complete clean proof gate passed at
+and unfinished drafts. The condensed TeX and cover revision is published at
+`61d4d90`; the citation-audit follow-up is recorded separately below.
+The complete clean proof gate passed at
 `1f886dd524d0c9f3b38192a55fd7cfa5a20dfe06`: 167 modules, 490 reviewed exact
 contracts and 3,640 imported theorem axiom audits, with all 168 commands successful.
 The 216 proof-source mappings are pinned to that revision; 194 remain in the
@@ -41,6 +42,16 @@ snapshots. The [resolution audit](reports/thesis-reviews/resolution-audit.json)
 records 13 resolved findings and five partial areas: historical artifacts, AI
 identifiers, timing provenance, conflicting VGG values, and further numerical
 stability evidence.
+
+The reference audit covers all 190 original bibliography entries and 405
+reference-context pairs. Its [source records](reports/reference-audit/references.json)
+and [coverage check](reports/reference-audit/coverage.json) accompany the
+claim-by-claim corrections in `reports/reference-audit/`.
+Comments beside each retained BibTeX entry identify
+the primary source, downloaded version and local file under
+`literature/references/`, with a checksum. Partial documents and inaccessible
+full texts are explicitly distinguished from checked full papers. Downloaded
+third-party texts stay local; source URLs and audit records are versioned.
 
 ## Contents
 

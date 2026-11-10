@@ -65,19 +65,19 @@ vector by $\bar{a}$. All metrics below use $\bar{a}$; faithfulness metrics use r
 softmax) to avoid saturation effects, and perturbations use the Quantus per-sample mean replacement
 baseline.
 
-\paragraph{Attribution localization (AL).} The inside-mass ratio of~\textcite{Kohlbrenner2020}, who compute it with ground-truth bounding boxes;
-we use the ImageNet-S pixel masks:
+\paragraph{Attribution localization (AL).} We adapt the inside-total relevance ratio of~\textcite{Kohlbrenner2020}, who sum positive relevance within ground-truth bounding boxes;
+we use absolute attribution mass, pixel masks and a stabilized denominator:
 \begin{align}
     \text{AL}(a, m) = \frac{\sum_{i=1}^d \bar{a}_i m_i}{\sum_{i=1}^d \bar{a}_i + 10^{-9}}.
 \end{align}
 
-\paragraph{Pointing game (PG).} Following the Excitation Backprop protocol~\parencite{Zhang2018pointinggame}, the pointing-game config
+\paragraph{Pointing game (PG).} We use the pointing-game localization criterion of~\textcite{Zhang2018pointinggame}; our configuration
 uses \texttt{abs=true} and no normalization. Let $M(a) \coloneqq \{i \in \{1, \dots, d\} :
     \bar{a}_i = \max_j \bar{a}_j\}$ be the entire set of maximizers. Then
 \begin{align}
     \text{PG}(a, m) = \1\bigl\{M(a) \cap \{i : m_i = 1\} \neq \varnothing\bigr\}.
 \end{align}
-Ties are scored as a hit whenever at least one maximizer lies inside the object mask. PG is binary
+Our tie convention scores a hit whenever at least one maximizer lies inside the object mask. PG is binary
 per image--class record, so its ImageNet-S test mean is a multiple of $1/565$.
 
 \paragraph{Top-$k$ intersection (TK).} Following~\textcite{Theiner2021}, with $k = 1000$ and the permutation $\pi$ that sorts
@@ -113,7 +113,7 @@ in decreasing order of their summed attribution, and the target logit is recorde
 removal. Sel is the trapezoidal area under this curve, with the fraction of removed patches on the
 abscissa. Lower is better.
 
-\paragraph{Max and average sensitivity (MaxS, AvgS).} Following \textcite{Yeh2019}, the evaluator regenerates attributions on the same $N_s = 50$
+\paragraph{Max and average sensitivity (MaxS, AvgS).} Using the max-sensitivity of~\textcite{Yeh2019} and its mean analogue, our evaluator regenerates attributions on the same $N_s = 50$
 inputs for both metrics, $x + \xi_k$ with uniform noise $\xi_k \sim \mathcal{U}[-r, r]^{C \times H
     \times W}$, $r = 0.2$, and reports the maximum (MaxS) or mean (AvgS) over $k$ of
 $\|\psi(a(x+\xi_k)) - \psi(a(x))\|_F / \|\psi(a(x))\|_F$. Lower is better, as it indicates

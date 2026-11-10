@@ -1,0 +1,636 @@
+[
+  {
+    "key": "Ali2022AttnLRP",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "XAI for Transformers: Better Explanations through Conservative Propagation",
+      "authors": [
+        "Ameen Ali",
+        "Thomas Schnake",
+        "Oliver Eberle",
+        "Grégoire Montavon",
+        "Klaus-Robert Müller",
+        "Lior Wolf"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "Proceedings of the 39th International Conference on Machine Learning, PMLR 162",
+      "year": "2022",
+      "doi": null,
+      "url": "https://proceedings.mlr.press/v162/ali22a.html"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://proceedings.mlr.press/v162/ali22a.html",
+        "supports": "Title, ordered authors, venue/publication status and year."
+      },
+      {
+        "url": "https://proceedings.mlr.press/v162/ali22a/ali22a.pdf",
+        "supports": "Full paper §§3–4: conservation analysis, AH-rule, LN-rule and implementation box."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Ali2022AttnLRP.pdf",
+      "format": "pdf",
+      "source_url": "https://proceedings.mlr.press/v162/ali22a/ali22a.pdf",
+      "sha256": "c24652885d957c370cb95ad1322090240fa269a9b1215e8a1dd561a1e85e69f5",
+      "identity_verified": true,
+      "version_note": "Official published full text; title and ordered authors read and matched."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 100,
+        "verdict": "supported",
+        "evidence": "§§3–4 introduce conservative transformer LRP.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/04_game_theory.tex",
+        "line": 50,
+        "verdict": "supported",
+        "evidence": "§4 supplies conservative attention-head and LayerNorm propagation.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/04_game_theory.tex",
+        "line": 90,
+        "verdict": "mismatched",
+        "evidence": "§4, pp.4–5 freezes attention and the LayerNorm denominator; centering remains differentiable.",
+        "proposed_replacement": "Transformer-specific rules therefore \\emph{condition} on parts of the forward pass: conservative propagation~\\parencite{Ali2022AttnLRP} holds $A$ and the LayerNorm denominator fixed while retaining the linear centering operation; DAVE~\\parencite{Wrobel2024} also fixes the mean. Both route attention relevance through the Value path only; AttnLRP~\\parencite{Achtibat2024AttnLRP} also propagates through the softmax and the QK product."
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 11,
+        "verdict": "mismatched",
+        "evidence": "§3 proves nonconservation; §4 detaches attention and variance scaling, not the mean.",
+        "proposed_replacement": "\\textcite{Ali2022AttnLRP} made the structural point that shapes this chapter: naive gradient propagation through attention and layer normalization \\emph{violates conservation}, whereas holding the attention matrix and LayerNorm denominator constant (``detached), while retaining linear centering, restores it."
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 13,
+        "verdict": "supported",
+        "evidence": "§4 AH-rule treats realized attention as fixed coefficients.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 75,
+        "verdict": "supported",
+        "evidence": "§4 AH-rule freezes attention, yielding linear Value routing.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 259,
+        "verdict": "mismatched",
+        "evidence": "§4 leaves LayerNorm centering active, so its map is linear but not pointwise.",
+        "proposed_replacement": "LayerNorm's mean and denominator are detached following DAVE~\\parencite{Wrobel2024}, so the layer becomes a pointwise affine map; Ali et al.~\\parencite{Ali2022AttnLRP} instead detach only the denominator and retain linear centering."
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 319,
+        "verdict": "supported",
+        "evidence": "§4 AH-rule freezes attention and disconnects Query/Key propagation.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 444,
+        "verdict": "supported",
+        "evidence": "§3.2 Proposition 3.2 establishes LayerNorm nonconservation; the subsequent DAVE implementation is a separate attribution.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/07_transformers.tex",
+        "line": 479,
+        "verdict": "supported",
+        "evidence": "§4 AH-rule supports the stated Value-only conditioned attention comparison.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/supplement/experiments.tex",
+        "line": 511,
+        "verdict": "supported",
+        "evidence": "§4 AH-rule assigns no relevance to attention-generating Query/Key paths.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "Citation key says AttnLRP, but this is Ali et al.’s conservative propagation paper, not Achtibat et al.’s distinct AttnLRP. Identity and metadata are correct.",
+      "Attention detachment is supported. LayerNorm treatment differs from freezing both mean and variance: only its denominator is detached, retaining linear centering."
+    ]
+  },
+  {
+    "key": "Deng2009",
+    "metadata_status": "correction_proposed",
+    "verified_metadata": {
+      "title": "ImageNet: A Large-Scale Hierarchical Image Database",
+      "authors": [
+        "Jia Deng",
+        "Wei Dong",
+        "Richard Socher",
+        "Li-Jia Li",
+        "Kai Li",
+        "Li Fei-Fei"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "2009 IEEE Conference on Computer Vision and Pattern Recognition",
+      "year": "2009",
+      "doi": "10.1109/CVPR.2009.5206848",
+      "url": "https://ieeexplore.ieee.org/abstract/document/5206848/"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://ieeexplore.ieee.org/abstract/document/5206848/",
+        "supports": "Title, ordered authors, venue/publication status and year."
+      },
+      {
+        "url": "https://cs.stanford.edu/groups/vision/pdf/ImageNet_CVPR2009.pdf",
+        "supports": "Author PDF title page gives all six authors, including Li-Jia Li."
+      },
+      {
+        "url": "https://cs.stanford.edu/groups/vision/publications.html",
+        "supports": "Author laboratory bibliography confirms CVPR 2009 and links matching PDF."
+      },
+      {
+        "url": "https://www.image-net.org/download-images.php",
+        "supports": "Official access-page search-index text states non-commercial research/educational use; direct page fetch timed out."
+      }
+    ],
+    "suggested_bibtex": "@inproceedings{Deng2009,\n  title = {{ImageNet}: A Large-Scale Hierarchical Image Database},\n  author = {Deng, Jia and Dong, Wei and Socher, Richard and Li, Li-Jia and Li, Kai and Fei-Fei, Li},\n  booktitle = {2009 IEEE Conference on Computer Vision and Pattern Recognition},\n  pages = {248--255},\n  publisher = {IEEE},\n  year = {2009},\n  doi = {10.1109/CVPR.2009.5206848},\n  url = {https://doi.org/10.1109/CVPR.2009.5206848}\n}",
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Deng2009.pdf",
+      "format": "pdf",
+      "source_url": "https://cs.stanford.edu/groups/vision/pdf/ImageNet_CVPR2009.pdf",
+      "sha256": "9875ae02d26ad1c77554bcd6921610189d86c2609d542de0fa43e34b0990f3b3",
+      "identity_verified": true,
+      "version_note": "Author-hosted CVPR 2009 manuscript, locally numbered 1–8; published proceedings pagination is 248–255. Exact title and all authors match."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/08_experiments.tex",
+        "line": 60,
+        "verdict": "supported",
+        "evidence": "§1 introduces ImageNet as a training/benchmark image database. Appropriate background alongside the separate ILSVRC and model/checkpoint sources.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/supplement/experiments.tex",
+        "line": 94,
+        "verdict": "supported",
+        "evidence": "§1 identifies ImageNet; the later ILSVRC source, rather than this 2009 paper, supplies the 1K benchmark history.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/supplement/experiments.tex",
+        "line": 99,
+        "verdict": "mismatched",
+        "evidence": "The 2009 paper does not establish these access conditions. The official download terms support non-commercial research/educational use.",
+        "proposed_replacement": "ImageNet images are used under the ImageNet terms of access (non-commercial research and educational use; \\url{https://www.image-net.org/download-images.php})."
+      }
+    ],
+    "notes": [
+      "Fix malformed fourth-author field Li, \\{Li Jia\\} to Li, Li-Jia. Last author is retained in the order/name form printed on this paper (Li Fei-Fei).",
+      "Deng2009 introduces the original ImageNet database; the co-cited Russakovsky2015ilsvrc supplies the later ImageNet-1K benchmark provenance. The paper itself cannot document contemporary torchvision weights or dataset access terms."
+    ]
+  },
+  {
+    "key": "Smilkov2017",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "SmoothGrad: removing noise by adding noise",
+      "authors": [
+        "Daniel Smilkov",
+        "Nikhil Thorat",
+        "Been Kim",
+        "Fernanda Viégas",
+        "Martin Wattenberg"
+      ],
+      "entry_type": "misc",
+      "venue": "arXiv:1706.03825; presented at ICML 2017 Workshop on Visualization for Deep Learning",
+      "year": "2017",
+      "doi": "10.48550/arXiv.1706.03825",
+      "url": "https://arxiv.org/abs/1706.03825"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://arxiv.org/abs/1706.03825",
+        "supports": "Title, ordered authors, venue/publication status and year."
+      },
+      {
+        "url": "https://media.icml.cc/Conferences/ICML2017/Workshop-Program-ICML-2017.pdf",
+        "supports": "Official workshop program lists SmoothGrad in Workshop on Visualization for Deep Learning; this is not a main-track ICML proceedings paper."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Smilkov2017.pdf",
+      "format": "pdf",
+      "source_url": "https://arxiv.org/pdf/1706.03825",
+      "sha256": "5a018a58df31c4eb1091cbb671c02762d5af5fe57c20d0ea8cbdccc8df45e906",
+      "identity_verified": true,
+      "version_note": "arXiv v1, 12 June 2017. Correct full paper; workshop presentation also confirmed by official ICML workshop program."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 97,
+        "verdict": "supported",
+        "evidence": "§2, p.3 defines SmoothGrad by averaging sensitivity maps evaluated on Gaussian-noise perturbations of the input.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/05_saliency.tex",
+        "line": 7,
+        "verdict": "supported",
+        "evidence": "§2, p.3 defines SmoothGrad by averaging sensitivity maps evaluated on Gaussian-noise perturbations of the input.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/supplement/experiments.tex",
+        "line": 112,
+        "verdict": "supported",
+        "evidence": "§2, p.3 defines SmoothGrad by averaging sensitivity maps evaluated on Gaussian-noise perturbations of the input.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "Existing arXiv misc citation is accurate. An optional note may record the workshop presentation; no evidence of a separately paginated main-track publication."
+    ]
+  },
+  {
+    "key": "Kolek2023_ShearletX",
+    "metadata_status": "correction_proposed",
+    "verified_metadata": {
+      "title": "Explaining Image Classifiers With Multiscale Directional Image Representation",
+      "authors": [
+        "Stefan Kolek",
+        "Robert Windesheim",
+        "Hector Andrade-Loarca",
+        "Gitta Kutyniok",
+        "Ron Levie"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)",
+      "year": "2023",
+      "doi": "10.1109/CVPR52729.2023.01784",
+      "url": "https://openaccess.thecvf.com/content/CVPR2023/html/Kolek_Explaining_Image_Classifiers_With_Multiscale_Directional_Image_Representation_CVPR_2023_paper.html"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://openaccess.thecvf.com/content/CVPR2023/html/Kolek_Explaining_Image_Classifiers_With_Multiscale_Directional_Image_Representation_CVPR_2023_paper.html",
+        "supports": "Title, ordered authors, venue/publication status and year."
+      },
+      {
+        "url": "https://cris.iucc.ac.il/en/publications/explaining-image-classifiers-with-multiscale-directional-image-re/",
+        "supports": "Author institution’s research record gives DOI, authors, 2023 and pp.18600–18609."
+      }
+    ],
+    "suggested_bibtex": "@inproceedings{Kolek2023_ShearletX,\n  author = {Kolek, Stefan and Windesheim, Robert and Andrade-Loarca, Hector and Kutyniok, Gitta and Levie, Ron},\n  title = {Explaining Image Classifiers With Multiscale Directional Image Representation},\n  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},\n  pages = {18600--18609},\n  year = {2023},\n  doi = {10.1109/CVPR52729.2023.01784},\n  url = {https://openaccess.thecvf.com/content/CVPR2023/html/Kolek_Explaining_Image_Classifiers_With_Multiscale_Directional_Image_Representation_CVPR_2023_paper.html}\n}",
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Kolek2023_ShearletX.pdf",
+      "format": "pdf",
+      "source_url": "https://openaccess.thecvf.com/content/CVPR2023/papers/Kolek_Explaining_Image_Classifiers_With_Multiscale_Directional_Image_Representation_CVPR_2023_paper.pdf",
+      "sha256": "15d068bedfc72287d32a13322dae311f7becb8930a648a933a4bdd9c3973656b",
+      "identity_verified": true,
+      "version_note": "Official CVF open-access accepted version, matching published CVPR 2023 paper, pp.18600–18609."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 97,
+        "verdict": "supported",
+        "evidence": "§4, pp.18603–18604 optimizes sparse masks over shearlet coefficients to preserve classifier output, supporting the perturbation/mask-explanation classification.",
+        "proposed_replacement": null
+      },
+      {
+        "file": "tex/chapters/05_saliency.tex",
+        "line": 7,
+        "verdict": "supported",
+        "evidence": "§4, pp.18603–18604 optimizes sparse masks over shearlet coefficients to preserve classifier output, supporting the perturbation/mask-explanation classification.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "Poster is a presentation designation, not the proceedings title. Replace virtual poster URL/booktitle with archival proceedings metadata."
+    ]
+  },
+  {
+    "key": "Zech2018Pneumonia",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Variable generalization performance of a deep learning model to detect pneumonia in chest radiographs: A cross-sectional study",
+      "authors": [
+        "John R. Zech",
+        "Marcus A. Badgeley",
+        "Manway Liu",
+        "Anthony B. Costa",
+        "Joseph J. Titano",
+        "Eric Karl Oermann"
+      ],
+      "entry_type": "article",
+      "venue": "PLOS Medicine 15(11), e1002683",
+      "year": "2018",
+      "doi": "10.1371/journal.pmed.1002683",
+      "url": "https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002683"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://journals.plos.org/plosmedicine/article?id=10.1371/journal.pmed.1002683",
+        "supports": "Title, ordered authors, venue/publication status and year."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Zech2018Pneumonia.pdf",
+      "format": "pdf",
+      "source_url": "https://journals.plos.org/plosmedicine/article/file?id=10.1371/journal.pmed.1002683&type=printable",
+      "sha256": "e354dbaf8dc996042d9a577d35cb1a1fc938fb7e3424131da4ac3af4403fd5ee",
+      "identity_verified": true,
+      "version_note": "Official published full text; title and ordered authors read and matched."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 7,
+        "verdict": "supported",
+        "evidence": "Results and Fig.2, pp.9–12, show near-perfect hospital identification and acquisition-related image cues; Discussion links site prevalence differences to confounding and poor external generalization.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": []
+  },
+  {
+    "key": "Dombrowski2019ManipulatedExplanations",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Explanations can be manipulated and geometry is to blame",
+      "authors": [
+        "Ann-Kathrin Dombrowski",
+        "Maximilian Alber",
+        "Christopher J. Anders",
+        "Marcel Ackermann",
+        "Klaus-Robert Müller",
+        "Pan Kessel"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "Advances in Neural Information Processing Systems 32",
+      "year": "2019",
+      "doi": null,
+      "url": "https://papers.nips.cc/paper/2019/hash/bb836c01cdc9120a9c984c525e4b1a4a-Abstract.html"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://papers.nips.cc/paper/2019/hash/bb836c01cdc9120a9c984c525e4b1a4a-Abstract.html",
+        "supports": "Title, ordered authors, venue/publication status and year."
+      },
+      {
+        "url": "https://arxiv.org/abs/1906.07983",
+        "supports": "Correct author spelling, corroborating published PDF rather than landing-page typo."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Dombrowski2019ManipulatedExplanations.pdf",
+      "format": "pdf",
+      "source_url": "https://proceedings.neurips.cc/paper/2019/file/bb836c01cdc9120a9c984c525e4b1a4a-Paper.pdf",
+      "sha256": "7ef0fe6b79bc0244d9120ca19366ef68cac663a37bafe00f58199e567ea42ffe",
+      "identity_verified": true,
+      "version_note": "Official published full text; title and ordered authors read and matched."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 97,
+        "verdict": "supported",
+        "evidence": "§2, pp.3–5 demonstrates targeted explanation manipulation under small input perturbations with nearly unchanged predictions; §3 relates this fragility to network geometry.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "The proceedings landing page misspells Maximilian as Maximillian and omits Anders’s middle initial; the downloaded paper title page and arXiv original confirm the thesis’s current spelling."
+    ]
+  },
+  {
+    "key": "phuong2020functional",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Functional vs. parametric equivalence of ReLU networks",
+      "authors": [
+        "Mary Phuong",
+        "Christoph H. Lampert"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "8th International Conference on Learning Representations (ICLR)",
+      "year": "2020",
+      "doi": null,
+      "url": "https://iclr.cc/virtual_2020/poster_Bylx-TNKvH.html"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://iclr.cc/virtual_2020/poster_Bylx-TNKvH.html",
+        "supports": "Title, ordered authors, venue/publication status and year."
+      },
+      {
+        "url": "https://research-explorer.ista.ac.at/record/7481",
+        "supports": "Institutional record confirms conference publication and hosts the identified published version."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/phuong2020functional.pdf",
+      "format": "pdf",
+      "source_url": "https://research-explorer.ista.ac.at/download/7481/7482/main.pdf",
+      "sha256": "89437ca71e4c9588177a2307db1c32535efd477ed20f588cc583fabeeeab354f",
+      "identity_verified": true,
+      "version_note": "Published ICLR 2020 paper from authors’ institution repository; 23 pages. OpenReview download returned 403, so the legitimate institutional full text was used."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/01_introduction.tex",
+        "line": 94,
+        "verdict": "mismatched",
+        "evidence": "Theorem 1 and §§3–4 study identifiability up to permutations/scalings via piecewise-linear folds. They do not prove CPWL/ReLU representation equivalence or a tropical-rational characterization.",
+        "proposed_replacement": "The geometric reading rests on the identification of \\ac{relu} networks with \\ac{cpwl} maps and tropical rational functions \\parencite{Arora2018,Zhang2018,BalestrieroBaraniuk2018MadMax,Montufar2022,Misiakos2022,Hertrich2023,huchette2025deeplearningmeetspolyhedral}."
+      }
+    ],
+    "notes": [
+      "The paper is relevant to ReLU geometry broadly, but removing this one key from the representation-equivalence citation cluster is the minimal precise correction; no claim about its actual theorem needs adding."
+    ]
+  },
+  {
+    "key": "Hellinger1909",
+    "metadata_status": "correction_proposed",
+    "verified_metadata": {
+      "title": "Neue Begründung der Theorie quadratischer Formen von unendlichvielen Veränderlichen",
+      "authors": [
+        "Ernst Hellinger"
+      ],
+      "entry_type": "article",
+      "venue": "Journal für die reine und angewandte Mathematik",
+      "year": "1909",
+      "doi": "10.1515/crll.1909.136.210",
+      "url": "https://doi.org/10.1515/crll.1909.136.210"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://doi.org/10.1515/crll.1909.136.210",
+        "supports": "Publisher record: title, E. Hellinger, journal, printed year 1909, pages 210–271, DOI; the 2009 date is electronic republication."
+      },
+      {
+        "url": "https://geodesic.mathdoc.fr/item/JRAM_1909__136_149313/",
+        "supports": "Mathematical digitization record gives historical volume 136 (1909), pp. 210–271."
+      },
+      {
+        "url": "https://www.deutsche-biographie.de/gnd118990284.html",
+        "supports": "Full author name Ernst Hellinger and identification of this article (its page range has an apparent 279 typo; publisher and scan establish 271)."
+      }
+    ],
+    "suggested_bibtex": "@article{Hellinger1909,\n  author = {Hellinger, Ernst},\n  title = {Neue {Begründung} der {Theorie} quadratischer {Formen} von unendlichvielen {Veränderlichen}},\n  journal = {Journal für die reine und angewandte Mathematik},\n  volume = {136},\n  pages = {210--271},\n  year = {1909},\n  doi = {10.1515/crll.1909.136.210},\n  url = {https://doi.org/10.1515/crll.1909.136.210}\n}",
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Hellinger1909.pdf",
+      "format": "pdf",
+      "source_url": "https://pdodds.w3.uvm.edu/research/papers/others/1909/hellinger1909a.pdf",
+      "sha256": "4a8bac030d659e84ce20e14177ba97b8e5a4ef963c461b61e95adbbb74ad3f54",
+      "identity_verified": true,
+      "version_note": "Full original article scan, 62 pages, printed pp. 210–271, from University of Vermont faculty-hosted collection. Title/author and relevant integral definitions read; OCR is imperfect, so printed p. 237 was visually inspected."
+    },
+    "contexts": [
+      {
+        "file": "tex/chapters/11_trajectory.tex",
+        "line": 57,
+        "verdict": "supported",
+        "evidence": "Appropriate historical attribution: §4, pp. 234–238, develops the generalized integrals associated with Hellinger. The displayed normalized probability-distance formula is modern notation, not a formula stated in this 1909 article; algebraically it equals the square root of one half the sum of squared square-root probability differences. The layered-Markov computation is attributed to the thesis appendix, not to Hellinger.",
+        "proposed_replacement": null
+      }
+    ],
+    "notes": [
+      "Replace misc plus journal-in-note with a structured article record; current author/title/year/page information is substantively correct.",
+      "The publisher database encodes the volume as year 1909 and issue 136; historical mathematical bibliography convention uses volume 136, as above.",
+      "The citation is historical, not a claim that the original paper introduced the thesis’s discrete normalization or its Markov-chain algorithm. A modern probability source could additionally document that normalization, but no prose correction is necessary."
+    ]
+  },
+  {
+    "key": "Haase2023",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Lower Bounds on the Depth of Integral ReLU Neural Networks via Lattice Polytopes",
+      "authors": [
+        "Christian Alexander Haase",
+        "Christoph Hertrich",
+        "Georg Loho"
+      ],
+      "entry_type": "inproceedings",
+      "venue": "The Eleventh International Conference on Learning Representations",
+      "year": "2023",
+      "doi": null,
+      "url": "https://openreview.net/forum?id=2mvALOAWaxY"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://arxiv.org/abs/2302.12553",
+        "supports": "Title, three ordered authors, identifier and ICLR 2023 status."
+      },
+      {
+        "url": "https://research.utwente.nl/en/publications/lower-bounds-on-the-depth-of-integral-relu-neural-networks-via-la/",
+        "supports": "Coauthor institution verifies ICLR 2023 publication and OpenReview identifier."
+      },
+      {
+        "url": "https://webdoc.sub.gwdg.de/ebook/diss/2003/tu-berlin/diss/2000/haase_christian.pdf",
+        "supports": "Author’s dissertation gives his full name Christian Alexander Haase, so expanded name in existing BibTeX is valid."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/Haase2023.pdf",
+      "format": "pdf",
+      "source_url": "https://arxiv.org/pdf/2302.12553",
+      "sha256": "0520d2d48162230cd18081efab0b1b8b3dca020e622df226eb8c37ae5869d3d9",
+      "identity_verified": true,
+      "version_note": "arXiv v1 (24 February 2023) explicitly labeled Published as a conference paper at ICLR 2023; same title and ordered authors. First author appears as Christian Haase in paper."
+    },
+    "contexts": [],
+    "notes": [
+      "Uncited entry: metadata and identity checked. Existing full author name is valid, although the paper itself prints Christian Haase. arXiv DOI 10.48550/arXiv.2302.12553 identifies the repository version, not a conference DOI."
+    ]
+  },
+  {
+    "key": "MaclaganSturmfels2015tropical",
+    "metadata_status": "verified",
+    "verified_metadata": {
+      "title": "Introduction to Tropical Geometry",
+      "authors": [
+        "Diane Maclagan",
+        "Bernd Sturmfels"
+      ],
+      "entry_type": "book",
+      "venue": "American Mathematical Society, Graduate Studies in Mathematics 161",
+      "year": "2015",
+      "doi": "10.1090/gsm/161",
+      "url": "https://doi.org/10.1090/gsm/161"
+    },
+    "metadata_sources": [
+      {
+        "url": "https://doi.org/10.1090/gsm/161",
+        "supports": "AMS publisher record identifies title, ordered authors, series and DOI."
+      },
+      {
+        "url": "https://www.ams.org/books/gsm/161/gsm161-endmatter.pdf",
+        "supports": "Publicly indexed AMS front matter records both authors, Graduate Studies in Mathematics volume 161, 2015 and ISBN 978-0-8218-5198-2; direct download was denied (403)."
+      },
+      {
+        "url": "https://math.berkeley.edu/~bernd/books.html",
+        "supports": "Author’s own bibliography confirms title, coauthor, GSM 161, AMS and 2015."
+      },
+      {
+        "url": "https://math.berkeley.edu/~bernd/math274last.html",
+        "supports": "Author identifies the publicly circulated Maclagan–Sturmfels manuscript as a draft of the same book."
+      }
+    ],
+    "suggested_bibtex": null,
+    "artifact": {
+      "path": "audit-cache/2026-11-10/papers/MaclaganSturmfels2015tropical.pdf",
+      "format": "pdf",
+      "source_url": "https://citeseerx.ist.psu.edu/document?doi=282920a4ece4c54c148f3acd8744ee1ecafc2d22&repid=rep1&type=pdf",
+      "sha256": "a4b2b809f83fcc3733f008ed1f1e4ccc4bff2917c21fff157d5d5457fcfa597b",
+      "identity_verified": true,
+      "version_note": "Author manuscript mirrored by Penn State CiteSeerX: title page dated August 23, 2013; 281 PDF pages. Preface explicitly says preliminary and incomplete, with five chapters and sixth forthcoming. This is the correct book project but is NOT the full published 2015 edition; final-edition full text remains unavailable."
+    },
+    "contexts": [],
+    "notes": [
+      "Uncited entry in the supplied active sources; only metadata and artifact identity were audited.",
+      "Existing bibliography is correct for the published 2015 AMS book. Keep its 2015 metadata despite the accessible 2013 draft.",
+      "Publisher full text/front-matter downloads returned HTTP 403. The former author-hosted Warwick URL no longer resolves; the new author domain returned 403 for the draft. Cached manuscript is a legitimately indexed author draft, not a substitute claimed to be the final published edition."
+    ],
+    "recovery_status": "no_additional_authorized_full_text_found",
+    "access_attempts": [
+      {
+        "url": "https://homepages.warwick.ac.uk/staff/D.Maclagan/papers/TropicalBook20.4.14.pdf",
+        "result": "Former author-hosted April 2014 draft URL fails DNS resolution."
+      },
+      {
+        "url": "https://warwick.ac.uk/fac/sci/maths/people/staff/diane_maclagan/",
+        "result": "Current institutional profile links personal site https://dmaclagan.warwick.ac.uk/."
+      },
+      {
+        "url": "https://dmaclagan.warwick.ac.uk/papers/papers.html",
+        "result": "Official current publications link returns HTTP 403."
+      },
+      {
+        "url": "https://dmaclagan.warwick.ac.uk/papers/TropicalBook20.4.14.pdf",
+        "result": "HTTP 403 text/html, 199 bytes; no PDF downloaded."
+      },
+      {
+        "url": "https://www.ams.org/books/gsm/161/gsm161.pdf",
+        "result": "HTTP 403 text/html, 28805 bytes; no PDF downloaded."
+      },
+      {
+        "url": "https://math.berkeley.edu/~bernd/books.html",
+        "result": "Coauthor bibliography confirms final 2015 book but does not link a full text."
+      }
+    ],
+    "recovery_note": "The existing 281-page August 2013 manuscript remains the only accessible cached version; it is explicitly preliminary/incomplete and must not count as the complete 2015 book.",
+    "recovery_date": "2026-11-10"
+  }
+]

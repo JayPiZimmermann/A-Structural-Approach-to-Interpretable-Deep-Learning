@@ -60,7 +60,7 @@ Every feedforward \ac{relu} network represents a \ac{cpwl} function.\end{observa
 Affine maps are \ac{cpwl}, the componentwise $\relu$ is \ac{cpwl}, and the composition of two \ac{cpwl} maps is again \ac{cpwl}: if $f$ is affine on the polyhedra $Q_1, \ldots, Q_N$ covering $\RR^d$ and $g$ is affine on the polyhedra $P_1, \ldots, P_M$ covering the intermediate space, then $g \circ f$ is affine on each of the at most $NM$ polyhedra $Q_r \cap f^{-1}(P_s)$ (preimages of polyhedra under affine maps are polyhedra), these cover $\RR^d$, and continuity is preserved under composition. The claim follows by induction along the recursion \eqref{eq:forward_recursion}.
 \end{proof}
 
-The converse also holds: \emph{every} \ac{cpwl} function is exactly representable by a \ac{relu} network of bounded depth. This equivalence, due to \textcite{Arora2018}, is the entry point for the difference-of-convex analysis of Chapter~\ref{ch:decompositions}.
+The converse also holds: \emph{every} \ac{cpwl} function is exactly representable by a \ac{relu} network of bounded depth. This equivalence, with a dimension-dependent depth bound given by \textcite{Arora2018}, is the entry point for the difference-of-convex analysis of Chapter~\ref{ch:decompositions}.
 
 \begin{theoremenv}[\ac{cpwl}--\ac{relu} equivalence, \parencite{Arora2018}, \LeanResult{thm:cpwl_relu_equivalence}]\label{thm:cpwl_relu_equivalence}
 A function $f \colon \RR^{d} \to \RR$ is \ac{cpwl} if and only if it is representable by a feedforward \ac{relu} network. Moreover, every \ac{cpwl} function on $\RR^d$ is representable by a \ac{relu} network of depth at most $\bigl\lceil \log_2(d+1) \bigr\rceil + 1$.\end{theoremenv}
@@ -82,7 +82,7 @@ with finitely many affine functions $\ell_r, m_s \colon \RR^d \to \RR$; this is 
 	= \frac{u + v}{2} + \frac{\relu(u - v) + \relu(v - u)}{2},
 	\label{eq:max_as_relu}
 \end{equation}
-where the affine pre- and post-combinations are absorbed into the surrounding weight matrices. Arranging the $N_g$ affine arguments of $g$ in a balanced binary tree of pairwise maxima realizes $g$ by a \ac{relu} network of depth $\lceil \log_2 N_g \rceil + 1$, and likewise for $h$; a final affine layer forms the difference \eqref{eq:cpwl_dc_representation}. This proves representability. The stated depth bound, which is uniform in the number of affine pieces and depends only on the input dimension $d$, follows from the refinement of \textcite{Arora2018}: every \ac{cpwl} function on $\RR^d$ can be written as a signed sum of maxima of at most $d + 1$ affine functions each, so the trees in the construction above have depth at most $\lceil \log_2(d+1) \rceil$.
+where the affine pre- and post-combinations are absorbed into the surrounding weight matrices. Arranging the $N_g$ affine arguments of $g$ in a balanced binary tree of pairwise maxima realizes $g$ by a \ac{relu} network of depth $\lceil \log_2 N_g \rceil + 1$, and likewise for $h$; a final affine layer forms the difference \eqref{eq:cpwl_dc_representation}. This proves representability. The stated depth bound, which is uniform in the number of affine pieces and depends only on the input dimension $d$, follows from \textcite{Arora2018}, who use the Wang--Sun representation of every \ac{cpwl} function on $\RR^d$ as a signed sum of maxima of at most $d + 1$ affine functions each. These maxima require at most $\lceil \log_2(d+1) \rceil$ hidden layers, followed by a final affine output layer.
 \end{proof}
 
 \begin{remark}[Expressivity and linear regions]\label{rem:linear_regions}
@@ -99,7 +99,7 @@ We order $\RR^d$ coordinatewise: $x \le y$ if and only if $x_i \le y_i$ for all 
 A feedforward network with recursion \eqref{eq:forward_recursion} and monotone activation functions is called a \emph{monotone neural network} if all its weight matrices are entrywise non-negative, $\Wl{l} \ge 0$ for all $l = 1, \ldots, L$.
 \end{definition}
 
-Weight-sign constraints are the oldest device for building monotone models \parencite{Sill1997_MonotonicNetworks,Daniels2010_MonotoneNN} and remain the structural core of modern certified-monotone architectures \parencite{Liu2020CertifiedMonotone,Runje_2023}.
+Weight-sign constraints are an established device for building monotone models \parencite{Sill1997_MonotonicNetworks,Daniels2010_MonotoneNN} and remain central to modern monotone architectures \parencite{Runje_2023}; monotonicity can also be certified without imposing such constraints \parencite{Liu2020CertifiedMonotone}.
 
 \begin{proposition}[Monotone networks represent monotone functions, \LeanResult{prop:monotone_represents}]\label{prop:monotone_represents}
 A monotone neural network represents a monotone function; each coordinate function is non-decreasing in every input variable.\end{proposition}
@@ -317,7 +317,7 @@ The minimizing player $P^{-}$ obtains $V^{\star}\bigl(s^{(l)}_{i,-}\bigr) = \min
 \end{proof}
 
 \begin{remark}[Softplus networks from entropy regularization]\label{rem:softplus_game}
-\textcite{Gaubert2025} also treat softplus networks, by \emph{regularizing} the stop/continue decision. Replace the hard choice at an activation state by a mixed policy $\nu \in \Delta(\{\mathrm{stop}, \mathrm{cont}\})$ rewarded with a Shannon-entropy bonus at temperature $\theta > 0$. By the Legendre--Fenchel identity for the entropy \parencite{BoydVandenberghe2004},
+\textcite{Gaubert2025} also treat softplus networks, by \emph{regularizing} the stop/continue decision. Replace the hard choice at a positive activation state by a mixed policy $\nu \in \Delta(\{\mathrm{stop}, \mathrm{cont}\})$ rewarded with a Shannon-entropy bonus at temperature $\theta > 0$. At a negative state, the entropy term enters with the opposite sign in the payoff to $P^+$. By the Legendre--Fenchel identity for the entropy \parencite{BoydVandenberghe2004},
 \begin{equation}
 	\max_{\nu \in \Delta_n} \Bigl\{ \textstyle\sum_{i=1}^{n} \nu_i r_i + \theta\, \mathcal{H}(\nu) \Bigr\}
 	= \theta \log \textstyle\sum_{i=1}^{n} e^{r_i / \theta},
@@ -325,7 +325,7 @@ The minimizing player $P^{-}$ obtains $V^{\star}\bigl(s^{(l)}_{i,-}\bigr) = \min
 	\mathcal{H}(\nu) = -\textstyle\sum_i \nu_i \log \nu_i,
 	\label{eq:legendre_fenchel}
 \end{equation}
-with the Gibbs distribution $\nu^{\star}_i \propto e^{r_i/\theta}$ as unique maximizer, the regularized value at a state with continuation value $\preactl{l}_i$ (computed as in \eqref{eq:rng_cont_value}) becomes $\theta \log\bigl(1 + e^{\preactl{l}_i / \theta}\bigr)$---the softplus activation at temperature $\theta$---and the equilibrium policy continues with the sigmoid probability $\bigl(1 + e^{-\preactl{l}_i/\theta}\bigr)^{-1}$. The hard game of Definition~\ref{def:relu_net_game} is recovered in the limit $\theta \to 0$. Chapter~\ref{ch:game_theory} re-derives this mechanism from the regularized decompositions of Section~\ref{sec:regularized_decompositions} and reuses it at the routing states of the \ac{rg}, with the two temperatures $\theta$ (activation gates) and $\tau$ (routing) kept distinct.
+with the Gibbs distribution $\nu^{\star}_i \propto e^{r_i/\theta}$ as unique maximizer, the regularized value at a positive state with continuation value $\preactl{l}_i$ (computed as in \eqref{eq:rng_cont_value}) becomes $\theta \log\bigl(1 + e^{\preactl{l}_i / \theta}\bigr)$---the softplus activation at temperature $\theta$---and the equilibrium policy continues with the sigmoid probability $\bigl(1 + e^{-\preactl{l}_i/\theta}\bigr)^{-1}$. The hard game of Definition~\ref{def:relu_net_game} is recovered in the limit $\theta \to 0$. Chapter~\ref{ch:game_theory} re-derives this mechanism from the regularized decompositions of Section~\ref{sec:regularized_decompositions} and reuses it at the routing states of the \ac{rg}, with the two temperatures $\theta$ (activation gates) and $\tau$ (routing) kept distinct.
 \end{remark}
 
 \begin{remark}[What Chapter~\ref{ch:game_theory} inherits and what it changes]\label{rem:inherited_vs_new}

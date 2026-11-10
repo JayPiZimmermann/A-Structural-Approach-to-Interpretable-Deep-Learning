@@ -25,16 +25,15 @@ signed relevance~\parencite{Binder2016LRN,Kohlbrenner2020,Gu2019CLRP,Nam2020,vuk
 a common trajectory-space semantics for this family: \ac{sg} recovers gradients, \ac{rg} recovers
 the generalized $\alpha\beta$ rule, and its analytical modes map back to principled modifications
 of existing backward rules. Excitation Backprop~\parencite{Zhang2018pointinggame} is an absorbing Markov
-chain recovering the $\alpha\beta$-\ac{lrp} rule for the special case $(\alpha, \beta) = (1,0)$
-known as the $z^+$-rule, which only considers the positive weights in the relevance propagation.
+chain whose redistribution on non-negative activations gives the unstabilized $z^+$-rule with biases
+omitted: the $(\alpha,\beta)=(1,0)$ case of $\alpha\beta$-\ac{lrp}.
 Our game extends it with an opponent player (enabling negative-weight influence) and replaces
 input-dependent transition probabilities with soft Bellman equations.
-Deep
-Taylor~\parencite{Montavon2017DeepTaylor} justifies that same $z^+$-rule and explicitly leaves the mathematical
-modeling of the general $\alpha\beta$ rule as an open problem; \ac{rg} closes this.
+Deep Taylor~\parencite{Montavon2017DeepTaylor} justifies the $z^+$-rule on non-negative inputs;
+\ac{rg} supplies a game-theoretic construction for the generalized $\alpha\beta$ rule.
 
-\textbf{Shapley-value attribution methods.} SHAP and KernelSHAP frame explanation as a cooperative
-game over feature coalitions~\parencite{LundbergLee2017} in a \emph{black-box} setting; they are therefore
+\textbf{Shapley-value attribution methods.} KernelSHAP frames explanation as a cooperative
+game over feature coalitions~\parencite{LundbergLee2017} in a \emph{black-box} setting; it is therefore
 a distinct, complementary game that explains marginal input-feature contributions relative to a
 baseline, whereas our backward game explains how relevance is routed through network internals in a
 \emph{white-box} setting.
@@ -52,7 +51,7 @@ tokenization artifacts via conditioned operators and equivariant averaging~\pare
 conditioned-operator transformer constructions arise naturally inside our game semantics: the
 QK-softmax is the oracle player's reference policy, while attribution lives on the Value-routing
 trajectories. Hence, our method is compatible with Reynolds averaging, which in our \ac{rg}+Eq mode
-removes the same grid artifact that DAVE targets---however, with more control via the different
+suppresses tokenization-grid artifacts targeted by DAVE, with further control via the different
 game modes.
 \section{Backward Attribution}\label{ptnb:sec:background}
 
@@ -80,17 +79,18 @@ $\beta$, each normalized by its own denominator,
     W^{(l)}_{ij}]^-}{\Sigma^{(l,-)}_j + \varepsilon} \Bigr) R^{(l)}_j, \nonumber\\
     \Sigma^{(l,\pm)}_j &= \textstyle\sum_k [a^{(l-1)}_k W^{(l)}_{kj}]^{\pm} + [b^{(l)}_j]^{\pm}.
 \end{align}
-Relevance assigned to the bias and to $\varepsilon$ is absorbed. $(\alpha,\beta) = (1,0)$ gives the
-$z^+$-rule of Deep Taylor decomposition~\parencite{Montavon2017DeepTaylor}, which turns out to be the same rule
-as Excitation Backprop~\parencite{Zhang2018pointinggame}; other rules (LRP-$\varepsilon$, LRP-$\gamma$)
+Relevance assigned to the bias and to $\varepsilon$ is absorbed. For non-negative activations,
+$(\alpha,\beta)=(1,0)$ with $\varepsilon=0$ and biases omitted from normalization gives the
+$z^+$-rule of Deep Taylor decomposition~\parencite{Montavon2017DeepTaylor} and
+Excitation Backprop~\parencite{Zhang2018pointinggame}; other rules (LRP-$\varepsilon$, LRP-$\gamma$)
 change the redistribution fractions.
 
 \paragraph{Transformers.} In a Vision Transformer (\acs{vit}), \ch{LayerNorm couples the features of a token through its
 input-dependent mean and variance,} and the attention matrix $A = \softmax(QK^\top/\sqrt{d})$
 depends on the input, which breaks conservation~\parencite{Ali2022AttnLRP}.
 \ch{Transformer-specific rules therefore \emph{condition} on the forward pass: conservative
-propagation~\parencite{Ali2022AttnLRP} and DAVE~\parencite{Wrobel2024} hold $A$ and the LayerNorm statistics fixed
-and propagate relevance through the Value path only;
+propagation~\parencite{Ali2022AttnLRP} and DAVE~\parencite{Wrobel2024} hold $A$ and the LayerNorm denominator fixed,
+retain linear mean-centering, and propagate attention relevance through the Value path only;
 AttnLRP~\parencite{Achtibat2024AttnLRP} also propagates through the softmax and the QK product.}
 
 All these rules share one structure: a backward recursion that routes mass from each neuron to its
@@ -118,12 +118,12 @@ value~\eqref{ptnb:eq:soft-bellman}.
 Both games start with unit mass at the positive output state.
 Any player policies induce a backward trajectory measure $\Pi_x$ on trajectories $\zeta=(\zeta_0,
     \zeta_1, \dots)$ with a game-specific cumulative discount $d_t(\zeta)$ up to time $t$.
-The \textbf{discounted occupation measure}~\parencite{Puterman1994mdp}
+For these game-specific discounts, we define the \textbf{discounted occupation measure}
 \begin{align}\label{ptnb:eq:attribution}
     \Gamma_x(v) \coloneqq \E_{\zeta \sim \Pi_x}\!\left[ \textstyle\sum_t d_t(\zeta)\,\1\{\zeta_t = v\}
-    \right]
+    \right].
 \end{align}
-quantifies how much weight the trajectories going through a state have.
+It quantifies how much weight the trajectories going through a state have.
 
 \subsection{The Stopping Game}\label{ptnb:sec:stopping}\label{sec:stopping_game_reinterpretation}
 

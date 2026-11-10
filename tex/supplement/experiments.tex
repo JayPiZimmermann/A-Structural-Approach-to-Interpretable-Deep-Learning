@@ -95,11 +95,10 @@ benchmark~\parencite{Deng2009,Russakovsky2015ilsvrc}. Quantitative scoring is pe
 Quantus~\parencite{Hedstrom2023}.
 
 \paragraph{Licenses.}\label{ptnb:app:licences}
-ImageNet images are used under the ImageNet terms of access (non-commercial research and
-educational use)~\parencite{Deng2009}. The ImageNet-S masks~\parencite{gao2022luss} are released by
-their authors without an explicit license; their images are ImageNet images and fall under the same
-terms. The Pascal VOC 2012 images~\parencite{Everingham2010voc} are subject to the Flickr terms of use,
-as stated by the dataset providers. The checkpoints are distributed with torchvision (BSD-3-Clause)
+ImageNet images~\parencite{Deng2009} are used under the ImageNet terms of access (non-commercial research and
+educational use)\footnote{\url{https://www.image-net.org/download-images.php}.}. The ImageNet-S mask release~\parencite{gao2022luss} does not state a separate mask license\footnote{Authors' release: \url{https://github.com/LUSSeg/ImageNet-S}.}; its images are ImageNet images and fall under the same
+terms. The Pascal VOC 2012 images are subject to the Flickr terms of use,
+as stated by the dataset providers\footnote{\url{https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2012/}, Database Rights.}. The checkpoints are distributed with torchvision
 and were trained on ImageNet-1K. Libraries: PyTorch and torchvision (BSD-3-Clause), Quantus
 (GPL-3.0), zennit (GPL-3.0/LGPL-3.0), lxt, captum and scikit-image (BSD-3-Clause), pytorch-grad-cam
 (MIT); the reference code of \acs{ptnbTIBAV} and \acs{ptnbGAE} (MIT) is included with its license notice.
@@ -113,13 +112,13 @@ gradient maps~\parencite{Smilkov2017}. \textbf{IntGrad} is Integrated
 Gradients~\parencite{Sundararajan2017} with a black-image baseline. \textbf{DeepLIFT}
 propagates activation differences relative to a reference input with the Rescale
 rule~\parencite{Shrikumar2017} (CNNs only). \textbf{DAVE} is the distribution-aware ViT gradient
-decomposition of~\textcite{Wrobel2024}. \textbf{SG} is our \ac{sg}, included in this block because it
+decomposition of~\textcite{Wrobel2024}. The rows labeled DAVE use our implementation, which additionally freezes the LayerNorm mean; published DAVE retains differentiation through mean-centering. \textbf{SG} is our \ac{sg}, included in this block because it
 recovers the gradient as a Stopping-Game occupation measure (Theorem~\ref{ptnb:thm:deriv-occ}).
 
 \paragraph{LRP / relevance-propagation block.}
 \textbf{LRP-$\varepsilon$} denotes the stabilized Layer-wise Relevance Propagation
-rule~\parencite{Bach2015}. \textbf{LRP-$\gamma$} is the positive-weight-amplified LRP variant used in
-best-practice comparisons~\parencite{Kohlbrenner2020}. \textbf{AttnLRP} is transformer LRP \ch{that
+rule~\parencite{Bach2015}. \textbf{LRP-$\gamma$} is the positive-weight-amplified LRP
+variant~\parencite{Montavon_2022_gammaLRP}. \textbf{AttnLRP} is transformer LRP \ch{that
 propagates relevance through the softmax and the bilinear attention product as well as the Value
 path}~\parencite{Achtibat2024AttnLRP}. \textbf{RG} is our \ac{rg}.
 \textbf{RG+Eq} is the same method with equivariant Reynolds averaging, used mainly on ViT to
@@ -359,7 +358,7 @@ dataset \emph{without} re-tuning, and (ii) put baselines on equal footing by re-
 per-method validation selection on the new pool.
 
 \paragraph{Dataset.}
-We use Pascal VOC 2012~\parencite{Everingham2010voc} segmentation annotations: the trainval pool of
+We use Pascal VOC 2012~\parencite{Everingham2010voc} segmentation annotations\footnote{Release statistics: \url{https://www.robots.ox.ac.uk/~vgg/projects/pascal/VOC/voc2012/dbstats.html}.}: the trainval pool of
 $2{,}913$ images with pixel-accurate \texttt{Seg\-mentationClass} masks across $20$ foreground
 classes plus background. Each image is expanded to one (image, foreground-class) sample per
 distinct VOC class label present in its mask, yielding $3{,}422$ total samples after dropping the
@@ -393,9 +392,8 @@ excluded after the split (18 val and 105 test samples). The resulting partitions
 \emph{binary VOC2012 segmentation pixel mask} for that class, not bounding boxes. The mask is
 resized via NEAREST interpolation and center-cropped to $224{\times}224$ to match the input
 pipeline (\texttt{Resize(256)$\,\to\,$CenterCrop(224)}), then passed verbatim into
-Quantus~\parencite{Hedstrom2023} alongside the attribution map. This avoids the well-known bbox
-over-credit issue~\parencite{Selvaraju2017} where a method that puts mass anywhere inside the
-box wins the metric; pixel masks reward only mass on the actual foreground object.
+Quantus~\parencite{Hedstrom2023} alongside the attribution map. This avoids awarding foreground
+credit to background pixels inside an object's bounding box; pixel masks reward only mass on the actual foreground object.
 
 \paragraph{Tuning protocol.}
 The protocol mirrors the ImageNet-S protocol of Section~\ref{ptnb:app:protocol}, with one deliberate
