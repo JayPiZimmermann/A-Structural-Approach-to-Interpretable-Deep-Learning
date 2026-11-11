@@ -6,9 +6,9 @@ This chapter develops interpretability methods from the streams $g,h$ with $f=g-
 
 Post-hoc attribution assigns each input feature a score for its influence on a fixed network output. Established families include gradient saliency~\parencite{Simonyan2014}, deconvolution and guided backpropagation~\parencite{ZeilerFergus2014,Springenberg2015}, \ac{lrp} and deep Taylor decomposition~\parencite{Bach2015,Montavon2017DeepTaylor}, class-activation mapping~\parencite{Zhou2016,Selvaraju2017}, baseline-based methods such as Integrated Gradients and DeepLIFT~\parencite{Sundararajan2017,Shrikumar2017}, noise-averaged gradients~\parencite{Smilkov2017}, and perturbation- or surrogate-based explanations~\parencite{Ribeiro2016,FongVedaldi2017,LundbergLee2017,Kolek2023_ShearletX,Fel2023_EVA}. These explain the original network. We identify signal loss in rules using ordinary local derivatives, then develop SplitCAM, SplitLRP and SplitGrad from the separate signals preserved by the split-pair of Section~\ref{sec:dc_splitting_relu}, closing with by-design DCINNs.
 
-PRCA and DRSA optimize relevance over activation subspaces; their virtual layer preserves the decision function when a full orthogonal basis is retained~\parencite{Chormai2024DRSA}. Our split representation separates contributions using the original network's signs and gates.
+PRCA and DRSA optimize relevance over activation subspaces; their virtual layer preserves the decision function when a full orthogonal basis is retained~\parencite{Chormai2024DRSA}. Our DC representation separates contributions using the original network's signs and gates.
 
-Consider a feedforward \ac{relu} network with layers $1,\dots,L$, weights $\Wl{l}$, pre-activations $\preactl{l}=\Wl{l}\actl{l-1}$, hidden activations $\actl{l}=\relu(\preactl{l})$ for $l<L$, and ungated readout $\actl{L}=\preactl{L}$. We attribute a fixed scalar class logit: $f^{(l)}\colon\RR^{d^{(l)}}\to\RR$ denotes layers $l+1,\dots,L$ acting on layer-$l$ activations. Biases are absorbed as in Section~\ref{sec:dc_splitting_relu}. The split streams $g^{(l)},h^{(l)}\colon\RR^{d^{(l)}}\times\RR^{d^{(l)}}\to\RR$ act on $\act{l}{+},\act{l}{-}$ and satisfy
+Consider a feedforward \ac{relu} network with layers $1,\dots,L$, weights $\Wl{l}$, pre-activations $\preactl{l}=\Wl{l}\actl{l-1}$, hidden activations $\actl{l}=\relu(\preactl{l})$ for $l<L$, and ungated readout $\actl{L}=\preactl{L}$. We attribute a fixed scalar class logit: $f^{(l)}\colon\RR^{d^{(l)}}\to\RR$ denotes layers $l+1,\dots,L$ acting on layer-$l$ activations. Biases are absorbed as in Section~\ref{sec:dc_splitting_relu}. The split-streams $g^{(l)},h^{(l)}\colon\RR^{d^{(l)}}\times\RR^{d^{(l)}}\to\RR$ act on $\act{l}{+},\act{l}{-}$ and satisfy
 \begin{equation}
 	f^{(l)}\bigl(a^{+} - a^{-}\bigr) = g^{(l)}(a^{+}, a^{-}) - h^{(l)}(a^{+}, a^{-})
 	\qquad \text{for all } a^{+}, a^{-} \in \RR^{d^{(l)}},
@@ -124,7 +124,7 @@ Non-negative weights let each neuron only \emph{add} evidence, a structure long 
 \end{equation}
 where $\odot$ denotes the elementwise product and the sum runs over the channels. This makes LayerCAM applicable to early layers with high spatial resolution. Inactive neurons contribute no activation-weighted term, and the positive-gradient weighting discards negative gradient evidence.
 
-\emph{SplitCAM} applies LayerCAM's spatial activation weighting to signed split-stream maps. Raw sensitivities sum \emph{absolute} path products (Proposition~\ref{prop:sensitivity_mass}) and become numerically enormous in deep split-pairs, requiring the stabilized sensitivities of Section~\ref{subsec:backward_stabilization}.
+\emph{SplitCAM} applies LayerCAM's spatial activation weighting to signed split-stream maps. Raw sensitivities sum \emph{absolute} path products (Proposition~\ref{prop:sensitivity_mass}) and become numerically enormous in deep split networks, requiring the stabilized sensitivities of Section~\ref{subsec:backward_stabilization}.
 
 \begin{definition}[Shifted local sensitivities, \LeanResult{def:shifted_sensitivities}]\label{def:shifted_sensitivities}
 Fix shift parameters $\alpha^{(l)} \in [0, \tfrac{1}{2}]$. For $s \in \{g, h\}$ define, backward from layer $L$, intermediate sensitivities $\delta_{\mathrm{int}}^{(l, \pm, s)}$ by evaluating the recursions \eqref{eq:delta_plus_recursion}--\eqref{eq:delta_minus_recursion} (respectively the base case of Lemma~\ref{lem:split_backward_recursion} at $l = L$) with the already-shifted sensitivities of the subsequent layer, and set
@@ -141,7 +141,7 @@ The common shift preserves sensitivity differences. By \eqref{eq:claim_bulk}, it
 
 \paragraph{The SplitCAM attribution.}\label{subsec:splitcam_definition}
 \begin{definition}[SplitCAM]\label{def:splitcam}
-For a layer $l$ of the decomposed model, a stream $s \in \{g, h\}$ and a sign $\sigma \in \{+, -\}$, the SplitCAM attribution maps are
+For a layer $l$ of the split network, a split-stream $s \in \{g, h\}$ and a sign $\sigma \in \{+, -\}$, the SplitCAM attribution maps are
 \begin{align}
 	\text{SplitCAM}^{(l, \sigma, s)} &\coloneqq \sum_{c} \delta_{\mathrm{shift}}^{(l, \sigma, s)}\big\vert_c \odot \act{l}{\sigma}_c,
 	\label{eq:splitcam_stream} \\
@@ -153,7 +153,7 @@ where $\act{l}{\sigma}_c$ denotes the channel-$c$ activation map of the $\sigma$
 
 SplitCAM \emph{omits positive-gradient clipping and the outer $\relu$}, retaining signed shifted sensitivities. It uses shifted sensitivities rather than raw derivatives: \eqref{eq:shift_definition} changes each map only by multiples of the pattern-independent $W_{\mathrm{abs}}^{[l]}$, keeping the quantities numerically meaningful.
 
-Under Section~\ref{sec:stabilization_dc}, the forward pass scales split activations and restores their invariant against cached original activations. The backward pass applies Definition~\ref{def:shifted_sensitivities} using masks from those activations, preserving \eqref{eq:backward_invariant} against the cached original gradient.
+Under Section~\ref{sec:stabilization_dc}, the forward pass scales split-stream activations and restores their invariant against cached original activations. The backward pass applies Definition~\ref{def:shifted_sensitivities} using masks from those activations, preserving \eqref{eq:backward_invariant} against the cached original gradient.
 
 \paragraph{Layer choice and resolution.}
 Like LayerCAM, SplitCAM is defined at every layer, and the resulting map is bilinearly upsampled to the input resolution. Empirically the method peaks in the deep convolutional blocks --- for VGG-16~\parencite{Simonyan2015} at layer 26 --- where it concentrates on entire classified objects noticeably better than LayerCAM at the same layer; the full layer-ablation study and the quantitative comparison on the Quantus benchmark~\parencite{Hedstrom2023} for VGG-16 and ResNet-18~\parencite{He2016resnet} are reported in Chapter~\ref{ch:experiments}.
@@ -174,11 +174,11 @@ and redistributes the relevances $R^{(l+1)}_i$ onto the inputs as
 with a small stabilizer $\varepsilon > 0$. Setting $\gamma = 0$ gives the corresponding bias-excluding $\varepsilon$-rule. For affine--ReLU blocks, ReLU activations pass relevance through unchanged, and redistribution acts on the affine layers.
 
 \paragraph{Relevance propagation on the split-pair.}\label{subsec:splitlrp_definition}
-\emph{SplitLRP} treats both streams as neuron groups in one decomposed network. Each layer carries relevance tensors $R^{(l,+)},R^{(l,-)}$, jointly propagated through the four coupling blocks built from $\Wsig{l}{+},\Wsig{l}{-}$. Propagation starts at the class-specific positive $g$-output $\act{L}{+}$. All weights are non-negative, so we use \eqref{eq:lrp_gamma_rule} with $\gamma=0$, $\varepsilon=10^{-6}$: the $\varepsilon$-rule needs no preference for positive over negative contributions. Paired Maxout gates \eqref{eq:split_maxout_gate} are transparent in the relevance pass.
+\emph{SplitLRP} treats both split-streams as neuron groups in one split network. Each layer carries relevance tensors $R^{(l,+)},R^{(l,-)}$, jointly propagated through the four coupling blocks built from $\Wsig{l}{+},\Wsig{l}{-}$. Propagation starts at the class-specific positive $g$-output $\act{L}{+}$. All weights are non-negative, so we use \eqref{eq:lrp_gamma_rule} with $\gamma=0$, $\varepsilon=10^{-6}$: the $\varepsilon$-rule needs no preference for positive over negative contributions. Paired Maxout gates \eqref{eq:split_maxout_gate} are transparent in the relevance pass.
 
 The following conventions complete the specification.
 \begin{itemize}
-	\item \emph{Forward pass.} The split activations are computed with the same scaling stabilization and forward-invariant correction of Section~\ref{sec:stabilization_dc} as SplitCAM.
+	\item \emph{Forward pass.} The split-stream activations are computed with the same scaling stabilization and forward-invariant correction of Section~\ref{sec:stabilization_dc} as SplitCAM.
 	\item \emph{Normalization.} The denominator of \eqref{eq:lrp_gamma_rule} renormalizes relevance layer-wise, preserving the combined budget of $R^{(l,+)},R^{(l,-)}$ at $\act{L}{+}$ up to the $\varepsilon$-stabilizer (Remark~\ref{rem:splitlrp_markov}). This replaces backward shifting (Definition~\ref{def:shifted_sensitivities}).
 	\item \emph{Pooling and normalization layers.} Relevance passes through max-pooling by the winner-takes-it-all scheme, assigning the full relevance to the location attaining the maximum; batch-nor\-mal\-iza\-tion layers are merged into the adjacent linear or convolutional layers beforehand; residual additions split relevance evenly across branches.
 \end{itemize}
@@ -191,7 +191,7 @@ The SplitLRP attribution at layer $l$ is the pair $\bigl(R^{(l,+)}, R^{(l,-)}\bi
 \end{equation}
 \end{definition}
 
-Positive-stream relevance traverses an even number of sign inversions and represents support; negative-stream relevance represents opposition. Equation~\eqref{eq:splitlrp_combined} combines them into a signed saliency map.
+Relevance $R^{(l,+)}$ traverses an even number of sign inversions and represents support; $R^{(l,-)}$ represents opposition. Equation~\eqref{eq:splitlrp_combined} combines them into a signed saliency map.
 
 \begin{remark}[A probabilistic reading]\label{rem:splitlrp_markov}
 The original network's $\varepsilon$-rule mixes signed contributions, producing a signed path measure (Chapter~\ref{ch:trajectory}). In the split-pair, $\tilde{z}^{(l+1)}_{ij}$ multiplies non-negative activations and weights. Up to the stabilizer, its propagation matrices are stochastic: SplitLRP is a Markov chain on the doubled graph, with unsigned relevance measure $\bigl(R^{(l,+)},R^{(l,-)}\bigr)$. Doubling the state space absorbs weight signs, as in the stopping game's probabilistic backward flow (Chapter~\ref{ch:game_theory}).

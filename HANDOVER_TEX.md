@@ -141,6 +141,14 @@ retry commands. Cooperating manual builds must take the persistent
 `reports/vit-extension/tex-build.lock`; do not delete lock files. The coordinator
 preserves concurrent edits and records each publication in the main receipt.
 
+### DC terminology
+
+Use **DC decomposition** for the construction, **split-pair** for $(g,h)$,
+**split-streams** for its components, and **split network** for the implementing
+network. Section 1.1 defines these terms. Use **split-stream activations** and
+**split-stream gradients**; keep stopping decompositions and general activation
+pairs distinct. See `reports/dc-terminology/consistency.json` for the source check.
+
 ### Independent rendering switches
 
 `tex/preamble/rendering.tex` defines `\RenderTables` and

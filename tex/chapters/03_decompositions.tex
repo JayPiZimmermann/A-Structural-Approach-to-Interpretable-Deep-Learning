@@ -1,4 +1,4 @@
-\chapter{Network Decompositions and DC Formulations}\label{ch:decompositions}
+\chapter{Network Decompositions}\label{ch:decompositions}
 
 Network decompositions separate positive and negative contributions while preserving their difference. DC streams provide convex, monotone functions for Chapter~\ref{ch:saliency}; stopping streams preserve the gates underlying Chapter~\ref{ch:game_theory}. Mixing and regularization connect these choices. We compare their retained information and backward calculations, then stabilize them for deep networks.
 
@@ -23,7 +23,7 @@ Consider an $L$-layer feedforward network with weights $\Wl{l}$, biases $b^{(l)}
 	\qquad l = 1, \dots, L,
 	\label{eq:original_forward_pass}
 \end{equation}
-where $\varrho_l=\varrho$ for $1\leq l<L$ and $\varrho_L=\mathrm{id}$ gives the ungated affine readout $f(x)=\actl{L}\in\RR$. For multi-class networks, fix one target logit. We use the notation of Section~\ref{sec:nn_notation_pwl}, reserving $g,h$ for the split streams of Section~\ref{sec:dc_splitting_relu}.
+where $\varrho_l=\varrho$ for $1\leq l<L$ and $\varrho_L=\mathrm{id}$ gives the ungated affine readout $f(x)=\actl{L}\in\RR$. For multi-class networks, fix one target logit. We use the notation of Section~\ref{sec:nn_notation_pwl}, reserving $g,h$ for the split-streams of Section~\ref{sec:dc_splitting_relu}.
 
 \begin{definition}[Decomposition]\label{def:decomposition}
 A \emph{decomposition} of the $L$-layer network~\eqref{eq:original_forward_pass} propagates non-negative activation pairs $\bigl(\act{l}{+}_i, \act{l}{-}_i\bigr) \in \RR^2_{\ge 0}$ from input to output using only
@@ -227,7 +227,7 @@ For $f(z)=\relu(z)$ choose $p(z)=\relu(z)$, $q(z)=0$, and $L=1$. Both profiles a
     \end{gathered}
     \label{eq:splitting_identity}
 \end{equation}
-This specializes the general criterion to a positive Maxout component \parencite{Goodfellow2013Maxout} and a negative identity component. Replacing $f''\,\diff z$ by $\delta_0$ in the absolute-curvature construction gives the same pair (Remark~\ref{rem:bv_extension}). This classical ReLU-network DC split \parencite{Zhang2018,Siahkamari2020_DCRegression,Awasthi2023DCNN,hiddenMono} underlies our stabilized passes, CNN extension, and saliency methods.
+This specializes the general criterion to a positive Maxout component \parencite{Goodfellow2013Maxout} and a negative identity component. Replacing $f''\,\diff z$ by $\delta_0$ in the absolute-curvature construction gives the same pair (Remark~\ref{rem:bv_extension}). This classical ReLU-network DC decomposition \parencite{Zhang2018,Siahkamari2020_DCRegression,Awasthi2023DCNN,hiddenMono} underlies our stabilized passes, CNN extension, and saliency methods.
 
 The hidden-layer update is therefore
 \begin{equation}
@@ -240,12 +240,12 @@ with $\act{L}{\pm}=\preact{L}{\pm}$ at the final affine readout. Theorem~\ref{th
 \begin{figure}[htbp]
 	\centering
 	\includegraphics[width=.35\linewidth]{figures/decompositions/split_streams.pdf}
-	\caption[Monotone, convex split streams and a standard ReLU layer]{Monotone, convex split streams (top) and a standard \ac{relu} layer (bottom). Negative weights swap positive and negative input streams into opposite pre-activation streams; positive weights preserve them.}
+	\caption[Monotone, convex split-streams and a standard ReLU layer]{Monotone, convex split-streams (top) and a standard \ac{relu} layer (bottom). Negative weights swap positive and negative input streams into opposite pre-activation streams; positive weights preserve them.}
 	\label{fig:splitstreams}
 \end{figure}
 
-\paragraph{The stream functions $g$ and $h$.}
-The \ac{dc} \emph{split pair} consists of two monotone \emph{split streams}, non-negative on the input quadrant (Figure~\ref{fig:splitstreams}). Like the tail network $f^{(l)} \colon \RR^{d^{(l)}} \to \RR$ on layers $l+1, \dots, L$, define the restricted streams
+\paragraph{The split-streams $g$ and $h$.}
+The \ac{dc} \emph{split-pair} consists of two monotone \emph{split-streams}, non-negative on the input quadrant (Figure~\ref{fig:splitstreams}). Like the tail network $f^{(l)} \colon \RR^{d^{(l)}} \to \RR$ on layers $l+1, \dots, L$, define the restricted streams
 \begin{equation}
 	g^{(l)} \colon \RR^{d^{(l)}} \times \RR^{d^{(l)}} \to \RR,
 	\qquad
@@ -261,7 +261,7 @@ mapping an activation pair at layer $l$ to the $+$ and $-$ components of the dec
 \end{equation}
 where \eqref{eq:split_pos}--\eqref{eq:split_neg} and \eqref{eq:dc_split_activations} compute $\bigl(\act{l+1}{+}, \act{l+1}{-}\bigr)$ from $(x^+,x^-)$. These full tail functions, rather than individual layer activations, define $f=g-h$ and underpin Chapter~\ref{ch:saliency}.
 
-\begin{theoremenv}[Structure and correctness of the split streams, \LeanResult{prop:stream_properties}, \LeanResult{thm:split_correct}]\label{thm:split_correct}
+\begin{theoremenv}[Structure and correctness of the split-streams, \LeanResult{prop:stream_properties}, \LeanResult{thm:split_correct}]\label{thm:split_correct}
 For every $0\le l\le L$, the streams $g^{(l)},h^{(l)}$ of~\eqref{eq:stream_functions} are convex and coordinatewise non-decreasing on $\RR^{d^{(l)}}\times\RR^{d^{(l)}}$. For all $x^+,x^-\in\RR^{d^{(l)}}_{\ge0}$,
 \begin{equation}
 	f^{(l)}\bigl(x^+-x^-\bigr)=\bigl(g^{(l)}-h^{(l)}\bigr)(x^+,x^-).
@@ -274,7 +274,7 @@ Apply Theorem~\ref{thm:general_dc_network} to each ReLU tail, using~\eqref{eq:sp
 \end{proof}
 
 \begin{remark}[Preservation of sub-threshold signals]\label{rem:subthreshold}
-At an inactive neuron, $\preactl{l}_i\le0$, ReLU outputs $\actl{l}_i=0$, discarding the losing pre-activation's magnitude. Downstream computation cannot distinguish degrees of suppression. The split pair $\bigl(\act{l}{+}_i,\act{l}{-}_i\bigr)=\bigl(\preact{l}{-}_i,\preact{l}{-}_i\bigr)$ has the required zero difference while retaining the cancelled mass $\preact{l}{-}_i$ in both components. These sub-threshold contributions give the streams more information than the original activations, which Chapter~\ref{ch:saliency} exploits. Retaining them also causes the numerical growth of Section~\ref{sec:stabilization_dc}: without subtractive cancellation, the streams accumulate absolute mass $\preact{l}{+}_i+\preact{l}{-}_i$ instead of the signed residual.
+At an inactive neuron, $\preactl{l}_i\le0$, ReLU outputs $\actl{l}_i=0$, discarding the losing pre-activation's magnitude. Downstream computation cannot distinguish degrees of suppression. The activation pair $\bigl(\act{l}{+}_i,\act{l}{-}_i\bigr)=\bigl(\preact{l}{-}_i,\preact{l}{-}_i\bigr)$ has the required zero difference while retaining the cancelled mass $\preact{l}{-}_i$ in both components. These sub-threshold contributions give the streams more information than the original activations, which Chapter~\ref{ch:saliency} exploits. Retaining them also causes the numerical growth of Section~\ref{sec:stabilization_dc}: without subtractive cancellation, the streams accumulate absolute mass $\preact{l}{+}_i+\preact{l}{-}_i$ instead of the signed residual.
 \end{remark}
 
 \begin{remark}[Flexibility of the input split]\label{rem:input_split_flexibility}
@@ -479,7 +479,7 @@ For fixed masked softmax, apply the theorem to each row's nonempty allowed set a
 
 The symmetric tilt $M(a+b)$ yields different streams with the same difference. Its fixed-profile minimality complements the asymmetric lift, whose normalization recovers the literal ReLU pair $(\max\{a,b\},b)$.
 
-\begin{theoremenv}[DC--monotone splitting under integrable curvature, \LeanResult{thm:smooth_dc_split}]\label{thm:smooth_dc_split}
+\begin{theoremenv}[Monotone DC decomposition under integrable curvature, \LeanResult{thm:smooth_dc_split}]\label{thm:smooth_dc_split}
 Let $f\colon \RR \to \RR$ be differentiable with locally absolutely continuous derivative $f'$ and $f'' \in L^1(\RR)$. Then the limit $s_- \coloneqq \lim_{u\to-\infty} f'(u)$ exists and $f'$ is bounded. Write $P \coloneqq \max\{f'',0\}$ and $N \coloneqq \max\{-f'',0\}$, so that $f'' = P - N$ with $P, N \ge 0$, and define
 \begin{align}
 	C_1(x) &\coloneqq f(0) + \int_0^x \Bigl( s_- + \int_{-\infty}^t P(u)\,\diff u \Bigr) \diff t,
@@ -557,7 +557,7 @@ For any $u,v$, both $\max\{u,v\}-v$ and $u-\min\{u,v\}$ equal $\relu(u-v)$, so t
 The maximum in the $+$ stream at $\eta=1$ and minimum in the $-$ stream at $\eta=0$ recover the same difference. The former gives convex activations throughout the network.
 
 \begin{theoremenv}[$\eta=1$: the convex DC endpoint, \LeanResult{thm:mixing_convex_extreme}, \LeanResult{cor:dc_split_endpoint}]\label{thm:mixing_convex_extreme}
-Setting $\eta=1$ in Definition~\ref{def:fmix} gives the valid \emph{\ac{dc} split}, with $\act{l}{\pm}\coloneqq a_{\mathrm{mix}}^{(l,\pm,1)}$: canonical affine maps~\eqref{eq:split_pos}--\eqref{eq:split_neg}, input~\eqref{eq:input_split_convention}, hidden update~\eqref{eq:dc_split_activations}, and final identity $\act{L}{\pm}=\preact{L}{\pm}$. If every input component $x_k^\pm$ is convex in $x$, as for $x^\pm=\posneg{x}{\pm}$ or any admissible affine split, every activation is convex, including the final non-negative affine combinations. Thus $\actl{l}_i=a_{\mathrm{mix},i}^{(l,+,1)}-a_{\mathrm{mix},i}^{(l,-,1)}$ is a DC representation of the network's \ac{cpwl} computation \parencite{Arora2018,hiddenMono}.
+Setting $\eta=1$ in Definition~\ref{def:fmix} gives the valid \emph{\ac{dc} decomposition}, with $\act{l}{\pm}\coloneqq a_{\mathrm{mix}}^{(l,\pm,1)}$: canonical affine maps~\eqref{eq:split_pos}--\eqref{eq:split_neg}, input~\eqref{eq:input_split_convention}, hidden update~\eqref{eq:dc_split_activations}, and final identity $\act{L}{\pm}=\preact{L}{\pm}$. If every input component $x_k^\pm$ is convex in $x$, as for $x^\pm=\posneg{x}{\pm}$ or any admissible affine split, every activation is convex, including the final non-negative affine combinations. Thus $\actl{l}_i=a_{\mathrm{mix},i}^{(l,+,1)}-a_{\mathrm{mix},i}^{(l,-,1)}$ is a DC representation of the network's \ac{cpwl} computation \parencite{Arora2018,hiddenMono}.
 \end{theoremenv}
 \AliasLabel{cor:dc_split_endpoint}{thm:mixing_convex_extreme}
 \begin{proof}
@@ -597,7 +597,7 @@ The shared gate in~\eqref{eq:fstop_def} gives the local difference $\1[z^+-z^->0
 \end{proof}
 
 \begin{remark}[Shared gate versus per-stream maxima]\label{rem:gate_vs_maxima}
-At an inactive neuron, $\preactl{l}_i \le 0$, the \ac{dc} split of Theorem~\ref{cor:dc_split_endpoint} outputs $\bigl(\preact{l}{-}_i, \preact{l}{-}_i\bigr)$, preserving sub-threshold magnitude (Remark~\ref{rem:subthreshold}) and propagating cancelled mass. The Stopping Decomposition outputs $(0, 0)$, annihilating both streams exactly where the original \ac{relu} vanishes. Thus the convex mixing streams ($\eta = 1$) retain dead-neuron contributions in downstream pairs, while stopping mass follows only active neurons. The discontinuous stopping gate sacrifices global convexity for exact forward-support agreement and retains regularity on each linear region.
+At an inactive neuron, $\preactl{l}_i \le 0$, the \ac{dc} decomposition of Theorem~\ref{cor:dc_split_endpoint} outputs $\bigl(\preact{l}{-}_i, \preact{l}{-}_i\bigr)$, preserving sub-threshold magnitude (Remark~\ref{rem:subthreshold}) and propagating cancelled mass. The Stopping Decomposition outputs $(0, 0)$, annihilating both streams exactly where the original \ac{relu} vanishes. Thus the convex mixing streams ($\eta = 1$) retain dead-neuron contributions in downstream pairs, while stopping mass follows only active neurons. The discontinuous stopping gate sacrifices global convexity for exact forward-support agreement and retains regularity on each linear region.
 \end{remark}
 
 \begin{lemmaenv}[Monotonicity of the Stopping Decomposition on linear regions, \LeanResult{lem:stop_monotone}]\label{lem:stop_monotone}
@@ -761,7 +761,7 @@ with the empty product at $l = L$ read as the identity.
 
 A \emph{common} shift at any layer translates both stream outputs equally, preserving their difference and hence the network value (Theorem~\ref{thm:split_correct}).
 
-\begin{theoremenv}[Shift equivariance of the split streams, \LeanResult{thm:shift_forward}]\label{thm:shift_forward}
+\begin{theoremenv}[Shift equivariance of the split-streams, \LeanResult{thm:shift_forward}]\label{thm:shift_forward}
 For $0\le l\le L$, $s\in\{g,h\}$, and $c,a^{(+)},a^{(-)}\in\RR^{d^{(l)}}$ with $a^{(\pm)},a^{(\pm)}+c\ge0$,
 \begin{equation}
 s^{(l)}\bigl(a^{(+)}+c,a^{(-)}+c\bigr)
@@ -831,7 +831,7 @@ and then the uniform shift
 	\delta_{\mathrm{shift}}^{(l,\pm,s)} \coloneqq \delta_{\mathrm{int}}^{(l,\pm,s)} - \alpha^{(l)} \bigl( \delta_{\mathrm{int}}^{(l,+,s)} + \delta_{\mathrm{int}}^{(l,-,s)} \bigr),
 	\label{eq:delta_shift_def}
 \end{equation}
-The Maxout gates are $M^{(l,+)}\coloneqq\diag(\1[\preactl{l}\ge0])$ and $M^{(l,-)}\coloneqq\diag(\1[\preactl{l}<0])$. Differentiating~\eqref{eq:split_pos}--\eqref{eq:split_neg} and~\eqref{eq:dc_split_activations} gives~\eqref{eq:split_layer_jacobians}, hence the chain-rule recursion~\eqref{eq:delta_int_pos}. For $\alpha^{(l)} \equiv 0$ the scheme reproduces the plain split-pair sensitivities. In the implementation, the gate patterns $M^{(l,\pm)}$ are taken from the cached original activations rather than the drifted split pre-activations, and cached original gradients give small corrections enforcing the \textbf{backward invariant} $\tfrac12\bigl[ (\delta^{(l,+,g)} - \delta^{(l,-,g)}) - (\delta^{(l,+,h)} - \delta^{(l,-,h)}) \bigr] = \partial f^{(l)} / \partial \actl{l}$.
+The Maxout gates are $M^{(l,+)}\coloneqq\diag(\1[\preactl{l}\ge0])$ and $M^{(l,-)}\coloneqq\diag(\1[\preactl{l}<0])$. Differentiating~\eqref{eq:split_pos}--\eqref{eq:split_neg} and~\eqref{eq:dc_split_activations} gives~\eqref{eq:split_layer_jacobians}, hence the chain-rule recursion~\eqref{eq:delta_int_pos}. For $\alpha^{(l)} \equiv 0$ the scheme reproduces the plain split-stream sensitivities. In the implementation, the gate patterns $M^{(l,\pm)}$ are taken from the cached original activations rather than the drifted split pre-activations, and cached original gradients give small corrections enforcing the \textbf{backward invariant} $\tfrac12\bigl[ (\delta^{(l,+,g)} - \delta^{(l,-,g)}) - (\delta^{(l,+,h)} - \delta^{(l,-,h)}) \bigr] = \partial f^{(l)} / \partial \actl{l}$.
 
 For $s\in\{g,h\}$ define the head on the half--half split by $\tilde s^{(l)}(\actl{l})\coloneqq s^{(l)}(\actl{l}/2,-\actl{l}/2)$. The chain rule gives the unified-input gradient
 \begin{equation}
@@ -841,7 +841,7 @@ For $s\in\{g,h\}$ define the head on the half--half split by $\tilde s^{(l)}(\ac
 \end{equation}
 Define $\delta_{\mathrm{shift}}^{(l,s)}\coloneqq(\delta_{\mathrm{shift}}^{(l,+,s)}-\delta_{\mathrm{shift}}^{(l,-,s)})/2$ and $\delta^s_{\mathrm{shift}}\coloneqq\delta_{\mathrm{shift}}^{(0,s)}$. For the final affine readout we use the uniform-notation convention $M^{(L,+)}=I$, $M^{(L,-)}=0$; these are algebraic placeholders, not an additional gate. Standard backpropagation gives $\delta^{(l)} \coloneqq \partial f^{(l)} / \partial \actl{l} = \prod_{j = L, \dots, l+1} W^{(j,x)}$ with gated matrices $W^{(l,x)} \coloneqq M^{(l,+)} \Wl{l}$.
 
-\begin{theoremenv}[Closed formulas for the stabilized split gradients, \LeanResult{thm:closed_formula_shift}]\label{thm:closed_formula_shift}
+\begin{theoremenv}[Closed formulas for the stabilized split-stream gradients, \LeanResult{thm:closed_formula_shift}]\label{thm:closed_formula_shift}
 With $\overline{\alpha}_j\coloneqq\prod_{j\le i\le L}(1-2\alpha^{(i)})$, $\varepsilon_g=1$, and $\varepsilon_h=-1$, the pass~\eqref{eq:delta_int_pos}--\eqref{eq:delta_shift_def} computes, for $0\le l\le L$ and $s\in\{g,h\}$,
 \begin{equation}
 \delta_{\mathrm{shift}}^{(l,s)}
@@ -849,7 +849,7 @@ With $\overline{\alpha}_j\coloneqq\prod_{j\le i\le L}(1-2\alpha^{(i)})$, $\varep
 \label{eq:closed_formula_g}
 \end{equation}
 \AliasLabel{eq:closed_formula_h}{eq:closed_formula_g}
-The $j=L-1$ correction term is zero because $M^{(L,-)}=0$: no minimum or auxiliary $Q$ source is inserted at the affine readout. In particular, $\delta_{\mathrm{shift}}^{(l,g)} - \delta_{\mathrm{shift}}^{(l,h)} = \delta^{(l)}$ for all $l$; for $\alpha^{(i)} \equiv 0$ (i.e.\ $\overline{\alpha}_j = 1$) the formulas describe the plain split-pair gradients, and for $\alpha^{(i)} \equiv 1/2$ all correction terms vanish and the stabilized quantities are $\pm\delta^{(l)}/2$, halves of the original gradient.\end{theoremenv}
+The $j=L-1$ correction term is zero because $M^{(L,-)}=0$: no minimum or auxiliary $Q$ source is inserted at the affine readout. In particular, $\delta_{\mathrm{shift}}^{(l,g)} - \delta_{\mathrm{shift}}^{(l,h)} = \delta^{(l)}$ for all $l$; for $\alpha^{(i)} \equiv 0$ (i.e.\ $\overline{\alpha}_j = 1$) the formulas describe the plain split-stream gradients, and for $\alpha^{(i)} \equiv 1/2$ all correction terms vanish and the stabilized quantities are $\pm\delta^{(l)}/2$, halves of the original gradient.\end{theoremenv}
 
 \begin{proof}
 \emph{Claim 1 (bulk of the shifted sensitivities).} For every $l$,
@@ -958,4 +958,4 @@ Let $\mathcal{G}$ be a feedforward computation graph composed of the chunk types
 Induct in topological order from the non-negative affine input coordinates. Lemma~\ref{lem:linear_chunk}, Proposition~\ref{prop:maxpool_correct}, and Theorem~\ref{cor:dc_split_endpoint} with~\eqref{eq:splitting_identity} give non-negativity and recovery for each chunk. Convexity and monotonicity propagate by composition of convex coordinatewise non-decreasing maps~\parencite{Amos2017}, as in Theorem~\ref{thm:general_dc_network}. Re-centering preserves non-negativity and the difference (Theorem~\ref{thm:shift_forward}), but can destroy monotonicity: $(\max\{p,n\},n)$ becomes $(\relu(p-n),0)$, whose first component decreases with $n$. Hence re-centering is excluded from the structural conclusion, along with winner-takes-it-all pooling. The invariant at $C_M$ proves output recovery.
 \end{proof}
 
-These valid decompositions---the mixing family with its convex \ac{dc} endpoint, curvature-based smooth splits (Section~\ref{sec:dc_splitting_smooth}), and hard/regularized gates---now have stabilized passes and CNN extensions. Chapter~\ref{ch:game_theory} builds games on the Stopping Decomposition; Chapter~\ref{ch:saliency} derives attribution from $g,h$.
+These valid decompositions---the mixing family with its convex \ac{dc} endpoint, curvature-based decompositions for smooth activations (Section~\ref{sec:dc_splitting_smooth}), and hard/regularized gates---now have stabilized passes and CNN extensions. Chapter~\ref{ch:game_theory} builds games on the Stopping Decomposition; Chapter~\ref{ch:saliency} derives attribution from $g,h$.
