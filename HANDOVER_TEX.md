@@ -19,7 +19,7 @@ files in the ignored `literature/references/` directory; full texts are not
 redistributed through Git. Four unverified records with wrong identifiers are
 quarantined in the audit ledger. The source-paper archives remain unchanged.
 The audit follow-up has passed the final build, warning, citation-provenance
-and publication checks recorded in `reports/publication-build.json`. Both rendering switches must remain enabled.
+and publication checks recorded in `reports/publication-build.json`. Full publication builds enable both rendering switches; the current temporary review setting is described below.
 
 The subsequent literature update adds eleven references with short, scoped
 comparisons across five chapters. Selection, placement, metadata, and source
@@ -48,11 +48,18 @@ axiom audits**. All 168 commands exited zero. Evidence remains in
 `reports/verification/commit-1f886dd/` and `reports/verification/current/`;
 the previous `0f3cfb0` gate is archived.
 
-The current revision merges the former 123-page thesis and 80-page supplement
+The consolidation merged the former 123-page thesis and 80-page supplement
 into **one 147-page PDF**, with proofs in their chapters and extended experiments
-in appendices. The target remains 150 pages. Treat
-`reports/single-pdf/publication-checks.json` and the matching
-`reports/publication-build.json` as authoritative for the final copied PDF.
+in appendices. Adding the completed ViT extension produced a 148-page full build.
+The target remains 150 pages. On 11 November the user requested restoration of
+the longer Section 1.1 and temporarily disabled tables and qualitative image
+grids for text review. The restored section follows the pre-compression wording
+and paragraph order, retaining the requested question of what explanations
+explain, a brief white-box/black-box distinction, and the revised MNIST motivation.
+The current PDF is therefore a text-review draft, not a full-content page-budget
+measurement. Treat `reports/publication-build.json` and its referenced
+`reports/introduction-restoration/` checks as authoritative for this copied PDF;
+`reports/single-pdf/` records the earlier consolidation.
 The introductory figure uses a compact layout. Static `tex/main.xmpdata` supplies PDF metadata for reproducible builds without
 metadata-generation warnings.
 
@@ -81,10 +88,12 @@ The separate supplement root is retired. `reports/single-pdf/` records the
 consolidations and independent retention reviews. Compact tables belong beside
 their discussion; only extensive matrices and sweeps remain in appendices.
 The complete ViT comparison is printed once in the main results chapter.
-The consolidation reduces counted chapter, appendix and abstract prose by 23.8%
+At the consolidation checkpoint, counted chapter, appendix and abstract prose fell by 23.8%
 against `b43bc24`; the count excludes separately input table/figure text and the
-bibliography. All 618 original label names, 153 citation keys and 194 figure assets
-remain. Repeated statements use canonical labels and reviewed aliases. The RG
+bibliography. That checkpoint retained all 618 original label names, 153 citation
+keys and 194 figure assets. The later user-requested removal of the peripheral
+functional-identifiability clause removes its citation from the introduction;
+the bibliography record remains. Repeated statements use canonical labels and reviewed aliases. The RG
 recovery claim was also corrected: ungated $\alpha\beta$-LRP recovery covers the
 stated affine/ReLU-chain or positive-support cases; the residual extension uses
 explicit activation gates. Its forward addition identity retains unit temperature
@@ -116,10 +125,16 @@ out of the thesis. Builds run in an isolated snapshot and must pass the existing
 150-page publication guard before replacing the local PDF; the watcher does not
 commit or push.
 
-Ten class-diverse qualitative candidates are in
-`reports/vit-extension/qualitative/`; they remain outside the thesis pending the
-user's selection. Later releases use the same images and add the completed
-methods. `reports/vit-extension/latest-artifacts.json` points to those updated
+Exclude all ViT DC backward-shift alpha ablation tables and figures from the
+thesis (user instruction, 11 November 2026). None are present in the current
+PDF: the extension contains only validation-selected configurations. Keep their
+selected alpha values for reproducibility. The original VGG-16 alpha ablations
+and the game-method ablations are distinct and remain in scope.
+
+The user rejected the ten qualitative candidates on 11 November 2026:
+do not include these comparisons in the thesis. The files in
+`reports/vit-extension/qualitative/` and later releases are diagnostic archives
+only. `reports/vit-extension/latest-artifacts.json` points to updated
 renders after publication. Read `reports/vit-extension/status.json` and
 `watcher.pid` for live state, and `completion-coordinator.txt` for restart and
 retry commands. Cooperating manual builds must take the persistent
@@ -129,8 +144,9 @@ preserves concurrent edits and records each publication in the main receipt.
 ### Independent rendering switches
 
 `tex/preamble/rendering.tex` defines `\RenderTables` and
-`\RenderQualitativeImageTables`, both defaulting to `1` (enabled). Set either to
-`0` to omit its content while retaining a compact placeholder, the full caption,
+`\RenderQualitativeImageTables`, currently both set to `0` for the user's
+temporary text review (11 November 2026). A value of `0` omits the content while
+retaining a compact placeholder, the full caption,
 the list entry and the label. The first controls regular tables, including the
 result longtables. The second controls
 the six qualitative image grids; ordinary diagrams, plots and acronym lists are
@@ -146,7 +162,7 @@ pdflatex -interaction=nonstopmode -halt-on-error -jobname=main \
 
 Settle the single document's cross-references. Keep draft auxiliary files and
 PDFs separate from the normal publication build. All four switch combinations are covered by the evidence in
-`reports/evidence/rendering-switches/`; the final publication settings remain
+`reports/evidence/rendering-switches/`; restore these settings for the final full publication:
 `\RenderTables=1` and `\RenderQualitativeImageTables=1`.
 
 After copying the compiled PDF, run from the repository root:
