@@ -8,13 +8,13 @@ Post-hoc attribution assigns each input feature a score for its influence on a f
 
 PRCA and DRSA optimize relevance over activation subspaces; their virtual layer preserves the decision function when a full orthogonal basis is retained~\parencite{Chormai2024DRSA}. Our DC representation separates contributions using the original network's signs and gates.
 
-Consider a feedforward \ac{relu} network with layers $1,\dots,L$, weights $\Wl{l}$, pre-activations $\preactl{l}=\Wl{l}\actl{l-1}$, hidden activations $\actl{l}=\relu(\preactl{l})$ for $l<L$, and ungated readout $\actl{L}=\preactl{L}$. We attribute a fixed scalar class logit: $f^{(l)}\colon\RR^{d^{(l)}}\to\RR$ denotes layers $l+1,\dots,L$ acting on layer-$l$ activations. Biases are absorbed as in Section~\ref{sec:dc_splitting_relu}. The split-streams $g^{(l)},h^{(l)}\colon\RR^{d^{(l)}}\times\RR^{d^{(l)}}\to\RR$ act on $\act{l}{+},\act{l}{-}$ and satisfy
+Consider a \ac{relu} \ac{mlp} with layers $1,\dots,L$, weights $\Wl{l}$, pre-activations $\preactl{l}=\Wl{l}\actl{l-1}$, hidden activations $\actl{l}=\relu(\preactl{l})$ for $l<L$, and ungated readout $\actl{L}=\preactl{L}$. We attribute a fixed scalar class logit: $f^{(l)}\colon\RR^{d^{(l)}}\to\RR$ denotes layers $l+1,\dots,L$ acting on layer-$l$ activations. Biases are absorbed as in Section~\ref{sec:dc_splitting_relu}. The split-streams $g^{(l)},h^{(l)}\colon\RR^{d^{(l)}}\times\RR^{d^{(l)}}\to\RR$ act on $\act{l}{+},\act{l}{-}$ and satisfy
 \begin{equation}
 	f^{(l)}\bigl(a^{+} - a^{-}\bigr) = g^{(l)}(a^{+}, a^{-}) - h^{(l)}(a^{+}, a^{-})
 	\qquad \text{for all } a^{+}, a^{-} \in \RR^{d^{(l)}},
 	\label{eq:split_correctness_recall}
 \end{equation}
-and we write $g\coloneqq g^{(0)}$, $h\coloneqq h^{(0)}$ with balanced input split $\act{0}{\pm}=\pm x/2$. Derivatives are row vectors (scalar Jacobians); derivative statements hold at differentiability points, hence Lebesgue-almost everywhere because all functions involved are \ac{cpwl}.
+and we write $g\coloneqq g^{(0)}$, $h\coloneqq h^{(0)}$ with balanced input split $\act{0}{\sigma}=\xi_\sigma x/2$. Derivatives are row vectors (scalar Jacobians); derivative statements hold at differentiability points, hence Lebesgue-almost everywhere because all functions involved are \ac{cpwl}.
 
 A \ac{relu} gate transmits positive pre-activations and otherwise returns zero, erasing their negative magnitude and blocking the local gradient. This \emph{subthreshold signal loss} hides the suppressed pre-activation from the output through that gate and from backward rules retaining its ordinary derivative. Ordinary input gradients can therefore exhibit exact regional blindness.
 
@@ -66,7 +66,7 @@ Use the row sensitivities $\delta^{(l,\sigma,s)}$ of \eqref{eq:local_sensitiviti
 The four local sensitivities obey coupled backward recursions, the split analogue of backpropagation underlying this chapter's methods.
 
 \begin{lemmaenv}[Split backward recursions, \LeanResult{lem:split_backward_recursion}]\label{lem:split_backward_recursion}
-With the activation masks $M^{(l,\pm)}$ of Proposition~\ref{prop:gradient_blindness}, extended by $M^{(L,+)}=I$ and $M^{(L,-)}=0$ for the affine readout, for every $0 \leq l < L$ and $s \in \{g, h\}$,
+With the activation masks $M^{(l,\sigma)}$ of Proposition~\ref{prop:gradient_blindness}, extended by $M^{(L,+)}=I$ and $M^{(L,-)}=0$ for the affine readout, for every $0 \leq l < L$ and $s \in \{g, h\}$,
 \begin{align}
 	\delta^{(l, +, s)}
 	&= \delta^{(l+1, +, s)} \bigl( M^{(l+1, +)} \Wsig{l+1}{+} + M^{(l+1, -)} \Wsig{l+1}{-} \bigr)
@@ -110,7 +110,7 @@ Differentiate the correctness identity \eqref{eq:split_correctness_recall} with 
 For the combined gradients \eqref{eq:unified_split_gradients}, Corollary~\ref{cor:backward_invariant} gives $\delta^{(l,g)}-\delta^{(l,h)}=\delta^{(l)}$: regional blindness means equal combined stream gradients, possibly both zero. Partial sensitivities can differ from $\tfrac12W_{\mathrm{abs}}^{[l]}$, recording routing at active and inactive \ac{relu} gates. Proposition~\ref{prop:sensitivity_mass} guarantees a positive partial sensitivity per head for each feature connected to the output by a nonzero-weight path, without guaranteeing nonzero partial differences, combined gradients or attribution. For example, with $f(x)=\relu(\relu(x)+\relu(-x)-10)$ and balanced input split, both heads equal $10$ locally near $x=1$, and both combined gradients vanish.
 
 \begin{remark}[The counterexample, revisited]\label{rem:counterexample_split}
-For \eqref{eq:ig_counterexample} with balanced split $\act{0}{\pm}=\pm x/2$, Section~\ref{sec:dc_splitting_relu} gives $g(x)=x/2+1$, $h(x)=x/2$ and $g(x)-h(x)=1=f(x)$ for $x>1$. At $x=2$ both stream gradients equal $\tfrac{1}{2}$, while $f'(2)=\tfrac{1}{2}-\tfrac{1}{2}=0$. Thus the heads supply a nonzero signal consistent with $f(2)\neq f(0)$, even where their difference is constant. This example with $x'=0$ does not establish Definition~\ref{def:sensitivity} for arbitrary attribution rules or baselines. The following methods turn the pair-valued signal into scalar maps; the shifted combinations of Section~\ref{sec:split_grad} avoid exact cancellation here and assign positive attribution for every $\alpha<\tfrac{1}{2}$.
+For \eqref{eq:ig_counterexample} with balanced split $\act{0}{\sigma}=\xi_\sigma x/2$, Section~\ref{sec:dc_splitting_relu} gives $g(x)=x/2+1$, $h(x)=x/2$ and $g(x)-h(x)=1=f(x)$ for $x>1$. At $x=2$ both stream gradients equal $\tfrac{1}{2}$, while $f'(2)=\tfrac{1}{2}-\tfrac{1}{2}=0$. Thus the heads supply a nonzero signal consistent with $f(2)\neq f(0)$, even where their difference is constant. This example with $x'=0$ does not establish Definition~\ref{def:sensitivity} for arbitrary attribution rules or baselines. The following methods turn the pair-valued signal into scalar maps; the shifted combinations of Section~\ref{sec:split_grad} avoid exact cancellation here and assign positive attribution for every $\alpha<\tfrac{1}{2}$.
 \end{remark}
 
 Non-negative weights let each neuron only \emph{add} evidence, a structure long associated with interpretability~\parencite{ayinde2018nonnegativity,lee1999nmf}. The split-pair gives an arbitrary pretrained network this structure by doubling its width; the following methods exploit its signal flow.
@@ -127,10 +127,10 @@ where $\odot$ denotes the elementwise product and the sum runs over the channels
 \emph{SplitCAM} applies LayerCAM's spatial activation weighting to signed split-stream maps. Raw sensitivities sum \emph{absolute} path products (Proposition~\ref{prop:sensitivity_mass}) and become numerically enormous in deep split networks, requiring the stabilized sensitivities of Section~\ref{subsec:backward_stabilization}.
 
 \begin{definition}[Shifted local sensitivities, \LeanResult{def:shifted_sensitivities}]\label{def:shifted_sensitivities}
-Fix shift parameters $\alpha^{(l)} \in [0, \tfrac{1}{2}]$. For $s \in \{g, h\}$ define, backward from layer $L$, intermediate sensitivities $\delta_{\mathrm{int}}^{(l, \pm, s)}$ by evaluating the recursions \eqref{eq:delta_plus_recursion}--\eqref{eq:delta_minus_recursion} (respectively the base case of Lemma~\ref{lem:split_backward_recursion} at $l = L$) with the already-shifted sensitivities of the subsequent layer, and set
+Fix shift parameters $\alpha^{(l)} \in [0, \tfrac{1}{2}]$. For $s \in \{g, h\}$ and $\sigma\in\{+,-\}$ define, backward from layer $L$, intermediate sensitivities $\delta_{\mathrm{int}}^{(l,\sigma, s)}$ by evaluating the recursions \eqref{eq:delta_plus_recursion}--\eqref{eq:delta_minus_recursion} (respectively the base case of Lemma~\ref{lem:split_backward_recursion} at $l = L$) with the already-shifted sensitivities of the subsequent layer, and set
 \begin{equation}
-	\delta_{\mathrm{shift}}^{(l, \pm, s)}
-	\coloneqq \delta_{\mathrm{int}}^{(l, \pm, s)} - \alpha^{(l)} \bigl( \delta_{\mathrm{int}}^{(l, +, s)} + \delta_{\mathrm{int}}^{(l, -, s)} \bigr),
+	\delta_{\mathrm{shift}}^{(l,\sigma, s)}
+	\coloneqq \delta_{\mathrm{int}}^{(l,\sigma, s)} - \alpha^{(l)} \bigl( \delta_{\mathrm{int}}^{(l, +, s)} + \delta_{\mathrm{int}}^{(l, -, s)} \bigr),
 	\qquad
 	\delta_{\mathrm{shift}}^{(l, s)} \coloneqq \frac{\delta_{\mathrm{shift}}^{(l, +, s)} - \delta_{\mathrm{shift}}^{(l, -, s)}}{2}.
 	\label{eq:shift_definition}
@@ -198,12 +198,12 @@ The original network's $\varepsilon$-rule mixes signed contributions, producing 
 \end{remark}
 
 \begin{remark}[Sensitivity to learned parameters]\label{rem:splitlrp_sanity}
-The parameter-randomization sanity check of \textcite{Adebayo2018sanity} differentiates the three split methods. After reinitializing the last three feedforward layers of VGG-16, every reported SplitCAM and SplitGrad configuration has lower SSIM than every listed baseline, whereas the HOG and Spearman comparisons are mixed. This establishes sensitivity to the tested parameter changes, not faithfulness to the learned decision process. SplitLRP retains high HOG and Spearman similarity despite a decrease in SSIM. This retained structure is consistent with parameter-insensitivity concerns for some relevance-propagation rules~\parencite{sixt2020whenexplanationslie}, but the comparison does not identify the mechanism in SplitLRP. Section~\ref{app:p1_sanity} reports the quantitative results and the caveats of \textcite{Binder2022shortcomings} on randomization-based checks.
+The parameter-randomization sanity check of \textcite{Adebayo2018sanity} differentiates the three split methods. After reinitializing the last three fully connected layers of VGG-16, every reported SplitCAM and SplitGrad configuration has lower SSIM than every listed baseline, whereas the HOG and Spearman comparisons are mixed. This establishes sensitivity to the tested parameter changes, not faithfulness to the learned decision process. SplitLRP retains high HOG and Spearman similarity despite a decrease in SSIM. This retained structure is consistent with parameter-insensitivity concerns for some relevance-propagation rules~\parencite{sixt2020whenexplanationslie}, but the comparison does not identify the mechanism in SplitLRP. Section~\ref{app:p1_sanity} reports the quantitative results and the caveats of \textcite{Binder2022shortcomings} on randomization-based checks.
 \end{remark}
 
 \subsection{SplitGrad}\label{sec:split_grad}
 
-SplitGrad uses the stabilized combined gradients of \eqref{eq:unified_split_gradients} directly. The balanced embedding $\act{0}{\pm}=\pm x/2$ gives the factor $\tfrac12$ in \eqref{eq:shift_definition}; Theorem~\ref{thm:closed_formula_shift} shows that the difference of the stabilized sensitivities of the two convex heads recovers the exact original gradient.
+SplitGrad uses the stabilized combined gradients of \eqref{eq:unified_split_gradients} directly. The balanced embedding $\act{0}{\sigma}=\xi_\sigma x/2$ gives the factor $\tfrac12$ in \eqref{eq:shift_definition}; Theorem~\ref{thm:closed_formula_shift} shows that the difference of the stabilized sensitivities of the two convex heads recovers the exact original gradient.
 
 \begin{definition}[SplitGrad]\label{def:splitgrad}
 For a layer $l$ and stream $s \in \{g, h\}$, the SplitGrad attribution map is the channel mean of the combined shifted sensitivity,

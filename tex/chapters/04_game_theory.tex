@@ -56,7 +56,7 @@ $z^{(l)}_j = \sum_i a^{(l-1)}_i W^{(l)}_{ij} + b^{(l)}_j$, and activations $a^{(
     \relu(z^{(l)}_j)$. We initially explain a scalar activation $f(x) = a^{(L)}_u$;
 Section~\ref{ptnb:app:affine-readout} extends this to ungated, possibly negative affine logits.
 Write $[u]^{+} = \max(u,0)$, $[u]^{-} = \max(-u,0)$, hence $u = [u]^+ - [u]^-$, and
-$W^{(l,\pm)} = [W^{(l)}]^{\pm}$ entrywise.
+$W^{(l,\sigma)} = [W^{(l)}]^{\sigma}$ entrywise for $\sigma\in\{+,-\}$.
 
 \paragraph{Layer-wise relevance propagation.} Starting from $R^{(L)}_u = f(x)$,
 \ac{lrp}~\parencite{Bach2015} redistributes each neuron's relevance $R^{(l)}_j$ backward, layer by layer, in proportion to each input's
@@ -70,7 +70,7 @@ positive and negative fractions are normalized separately and scaled by $\alpha$
     R^{(l-1)}_i &= \textstyle\sum_j \Bigl( \alpha\, \tfrac{[a^{(l-1)}_i
     W^{(l)}_{ij}]^+}{\Sigma^{(l,+)}_j + \varepsilon} - \beta\, \tfrac{[a^{(l-1)}_i
     W^{(l)}_{ij}]^-}{\Sigma^{(l,-)}_j + \varepsilon} \Bigr) R^{(l)}_j, \nonumber\\
-    \Sigma^{(l,\pm)}_j &= \textstyle\sum_k [a^{(l-1)}_k W^{(l)}_{kj}]^{\pm} + [b^{(l)}_j]^{\pm}.
+    \Sigma^{(l,\sigma)}_j &= \textstyle\sum_k [a^{(l-1)}_k W^{(l)}_{kj}]^{\sigma} + [b^{(l)}_j]^{\sigma},\qquad \sigma\in\{+,-\}.
 \end{align}
 \AliasLabel{ptnb:eq:lrp-eps-recursion}{ptnb:eq:lrp-ab}
 \AliasLabel{ptnb:eq:routing-sigma-def}{ptnb:eq:lrp-ab}
@@ -131,7 +131,7 @@ recursions~\eqref{ptnb:eq:split-pos}--\eqref{ptnb:eq:split-neg} with transposed 
 the shared gate $f_{\mathrm{stop}}$ of Definition~\ref{def:fstop}. Here the input pair is the
 canonical positive/negative split, rather than an arbitrary non-negative pair:
 \begin{equation}\label{ptnb:eq:input-split-convention}
-    a_{\mathrm{stop},k}^{(0,\pm)}=x_k^\pm=[\pm x_k]^+.
+    a_{\mathrm{stop},k}^{(0,\sigma)}=x_k^\sigma=[x_k]^\sigma.
 \end{equation}
 
 \begin{theoremenv}[Layer-wise recovery, \LeanResult{ptnb:thm:decomp-recovery}]\label{ptnb:thm:decomp-recovery}
@@ -163,10 +163,10 @@ sum. The game implements this parity bookkeeping by switching players at negativ
 
 \subsection{Game Definition}\label{ptnb:app:adf-game-def}\label{sec:shapley_bellman_recursion}\label{ptnb:app:adf-recursion}
 
-The construction retains the $\pm$ states, sign-split transitions, bias continuation rewards,
+The construction retains the sign-indexed states, sign-split transitions, bias continuation rewards,
 input payoffs, cemetery, and stop/continue choices of \textcite{Gaubert2025}. For attribution, we
-resolve their signed value $\pm a_j^{(l)}$ into non-negative player payoffs and replace terminal
-$\pm x_k$ by $x_k^+,x_k^-$, exposing the parity paths.
+resolve their signed value $\xi_\sigma a_j^{(l)}$ into non-negative player payoffs and replace terminal
+$\xi_\sigma x_k$ by $x_k^+,x_k^-$, exposing the parity paths.
 
 \begin{definition}[Stopping Game State Space]\label{ptnb:def:adf-game-states}
 The states are $s_{j,q}^{(l,\mathrm{act})}$, $1\leq l\leq L$, for neuron $j$ with player
@@ -215,7 +215,7 @@ The active player $q$ maximizes its advantage $V_q$, rather than its individual 
     \caption[Stopping Game: trajectories and local stopping decisions]{Stopping Game: trajectories
     (left) and local decisions (right). Continuing from $s_{2,+}^{(2)}$ reaches $s_{1,+}^{(1)}$,
     $s_{2,+}^{(1)}$, and $s_{3,-}^{(1)}$ with probabilities $7/10$, $2/10$, and $1/10$;
-    only the negative edge switches players. Labels $R^\pm$ denote expected continuation payoffs,
+    only the negative edge switches players. Labels $R^\sigma$ denote expected continuation payoffs,
     excluding discount $\gamma_2^{(2)}=10$ at $s_{2,+}^{(2)}$. At $s_{3,-}^{(1)}$, $R^-=40$ and
     $R^+=100$ give advantage $-60$, so $P^-$ stops and $V_-=0$ (gray half-neuron). These trajectories
     terminate there; the cemetery is omitted. Their continuation payoff to both players is zero,
@@ -565,7 +565,7 @@ probability $|c_{uj}|/\gamma_u$, retaining the player for $c_{uj}\geq0$ and swit
 for $c_{uj}<0$. Its value is therefore $b_u+\sum_jc_{uj}h_j=f_u(x)$, even when this value is
 negative. If $\gamma_u=0$, the root pays $b_u$ and moves to the cemetery; the input derivative
 is zero. On the strict gate cells of Theorem~\ref{ptnb:thm:gradient}, let
-$\Gamma^{\mathrm{SG}}_{j,\pm}(i)$ denote the input-state occupations from a unit source at
+$\Gamma^{\mathrm{SG}}_{j,\sigma}(i)$ denote the input-state occupations from a unit source at
 hidden neuron $j$ with initial player $+$. The added transition gives
 \begin{align}\label{ptnb:eq:affine-readout-gradient}
     \partial_i f_u(x)=\sum_j c_{uj}
@@ -586,11 +586,11 @@ and the branchwise Gibbs policies give the coefficients
 \end{align}
 Bias and outside-option shares are absorbed. An empty branch is completed by a transition to
 the cemetery, and its ordinary-successor fractions are zero ($0/0\coloneqq0$).
-For unit-source hidden occupations $\Gamma^{\mathrm{RG}}_{j,\pm}(i)$, define
+For unit-source hidden occupations $\Gamma^{\mathrm{RG}}_{j,\sigma}(i)$, define
 \begin{align}\label{ptnb:eq:affine-readout-occupation}
-    \widehat\Gamma_\pm(i)=\sum_j\bigl(
-    q_j^+\Gamma^{\mathrm{RG}}_{j,\pm}(i)
-    +q_j^-\Gamma^{\mathrm{RG}}_{j,\mp}(i)\bigr).
+    \widehat\Gamma_\sigma(i)=\sum_j\bigl(
+    q_j^+\Gamma^{\mathrm{RG}}_{j,\sigma}(i)
+    +q_j^-\Gamma^{\mathrm{RG}}_{j,\opp{\sigma}}(i)\bigr).
 \end{align}
 Since $h_j=0$ implies $q_j^+=q_j^-=0$, only positive hidden activations receive nonzero relevance.
 Subtracting the equations gives affine $\alpha\beta$ redistribution followed by
@@ -772,7 +772,7 @@ At every activation state,
        =a_{\mathrm{soft},j}^{(l,p\oplus q,\theta)},\qquad
     V_q^{\pi^\star}(s_{j,q}^{(l,\mathrm{act})})=\mathrm{sp}_\theta(z_j^{(l)}).
 \end{equation}
-Here the Softplus split starts at $a_{\mathrm{soft},k}^{(0,\pm,\theta)}=x_k^\pm$, follows the affine
+Here the Softplus split starts at $a_{\mathrm{soft},k}^{(0,\sigma,\theta)}=x_k^\sigma$, follows the affine
 recursion~\eqref{ptnb:eq:split-pos}--\eqref{ptnb:eq:split-neg}, and uses the entropy pair
 \eqref{eq:fsoft_def}, with $\mathrm{sp}_\theta=\sigma_\theta$ and
 $\mathcal H_\theta(z)=\mathcal H(\mathrm{sp}'_\theta(z))$.
