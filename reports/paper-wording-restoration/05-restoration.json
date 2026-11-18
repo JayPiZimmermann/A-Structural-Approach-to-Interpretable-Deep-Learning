@@ -1,0 +1,212 @@
+{
+  "status": "restored_frozen",
+  "file": "tex/chapters/05_saliency.tex",
+  "baseline": "/tmp/thesis-paper-closeness/before-restoration/05_saliency.tex",
+  "source_priority": [
+    "literature/references/hiddenMono.pdf (official CVPR accepted main paper)",
+    "/tmp/thesis-paper-closeness/hiddenMono_supplement.pdf (official CVPR supplement)",
+    "/tmp/thesis-paper-closeness/ptnb/main.tex (pristine PTNB source)",
+    "/tmp/thesis-paper-closeness/hm-f171c4e (secondary TeX used to locate source clauses; authoritative PDF controls)"
+  ],
+  "source_hashes": {
+    "literature/references/hiddenMono.pdf": "95020d66c54a63e432635a73b690d7d5c983262bdfc6bc0ba258a112ca963965",
+    "/tmp/thesis-paper-closeness/hiddenMono_supplement.pdf": "b5c7e828772ad697321627602ce598cf18fddd1f5891308cfe7e62ce84eb0841",
+    "/tmp/thesis-paper-closeness/ptnb/main.tex": "a5973cd06a198b94b6c650c90786d4dfbadef5e272893dd7a0ecc2da77cfbb59"
+  },
+  "before_sha256": "90480324944336b51991998205dcd5ff54660f3161dfa78bab61f78bde391bcb",
+  "after_sha256": "c833215aa6431d640dbc975b63d6064e4ea59e457729113595b293c310ff1782",
+  "prose_count": {
+    "before": 3338,
+    "after": 3496,
+    "growth_words": 158,
+    "growth_percent": 4.733373277411624
+  },
+  "checks": {
+    "equation_blocks": {
+      "byte_identical": true,
+      "count": 15
+    },
+    "labels": {
+      "byte_identical": true,
+      "count": 50
+    },
+    "badges": {
+      "byte_identical": true,
+      "count": 5
+    },
+    "headings": {
+      "byte_identical": true,
+      "count": 19
+    },
+    "figures": {
+      "byte_identical": true,
+      "count": 3
+    },
+    "citation_occurrences": {
+      "byte_identical": true,
+      "count": 34
+    },
+    "scientific_caveats_and_proofs": {
+      "byte_identical": true,
+      "scope": "All proofs; counterfactual/full-model caveat; direct-training mechanism-study opening; numerical runtime/baseline caveats; randomization conclusions; zero-gradient counterexample; closing MNIST scope qualification."
+    }
+  },
+  "changed_passages": [
+    {
+      "old": "Established families include gradient saliency",
+      "new": "A large body of XAI research investigates pixel- or feature-level attributions in deep networks, including gradient saliency",
+      "source": "HM accepted paper p. 24108, Related work on XAI",
+      "retention": "Keep all current citation keys and added context."
+    },
+    {
+      "old": "deconvolution and guided backpropagation",
+      "new": "deconvolutional and guided-backprop visualizations",
+      "source": "HM accepted paper p. 24108, Related work on XAI",
+      "retention": ""
+    },
+    {
+      "old": "baseline-based methods such as Integrated Gradients and DeepLIFT",
+      "new": "axiomatic attributions such as Integrated Gradients and DeepLIFT",
+      "source": "HM accepted paper p. 24108, Related work on XAI",
+      "retention": "The source calls these axiomatic; baseline dependence remains explicit later."
+    },
+    {
+      "old": "\\ac{cam} methods explain \\ac{cnn} decisions by combining spatial activation maps of a convolutional layer with class-specific weighting coefficients.",
+      "new": "\\ac{cam} and its variants generate visual explanations by combining layer activation maps with class specific weights or layer gradients.",
+      "source": "HM accepted paper p. 24111, Section 4.1",
+      "retention": "Keep detailed GAP, channel pooling, LayerCAM positive-gradient and resolution discussion."
+    },
+    {
+      "old": "\\emph{SplitCAM} applies LayerCAM's spatial activation weighting to signed split-stream maps.",
+      "new": "\\emph{SplitCAM} extends the LayerCAM framework to our split-pair architecture.",
+      "source": "HM accepted paper p. 24111, Section 4.1",
+      "retention": "Signed formulas and explicit no-clipping distinction remain below."
+    },
+    {
+      "old": "We use $\\alpha^{(l)}\\equiv\\alpha$ unless stated otherwise.",
+      "new": "We usually choose all the factors $\\alpha^{(l)}$ to be the same value $\\alpha$.",
+      "source": "HM accepted paper p. 24110, Section 3.3",
+      "retention": "Preserve all alpha endpoints and intermediate bulk formula."
+    },
+    {
+      "old": "SplitCAM \\emph{omits positive-gradient clipping and the outer $\\relu$}, retaining signed shifted sensitivities.",
+      "new": "SplitCAM omits the positive filtering by the $\\relu$ function: neither the shifted sensitivities nor the final map are clipped.",
+      "source": "HM accepted paper p. 24111, Section 4.1",
+      "retention": "Make both absent clipping operations explicit; equation blocks unchanged."
+    },
+    {
+      "old": "Under Section~\\ref{sec:stabilization_dc}, the forward pass scales split-stream activations and restores their invariant against cached original activations. The backward pass applies Definition~\\ref{def:shifted_sensitivities} using masks from those activations, preserving \\eqref{eq:backward_invariant} against the cached original gradient.",
+      "new": "After scaling as in Section~\\ref{sec:stabilization_dc}, we apply corrective shifts to the split-stream activations such that their difference matches the original network's activation. In the backward pass we apply the shifting procedure of Definition~\\ref{def:shifted_sensitivities} and slightly correct the four sensitivity maps in each layer to ensure the backward invariant \\eqref{eq:backward_invariant}, using masks from cached original activations and the cached original gradient.",
+      "source": "HM accepted paper p. 24111, Section 4.1",
+      "retention": "Restore source forward/backward wording; preserve masks from cached original activations and the cached original gradient."
+    },
+    {
+      "old": "where it concentrates on entire classified objects noticeably better than LayerCAM at the same layer",
+      "new": "where we observe more focus on the whole classified objects by SplitCAM compared to LayerCAM at the same layer",
+      "source": "HM official supplement Section C.1, VGG16 Qualitative Saliency Map Comparison",
+      "retention": "Keep model, layer 26, empirical scope, Quantus and full layer-ablation references."
+    },
+    {
+      "old": "\\ac{lrp}~\\parencite{Bach2015} propagates a relevance budget backward, distributing each neuron's relevance to its inputs in proportion to their contributions;",
+      "new": "\\ac{lrp}~\\parencite{Bach2015} redistributes the output score iteratively from the output layer to the input layer depending on the weights and activations;",
+      "source": "HM accepted paper p. 24112, Section 4.2",
+      "retention": "Keep overview/best-practice citations and bias-excluding epsilon-stabilized implementation."
+    },
+    {
+      "old": "The $\\gamma$-rule~\\parencite{Montavon_2022_gammaLRP} emphasizes positive contributions.",
+      "new": "The $\\gamma$-rule~\\parencite{Montavon_2022_gammaLRP} emphasizes positive influences on the prediction by increasing the influence of positive weights.",
+      "source": "HM accepted paper p. 24112, Section 4.2",
+      "retention": "Source wording with grammatical preposition corrected."
+    },
+    {
+      "old": "and redistributes the relevances $R^{(l+1)}_i$ onto the inputs as",
+      "new": "and, given relevances $R^{(l+1)}_i$ at the outputs, redistribute them to inputs $j$ as",
+      "source": "HM accepted paper p. 24112, Section 4.2",
+      "retention": "Preserve source at-the-outputs/input-j wording while joining grammatically to the unchanged comma-ending contribution equation."
+    },
+    {
+      "old": "with a small stabilizer $\\varepsilon > 0$.",
+      "new": "with a small $\\varepsilon > 0$ for numerical stability.",
+      "source": "HM accepted paper p. 24112, Section 4.2",
+      "retention": ""
+    },
+    {
+      "old": "\\emph{SplitLRP} treats both split-streams as neuron groups in one split network. Each layer carries relevance tensors $R^{(l,+)},R^{(l,-)}$, jointly propagated through the four coupling blocks built from $\\Wsig{l}{+},\\Wsig{l}{-}$. Propagation starts at the class-specific positive $g$-output $\\act{L}{+}$.",
+      "new": "In the \\ac{dc} decomposition, each layer consists of two split-streams, which \\emph{SplitLRP} treats as two sets of neurons within a unified model. Accordingly, LRP on the split-pair produces two relevance tensors in each layer, $R^{(l,+)}$ and $R^{(l,-)}$, jointly propagated through the four coupling blocks built from $\\Wsig{l}{+},\\Wsig{l}{-}$. We propagate relevance from the class-specific positive output $\\act{L}{+}$.",
+      "source": "HM accepted paper p. 24112, SplitLRP implementation details",
+      "retention": "Preserve coupled split-network semantics and exact output initialization; avoid calling streams separately independent."
+    },
+    {
+      "old": "\\item \\emph{Forward pass.} The split-stream activations are computed with the same scaling stabilization and forward-invariant correction of Section~\\ref{sec:stabilization_dc} as SplitCAM.",
+      "new": "\\item \\emph{Forward pass.} We scale and correct the activations in the forward pass just as we do in SplitCAM (Section~\\ref{sec:stabilization_dc}).",
+      "source": "HM accepted paper p. 24112, SplitLRP implementation details",
+      "retention": ""
+    },
+    {
+      "old": "Relevance passes through max-pooling by the winner-takes-it-all scheme, assigning the full relevance to the location attaining the maximum;",
+      "new": "We propagate relevance backwards through max-pooling layers using the ``winner-takes-all'' scheme, assigning all relevance to the location that achieved the maximum activation;",
+      "source": "HM accepted paper p. 24112, Maxpooling Nonlinearities",
+      "retention": "Preserve correct batch-normalization folding and even residual splitting; do not restore source LayerNorm-folding error."
+    },
+    {
+      "old": "Equation~\\eqref{eq:splitlrp_combined} combines them into a signed saliency map.",
+      "new": "Equation~\\eqref{eq:splitlrp_combined} aggregates the positive and negative streams into a single signed saliency map.",
+      "source": "HM accepted paper p. 24112, Combined LRP maps",
+      "retention": "Keep sign-inversion parity and support/opposition interpretation."
+    },
+    {
+      "old": "SplitGrad uses the stabilized combined gradients of \\eqref{eq:unified_split_gradients} directly.",
+      "new": "Our SplitGrad method averages the combined shifted local sensitivities of \\eqref{eq:unified_split_gradients} over channels at layer $l$.",
+      "source": "HM accepted paper pp. 24111\u201324112, SplitGrad",
+      "retention": "Current combined-stream definition preserved, not replaced by the partial +,g variant of main-paper equation (8)."
+    },
+    {
+      "old": "\\item \\emph{Regularization.} Since non-negative weights preclude cancellation, activations can grow quickly; a small initialization scale and a weight decay of $10^{-3}$ keep the streams stable during training.",
+      "new": "\\item \\emph{Regularization.} Because non-negative weights can cause exploding activations, we use a small initialization scale for all base model weights and apply a weight decay of $10^{-3}$ in all experiments.",
+      "source": "HM official supplement Section D.1, Restricting the weights",
+      "retention": "Exact source sentence; all original settings retained."
+    },
+    {
+      "old": "The empirical study uses two MNIST base architectures:",
+      "new": "We train two base architectures on MNIST:",
+      "source": "HM accepted paper p. 24110, Section 3.5",
+      "retention": "Keep architecture dimensions/parameters and all eight variants."
+    },
+    {
+      "old": "The $g$-gradient best traces strokes for the ground-truth logit; for competing ``6'', ``8'' and ``9'', $h$-gradients concentrate \\emph{between the arches}, where added pixels would geometrically close loops.",
+      "new": "The $g$-gradient for the ground-truth class ``3'' follows the digit strokes most accurately. For classes ``6'', ``8'' and ``9'', the $h$-gradients are dense \\emph{between the arches} of the ``3'', where added pixels would geometrically close loops.",
+      "source": "HM official supplement Section D.2, Results",
+      "retention": "Retain geometric reading only; no unsupported full-logit intervention claim."
+    },
+    {
+      "old": "The single \\texttt{cnn\\_maxout} IC model's gradients are mostly positive on strokes and negative on background, with less class-dependent directional variation.",
+      "new": "The gradients of the single \\texttt{cnn\\_maxout} IC model are mostly positive on the strokes and negative on the background, with less class-dependent directional variation.",
+      "source": "HM official supplement Section D.2, Results",
+      "retention": "Keep corrected IC model identity and comparative rather than absolute absence of class variation."
+    },
+    {
+      "old": "Chapter~\\ref{ch:game_theory} varies equilibrium trajectory laws through routing and stopping temperatures $\\tau,\\theta$, the policy-entropy bonus, risk $\\lambda\\le0$, stream balance $(\\alpha,\\beta)$, and \\ac{lrp} stabilization $\\epsilon\\ge0$.",
+      "new": "Game-theoretic concepts like risk aversion and entropy regularization map back to novel modes of the backward rules for probing and tuning explanation properties. Chapter~\\ref{ch:game_theory} varies equilibrium trajectory laws through routing and stopping temperatures $\\tau,\\theta$, the policy-entropy bonus, risk $\\lambda\\le0$, stream balance $(\\alpha,\\beta)$, and \\ac{lrp} stabilization $\\epsilon\\ge0$.",
+      "source": "PTNB main.tex Section Game-Theoretic Modes",
+      "retention": "Restore source motivation, preserving complete current parameter list and exactness caveats."
+    },
+    {
+      "old": "Following DAVE~\\parencite{Wrobel2024}, compute attributions on $N$ randomly transformed inputs (small rotations, translations, horizontal flips), map them back by $\\tau_t^{-1}$, and average.",
+      "new": "Following DAVE's transform-averaging strategy~\\parencite{Wrobel2024}, we compute explanations on $N$ transformed inputs (small random rotations, translations, horizontal flips), map each explanation back to the original image coordinates by $\\tau_t^{-1}$, and average the aligned maps.",
+      "source": "PTNB main.tex Appendix Equivariant Spatial Averaging",
+      "retention": "Retain distinction from routing temperature and qualified Reynolds-inspired smoothing statement."
+    }
+  ],
+  "not_restored": [
+    "Source LayerCAM equation lacks the positive-gradient inner clip; the corrected baseline formula is unchanged.",
+    "Source treats SplitCAM shifted sensitivities as gradients; current raw/shifted distinction remains.",
+    "Source folds LayerNorm into affine layers; retain correct BatchNorm-only folding statement.",
+    "Source claims exact SplitLRP budget conservation despite epsilon stabilizer; retain up-to-epsilon qualification.",
+    "Source claims individual h-stream sensitivity establishes full-model counterfactual effect; complete-model sum and intervention caveats retained.",
+    "Source overclaims superiority in randomization, faithfulness and broad competitive runtime; retain corrected empirical comparisons and baseline ambiguity.",
+    "Source claims universal factual/counterfactual disentanglement or conclusions about pretrained models from MNIST; retain directly trained illustrative scope.",
+    "All novel theoretical exposition/proofs, DCINN-to-pretrained mechanism framing, and new related work stay in current structure."
+  ],
+  "build_run": false,
+  "commit_created": false
+}

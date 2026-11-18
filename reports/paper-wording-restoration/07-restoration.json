@@ -1,0 +1,196 @@
+{
+  "file": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/tex/chapters/07_transformers.tex",
+  "sources": {
+    "primary_ptnb": "/tmp/thesis-paper-closeness/ptnb/main.tex",
+    "primary_hm_supplement": "/tmp/thesis-paper-closeness/hiddenMono_supplement.pdf",
+    "secondary_hm_source": "/tmp/thesis-paper-closeness/hm-f171c4e/appendix/maxout_networks.tex",
+    "primary_hm_main_text": "/tmp/thesis-paper-closeness/hm-official.txt"
+  },
+  "baseline": "/tmp/thesis-paper-closeness/before-restoration/07_transformers.tex",
+  "baseline_sha256": "85646659f95e1868f78b32a808e0d3658485cd7d92ba67eba3c1b6c91377dd25",
+  "result_sha256": "c02f5aaf06d14ed27c7fde4ada6380075a4fde71849605d24e80742a421251ac",
+  "restorations": [
+    {
+      "source": "Official HM main paper, Multiplicative Networks; official supplement Section E",
+      "reason": "Restore original opening and component terminology, retaining the corrected monotone-versus-convex distinction.",
+      "before": "Gating layers, squeeze-and-excitation blocks, and attention multiply activations entrywise or contract tensors. The sign-sorted construction of \\textcite{hiddenMono} preserves the difference and monotonicity of non-negative stream pairs. Section~\\ref{sec:transformer_dc} gives a convexity-preserving product identity combining with Chapter~\\ref{ch:decompositions}'s multivariate softmax pair.",
+      "after": "In this section we lay the theoretical foundation to split neural networks that contain non-additive components such as gating, SE-blocks or attention modules. These require matrix multiplication and Hadamard product layers. The sign-sorted construction of \\textcite{hiddenMono} preserves the difference and monotonicity on non-negative split inputs; Section~\\ref{sec:transformer_dc} adds convexity using Chapter~\\ref{ch:decompositions}'s multivariate softmax pair."
+    },
+    {
+      "source": "Official HM supplement, Section E; source spelling cross-checked against hm-f171c4e/appendix/maxout_networks.tex",
+      "reason": "Restore the original transition to the abstract architecture without importing its unsupported convexity claim.",
+      "before": "We enlarge the architecture class for the splitting theorem. A rank-$k$ Maxout unit",
+      "after": "For full generality, we consider rank-$k$ Maxout networks, a generalization of ReLU networks. A rank-$k$ Maxout unit"
+    },
+    {
+      "source": "Official HM supplement, Section E; source spelling cross-checked against hm-f171c4e/appendix/maxout_networks.tex",
+      "reason": "Restore the per-neuron induction wording while preserving the orthant and non-negativity needed for multiplication.",
+      "before": "Induct in topological order on the non-negative orthant. Coordinate projections are posynomials; non-negative scaling, addition and maxima preserve finite maxima of posynomials. Products of non-negative factors distribute over finite maxima, covering every network operation.",
+      "after": "We prove that the activation of each neuron is the maximum of posynomials, by induction in topological order. Coordinate projections start the induction. On the non-negative orthant, finite maxima of posynomials are closed under non-negative scaling, addition, maxima and multiplication; products distribute over finite maxima."
+    },
+    {
+      "source": "Official HM supplement, Section E; source spelling cross-checked against hm-f171c4e/appendix/maxout_networks.tex",
+      "reason": "Restore the original attribution of the constructive proof.",
+      "before": "Extend \\textcite{hertrich2025neuralnetworksvirtualextended}'s argument in topological order.",
+      "after": "The proof follows and extends the idea of \\textcite{hertrich2025neuralnetworksvirtualextended}, processing neurons in topological order."
+    },
+    {
+      "source": "Official HM supplement, Section E; source spelling cross-checked against hm-f171c4e/appendix/maxout_networks.tex",
+      "reason": "Use the original construction terminology without re-expanding the proof.",
+      "before": "For multiplication, create one auxiliary monomial per expanded summand and collect even/odd negative-stream parity into $v^+$ and $v^-$, respectively.",
+      "after": "For multiplication, introduce one multiplication neuron for each summand, collecting even/odd negative-stream parity into $v^+$ and $v^-$, respectively."
+    },
+    {
+      "source": "PTNB v2 main.tex: sec:attention",
+      "reason": "Restore the paper\u2019s oracle-game formulation; nearby sentences retain the fixed-mean/scale convention and full-DC distinction.",
+      "before": "The realized softmax row supplies a detached reference policy, and explanatory trajectories follow only the Value route.",
+      "after": "The QK-softmax block is replaced by an \\emph{oracle game} emitting a detached reference policy, with occupation-measure trajectories flowing only through the Value route."
+    },
+    {
+      "source": "PTNB v2 main.tex: app:attention-target-rule",
+      "reason": "Restore the original single-head setup.",
+      "before": "Consider one head with output/query token",
+      "after": "We focus on a single attention head with output/query token"
+    },
+    {
+      "source": "PTNB v2 main.tex: app:attention-target-rule",
+      "reason": "Restore the original packed-projection and multi-head explanation.",
+      "before": "Mixing preserves feature $d$. In ViT-B/16, $v=XW_v$ uses one $D\\times D$ projection reshaped into $n_h$ heads, with $W_v^{(h)}\\in\\RR^{D\\times d_h}$ its head-$h$ column block. Each $X_{k,e}$ feeds every head; per-head input relevances sum there.",
+      "after": "AV mixing acts independently per feature dimension $d$. ViT-B/16 implements the Value projection as a single $D\\times D$ linear $v=XW_v$ followed by a reshape into $n_h$ heads; $W_v^{(h)}\\in\\RR^{D\\times d_h}$ is its head-$h$ column block. Each input embedding $X_{k,e}$ feeds Value entries of every head, and the per-head $R^X$ contributions sum there."
+    },
+    {
+      "source": "PTNB v2 main.tex: app:attention-target-rule",
+      "reason": "Restore the original contrast between composite and sequential propagation, retaining all reported-results scope.",
+      "before": "Sequential $\\alpha\\beta$-\\ac{lrp} on $X\\to v\\to O$ instead splits netted Values and applies the factors twice, giving a different rule for mixed-sign predecessors.",
+      "after": "Sequential $\\alpha\\beta$-\\ac{lrp} on $X\\to v\\to O$ splits by the sign of the netted Value entry and applies $(\\alpha,\\beta)$ at both stages; the two rules differ for mixed-sign predecessors."
+    },
+    {
+      "source": "PTNB v2 main.tex: app:kl-legendre-fenchel",
+      "reason": "Restore the original short proof; the subsequent corrected zero-support extension is unchanged.",
+      "before": "The Gibbs identity~\\parencite{BoydVandenberghe2004},\n$\\E_\\pi[r]-\\mathrm{KL}(\\pi\\|\\bar\\pi)=\\log Z-\\mathrm{KL}(\\pi\\|\\pi_r^\\star)$,\nis maximized exactly at $\\pi=\\pi_r^\\star$.",
+      "after": "This is the Gibbs variational principle~\\parencite{BoydVandenberghe2004}:\n$\\E_\\pi[r]-\\mathrm{KL}(\\pi\\|\\bar\\pi)=\\log Z-\\mathrm{KL}(\\pi\\|\\pi_r^\\star)$,\nwhich is maximal, with value $\\log Z$, exactly at $\\pi=\\pi_r^\\star$."
+    },
+    {
+      "source": "PTNB v2 main.tex: prop:attn-value-policy proof",
+      "reason": "Restore the paper\u2019s name for the KL specialization.",
+      "before": "Apply~\\eqref{ptnb:eq:kl-lf-linearized} with $u(k)=\\tilde v_{k,d}^\\kappa$.",
+      "after": "Apply the logit specialization~\\eqref{ptnb:eq:kl-lf-linearized} with $u(k)=\\tilde v_{k,d}^\\kappa$."
+    },
+    {
+      "source": "PTNB v2 main.tex: app:attention-oracle",
+      "reason": "Restore the original best-response formulation while keeping the statement that the cached reference suffices.",
+      "before": "The cached reference $A_{t,\\cdot}$ suffices for Value routing. Optionally, interpret it as the entropy-regularized best response to detached logits $e_{tk}=Q_tK_k^\\top/\\sqrt{d_h}$. At temperature $1$,~\\eqref{ptnb:eq:gibbs-lse} gives",
+      "after": "The cached reference $A_{t,\\cdot}$ suffices for Value routing. It is itself the entropy-regularized best response of an auxiliary \\emph{oracle} player whose payoff is the detached query--key logit $e_{tk}=Q_tK_k^\\top/\\sqrt{d_h}$: by~\\eqref{ptnb:eq:gibbs-lse}, at temperature $1$,"
+    },
+    {
+      "source": "PTNB v2 main.tex: app:attention-oracle",
+      "reason": "Restore the original oracle-scope sentence while preserving nonempty masked support.",
+      "before": "For masked attention, use the nonempty allowed-key set. This oracle acts only in the forward pass and supplies $\\bar\\pi_t=A_{t,\\cdot}$; its states carry no occupation mass, so relevance does not traverse $Q$ or $K$.",
+      "after": "For masked attention, use the nonempty allowed-key set. The oracle acts in the forward pass only and hands $\\bar\\pi_t=A_{t,\\cdot}$ to the Value-routing player; its states carry no occupation mass, so no relevance flows through $Q$ or $K$."
+    },
+    {
+      "source": "PTNB v2 main.tex: app:risk-attn",
+      "reason": "Restore the original distinction between the backward routing intervention and unchanged forward predictions; proxy and entropy corrections remain.",
+      "before": "The AV-backward hook shifts cached pre-softmax logits, leaving predictions unchanged.",
+      "after": "The shift is computed in the AV-backward hook from cached pre-softmax logits, so the forward pass and model predictions remain unchanged."
+    },
+    {
+      "source": "PTNB v2 main.tex: sec:attention",
+      "reason": "Restore the original implementation sentence with the existing bias/stabilizer qualification.",
+      "before": "The \\ac{rg} on ViT-B/16 implements the composite rule with bias and stabilizer absorption.",
+      "after": "Our ViT-B/16 \\ac{rg} implementation applies this rule to the attention product and the Value projection as one composite step, with bias and stabilizer absorption."
+    },
+    {
+      "source": "PTNB v2 main.tex: app:vit-implementation, Softmax detachment",
+      "reason": "Restore the original detachment and fixed-input wording; the oracle remains optional.",
+      "before": "\\item \\emph{Softmax detachment.} Cache the realized row $A_{t,\\cdot}$ as the fixed KL reference supplied by the optional QK oracle.",
+      "after": "\\item \\emph{Softmax detachment.} Softmax outputs are fully detached. The cached softmax row $A_{t,\\cdot}$ is supplied as a fixed input to the Value-routing player by the optional QK oracle."
+    },
+    {
+      "source": "PTNB v2 main.tex: app:attention-grad-detach",
+      "reason": "Restore the original implementation wording.",
+      "before": "Softmax and QK-matmul hooks return zero.",
+      "after": "The softmax and QK-matmul backward hooks return zero gradients."
+    },
+    {
+      "source": "PTNB v2 main.tex: app:equivariant",
+      "reason": "Restore the original three-step averaging description; the subsequent no-group/no-exactness qualification remains.",
+      "before": "The $16{\\times}16$ patch tokenization breaks translation equivariance. Following DAVE~\\parencite{Wrobel2024}, \\ac{rg}+Eq explains transformed inputs, maps explanations back, and averages the aligned maps to suppress tokenization-grid artifacts:",
+      "after": "The $16{\\times}16$ patch tokenization breaks translation equivariance. Following DAVE's transform-averaging strategy~\\parencite{Wrobel2024}, \\ac{rg}+Eq computes explanations on transformed inputs, maps each explanation back to the original image coordinates, and averages the aligned maps to suppress tokenization-grid artifacts:"
+    },
+    {
+      "source": "PTNB v2 main.tex: app:equivariant",
+      "reason": "Restore the original qualified conclusion while retaining the explicit Reynolds interpretation.",
+      "before": "These transforms do not form a group, so this Monte-Carlo Reynolds smoothing has no exactness guarantee.",
+      "after": "The transforms do not form a group, so this Monte-Carlo Reynolds average is an optional smoothing mode without an exactness claim."
+    }
+  ],
+  "checks": {
+    "displayed_environments": {
+      "unchanged": true,
+      "count": 30
+    },
+    "displayed_brackets": {
+      "unchanged": true,
+      "count": 0
+    },
+    "labels": {
+      "unchanged": true,
+      "count": 71
+    },
+    "aliases": {
+      "unchanged": true,
+      "count": 4
+    },
+    "lean_badges": {
+      "unchanged": true,
+      "count": 9
+    },
+    "headings": {
+      "unchanged": true,
+      "count": 22
+    },
+    "citations": {
+      "unchanged": true,
+      "count": 34
+    },
+    "mathematical_statements": {
+      "unchanged": true,
+      "count": 10
+    },
+    "displays": {
+      "unchanged": true,
+      "count": 30
+    }
+  },
+  "constructive_dc_and_algorithm_byte_identical": true,
+  "protected_caveats": [
+    "Non-negative orthant and lack of general convexity in sign-sorted multiplicative networks",
+    "Uniformly bounded expanded monomial count rather than merely bounded fan-in",
+    "Fixed attention oracle versus input-dependent constructive Transformer DC",
+    "Implementation fixes both LayerNorm mean and scale; CP-LRP and DAVE retain linear centering",
+    "All zero-mass cases, cemetery completion, masked support and positive stabilizer conventions",
+    "Composite rather than sequential alpha-beta rule and Value-only reported experiments",
+    "Risk score is a proxy rather than a QK-logit standard deviation; entropy need not decrease",
+    "All numerical limitations, Arras identity-rule scope and recent related-work citations",
+    "Transform averaging is not an exact group Reynolds operation"
+  ],
+  "not_restored": [
+    "HM supplement\u2019s unsupported convexity claim for ordinary product splitting",
+    "HM supplement\u2019s insufficient bounded-input-count complexity condition",
+    "PTNB\u2019s imprecise identification of fixed-mean LayerNorm with CP-LRP/DAVE",
+    "PTNB\u2019s overstatement that the risk proxy guarantees stable QK interactions",
+    "Long appendix proofs, duplicate statements, removed displays and cross-references to standalone supplementary material"
+  ],
+  "status": "Applied and frozen for parent review/build",
+  "no_build_or_commit": true,
+  "official_hm_supplement_sha256": "b5c7e828772ad697321627602ce598cf18fddd1f5891308cfe7e62ce84eb0841",
+  "word_count": {
+    "tool": "texcount -utf8 -brief -sum=1,1,1,0,0,0,0",
+    "before": 3124,
+    "after": 3266,
+    "increase": 142,
+    "increase_percent": 4.55
+  },
+  "no_children_spawned": true
+}

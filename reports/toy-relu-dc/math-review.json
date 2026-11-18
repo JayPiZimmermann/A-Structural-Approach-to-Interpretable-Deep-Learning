@@ -1,0 +1,56 @@
+{
+  "verdict": "PASS",
+  "reviewer": "/root/concise_foundations (independent global derivation, implementation, artifact and retention review)",
+  "recorded_at_utc": "2026-11-13T12:40:15.238387+00:00",
+  "source_sha256": {
+    "tex/chapters/03_decompositions.tex": "94a2d02d4617cfb5bd8ff8b6523bf9b100b44acde0f26877db2c6efde62fd113",
+    "scripts/plot_toy_relu_dc.py": "5ed490af90007ef425e4bfaf6367702ce56c4f8586bfcdcc2dd50ee7763c0667",
+    "reports/toy-relu-dc/construction.json": "b1d362104bf628bfee15bb65e5818febec6b4781a6e32c4bfc4dbc9db72f859a",
+    "reports/toy-relu-dc/values.csv": "5da6bf492633b20b5e55f971ad5a4df3823858cd526eda3fe61909b71e488065",
+    "tex/figures/toy_relu_dc_components.pdf": "63b1d9de91abb8dc23ff48219059b1121ec72b53813522943ea4eaf31aef3c3e",
+    "tex/figures/toy_relu_dc_components.png": "15ca2d14e188ab45dae4ab4b918e2d234bebc66b511194b767c089c35e248b26",
+    "tex/figures/toy_relu_dc_components.tex": "9440a68bada4d8a12882a6a4e3e18e249905b8e9c25b43dee10334b027916d57",
+    "tex/figures/toy_relu_dc_function.pdf": "73d114a57c51a212f8c4c2555f8160e1d50f479c97f5a03b2ad505a0205fb486",
+    "tex/figures/toy_relu_dc_function.png": "7c59f37cb6fb76fdeb35fa88518ccebb9b636061b3a3645ffcd66441bf6b300a",
+    "tex/figures/toy_relu_dc_function.tex": "5a4faebd4697a264562c3f684954faea9883d866206199d8326140636da9a202",
+    "tex/figures/toy_relu_dc_preview.pdf": "08f9bc4ef907b7f21749b21a16604549aa27c17cd8e70e85aa601e1d72cbfe38",
+    "tex/figures/toy_relu_dc_preview.png": "f7c54935ffd2e381104e82d43d028bc2b024e23d5630a672cae978ce2a890c73",
+    "tex/figures/toy_relu_dc_preview.tex": "bbffa9f1a56f35c8e0fb062ee44e38072c37c86e2e9b51ca91260fdcd1c82729"
+  },
+  "snapshot": "/tmp/thesis-toy-relu-dc/before_03.tex",
+  "before_sha256": "67611441323b8e46da9a9ebaf1f587bd3c434c763abe4fc59e2a2ec08622a253",
+  "global_derivation": {
+    "architecture": "Widths (1,2,1,1), two ReLU hidden layers and an identity affine readout.",
+    "ordinary_forward": "a1=(relu(x),relu(-x)); a2=relu(1-a1_1-a1_2); f=a2=max(1-|x|,0).",
+    "independent_input_pair": "Let the independent input pair be (u,v), representing signed input u-v.",
+    "first_split_layer": "a1+=(max(u,v),max(u,v)); a1-=(v,u).",
+    "second_split_preactivations": "z2+=1+u+v; z2-=2max(u,v).",
+    "output_pair": "G(u,v)=max(1+u+v,2max(u,v)); H(u,v)=2max(u,v). The positive identity readout preserves this pair.",
+    "exact_difference": "G-H=max(1+u+v-2max(u,v),0)=max(1-|u-v|,0).",
+    "usual_input_split": "At u=max(x,0) and v=max(-x,0), u+v=max(u,v)=|x|. Hence g=max(1+|x|,2|x|) and h=2|x| globally.",
+    "convexity_and_monotonicity": "G,H are convex and coordinatewise nondecreasing in independent (u,v). Their usual-input pullbacks g,h are convex; neither is globally nondecreasing in signed x. They are nonnegative on the usual input split.",
+    "fold_signs": "f has positive slope jumps at -1 and 1 and a negative jump at 0; g has positive jumps at -1,0,1; -h has its negative jump at 0. Caption markers agree."
+  },
+  "code_review": [
+    "The evaluator implements sign-split weights/biases, hidden (max(z+,z-),z-) gates, and the ungated affine readout. It checks exact original-versus-split recovery at every layer.",
+    "The executable main generates 601 rational inputs, closed-form checks, exact piecewise slopes, figures and source-bound construction metadata.",
+    "Independently invoked evaluate on all 601 saved CSV inputs: each row matches the evaluator and all three closed formulas, with exact Fraction arithmetic. No plotting/build routine was rerun.",
+    "Finite sample checks are kept distinct from the global algebraic proof above."
+  ],
+  "visual_review": [
+    "Actual combined preview PNG inspected. Both panels and labels are legible with no clipping.",
+    "Original tent and exact polyline DC components use every breakpoint; displayed g and -h agree with the formula caption.",
+    "Blue circles mark the convex folds and orange triangles the concave folds at the correct coordinates.",
+    "Caption accurately distinguishes convex pullbacks in signed x from monotonicity in the independent input pair."
+  ],
+  "retention": {
+    "display_blocks": 61,
+    "proof_blocks": 24,
+    "badges": 30,
+    "aliases": 13,
+    "all_existing_displays_proofs_badges_aliases_byte_identical": true,
+    "all_existing_labels_retained": true,
+    "only_added_label": "fig:toy_relu_dc"
+  },
+  "scope": "No source edits or Lean/LaTeX build; independent evaluator replay and metadata/hash checks only."
+}

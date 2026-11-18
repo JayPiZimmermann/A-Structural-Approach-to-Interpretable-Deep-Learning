@@ -178,6 +178,7 @@ commit, receipt and heatmaps.
 | `Thesis/RoutingBackward.lean` | Network-derived contribution masses, full alpha-beta recurrence, and discounted routing-path recovery |
 | `Thesis/SoftplusBackward.lean` | Actual full Softplus-network derivative and discounted occupation recovery |
 | `Thesis/Games.lean` | Finite path laws, dynamic programming, Hellinger overlap, per-pixel partition, Doob conditioning |
+| `Thesis/TrajectoryHellinger.lean` | Varying finite layer state spaces, actual prefix marginals, independently transported overlap mass, and the squared/square-root Hellinger identities in `eq:trajectory_hellinger_recursion` |
 | `Thesis/Regularization.lean` | Softplus derivatives, binary entropy optimizer, finite Gibbs variational principle |
 | `Thesis/GeneralRegularization.lean` | Compact optimizer existence, convex monotone Lipschitz conjugate activation, arbitrary chosen-pair validity and actual affine readout recovery |
 | `Thesis/CPWLLattice.lean`, `SignedMaxReduction.lean` | Genuine finite-polyhedral CPWL cover to a max-affine difference and a signed sum of maxima of at most d+1 affine functions |
@@ -251,6 +252,13 @@ that output is explicitly labelled as development evidence. The readable seconda
 `Audit.lean` can still be regenerated with `python3 scripts/audit.py`.
 The accepted foundational axioms are `propext`, `Classical.choice`, and
 `Quot.sound`. No `sorry`, `admit`, or custom axioms are used.
+
+The unpublished `TrajectoryHellinger` addition is checked separately with
+`lake build Thesis.TrajectoryHellinger` and
+`lake env lean checks/trajectory_hellinger_audit.lean`. Its local receipt is
+`../reports/verification/trajectory-hellinger/receipt.json`; the equation links to
+a source snapshot under `../docs/draft-proofs/`. Keep that directory beside the
+PDF. Existing published links and the pinned `All` root remain unchanged.
 
 The local development checkout may reuse a mathlib cache through an ignored
 `.lake/packages` symlink. A fresh checkout fetches the pinned dependencies normally;

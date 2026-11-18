@@ -1,0 +1,65 @@
+{
+  "verdict": "PASS",
+  "reviewer": "/root/concise_foundations",
+  "scope": "Narrow read-only consistency review of introductory survival-conditioned BC/H definitions and the Doob explanation; existing conditioned-survival equations, proof, assumptions, and protected equation aliases.",
+  "source_sha256": {
+    "tex/chapters/02_foundations.tex": "077f6aad7ebcc87e995c351e0fc02309d2f0169a8d7c92d75eb5f7d00f853e1f",
+    "/tmp/thesis-survival-definitions/02_foundations.before.tex": "16c79801a0e094f659315e3c89f14b6a210f2fc82cd065e6344c2684cd343806",
+    "literature/references/LevinPeres2017MarkovChains.pdf": "9ef39f9467d9647ff3f5e8747b9ce24b7a90d13be2f8156fbd827b95b661a772",
+    "/tmp/thesis-survival-definitions/02_foundations.before-h-explanation.tex": "7d60c76b15ef02fa2976a9e34a1577d9f83b9ce2d9cd28558dda8371156f58df",
+    "/tmp/thesis-survival-definitions/02_foundations.before-doob-intent.tex": "4f8dda40fdcfb30278c7fba28e623ce93ab4f0df6a22e2d95d6efe674882fc8e"
+  },
+  "retention": {
+    "existing_display_blocks_byte_identical": 4,
+    "conditioned_survival_proof_byte_identical": true,
+    "all_alias_declarations_byte_identical": true,
+    "trajectory_hellinger_display_byte_identical": true,
+    "canonical_bc_chain_rule_display_byte_identical": true,
+    "new_unnumbered_definition_displays": 1
+  },
+  "findings": [
+    "Surv is terminal ordinary-state arrival, equivalent to never entering the cemetery because the established kernels absorb there. Z_M and the conditioned path laws are defined before the new BC_surv/H_surv names.",
+    "Strict positivity Z_A,Z_B>0 is retained explicitly in the preceding definition and governs the conditioned laws used by the following theorem; it was moved, not dropped. Normalizing each complete path law by its own Z_M gives normalized probabilities and H_surv^2=1-BC_surv.",
+    "The remaining-survival function is interpreted through continuation from a state, including unreachable states, preserving the intended meaning of the conditional-probability notation on null marginal events.",
+    "The Doob quotient is asserted on positive-survival rows only. The survival averaging identity gives row sums one; its nonnegative probabilities give nonnegative entries. Arbitrary normalized completion of zero-survival rows remains valid because conditioned trajectories cannot reach them.",
+    "The conditioned geometric-kernel quotient retains the joint-positive denominator condition. All post-hoc normalization formulas and terminal-map statements are unchanged.",
+    "Levin and Peres, Section 17.6.1, supports the harmonic reweighting, stochastic row calculation, and conditioning interpretation. The layered survival recurrence is the corresponding finite-horizon instance.",
+    "The protected conditioned-bc-kernel alias still specializes the identical generic path-overlap formula to conditioned kernels, with the distinct survival proof and physical witnesses retained."
+  ],
+  "updated_review_hash_bindings": [
+    "reports/single-pdf/lean-alias-reviews.json: aliases.ptnb:eq:conditioned-bc-kernel.source_sha256.tex/chapters/02_foundations.tex",
+    "reports/verification/trajectory-hellinger/scope-review.json: source_sha256.tex/chapters/02_foundations.tex"
+  ],
+  "required_fixes": [],
+  "latest_prose_review": {
+    "verdict": "PASS",
+    "reviewer": "/root/concise_foundations",
+    "baseline": "/tmp/thesis-survival-definitions/02_foundations.before-h-explanation.tex",
+    "all_display_blocks_byte_identical": 46,
+    "all_proofs_byte_identical": true,
+    "all_alias_declarations_byte_identical": true,
+    "doob_clarification": "h is now explicitly a nonnegative state function, specialized to the remaining survival probability psi in [0,1]. Ordinary layer-0 terminal states retain the general Markov scope; a separate sentence identifies inputs in the attribution application. The positive-source quotient, weighted-average row normalization, and Bayes interpretation are correct. Existing positivity and zero-survival completion assumptions are unchanged.",
+    "construction_comparison": [
+      "Algebraic proximity to local maxima is justified by max(a-b,c-d)=max(a+d,c+b)-(b+d); the ReLU pair is the case c=d=0. The local-maxima minimum identity uses the same common-term/max algebra. No equality with either global algorithm is claimed.",
+      "The absolute-curvature scalar construction has p_second=(f_second)_positive and q_second=(f_second)_negative almost everywhere, matching the one-dimensional positive/negative-fold interpretation.",
+      "Representation dependence is substantive: applying the layerwise recursion to ReLU(-ReLU(u-v)) yields the identical pair (max(u,v),max(u,v)) for the zero function, whereas either global construction applied to the zero function yields (0,0). This validates the retained caveat."
+    ],
+    "resolved_precision": "Changed ordinary input state to ordinary terminal state at layer 0 before final hash binding; retained a separate attribution interpretation.",
+    "required_fixes": []
+  },
+  "follow_ups": [
+    {
+      "verdict": "PASS",
+      "reviewer": "/root/concise_foundations",
+      "recorded_at_utc": "2026-11-13T10:13:55.389973+00:00",
+      "scope": "Application-first Doob paragraph only; exact comparison confirms there are no other changes from the provided snapshot.",
+      "baseline": "/tmp/thesis-survival-definitions/02_foundations.before-doob-intent.tex",
+      "all_display_blocks_byte_identical": 46,
+      "all_proofs_and_aliases_unchanged": true,
+      "finding": "The opening now explicitly applies the transform using survival probability. h remains the probability psi in [0,1], evaluated at layer-tagged states; ordinary terminals, the positive-source quotient, transition-weighted normalization, and Bayes interpretation are unchanged.",
+      "chapter_sha256": "077f6aad7ebcc87e995c351e0fc02309d2f0169a8d7c92d75eb5f7d00f853e1f",
+      "scope_review_sha256": "3e7865632683c867efb896d0a19472940381ceb4bdb9670743e27b849f23738f",
+      "required_fixes": []
+    }
+  ]
+}

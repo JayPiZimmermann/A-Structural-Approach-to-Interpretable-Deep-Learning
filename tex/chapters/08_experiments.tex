@@ -1,8 +1,10 @@
 \chapter{Experiments and Evaluation}\label{ch:experiments}
 
-This chapter evaluates two design choices: exposing split-streams to attribution and changing backward routing through game policies. The split-method and game-based campaigns examine localization, faithfulness, robustness, and numerical or computational cost. We retain their checkpoints, sample exclusions, metric conventions, and selection protocols, comparing scores within each campaign. Model-evaluation scores come from the papers; Pascal VOC uncertainty estimates and comparison statistics are recomputed locally using images as independent sampling units.
+This chapter evaluates two design choices: exposing split-streams to attribution and changing backward routing through game policies. The split-method and game-based campaigns examine localization, faithfulness, robustness, and computational cost. We retain their checkpoints, sample exclusions, metric conventions, and selection protocols, comparing scores within each campaign. Model-evaluation scores come from the papers; Pascal VOC uncertainty estimates and comparison statistics are recomputed locally using images as independent sampling units.
 
 \section{Experimental Setup}\label{sec:experimental_setup}\label{sec:quantus_evaluation}
+
+Attribution methods are described in Sections~\ref{sec:split_attribution_concept} and~\ref{sec:risk_aversion_regularization}; Appendix~\ref{app:baselines} describes the baselines and their implementations. The campaigns use the distinct settings below.
 
 The split campaign evaluates pretrained VGG-16 and ResNet-18 on a custom 50-class ImageNet-S subset at $224\times224$ resolution. The source paper reports 50 validation images (one per class) for layer--formula selection and 566 test images. Its released loader selects locally available image--mask pairs without the game campaign's label-agreement filter; these counts alone cannot recover historical sample membership. Explanations target the predicted class, including for misclassified images; localization uses the annotated object mask. Baselines use Captum, Zennit for $\gamma$-LRP, and separate Grad-CAM++ and LayerCAM implementations. Each method retains localization-selected and Pixel-Flipping-selected configurations (full settings and results: Section~\ref{app:saliency}).
 
@@ -13,12 +15,12 @@ The split tables report Pixel Flipping as score-drop AUC (PF$^{\mathrm{drop}}_5$
 \input{figures/experiments/vgg_saliency_comparison_main}
 
 \paragraph{Qualitative analysis.}
-Figure~\ref{fig:vgg_saliency_comparison_main} compares split and baseline saliency maps at their best-performing layers. Mid-layer SplitCAM resembles earlier-layer classical $\gamma$-\ac{lrp}. Against same-layer LayerCAM, it gives more weight across object pixels while emphasizing key features, balancing interpretability and focus (low entropy). For $\alpha \ll 0.5$, SplitGrad yields less focused, finely aligned gradients following image details. We attribute this to Maxout retaining pre-activation information that ReLU discards at inactive neurons. Further examples appear in Section~\ref{app:saliency}.
+Figure~\ref{fig:vgg_saliency_comparison_main} qualitatively compares saliency maps from our split methods with their baseline counterparts at the best-performing layers. Mid-layer SplitCAM shares key visual characteristics with classical $\gamma$-\ac{lrp} from earlier layers. Compared to standard LayerCAM on the same layer it focuses more weight to all object pixels, while still marking the key object features as especially important. For $\alpha \ll 0.5$, SplitGrad yields less focused yet finely aligned gradients that closely follow image details. We attribute this to the Maxout activation retaining preactivation information, unlike ReLU, which discards it in inactive neurons. Overall, mid-layer SplitCAM offers an effective balance between interpretability and focus (low entropy).
 
 \paragraph{Quantitative analysis.}
-Tables~\ref{tab:eval_vgg_main} and~\ref{tab:eval_res_main} give the complete selected VGG-16 and ResNet-18 configurations; \emph{Abs} indicates absolute saliency before Quantus evaluation. Section~\ref{app:saliency} specifies layers and parameters.
+Tables~\ref{tab:eval_vgg_main} and~\ref{tab:eval_res_main} compare attribution methods on VGG-16 and ResNet-18 across Quantus metrics. The \emph{Abs} column specifies whether absolute saliency values were used prior to evaluation in Quantus. Detailed results with the selected layers and configurations are in Section~\ref{app:saliency}.
 
-The backpropagation-based methods depend strongly on layer choice (ablations: Section~\ref{app:ablation}).
+Overall, the considered backpropagation-based attribution methods heavily depend on the selected network layer; see Section~\ref{app:ablation} for extensive ablation.
 
 VGG-16 gains depend on metric and configuration. Table~\ref{tab:eval_vgg_main} gives SplitCAM Pointing Game $0.938$ versus Guided Backprop's $0.887$, Attribution Localization $0.651$ versus Guided Backprop's $0.632$, and Selectivity $2.727$ versus LayerCAM's $2.792$, from different SplitCAM layers. LayerCAM has the highest displayed Pixel Flipping score-drop AUCs, $0.317$ and $2.474$, versus SplitCAM's $0.300$ and $2.404$. SplitLRP has the lowest Maximum Sensitivity, $0.282$, versus Guided Backprop's $0.375$, and higher Pointing Game but lower Attribution Localization and Pixel Flipping scores than the displayed classical $\gamma$-\ac{lrp} configurations.
 
@@ -52,7 +54,7 @@ The historical timing artifacts lack hardware, precision and exact configuration
 \section{Split-Method Stabilization Ablations}\label{sec:ablations}
 \subsection{Backward-Pass Stabilization of the Split Methods}\label{subsec:alpha_ablation}
 
-Two configurations in Table~\ref{tab:alpha_ablation_main} illustrate the effect of the shift $\alpha$ on SplitGrad and SplitCAM on the custom ImageNet-S test split. As in Section~\ref{sec:stabilization_dc}, $\alpha = 0$ leaves the backward pass unstabilized; $\alpha = 0.5$ gives local sensitivities resembling scaled original-network gradients. Reducing $\alpha$ from $0.5$ to $0.4$ improves both configurations' Pointing Game and Attribution Localization, while SplitCAM's PF$^{\mathrm{drop}}_{20}$ falls from $1.607$ to $1.585$. SplitGrad peaks in PF$^{\mathrm{drop}}_{20}$ at $\alpha = 0.4$ and localization at $\alpha = 0.35$; SplitCAM's Pointing Game and Attribution Localization peak at $0.4$ and $0.35$, respectively. Both minimize Maximum Sensitivity at $\alpha = 0$. The sweep supports metric-dependent $\alpha$ choices; numerical stabilization and attribution-rule changes remain confounded. Section~\ref{app:ablation} (Table~\ref{tab:alpha_comparison_by_method}) gives the full grid and compares convex with winner-takes-it-all max-pooling.
+Table~\ref{tab:alpha_ablation_main} presents the performance of two selected SplitGrad and SplitCAM configurations across different shifting parameters $\alpha$, evaluated on our custom ImageNet-S test split. As explained in Section~\ref{sec:stabilization_dc}, $\alpha$ controls backward pass stabilization: $\alpha = 0$ means no stabilization and $\alpha = 0.5$ yields local sensitivities resembling scaled original gradients. Reducing $\alpha$ from $0.5$ to $0.4$ improves both configurations' Pointing Game and Attribution Localization, while SplitCAM's PF$^{\mathrm{drop}}_{20}$ falls from $1.607$ to $1.585$. SplitGrad peaks in PF$^{\mathrm{drop}}_{20}$ at $\alpha = 0.4$ and localization at $\alpha = 0.35$; SplitCAM's Pointing Game and Attribution Localization peak at $0.4$ and $0.35$, respectively. Both minimize Maximum Sensitivity at $\alpha = 0$. The sweep supports metric-dependent $\alpha$ choices; numerical stabilization and attribution-rule changes remain confounded. Section~\ref{app:ablation} (Table~\ref{tab:alpha_comparison_by_method}) gives the full grid and compares convex with winner-takes-it-all max-pooling.
 
 The unresolved source-table discrepancy for this SplitCAM configuration is documented in Section~\ref{app:backward_ablation}.
 
@@ -66,6 +68,231 @@ Tables~\ref{tab:alpha_comparison_none} and~\ref{tab:alpha_comparison_shift} repo
 
 
 
+\section{Directly Trained Difference-of-Convex Models on MNIST}\label{sec:dcinns}
+
+To study mechanisms exposed by the \ac{dc} decomposition of pretrained networks (Sections~\ref{sec:split_cam}--\ref{sec:split_grad}), we directly train small DC input neural networks (DCINNs) and their monotone relatives on MNIST. Their shared opposing-stream structure provides a controlled setting for examining class-dependent sensitivities on present and candidate missing strokes, with a modest, architecture-dependent accuracy cost.
+
+\paragraph{Architecture and training.}\label{subsec:dcinn_architecture}
+
+We use the \ac{icnn} and monotone-network definitions of Section~\ref{sec:convex_monotone_foundations}; only the \ac{icnn} leaves its first affine layer unconstrained.
+
+The \textbf{DIC-model} (directly trained as the difference of two input-convex neural networks) denotes $g-h$ with both streams input-convex, while the \textbf{DM-model} (directly trained as the difference of two monotone networks) denotes $g-h$ with both streams monotone. For each base model we also evaluate the \emph{inverted-input} variant (DICIN / DMIN), where the $h$-stream processes $\1-x$, motivated by sensitivities to missing features.
+
+Three implementation choices matter in practice.
+\begin{itemize}
+	\item \emph{Activations.} Both streams use convex, monotone rank-2 Maxout units~\parencite{Goodfellow2013Maxout}, which consistently outperformed \ac{relu} streams in the difference setting. Their constrained layers use the same non-negative-weight Maxout building blocks as the split-stream construction in Section~\ref{sec:dc_splitting_relu}.
+	\item \emph{Non-negativity.} Constrained weights are parameterized as $p(\tilde{W})$ with free parameters $\tilde{W}$ and a positivity transform $p$; among softplus, exponential and squaring, $p = \relu$ with absolute-value-of-Gaussian initialization gave the best test accuracy. The transform is also applied to biases and to the scale and shift parameters of batch-normalization layers.
+	\item \emph{Regularization.} Because non-negative weights can cause exploding activations, we use a small initialization scale for all base model weights and apply a weight decay of $10^{-3}$ in all experiments.
+\end{itemize}
+
+We train two base architectures on MNIST: \texttt{cnn\_maxout}, a \ac{cnn} with four convolutional layers (32, 64, 128 and 128 channels with batch normalization) followed by three fully connected layers, roughly $1.2$ million parameters in total, and \texttt{mlp\_maxout}, a wide four-layer \ac{mlp} ($784 \to 800 \to 800 \to 800 \to 10$) with roughly $4.2$ million parameters --- each in eight variants: unconstrained (None), single-stream constrained (IC, Mon), and difference-of-two models (DIC, DM, DICIN, DMIN, and an unconstrained difference baseline).
+
+\paragraph{Stream sensitivities and candidate counterfactual features.}\label{subsec:counterfactual_features}
+
+For an inverted-input class logit $f(x)=g(x)-h(\1-x)$, the complete gradient at differentiable inputs is
+\[
+\nabla f(x)=\nabla g(x)+(\nabla h)(\1-x).
+\]
+The complement and subtraction cancel the two minus signs: a positive entry of $(\nabla h)(\1-x)$ (bright blue pixel) indicates positive local sensitivity of the contribution $-h(\1-x)$ to increasing the original input. It can be outweighed by a negative entry of $\nabla g(x)$, so neither stream alone guarantees an increase in the complete class logit. Even the complete gradient describes only local sensitivity; finite counterfactual claims require evaluating the model under the proposed intervention, and a logit increase need not change the predicted class. The unconstrained first layer means that ICNN gradients need not be non-negative in the original input coordinates.
+
+\begin{figure}[t]
+\QualitativeImageContent{
+	\centering
+	\begin{minipage}[c]{0.15\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/original.png}\\[-1pt]
+		{\scriptsize Original}
+	\end{minipage}\hspace{0.015\linewidth}%
+	\begin{minipage}[c]{0.80\linewidth}
+		\centering
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_0_bright.png}\\[-1pt]{\scriptsize Logit 0}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_1_bright.png}\\[-1pt]{\scriptsize Logit 1}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_2_bright.png}\\[-1pt]{\scriptsize Logit 2}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_3_bright.png}\\[-1pt]{\scriptsize Logit 3}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_4_bright.png}\\[-1pt]{\scriptsize Logit 4}
+		\end{minipage}
+
+		\vspace{0.12cm}
+
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_5_bright.png}\\[-1pt]{\scriptsize Logit 5}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_6_bright.png}\\[-1pt]{\scriptsize Logit 6}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_7_bright.png}\\[-1pt]{\scriptsize Logit 7}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_8_bright.png}\\[-1pt]{\scriptsize Logit 8}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_9_bright.png}\\[-1pt]{\scriptsize Logit 9}
+		\end{minipage}
+	\end{minipage}
+	}%
+\caption[Stream gradients of the inverted-input DIC model]{Stream gradients of the inverted-input DIC model (\texttt{cnn\_maxout} DICIN) on a correctly classified MNIST test digit ``3'', thresholded and overlaid per class logit. The $g$-stream gradient (red) highlights sensitivities on present strokes, while the $h$-stream gradient (blue) highlights sensitivities at candidate missing-stroke locations. These stream-local maps do not by themselves establish the effect of adding pixels on the complete model. Left: the original digit.}
+	\label{fig:mnist_split_ic_saliency}
+\end{figure}
+
+\begin{figure}[t]
+\QualitativeImageContent{
+	\centering
+	\begin{minipage}[c]{0.15\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/original.png}\\[-1pt]
+		{\scriptsize Original}
+	\end{minipage}\hspace{0.015\linewidth}%
+	\begin{minipage}[c]{0.80\linewidth}
+		\centering
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_0_bright.png}\\[-1pt]{\scriptsize Logit 0}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_1_bright.png}\\[-1pt]{\scriptsize Logit 1}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_2_bright.png}\\[-1pt]{\scriptsize Logit 2}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_3_bright.png}\\[-1pt]{\scriptsize Logit 3}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_4_bright.png}\\[-1pt]{\scriptsize Logit 4}
+		\end{minipage}
+
+		\vspace{0.12cm}
+
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_5_bright.png}\\[-1pt]{\scriptsize Logit 5}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_6_bright.png}\\[-1pt]{\scriptsize Logit 6}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_7_bright.png}\\[-1pt]{\scriptsize Logit 7}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_8_bright.png}\\[-1pt]{\scriptsize Logit 8}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_9_bright.png}\\[-1pt]{\scriptsize Logit 9}
+		\end{minipage}
+	\end{minipage}
+	}%
+\caption[Second example of inverted-input DIC stream gradients]{Second correctly classified MNIST test ``3'', using the model, per-class thresholded overlays and color convention of Figure~\ref{fig:mnist_split_ic_saliency}. Left: input. These stream-local maps do not by themselves establish the effect of adding pixels on the complete model.}
+	\label{fig:mnist_split_ic_saliency_second}
+\end{figure}
+
+Figure~\ref{fig:mnist_split_ic_saliency} overlays both gradients for each class logit of a test ``3''. The $g$-gradient for the ground-truth class ``3'' follows the digit strokes most accurately. For classes ``6'', ``8'' and ``9'', the $h$-gradients are dense \emph{between the arches} of the ``3'', where added pixels would geometrically close loops. A second correctly classified ``3'' (Figure~\ref{fig:mnist_split_ic_saliency_second}) shows the same qualitative pattern. The gradients of the single \texttt{cnn\_maxout} IC model are mostly positive on the strokes and negative on the background, with less class-dependent directional variation. These examples suggest a role for the difference structure without establishing general disentanglement.
+
+Figure~\ref{fig:mnist_ic_saliency} visualizes input gradients of the \texttt{cnn\_maxout} IC model on representative test samples. The gradients are mostly positive on the strokes and negative on the background.
+
+\begin{figure}[t]
+\QualitativeImageContent{
+    \centering
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_0_bright.png}
+        \scriptsize Gradient 0
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_1_bright.png}
+        \scriptsize Gradient 1
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_2_bright.png}
+        \scriptsize Gradient 2
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_3_bright.png}
+        \scriptsize Gradient 3
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_4_bright.png}
+        \scriptsize Gradient 4
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_5_bright.png}
+        \scriptsize Gradient 5
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_6_bright.png}
+        \scriptsize Gradient 6
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_7_bright.png}
+        \scriptsize Gradient 7
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_8_bright.png}
+        \scriptsize Gradient 8
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_9_bright.png}
+        \scriptsize Gradient 9
+    \end{minipage}%
+
+    \par\vspace{0.25cm}
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_0.png}
+        \scriptsize Label 0
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_1.png}
+        \scriptsize Label 1
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_2.png}
+        \scriptsize Label 2
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_3.png}
+        \scriptsize Label 3
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_4.png}
+        \scriptsize Label 4
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_5.png}
+        \scriptsize Label 5
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_6.png}
+        \scriptsize Label 6
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_7.png}
+        \scriptsize Label 7
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_8.png}
+        \scriptsize Label 8
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_9.png}
+        \scriptsize Label 9
+    \end{minipage}%
+
+    }%
+\caption[Input-gradient visualizations for ten MNIST digits]{Input-gradient visualizations of the \texttt{cnn\_maxout} IC model for ten MNIST digits, each with respect to its ground-truth label. Top: saliency maps; bottom: input images. As in the source figure, positive and negative gradient values above threshold 0.2 are colored red and blue, with ranking colorized using exponential decay.}
+    \label{fig:mnist_ic_saliency}
+\end{figure}
+
+
+\paragraph{Accuracy trade-offs.}\label{subsec:dcinn_accuracy}
+
+Architectural constraints can reduce expressivity~\parencite{Sill1997_MonotonicNetworks,Liu2020CertifiedMonotone}, but for the difference-of-two construction the accuracy cost is small on the convolutional base model and even negative on the \ac{mlp}, where every difference-of-two variant outperforms the unconstrained baseline; \textcite{hiddenMono} report the full accuracy table across ten seeds and all eight variants.
+
 \section{Game-Based Case Study}\label{sec:results_vit}\label{sec:saliency_results}\label{ptnb:sec:experiments}\label{ptnb:sec:case-study}
 
 
@@ -74,7 +301,7 @@ Tables~\ref{tab:alpha_comparison_none} and~\ref{tab:alpha_comparison_shift} repo
 We evaluate \ac{rg} and \ac{sg} against standard backward baselines (Section~\ref{ptnb:app:baselines}) on VGG-16~\parencite{Simonyan2015}, ResNet-50~\parencite{He2016resnet}, and ViT-B/16~\parencite{Dosovitskiy2021vit}, using PyTorch~\parencite{Paszke2019PyTorch} and torchvision ImageNet-1K checkpoints~\parencite{Deng2009,Russakovsky2015ilsvrc}\footnote{Checkpoint documentation: \url{https://docs.pytorch.org/vision/stable/models.html}; identifiers: Section~\ref{app:extended_protocol}.}. ImageNet-S~\parencite{gao2022luss} supplies 50 validation and 565 test images at $224{\times}224$; Pascal VOC 2012~\parencite{Everingham2010voc} tests cross-dataset transfer. The data filters, annotated-class targets and pixel-mask protocol are specified in Section~\ref{ptnb:app:protocol}. Quantus~\parencite{Hedstrom2023} measures localization (AL, PG, TK; $\uparrow$), faithfulness (PF$_5$, PF$_{20}$, Sel; $\downarrow$), and robustness (MaxS, AvgS; $\downarrow$). Baseline implementations and settings, mode parameters, and metric definitions appear in Sections~\ref{ptnb:app:baselines}, \ref{ptnb:app:config-symbols} and~\ref{ptnb:app:metrics}.
 
 \paragraph{Protocol.}
-Every tunable method, including baselines and DAVE, uses the same validation search: \nValGrid{} configurations in the declared grids (Table~\ref{ptnb:tab:main-search-grid}). Independent localization and faithfulness rank-sums select two configurations per method; both are evaluated once on test data. Confidence intervals and Holm-corrected paired comparisons follow Section~\ref{ptnb:app:stats}. The \ac{rg}/\ac{rg}+Eq anchors additionally represent $\alpha\beta$-\ac{lrp} exactly (Theorem~\ref{ptnb:thm:lrp-recovery}). Table~\ref{ptnb:tab:test-ci-vit} gives both selections and intervals; the comparison below uses localization-selected rows and retains their original testing family. Reporting faithfulness-selected rows separately preserves the distinction between mask agreement and faithfulness.
+Methods are evaluated under a two-stage protocol that treats baselines and our games alike. Stage~1 runs a validation grid search for every tunable method, including DAVE (Table~\ref{ptnb:tab:main-search-grid}; \nValGrid{} configurations in total). Stage~2 independently selects the localization and faithfulness rank-sum configurations and evaluates both once on the test split. Confidence intervals and Holm-corrected paired comparisons follow Section~\ref{ptnb:app:stats}. The \ac{rg}/\ac{rg}+Eq anchors additionally represent $\alpha\beta$-\ac{lrp} exactly (Theorem~\ref{ptnb:thm:lrp-recovery}). Table~\ref{ptnb:tab:test-ci-vit} gives both selections and intervals; the comparison below uses localization-selected rows and retains their original testing family. Reporting faithfulness-selected rows separately preserves the distinction between mask agreement and faithfulness.
 
 \appneedspace{8\baselineskip}
 \begin{center}
@@ -110,10 +337,15 @@ faithfulness for localization. \ac{ptnbADF} adds modest overhead (\ac{rg}: \vitR
 averaging is the only expensive variant (\vitRGEqTime\,s), exceeding even the perturbation method
 KernelSHAP (\vitSHAPTime\,s).
 
+\paragraph{Mode selection and cost.}
+Start at the anchor, vary $\tau$ at negligible cost, add risk aversion with input variance $\sigma^2$ to discount high-variance units ($\lambda$ for \acp{cnn}, $\lambda_{\mathrm{sm}}$ for \acp{vit}), then use \ac{rg}+Eq averaging for ViT token-grid artifacts. The validation selections of Section~\ref{ptnb:app:val-selection} show which combination the protocol picks per model and criterion. The VGG-16 \ac{sg} configuration also uses the noisy-observation gate.
+
+Median times on one A100 GPU at batch size 1 show little temperature overhead, from $0.035$ to $0.037$\,s/image for VGG-16 and from $0.089$ to $0.094$\,s/image for ResNet-50. Risk aversion adds one \ac{ptnbADF} pass, from $0.089$ to $0.140$\,s/image on ResNet-50; the noisy gate also requires this pass for $\sigma$. Changing $(\alpha,\beta)$, $\varepsilon$ or the fan-in entropy bias has negligible overhead. Equivariant averaging requires $N$ attribution passes; the ViT timings below use $N=50$.
+
 \paragraph{ViT-B/16 attribution runtime.} For the localization-selected or fixed configurations in Table~\ref{ptnb:tab:test-ci-vit}, seconds per image on one GPU were: Gradient $0.02$, SmoothGrad $1.12$, LRP-$\gamma$ $0.08$, AttnLRP $0.10$, TIBAV $0.15$, GAE $0.03$, KernelSHAP $6.71$, RG anchor $0.10$, RG $0.17$, RG+Eq anchor $4.93$, and RG+Eq $8.66$. The anchors are the exact $\alpha\beta$-\ac{lrp} representations of Theorem~\ref{ptnb:thm:lrp-recovery}; hardware and timing scope are specified in Section~\ref{ptnb:app:compute-resources}.
 
 \paragraph{Higher $\tau$ spreads attribution into context.}
-Localization-optimal modes concentrate mass on the few patches aligning with the mask. Increasing $\tau$ spreads equilibrium routing over more predecessors: the displayed examples retain object focus while extending attribution into context, without establishing which contextual features the model uses. Around the selected ViT-B/16 setting, AL decreases monotonically from $0.723$ at $\tau{=}0.3$ to $0.461$ at $\tau{=}1$; faithfulness is non-monotonic. High $\tau$ shows how localization scores favor concentrated maps within the same game. User-perceived informativeness remains untested.
+The localization-optimal modes place mass on the few patches that align with the segmentation mask. As $\tau$ increases, the same equilibrium spreads routing over more predecessors: the displayed examples retain object focus while extending attribution into context, without establishing which contextual features the model uses. Around the selected ViT-B/16 setting, AL decreases monotonically from $0.723$ at $\tau{=}0.3$ to $0.461$ at $\tau{=}1$; faithfulness is non-monotonic. High $\tau$ shows how localization scores favor concentrated maps within the same game. User-perceived informativeness remains untested.
 
 \begin{table}[htbp]
     \centering
@@ -142,7 +374,7 @@ structure is model-specific or dataset-specific. The localization lead carries o
 (Section~\ref{ptnb:app:voc-cross-data}).
 
 \paragraph{VGG-16 and ResNet-50 (Section~\ref{ptnb:app:results}).}
-On CNNs, where \ac{lrp}-type rules are strong, localization-selected \ac{rg} leads AL within that selection: clearly on VGG-16 (\vggRGlocAL{} versus \vggBestBaseAL{} for \vggBestBaseALname{}) and narrowly on ResNet-50 (\resRGlocAL{} versus \resBestBaseAL{} for \resBestBaseALname{}). The ResNet-50 difference is not Holm-significant (adjusted $p=0.420$), so its numerical lead does not establish superiority. Across both objectives, VGG-16's strongest baseline AL is faithfulness-selected LRP-$\varepsilon$ at $0.639$, below \ac{rg}'s \vggRGlocAL{}. Pixel Flipping favors LRP-$\varepsilon$ for VGG-16 PF$_5$ ($12.43$), LRP-$\gamma$ for VGG-16 PF$_{20}$ ($7.89$ versus LRP-$\varepsilon$'s $8.17$), and LRP-$\gamma$ for both ResNet-50 metrics; \ac{cam} and perturbation methods lead TK and PG. VGG-16's risk-averse \ac{sg} is most robust (MaxS \vggSGlocMaxS{} versus \vggBestBaseMaxS{} for \vggBestBaseMaxSname{}).
+On the CNNs, where \ac{lrp}-type rules are already strong, the localization-selected \ac{rg} rows also lead on AL within that selection: clearly on VGG-16 (\vggRGlocAL{} versus \vggBestBaseAL{} for \vggBestBaseALname{}) and narrowly on ResNet-50 (\resRGlocAL{} versus \resBestBaseAL{} for \resBestBaseALname{}). The ResNet-50 difference is not Holm-significant (adjusted $p=0.420$), so its numerical lead does not establish superiority. Across both objectives, VGG-16's strongest baseline AL is faithfulness-selected LRP-$\varepsilon$ at $0.639$, below \ac{rg}'s \vggRGlocAL{}. Pixel Flipping favors LRP-$\varepsilon$ for VGG-16 PF$_5$ ($12.43$), LRP-$\gamma$ for VGG-16 PF$_{20}$ ($7.89$ versus LRP-$\varepsilon$'s $8.17$), and LRP-$\gamma$ for both ResNet-50 metrics; \ac{cam} and perturbation methods lead TK and PG. On VGG-16 the risk-averse \ac{sg} mode is the most robust method (MaxS \vggSGlocMaxS{} versus \vggBestBaseMaxS{} for \vggBestBaseMaxSname{}).
 
 \subsection{Game-Method Ablations}\label{subsec:mode_ablation}
 
@@ -150,7 +382,7 @@ One-factor mode ablations around validation-selected configurations (Section~\re
 
 \paragraph{Gradient-fallback attention.}\label{ptnb:app:abl-gradient-fallback}
 
-Conditioned \ac{rg} routes only through Values, with zero $Q$, $K$ gradients, as in CP-LRP~\parencite{Ali2022AttnLRP} (Section~\ref{ptnb:app:vit-implementation}). Gradient fallback uses pure autograd through attention, recovering zennit-style $\varepsilon$-\ac{lrp}; Value-routing risk $\lambda_\text{sm}$ is inactive. Fallback lowers all three localization metrics in every configuration (AL and TK significantly throughout) and worsens every PF$_5$, PF$_{20}$ and Sel cell, significantly in four of nine.
+The \ac{rg} backward holds the realized attention policy fixed and routes relevance only through the Value path, with zero gradient on $Q$, $K$, as in CP-LRP~\parencite{Ali2022AttnLRP} (Section~\ref{ptnb:app:vit-implementation}). Gradient fallback uses pure autograd through attention, recovering zennit-style $\varepsilon$-\ac{lrp}; Value-routing risk $\lambda_\text{sm}$ is inactive. Fallback lowers all three localization metrics in every configuration (AL and TK significantly throughout) and worsens every PF$_5$, PF$_{20}$ and Sel cell, significantly in four of nine.
 
 % VIT_EXTENSION_INSERT_HERE
 % BEGIN VIT_EXTENSION_GENERATED

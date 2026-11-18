@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>Thesis.TrajectoryHellinger.trajectory_hellinger_recursion — locally checked Lean proof</title>
+<style>
+body{margin:2rem;color:#202124;background:#fff;font:16px/1.5 system-ui,sans-serif}
+h1{font-size:1.2rem;overflow-wrap:anywhere} .metadata{max-width:85ch}
+pre{overflow:auto;padding:1rem 0;border-top:1px solid #ccc;font:14px/1.5 monospace}
+.line{display:block;min-height:1.5em} .line:target{background:#fff2bd}
+.number{display:inline-block;width:4em;padding-right:1em;text-align:right;color:#666}
+code{font:inherit} .hash{overflow-wrap:anywhere}
+</style><main>
+<h1>Thesis.TrajectoryHellinger.trajectory_hellinger_recursion</h1>
+<div class="metadata"><p>Locally checked, unpublished Lean source. This is an addition to the
+pinned thesis formalization; it has not been committed or published as a GitHub revision.</p>
+<p>Hellinger distance of normalized prefix and complete trajectory laws equals the square root of one minus the total recursively propagated geometric-mean overlap. Layer state types may vary; zero probabilities are allowed. Lean counts elapsed steps n=L-l; n=L gives the full trajectory law.</p>
+<p>Source: <code>formalization/Thesis/TrajectoryHellinger.lean</code><br>
+SHA-256: <code class="hash">5bc28089683b0781d90658ebfa595b926a4201d542c4e52715de8c43be1fd579</code><br>
+Permitted axioms used: <code>propext, Classical.choice, Quot.sound</code>.</p>
+<p>The separate local build, theorem type, axiom audit and scope review passed.
+Keep this <code>draft-proofs</code> directory beside the thesis PDF.</p></div>
+<pre><span class="line" id="L1"><a href="#L1" class="number">1</a><code>import Thesis.Games</code></span>
+<span class="line" id="L2"><a href="#L2" class="number">2</a><code></code></span>
+<span class="line" id="L3"><a href="#L3" class="number">3</a><code>/-!</code></span>
+<span class="line" id="L4"><a href="#L4" class="number">4</a><code>Hellinger distance of actual layered trajectory laws, computed by transporting</code></span>
+<span class="line" id="L5"><a href="#L5" class="number">5</a><code>geometric-mean overlap mass. The state type may vary at every layer. We index</code></span>
+<span class="line" id="L6"><a href="#L6" class="number">6</a><code>the traversal by elapsed steps `n`; in the thesis notation this is `n = L - l`,</code></span>
+<span class="line" id="L7"><a href="#L7" class="number">7</a><code>with the full trajectory law obtained at `n = L`. A cemetery can be included</code></span>
+<span class="line" id="L8"><a href="#L8" class="number">8</a><code>in each state type, but absorption is not required by the distance identity.</code></span>
+<span class="line" id="L9"><a href="#L9" class="number">9</a><code>-/</code></span>
+<span class="line" id="L10"><a href="#L10" class="number">10</a><code>noncomputable section</code></span>
+<span class="line" id="L11"><a href="#L11" class="number">11</a><code>set_option autoImplicit false</code></span>
+<span class="line" id="L12"><a href="#L12" class="number">12</a><code>namespace Thesis.TrajectoryHellinger</code></span>
+<span class="line" id="L13"><a href="#L13" class="number">13</a><code>open Finset</code></span>
+<span class="line" id="L14"><a href="#L14" class="number">14</a><code>open scoped Classical</code></span>
+<span class="line" id="L15"><a href="#L15" class="number">15</a><code></code></span>
+<span class="line" id="L16"><a href="#L16" class="number">16</a><code>/-- A prefix includes its initial state and every subsequently visited state. -/</code></span>
+<span class="line" id="L17"><a href="#L17" class="number">17</a><code>def Prefix (S : ℕ → Type) : ℕ → Type</code></span>
+<span class="line" id="L18"><a href="#L18" class="number">18</a><code>  | 0 =&gt; S 0</code></span>
+<span class="line" id="L19"><a href="#L19" class="number">19</a><code>  | n + 1 =&gt; Prefix S n × S (n + 1)</code></span>
+<span class="line" id="L20"><a href="#L20" class="number">20</a><code></code></span>
+<span class="line" id="L21"><a href="#L21" class="number">21</a><code>instance prefixFintype (S : ℕ → Type) [∀ n, Fintype (S n)] :</code></span>
+<span class="line" id="L22"><a href="#L22" class="number">22</a><code>    (n : ℕ) → Fintype (Prefix S n)</code></span>
+<span class="line" id="L23"><a href="#L23" class="number">23</a><code>  | 0 =&gt; inferInstanceAs (Fintype (S 0))</code></span>
+<span class="line" id="L24"><a href="#L24" class="number">24</a><code>  | n + 1 =&gt; @instFintypeProd (Prefix S n) (S (n + 1))</code></span>
+<span class="line" id="L25"><a href="#L25" class="number">25</a><code>      (prefixFintype S n) inferInstance</code></span>
+<span class="line" id="L26"><a href="#L26" class="number">26</a><code></code></span>
+<span class="line" id="L27"><a href="#L27" class="number">27</a><code>def last {S : ℕ → Type} : (n : ℕ) → Prefix S n → S n</code></span>
+<span class="line" id="L28"><a href="#L28" class="number">28</a><code>  | 0, p =&gt; p</code></span>
+<span class="line" id="L29"><a href="#L29" class="number">29</a><code>  | _ + 1, p =&gt; p.2</code></span>
+<span class="line" id="L30"><a href="#L30" class="number">30</a><code></code></span>
+<span class="line" id="L31"><a href="#L31" class="number">31</a><code>abbrev Kernel (S : ℕ → Type) := (n : ℕ) → S n → S (n + 1) → ℝ</code></span>
+<span class="line" id="L32"><a href="#L32" class="number">32</a><code></code></span>
+<span class="line" id="L33"><a href="#L33" class="number">33</a><code>variable {S : ℕ → Type} [∀ n, Fintype (S n)]</code></span>
+<span class="line" id="L34"><a href="#L34" class="number">34</a><code></code></span>
+<span class="line" id="L35"><a href="#L35" class="number">35</a><code>/-- Independent product law of all prefixes, including the common delta start. -/</code></span>
+<span class="line" id="L36"><a href="#L36" class="number">36</a><code>def pathLaw (K : Kernel S) (s₀ : S 0) : (n : ℕ) → Prefix S n → ℝ</code></span>
+<span class="line" id="L37"><a href="#L37" class="number">37</a><code>  | 0, p =&gt; if p = s₀ then 1 else 0</code></span>
+<span class="line" id="L38"><a href="#L38" class="number">38</a><code>  | n + 1, p =&gt; pathLaw K s₀ n p.1 * K n (last n p.1) p.2</code></span>
+<span class="line" id="L39"><a href="#L39" class="number">39</a><code></code></span>
+<span class="line" id="L40"><a href="#L40" class="number">40</a><code>/-- Forward transport, independently defined without enumerating paths. -/</code></span>
+<span class="line" id="L41"><a href="#L41" class="number">41</a><code>def mass (K : Kernel S) (s₀ : S 0) : (n : ℕ) → S n → ℝ</code></span>
+<span class="line" id="L42"><a href="#L42" class="number">42</a><code>  | 0, s =&gt; if s = s₀ then 1 else 0</code></span>
+<span class="line" id="L43"><a href="#L43" class="number">43</a><code>  | n + 1, t =&gt; ∑ s, mass K s₀ n s * K n s t</code></span>
+<span class="line" id="L44"><a href="#L44" class="number">44</a><code></code></span>
+<span class="line" id="L45"><a href="#L45" class="number">45</a><code>def geometricKernel (A B : Kernel S) : Kernel S :=</code></span>
+<span class="line" id="L46"><a href="#L46" class="number">46</a><code>  fun n s t =&gt; Real.sqrt (A n s t * B n s t)</code></span>
+<span class="line" id="L47"><a href="#L47" class="number">47</a><code></code></span>
+<span class="line" id="L48"><a href="#L48" class="number">48</a><code>/-- The thesis quantity g, initialized at the start and propagated edgewise. -/</code></span>
+<span class="line" id="L49"><a href="#L49" class="number">49</a><code>def g (A B : Kernel S) (s₀ : S 0) (n : ℕ) : S n → ℝ :=</code></span>
+<span class="line" id="L50"><a href="#L50" class="number">50</a><code>  mass (geometricKernel A B) s₀ n</code></span>
+<span class="line" id="L51"><a href="#L51" class="number">51</a><code></code></span>
+<span class="line" id="L52"><a href="#L52" class="number">52</a><code>/-- Computed overlap mass; identification with path overlap is proved below. -/</code></span>
+<span class="line" id="L53"><a href="#L53" class="number">53</a><code>def BC (A B : Kernel S) (s₀ : S 0) (n : ℕ) : ℝ := ∑ s, g A B s₀ n s</code></span>
+<span class="line" id="L54"><a href="#L54" class="number">54</a><code></code></span>
+<span class="line" id="L55"><a href="#L55" class="number">55</a><code>/-- Squared Hellinger distance is defined from differences of square roots. -/</code></span>
+<span class="line" id="L56"><a href="#L56" class="number">56</a><code>def hellingerSquared {X : Type} [Fintype X] (p q : X → ℝ) : ℝ :=</code></span>
+<span class="line" id="L57"><a href="#L57" class="number">57</a><code>  (1 / 2 : ℝ) * ∑ x, (Real.sqrt (p x) - Real.sqrt (q x)) ^ 2</code></span>
+<span class="line" id="L58"><a href="#L58" class="number">58</a><code></code></span>
+<span class="line" id="L59"><a href="#L59" class="number">59</a><code>/-- The distance, independently of any overlap recursion. -/</code></span>
+<span class="line" id="L60"><a href="#L60" class="number">60</a><code>def hellinger {X : Type} [Fintype X] (p q : X → ℝ) : ℝ :=</code></span>
+<span class="line" id="L61"><a href="#L61" class="number">61</a><code>  Real.sqrt (hellingerSquared p q)</code></span>
+<span class="line" id="L62"><a href="#L62" class="number">62</a><code></code></span>
+<span class="line" id="L63"><a href="#L63" class="number">63</a><code>theorem hellingerSquared_nonneg {X : Type} [Fintype X] (p q : X → ℝ) :</code></span>
+<span class="line" id="L64"><a href="#L64" class="number">64</a><code>    0 ≤ hellingerSquared p q := by</code></span>
+<span class="line" id="L65"><a href="#L65" class="number">65</a><code>  unfold hellingerSquared</code></span>
+<span class="line" id="L66"><a href="#L66" class="number">66</a><code>  exact mul_nonneg (by norm_num) (Finset.sum_nonneg fun x _ =&gt; sq_nonneg _)</code></span>
+<span class="line" id="L67"><a href="#L67" class="number">67</a><code></code></span>
+<span class="line" id="L68"><a href="#L68" class="number">68</a><code>theorem hellinger_sq {X : Type} [Fintype X] (p q : X → ℝ) :</code></span>
+<span class="line" id="L69"><a href="#L69" class="number">69</a><code>    hellinger p q ^ 2 = hellingerSquared p q := by</code></span>
+<span class="line" id="L70"><a href="#L70" class="number">70</a><code>  exact Real.sq_sqrt (hellingerSquared_nonneg p q)</code></span>
+<span class="line" id="L71"><a href="#L71" class="number">71</a><code></code></span>
+<span class="line" id="L72"><a href="#L72" class="number">72</a><code>omit [∀ n, Fintype (S n)] in</code></span>
+<span class="line" id="L73"><a href="#L73" class="number">73</a><code>theorem pathLaw_nonnegative (K : Kernel S) (s₀ : S 0)</code></span>
+<span class="line" id="L74"><a href="#L74" class="number">74</a><code>    (n : ℕ) (hK : ∀ i &lt; n, ∀ s t, 0 ≤ K i s t) (p : Prefix S n) :</code></span>
+<span class="line" id="L75"><a href="#L75" class="number">75</a><code>    0 ≤ pathLaw K s₀ n p := by</code></span>
+<span class="line" id="L76"><a href="#L76" class="number">76</a><code>  classical</code></span>
+<span class="line" id="L77"><a href="#L77" class="number">77</a><code>  induction n with</code></span>
+<span class="line" id="L78"><a href="#L78" class="number">78</a><code>  | zero =&gt;</code></span>
+<span class="line" id="L79"><a href="#L79" class="number">79</a><code>      change 0 ≤ if p = s₀ then (1 : ℝ) else 0</code></span>
+<span class="line" id="L80"><a href="#L80" class="number">80</a><code>      split_ifs &lt;;&gt; norm_num</code></span>
+<span class="line" id="L81"><a href="#L81" class="number">81</a><code>  | succ n ih =&gt;</code></span>
+<span class="line" id="L82"><a href="#L82" class="number">82</a><code>      exact mul_nonneg (ih (fun i hi =&gt; hK i (Nat.lt_succ_of_lt hi)) p.1)</code></span>
+<span class="line" id="L83"><a href="#L83" class="number">83</a><code>        (hK n (Nat.lt_succ_self n) (last n p.1) p.2)</code></span>
+<span class="line" id="L84"><a href="#L84" class="number">84</a><code></code></span>
+<span class="line" id="L85"><a href="#L85" class="number">85</a><code>theorem pathLaw_normalized (K : Kernel S) (s₀ : S 0)</code></span>
+<span class="line" id="L86"><a href="#L86" class="number">86</a><code>    (n : ℕ) (hKrow : ∀ i &lt; n, ∀ s, ∑ t, K i s t = 1) :</code></span>
+<span class="line" id="L87"><a href="#L87" class="number">87</a><code>    (∑ p : Prefix S n, pathLaw K s₀ n p) = 1 := by</code></span>
+<span class="line" id="L88"><a href="#L88" class="number">88</a><code>  classical</code></span>
+<span class="line" id="L89"><a href="#L89" class="number">89</a><code>  induction n with</code></span>
+<span class="line" id="L90"><a href="#L90" class="number">90</a><code>  | zero =&gt;</code></span>
+<span class="line" id="L91"><a href="#L91" class="number">91</a><code>      change (∑ p : S 0, if p = s₀ then (1 : ℝ) else 0) = 1</code></span>
+<span class="line" id="L92"><a href="#L92" class="number">92</a><code>      simp</code></span>
+<span class="line" id="L93"><a href="#L93" class="number">93</a><code>  | succ n ih =&gt;</code></span>
+<span class="line" id="L94"><a href="#L94" class="number">94</a><code>    change (∑ p : Prefix S n × S (n + 1),</code></span>
+<span class="line" id="L95"><a href="#L95" class="number">95</a><code>      pathLaw K s₀ n p.1 * K n (last n p.1) p.2) = 1</code></span>
+<span class="line" id="L96"><a href="#L96" class="number">96</a><code>    rw [Fintype.sum_prod_type]</code></span>
+<span class="line" id="L97"><a href="#L97" class="number">97</a><code>    simp only [← Finset.mul_sum, hKrow n (Nat.lt_succ_self n), mul_one]</code></span>
+<span class="line" id="L98"><a href="#L98" class="number">98</a><code>    exact ih (fun i hi =&gt; hKrow i (Nat.lt_succ_of_lt hi))</code></span>
+<span class="line" id="L99"><a href="#L99" class="number">99</a><code></code></span>
+<span class="line" id="L100"><a href="#L100" class="number">100</a><code>/-- The transported mass equals the sum over paths with the given endpoint. -/</code></span>
+<span class="line" id="L101"><a href="#L101" class="number">101</a><code>theorem mass_eq_endpoint_sum (K : Kernel S) (s₀ : S 0) (n : ℕ) (t : S n) :</code></span>
+<span class="line" id="L102"><a href="#L102" class="number">102</a><code>    mass K s₀ n t = ∑ p : Prefix S n,</code></span>
+<span class="line" id="L103"><a href="#L103" class="number">103</a><code>      if last n p = t then pathLaw K s₀ n p else 0 := by</code></span>
+<span class="line" id="L104"><a href="#L104" class="number">104</a><code>  classical</code></span>
+<span class="line" id="L105"><a href="#L105" class="number">105</a><code>  induction n with</code></span>
+<span class="line" id="L106"><a href="#L106" class="number">106</a><code>  | zero =&gt;</code></span>
+<span class="line" id="L107"><a href="#L107" class="number">107</a><code>      change (if t = s₀ then (1 : ℝ) else 0) =</code></span>
+<span class="line" id="L108"><a href="#L108" class="number">108</a><code>        ∑ p : S 0, if p = t then (if p = s₀ then 1 else 0) else 0</code></span>
+<span class="line" id="L109"><a href="#L109" class="number">109</a><code>      simp</code></span>
+<span class="line" id="L110"><a href="#L110" class="number">110</a><code>  | succ n ih =&gt;</code></span>
+<span class="line" id="L111"><a href="#L111" class="number">111</a><code>    change (∑ s, mass K s₀ n s * K n s t) =</code></span>
+<span class="line" id="L112"><a href="#L112" class="number">112</a><code>      ∑ p : Prefix S n × S (n + 1),</code></span>
+<span class="line" id="L113"><a href="#L113" class="number">113</a><code>        if p.2 = t then pathLaw K s₀ n p.1 * K n (last n p.1) p.2 else 0</code></span>
+<span class="line" id="L114"><a href="#L114" class="number">114</a><code>    rw [Fintype.sum_prod_type]</code></span>
+<span class="line" id="L115"><a href="#L115" class="number">115</a><code>    simp only [Finset.sum_ite_eq&#x27;, Finset.mem_univ, ite_true]</code></span>
+<span class="line" id="L116"><a href="#L116" class="number">116</a><code>    simp_rw [ih, Finset.sum_mul]</code></span>
+<span class="line" id="L117"><a href="#L117" class="number">117</a><code>    rw [Finset.sum_comm]</code></span>
+<span class="line" id="L118"><a href="#L118" class="number">118</a><code>    apply Finset.sum_congr rfl</code></span>
+<span class="line" id="L119"><a href="#L119" class="number">119</a><code>    intro p _</code></span>
+<span class="line" id="L120"><a href="#L120" class="number">120</a><code>    simp only [ite_mul, zero_mul]</code></span>
+<span class="line" id="L121"><a href="#L121" class="number">121</a><code>    simp</code></span>
+<span class="line" id="L122"><a href="#L122" class="number">122</a><code></code></span>
+<span class="line" id="L123"><a href="#L123" class="number">123</a><code>theorem mass_total_eq_path_sum (K : Kernel S) (s₀ : S 0) (n : ℕ) :</code></span>
+<span class="line" id="L124"><a href="#L124" class="number">124</a><code>    (∑ s, mass K s₀ n s) = ∑ p : Prefix S n, pathLaw K s₀ n p := by</code></span>
+<span class="line" id="L125"><a href="#L125" class="number">125</a><code>  simp_rw [mass_eq_endpoint_sum]</code></span>
+<span class="line" id="L126"><a href="#L126" class="number">126</a><code>  rw [Finset.sum_comm]</code></span>
+<span class="line" id="L127"><a href="#L127" class="number">127</a><code>  simp</code></span>
+<span class="line" id="L128"><a href="#L128" class="number">128</a><code></code></span>
+<span class="line" id="L129"><a href="#L129" class="number">129</a><code>omit [∀ n, Fintype (S n)] in</code></span>
+<span class="line" id="L130"><a href="#L130" class="number">130</a><code>/-- Geometric means factor along the actual varying-state prefix law. -/</code></span>
+<span class="line" id="L131"><a href="#L131" class="number">131</a><code>theorem pathLaw_geometric (A B : Kernel S) (s₀ : S 0)</code></span>
+<span class="line" id="L132"><a href="#L132" class="number">132</a><code>    (n : ℕ) (hA : ∀ i &lt; n, ∀ s t, 0 ≤ A i s t)</code></span>
+<span class="line" id="L133"><a href="#L133" class="number">133</a><code>    (hB : ∀ i &lt; n, ∀ s t, 0 ≤ B i s t) (p : Prefix S n) :</code></span>
+<span class="line" id="L134"><a href="#L134" class="number">134</a><code>    Real.sqrt (pathLaw A s₀ n p * pathLaw B s₀ n p) =</code></span>
+<span class="line" id="L135"><a href="#L135" class="number">135</a><code>      pathLaw (geometricKernel A B) s₀ n p := by</code></span>
+<span class="line" id="L136"><a href="#L136" class="number">136</a><code>  classical</code></span>
+<span class="line" id="L137"><a href="#L137" class="number">137</a><code>  induction n with</code></span>
+<span class="line" id="L138"><a href="#L138" class="number">138</a><code>  | zero =&gt;</code></span>
+<span class="line" id="L139"><a href="#L139" class="number">139</a><code>      change Real.sqrt ((if p = s₀ then (1 : ℝ) else 0) *</code></span>
+<span class="line" id="L140"><a href="#L140" class="number">140</a><code>        (if p = s₀ then (1 : ℝ) else 0)) = if p = s₀ then 1 else 0</code></span>
+<span class="line" id="L141"><a href="#L141" class="number">141</a><code>      split_ifs &lt;;&gt; norm_num</code></span>
+<span class="line" id="L142"><a href="#L142" class="number">142</a><code>  | succ n ih =&gt;</code></span>
+<span class="line" id="L143"><a href="#L143" class="number">143</a><code>    simp only [pathLaw]</code></span>
+<span class="line" id="L144"><a href="#L144" class="number">144</a><code>    have he : (pathLaw A s₀ n p.1 * A n (last n p.1) p.2) *</code></span>
+<span class="line" id="L145"><a href="#L145" class="number">145</a><code>        (pathLaw B s₀ n p.1 * B n (last n p.1) p.2) =</code></span>
+<span class="line" id="L146"><a href="#L146" class="number">146</a><code>        (pathLaw A s₀ n p.1 * pathLaw B s₀ n p.1) *</code></span>
+<span class="line" id="L147"><a href="#L147" class="number">147</a><code>        (A n (last n p.1) p.2 * B n (last n p.1) p.2) := by ring</code></span>
+<span class="line" id="L148"><a href="#L148" class="number">148</a><code>    have hAn := fun i hi =&gt; hA i (Nat.lt_succ_of_lt hi)</code></span>
+<span class="line" id="L149"><a href="#L149" class="number">149</a><code>    have hBn := fun i hi =&gt; hB i (Nat.lt_succ_of_lt hi)</code></span>
+<span class="line" id="L150"><a href="#L150" class="number">150</a><code>    rw [he, Real.sqrt_mul (mul_nonneg</code></span>
+<span class="line" id="L151"><a href="#L151" class="number">151</a><code>      (pathLaw_nonnegative A s₀ n hAn p.1) (pathLaw_nonnegative B s₀ n hBn p.1)),</code></span>
+<span class="line" id="L152"><a href="#L152" class="number">152</a><code>      ih hAn hBn]</code></span>
+<span class="line" id="L153"><a href="#L153" class="number">153</a><code>    rfl</code></span>
+<span class="line" id="L154"><a href="#L154" class="number">154</a><code></code></span>
+<span class="line" id="L155"><a href="#L155" class="number">155</a><code>/-- The computed total mass is the overlap of whole prefixes, not merely endpoints. -/</code></span>
+<span class="line" id="L156"><a href="#L156" class="number">156</a><code>theorem BC_eq_path_overlap (A B : Kernel S) (s₀ : S 0)</code></span>
+<span class="line" id="L157"><a href="#L157" class="number">157</a><code>    (n : ℕ) (hA : ∀ i &lt; n, ∀ s t, 0 ≤ A i s t)</code></span>
+<span class="line" id="L158"><a href="#L158" class="number">158</a><code>    (hB : ∀ i &lt; n, ∀ s t, 0 ≤ B i s t) :</code></span>
+<span class="line" id="L159"><a href="#L159" class="number">159</a><code>    BC A B s₀ n = Thesis.Games.overlap (pathLaw A s₀ n) (pathLaw B s₀ n) := by</code></span>
+<span class="line" id="L160"><a href="#L160" class="number">160</a><code>  unfold BC g Thesis.Games.overlap</code></span>
+<span class="line" id="L161"><a href="#L161" class="number">161</a><code>  rw [mass_total_eq_path_sum]</code></span>
+<span class="line" id="L162"><a href="#L162" class="number">162</a><code>  simp_rw [pathLaw_geometric A B s₀ n hA hB]</code></span>
+<span class="line" id="L163"><a href="#L163" class="number">163</a><code></code></span>
+<span class="line" id="L164"><a href="#L164" class="number">164</a><code>/-- Remove the last k coordinates of a longer path. -/</code></span>
+<span class="line" id="L165"><a href="#L165" class="number">165</a><code>def truncate (n : ℕ) : (k : ℕ) → Prefix S (n + k) → Prefix S n</code></span>
+<span class="line" id="L166"><a href="#L166" class="number">166</a><code>  | 0, p =&gt; p</code></span>
+<span class="line" id="L167"><a href="#L167" class="number">167</a><code>  | k + 1, p =&gt; truncate n k p.1</code></span>
+<span class="line" id="L168"><a href="#L168" class="number">168</a><code></code></span>
+<span class="line" id="L169"><a href="#L169" class="number">169</a><code>/-- Normalized future transitions make the shorter law the true marginal</code></span>
+<span class="line" id="L170"><a href="#L170" class="number">170</a><code>of the longer trajectory distribution. -/</code></span>
+<span class="line" id="L171"><a href="#L171" class="number">171</a><code>theorem prefix_marginal (K : Kernel S) (s₀ : S 0)</code></span>
+<span class="line" id="L172"><a href="#L172" class="number">172</a><code>    (n k : ℕ) (hKrow : ∀ i &lt; n + k, ∀ s, ∑ t, K i s t = 1)</code></span>
+<span class="line" id="L173"><a href="#L173" class="number">173</a><code>    (q : Prefix S n) :</code></span>
+<span class="line" id="L174"><a href="#L174" class="number">174</a><code>    (∑ p : Prefix S (n + k),</code></span>
+<span class="line" id="L175"><a href="#L175" class="number">175</a><code>      if truncate n k p = q then pathLaw K s₀ (n + k) p else 0) =</code></span>
+<span class="line" id="L176"><a href="#L176" class="number">176</a><code>      pathLaw K s₀ n q := by</code></span>
+<span class="line" id="L177"><a href="#L177" class="number">177</a><code>  classical</code></span>
+<span class="line" id="L178"><a href="#L178" class="number">178</a><code>  induction k with</code></span>
+<span class="line" id="L179"><a href="#L179" class="number">179</a><code>  | zero =&gt;</code></span>
+<span class="line" id="L180"><a href="#L180" class="number">180</a><code>      change (∑ p : Prefix S n, if p = q then pathLaw K s₀ n p else 0) = _</code></span>
+<span class="line" id="L181"><a href="#L181" class="number">181</a><code>      exact Fintype.sum_ite_eq&#x27; q (pathLaw K s₀ n)</code></span>
+<span class="line" id="L182"><a href="#L182" class="number">182</a><code>  | succ k ih =&gt;</code></span>
+<span class="line" id="L183"><a href="#L183" class="number">183</a><code>    change (∑ p : Prefix S (n + k) × S (n + k + 1),</code></span>
+<span class="line" id="L184"><a href="#L184" class="number">184</a><code>      if truncate n k p.1 = q then</code></span>
+<span class="line" id="L185"><a href="#L185" class="number">185</a><code>        pathLaw K s₀ (n + k) p.1 * K (n + k) (last (n + k) p.1) p.2</code></span>
+<span class="line" id="L186"><a href="#L186" class="number">186</a><code>      else 0) = _</code></span>
+<span class="line" id="L187"><a href="#L187" class="number">187</a><code>    rw [Fintype.sum_prod_type]</code></span>
+<span class="line" id="L188"><a href="#L188" class="number">188</a><code>    have hs (p : Prefix S (n + k)) :</code></span>
+<span class="line" id="L189"><a href="#L189" class="number">189</a><code>        (∑ t, if truncate n k p = q then</code></span>
+<span class="line" id="L190"><a href="#L190" class="number">190</a><code>          pathLaw K s₀ (n + k) p * K (n + k) (last (n + k) p) t else 0) =</code></span>
+<span class="line" id="L191"><a href="#L191" class="number">191</a><code>        if truncate n k p = q then pathLaw K s₀ (n + k) p else 0 := by</code></span>
+<span class="line" id="L192"><a href="#L192" class="number">192</a><code>      by_cases hp : truncate n k p = q</code></span>
+<span class="line" id="L193"><a href="#L193" class="number">193</a><code>      · simp [hp, ← Finset.mul_sum, hKrow (n + k) (Nat.lt_succ_self (n + k))]</code></span>
+<span class="line" id="L194"><a href="#L194" class="number">194</a><code>      · simp [hp]</code></span>
+<span class="line" id="L195"><a href="#L195" class="number">195</a><code>    simp_rw [hs]</code></span>
+<span class="line" id="L196"><a href="#L196" class="number">196</a><code>    exact ih (fun i hi =&gt; hKrow i (Nat.lt_succ_of_lt hi))</code></span>
+<span class="line" id="L197"><a href="#L197" class="number">197</a><code></code></span>
+<span class="line" id="L198"><a href="#L198" class="number">198</a><code>/-- The exact displayed Hellinger identities for every prefix length n,</code></span>
+<span class="line" id="L199"><a href="#L199" class="number">199</a><code>including the full law at n=L and the common-start boundary n=0.</code></span>
+<span class="line" id="L200"><a href="#L200" class="number">200</a><code>The equation uses layer index l=L-n; BC and g are the independently computed</code></span>
+<span class="line" id="L201"><a href="#L201" class="number">201</a><code>overlap recursion, and H is defined from square-root differences of path laws. -/</code></span>
+<span class="line" id="L202"><a href="#L202" class="number">202</a><code>theorem trajectory_hellinger_recursion (A B : Kernel S) (s₀ : S 0)</code></span>
+<span class="line" id="L203"><a href="#L203" class="number">203</a><code>    (n : ℕ) (hA : ∀ i &lt; n, ∀ s t, 0 ≤ A i s t)</code></span>
+<span class="line" id="L204"><a href="#L204" class="number">204</a><code>    (hB : ∀ i &lt; n, ∀ s t, 0 ≤ B i s t)</code></span>
+<span class="line" id="L205"><a href="#L205" class="number">205</a><code>    (hArow : ∀ i &lt; n, ∀ s, ∑ t, A i s t = 1)</code></span>
+<span class="line" id="L206"><a href="#L206" class="number">206</a><code>    (hBrow : ∀ i &lt; n, ∀ s, ∑ t, B i s t = 1) :</code></span>
+<span class="line" id="L207"><a href="#L207" class="number">207</a><code>    hellingerSquared (pathLaw A s₀ n) (pathLaw B s₀ n) =</code></span>
+<span class="line" id="L208"><a href="#L208" class="number">208</a><code>        hellinger (pathLaw A s₀ n) (pathLaw B s₀ n) ^ 2 ∧</code></span>
+<span class="line" id="L209"><a href="#L209" class="number">209</a><code>    hellinger (pathLaw A s₀ n) (pathLaw B s₀ n) ^ 2 = 1 - BC A B s₀ n ∧</code></span>
+<span class="line" id="L210"><a href="#L210" class="number">210</a><code>    hellinger (pathLaw A s₀ n) (pathLaw B s₀ n) = Real.sqrt (1 - BC A B s₀ n) ∧</code></span>
+<span class="line" id="L211"><a href="#L211" class="number">211</a><code>    hellinger (pathLaw A s₀ n) (pathLaw B s₀ n) =</code></span>
+<span class="line" id="L212"><a href="#L212" class="number">212</a><code>        Real.sqrt (1 - ∑ s, g A B s₀ n s) := by</code></span>
+<span class="line" id="L213"><a href="#L213" class="number">213</a><code>  have hs : hellingerSquared (pathLaw A s₀ n) (pathLaw B s₀ n) =</code></span>
+<span class="line" id="L214"><a href="#L214" class="number">214</a><code>      1 - BC A B s₀ n := by</code></span>
+<span class="line" id="L215"><a href="#L215" class="number">215</a><code>    rw [BC_eq_path_overlap A B s₀ n hA hB]</code></span>
+<span class="line" id="L216"><a href="#L216" class="number">216</a><code>    exact Thesis.Games.hellinger_identity _ _</code></span>
+<span class="line" id="L217"><a href="#L217" class="number">217</a><code>      (pathLaw_nonnegative A s₀ n hA) (pathLaw_nonnegative B s₀ n hB)</code></span>
+<span class="line" id="L218"><a href="#L218" class="number">218</a><code>      (pathLaw_normalized A s₀ n hArow) (pathLaw_normalized B s₀ n hBrow)</code></span>
+<span class="line" id="L219"><a href="#L219" class="number">219</a><code>  have hd : hellinger (pathLaw A s₀ n) (pathLaw B s₀ n) =</code></span>
+<span class="line" id="L220"><a href="#L220" class="number">220</a><code>      Real.sqrt (1 - BC A B s₀ n) := by</code></span>
+<span class="line" id="L221"><a href="#L221" class="number">221</a><code>    unfold hellinger</code></span>
+<span class="line" id="L222"><a href="#L222" class="number">222</a><code>    rw [hs]</code></span>
+<span class="line" id="L223"><a href="#L223" class="number">223</a><code>  exact ⟨(hellinger_sq _ _).symm, (hellinger_sq _ _).trans hs, hd, hd⟩</code></span>
+<span class="line" id="L224"><a href="#L224" class="number">224</a><code></code></span>
+<span class="line" id="L225"><a href="#L225" class="number">225</a><code>theorem common_start_distance (A B : Kernel S) (s₀ : S 0) :</code></span>
+<span class="line" id="L226"><a href="#L226" class="number">226</a><code>    hellinger (pathLaw A s₀ 0) (pathLaw B s₀ 0) = 0 := by</code></span>
+<span class="line" id="L227"><a href="#L227" class="number">227</a><code>  simp [hellinger, hellingerSquared, Prefix, pathLaw]</code></span>
+<span class="line" id="L228"><a href="#L228" class="number">228</a><code></code></span>
+<span class="line" id="L229"><a href="#L229" class="number">229</a><code>end Thesis.TrajectoryHellinger</code></span></pre></main></html>

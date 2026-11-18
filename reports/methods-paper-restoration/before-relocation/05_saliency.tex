@@ -1,0 +1,281 @@
+\chapter{Saliency and Attribution Methods}\label{ch:saliency}
+
+This chapter develops interpretability methods from the streams $g,h$ with $f=g-h$ constructed in Section~\ref{sec:dc_splitting_relu}. Section~\ref{sec:split_attribution_concept} reads the streams separately to explain pretrained networks through SplitCAM, SplitLRP and SplitGrad~\parencite{hiddenMono}. It also studies directly trained difference-of-convex input neural networks (DCINNs), whose MNIST examples exhibit class-dependent stream sensitivities. Section~\ref{sec:game_based_attribution} collects practical \emph{modes} that turn the game equilibria of Chapter~\ref{ch:game_theory} into tunable attribution maps, and the \emph{technicalities} of equivariant averaging that improve attribution quality.
+
+\section{Split-Based and Difference-of-Convex Attribution}\label{sec:split_attribution_concept}
+
+In this section, we use the neural network decomposition framework introduced in the previous sections to extend two common XAI attribution methods: LayerCAM and LRP~\parencite{hiddenMono}. Fix a scalar class logit and use the split-streams $g,h$ of Section~\ref{sec:dc_splitting_relu}. Their activations, shifted local sensitivities and implementation conventions are specified in Sections~\ref{sec:stabilization_dc} and~\ref{subsec:split_implementations}.
+
+\subsection{SplitCAM}\label{sec:split_cam}
+
+Class Activation Mapping (CAM)~\parencite{Zhou2016} and its variants (Grad-CAM~\parencite{Selvaraju2017}, Grad-CAM++~\parencite{Chattopadhay2018}, LayerCAM~\parencite{Jiang2021LayerCAM}) generate visual explanations by combining layer activation maps with class specific weights or layer gradients.
+
+\emph{SplitCAM} extends the LayerCAM framework to our split-pair architecture. For a given layer~$l$ in the decomposed model we combine the split-stream activations with their shifted local sensitivities:
+\begin{align}
+\text{SplitCAM}^{(l,\sigma,s)} &\coloneqq \sum_c \delta_{\mathrm{shift}}^{(l,\sigma,s)}\big\vert_c\odot\act{l}{\sigma}_c,
+\label{eq:splitcam_stream}\\
+\text{SplitCAM}^{(l,s)} &\coloneqq \sum_c \delta_{\mathrm{shift}}^{(l,s)}\big\vert_c\odot\actl{l}_c,
+\label{eq:splitcam_combined}
+\end{align}
+where $s\in\{g,h\}$, $\sigma\in\{+,-\}$, $c$ indexes channels, $\odot$ denotes elementwise multiplication, and $\actl{l}_c=\act{l}{+}_c-\act{l}{-}_c$ is the original activation. SplitCAM omits the positive filtering by the ReLU function: neither the sensitivities nor the resulting maps are clipped.
+
+\subsection{SplitLRP}\label{sec:split_lrp}
+
+Layer-wise Relevance Propagation~\parencite{Bach2015} redistributes the output score iteratively from the output layer to the input layer depending on the weights and activations. In the DC decomposition, each layer consists of a positive and a negative split-stream, which we treat as two sets of neurons within a unified model. Accordingly, LRP on the split-pair produces two relevance tensors in each layer, $R^{(l,+)}$ and $R^{(l,-)}$.
+
+We propagate relevance from the class-specific positive output $\act{L}{+}$. Since all weights in the decomposed model are non-negative, we use the standard LRP-$\gamma$ rule~\parencite{Montavon_2022_gammaLRP} with $\gamma=0$ and $\varepsilon=10^{-6}$, the bias-excluding $\varepsilon$-rule. The forward and backward implementation follows Section~\ref{subsec:split_implementations}.
+
+We additionally report \emph{combined} LRP maps, defined as
+\begin{equation}
+R^{(l,\mathrm{comb})}\coloneqq R^{(l,+)}-R^{(l,-)}.
+\label{eq:splitlrp_combined}
+\end{equation}
+This quantity aggregates the positive and negative streams into a single signed saliency map.
+
+\subsection{SplitGrad}\label{sec:split_grad}
+
+As a simple attribution method we also propose \emph{SplitGrad}, which takes the channel mean of the shifted split-pair gradients:
+\begin{equation}
+\text{SplitGrad}^{(l,s)}\coloneqq\frac{1}{C^{(l)}}\sum_{c=1}^{C^{(l)}}\delta_{\mathrm{shift}}^{(l,s)}\big\vert_c,
+\label{eq:splitgrad}
+\end{equation}
+where $C^{(l)}$ is the number of channels; the default configuration reads the $g$-stream. Chapter~\ref{ch:experiments} reports layer selection, quantitative comparisons and runtime.
+
+\subsection{Directly Trained Difference-of-Convex Input Neural Networks}\label{sec:dcinns}
+
+To study mechanisms exposed by the \ac{dc} decomposition of pretrained networks (Sections~\ref{sec:split_cam}--\ref{sec:split_grad}), we directly train small DC input neural networks (DCINNs) and their monotone relatives on MNIST. Their shared opposing-stream structure provides a controlled setting for examining class-dependent sensitivities on present and candidate missing strokes, with a modest, architecture-dependent accuracy cost.
+
+\paragraph{Architecture and training.}\label{subsec:dcinn_architecture}
+
+We use the \ac{icnn} and monotone-network definitions of Section~\ref{sec:convex_monotone_foundations}; only the \ac{icnn} leaves its first affine layer unconstrained.
+
+The \textbf{DIC-model} (directly trained as the difference of two input-convex neural networks) denotes $g-h$ with both streams input-convex, while the \textbf{DM-model} (directly trained as the difference of two monotone networks) denotes $g-h$ with both streams monotone. For each base model we also evaluate the \emph{inverted-input} variant (DICIN / DMIN), where the $h$-stream processes $\1-x$, motivated by sensitivities to missing features.
+
+Three implementation choices matter in practice.
+\begin{itemize}
+	\item \emph{Activations.} Both streams use convex, monotone rank-2 Maxout units~\parencite{Goodfellow2013Maxout}, which consistently outperformed \ac{relu} streams in the difference setting. Their constrained layers use the same non-negative-weight Maxout building blocks as the split-stream construction in Section~\ref{sec:dc_splitting_relu}.
+	\item \emph{Non-negativity.} Constrained weights are parameterized as $p(\tilde{W})$ with free parameters $\tilde{W}$ and a positivity transform $p$; among softplus, exponential and squaring, $p = \relu$ with absolute-value-of-Gaussian initialization gave the best test accuracy. The transform is also applied to biases and to the scale and shift parameters of batch-normalization layers.
+	\item \emph{Regularization.} Because non-negative weights can cause exploding activations, we use a small initialization scale for all base model weights and apply a weight decay of $10^{-3}$ in all experiments.
+\end{itemize}
+
+We train two base architectures on MNIST: \texttt{cnn\_maxout}, a \ac{cnn} with four convolutional layers (32, 64, 128 and 128 channels with batch normalization) followed by three fully connected layers, roughly $1.2$ million parameters in total, and \texttt{mlp\_maxout}, a wide four-layer \ac{mlp} ($784 \to 800 \to 800 \to 800 \to 10$) with roughly $4.2$ million parameters --- each in eight variants: unconstrained (None), single-stream constrained (IC, Mon), and difference-of-two models (DIC, DM, DICIN, DMIN, and an unconstrained difference baseline).
+
+\paragraph{Stream sensitivities and candidate counterfactual features.}\label{subsec:counterfactual_features}
+
+For an inverted-input class logit $f(x)=g(x)-h(\1-x)$, the complete gradient at differentiable inputs is
+\[
+\nabla f(x)=\nabla g(x)+(\nabla h)(\1-x).
+\]
+The complement and subtraction cancel the two minus signs: a positive entry of $(\nabla h)(\1-x)$ (bright blue pixel) indicates positive local sensitivity of the contribution $-h(\1-x)$ to increasing the original input. It can be outweighed by a negative entry of $\nabla g(x)$, so neither stream alone guarantees an increase in the complete class logit. Even the complete gradient describes only local sensitivity; finite counterfactual claims require evaluating the model under the proposed intervention, and a logit increase need not change the predicted class. The unconstrained first layer means that ICNN gradients need not be non-negative in the original input coordinates.
+
+\begin{figure}[t]
+\QualitativeImageContent{
+	\centering
+	\begin{minipage}[c]{0.15\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/original.png}\\[-1pt]
+		{\scriptsize Original}
+	\end{minipage}\hspace{0.015\linewidth}%
+	\begin{minipage}[c]{0.80\linewidth}
+		\centering
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_0_bright.png}\\[-1pt]{\scriptsize Logit 0}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_1_bright.png}\\[-1pt]{\scriptsize Logit 1}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_2_bright.png}\\[-1pt]{\scriptsize Logit 2}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_3_bright.png}\\[-1pt]{\scriptsize Logit 3}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_4_bright.png}\\[-1pt]{\scriptsize Logit 4}
+		\end{minipage}
+
+		\vspace{0.12cm}
+
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_5_bright.png}\\[-1pt]{\scriptsize Logit 5}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_6_bright.png}\\[-1pt]{\scriptsize Logit 6}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_7_bright.png}\\[-1pt]{\scriptsize Logit 7}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_8_bright.png}\\[-1pt]{\scriptsize Logit 8}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_030_true_3_pred_3/final_saliency_threshold_wrt_9_bright.png}\\[-1pt]{\scriptsize Logit 9}
+		\end{minipage}
+	\end{minipage}
+	}%
+\caption[Stream gradients of the inverted-input DIC model]{Stream gradients of the inverted-input DIC model (\texttt{cnn\_maxout} DICIN) on a correctly classified MNIST test digit ``3'', thresholded and overlaid per class logit. The $g$-stream gradient (red) highlights sensitivities on present strokes, while the $h$-stream gradient (blue) highlights sensitivities at candidate missing-stroke locations. These stream-local maps do not by themselves establish the effect of adding pixels on the complete model. Left: the original digit.}
+	\label{fig:mnist_split_ic_saliency}
+\end{figure}
+
+\begin{figure}[t]
+\QualitativeImageContent{
+	\centering
+	\begin{minipage}[c]{0.15\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/original.png}\\[-1pt]
+		{\scriptsize Original}
+	\end{minipage}\hspace{0.015\linewidth}%
+	\begin{minipage}[c]{0.80\linewidth}
+		\centering
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_0_bright.png}\\[-1pt]{\scriptsize Logit 0}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_1_bright.png}\\[-1pt]{\scriptsize Logit 1}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_2_bright.png}\\[-1pt]{\scriptsize Logit 2}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_3_bright.png}\\[-1pt]{\scriptsize Logit 3}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_4_bright.png}\\[-1pt]{\scriptsize Logit 4}
+		\end{minipage}
+
+		\vspace{0.12cm}
+
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_5_bright.png}\\[-1pt]{\scriptsize Logit 5}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_6_bright.png}\\[-1pt]{\scriptsize Logit 6}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_7_bright.png}\\[-1pt]{\scriptsize Logit 7}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_8_bright.png}\\[-1pt]{\scriptsize Logit 8}
+		\end{minipage}%
+		\begin{minipage}[b]{0.19\linewidth}\centering
+			\includegraphics[width=\linewidth]{saliency/mnist_split_ic_saliency/image_036_true_3_pred_3/final_saliency_threshold_wrt_9_bright.png}\\[-1pt]{\scriptsize Logit 9}
+		\end{minipage}
+	\end{minipage}
+	}%
+\caption[Second example of inverted-input DIC stream gradients]{Second correctly classified MNIST test ``3'', using the model, per-class thresholded overlays and color convention of Figure~\ref{fig:mnist_split_ic_saliency}. Left: input. These stream-local maps do not by themselves establish the effect of adding pixels on the complete model.}
+	\label{fig:mnist_split_ic_saliency_second}
+\end{figure}
+
+Figure~\ref{fig:mnist_split_ic_saliency} overlays both gradients for each class logit of a test ``3''. The $g$-gradient for the ground-truth class ``3'' follows the digit strokes most accurately. For classes ``6'', ``8'' and ``9'', the $h$-gradients are dense \emph{between the arches} of the ``3'', where added pixels would geometrically close loops. A second correctly classified ``3'' (Figure~\ref{fig:mnist_split_ic_saliency_second}) shows the same qualitative pattern. The gradients of the single \texttt{cnn\_maxout} IC model are mostly positive on the strokes and negative on the background, with less class-dependent directional variation. These examples suggest a role for the difference structure without establishing general disentanglement.
+
+Figure~\ref{fig:mnist_ic_saliency} visualizes input gradients of the \texttt{cnn\_maxout} IC model on representative test samples. The gradients are mostly positive on the strokes and negative on the background.
+
+\begin{figure}[t]
+\QualitativeImageContent{
+    \centering
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_0_bright.png}
+        \scriptsize Gradient 0
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_1_bright.png}
+        \scriptsize Gradient 1
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_2_bright.png}
+        \scriptsize Gradient 2
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_3_bright.png}
+        \scriptsize Gradient 3
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_4_bright.png}
+        \scriptsize Gradient 4
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_5_bright.png}
+        \scriptsize Gradient 5
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_6_bright.png}
+        \scriptsize Gradient 6
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_7_bright.png}
+        \scriptsize Gradient 7
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_8_bright.png}
+        \scriptsize Gradient 8
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/saliency_threshold_wrt_9_bright.png}
+        \scriptsize Gradient 9
+    \end{minipage}%
+
+    \par\vspace{0.25cm}
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_0.png}
+        \scriptsize Label 0
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_1.png}
+        \scriptsize Label 1
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_2.png}
+        \scriptsize Label 2
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_3.png}
+        \scriptsize Label 3
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_4.png}
+        \scriptsize Label 4
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_5.png}
+        \scriptsize Label 5
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_6.png}
+        \scriptsize Label 6
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_7.png}
+        \scriptsize Label 7
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_8.png}
+        \scriptsize Label 8
+    \end{minipage}%
+    \begin{minipage}[b]{0.09\linewidth}\centering
+        \includegraphics[width=\linewidth]{saliency/mnist_ic_saliency/original_9.png}
+        \scriptsize Label 9
+    \end{minipage}%
+
+    }%
+\caption[Input-gradient visualizations for ten MNIST digits]{Input-gradient visualizations of the \texttt{cnn\_maxout} IC model for ten MNIST digits, each with respect to its ground-truth label. Top: saliency maps; bottom: input images. As in the source figure, positive and negative gradient values above threshold 0.2 are colored red and blue, with ranking colorized using exponential decay.}
+    \label{fig:mnist_ic_saliency}
+\end{figure}
+
+
+\paragraph{Accuracy trade-offs.}\label{subsec:dcinn_accuracy}
+
+Architectural constraints can reduce expressivity~\parencite{Sill1997_MonotonicNetworks,Liu2020CertifiedMonotone}, but for the difference-of-two construction the accuracy cost is small on the convolutional base model and even negative on the \ac{mlp}, where every difference-of-two variant outperforms the unconstrained baseline; the full accuracy table across ten seeds and all eight variants is reported in Chapter~\ref{ch:experiments}.
+
+
+
+\section{Game-Based Attribution: Modes and Technicalities}\label{sec:game_based_attribution}
+
+The game route attributes by the per-neuron difference of players' discounted equilibrium occupation measures. It recovers gradients in the \ac{sg} (Theorem~\ref{ptnb:thm:gradient}) and the full $\alpha\beta$-\ac{lrp} family in the \ac{rg} at $\tau=1$ (Theorem~\ref{thm:lrp_recovery}). Here we collect tunable \emph{modes} and input-side \emph{technicalities}.
+
+\subsection{Attribution Modes}\label{subsec:attribution_modes}
+
+Game-theoretic concepts like risk aversion and entropy regularization map back to novel modes of the backward rules for probing and tuning explanation properties. The exact representations of Chapter~\ref{ch:game_theory} are the defaults; every mode other than the \ac{lrp} parameters $(\alpha,\beta,\varepsilon)$ is a deformation that is off at the anchor. Section~\ref{sec:risk_aversion_regularization} gives the modes and their backward rules. Here $(\alpha,\beta)$ denotes the \ac{lrp} discount pair with $\alpha-\beta=1$, distinct from the backward shift $\alpha\in[0,\tfrac12]$ of Section~\ref{subsec:backward_stabilization}.
+
+\subsection{Technicalities}\label{subsec:technicalities}
+
+The $16\times16$ patch tokenization breaks translation equivariance. Following DAVE's transform-averaging strategy~\parencite{Wrobel2024}, \ac{rg}+Eq computes explanations on transformed inputs, maps each explanation back to the original image coordinates, and averages the aligned maps (a Monte-Carlo Reynolds average). Sections~\ref{sec:vit_implementation} and~\ref{ptnb:app:equivariant} specify the conditioned operators and spatial transforms.

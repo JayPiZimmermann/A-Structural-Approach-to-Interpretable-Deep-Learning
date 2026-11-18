@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width">
+<title>Thesis.PolarizedMultiplicative.polarized_expression_dc — locally checked Lean proof</title>
+<style>
+body{margin:2rem;color:#202124;background:#fff;font:16px/1.5 system-ui,sans-serif}
+h1{font-size:1.2rem;overflow-wrap:anywhere} .metadata{max-width:85ch}
+pre{overflow:auto;padding:1rem 0;border-top:1px solid #ccc;font:14px/1.5 monospace}
+.line{display:block;min-height:1.5em} .line:target{background:#fff2bd}
+.number{display:inline-block;width:4em;padding-right:1em;text-align:right;color:#666}
+code{font:inherit} .hash{overflow-wrap:anywhere}
+</style><main>
+<h1>Thesis.PolarizedMultiplicative.polarized_expression_dc</h1>
+<div class="metadata"><p>Locally checked, unpublished Lean source. This is an addition to the
+pinned thesis formalization; it has not been committed or published as a GitHub revision.</p>
+<p>Exact polarized recursive decomposition of finite scalar expressions: nonnegative convex monotone heads on independent nonnegative doubled inputs, and globally convex nonnegative heads after the canonical signed-input split. Applies to multiplicative ReLU computations; matrices and convolutions reduce to scalar sums/products and finite maxima to ReLU. No size bound or floating-point guarantee is asserted.</p>
+<p>Source: <code>formalization/Thesis/PolarizedMultiplicative.lean</code><br>
+SHA-256: <code class="hash">493056326fd3333d0df4635e3e4bd538588073d056986fae1b34a157bb3a330f</code><br>
+Permitted axioms used: <code>propext, Classical.choice, Quot.sound</code>.</p>
+<p>The separate local build, theorem type, axiom audit and scope review passed.
+Keep this <code>draft-proofs</code> directory beside the thesis PDF.</p></div>
+<pre><span class="line" id="L1"><a href="#L1" class="number">1</a><code>import HiddenMonotonicity.TransformerExprProperties</code></span>
+<span class="line" id="L2"><a href="#L2" class="number">2</a><code></code></span>
+<span class="line" id="L3"><a href="#L3" class="number">3</a><code>/-! The polarized recursive evaluator gives a DC decomposition of every finite</code></span>
+<span class="line" id="L4"><a href="#L4" class="number">4</a><code>scalar expression. Multiplicative ReLU networks use inputs, constants, sums,</code></span>
+<span class="line" id="L5"><a href="#L5" class="number">5</a><code>signed scaling, products, and ReLU; max a b is ReLU (a-b) + b.</code></span>
+<span class="line" id="L6"><a href="#L6" class="number">6</a><code>No new product operation or assumed convexity certificate is introduced. -/</code></span>
+<span class="line" id="L7"><a href="#L7" class="number">7</a><code>noncomputable section</code></span>
+<span class="line" id="L8"><a href="#L8" class="number">8</a><code>set_option autoImplicit false</code></span>
+<span class="line" id="L9"><a href="#L9" class="number">9</a><code>namespace Thesis.PolarizedMultiplicative</code></span>
+<span class="line" id="L10"><a href="#L10" class="number">10</a><code>open HiddenMonotonicity.TransformerDC Set</code></span>
+<span class="line" id="L11"><a href="#L11" class="number">11</a><code>universe u</code></span>
+<span class="line" id="L12"><a href="#L12" class="number">12</a><code></code></span>
+<span class="line" id="L13"><a href="#L13" class="number">13</a><code>/-- Combined contract of the existing polarized algorithm, valid at every finite</code></span>
+<span class="line" id="L14"><a href="#L14" class="number">14</a><code>expression depth, on independent nonnegative input pairs and on raw signed inputs. -/</code></span>
+<span class="line" id="L15"><a href="#L15" class="number">15</a><code>theorem polarized_expression_dc {ι : Type u} (e : Expr ι) :</code></span>
+<span class="line" id="L16"><a href="#L16" class="number">16</a><code>    Regular (Ici (0 : DoubledInput ι)) e.decompose ∧</code></span>
+<span class="line" id="L17"><a href="#L17" class="number">17</a><code>    (∀ x : DoubledInput ι,</code></span>
+<span class="line" id="L18"><a href="#L18" class="number">18</a><code>      (e.decompose x).1 - (e.decompose x).2 = e.eval (x.1 - x.2)) ∧</code></span>
+<span class="line" id="L19"><a href="#L19" class="number">19</a><code>    ConvexOn ℝ univ (fun x : ι → ℝ =&gt; (e.rawDecompose x).1) ∧</code></span>
+<span class="line" id="L20"><a href="#L20" class="number">20</a><code>    ConvexOn ℝ univ (fun x : ι → ℝ =&gt; (e.rawDecompose x).2) ∧</code></span>
+<span class="line" id="L21"><a href="#L21" class="number">21</a><code>    (∀ x : ι → ℝ, 0 ≤ e.rawDecompose x) ∧</code></span>
+<span class="line" id="L22"><a href="#L22" class="number">22</a><code>    (∀ x : ι → ℝ,</code></span>
+<span class="line" id="L23"><a href="#L23" class="number">23</a><code>      (e.rawDecompose x).1 - (e.rawDecompose x).2 = e.eval x) := by</code></span>
+<span class="line" id="L24"><a href="#L24" class="number">24</a><code>  exact ⟨e.decompose_regular, e.decompose_exact,</code></span>
+<span class="line" id="L25"><a href="#L25" class="number">25</a><code>    e.rawDecompose_convex.1, e.rawDecompose_convex.2,</code></span>
+<span class="line" id="L26"><a href="#L26" class="number">26</a><code>    e.rawDecompose_nonnegative, e.rawDecompose_exact⟩</code></span>
+<span class="line" id="L27"><a href="#L27" class="number">27</a><code></code></span>
+<span class="line" id="L28"><a href="#L28" class="number">28</a><code>end Thesis.PolarizedMultiplicative</code></span></pre></main></html>

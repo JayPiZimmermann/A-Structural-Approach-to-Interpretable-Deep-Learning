@@ -1,0 +1,20 @@
+{
+  "verdict": "PASS",
+  "reviewer": "/root (direct source and type review; not an independent agent review)",
+  "declaration": "Thesis.PolarizedMultiplicative.polarized_expression_dc",
+  "source_sha256": {
+    "formalization/Thesis/PolarizedMultiplicative.lean": "493056326fd3333d0df4635e3e4bd538588073d056986fae1b34a157bb3a330f",
+    "formalization/checks/polarized_multiplicative_audit.lean": "3fa50baed5c92f7f061abf7a74a183781cd0784d86e319cfbed51b3254bb6bc5"
+  },
+  "scope": "Exact polarized recursive decomposition of finite scalar expressions: nonnegative convex monotone heads on independent nonnegative doubled inputs, and globally convex nonnegative heads after the canonical signed-input split. Applies to multiplicative ReLU computations; matrices and convolutions reduce to scalar sums/products and finite maxima to ReLU. No size bound or floating-point guarantee is asserted.",
+  "findings": [
+    "The wrapper conjoins already-proved Expr.decompose_regular, Expr.decompose_exact and the raw-input properties; it assumes no decomposition certificate.",
+    "Expr.splitEval handles multiplication by mulPair=productSplit, the literal polarized half-sums of squares; the separate audit checks this definition by rfl.",
+    "Regular explicitly contains convexity of each head, coordinatewise monotonicity, and nonnegativity on the doubled-input orthant.",
+    "The audit spells out the complete contract without the Regular wrapper and Lean type-checks it. Exactness is proved for all signed stream pairs; structural properties are restricted to nonnegative pairs.",
+    "The scalar expression language covers affine operations, residual sums, products and ReLU. Matrix products and convolutions are finite scalar sums. Finite maxima reduce to max(a,b)=ReLU(a-b)+b.",
+    "Unrolling a finite computation DAG yields finite expressions; no sharing, size or complexity theorem is claimed by this local endpoint.",
+    "No pinned Lean source or link mapping was edited."
+  ],
+  "required_fixes": []
+}

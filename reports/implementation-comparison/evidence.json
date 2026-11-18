@@ -1,0 +1,38 @@
+{
+  "recorded_at_utc": "2026-11-16T16:10:42.354339+00:00",
+  "official_repository": "https://github.com/JayPiZimmermann/DC-Decomposition-for-Explanability",
+  "official_download": "/tmp/hidden-monotonicity-official-2026-11-16",
+  "official_revision": "31be19b460358a69516452402d41bd650845a344",
+  "download_scope": "Fresh shallow sparse checkout of code directories dc_decomposition, difference_of_networks, util, xai and top-level files; experiment artifact directories omitted.",
+  "current_repository": "/home/jzimmermann/code/A-Structural-Approach-to-Interpretable-Deep-Learning/code/playing_backward",
+  "current_revision": "7b5cd387f0a690b0d3451aa60bc8d897bd442a38",
+  "official_sources": {
+    "dc_decomposition/hybrid_split/hybrid_decomposer.py": "5c21c83e33b37117067aa9b4c86ad50868dbb7f9d9cc959b86e1acc0090bf715",
+    "dc_decomposition/hybrid_split/hybrid_network.py": "6f87498a1f504c317a57a72a7615a937a283f7d7397de1afb4637010850d072e",
+    "dc_decomposition/hybrid_split/chunk_module.py": "fa843613eb1705ce5e2e68ee6832d2710448e36d851661f89e853a786c27dd9a",
+    "dc_decomposition/split_util/residual_cache.py": "d261ba40720d5b689d542583010e20c7d8535a0a552a9c6e2eb3015678cef512"
+  },
+  "current_sources": {
+    "bwgame/patcher.py": "ebfce0c77ff091eb65f29d51ecc77e31c2c4157e7cd23c9450d568ecf2c6d8b8",
+    "bwgame/functional_replacer.py": "32256c95f74b4cfa677fbd9f2e764a60f5cebcdac7c0dc3a37c95c0e54551136",
+    "bwgame/dc_context.py": "f2dcadffbd91e7c96f63a72de8b4f7221f9bbb067cad3c3f2f191a05d76c6570",
+    "bwgame/operations/base.py": "74087ad988f211c820627311faaae1dda9b71cf99764feb2b028ffd22e662d07",
+    "bwgame/operations/patch_builder.py": "898626577fdba272fc1fdf874a2e95c50d4e062513a85a829e9ecc515deac070",
+    "bwgame/operations/add.py": "cfa1f5107f470e06d1749d72d375358b97520a030776aba995a0810b473c0d17",
+    "bwgame/alignment_cache.py": "fb40b79d40b5dcb1d8696fa663beedc4929523bbf20dba8901e2fa37f06adb63",
+    "bwgame/operations/softmax.py": "aaf0e61f647f1b8c2996d3e4e61ab3d5527db9c6b4bcca3bd61f386b66cfa3be",
+    "bwgame/operations/layernorm.py": "c46171225e25bfd4f7e650aac53a398cca8015a5ecf79aae03df94036d4921f5"
+  },
+  "findings": {
+    "old_execution": "Separate HybridTCSplitNetwork built from planned replacement chunks; forward resolves original graph inputs with ResidualCache; reverse pass explicitly accumulates four sensitivity components in input_caches.",
+    "current_execution": "Existing supported modules get patched forwards backed by custom autograd.Function backward methods. FX preprocessing converts functional calls into modules and recompiles forwards; this is not a graph-free implementation.",
+    "layout": "Packed along dimension 0: shape [4B,...], channels and parameter shapes unchanged. init_catted gives [pos,neg,0,0]; intermediate make_output_4 gives [pos,neg,pos,neg]. Backward packs four sensitivities.",
+    "native_add": "Corresponding packed blocks add under ordinary +, and PyTorch autograd distributes and accumulates gradients. Verified without FX or custom Add on 6 small residual networks.",
+    "prepared_add": "Default functional conversion inserts Add(recenter=True), with custom autograd for re-centering, optional alignment and sensitivity shifts. The custom Add is therefore present in this checkout, though not algebraically necessary for split+split residual sums.",
+    "remaining_caches": "Optional original-value/gradient alignment captures and custom-autograd saved tensors remain; removal of old explicit residual-routing cache does not mean cache-free.",
+    "transformer_scope": "Current bwgame softmax and LayerNorm use value-recovering splits, not the thesis globally convex/monotone Transformer construction. The transformer-dc experimental branch remains a separate graph/chunk implementation.",
+    "notation_note": "Several helper docstrings describe zeros in the trailing quarters where their implementations actually duplicate the streams; analysis follows executable code."
+  },
+  "test_report": "reports/implementation-comparison/residual-packing-check.json",
+  "manuscript_scope": "Comparison now incorporated in Section subsec:split_implementations of Chapter 03 at the author's request; see manuscript-review.json."
+}

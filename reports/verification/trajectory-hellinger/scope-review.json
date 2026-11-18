@@ -1,0 +1,60 @@
+{
+  "verdict": "PASS",
+  "reviewer": "/root/concise_foundations (independent read-only mathematical and declaration-scope review)",
+  "declaration": "Thesis.TrajectoryHellinger.trajectory_hellinger_recursion",
+  "scope": "Equation eq:trajectory_hellinger_recursion: normalized prefix-path sum-of-squares Hellinger distance equals the independently transported geometric-mean overlap expression, for varying finite layer state spaces and a common initial state.",
+  "source_sha256": {
+    "formalization/Thesis/TrajectoryHellinger.lean": "5bc28089683b0781d90658ebfa595b926a4201d542c4e52715de8c43be1fd579",
+    "formalization/Thesis/Games.lean": "585f3fadd0c405584ec7ddb0b76be7a1606d8005ce8d179c9de6095f831fd312",
+    "formalization/checks/trajectory_hellinger_audit.lean": "686c1bc1e43f829d5c42de93fa9b76a2b6e7baafe1328957a86c7b428e42e08a",
+    "reports/verification/trajectory-hellinger/audit.log": "08fe5e6978d6de13f1ca0eb8bfae74c712855a87beb318f5057171541d37f2bb",
+    "reports/verification/trajectory-hellinger/build.log": "9a1441ecd8175d38a275d07b3438a7d21cd1ea3a6bd3855687295f3810391e84",
+    "tex/chapters/02_foundations.tex": "67a548ac9e296d902a213b3f9b6404c640ceaf4ac9901f046315d619648e8667"
+  },
+  "equation_sha256": "69dee4b11e353bcbd9740f14e6d8fac9ac6911630dc4783144d7f530812e63c7",
+  "findings": [
+    "Prefix includes the initial state and every successor; pathLaw is independently defined as the delta-start product of transition weights.",
+    "mass and g are defined by statewise transport, not by a path-overlap expression. mass_eq_endpoint_sum and pathLaw_geometric prove their connection to whole prefix trajectories; BC_eq_path_overlap then identifies computed BC with the actual path-law overlap.",
+    "hellingerSquared is independently one half the sum of squared square-root differences; hellinger is its nonnegative square root. Neither definition mentions BC or g. No target equality is assumed.",
+    "The exact four-clause endpoint proves the squared-distance identity and both distance formulas, including the explicit sum of g. Nonnegativity of the radicand follows from the proven sum-of-squares identity.",
+    "S may vary at every elapsed step. Reindex n=L-l and S(n)=the thesis state space at layer L-n; n=L gives the full-law formula and n=0 the shared-start boundary. Arbitrary unused future finite types do not add kernel assumptions.",
+    "Hypotheses require nonnegative entries and normalized rows only for i<n. They permit zero probabilities, differing supports, and unreachable states. Cemetery absorption is unnecessary for this identity, so omitting it is a valid generalization of the source assumptions.",
+    "prefix_marginal proves that summing out any normalized future suffix gives the stated shorter prefix law, closing the marginal interpretation used in the thesis.",
+    "The independent audit driver checks the actual four-clause expected theorem type. Recorded build ends successfully; the recorded axiom audit reports exactly propext, Classical.choice, Quot.sound for all four audited declarations."
+  ],
+  "validation_evidence": {
+    "build": "reports/verification/trajectory-hellinger/build.log; root ran lake build All Thesis.TrajectoryHellinger, exit 0",
+    "audit": "reports/verification/trajectory-hellinger/audit.log; root ran lake env lean checks/trajectory_hellinger_audit.lean, exit 0",
+    "axioms": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "independent_review_execution": "Read the frozen module, expected-type audit driver, build result, and axiom output; did not rerun the build in parallel."
+  },
+  "scope_limits": [
+    "This equation endpoint does not itself certify the runtime complexity, monotonicity, terminal-state disagreement decomposition, or conditioned-survival theorem; those are distinct surrounding claims.",
+    "GitHub publication and equation-link destination correctness are integration concerns outside this proof-scope verdict."
+  ],
+  "required_fixes": [],
+  "source_binding_follow_ups": [
+    {
+      "recorded_at_utc": "2026-11-16T09:50:39.120605+00:00",
+      "reviewer": "/root/concise_foundations",
+      "verdict": "PASS",
+      "evidence": "reports/convexity-definition/review.json",
+      "scope": "Chapter02 full-file hash refreshed for a preceding convexity definition only. Hellinger equation, probability assumptions, theorem proof and every existing Lean/build/audit claim are unchanged.",
+      "before_source_sha256": "bc3daf0347dde9debf72298dc7710d2594ef3d15ac780b7d39cc3ceae24b3f6d",
+      "after_source_sha256": "91d00b2aeafa57032a9f76dad76a83c9ce40f5bf6ee770d8c436efbf3f8d2b9a"
+    },
+    {
+      "recorded_at_utc": "2026-11-17T13:30:12.695351+00:00",
+      "reviewer": "/root",
+      "verdict": "PASS",
+      "evidence": "reports/entropy-regularization-notation/consistency.json",
+      "scope": "Whole-file binding refreshed after exactly two entropy macro substitutions; all Hellinger definitions, statement and proof unchanged.",
+      "before_source_sha256": "91d00b2aeafa57032a9f76dad76a83c9ce40f5bf6ee770d8c436efbf3f8d2b9a",
+      "after_source_sha256": "67a548ac9e296d902a213b3f9b6404c640ceaf4ac9901f046315d619648e8667"
+    }
+  ]
+}

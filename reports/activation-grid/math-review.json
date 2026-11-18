@@ -1,0 +1,110 @@
+{
+  "status": "PASS",
+  "reviewer": "/root/concise_foundations/proof_review",
+  "recorded_at_utc": "2026-11-16T11:50:14.179415+00:00",
+  "scope": "Independent mathematical review of the activation-grid implementation and its validation against current Chapter 03. No source edits or rendering performed by the reviewer.",
+  "source_sha256": {
+    "scripts/plot_activation_dc_grid.py": "b221de054040aa5db2a2c2a807a60409e610d673943953bcff8d9c16d3ae6d9f",
+    "tex/figures/activation_dc_grid.pdf": "0a4bf8ff494545b986413740b3c70fd20a7342b69c66609e8e26fb4537812b3e",
+    "tex/figures/activation_dc_grid.png": "faddeff417df4b3b1a153e1773ab5c62836965f98542c7d8a8b5e9e2ab2e311f",
+    "reports/activation-grid/validation.json": "c4acc7746bc97bbfc351f36c0964a846dea517559ff3ff567eff9fcef4cc63e4",
+    "tex/chapters/03_decompositions.tex": "4382d329dbdabad15fd2e1e93be6a9adc3c3e1b445e2d587767711fd1aa2bbae"
+  },
+  "checks": {
+    "rows_and_parameters": "ReLU, exact Gaussian GELU, Swish beta=1, sigmoid, softplus theta=1.",
+    "independent_input_domain": "meshgrid x,y in [0,4]^2, giving scalar difference z=x-y in [-4,4]. Neither input is a dependent coordinate.",
+    "literal_relu": "surfaces returns (maximum(x,y), y) for both formulations; the atomic-curvature case is treated separately.",
+    "simple_profiles": "Every simple p,q,L matches Table tab:closed_form_dc_profiles. GELU L=2, Swish L=2, sigmoid L=1/2, softplus L=1; ReLU L=1.",
+    "canonical_gelu": "a=sqrt(2), m=Phi(a)+a*phi(a)-1, c=2*phi(a), L=1+2m. Piecewise p=(-c, f(z)+m*z, L*z-c) across -a,a; q=p-f. Checked curvature f_second=(2-z^2)*phi(z).",
+    "canonical_swish": "r uniquely solves r*tanh(r/2)=2; a=r, m=(r-2)/4, c=(r^2-4)/4, L=r/2. Same piecewise profile structure. Checked f_second=sigma_prime(z)*(2+z*(1-2*sigma(z))).",
+    "canonical_sigmoid": "p=sigma(z) for z<=0, p=1/2+z/4 for z>=0; q=p-sigma(z), L=1/4.",
+    "canonical_softplus": "p=logaddexp(0,z), q=0, L=1; p(0)=log(2) is preserved.",
+    "lift": "Every formulation uses its own L in F_plus=p(x-y)+L*y and F_minus=q(x-y)+L*y. No offset alignment or scalar-profile clipping.",
+    "normalization": "Canonical GELU/Swish origins are (0,0); sigmoid is (1/2,0); softplus is (log(2),0). Simple GELU/Swish/sigmoid retain their different original constants.",
+    "convexity_and_monotonicity": "Analytic review confirms convex profiles with slopes in [0,L], so the Hessian of each lift is its nonnegative scalar curvature times [[1,-1],[-1,1]] where differentiable and its coordinate derivatives are profile_derivative and L-profile_derivative. The convex profile criterion covers ReLU and piecewise canonical joins.",
+    "independent_quadrature": "Validation integrates positive and negative actual f_second separately from minus infinity to establish origin slopes, then integrates the Taylor remainder from 0 to z. Orientation for negative z is correct. All four smooth activations have s_minus=0 and f(0)>=0, so validation origin values f(0),0 are appropriate.",
+    "coincident_rows": "ReLU and softplus simple/canonical surface arrays coincide exactly, as required.",
+    "output_binding": "Frozen script, generated PDF and PNG hashes match validation.json."
+  },
+  "validation_evidence": {
+    "surface_grid": [
+      81,
+      81
+    ],
+    "max_reconstruction_error": 1.8318679906315083e-15,
+    "min_surface_value": 0.0,
+    "max_canonical_profile_quadrature_error": 1.7763568394002505e-15,
+    "max_canonical_curvature_finite_difference_error": 1.3298079026835552e-07,
+    "canonical_L": {
+      "relu": 1.0,
+      "gelu": 1.2578082903703098,
+      "swish": 1.1996786402577337,
+      "sigmoid": 0.25,
+      "softplus": 1.0
+    }
+  },
+  "limitations": "The reviewer read the implementation and existing numerical report, independently checked analytic formulas and constants, and did not rerun rendering or numerical validation. Finite-grid checks corroborate the formulas; global mathematical properties follow from the checked analytic profiles. Layout and vector-output inspection were performed separately by the parent agent.",
+  "required_fixes": [],
+  "layout_refresh": {
+    "reviewed_by": "/root",
+    "recorded_at_utc": "2026-11-16T12:03:18.986595+00:00",
+    "evidence": "reports/activation-grid/layout-review.json",
+    "basis": "AST comparison confirms every mathematical and validation function is identical to the independently reviewed version; only imports, a rectangular-view helper, rendering and layout metadata changed."
+  },
+  "historical_legend_regeneration": {
+    "change": "Legend text Canonical (mesh) -> Minimum curvature (mesh).",
+    "verification": "Reverting this exact string in the final script recovers SHA256 6190c6f8e2f794dcd6c695c1ad0c2422604d9ee0babd9108b53b30a75c7b2e17, the independently reviewed script. All formulas and validation code are therefore byte-identical. Final regenerated artifact hashes match validation.json.",
+    "scope": "Historical legend-only revision of script91b0c86542fcfbed126044d00e4088a5a9e3cc7e6edf0f49d30d945bf911c2b4; the later layout revision is covered by layout_refresh."
+  },
+  "unrelated_softmax_proof_refresh": {
+    "reviewed_by": "/root",
+    "recorded_at_utc": "2026-11-16T12:06:30.211188+00:00",
+    "evidence": "reports/softmax-recovery-explicit/review.json",
+    "scope": "Chapter source binding updated for the expanded softmax cancellation and user caption shortening; all plotted scalar profiles and figure assets unchanged."
+  },
+  "unrelated_mixing_concision_refresh": {
+    "reviewed_by": "/root",
+    "evidence": "reports/mixing-concision/review.json",
+    "scope": "Whole chapter binding refreshed for later mixing-section prose edits. All preceding activation formulas and figure source are byte-identical to the immediate pre-edit snapshot; generated assets unchanged."
+  },
+  "unrelated_regularizer_definition_refresh": {
+    "reviewed_by": "/root",
+    "evidence": "reports/mixing-concision/regularizer-review.json",
+    "scope": "Only later regularizer prose changed; preceding activation profiles and figures unchanged."
+  },
+  "unrelated_stabilization_concision_refresh": {
+    "reviewed_by": "/root",
+    "evidence": "reports/stabilization-concision/review.json",
+    "scope": "Only later stabilization exposition changed. All preceding activation profiles and figure source unchanged."
+  },
+  "unrelated_residual_addition_refresh": {
+    "reviewed_by": "/root",
+    "evidence": "reports/residual-addition/review.json",
+    "scope": "Only later residual-addition prose and table row changed. Activation formulas and figures unchanged."
+  },
+  "cnn_composition_concision_refresh": {
+    "reviewed_by": "/root",
+    "evidence": "reports/cnn-composition-concision/review.json",
+    "scope": "Only end-of-chapter composition result and recap condensed; protected and plotted formulas unchanged."
+  },
+  "implementation_subsection_refresh": {
+    "reviewed_by": "/root",
+    "evidence": "reports/implementation-comparison/manuscript-review.json",
+    "scope": "Only CNN section introduction and implementation exposition changed; protected and plotted formulas unchanged."
+  },
+  "methods_chapter_removal": {
+    "reviewed_by": "/root",
+    "evidence": "reports/methods-paper-restoration/math-review.json",
+    "scope": "Plotted smooth profiles and grid source unchanged. Earlier ReLU recovery domain clarified as all real pairs; later method prose relocated from the removed chapter. Plot formulas and assets untouched."
+  },
+  "entropy_notation_refresh": {
+    "reviewed_by": "/root",
+    "evidence": "reports/entropy-regularization-notation/consistency.json",
+    "scope": "Only entropy glyph changed in later regularized decomposition section; preceding activation profiles and grid remain byte-identical."
+  },
+  "hertrich_context_relocation": {
+    "reviewed_by": "/root",
+    "scope": "Only the explanatory Hertrich\u2013Loho paragraph was inserted after the decomposition definition. Removing that paragraph reproduces the previous chapter byte for byte; all formal statements, displayed formulae, proofs, protected aliases and activation plots are unchanged.",
+    "evidence": "reports/unified-multiplication/review.json"
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "status": "PASS",
+  "reviewed_by": "/root",
+  "recorded_at_utc": "2026-11-16T16:18:57.819365+00:00",
+  "before_sha256": "5a4e6d135d73e094494622f7ce6f935a2e3083ff82b98e26a03437f6ea89ccb2",
+  "source_sha256": "5039b920fa05f35b2e644901f0ba6501bf886d755b04fdc986ec33a4fc6c7795",
+  "scope": "Replaced generic implementation/cache paragraph with concise subsection comparing CVPR graph reconstruction and current module patching; moved routine composition statement before implementation; replaced generic converter claim with subsection reference.",
+  "evidence": [
+    "reports/implementation-comparison/evidence.json",
+    "reports/implementation-comparison/residual-packing-check.json",
+    "reports/activation-grid/experimental-provenance.json"
+  ],
+  "checks": [
+    "4B packing is batch-axis packing with unchanged channel and parameter dimensions.",
+    "Forward patches use custom autograd backward rules; functional preprocessing still uses FX.",
+    "Native split+split addition needs no special algebraic rule; default Add still performs stabilization.",
+    "Reference-alignment caches are distinct from old residual-routing caches.",
+    "Backward components depend on selected propagation mode; not universally asserted to be classical derivatives.",
+    "Transformer DC benchmark branch distinguished from conditioned game implementation.",
+    "All mathematical displays, proofs and formal theorem statements remain unchanged."
+  ],
+  "independent_review": {
+    "reviewer": "/root/concise_foundations",
+    "verdict": "PASS",
+    "adjustment": "Parameter-shape preservation explicitly attributed to the patches, since preprocessing can unpack combined attention projection matrices into separate modules."
+  },
+  "layout_concision": {
+    "reviewed_by": "/root",
+    "scope": "Shortened the new comparison, CNN overview and winner-takes-all prose to avoid an almost empty extra page. Retained all implementation distinctions, precision options, packing, residual behavior, property qualifications and chapter references. All mathematical displays/proofs unchanged."
+  },
+  "four_block_rationale": {
+    "reviewed_by": "/root",
+    "recorded_at_utc": "2026-11-16T16:40:21.212118+00:00",
+    "scope": "Explained why two activation streams are duplicated: four output-stream/input-stream sensitivities must be carried in one backward pass, with gradients matching forward input tensor shapes.",
+    "code_evidence": [
+      "code/playing_backward/bwgame/operations/base.py:1",
+      "code/playing_backward/bwgame/operations/base.py:67",
+      "code/playing_backward/bwgame/operations/base.py:73"
+    ]
+  }
+}

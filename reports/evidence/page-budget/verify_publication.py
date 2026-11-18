@@ -17,6 +17,8 @@ ROOT = Path(__file__).resolve().parents[3]
 OUT = ROOT / "reports/single-pdf"
 sys.path.insert(0, str(ROOT / "scripts"))
 from tex_lean_inventory import published_link_details
+from generate_draft_lean_links import validate_draft_links
+from check_paper_references import strip_comments
 
 
 def command(*args):
@@ -65,6 +67,7 @@ def inspect_pdf():
     page_objects = {int(value) for value in re.findall(r"page\s+\d+\s*=\s*(\d+)\s+\d+\s+R", pages_listing)}
     names, remote, internal, uris = pdf_links(objects, page_objects)
     lean = [uri for uri in uris if "/formalization/" in uri and ".lean#L" in uri]
+    draft_lean = [uri for uri in uris if uri.startswith("draft-proofs/")]
     log = (ROOT / "tex/main.log").read_text()
     warnings = [line for line in log.splitlines() if re.search(r"\bWarning\b|Overfull \\[hv]box|Underfull \\[hv]box", line)]
     biber_log = ROOT / "tex/main.blg"
@@ -79,18 +82,20 @@ def inspect_pdf():
         "warnings": warnings, "biber_warnings_or_errors": biber_warnings,
         "unresolved_reference_or_citation": bool(re.search(
             r"(?:Reference|Citation).*undefined|There were undefined|multiply defined", log)),
-        "lean_uri_count": len(lean), "unique_lean_uris": len(set(lean)),
+        "lean_uri_count": len(lean) + len(draft_lean),
+        "unique_lean_uris": len(set(lean) | set(draft_lean)),
+        "pinned_lean_uri_count": len(lean), "draft_lean_uri_count": len(draft_lean),
         "remote_link_count": len(remote), "internal_link_count": len(internal),
         "named_destinations": len(names), "page_object_count": len(page_objects),
     }
-    return info, remote, internal, lean
+    return info, remote, internal, lean, draft_lean
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, default=OUT/'publication-checks.json')
     args = parser.parse_args()
-    info, remote, internal, all_lean = inspect_pdf()
+    info, remote, internal, all_lean, draft_lean = inspect_pdf()
     generated = (ROOT / "tex/preamble/lean_links_generated.tex").read_text()
     config = json.loads((ROOT / "formalization/tex_links.json").read_text())
     details = published_link_details(config)
@@ -101,6 +106,20 @@ def main():
         raise ValueError("Generated Lean declarations do not match the pinned link map")
     expected = Counter()
     for label, count in uses.items(): expected[urls[label]] += count
+    draft_links = validate_draft_links()
+    expected_draft = Counter()
+    direct_local_links = Counter(
+        label
+        for source in details['sources']
+        for label in re.findall(r"\\LeanLinkIfDeclared\s*\{([^}]+)\}",
+                                strip_comments(source.read_text()))
+        if label in draft_links
+    )
+    for label, spec in draft_links.items():
+        count = details['labels'][label]
+        if count != 1:
+            raise ValueError("Draft equation label must occur exactly once: " + label)
+        expected_draft[spec['url']] += count + direct_local_links[label]
     receipt = json.loads((ROOT / "reports/verification/current/receipt.json").read_text())
     changed = [name for name, digest in receipt["source"]["sha256"].items()
                if not (ROOT / name).is_file() or sha(ROOT / name) != digest]
@@ -112,30 +131,43 @@ def main():
         "no_remote_document_links": not remote,
         "internal_links_present": bool(internal), "broken_internal_links": broken,
         "all_internal_destinations_resolve": not broken,
-        "published_lean_uri_count": len(all_lean), "unique_lean_uris": len(set(all_lean)),
-        "expected_published_lean_link_count": sum(expected.values()),
+        "published_lean_uri_count": len(all_lean) + len(draft_lean),
+        "unique_lean_uris": len(set(all_lean) | set(draft_lean)),
+        "pinned_lean_uri_count": len(all_lean), "draft_lean_uri_count": len(draft_lean),
+        "expected_published_lean_link_count": sum(expected.values()) + sum(expected_draft.values()),
         "physical_lean_labels": len(uses), "aliased_lean_mappings": details['alias_coverage'],
         "retired_lean_labels": sorted(retired),
         "represented_unique_lean_declarations": len(details['represented_declarations']),
-        "all_expected_lean_uris_present": set(all_lean) == set(expected),
-        "all_expected_lean_link_occurrences_present": Counter(all_lean) == expected,
-        "all_lean_uris_at_verified_revision": all(
+        "all_expected_lean_uris_present": set(all_lean) == set(expected)
+            and set(draft_lean) == set(expected_draft),
+        "all_expected_lean_link_occurrences_present": Counter(all_lean) == expected
+            and Counter(draft_lean) == expected_draft,
+        "all_pinned_lean_uris_at_verified_revision": all(
             "/blob/" + receipt["source"]["commit"] + "/" in uri for uri in all_lean),
+        "local_proof_sources_builds_and_snapshots_verified": True,
+        "all_expected_local_proof_links_present": Counter(draft_lean) == expected_draft,
         "verified_proof_files_checked": len(receipt["source"]["sha256"]),
         "changed_verified_proof_files": changed,
     }
     required = ['main_pdf_within_150_pages', 'publication_log_clean', 'published_pdf_matches_build',
                 'no_remote_document_links', 'internal_links_present', 'all_internal_destinations_resolve',
                 'all_expected_lean_uris_present', 'all_expected_lean_link_occurrences_present',
-                'all_lean_uris_at_verified_revision']
+                'all_pinned_lean_uris_at_verified_revision',
+                'local_proof_sources_builds_and_snapshots_verified',
+                'all_expected_local_proof_links_present']
     passed = all(checks[key] for key in required) and not changed
-    result = {"status": "passed" if passed else "failed", "publication_mode": "single_pdf",
+    result = {"status": "passed" if passed else "failed",
+              "publication_mode": "single_pdf_with_local_proofs" if draft_links else "single_pdf",
+              "all_proof_links_published": not draft_links,
               "active_root": "tex/main.tex", "documents": {"thesis.pdf": info},
               "proof_source_commit": receipt["source"]["commit"], "checks": checks,
+              "local_proof_links": draft_links,
               "active_source_files": [str(p.relative_to(ROOT)) for p in details['sources']],
               "remote_document_links": remote,
               "missing_lean_uri_occurrences": dict(expected-Counter(all_lean)),
-              "unexpected_lean_uri_occurrences": dict(Counter(all_lean)-expected)}
+              "unexpected_lean_uri_occurrences": dict(Counter(all_lean)-expected),
+              "missing_local_proof_uri_occurrences": dict(expected_draft-Counter(draft_lean)),
+              "unexpected_local_proof_uri_occurrences": dict(Counter(draft_lean)-expected_draft)}
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, indent=2) + "\n")
     print(json.dumps(result, indent=2))

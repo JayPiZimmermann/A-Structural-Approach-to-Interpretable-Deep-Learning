@@ -1,0 +1,348 @@
+{
+  "status": "applied_and_frozen",
+  "timestamp_utc": "2026-11-11T20:02:52.216845+00:00",
+  "scope": [
+    "tex/chapters/08_experiments.tex",
+    "tex/chapters/10_appendix.tex",
+    "tex/appendices/experiments.tex"
+  ],
+  "source_priority": [
+    "Official accepted Hidden Monotonicity PDF and supplement; PDF wording checked against secondaryTeX",
+    "Pristine PTNB main.tex",
+    "Current thesis corrections and integration override source wording where claims differ"
+  ],
+  "source_sha256": {
+    "literature/references/hiddenMono.pdf": "95020d66c54a63e432635a73b690d7d5c983262bdfc6bc0ba258a112ca963965",
+    "/tmp/thesis-paper-closeness/hiddenMono_supplement.pdf": "b5c7e828772ad697321627602ce598cf18fddd1f5891308cfe7e62ce84eb0841",
+    "/tmp/thesis-paper-closeness/ptnb/main.tex": "a5973cd06a198b94b6c650c90786d4dfbadef5e272893dd7a0ecc2da77cfbb59"
+  },
+  "restored_passages": [
+    {
+      "file": "tex/chapters/08_experiments.tex",
+      "source": "HM accepted main PDF §5.3.1; hm-accepted.txt:438–452",
+      "before": "\nFigure~\\ref{fig:vgg_saliency_comparison_main} compares split and baseline saliency maps at their best-performing layers. Mid-layer SplitCAM resembles earlier-layer classical $\\gamma$-\\ac{lrp}. Against same-layer LayerCAM, it gives more weight across object pixels while emphasizing key features, balancing interpretability and focus (low entropy). For $\\alpha \\ll 0.5$, SplitGrad yields less focused, finely aligned gradients following image details. We attribute this to Maxout retaining pre-activation information that ReLU discards at inactive neurons. Further examples appear in Section~\\ref{app:saliency}.\n\n",
+      "after": "\nFigure~\\ref{fig:vgg_saliency_comparison_main} qualitatively compares saliency maps from our split methods with their baseline counterparts at the best-performing layers. Mid-layer SplitCAM shares key visual characteristics with classical $\\gamma$-\\ac{lrp} from earlier layers. Compared to standard LayerCAM on the same layer it focuses more weight to all object pixels, while still marking the key object features as especially important. For $\\alpha \\ll 0.5$, SplitGrad yields less focused yet finely aligned gradients that closely follow image details. We attribute this to the Maxout activation retaining preactivation information, unlike ReLU, which discards it in inactive neurons. Overall, mid-layer SplitCAM offers an effective balance between interpretability and focus (low entropy).\n\n",
+      "qualification": "Unchanged claim; restore paper phrasing while keeping the consolidated structure.",
+      "current_line": 16
+    },
+    {
+      "file": "tex/chapters/08_experiments.tex",
+      "source": "HM accepted main PDF §5.3.2; hm-accepted.txt:456–461",
+      "before": "Tables~\\ref{tab:eval_vgg_main} and~\\ref{tab:eval_res_main} give the complete selected VGG-16 and ResNet-18 configurations; \\emph{Abs} indicates absolute saliency before Quantus evaluation. Section~\\ref{app:saliency} specifies layers and parameters.",
+      "after": "Tables~\\ref{tab:eval_vgg_main} and~\\ref{tab:eval_res_main} compare attribution methods on VGG-16 and ResNet-18 across Quantus metrics. The \\emph{Abs} column specifies whether absolute saliency values were used prior to evaluation in Quantus. Full results with all layers and configurations are in Section~\\ref{app:saliency}.",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 19
+    },
+    {
+      "file": "tex/chapters/08_experiments.tex",
+      "source": "HM accepted main PDF §5.3.2; hm-accepted.txt:462–464",
+      "before": "The backpropagation-based methods depend strongly on layer choice (ablations: Section~\\ref{app:ablation}).",
+      "after": "Overall, the considered backpropagation-based attribution methods heavily depend on the selected network layer; see Section~\\ref{app:ablation} for extensive ablation.",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 21
+    },
+    {
+      "file": "tex/chapters/08_experiments.tex",
+      "source": "HM accepted main PDF §5.3.3; hm-accepted.txt:531–536",
+      "before": "Two configurations in Table~\\ref{tab:alpha_ablation_main} illustrate the effect of the shift $\\alpha$ on SplitGrad and SplitCAM on the custom ImageNet-S test split. As in Section~\\ref{sec:stabilization_dc}, $\\alpha = 0$ leaves the backward pass unstabilized; $\\alpha = 0.5$ gives local sensitivities resembling scaled original-network gradients.",
+      "after": "Table~\\ref{tab:alpha_ablation_main} presents the performance of two selected SplitGrad and SplitCAM configurations across different shifting parameters $\\alpha$, evaluated on our custom ImageNet-S test split. As explained in Section~\\ref{sec:stabilization_dc}, $\\alpha$ controls backward pass stabilization: $\\alpha = 0$ means no stabilization and $\\alpha = 0.5$ yields local sensitivities resembling scaled original gradients.",
+      "qualification": "Restore setup only; keep metric-specific extrema and confounding/source-discrepancy corrections verbatim.",
+      "current_line": 55
+    },
+    {
+      "file": "tex/chapters/08_experiments.tex",
+      "source": "PTNB main.tex:660–663",
+      "before": "Every tunable method, including baselines and DAVE, uses the same validation search: \\nValGrid{} configurations in the declared grids (Table~\\ref{ptnb:tab:main-search-grid}).",
+      "after": "Methods are evaluated under a two-stage protocol that treats baselines and our games alike. Stage~1 runs a validation grid search for every tunable method, including DAVE (Table~\\ref{ptnb:tab:main-search-grid}; \\nValGrid{} configurations in total).",
+      "qualification": "Keep later dual-selection, original testing-family and confidence-interval qualifications unchanged.",
+      "current_line": 77
+    },
+    {
+      "file": "tex/chapters/08_experiments.tex",
+      "source": "PTNB main.tex:663–667",
+      "before": "Independent localization and faithfulness rank-sums select two configurations per method; both are evaluated once on test data.",
+      "after": "Stage~2 independently selects the localization and faithfulness rank-sum configurations and evaluates both once on the test split.",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 77
+    },
+    {
+      "file": "tex/chapters/08_experiments.tex",
+      "source": "PTNB main.tex:705–707",
+      "before": "Localization-optimal modes concentrate mass on the few patches aligning with the mask. Increasing $\\tau$ spreads equilibrium routing over more predecessors:",
+      "after": "The localization-optimal modes place mass on the few patches that align with the segmentation mask. As $\\tau$ increases, the same equilibrium spreads routing over more predecessors:",
+      "qualification": "Do not restore untested environmental-feature-use or perception-optimal claims; retain qualifications.",
+      "current_line": 116
+    },
+    {
+      "file": "tex/chapters/08_experiments.tex",
+      "source": "PTNB main.tex:728–730",
+      "before": "On CNNs, where \\ac{lrp}-type rules are strong, localization-selected \\ac{rg} leads AL within that selection:",
+      "after": "On the CNNs, where \\ac{lrp}-type rules are already strong, the localization-selected \\ac{rg} rows also lead on AL within that selection:",
+      "qualification": "Preserve corrected ResNet non-significance and the stronger faithfulness-selected baseline.",
+      "current_line": 145
+    },
+    {
+      "file": "tex/chapters/08_experiments.tex",
+      "source": "PTNB main.tex:733–734",
+      "before": "VGG-16's risk-averse \\ac{sg} is most robust (MaxS",
+      "after": "On VGG-16 the risk-averse \\ac{sg} mode is the most robust method (MaxS",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 145
+    },
+    {
+      "file": "tex/chapters/08_experiments.tex",
+      "source": "PTNB main.tex:4776–4779",
+      "before": "Conditioned \\ac{rg} routes only through Values, with zero $Q$, $K$ gradients, as in CP-LRP",
+      "after": "The \\ac{rg} backward holds the realized attention policy fixed and routes relevance only through the Value path, with zero gradient on $Q$, $K$, as in CP-LRP",
+      "qualification": "Retain current short paragraph to avoid the previously isolated end-of-chapter float; all cells/caption remain unchanged.",
+      "current_line": 153
+    },
+    {
+      "file": "tex/chapters/10_appendix.tex",
+      "source": "PTNB main.tex:4354–4355",
+      "before": "A tie scores a hit if any maximizer lies inside the mask.",
+      "after": "Ties are scored as a hit whenever at least one maximizer lies inside the object mask.",
+      "qualification": "Preserve image–class sampling unit and ImageNet-S denominator in following sentence.",
+      "current_line": 58
+    },
+    {
+      "file": "tex/chapters/10_appendix.tex",
+      "source": "PTNB main.tex:4380–4386",
+      "before": " Following~\\textcite{Montavon2018} and Quantus~\\parencite{Hedstrom2023}, sum $\\bar{a}$ over square $39{\\times}39$ patches (side $\\lfloor\\sqrt{1568}\\rfloor$). Replace non-overlapping patches by the per-sample mean in decreasing attribution order, recording the target logit after each removal. Sel is the trapezoidal area under this curve against the fraction of removed patches. Lower is better.\n\n",
+      "after": "\nFollowing~\\textcite{Montavon2018} and its Quantus implementation~\\parencite{Hedstrom2023}, $\\bar{a}$ is summed over square patches of $39{\\times}39$ pixels (side $\\lfloor\\sqrt{1568}\\rfloor$); non-overlapping patches are removed (replaced by the per-sample mean) in decreasing order of their summed attribution, and the target logit is recorded after each removal. Sel is the trapezoidal area under this curve, with the fraction of removed patches on the abscissa. Lower is better.\n\n",
+      "qualification": "Preserve correct patch removal; do not restore HM smooth-pixel-perturbation misdescription.",
+      "current_line": 87
+    },
+    {
+      "file": "tex/chapters/10_appendix.tex",
+      "source": "PTNB main.tex:4392–4395",
+      "before": "Per-image seeds give every row identical perturbations. Both metrics use the same fixed random subset of 200 test images (seed 0) across rows and models; all other metrics use the full test split.",
+      "after": "The noise is seeded per image, so every row sees the same perturbed inputs. MaxS and AvgS are computed on a fixed random subset of 200 test images (seed 0) that is identical for all rows and models; all other metrics use the full test split.",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 90
+    },
+    {
+      "file": "tex/chapters/10_appendix.tex",
+      "source": "PTNB main.tex:4462–4464",
+      "before": "Every tunable method, including baselines, selects two configurations on validation:",
+      "after": "For every tunable method, baselines and ours alike, two configurations are selected on the validation split:",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 94
+    },
+    {
+      "file": "tex/chapters/10_appendix.tex",
+      "source": "PTNB main.tex:4465–4467",
+      "before": "Ranks are within-method and respect metric directions. Ties favor the default (the anchor for \\ac{rg}), then fewer non-default parameters, then grid order.",
+      "after": "Ranks are computed within each method's grid, respecting metric directions; ties are broken in favor of the default (for \\ac{rg}, the anchor), then of fewer non-default parameters, then of grid order.",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 94
+    },
+    {
+      "file": "tex/chapters/10_appendix.tex",
+      "source": "PTNB main.tex:4299–4307",
+      "before": "\n\\textbf{Gradient} is raw input-gradient saliency~\\parencite{Simonyan2014}: the maximum absolute gradient over color channels. \\textbf{SmGrad} averages noisy gradient maps (SmoothGrad)~\\parencite{Smilkov2017}. \\textbf{IntGrad} uses Integrated Gradients~\\parencite{Sundararajan2017} with a black-image baseline. \\textbf{DeepLIFT} propagates activation differences from a reference input using the Rescale rule~\\parencite{Shrikumar2017} (CNNs only). \\textbf{DAVE} is the distribution-aware ViT gradient decomposition of \\textcite{Wrobel2024}; our implementation additionally freezes the LayerNorm mean, whereas published DAVE differentiates through mean-centering. \\textbf{SG}, our \\ac{sg}, belongs here because its occupation measure recovers the gradient (Theorem~\\ref{ptnb:thm:deriv-occ}).\n\n",
+      "after": "\n\\textbf{Gradient} is the raw input-gradient saliency map~\\parencite{Simonyan2014}, the maximum over color channels of the absolute gradient. \\textbf{SmGrad} is SmoothGrad, i.e.\\ an average over noisy gradient maps~\\parencite{Smilkov2017}. \\textbf{IntGrad} is Integrated Gradients~\\parencite{Sundararajan2017} with a black-image baseline. \\textbf{DeepLIFT} propagates activation differences relative to a reference input with the Rescale rule~\\parencite{Shrikumar2017} (CNNs only). \\textbf{DAVE} is the distribution-aware ViT gradient decomposition of~\\textcite{Wrobel2024}; our implementation additionally freezes the LayerNorm mean, whereas published DAVE differentiates through mean-centering. \\textbf{SG} is our \\ac{sg}, included in this block because it recovers the gradient as a Stopping-Game occupation measure (Theorem~\\ref{ptnb:thm:deriv-occ}).\n\n",
+      "qualification": "Preserve exact DAVE implementation qualification and current checked citation keys.",
+      "current_line": 158
+    },
+    {
+      "file": "tex/chapters/10_appendix.tex",
+      "source": "PTNB main.tex:4309–4318",
+      "before": "\n\\textbf{LRP-$\\varepsilon$} is stabilized Layer-wise Relevance Propagation~\\parencite{Bach2015}; \\textbf{LRP-$\\gamma$} amplifies positive weights~\\parencite{Montavon_2022_gammaLRP}. \\textbf{AttnLRP} propagates transformer relevance through softmax, the bilinear attention product and the Value path~\\parencite{Achtibat2024AttnLRP}. \\textbf{RG} is our \\ac{rg}; \\textbf{RG+Eq} adds equivariant Reynolds averaging, mainly to suppress ViT tokenization-grid artifacts. \\textbf{TIBAV}~\\parencite{Chefer2021GenericAttention}, \\textbf{GAE}~\\parencite{Chefer2021ICCV} and Attention Rollout (\\textbf{AR}) are transformer attention-map baselines.\n\n",
+      "after": "\n\\textbf{LRP-$\\varepsilon$} denotes the stabilized Layer-wise Relevance Propagation rule~\\parencite{Bach2015}. \\textbf{LRP-$\\gamma$} is the positive-weight-amplified LRP variant~\\parencite{Montavon_2022_gammaLRP}. \\textbf{AttnLRP} is transformer LRP that propagates relevance through the softmax and the bilinear attention product as well as the Value path~\\parencite{Achtibat2024AttnLRP}. \\textbf{RG} is our \\ac{rg}. \\textbf{RG+Eq} is the same method with equivariant Reynolds averaging, used mainly on ViT to suppress tokenization-grid artifacts. \\textbf{TIBAV}~\\parencite{Chefer2021GenericAttention}, \\textbf{GAE}~\\parencite{Chefer2021ICCV} and Attention Rollout (\\textbf{AR}) are the transformer-specific attention-map baselines.\n\n",
+      "qualification": "Unchanged claim; restore paper phrasing while keeping the consolidated structure.",
+      "current_line": 161
+    },
+    {
+      "file": "tex/chapters/10_appendix.tex",
+      "source": "PTNB main.tex:4320–4324",
+      "before": "\n\\textbf{GCAM}, \\textbf{GCAM++} and \\textbf{LCAM} denote Grad-CAM~\\parencite{Selvaraju2017}, Grad-CAM++~\\parencite{Chattopadhay2018} and LayerCAM~\\parencite{Jiang2021LayerCAM}, respectively. LayerCAM weights class-activation evidence per location. All three use the CNNs' last convolutional block and bilinear upsampling.\n\n",
+      "after": "\n\\textbf{GCAM} is Grad-CAM~\\parencite{Selvaraju2017}, \\textbf{GCAM++} is Grad-CAM++~\\parencite{Chattopadhay2018}, and \\textbf{LCAM} is LayerCAM, which weights class-activation evidence per location~\\parencite{Jiang2021LayerCAM}. All three are computed at the last convolutional block of the CNNs and upsampled bilinearly.\n\n",
+      "qualification": "Unchanged claim; restore paper phrasing while keeping the consolidated structure.",
+      "current_line": 164
+    },
+    {
+      "file": "tex/chapters/10_appendix.tex",
+      "source": "PTNB main.tex:4326–4331",
+      "before": "\n\\textbf{LIME} is Local Interpretable Model-agnostic Explanations~\\parencite{Ribeiro2016}; \\textbf{KernelSHAP} estimates SHAP values by model-agnostic weighted regression~\\parencite{LundbergLee2017}. Both perturb SLIC superpixels~\\parencite{Achanta2012slic} and fit local surrogates, distinguishing them from the backward-propagation methods.\n\n",
+      "after": "\n\\textbf{LIME} is Local Interpretable Model-agnostic Explanations~\\parencite{Ribeiro2016}. \\textbf{KernelSHAP} denotes the model-agnostic weighted-regression estimator of SHAP values~\\parencite{LundbergLee2017}. Both perturb SLIC superpixels~\\parencite{Achanta2012slic}, explaining predictions by perturbing the input and fitting a local surrogate; they are separated from the backward-propagation methods above.\n\n",
+      "qualification": "Unchanged claim; restore paper phrasing while keeping the consolidated structure.",
+      "current_line": 167
+    },
+    {
+      "file": "tex/chapters/10_appendix.tex",
+      "source": "PTNB main.tex:4498–4504",
+      "before": "\n\nEvaluation is inference-only; repeated backward passes across validation/test grids dominate its cost, including equivariant-Reynolds and noise averaging. Runtime was measured on one NVIDIA A100-SXM4-40GB at batch size 1. Sweeps used several GPUs of that type, with up to two processes per GPU. The full pipeline (validation, test, robustness, Pascal VOC, ablations and randomization diagnostics) required about 450 GPU-hours.\n\n",
+      "after": "\nThe attribution evaluations are inference-only. The main cost is the repeated backward attribution pass over the validation and test images across the method grids, including the equivariant-Reynolds and noise-averaged configurations. Runtime measurements were taken on a single NVIDIA A100-SXM4-40GB with batch size 1; evaluation sweeps were distributed over several GPUs of the same type, with up to two evaluation processes per GPU. The full pipeline (validation grids, test evaluation, robustness, Pascal VOC, ablations and randomization diagnostics) required about 450 GPU-hours.\n\n",
+      "qualification": "Unchanged claim; restore paper phrasing while keeping the consolidated structure.",
+      "current_line": 230
+    },
+    {
+      "file": "tex/appendices/experiments.tex",
+      "source": "HM official supplement §B, hiddenMono_supplement.txt:70–72",
+      "before": "This section reports all methods evaluated in the split-method setup of Section~\\ref{sec:experimental_setup}.",
+      "after": "This section provides comprehensive evaluation results for all XAI methods tested in the experimental setup described in Section~\\ref{sec:experimental_setup}.",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 7
+    },
+    {
+      "file": "tex/appendices/experiments.tex",
+      "source": "HM official supplement §B.1, hiddenMono_supplement.txt:73–80",
+      "before": "\n\nFigure~\\ref{fig:vgg_saliency_comparison} extends Figure~\\ref{fig:vgg_saliency_comparison_main}. SplitCAM at layer 26 again covers classified objects more fully than LayerCAM at that layer. SplitGrad at layer 0 detects too many input edges to explain the decision usefully, especially amid background details such as the rubble in the wood rabbit image. This agrees with the performance peaks of both methods in deeper layers.\n\n",
+      "after": "\nComplementing Figure~\\ref{fig:vgg_saliency_comparison_main}, we give more saliency examples in Figure~\\ref{fig:vgg_saliency_comparison}. Again, we observe more focus on the whole classified objects by SplitCAM in layer 26 compared to LayerCAM in the same layer. SplitGrad in layer 0 detects too many edges of the original image to be a useful explanation of the model's decision, especially with background details such as the rubble in the wood rabbit image. This aligns with the observed performance peaks of SplitGrad and SplitCAM in deeper layers.\n\n",
+      "qualification": "Unchanged claim; restore paper phrasing while keeping the consolidated structure.",
+      "current_line": 10
+    },
+    {
+      "file": "tex/appendices/experiments.tex",
+      "source": "HM official supplement §B.3, hiddenMono_supplement.txt:192–193",
+      "before": "Table~\\ref{tab:xai_eval_comprehensive_res} reports all ResNet-18 split configurations, baselines and classical methods.",
+      "after": "Table~\\ref{tab:xai_eval_comprehensive_res} presents detailed quantitative metrics across all split configurations, baselines, and classical methods for ResNet-18.",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 22
+    },
+    {
+      "file": "tex/appendices/experiments.tex",
+      "source": "HM official supplement §C, hiddenMono_supplement.txt:333–336",
+      "before": "These ablations examine forward/backward stabilization and the max-pooling implementation (Section~\\ref{sec:stabilization_dc}).",
+      "after": "These ablation studies examine the effect of the proposed stabilization techniques for the forward and backward pass, as well as the influence of the selected max-pooling implementation (Section~\\ref{sec:stabilization_dc}).",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 28
+    },
+    {
+      "file": "tex/appendices/experiments.tex",
+      "source": "PTNB main.tex:4536–4538",
+      "before": "One pipeline generates the validation, test and VOC tables from the declared grids and selection rules of Section~\\ref{ptnb:app:protocol}.",
+      "after": "The validation, test and VOC tables are generated by one pipeline from the declared grids and the selection rules of Section~\\ref{ptnb:app:protocol}.",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 48
+    },
+    {
+      "file": "tex/appendices/experiments.tex",
+      "source": "PTNB main.tex:4540–4560",
+      "before": "\nParameter grids and baseline recipes appear in Table~\\ref{ptnb:tab:main-search-grid}. For \\ac{rg}, \\ac{rg}+Eq and \\ac{sg}, $\\tau$ is temperature; $\\lambda$ and $\\lambda_{\\mathrm{sm}}$ are activation-side and attention-logit risk aversion; $\\sigma^2$ is \\ac{ptnbADF} input variance; $\\varepsilon$ is the \\ac{lrp} stabilizer; $(\\alpha,\\beta)$ are stream weights; $\\tilde\\Phi$ is the noisy-observation gate; and $N$ counts transformed inputs averaged by \\ac{rg}+Eq. For SmoothGrad, $N$ counts noisy samples and $\\sigma/\\mathrm{range}$ is noise standard deviation relative to input range; $N_{\\mathrm{steps}}$ counts Integrated Gradients steps. DAVE averages $N$ inputs with rotations up to $\\theta_{\\max}$ degrees, shifts up to $s_{\\max}$ of image extent, and variance-preserving Gaussian-noise interpolation weight up to $t_{\\max}$. AttnLRP uses $\\gamma$-rule parameters $\\gamma_{\\mathrm{conv}}$, $\\gamma_{\\mathrm{lin}}$ for convolutional and linear layers, and attention stabilizer $\\varepsilon_{\\mathrm{attn}}$. For LIME and KernelSHAP, $N$ counts perturbations. Parenthesized row labels give the selection criterion (\\texttt{loc}, \\texttt{faith}); fixed methods have none.\n\n",
+      "after": "\nParameter grids and baseline recipes appear in Table~\\ref{ptnb:tab:main-search-grid}. The configuration columns use the following parameters. \\ac{rg}, \\ac{rg}+Eq and \\ac{sg}: temperature $\\tau$, activation-side risk aversion $\\lambda$, attention-logit risk aversion $\\lambda_{\\mathrm{sm}}$, \\ac{ptnbADF} input variance $\\sigma^2$, \\ac{lrp} stabilizer $\\varepsilon$, stream weights $(\\alpha,\\beta)$, noisy-observation gate $\\tilde\\Phi$, and the number $N$ of transformed inputs averaged by \\ac{rg}+Eq. SmoothGrad: $N$ noisy samples with noise standard deviation $\\sigma$ relative to the input range ($\\sigma/\\mathrm{range}$). Integrated Gradients: $N_{\\mathrm{steps}}$ integration steps. DAVE: $N$ transformed inputs with rotations up to $\\theta_{\\max}$ degrees, shifts up to $s_{\\max}$ of the image extent, and variance-preserving Gaussian noise of interpolation weight up to $t_{\\max}$. AttnLRP: $\\gamma$-rule parameters $\\gamma_{\\mathrm{conv}}$ and $\\gamma_{\\mathrm{lin}}$ of the convolutional and linear layers and the stabilizer $\\varepsilon_{\\mathrm{attn}}$ of the attention layers. LIME and KernelSHAP: $N$ perturbation samples. Row labels in parentheses give the selection criterion (\\texttt{loc}, \\texttt{faith}); single-configuration methods have no criterion.\n\n",
+      "qualification": "Restore list phrasing only; recipes remain canonical in grid/full-CI tables, without repeating configurations or falsely assigning KernelSHAP sample formula to LIME.",
+      "current_line": 51
+    },
+    {
+      "file": "tex/appendices/experiments.tex",
+      "source": "PTNB main.tex:4712–4718",
+      "before": "\n\nTables~\\ref{ptnb:tab:ablations-vit}--\\ref{ptnb:tab:ablations-resnet} vary one parameter over its declared grid around each validation-selected \\ac{rg}, \\ac{rg}+Eq and \\ac{sg} configuration (each selected center shown once in bold), fixing the others. The notes retain every selected factor value. Localization and faithfulness are evaluated on the 565-image test split without feeding back into selection. On ViT-B/16, ``+Eq'' applies \\ac{rg}+Eq at the selected \\ac{rg} parameters. Validation-inadmissible configurations (Section~\\ref{ptnb:app:selection}) are excluded.\n\n",
+      "after": "\nTables~\\ref{ptnb:tab:ablations-vit}--\\ref{ptnb:tab:ablations-resnet} vary one parameter at a time around each validation-selected configuration of \\ac{rg}, \\ac{rg}+Eq and \\ac{sg}, over the values of the declared grid; all other parameters stay at their selected values. Each selected center appears once in bold; the notes retain every selected factor value. The rows are evaluated on the 565-image test split with the localization and faithfulness metrics and never feed back into the selection. On ViT-B/16, ``+Eq'' evaluates \\ac{rg}+Eq at the parameters of the selected \\ac{rg} row. Configurations inadmissible on validation (Section~\\ref{ptnb:app:selection}) are excluded.\n\n",
+      "qualification": "Preserve consolidated-center display explanation and source grid inclusion rules.",
+      "current_line": 136
+    },
+    {
+      "file": "tex/appendices/experiments.tex",
+      "source": "PTNB main.tex:4746–4747",
+      "before": "Quantus Pointing Game counts a hit if any maximum-attribution pixel lies in the mask.",
+      "after": "The pointing game of Quantus counts a hit whenever any pixel attaining the map maximum lies in the mask.",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 170
+    },
+    {
+      "file": "tex/appendices/experiments.tex",
+      "source": "PTNB main.tex:4753–4754",
+      "before": "Single-pixel sampling removes most of LIME's and KernelSHAP's advantage.",
+      "after": "Drawing a single maximum pixel removes most of the advantage of the superpixel methods LIME and KernelSHAP.",
+      "qualification": "Unchanged claim; restore paper phrasing with thesis reference/acronym names.",
+      "current_line": 170
+    },
+    {
+      "file": "tex/appendices/experiments.tex",
+      "source": "PTNB main.tex:4817–4823",
+      "before": "Every map explains the ImageNet-S label; all examples are classified correctly except the kuvasz (predicted: English setter). The first image is from test, the other five from the 50-image validation split used for selection. Maps precede the absolute value and max-abs normalization of Section~\\ref{ptnb:app:metrics}; TIBAV's $14{\\times}14$ map uses nearest-neighbor upsampling, as in evaluation.",
+      "after": "As in the evaluation, every map explains the ImageNet-S label, which is the top-1 prediction for all images except the kuvasz (predicted: English setter). The first image is from the test split, the other five are from the 50-image validation split used for the selection. Heatmaps show the raw evaluator-side maps, before the absolute value and max-abs normalization of Section~\\ref{ptnb:app:metrics} (the $14{\\times}14$ TIBAV map is upsampled by nearest neighbor, as for the metrics).",
+      "qualification": "Preserve current shared full-CI configuration reference and exact signed99percentile caption; no duplicate configuration list.",
+      "current_line": 188
+    }
+  ],
+  "protected_corrections": [
+    "Stronger ResNet localization and Selectivity baselines; all exact corrected metric comparisons.",
+    "No revival of universal VGG superiority, generic competitive-runtime claim, independently attributed stabilization gains, or best-faithfulness claims outside the proper selection family.",
+    "14–29x SplitCAM cost, unresolved timing metadata/baselineidentity and measuredtimer boundaries.",
+    "Actual dataset exclusions, predicted-versus-annotated targets, scalar-feature Pixel Flipping and patch Selectivity.",
+    "VOC image-cluster bootstrap and record-weighted estimand, common image draws, all-pair Holm families, nonsignificance not equivalence.",
+    "DAVE mean-centering implementation difference; no claim that broader maps prove model feature use or perceptionoptimality.",
+    "Config matrix and canonical fulltable integration, all labels/tables/captions/data/formulas and new ViT integration inputs.",
+    "Formal verification, new mathematical/numerical diagnostic, author contribution, AI disclosures and reproduced artifact limitations unchanged."
+  ],
+  "counts": [
+    {
+      "file": "tex/chapters/08_experiments.tex",
+      "before_words": 2159,
+      "after_words": 2264,
+      "growth_words": 105,
+      "growth_percent": 4.863
+    },
+    {
+      "file": "tex/chapters/10_appendix.tex",
+      "before_words": 3051,
+      "after_words": 3166,
+      "growth_words": 115,
+      "growth_percent": 3.769
+    },
+    {
+      "file": "tex/appendices/experiments.tex",
+      "before_words": 1536,
+      "after_words": 1653,
+      "growth_words": 117,
+      "growth_percent": 7.617
+    }
+  ],
+  "total_before_words": 6746,
+  "total_after_words": 7083,
+  "total_growth_words": 337,
+  "total_growth_percent": 4.996,
+  "checks": {
+    "tex/chapters/08_experiments.tex": {
+      "unchanged_environments": [
+        "align",
+        "equation",
+        "table",
+        "figure",
+        "tabularx"
+      ],
+      "labels_aliases_unchanged": true,
+      "citation_keys_unchanged": true,
+      "before_sha256": "e1130d1afd55570f0a58a87191efefb7675eb4c7010be9882bb4d3393b30196e",
+      "after_sha256": "a96b924bb8280c175199cba1c3e3c3040f12c21aa6577aa343a7fbb5979584bd"
+    },
+    "tex/chapters/10_appendix.tex": {
+      "unchanged_environments": [
+        "align",
+        "equation",
+        "table",
+        "figure",
+        "tabularx"
+      ],
+      "labels_aliases_unchanged": true,
+      "citation_keys_unchanged": true,
+      "before_sha256": "6c0927f926c3fa2dd0c05ec49819f8863c435965e8c34fffd6695dbc0aac6698",
+      "after_sha256": "c435f4ace622430f821b0183e9d9927bafc2efd64188c078651d99dd90af938b",
+      "protected_byte_identical": [
+        "formalization_diagnostic_disclosure_tail",
+        "artifact_limits",
+        "statistics",
+        "pixel_flipping",
+        "dataset_flow"
+      ]
+    },
+    "tex/appendices/experiments.tex": {
+      "unchanged_environments": [
+        "align",
+        "equation",
+        "table",
+        "figure",
+        "tabularx"
+      ],
+      "labels_aliases_unchanged": true,
+      "citation_keys_unchanged": true,
+      "before_sha256": "098c62a56f7dd445119b4deae02ce9d148faf23958a3601c7c9d915f9d5d95ec",
+      "after_sha256": "e483738e5573e52a21599d94b9e0d6ab77f05d00ba2ea9853a122f0e1fe7ed6c"
+    }
+  },
+  "no_build_or_commit": true,
+  "children_used": false
+}
